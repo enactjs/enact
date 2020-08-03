@@ -131,7 +131,7 @@ const scenarios = {
 			container({
 				[containerAttribute]: 'subcontainer'
 			}),
-			spottable({id: 'afterSubcontainer'}),
+			spottable({id: 'afterSubcontainer'})
 		)
 	}),
 	owned: join(

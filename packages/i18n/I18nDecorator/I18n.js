@@ -167,7 +167,7 @@ class I18n {
 	 */
 	handleLocaleChange = () => {
 		onWindowFocus(this.updateLocale);
-	}
+	};
 
 	/**
 	 * Updates the locale for the application.
@@ -181,7 +181,7 @@ class I18n {
 	 */
 	updateLocale = (newLocale) => {
 		this.loadResources(newLocale);
-	}
+	};
 }
 
 export default I18n;

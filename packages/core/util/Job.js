@@ -8,10 +8,10 @@ import invariant from 'invariant';
  * @public
  */
 class Job {
-	id = null
-	fn = null
-	timeout = null
-	type = null
+	id = null;
+	fn = null;
+	timeout = null;
+	type = null;
 
 	/**
 	 * @constructor
@@ -42,7 +42,7 @@ class Job {
 	 */
 	start = (...args) => {
 		this.startAfter(this.timeout, ...args);
-	}
+	};
 
 	/**
 	 * Starts the job in `timeout` milliseconds
@@ -60,7 +60,7 @@ class Job {
 		this.stop();
 		this.type = 'timeout';
 		this.id = setTimeout(() => this.run(args), timeout);
-	}
+	};
 
 	/**
 	 * Stops the job.
@@ -82,7 +82,7 @@ class Job {
 			}
 			this.id = this.type = null;
 		}
-	}
+	};
 
 	/**
 	 * Executes the job immediately, then prevents any other calls to `throttle()` from running
@@ -97,7 +97,7 @@ class Job {
 	 */
 	throttle = (...args) => {
 		this.throttleUntil(this.timeout, ...args);
-	}
+	};
 
 	/**
 	 * Executes the job immediately, then prevents any other calls to `throttle()` from running for
@@ -118,7 +118,7 @@ class Job {
 			this.run(args);
 			this.id = setTimeout(this.stop, timeout);
 		}
-	}
+	};
 
 	/**
 	 * Executes job when the CPU is idle.
@@ -132,7 +132,7 @@ class Job {
 	 */
 	idle = (...args) => {
 		this.idleUntil(null, ...args);
-	}
+	};
 
 	/**
 	 * Executes job when the CPU is idle, or when the timeout is reached, whichever occurs first.
@@ -156,7 +156,7 @@ class Job {
 			// since we can't request an idle callback, just pass to startAfter()
 			this.startAfter(timeout, ...args);
 		}
-	}
+	};
 
 	/**
 	 * Executes job before the next repaint.
@@ -170,7 +170,7 @@ class Job {
 	 */
 	startRaf = (...args) => {
 		this.startRafAfter(this.timeout, ...args);
-	}
+	};
 
 	/**
 	 * Executes job before the next repaint after a given amount of timeout.
@@ -205,7 +205,7 @@ class Job {
 			// If requestAnimationFrame is not supported just run the function immediately
 			this.run(args);
 		}
-	}
+	};
 
 	/**
 	 * Starts the job when `promise` resolves.
@@ -242,7 +242,7 @@ class Job {
 				return this.run([result]);
 			}
 		});
-	}
+	};
 }
 
 export default Job;

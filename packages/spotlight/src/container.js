@@ -1,5 +1,3 @@
-/* global process */
-
 /**
  * Exports methods and members for creating and maintaining spotlight containers.
  *

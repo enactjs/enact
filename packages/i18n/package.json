@@ -33,9 +33,6 @@
       "baseSize": 24
     }
   },
-  "eslintConfig": {
-    "extends": "enact/strict"
-  },
   "jest": {
     "collectCoverageFrom": [
       "**/*.{js,jsx,ts,tsx}",

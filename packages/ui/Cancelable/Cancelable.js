@@ -167,7 +167,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			onCancel: PropTypes.func
-		}
+		};
 
 		constructor (props) {
 			super(props);
@@ -180,7 +180,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handle = handle.bind(this)
+		handle = handle.bind(this);
 
 		handleCancel = this.handle(
 			forCancel,
@@ -188,14 +188,14 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			dispatchCancelToConfig,
 			stop,
 			stopImmediate
-		)
+		);
 
 		handleKeyUp = this.handle(
 			forward('onKeyUp'),
 			// nesting handlers for DRYness. note that if any conditions return false in
 			// this.handleCancel(), this handler chain will stop too
 			this.handleCancel
-		)
+		);
 
 		renderWrapped (props) {
 			return (
