@@ -734,7 +734,7 @@ function getContainerNavigableElements (containerId, preferredEnterTo) {
 	const config = getContainerConfig(containerId);
 	const {enterTo, overflow} = config;
 
-	const enterLast = enterTo === 'last-focused' || preferredEnterTo === 'last-focused';
+	const enterLast = preferredEnterTo === 'last-focused' || (enterTo === 'last-focused' && !preferredEnterTo);
 	let next;
 
 	// if the container has a preferred entry point, try to find it first
