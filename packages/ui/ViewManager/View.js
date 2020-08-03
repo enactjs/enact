@@ -132,14 +132,14 @@ class View extends React.Component {
 		 * @type {Boolean}
 		 */
 		rtl: PropTypes.bool
-	}
+	};
 
 	static defaultProps = {
 		appearing: false,
 		enteringDelay: 0,
 		index: 0,
 		reverseTransition: false
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -171,7 +171,7 @@ class View extends React.Component {
 
 	enteringJob = new Job(() => {
 		this.setState(clearEntering);
-	})
+	});
 
 	componentWillAppear (callback) {
 		const {arranger} = this.props;
@@ -275,7 +275,7 @@ class View extends React.Component {
 		if (noAnimation || this.props.noAnimation) {
 			this.animation.finish();
 		}
-	}
+	};
 
 	render () {
 		const {enteringProp, children, childProps} = this.props;

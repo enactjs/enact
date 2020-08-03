@@ -83,7 +83,7 @@ const ApiDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					configurable: true
 				});
 			});
-		}
+		};
 
 		render () {
 			return <Wrapped setApiProvider={this.setProvider} {...this.props} />;

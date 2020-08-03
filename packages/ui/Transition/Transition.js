@@ -416,7 +416,7 @@ class Transition extends React.Component {
 		 * @public
 		 */
 		visible: PropTypes.bool
-	}
+	};
 
 	static defaultProps = {
 		direction: 'up',
@@ -425,7 +425,7 @@ class Transition extends React.Component {
 		timingFunction: 'ease-in-out',
 		type: 'slide',
 		visible: true
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -506,7 +506,7 @@ class Transition extends React.Component {
 		this.setState({
 			renderState: TRANSITION_STATE.MEASURE
 		});
-	})
+	});
 
 	handleResize = () => {
 		// @TODO oddly, using the setState callback is required here to ensure that the bounds
@@ -514,7 +514,7 @@ class Transition extends React.Component {
 		this.setState({
 			initialHeight: null
 		}, this.measureInner);
-	}
+	};
 
 	handleTransitionEnd = (ev) => {
 		forwardTransitionEnd(ev, this.props);
@@ -526,7 +526,7 @@ class Transition extends React.Component {
 				forwardOnShow(ev, this.props);
 			}
 		}
-	}
+	};
 
 	measureInner = () => {
 		if (this.childNode) {
@@ -540,11 +540,11 @@ class Transition extends React.Component {
 				});
 			}
 		}
-	}
+	};
 
 	childRef = (node) => {
 		this.childNode = node;
-	}
+	};
 
 	render () {
 		let {visible, ...props} = this.props;

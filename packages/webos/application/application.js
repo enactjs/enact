@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-/* global console */
 
 /**
  * Provides a collection of functions for fetching application metadata.

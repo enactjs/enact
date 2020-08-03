@@ -215,7 +215,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 	} = config;
 
 	return class extends React.Component {
-		static displayName = 'Touchable'
+		static displayName = 'Touchable';
 
 		static propTypes = /** @lends ui/Touchable.Touchable.prototype */ {
 			/**
@@ -383,12 +383,12 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			onUp: PropTypes.func
-		}
+		};
 
 		static defaultProps = {
 			disabled: false,
 			noResume: false
-		}
+		};
 
 		constructor (props) {
 			super(props);

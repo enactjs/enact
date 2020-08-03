@@ -17,9 +17,6 @@
       "baseSize": 24
     }
   },
-  "eslintConfig": {
-    "extends": "enact/strict"
-  },
   "dependencies": {
     "@enact/core": "^3.4.0",
     "prop-types": "^15.7.2",

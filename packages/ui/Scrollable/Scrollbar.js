@@ -35,7 +35,7 @@ const setCSSVariable = (element, variable, value) => {
  * @private
  */
 class ScrollbarBase extends PureComponent {
-	static displayName = 'ui:Scrollbar'
+	static displayName = 'ui:Scrollbar';
 
 	static propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {
 		/**
@@ -90,13 +90,13 @@ class ScrollbarBase extends PureComponent {
 		 * @public
 		 */
 		vertical: PropTypes.bool
-	}
+	};
 
 	static defaultProps = {
 		corner: false,
 		css: componentCss,
 		vertical: true
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -117,8 +117,8 @@ class ScrollbarBase extends PureComponent {
 		this.hideThumbJob.stop();
 	}
 
-	minThumbSizeRatio = 0
-	ignoreMode = false
+	minThumbSizeRatio = 0;
+	ignoreMode = false;
 
 	update = (bounds) => {
 		const
@@ -134,20 +134,20 @@ class ScrollbarBase extends PureComponent {
 
 		setCSSVariable(this.thumbRef.current, '--scrollbar-size-ratio', scrollThumbSizeRatio);
 		setCSSVariable(this.thumbRef.current, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
-	}
+	};
 
 	showThumb = () => {
 		this.hideThumbJob.stop();
 		ReactDOM.findDOMNode(this.thumbRef.current).classList.add(this.props.css.thumbShown); // eslint-disable-line react/no-find-dom-node
-	}
+	};
 
 	startHidingThumb = () => {
 		this.hideThumbJob.start();
-	}
+	};
 
 	hideThumb = () => {
 		ReactDOM.findDOMNode(this.thumbRef.current).classList.remove(this.props.css.thumbShown); // eslint-disable-line react/no-find-dom-node
-	}
+	};
 
 	hideThumbJob = new Job(this.hideThumb.bind(this), thumbHidingDelay);
 
@@ -162,9 +162,9 @@ class ScrollbarBase extends PureComponent {
 		}
 
 		this.minThumbSizeRatio = ri.scale(minThumbSize) / trackSize;
-	}
+	};
 
-	getContainerRef = () => (this.containerRef)
+	getContainerRef = () => (this.containerRef);
 
 	render () {
 		const
@@ -207,11 +207,11 @@ class Scrollbar extends Component {
 		 * @public
 		 */
 		vertical: PropTypes.bool
-	}
+	};
 
 	static defaultProps = {
 		vertical: true
-	}
+	};
 
 	setApi = (ref) => {
 		if (ref) {
@@ -222,7 +222,7 @@ class Scrollbar extends Component {
 			this.startHidingThumb = startHidingThumb;
 			this.update = uiUpdate;
 		}
-	}
+	};
 
 	render () {
 		const {vertical} = this.props;
