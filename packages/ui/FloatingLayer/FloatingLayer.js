@@ -122,7 +122,6 @@ class FloatingLayerBase extends React.Component {
 	constructor (props) {
 		super(props);
 		this.node = null;
-		this.id = this.generateId();
 		this.state = {
 			nodeRendered: false
 		};
@@ -248,6 +247,7 @@ class FloatingLayerBase extends React.Component {
 
 	render () {
 		const {children, open, scrimType, ...rest} = this.props;
+		const id = this.generateId();
 
 		delete rest.floatLayerClassName;
 		delete rest.floatLayerId;
@@ -258,14 +258,14 @@ class FloatingLayerBase extends React.Component {
 
 		if (open && this.state.nodeRendered) {
 			const portal = ReactDOM.createPortal(
-				<div {...rest} id={this.id}>
+				<div {...rest} id={id}>
 					{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
 					{React.cloneElement(children, {onClick: this.stopPropagation})}
 				</div>,
 				this.node
 			);
 
-			return <div aria-owns={this.id}>{portal}</div>;
+			return <div aria-owns={id}>{portal}</div>;
 		}
 
 		return null;
