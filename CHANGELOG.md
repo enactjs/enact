@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
-
-### Fixed
-
-- `ui/Touchable` to invoke event callbacks updated during gesture
-
 ## [3.4.0] - 2020-07-29
 
 ### Added
