@@ -48,7 +48,7 @@ describe('Touchable', () => {
 			}
 		);
 
-		test (
+		test(
 			'should update state configurations onHoldPulse events',
 			(done) => {
 				const holdConfig = {
@@ -77,7 +77,7 @@ describe('Touchable', () => {
 			}
 		);
 
-		test (
+		test(
 			'should update state configurations onHold events',
 			(done) => {
 				const holdConfig = {
@@ -106,7 +106,7 @@ describe('Touchable', () => {
 			}
 		);
 
-		test (
+		test(
 			'should update state configurations onHoldEnd events',
 			(done) => {
 				const holdConfig = {
@@ -122,16 +122,17 @@ describe('Touchable', () => {
 					<Component onHoldPulse={() => {}} holdConfig={holdConfig} />
 				);
 
-				const ev = {};
+				const ev = {currentTarget: {}};
 				subject.simulate('mousedown', ev);
 				subject.setProps({
 					onHoldEnd: handler
 				});
 
 				setTimeout(() => {
+					subject.simulate('mouseup', ev);
 					expect(handler).toHaveBeenCalled();
 					done();
-				}, 20);
+				}, 30);
 			}
 		);
 
