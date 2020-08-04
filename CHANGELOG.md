@@ -2,13 +2,18 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Touchable` to update config props on any gesture (hold, flick, drag)
+
 ## [3.4.0] - 2020-07-29
 
 ### Added
 
 - `ui/AnnounceDecorator.Announce` method `announce` parameter `clear` to clear previous message before setting the new message
 - `ui/ViewManager` prop and `ui/ViewManager.Arranger` callback config prop `rtl` to allow arrangers to adjust animations to be locale aware
-- `ui/Touchable` to update config props on any gesture (hold, flick, drag)
 
 ### Fixed
 
