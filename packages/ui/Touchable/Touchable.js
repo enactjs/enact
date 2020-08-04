@@ -460,6 +460,11 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				flick: this.props.flickConfig,
 				hold: this.props.holdConfig
 			});
+
+			// Update the props onHold, onHoldEnd, onHoldPulse on any gesture (hold, flick, drag).
+			this.hold.updateProps(this.props);
+			this.flick.updateProps(this.props);
+			this.drag.updateProps(this.props);
 		}
 
 		componentWillUnmount () {

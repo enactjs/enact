@@ -25,6 +25,15 @@ class Flick {
 		this.move(coords);
 	};
 
+	// This method will get the `onFlick` props in the existing `flickConfig` values.
+	updateProps = ({onFlick}) => {
+		// Check `tracking` gesture is not in progress. Check if gesture exists before updating the references to the `flickConfig`
+		if (!this.tracking) return;
+
+		// This will update the `flickConfig` with the new value
+		this.flickConfig.onFlick = onFlick;
+	};
+
 	move = ({x, y}) => {
 		if (!this.tracking) return;
 
