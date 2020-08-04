@@ -122,6 +122,7 @@ class FloatingLayerBase extends React.Component {
 	constructor (props) {
 		super(props);
 		this.node = null;
+		this.id = this.generateId();
 		this.state = {
 			nodeRendered: false
 		};
@@ -178,6 +179,10 @@ class FloatingLayerBase extends React.Component {
 			this.controller.unregister();
 		}
 	}
+
+	generateId = () => {
+		return Math.random().toString(36).substr(2, 8);
+	};
 
 	handleNotify = oneOf(
 		[forEventProp('action', 'close'), call('handleClose')],
@@ -252,13 +257,15 @@ class FloatingLayerBase extends React.Component {
 		delete rest.onOpen;
 
 		if (open && this.state.nodeRendered) {
-			return ReactDOM.createPortal(
-				<div {...rest}>
+			const portal = ReactDOM.createPortal(
+				<div {...rest} id={this.id}>
 					{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
 					{React.cloneElement(children, {onClick: this.stopPropagation})}
 				</div>,
 				this.node
 			);
+
+			return <div aria-owns={this.id}>{portal}</div>;
 		}
 
 		return null;
