@@ -158,7 +158,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	};
 
 	return class extends React.Component {
-		static displayName = 'ui:MarqueeDecorator'
+		static displayName = 'ui:MarqueeDecorator';
 
 		static propTypes = /** @lends ui/Marquee.MarqueeDecorator.prototype */ {
 			/**
@@ -300,7 +300,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			rtl: PropTypes.bool
-		}
+		};
 
 		static defaultProps = {
 			marqueeDelay: 1000,
@@ -309,9 +309,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeResetDelay: 1000,
 			marqueeSpacing: '50%',
 			marqueeSpeed: 60
-		}
+		};
 
-		static contextType = MarqueeControllerContext
+		static contextType = MarqueeControllerContext;
 
 		constructor (props) {
 			super(props);
@@ -406,11 +406,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (!this.contentFits) {
 				this.setState(state => state.promoted ? null : {promoted: true});
 			}
-		})
+		});
 
 		demoteJob = new Job(() => {
 			this.setState(state => (!state.animating && state.promoted) ? {promoted: false} : null);
-		})
+		});
 
 		demote () {
 			this.promoteJob.stop();
@@ -627,7 +627,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					}
 				}, delay, TimerState.START_PENDING);
 			}
-		}
+		};
 
 		/*
 		 * Stops the animation
@@ -644,7 +644,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.demote();
-		}
+		};
 
 		/*
 		 * Starts marquee animation with synchronization, if not already animating and a timer is
@@ -657,7 +657,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.state.animating || this.timerState !== TimerState.CLEAR) return;
 
 			this.startAnimation(delay);
-		}
+		};
 
 		/*
 		 * Starts marquee animation with synchronization
@@ -683,7 +683,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else {
 				this.start(delay);
 			}
-		}
+		};
 
 		/*
 		 * Resets the marquee and restarts it after `marqueeDelay` milliseconds.
@@ -700,7 +700,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else if (!this.state.animating) {
 				this.startAnimation(delay);
 			}
-		}
+		};
 
 		/*
 		 * Resets and restarts the marquee after `marqueeResetDelay` milliseconds
@@ -724,7 +724,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.restartAnimation(delay);
 				}, 0, TimerState.RESET_PENDING);
 			}
-		}
+		};
 
 		/*
 		 * Cancels the marquee
@@ -738,7 +738,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.stop();
-		}
+		};
 
 		handleResize = () => {
 			if (this.node && !this.props.marqueeDisabled) {
@@ -748,11 +748,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.resetAnimation();
 				}
 			}
-		}
+		};
 
 		handleMarqueeComplete = () => {
 			this.resetAnimation();
-		}
+		};
 
 		handleFocus = (ev) => {
 			this.isFocused = true;
@@ -762,7 +762,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}
 			forwardFocus(ev, this.props);
-		}
+		};
 
 		handleBlur = (ev) => {
 			this.promoteJob.stop();
@@ -773,7 +773,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.cancelAnimation();
 				}
 			}
-		}
+		};
 
 		handleEnter = (ev) => {
 			this.isHovered = true;
@@ -785,19 +785,19 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}
 			forwardEnter(ev, this.props);
-		}
+		};
 
 		handleLeave = (ev) => {
 			this.promoteJob.stop();
 			this.handleUnhover();
 			forwardLeave(ev, this.props);
-		}
+		};
 
 		handlePointerHide = ({keyCode}) => {
 			if (is('pointerHide', keyCode)) {
 				this.handleUnhover();
 			}
-		}
+		};
 
 		handleUnhover () {
 			this.isHovered = false;
@@ -812,7 +812,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		cacheNode = (node) => {
 			this.node = node;
-		}
+		};
 
 		validateTextDirection () {
 			this.setState((state, props) => {

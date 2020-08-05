@@ -111,7 +111,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {mapPropsToText} = config;
 
 	const Decorator = class extends React.Component {
-		static displayName = 'TextDecorator'
+		static displayName = 'TextDecorator';
 
 		static propTypes = /** @lends i18n/Text.TextDecorator.prototype */ {
 			/**
@@ -134,7 +134,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			locale: PropTypes.string
-		}
+		};
 
 		constructor (props) {
 			super(props);

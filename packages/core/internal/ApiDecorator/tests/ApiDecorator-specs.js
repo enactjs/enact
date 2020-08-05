@@ -14,13 +14,13 @@ describe('ApiDecorator', () => {
 			props.setApiProvider(this);
 		}
 
-		arrowFunction = () => 'arrow'
+		arrowFunction = () => 'arrow';
 
 		instanceFunction () {
 			return 'instance';
 		}
 
-		instanceProperty = 'property'
+		instanceProperty = 'property';
 
 		render () {
 			return (

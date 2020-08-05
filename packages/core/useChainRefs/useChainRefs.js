@@ -15,7 +15,7 @@ function updateRef (ref, node) {
 	if (ref) {
 		if (typeof ref === 'function') {
 			ref(node);
-		} else if (ref.hasOwnProperty('current')) {
+		} else if (Object.prototype.hasOwnProperty.call(ref, 'current')) {
 			ref.current = node;
 		} else {
 			// warn for a truthy ref that isn't a function or is an object without `current`

@@ -34,7 +34,7 @@ import {wrapWithView} from './View';
  * @public
  */
 const ViewManagerBase = class extends React.Component {
-	static displayName = 'ViewManager'
+	static displayName = 'ViewManager';
 
 	static propTypes = /** @lends ui/ViewManager.ViewManagerBase.prototype */ {
 		/**
@@ -203,13 +203,13 @@ const ViewManagerBase = class extends React.Component {
 		 * @default value of index
 		 */
 		start: PropTypes.number
-	}
+	};
 
 	static defaultProps = {
 		component: 'div',
 		duration: 300,
 		index: 0
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -244,14 +244,14 @@ const ViewManagerBase = class extends React.Component {
 			call('makeTransitionEvent'),
 			forward('onTransition')
 		)
-	).bindAs(this, 'handleTransition')
+	).bindAs(this, 'handleTransition');
 
 	handleWillTransition = handle(
 		adaptEvent(
 			call('makeTransitionEvent'),
 			forward('onWillTransition')
 		)
-	).bindAs(this, 'handleWillTransition')
+	).bindAs(this, 'handleWillTransition');
 
 	render () {
 		const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, rtl, ...rest} = this.props;

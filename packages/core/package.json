@@ -24,9 +24,6 @@
       "baseSize": 24
     }
   },
-  "eslintConfig": {
-    "extends": "enact/strict"
-  },
   "dependencies": {
     "classnames": "^2.2.5",
     "invariant": "^2.2.2",

@@ -33,9 +33,6 @@
       "baseSize": 24
     }
   },
-  "eslintConfig": {
-    "extends": "enact/strict"
-  },
   "jest": {
     "collectCoverageFrom": [
       "**/*.{js,jsx,ts,tsx}",
@@ -52,10 +49,10 @@
     "xhr": "^2.4.1"
   },
   "peerDependencies": {
-    "ilib": "^14.4.0 || ^14.4.0-webostv1"
+    "ilib": "^14.4.0 || ^14.6.0-webos"
   },
   "devDependencies": {
-    "@enact/ui-test-utils": "^0.3.2",
+    "@enact/ui-test-utils": "^0.5.1",
     "ilib": "^14.4.0"
   }
 }

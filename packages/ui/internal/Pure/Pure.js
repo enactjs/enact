@@ -55,11 +55,11 @@ const Pure = hoc(defaultConfig, (config, Wrapped) => {
 	const {propComparators} = config;
 
 	return class extends React.Component {
-		static displayName = 'Pure'
+		static displayName = 'Pure';
 
-		static propTypes = {}
+		static propTypes = {};
 
-		static defaultProps = {}
+		static defaultProps = {};
 
 		shouldComponentUpdate (nextProps) {
 			return this.hasChanged(this.props, nextProps, propComparators);

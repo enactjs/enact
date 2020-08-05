@@ -15,7 +15,7 @@ const validateStepMax = validateSteppedOnce((props) => props, {'component': 'Pos
 
 const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
-		static displayName = 'PositionDecorator'
+		static displayName = 'PositionDecorator';
 
 		static propTypes = {
 			disabled: PropTypes.bool,
@@ -25,7 +25,7 @@ const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-u
 			orientation: PropTypes.string,
 			step: PropTypes.number,
 			value: PropTypes.number
-		}
+		};
 
 		static defaultProps = {
 			disabled: false,
@@ -33,7 +33,7 @@ const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-u
 			min: 0,
 			orientation: 'horizontal',
 			step: 1
-		}
+		};
 
 		constructor (props) {
 			super(props);
