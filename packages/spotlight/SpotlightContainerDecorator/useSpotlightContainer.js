@@ -1,19 +1,7 @@
 import useClass from '@enact/core/useClass';
 import React from 'react';
 
-import Spotlight from '../src/spotlight';
-
 import SpotlightContainer from './SpotlightContainer';
-
-const stateFromProps = ({preserveId, spotlightId, spotlightRestrict}) => {
-	const options = {restrict: spotlightRestrict};
-	const id = Spotlight.add(spotlightId || options, options);
-	return {
-		id,
-		preserveId: preserveId && id === spotlightId,
-		spotlightRestrict
-	};
-};
 
 /**
  * Configuration for `useSpotlightContainer`
@@ -57,25 +45,28 @@ const stateFromProps = ({preserveId, spotlightId, spotlightRestrict}) => {
  * @private
  */
 function useSpotlightContainer (config) {
-	const {preserveId} = config;
-	const state = React.useRef(stateFromProps(config, preserveId));
-	const spotlightContainer = useClass(SpotlightContainer, {state, ...config});
+	const {disabled, id, muted, restrict, ...rest} = config;
 
-	spotlightContainer.setPropsAndContext(config, {preserveId, state, stateFromProps});
+	const spotlightContainer = useClass(SpotlightContainer, rest);
+	spotlightContainer.setProps({
+		disabled,
+		id,
+		muted,
+		restrict
+	});
 
 	React.useEffect(() => {
 		return () => {
 			spotlightContainer.unload();
 		};
-	});
+	}, [spotlightContainer]);
 
 	return {
-		blur: spotlightContainer.handleBlur,
-		focus: spotlightContainer.handleFocus,
-		id: state.current.id,
-		mouseEnter: spotlightContainer.handleMouseEnter,
-		mouseLeave: spotlightContainer.handleMouseLeave,
-		navigableFilter: spotlightContainer.navigableFilter
+		attributes: spotlightContainer.attributes,
+		onBlurCapture: spotlightContainer.onBlurCapture,
+		onFocusCapture: spotlightContainer.onFocusCapture,
+		onPointerEnter: spotlightContainer.onPointerEnter,
+		onPointerLeave: spotlightContainer.onPointerLeave
 	};
 }
 
