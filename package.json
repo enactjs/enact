@@ -1,6 +1,6 @@
 {
   "name": "enact",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "description": "Monorepo for all Enact front end libraries.",
   "private": true,
   "scripts": {
@@ -11,11 +11,18 @@
     "link-all": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock link",
     "unlink-all": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock unlink",
     "publish": "lerna publish --skip-npm --skip-git",
+    "lint": "lerna --concurrency 1 run lint",
     "test": "lerna --concurrency 1 run test",
+    "test-ss": "lerna --concurrency 1 run test-ss",
+    "test-ui": "lerna --concurrency 1 run test-ui",
     "clean": "lerna clean"
   },
   "license": "Apache-2.0",
+  "eslintConfig": {
+    "extends": "enact-proxy/strict"
+  },
   "devDependencies": {
+    "eslint-config-enact-proxy": "^1.0.0",
     "lerna": "2.8.0"
   }
 }

@@ -77,13 +77,13 @@ const scenarios = {
 			spottable({id: 'in-first'})
 		)}),
 		container({[containerAttribute]: 'second', children: join(
-			nonSpottable(),
+			nonSpottable()
 		)})
 	),
 	grid: join(
 		spottable({id: 'before-grid', style: 'height: 10px'}),
 		grid(),
-		spottable({id: 'after-grid', style: 'height: 10px'}),
+		spottable({id: 'after-grid', style: 'height: 10px'})
 	),
 	overlap: node({
 		style: 'position: relative',
@@ -157,7 +157,7 @@ const scenarios = {
 			[containerAttribute]: 'empty-container',
 			style: position(10, 10)
 		}),
-		positionedSpottable('below', 30, 0),
+		positionedSpottable('below', 30, 0)
 	),
 	emptyContainerOverlap: join(
 		positionedSpottable('above', 5, 10),
@@ -165,7 +165,7 @@ const scenarios = {
 			[containerAttribute]: 'empty-container',
 			style: position(10, 10)
 		}),
-		positionedSpottable('below', 30, 0),
+		positionedSpottable('below', 30, 0)
 	)
 };
 

@@ -17,7 +17,7 @@ const RadioContext = React.createContext();
 const RadioControllerDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 
 	return class extends React.Component {
-		static displayName = 'RadioControllerDecorator'
+		static displayName = 'RadioControllerDecorator';
 
 		constructor (props) {
 			super(props);

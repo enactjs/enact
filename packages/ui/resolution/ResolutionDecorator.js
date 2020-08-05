@@ -68,11 +68,11 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	}
 
 	return class extends React.Component {
-		static displayName = 'ResolutionDecorator'
+		static displayName = 'ResolutionDecorator';
 
 		static propTypes = /** @lends ui/resolution.ResolutionDecorator.prototype */ {
 			className: PropTypes.string
-		}
+		};
 
 		constructor (props) {
 			super(props);
@@ -98,7 +98,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (classNames) {
 				this.setState({resolutionClasses: classNames});
 			}
-		}
+		};
 
 		/*
 		 * Compare our current version of the resolved resolution class names with a fresh

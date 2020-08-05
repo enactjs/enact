@@ -27,9 +27,11 @@ const LinkBase = kind({
 	},
 
 	render: ({path, ...rest}) => {
+		/* eslint-disable jsx-a11y/anchor-has-content */
 		return (
 			<a href={path} {...rest} />
 		);
+		/* eslint-enable jsx-a11y/anchor-has-content */
 	}
 });
 

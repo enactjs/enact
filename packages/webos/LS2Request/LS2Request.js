@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-/* global console */
 /**
  * Provides a class for making LS2 service requests on webOS platforms.
  *
@@ -84,8 +83,8 @@ export default class LS2Request {
 
 		if (typeof window !== 'object' || !window.PalmServiceBridge) {
 			/* eslint no-unused-expressions: ["error", { "allowShortCircuit": true }]*/
-			onFailure && onFailure({errorCode: -1, errorText: 'PalmServiceBridge not found.', returnValue: false});
-			onComplete && onComplete({errorCode: -1, errorText: 'PalmServiceBridge not found.', returnValue: false});
+			if (onFailure) onFailure({errorCode: -1, errorText: 'PalmServiceBridge not found.', returnValue: false});
+			if (onComplete) onComplete({errorCode: -1, errorText: 'PalmServiceBridge not found.', returnValue: false});
 			console.error('PalmServiceBridge not found.');
 			return;
 		}

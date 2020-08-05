@@ -69,7 +69,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 	const defaultPropKey = 'default' + cap(prop);
 
 	return class extends React.PureComponent {
-		static displayName = 'Changeable'
+		static displayName = 'Changeable';
 
 		static propTypes = /** @lends ui/Changeable.Changeable.prototype */ {
 			/**
@@ -119,11 +119,11 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			disabled: PropTypes.bool
-		}
+		};
 
 		static defaultProps = {
 			disabled: false
-		}
+		};
 
 		constructor (props) {
 			super(props);
@@ -167,7 +167,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			return null;
 		}
 
-		handle = handle.bind(this)
+		handle = handle.bind(this);
 
 		handleChange = this.handle(
 			forProp('disabled', false),
@@ -177,7 +177,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 					this.setState(({value: oldValue}) => value !== oldValue ? {value} : null);
 				}
 			}
-		)
+		);
 
 		render () {
 			const props = Object.assign({}, this.props);
