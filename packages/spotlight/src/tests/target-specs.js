@@ -315,6 +315,79 @@ describe('target', () => {
 				}
 			)
 		);
+
+		test('should return `default-element` when last focused is unset', testScenario(
+			scenarios.grid,
+			() => {
+				configureContainer('grid', {
+					enterTo: 'last-focused',
+					defaultElement: '#middle-center'
+				});
+
+				const expected = 'middle-center';
+				const actual = safeTarget(
+					getTargetByContainer('grid'),
+					t => t.id
+				);
+
+				expect(actual).toBe(expected);
+			}
+		));
+
+		test('should return `default-element` when `last-focused` is requested but is unset', testScenario(
+			scenarios.grid,
+			() => {
+				configureContainer('grid', {
+					defaultElement: '#middle-center'
+				});
+
+				const expected = 'middle-center';
+				const actual = safeTarget(
+					getTargetByContainer('grid', 'last-focused'),
+					t => t.id
+				);
+
+				expect(actual).toBe(expected);
+			}
+		));
+
+		test('should return default element when configured for `last-focused` but requested `default-element`', testScenario(
+			scenarios.grid,
+			() => {
+				configureContainer('grid', {
+					enterTo: 'last-focused',
+					lastFocusedElement: document.querySelector('#top-left'),
+					defaultElement: '#middle-center'
+				});
+
+				const expected = 'middle-center';
+				const actual = safeTarget(
+					getTargetByContainer('grid', 'default-element'),
+					t => t.id
+				);
+
+				expect(actual).toBe(expected);
+			}
+		));
+
+		test('should return last focused element when configured for `default-element` but requested `last-focused`', testScenario(
+			scenarios.grid,
+			() => {
+				configureContainer('grid', {
+					enterTo: 'default-element',
+					lastFocusedElement: document.querySelector('#top-left'),
+					defaultElement: '#middle-center'
+				});
+
+				const expected = 'top-left';
+				const actual = safeTarget(
+					getTargetByContainer('grid', 'last-focused'),
+					t => t.id
+				);
+
+				expect(actual).toBe(expected);
+			}
+		));
 	});
 
 	describe('#getTargetBySelector', () => {
