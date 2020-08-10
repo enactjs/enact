@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.4.3] - 2020-08-10
+
+No significant changes.
+
 ## [3.4.2] - 2020-08-05
 
 Addresses a transpile error during the build of 3.4.1. No other changes were made.
