@@ -8,19 +8,33 @@ import SpotlightContainer from './SpotlightContainer';
  *
  * @typedef {Object} useSpotlightContainerConfig
  * @memberof spotlight/SpotlightContainerDecorator
- * @property {Object}   [containerConfig]   Spotlight container configuratiohn.
- * @property {Function} [navigableFilter]   Make a decision if a spottable component is accessibilt.
- * @property {Boolean}  [preserveId]        Whether the container will preserve the id when it unmounts.
- * @property {Boolean}  [spotlightDisabled] When `true`, controls in the container cannot be navigated.
- * @property {String}   [spotlightId]       Used to identify this component within the Spotlight system.
- *                                          If the value is `null`, an id will be generated.
- * @property {Function} [spotlightRestrict] Restricts or prioritizes navigation when focus attempts to leave the container. It
- *                                          can be either 'none', 'self-first', or 'self-only'. Specifying 'self-first' indicates that
- *                                          elements within the container will have a higher likelihood to be chosen as the next
- *                                          navigable element. Specifying 'self-only' indicates that elements in other containers
- *                                          cannot be navigated to by using 5-way navigation - however, elements in other containers
- *                                          can still receive focus by calling `Spotlight.focus(elem)` explicitly. Specying 'none'
- *                                          indicates there should be no restrictions when 5-way navigating the container.
+ * @property {Object}   [containerConfig]                   Spotlight container configuratiohn.
+ * @property {Function} [navigableFilter]                   Called to determine if a spottable
+ *                                                          component is accessible.
+ * @property {Boolean}  [preserveId]                        Preserves the spotlight id when the
+ *                                                          component unmounts.
+ * @property {Boolean}  [disabled]                          Prevents controls in the container from
+ *                                                          being navigable.
+ * @property {String}   [id]                                Identifies this component within the
+ *                                                          Spotlight system. If unset, an id will
+ *                                                          be generated.
+ * @property {('self-only'|'self-first'|'none')} [restrict] Restricts or prioritizes navigation when
+ *                                                          focus attempts to leave the container.
+ *                                                          It can be either 'none', 'self-first',
+ *                                                          or 'self-only'. Specifying 'self-first'
+ *                                                          indicates that elements within the
+ *                                                          container will have a higher likelihood
+ *                                                          to be chosen as the next navigable
+ *                                                          element. Specifying 'self-only'
+ *                                                          indicates that elements in other
+ *                                                          containers cannot be navigated to by
+ *                                                          using 5-way navigation - however,
+ *                                                          elements in other containers can still
+ *                                                          receive focus by calling
+ *                                                          `Spotlight.focus(elem)` explicitly.
+ *                                                          Specying 'none' indicates there should
+ *                                                          be no restrictions when 5-way navigating
+ *                                                          the container.
  * @private
  */
 
@@ -28,13 +42,22 @@ import SpotlightContainer from './SpotlightContainer';
  * Object returned by `useSpotlightContainer`
  *
  * @typedef {Object} useSpotlightContainerInterface
- * @property {Function} blur            CSS classes that should be applied to the root node
- * @property {Function} focus           Indicates if resources have been loaded
- * @property {String}   id              Current locale
- * @property {Function} mouseEnter      Indicates the current locale uses right-to-left text direction
- * @property {Function} mouseLeave      Indicates the current locale uses right-to-left text direction
- * @property {Function} navigableFilter Indicates the current locale uses right-to-left text direction
- * @property {Function}
+ * @memberof spotlight/SpotlightContainerDecorator
+ * @property {Function} onBlurCapture    Callback to notify hook when an node was blurred within the
+ *                                       container. Must be called during the capture phase of the
+ *                                       event flow.
+ * @property {Function} onFocusCapture   Callback to notify hook when an node was focused within the
+ *                                       container. Must be called during the capture phase of the
+ *                                       event flow.
+ * @property {String}   attributes       An object of DOM attributes of representing the current
+ *                                       spotlight container metadata.
+ * @property {Function} onPointerEnter   Callback to notify hook when the pointer enters the
+ *                                       container. Must be called during the capture phase of the
+ *                                       event flow.
+ * @property {Function} onPointerLeave   Callback to notify hook when the pointer leaves the
+ *                                       container. Must be called during the capture phase of the
+ *                                       event flow.
+ * @private
  */
 
 /**
