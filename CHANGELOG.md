@@ -2,6 +2,45 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.4.3] - 2020-08-10
+
+No significant changes.
+
+## [3.4.2] - 2020-08-05
+
+Addresses a transpile error during the build of 3.4.1. No other changes were made.
+
+## [3.4.1] - 2020-08-05
+
+### Fixed
+
+- `ui/Touchable` to invoke event callbacks updated during gesture
+
+## [3.4.0] - 2020-07-29
+
+### Added
+
+- `ui/AnnounceDecorator.Announce` method `announce` parameter `clear` to clear previous message before setting the new message
+- `ui/ViewManager` prop and `ui/ViewManager.Arranger` callback config prop `rtl` to allow arrangers to adjust animations to be locale aware
+
+### Fixed
+
+- `ui/Marquee` to correctly animate when scaled or when less than 1px longer than its container
+- `ui/Scroller` prop `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label`
+- `ui/Scroller` and `ui/VirtualList` to re-render when its size changed
+- `ui/Scroller` and `ui/VirtualList` to not fire `onScrollStop` event redundantly
+- `ui/VirtualList` with scrollMode `native` to not scrollTo bottom when dataSize changed to smaller and scrollTo called with `animate: false` option
+
+## [3.3.1] - 2020-07-20
+
+### Changed
+
+- `ui/Scroller` by increasing the scrollbar's inactivity timeout to 1000 ms
+
+### Fixed
+
+- `spotlight/Spottable` to correctly control focus when elements move under a stationary pointer
+
 ## [3.3.0] - 2020-07-13
 
 ### Changed

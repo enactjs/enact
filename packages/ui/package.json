@@ -1,6 +1,6 @@
 {
   "name": "@enact/ui",
-  "version": "3.3.0",
+  "version": "3.4.3",
   "description": "A collection of simplified unstyled cross-platform UI components for Enact",
   "main": "index.js",
   "scripts": {
@@ -24,11 +24,8 @@
       "baseSize": 24
     }
   },
-  "eslintConfig": {
-    "extends": "enact/strict"
-  },
   "dependencies": {
-    "@enact/core": "^3.3.0",
+    "@enact/core": "^3.4.3",
     "classnames": "^2.2.5",
     "direction": "^1.0.1",
     "invariant": "^2.2.2",

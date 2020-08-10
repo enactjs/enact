@@ -186,13 +186,13 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
-		}
+		};
 
 		static defaultProps = {
 			spotlightDisabled: false,
 			spotlightMuted: false,
 			spotlightRestrict: 'self-first'
-		}
+		};
 
 		constructor (props) {
 			super(props);
@@ -241,20 +241,20 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			return true;
-		}
+		};
 
 		silentBlur = ({target}) => {
 			this.shouldPreventBlur = true;
 			target.blur();
 			this.shouldPreventBlur = false;
-		}
+		};
 
-		handle = handle.bind(this)
+		handle = handle.bind(this);
 
 		handleBlur = oneOf(
 			[() => this.shouldPreventBlur, stop],
 			[returnsTrue, forward('onBlurCapture')]
-		).bindAs(this, 'handleBlur')
+		).bindAs(this, 'handleBlur');
 
 		handleFocus = oneOf(
 			[forProp('spotlightDisabled', true), handle(
@@ -262,13 +262,13 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				call('silentBlur')
 			)],
 			[returnsTrue, forward('onFocusCapture')]
-		).bindAs(this, 'handleFocus')
+		).bindAs(this, 'handleFocus');
 
 		handleMouseEnter = this.handle(
 			forward('onMouseEnter'),
 			isNewPointerPosition,
 			() => Spotlight.setActiveContainer(this.state.id)
-		)
+		);
 
 		handleMouseLeave = this.handle(
 			forward('onMouseLeave'),
@@ -285,7 +285,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					Spotlight.setActiveContainer(activeContainer);
 				}
 			}
-		)
+		);
 
 		render () {
 			const {spotlightDisabled, spotlightMuted, ...rest} = this.props;

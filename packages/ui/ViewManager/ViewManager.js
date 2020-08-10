@@ -34,7 +34,7 @@ import {wrapWithView} from './View';
  * @public
  */
 const ViewManagerBase = class extends React.Component {
-	static displayName = 'ViewManager'
+	static displayName = 'ViewManager';
 
 	static propTypes = /** @lends ui/ViewManager.ViewManagerBase.prototype */ {
 		/**
@@ -187,19 +187,29 @@ const ViewManagerBase = class extends React.Component {
 		reverseTransition: PropTypes.bool,
 
 		/**
+		 * Indicates the current locale uses right-to-left reading order.
+		 *
+		 * `rtl` is passed to the `arranger` in order to alter the animation (e.g. reversing the
+		 * horizontal direction).
+		 *
+		 * @type {Boolean}
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * Index of first visible view. Defaults to the current value of `index`.
 		 *
 		 * @type {Number}
 		 * @default value of index
 		 */
 		start: PropTypes.number
-	}
+	};
 
 	static defaultProps = {
 		component: 'div',
 		duration: 300,
 		index: 0
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -234,17 +244,17 @@ const ViewManagerBase = class extends React.Component {
 			call('makeTransitionEvent'),
 			forward('onTransition')
 		)
-	).bindAs(this, 'handleTransition')
+	).bindAs(this, 'handleTransition');
 
 	handleWillTransition = handle(
 		adaptEvent(
 			call('makeTransitionEvent'),
 			forward('onWillTransition')
 		)
-	).bindAs(this, 'handleWillTransition')
+	).bindAs(this, 'handleWillTransition');
 
 	render () {
-		const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, ...rest} = this.props;
+		const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, rtl, ...rest} = this.props;
 		let {end = index, start = index} = this.props;
 		const {prevIndex: previousIndex, reverseTransition} = this.state;
 		const childrenList = React.Children.toArray(children);
@@ -265,7 +275,8 @@ const ViewManagerBase = class extends React.Component {
 			reverseTransition,
 			enteringDelay,
 			enteringProp,
-			childProps
+			childProps,
+			rtl: Boolean(rtl)
 		});
 
 		delete rest.end;

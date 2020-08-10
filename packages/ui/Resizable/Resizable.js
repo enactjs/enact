@@ -74,9 +74,9 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 	invariant(resize, `resize is required by Resizable but was omitted when applied to ${Wrapped.displayName}`);
 
 	return class extends React.Component {
-		static displayName = 'Resizable'
+		static displayName = 'Resizable';
 
-		static contextType = ResizeContext
+		static contextType = ResizeContext;
 
 		componentDidMount () {
 			if (this.context && typeof this.context === 'function') {
@@ -117,7 +117,7 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 			// optionally filter the event before notifying the container
 			filter,
 			call('invalidateBounds')
-		).bind(this)
+		).bind(this);
 
 		render () {
 			const props = Object.assign({}, this.props);

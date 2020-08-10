@@ -50,7 +50,7 @@ describe('A11yDecorator', () => {
 		() => {
 			const subject = shallow(
 				<Component aria-label="LABEL" accessibilityHint="HINT">
-                    CONTENT
+					CONTENT
 				</Component>
 			);
 
@@ -66,7 +66,7 @@ describe('A11yDecorator', () => {
 		() => {
 			const subject = shallow(
 				<Component aria-label="LABEL" accessibilityPreHint="PREHINT">
-                    CONTENT
+					CONTENT
 				</Component>
 			);
 
@@ -82,7 +82,7 @@ describe('A11yDecorator', () => {
 		() => {
 			const subject = shallow(
 				<Component accessibilityPreHint="PREHINT" accessibilityHint="HINT">
-                    CONTENT
+					CONTENT
 				</Component>
 			);
 
@@ -98,7 +98,7 @@ describe('A11yDecorator', () => {
 		() => {
 			const subject = shallow(
 				<Component accessibilityPreHint="PREHINT" accessibilityHint="HINT" aria-label="LABEL">
-                    CONTENT
+					CONTENT
 				</Component>
 			);
 

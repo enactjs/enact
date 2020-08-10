@@ -70,7 +70,7 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
  * @private
  */
 class ScrollableBase extends Component {
-	static displayName = 'ui:ScrollableBase'
+	static displayName = 'ui:ScrollableBase';
 
 	static propTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
 		/**
@@ -398,7 +398,7 @@ class ScrollableBase extends Component {
 		 * @public
 		 */
 		verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
-	}
+	};
 
 	static defaultProps = {
 		cbScrollTo: nop,
@@ -410,9 +410,9 @@ class ScrollableBase extends Component {
 		onScrollStop: nop,
 		overscrollEffectOn: {drag: false, pageKey: false, wheel: false},
 		verticalScrollbar: 'auto'
-	}
+	};
 
-	static contextType = ResizeContext
+	static contextType = ResizeContext;
 
 	constructor (props) {
 		super(props);
@@ -529,7 +529,7 @@ class ScrollableBase extends Component {
 
 			this.enqueueForceUpdate();
 		});
-	}
+	};
 
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
@@ -551,17 +551,17 @@ class ScrollableBase extends Component {
 	}
 
 	// constants
-	pixelPerLine = 39
-	scrollWheelMultiplierForDeltaPixel = 1.5 // The ratio of wheel 'delta' units to pixels scrolled.
+	pixelPerLine = 39;
+	scrollWheelMultiplierForDeltaPixel = 1.5; // The ratio of wheel 'delta' units to pixels scrolled.
 
 	// status
-	deferScrollTo = true
-	isScrollAnimationTargetAccumulated = false
-	isUpdatedScrollThumb = false
+	deferScrollTo = true;
+	isScrollAnimationTargetAccumulated = false;
+	isUpdatedScrollThumb = false;
 
 	// overscroll
-	lastInputType = null
-	overscrollEnabled = false
+	lastInputType = null;
+	overscrollEnabled = false;
 	overscrollStatus = {
 		horizontal: {
 			before: {type: overscrollTypeNone, ratio: 0},
@@ -571,7 +571,7 @@ class ScrollableBase extends Component {
 			before: {type: overscrollTypeNone, ratio: 0},
 			after: {type: overscrollTypeNone, ratio: 0}
 		}
-	}
+	};
 
 	// bounds info
 	bounds = {
@@ -581,32 +581,32 @@ class ScrollableBase extends Component {
 		scrollHeight: 0,
 		maxTop: 0,
 		maxLeft: 0
-	}
+	};
 
 	// wheel/drag/flick info
-	wheelDirection = 0
-	isDragging = false
+	wheelDirection = 0;
+	isDragging = false;
 
 	// scroll info
-	scrolling = false
-	scrollLeft = 0
-	scrollTop = 0
-	scrollToInfo = null
+	scrolling = false;
+	scrollLeft = 0;
+	scrollTop = 0;
+	scrollToInfo = null;
 
 	// component info
-	childRefCurrent = null
+	childRefCurrent = null;
 
 	// scroll animator
-	animator = new ScrollAnimator()
+	animator = new ScrollAnimator();
 
 	// drag/flick event handlers
 
-	getRtlX = (x) => (this.props.rtl ? -x : x)
+	getRtlX = (x) => (this.props.rtl ? -x : x);
 
 	onMouseDown = handle(
 		forwardWithPrevent('onMouseDown'),
 		this.stop
-	).bindAs(this, 'onMouseDown')
+	).bindAs(this, 'onMouseDown');
 
 	onDragStart = (ev) => {
 		if (ev.type === 'dragstart') return;
@@ -616,7 +616,7 @@ class ScrollableBase extends Component {
 		this.isDragging = true;
 		this.dragStartX = this.scrollLeft + this.getRtlX(ev.x);
 		this.dragStartY = this.scrollTop + ev.y;
-	}
+	};
 
 	onDrag = (ev) => {
 		if (ev.type === 'drag') return;
@@ -632,7 +632,7 @@ class ScrollableBase extends Component {
 			animate: false,
 			overscrollEffect: this.props.overscrollEffectOn.drag
 		});
-	}
+	};
 
 	onDragEnd = (ev) => {
 		if (ev.type === 'dragend') return;
@@ -656,7 +656,7 @@ class ScrollableBase extends Component {
 		}
 
 		this.flickTarget = null;
-	}
+	};
 
 	onFlick = (ev) => {
 		const {direction} = this.props;
@@ -671,7 +671,7 @@ class ScrollableBase extends Component {
 		if (this.props.onFlick) {
 			forward('onFlick', ev, this.props);
 		}
-	}
+	};
 
 	calculateDistanceByWheel (deltaMode, delta, maxPixel) {
 		if (deltaMode === 0) {
@@ -728,7 +728,7 @@ class ScrollableBase extends Component {
 				ev.stopPropagation();
 			}
 		}
-	}
+	};
 
 	scrollByPage = (keyCode) => {
 		const
@@ -739,7 +739,7 @@ class ScrollableBase extends Component {
 		this.lastInputType = 'pageKey';
 
 		this.scrollToAccumulatedTarget(pageDistance, canScrollVertically, this.props.overscrollEffectOn.pageKey);
-	}
+	};
 
 	onKeyDown = (ev) => {
 		if (this.props.onKeyDown) {
@@ -747,7 +747,7 @@ class ScrollableBase extends Component {
 		} else if ((isPageUp(ev.keyCode) || isPageDown(ev.keyCode))) {
 			this.scrollByPage(ev.keyCode);
 		}
-	}
+	};
 
 	scrollToAccumulatedTarget = (delta, vertical, overscrollEffect) => {
 		if (!this.isScrollAnimationTargetAccumulated) {
@@ -763,7 +763,7 @@ class ScrollableBase extends Component {
 		}
 
 		this.start({targetX: this.accumulatedTargetX, targetY: this.accumulatedTargetY, overscrollEffect});
-	}
+	};
 
 	// overscroll effect
 
@@ -775,15 +775,15 @@ class ScrollableBase extends Component {
 		} else {
 			return null;
 		}
-	}
+	};
 
 	setOverscrollStatus = (orientation, edge, type, ratio) => {
 		const status = this.overscrollStatus[orientation][edge];
 		status.type = type;
 		status.ratio = ratio;
-	}
+	};
 
-	getOverscrollStatus = (orientation, edge) => (this.overscrollStatus[orientation][edge])
+	getOverscrollStatus = (orientation, edge) => (this.overscrollStatus[orientation][edge]);
 
 	calculateOverscrollRatio = (orientation, position) => {
 		const
@@ -802,12 +802,12 @@ class ScrollableBase extends Component {
 		}
 
 		return Math.min(1, 2 * overDistance / baseSize);
-	}
+	};
 
 	applyOverscrollEffect = (orientation, edge, type, ratio) => {
 		this.props.applyOverscrollEffect(orientation, edge, type, ratio);
 		this.setOverscrollStatus(orientation, edge, type === overscrollTypeOnce ? overscrollTypeDone : type, ratio);
-	}
+	};
 
 	checkAndApplyOverscrollEffect = (orientation, edge, type, ratio = 1) => {
 		const
@@ -820,7 +820,7 @@ class ScrollableBase extends Component {
 		} else {
 			this.setOverscrollStatus(orientation, edge, type, ratio);
 		}
-	}
+	};
 
 	clearOverscrollEffect = (orientation, edge) => {
 		if (this.getOverscrollStatus(orientation, edge).type !== overscrollTypeNone) {
@@ -830,7 +830,7 @@ class ScrollableBase extends Component {
 				this.applyOverscrollEffect(orientation, edge, overscrollTypeNone, 0);
 			}
 		}
-	}
+	};
 
 	clearAllOverscrollEffects = () => {
 		['horizontal', 'vertical'].forEach((orientation) => {
@@ -838,7 +838,7 @@ class ScrollableBase extends Component {
 				this.clearOverscrollEffect(orientation, edge);
 			});
 		});
-	}
+	};
 
 	applyOverscrollEffectOnDrag = (orientation, edge, targetPosition, type) => {
 		if (edge) {
@@ -852,7 +852,7 @@ class ScrollableBase extends Component {
 			this.clearOverscrollEffect(orientation, 'before');
 			this.clearOverscrollEffect(orientation, 'after');
 		}
-	}
+	};
 
 	checkAndApplyOverscrollEffectOnScroll = (orientation) => {
 		['before', 'after'].forEach((edge) => {
@@ -862,7 +862,7 @@ class ScrollableBase extends Component {
 				this.checkAndApplyOverscrollEffect(orientation, edge, type, ratio);
 			}
 		});
-	}
+	};
 
 	checkAndApplyOverscrollEffectOnStart = (orientation, edge, targetPosition) => {
 		if (this.isDragging) {
@@ -870,7 +870,7 @@ class ScrollableBase extends Component {
 		} else if (edge) {
 			this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
-	}
+	};
 
 	// call scroll callbacks
 
@@ -938,14 +938,14 @@ class ScrollableBase extends Component {
 		}
 
 		return reachedEdgeInfo;
-	}
+	};
 
 	// scroll start/stop
 
 	doScrollStop = () => {
 		this.scrolling = false;
 		this.forwardScrollEvent('onScrollStop', this.getReachedEdgeInfo());
-	}
+	};
 
 	scrollStopJob = new Job(this.doScrollStop, scrollStopWaiting);
 
@@ -1040,7 +1040,7 @@ class ScrollableBase extends Component {
 			this.scroll(targetX, targetY, targetX, targetY);
 			this.stop();
 		}
-	}
+	};
 
 	scroll = (left, top, ...rest) => {
 		if (left !== this.scrollLeft) {
@@ -1052,7 +1052,7 @@ class ScrollableBase extends Component {
 
 		this.childRefCurrent.setScrollPosition(this.scrollLeft, this.scrollTop, this.props.rtl, ...rest);
 		this.forwardScrollEvent('onScroll');
-	}
+	};
 
 	stop () {
 		this.animator.stop();
@@ -1131,7 +1131,7 @@ class ScrollableBase extends Component {
 		}
 
 		return {left, top};
-	}
+	};
 
 	scrollTo = (opt) => {
 		if (!this.deferScrollTo) {
@@ -1149,17 +1149,17 @@ class ScrollableBase extends Component {
 		} else {
 			this.scrollToInfo = opt;
 		}
-	}
+	};
 
 	canScrollHorizontally = (bounds) => {
 		const {direction} = this.props;
 		return (direction === 'horizontal' || direction === 'both') && (bounds.scrollWidth > bounds.clientWidth) && !isNaN(bounds.scrollWidth);
-	}
+	};
 
 	canScrollVertically = (bounds) => {
 		const {direction} = this.props;
 		return (direction === 'vertical' || direction === 'both') && (bounds.scrollHeight > bounds.clientHeight) && !isNaN(bounds.scrollHeight);
-	}
+	};
 
 	// scroll bar
 
@@ -1187,7 +1187,7 @@ class ScrollableBase extends Component {
 		if (this.state.isVerticalScrollbarVisible && this.verticalScrollbarRef.current) {
 			this.verticalScrollbarRef.current.startHidingThumb();
 		}
-	}
+	};
 
 	updateScrollbars = () => {
 		const
@@ -1216,7 +1216,7 @@ class ScrollableBase extends Component {
 			this.deferScrollTo = false;
 			this.isUpdatedScrollThumb = this.updateScrollThumbSize();
 		}
-	}
+	};
 
 	updateScrollThumbSize = () => {
 		const
@@ -1246,7 +1246,7 @@ class ScrollableBase extends Component {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	// ref
 
@@ -1306,7 +1306,7 @@ class ScrollableBase extends Component {
 		if (ref) {
 			this.childRefCurrent = ref;
 		}
-	}
+	};
 
 	handleScroll = () => {
 		const childRefCurrent = this.childRefCurrent;
@@ -1319,7 +1319,7 @@ class ScrollableBase extends Component {
 			childRefCurrent.containerRef.current.scrollTop = this.scrollTop;
 			childRefCurrent.containerRef.current.scrollLeft = childRefCurrent.getRtlPositionX(this.scrollLeft);
 		}
-	}
+	};
 
 	render () {
 		const
@@ -1394,7 +1394,7 @@ class ScrollableBase extends Component {
  * @private
  */
 class Scrollable extends Component {
-	static displayName = 'ui:Scrollable'
+	static displayName = 'ui:Scrollable';
 
 	static propTypes = /** @lends ui/Scrollable.Scrollable.prototype */ {
 		/**
@@ -1405,7 +1405,7 @@ class Scrollable extends Component {
 		 * @private
 		 */
 		childRenderer: PropTypes.func.isRequired
-	}
+	};
 
 	render () {
 		const {childRenderer, ...rest} = this.props;

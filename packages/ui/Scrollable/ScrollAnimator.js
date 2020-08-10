@@ -43,8 +43,8 @@ const
  * @private
  */
 class ScrollAnimator {
-	rAFId = null
-	type = 'ease-out'
+	rAFId = null;
+	type = 'ease-out';
 
 	/**
 	 * @param {String|null} type - Timing function type for list scroll animation.  Must be one of

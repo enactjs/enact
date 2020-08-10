@@ -1,3 +1,4 @@
+/* global ResizeObserver */
 /**
  * Unstyled scrollable hook and behaviors to be customized by a theme or application.
  *
@@ -284,6 +285,29 @@ const useScrollBase = (props) => {
 	useLayoutEffect(() => {
 		if (props.cbScrollTo) {
 			props.cbScrollTo(scrollTo);
+		}
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useLayoutEffect(() => {
+		const containerRef = scrollContainerRef.current;
+		if (!containerRef) {
+			return;
+		}
+		if (typeof ResizeObserver === 'function') {
+			let resizeObserver = new ResizeObserver(() => {
+				if (scrollContentHandle.current && scrollContentHandle.current.syncClientSize) {
+					scrollContentHandle.current.syncClientSize();
+				}
+			});
+
+			resizeObserver.observe(containerRef);
+
+			return () => {
+				if (resizeObserver) {
+					resizeObserver.disconnect();
+					resizeObserver = null;
+				}
+			};
 		}
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -1088,8 +1112,6 @@ const useScrollBase = (props) => {
 				scrollContentRef.current.style.scrollBehavior = 'smooth';
 			}
 
-			mutableRef.current.scrollStopJob.start();
-
 			if (props.start) {
 				props.start(animate);
 			}
@@ -1257,15 +1279,22 @@ const useScrollBase = (props) => {
 	function scrollTo (opt) {
 		if (!mutableRef.current.deferScrollTo) {
 			const {left, top} = getPositionForScrollTo(opt);
+			const targetX = (left !== null) ? left : mutableRef.current.scrollLeft;
+			const targetY = (top !== null) ? top : mutableRef.current.scrollTop;
 
 			if (props.scrollTo) {
 				props.scrollTo(opt);
 			}
 
 			mutableRef.current.scrollToInfo = null;
+
+			if (scrollMode === 'native' && scrollContentHandle.current && scrollContentHandle.current.setScrollToPositionTarget) {
+				scrollContentHandle.current.setScrollToPositionTarget(targetX, targetY);
+			}
+
 			start({
-				targetX: (left !== null) ? left : mutableRef.current.scrollLeft,
-				targetY: (top !== null) ? top : mutableRef.current.scrollTop,
+				targetX,
+				targetY,
 				animate: opt.animate
 			});
 		} else {
@@ -1460,13 +1489,16 @@ const useScrollBase = (props) => {
 		})
 	});
 
+	const voiceProps = {
+		'data-webos-voice-disabled': voiceDisabled,
+		'data-webos-voice-focused': voiceFocused,
+		'data-webos-voice-group-label': voiceGroupLabel
+	};
+
 	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
 		{
 			childProps,
 			clientSize,
-			'data-webos-voice-disabled': voiceDisabled,
-			'data-webos-voice-focused': voiceFocused,
-			'data-webos-voice-group-label': voiceGroupLabel,
 			dataSize,
 			itemRenderer,
 			itemSize,
@@ -1480,6 +1512,7 @@ const useScrollBase = (props) => {
 
 	assignProperties('scrollContentProps', {
 		...scrollContentProps,
+		...voiceProps,
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
 		direction,
