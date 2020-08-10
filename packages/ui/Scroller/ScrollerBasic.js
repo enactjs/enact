@@ -1,3 +1,4 @@
+/* global MutationObserver */
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {platform} from '@enact/core/platform';
 import classNames from 'classnames';
@@ -94,6 +95,13 @@ class ScrollerBasic extends Component {
 
 	componentDidMount () {
 		this.calculateMetrics();
+		if (typeof MutationObserver === 'function') {
+			this.mutationObserver = new MutationObserver(() => {
+				this.calculateMetrics();
+			});
+
+			this.mutationObserver.observe(this.props.scrollContentRef.current, {childList: true, subtree: true});
+		}
 	}
 
 	componentDidUpdate (prevProps) {
@@ -101,6 +109,11 @@ class ScrollerBasic extends Component {
 		if (this.props.isVerticalScrollbarVisible && !prevProps.isVerticalScrollbarVisible) {
 			this.forceUpdate();
 		}
+	}
+
+	componentWillUnMount () {
+		this.mutationObserver.disconnect();
+		this.mutationObserver = null;
 	}
 
 	scrollBounds = {
@@ -116,6 +129,8 @@ class ScrollerBasic extends Component {
 		top: 0,
 		left: 0
 	};
+
+	mutationObserver = null;
 
 	getScrollBounds = () => this.scrollBounds;
 

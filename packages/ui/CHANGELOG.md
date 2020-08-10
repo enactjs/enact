@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Scroller` to update scroll bounds when children had changed
+
 ## [3.4.2] - 2020-08-05
 
 No significant changes.
