@@ -11,8 +11,8 @@ import SpotlightContainer from './SpotlightContainer';
  * @property {Object}   [containerConfig]                   Spotlight container configuration.
  * @property {Function} [navigableFilter]                   Called to determine if a spottable
  *                                                          component is accessible.
- * @property {Boolean}  [preserveId]                        Preserves the spotlight id when the
- *                                                          component unmounts.
+ * @property {Boolean}  [preserveId]                        Preserves the spotlight `id`, if
+ *                                                          specified, when the component unmounts.
  * @property {Boolean}  [disabled]                          Prevents controls in the container from
  *                                                          being navigable.
  * @property {String}   [id]                                Identifies this component within the

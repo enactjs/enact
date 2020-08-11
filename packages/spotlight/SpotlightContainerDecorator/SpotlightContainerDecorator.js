@@ -92,7 +92,7 @@ const defaultConfig = {
 	navigableFilter: null,
 
 	/**
-	 * Whether the container will preserve the id when it unmounts.
+	 * Whether the container will preserve the specified `spotlightId` when it unmounts.
 	 *
 	 * @type {Boolean}
 	 * @default false
