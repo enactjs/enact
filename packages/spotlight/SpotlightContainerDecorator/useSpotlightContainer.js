@@ -8,7 +8,7 @@ import SpotlightContainer from './SpotlightContainer';
  *
  * @typedef {Object} useSpotlightContainerConfig
  * @memberof spotlight/SpotlightContainerDecorator
- * @property {Object}   [containerConfig]                   Spotlight container configuratiohn.
+ * @property {Object}   [containerConfig]                   Spotlight container configuration.
  * @property {Function} [navigableFilter]                   Called to determine if a spottable
  *                                                          component is accessible.
  * @property {Boolean}  [preserveId]                        Preserves the spotlight id when the
@@ -32,14 +32,14 @@ import SpotlightContainer from './SpotlightContainer';
  *                                                          elements in other containers can still
  *                                                          receive focus by calling
  *                                                          `Spotlight.focus(elem)` explicitly.
- *                                                          Specying 'none' indicates there should
+ *                                                          Specifying 'none' indicates there should
  *                                                          be no restrictions when 5-way navigating
  *                                                          the container.
  * @private
  */
 
 /**
- * Object returned by `useSpotlightContainer`
+ * Object returned by `useSpotlightContainer`.
  *
  * @typedef {Object} useSpotlightContainerInterface
  * @memberof spotlight/SpotlightContainerDecorator
@@ -50,7 +50,8 @@ import SpotlightContainer from './SpotlightContainer';
  *                                       container. Must be called during the capture phase of the
  *                                       event flow.
  * @property {String}   attributes       An object of DOM attributes of representing the current
- *                                       spotlight container metadata.
+ *                                       spotlight container metadata. Must be passed onto the
+ *                                       container node.
  * @property {Function} onPointerEnter   Callback to notify hook when the pointer enters the
  *                                       container. Must be called during the capture phase of the
  *                                       event flow.
