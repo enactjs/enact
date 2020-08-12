@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### fixed
+
+- `ui/Scroller` to update metrics when children's size is changed
+
 ## [3.4.3] - 2020-08-10
 
 No significant changes.
