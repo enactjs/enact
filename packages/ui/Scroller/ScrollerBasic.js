@@ -254,7 +254,7 @@ class ScrollerBasic extends Component {
 				ref={this.props.scrollContentRef}
 				style={mergedStyle}
 			>
-				<div className={css.content} ref={this.getContentRef}>
+				<div ref={this.getContentRef}>
 					{children}
 				</div>
 			</div>
