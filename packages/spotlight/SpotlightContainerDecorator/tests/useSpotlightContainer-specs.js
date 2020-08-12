@@ -48,6 +48,25 @@ describe('useSpotlightContainer', () => {
 	// remove all containers after each test
 	afterEach(Spotlight.clear);
 
+	test('should support omitting the config object', () => {
+		function Comp (props) {
+			const spotlightContainer = useSpotlightContainer();
+
+			return (
+				<div {...props} {...spotlightContainer.attributes} />
+			);
+		}
+
+		const subject = shallow(
+			<Comp />
+		);
+
+		const expected = true;
+		const actual = subject.prop('data-spotlight-container');
+
+		expect(actual).toBe(expected);
+	});
+
 	describe('attributes', () => {
 		test(
 			'should set `data-spotlight-container` attribute',
