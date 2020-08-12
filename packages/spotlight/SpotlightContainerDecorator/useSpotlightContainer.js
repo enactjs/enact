@@ -8,13 +8,27 @@ import SpotlightContainer from './SpotlightContainer';
  *
  * @typedef {Object} useSpotlightContainerConfig
  * @memberof spotlight/SpotlightContainerDecorator
- * @property {Object}   [containerConfig]                   Spotlight container configuration.
+ * @property {Object}   [containerConfig]                   Spotlight container configuration. This
+ *                                                          is a design-time configuration and only
+ *                                                          applied once on first render.
  * @property {Function} [navigableFilter]                   Called to determine if a spottable
- *                                                          component is accessible.
+ *                                                          component is accessible. This is a
+ *                                                          design-time configuration and only
+ *                                                          applied once on first render.
  * @property {Boolean}  [preserveId]                        Preserves the spotlight `id`, if
  *                                                          specified, when the component unmounts.
  * @property {Boolean}  [disabled]                          Prevents controls in the container from
- *                                                          being navigable.
+ *                                                          being navigable. This is a design-time
+ *                                                          configuration and only applied once on
+ *                                                          first render.
+ * @property {Boolean}  [muted]                             Suppresses appearance of focus within
+ *                                                          the container while still allowing the
+ *                                                          component to gain focus. The components
+ *                                                          within the container are responsible for
+ *                                                          adjusting their visual appearance based
+ *                                                          on the presence of the
+ *                                                          `data-spotlight-container-muted`
+ *                                                          attribute on an ancestor container.
  * @property {String}   [id]                                Identifies this component within the
  *                                                          Spotlight system. If unset, an id will
  *                                                          be generated.
@@ -64,11 +78,11 @@ import SpotlightContainer from './SpotlightContainer';
 /**
  * Support Spotlight container
  *
- * @param {useSpotlightContainerConfig} config Configuration options
+ * @param {useSpotlightContainerConfig} [config] Configuration options
  * @returns {useSpotlightContainerInterface}
  * @private
  */
-function useSpotlightContainer (config) {
+function useSpotlightContainer (config = {}) {
 	const {disabled, id, muted, restrict, ...rest} = config;
 
 	const spotlightContainer = useClass(SpotlightContainer, rest);
