@@ -404,14 +404,10 @@
 //     font-size: 1.6em;
 //   });
 .enact-locale-tallglyph(@rules) when (isruleset(@rules)) {
-	// :global(.enact-locale-th) &,
-	// :global(.enact-locale-si) & {
-	// 	@rules();
-	// }
 	each(@locale-tallglyph-languages, {
 		// Take each language in the list, apply the @rules to them.
 		// @value is used to generate an appropriate selector for the @rules.
-		// Ex: `.enact-locale-th { @rules(); }`
+		// Ex: `.enact-locale-th & { @rules(); }`
 		.enact-locale(@value, @rules);
 	});
 }
@@ -425,7 +421,6 @@
 .enact-locale(@locale-target; @rules) when (iskeyword(@locale-target)) and (isruleset(@rules)) {
 	:global(.enact-locale-@{locale-target}) & {
 		@rules();
-		// content: 'you got it';
 	}
 }
 
