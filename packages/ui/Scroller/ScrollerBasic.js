@@ -227,7 +227,7 @@ class ScrollerBasic extends Component {
 
 	getContentRef = (ref) => {
 		this.contentRef = ref;
-	}
+	};
 
 	render () {
 		const
