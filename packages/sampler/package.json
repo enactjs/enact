@@ -1,6 +1,6 @@
 {
   "name": "enact-sampler",
-  "version": "3.4.0",
+  "version": "3.4.3",
   "description": "Component and QA samples for Enact",
   "private": true,
   "main": "index.js",
@@ -12,13 +12,14 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@enact/core": "^3.4.0",
-    "@enact/i18n": "^3.4.0",
-    "@enact/spotlight": "^3.4.0",
-    "@enact/ui": "^3.4.0",
-    "@enact/webos": "^3.4.0",
+    "@enact/core": "^3.4.3",
+    "@enact/i18n": "^3.4.3",
+    "@enact/spotlight": "^3.4.3",
+    "@enact/ui": "^3.4.3",
+    "@enact/webos": "^3.4.3",
     "classnames": "^2.2.6",
     "ilib": "^14.4.0",
+    "prop-types": "^15.7.2",
     "query-string": "^6.7.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"

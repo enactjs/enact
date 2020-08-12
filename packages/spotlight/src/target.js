@@ -65,10 +65,10 @@ function getContainersToSearch (containerId) {
 	return range;
 }
 
-function getTargetByContainer (containerId) {
+function getTargetByContainer (containerId, enterTo) {
 	return getContainersToSearch(containerId)
 		.reduce((next, id) => {
-			return next || getContainerFocusTarget(id);
+			return next || getContainerFocusTarget(id, enterTo);
 		}, null);
 }
 
