@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` to restore focus to last focused elements in an overflow container if they are visible
+
 ## [3.4.3] - 2020-08-10
 
 No significant changes.
