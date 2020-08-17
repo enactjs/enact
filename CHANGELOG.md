@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.4.4] - 2020-08-17
+
+### Fixed
+
+- `ui/FloatingLayer` and `ui/Slider` to prevent global classname leaks
+
 ## [3.4.3] - 2020-08-10
 
 No significant changes.

@@ -248,11 +248,10 @@ const SliderBase = kind({
 	},
 
 	computed: {
-		className: ({disabled, noFill, orientation, pressed, styler}) => {
+		className: ({noFill, orientation, pressed, styler}) => {
 			return styler.append(
 				orientation,
 				{
-					disabled,
 					noFill,
 					pressed
 				}
