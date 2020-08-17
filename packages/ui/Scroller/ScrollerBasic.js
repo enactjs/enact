@@ -1,4 +1,3 @@
-/* global ResizeObserver */
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {platform} from '@enact/core/platform';
 import classNames from 'classnames';
@@ -95,27 +94,12 @@ class ScrollerBasic extends Component {
 
 	componentDidMount () {
 		this.calculateMetrics();
-
-		if (typeof ResizeObserver === 'function') {
-			this.resizeObserver = new ResizeObserver(() => {
-				this.calculateMetrics();
-			});
-
-			this.resizeObserver.observe(this.contentRef);
-		}
 	}
 
 	componentDidUpdate (prevProps) {
 		this.calculateMetrics();
 		if (this.props.isVerticalScrollbarVisible && !prevProps.isVerticalScrollbarVisible) {
 			this.forceUpdate();
-		}
-	}
-
-	componentWillUnmount () {
-		if (this.resizeObserver) {
-			this.resizeObserver.disconnect();
-			this.resizeObserver = null;
 		}
 	}
 
@@ -132,9 +116,6 @@ class ScrollerBasic extends Component {
 		top: 0,
 		left: 0
 	};
-
-	contentRef = null;
-	resizeObserver = null;
 
 	getScrollBounds = () => this.scrollBounds;
 
@@ -225,13 +206,9 @@ class ScrollerBasic extends Component {
 		return false;
 	};
 
-	getContentRef = (ref) => {
-		this.contentRef = ref;
-	};
-
 	render () {
 		const
-			{children, className, style, ...rest} = this.props,
+			{className, style, ...rest} = this.props,
 			mergedStyle = Object.assign({}, style, {
 				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
 				overflowY: this.isVertical() ? 'auto' : 'hidden'
@@ -253,11 +230,7 @@ class ScrollerBasic extends Component {
 				className={classNames(className, css.scroller)}
 				ref={this.props.scrollContentRef}
 				style={mergedStyle}
-			>
-				<div ref={this.getContentRef}>
-					{children}
-				</div>
-			</div>
+			/>
 		);
 	}
 }
