@@ -14,6 +14,8 @@ import {ResizeContext} from '../Resizable';
 import MarqueeBase from './MarqueeBase';
 import {MarqueeControllerContext} from './MarqueeController';
 
+import css from './Marquee.module.less';
+
 /**
  * Default configuration parameters for {@link ui/Marquee.MarqueeDecorator}
  *
@@ -501,6 +503,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		measureWidths () {
+			const {width} = this.node.getBoundingClientRect();
+
+			if (this.node.querySelectorAll(`.${css.marquee}`).length > 0) return {scrollWidth: this.node.scrollWidth, width};
+
 			// move all the children into the wrapper node ...
 			const wrapper = document.createElement('span');
 			this.moveChildren(this.node, wrapper);
@@ -508,7 +514,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			// measure it to find the precise floating point width of the content ...
 			const {width: scrollWidth} = wrapper.getBoundingClientRect();
-			const {width} = this.node.getBoundingClientRect();
 
 			// and move all the children back and remove the wrapper
 			this.node.removeChild(wrapper);
