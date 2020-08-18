@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight/SpotlightContainerDecorator` to allow use of `ref`
+
 ## [3.4.4] - 2020-08-17
 
 No significant changes.
