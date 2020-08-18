@@ -219,12 +219,12 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	};
 
 	// Wrapping with a React.Component to maintain ref support
-	return class extends React.Component {
+	return class SpotlightContainerDecoratorAdapter extends React.Component {
 		render () {
 			return (
 				<SpotlightContainerDecorator {...this.props} />
 			);
-		};
+		}
 	};
 });
 
