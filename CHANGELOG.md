@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.4.5] - 2020-08-18
+
+### Fixed
+
+- `spotlight/SpotlightContainerDecorator` to allow use of `ref`
+
 ## [3.4.4] - 2020-08-17
 
 ### Fixed
