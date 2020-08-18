@@ -8,7 +8,6 @@
 import handle, {forward} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
-import EnactPropTypes from '@enact/core/internal/prop-types';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -150,7 +149,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	function SpotlightContainerDecorator (props) {
-		const {componentRef, spotlightDisabled, spotlightId, spotlightMuted, spotlightRestrict, ...rest} = props;
+		const {spotlightDisabled, spotlightId, spotlightMuted, spotlightRestrict, ...rest} = props;
 
 		const spotlightContainer = useSpotlightContainer({
 			id: spotlightId,
@@ -165,19 +164,11 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		const handlers = useHandlers(containerHandlers, props, spotlightContainer);
 
 		return (
-			<Wrapped {...rest} {...spotlightContainer.attributes} {...handlers} ref={componentRef} />
+			<Wrapped {...rest} {...spotlightContainer.attributes} {...handlers} />
 		);
 	}
 
 	SpotlightContainerDecorator.propTypes = /** @lends spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.prototype */ {
-		/**
-		 * Forwarded ref
-		 *
-		 * @type {Function|Object}
-		 * @private
-		 */
-		componentRef: EnactPropTypes.ref,
-
 		/**
 		 * When `true`, controls in the container cannot be navigated.
 		 *
@@ -227,11 +218,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		spotlightRestrict: 'self-first'
 	};
 
-	return React.forwardRef((props, ref) => {
-		return (
-			<SpotlightContainerDecorator {...props} componentRef={ref} />
-		);
-	});
+	return SpotlightContainerDecorator;
 });
 
 export default SpotlightContainerDecorator;
