@@ -1113,6 +1113,7 @@ export {
 	getContainerFocusTarget,
 	getContainerId,
 	getContainerPreviousTarget,
+	getDeepSpottableDescendants,
 	getDefaultContainer,
 	getLastContainer,
 	getNavigableContainersForNode,
