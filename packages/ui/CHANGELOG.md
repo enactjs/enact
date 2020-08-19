@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to call remaining scrollStopJob function in cleanup phase
+
 ## [3.4.5] - 2020-08-18
 
 No significant changes.

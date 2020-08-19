@@ -50,7 +50,9 @@ const useScrollbar = (props) => {
 	hideScrollbarTrackJob.current = hideScrollbarTrackJob.current || new Job(hideScrollbarTrack, scrollbarTrackHidingDelay);
 
 	function hideScrollbarTrack () {
-		removeClass(scrollbarTrackRef.current, css.scrollbarTrackShown);
+		if (scrollbarTrackRef.current !== null) {
+			removeClass(scrollbarTrackRef.current, css.scrollbarTrackShown);
+		}
 	}
 
 	useEffect(() => {
