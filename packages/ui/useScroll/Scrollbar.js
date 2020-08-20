@@ -13,11 +13,17 @@ import componentCss from './Scrollbar.module.less';
 const scrollbarTrackHidingDelay = 900; // 900ms + 100ms(fade out duration) = 1000ms.
 
 const addClass = (element, className) => {
-	ReactDOM.findDOMNode(element).classList.add(className); // eslint-disable-line react/no-find-dom-node
+	const node = ReactDOM.findDOMNode(element); // eslint-disable-line react/no-find-dom-node
+	if (node) {
+		node.classList.add(className);
+	}
 };
 
 const removeClass = (element, className) => {
-	ReactDOM.findDOMNode(element).classList.remove(className); // eslint-disable-line react/no-find-dom-node
+	const node = ReactDOM.findDOMNode(element); // eslint-disable-line react/no-find-dom-node
+	if (node) {
+		node.classList.remove(className);
+	}
 };
 
 /*
@@ -50,9 +56,7 @@ const useScrollbar = (props) => {
 	hideScrollbarTrackJob.current = hideScrollbarTrackJob.current || new Job(hideScrollbarTrack, scrollbarTrackHidingDelay);
 
 	function hideScrollbarTrack () {
-		if (scrollbarTrackRef.current !== null) {
-			removeClass(scrollbarTrackRef.current, css.scrollbarTrackShown);
-		}
+		removeClass(scrollbarTrackRef.current, css.scrollbarTrackShown);
 	}
 
 	useEffect(() => {
