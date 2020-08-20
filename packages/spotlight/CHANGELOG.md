@@ -8,6 +8,12 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 - `spotlight` to correctly prioritize next spottable elements when wrapped by a container that does not also wrap the currently focused element
 
+## [3.4.5] - 2020-08-18
+
+### Fixed
+
+- `spotlight/SpotlightContainerDecorator` to allow use of `ref`
+
 ## [3.4.4] - 2020-08-17
 
 No significant changes.

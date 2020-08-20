@@ -218,7 +218,14 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		spotlightRestrict: 'self-first'
 	};
 
-	return SpotlightContainerDecorator;
+	// Wrapping with a React.Component to maintain ref support
+	return class SpotlightContainerDecoratorAdapter extends React.Component {
+		render () {
+			return (
+				<SpotlightContainerDecorator {...this.props} />
+			);
+		}
+	};
 });
 
 export default SpotlightContainerDecorator;
