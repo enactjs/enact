@@ -8,6 +8,16 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 - `spotlight` to restore focus to last focused elements in an overflow container if they are visible
 
+## [3.4.5] - 2020-08-18
+
+### Fixed
+
+- `spotlight/SpotlightContainerDecorator` to allow use of `ref`
+
+## [3.4.4] - 2020-08-17
+
+No significant changes.
+
 ## [3.4.3] - 2020-08-10
 
 No significant changes.
