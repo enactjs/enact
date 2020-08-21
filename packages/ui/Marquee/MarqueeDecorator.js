@@ -7,6 +7,7 @@ import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
 import shallowEqual from 'recompose/shallowEqual';
+import warning from 'warning';
 
 import {scale} from '../resolution';
 import {ResizeContext} from '../Resizable';
@@ -503,9 +504,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		measureWidths () {
-			const {width} = this.node.getBoundingClientRect();
+			if (this.node.querySelector(`.${css.marquee}`)) {
+				warning(true, 'Marquee should not be nested inside another Marquee');
 
-			if (this.node.querySelectorAll(`.${css.marquee}`).length > 0) return {scrollWidth: this.node.scrollWidth, width};
+				return {scrollWidth: this.node.scrollWidth, width: this.node.getBoundingClientRect().width};
+			}
 
 			// move all the children into the wrapper node ...
 			const wrapper = document.createElement('span');
@@ -514,6 +517,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			// measure it to find the precise floating point width of the content ...
 			const {width: scrollWidth} = wrapper.getBoundingClientRect();
+			const {width} = this.node.getBoundingClientRect();
 
 			// and move all the children back and remove the wrapper
 			this.node.removeChild(wrapper);
