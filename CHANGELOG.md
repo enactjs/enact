@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/MarqueeDecorator` to warn against nested `Marquee`'s
+
 ## [3.4.3] - 2020-08-10
 
 No significant changes.
