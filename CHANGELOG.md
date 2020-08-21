@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Added
 
-- `ui/MarqueeDecorator` to warn against nested `Marquee`'s
+- `ui/MarqueeDecorator` warning against nested `Marquee`'s
 
 ## [3.4.3] - 2020-08-10
 
