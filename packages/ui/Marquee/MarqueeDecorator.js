@@ -505,7 +505,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		measureWidths () {
 			if (this.node.querySelector(`.${css.marquee}`)) {
-				warning(true, 'Marquee should not be nested inside another Marquee');
+				warning(false, 'Marquee should not be nested inside another Marquee');
 
 				return {scrollWidth: this.node.scrollWidth, width: this.node.getBoundingClientRect().width};
 			}
