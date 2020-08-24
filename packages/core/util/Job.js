@@ -25,8 +25,6 @@ class Job {
 		this.timeout = timeout;
 	}
 
-	alive = () => Boolean(this.id);
-
 	run (args) {
 		// don't want to inadvertently apply Job's context on `fn`
 		return this.fn.apply(null, args);
