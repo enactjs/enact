@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/MarqueeDecorator` warning against nested `Marquee`'s
+
 ## [3.4.5] - 2020-08-18
 
 No significant changes.

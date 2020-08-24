@@ -7,12 +7,15 @@ import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React from 'react';
 import shallowEqual from 'recompose/shallowEqual';
+import warning from 'warning';
 
 import {scale} from '../resolution';
 import {ResizeContext} from '../Resizable';
 
 import MarqueeBase from './MarqueeBase';
 import {MarqueeControllerContext} from './MarqueeController';
+
+import css from './Marquee.module.less';
 
 /**
  * Default configuration parameters for {@link ui/Marquee.MarqueeDecorator}
@@ -501,6 +504,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		measureWidths () {
+			if (this.node.querySelector(`.${css.marquee}`)) {
+				warning(false, 'Marquee should not be nested inside another Marquee');
+
+				return {scrollWidth: this.node.scrollWidth, width: this.node.getBoundingClientRect().width};
+			}
+
 			// move all the children into the wrapper node ...
 			const wrapper = document.createElement('span');
 			this.moveChildren(this.node, wrapper);
