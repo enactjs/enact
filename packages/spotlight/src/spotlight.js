@@ -271,7 +271,9 @@ const Spotlight = (function () {
 				({lastFocusedElement} = getContainerConfig(lastFocusedElement));
 			}
 
-			if (!lastFocusedElement || !contains(getContainerNode(lastContainerId).getBoundingClientRect(), lastFocusedElement.getBoundingClientRect())) {
+			const lastContainerNode = getContainerNode(lastContainerId);
+
+			if (!lastFocusedElement || (lastContainerNode.getBoundingClientRect && lastFocusedElement.getBoundingClientRect && !contains(lastContainerNode.getBoundingClientRect(), lastFocusedElement.getBoundingClientRect()))) {
 				lastFocusedElement = getContainerConfig(lastContainerId).overflow && getNearestTargetFromPosition(position, lastContainerId);
 			}
 
