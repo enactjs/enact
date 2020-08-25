@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Routable` to respect the current path on first render when using relative paths in links
+
 ## [3.4.6] - 2020-08-24
 
 ### Added
