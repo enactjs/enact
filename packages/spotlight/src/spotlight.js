@@ -265,13 +265,20 @@ const Spotlight = (function () {
 
 			// only prepend last focused if it exists so that Spotlight.focus() doesn't receive
 			// a falsy target
-			let lastFocused = getContainerLastFocusedElement(lastContainerId);
-			if (!lastFocused || !contains(getContainerNode(lastContainerId).getBoundingClientRect(), lastFocused.getBoundingClientRect())) {
-				lastFocused = getContainerConfig(lastContainerId).overflow && getNearestTargetFromPosition(position, lastContainerId);
+			let lastFocusedElement = getContainerLastFocusedElement(lastContainerId);
+
+			while (isContainer(lastFocusedElement)) {
+				({lastFocusedElement} = getContainerConfig(lastFocusedElement));
 			}
 
-			if (lastFocused) {
-				next.unshift(lastFocused);
+			const lastContainerNode = getContainerNode(lastContainerId);
+
+			if (!lastFocusedElement || (lastContainerNode.getBoundingClientRect && lastFocusedElement.getBoundingClientRect && !contains(lastContainerNode.getBoundingClientRect(), lastFocusedElement.getBoundingClientRect()))) {
+				lastFocusedElement = getContainerConfig(lastContainerId).overflow && getNearestTargetFromPosition(position, lastContainerId);
+			}
+
+			if (lastFocusedElement) {
+				next.unshift(lastFocusedElement);
 			}
 		} else {
 			next = [rootContainerId];

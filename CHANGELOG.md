@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.4.6] - 2020-08-24
+
+### Added
+
+- `ui/MarqueeDecorator` warning against nested `Marquee`'s
+
+### Fixed
+
+- `spotlight` to correctly prioritize next spottable elements when wrapped by a container that does not also wrap the currently focused element
+- `spotlight` to restore focus to last focused elements in an overflow container if they are visible
+
 ## [3.4.5] - 2020-08-18
 
 ### Fixed
