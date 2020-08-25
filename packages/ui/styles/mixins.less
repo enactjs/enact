@@ -363,8 +363,8 @@
 // Or:
 //   @lineheight: 1.4em 1.6em;
 //   .enact-locale-line-height(@lineheight);
-.enact-locale-line-height(@both) when (length(@both) = 2) {
-	.enact-locale-tallglyph(line-height; @both);
+.enact-locale-line-height(@both; @target: normal) when (length(@both) = 2) {
+	.enact-locale-tallglyph(line-height; @both; @target);
 }
 
 
@@ -373,9 +373,9 @@
 // Rulename and a normal value followed by a tallglyph value (3 arguments)
 // Ex:
 //   .enact-locale-tallglyph(font-size; 1.4em; 1.6em);  ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
-.enact-locale-tallglyph(@rule; @normal; @tallglyph) {
+.enact-locale-tallglyph(@rule; @normal; @tallglyph; @target) when (iskeyword(@rule)) {
 	@{rule}: @normal;
-	.enact-locale-tallglyph(@rule; @tallglyph);
+	.enact-locale-tallglyph(@rule; @tallglyph; @target);
 }
 
 // Rulename and 2 value second variable (2 arguments, 2nd being a list)
@@ -384,18 +384,18 @@
 // Or:
 //   @fontsize: 1.4em 1.6em;
 //   .enact-locale-tallglyph(font-size, @fontsize);    ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
-.enact-locale-tallglyph(@rule; @val) when (length(@val) = 2) {
+.enact-locale-tallglyph(@rule; @val; @target: normal) when (iskeyword(@rule)) and (length(@val) = 2) {
 	@{rule}: extract(@val, 1);
-	.enact-locale-tallglyph(@rule; extract(@val, 2));
+	.enact-locale-tallglyph(@rule; extract(@val, 2); @target);
 }
 
 // Rulename and a tallglyph value
 // Ex:
 //   .enact-locale-tallglyph(font-size; 1.6em);  ->  tallglyphs font-size: 1.6em;
-.enact-locale-tallglyph(@rule; @val) when (default()) {
+.enact-locale-tallglyph(@rule; @val; @target: normal) when (iskeyword(@rule)) and (default()) {
 	.enact-locale-tallglyph({
 		@{rule}: @val;
-	});
+	}, @target);
 }
 
 // Accept a ruleset and apply it to the list of tall-glyph languages
@@ -403,12 +403,12 @@
 //   .enact-locale-tallglyph({
 //     font-size: 1.6em;
 //   });
-.enact-locale-tallglyph(@rules) when (isruleset(@rules)) {
+.enact-locale-tallglyph(@rules; @target: normal) when (isruleset(@rules)) and (default()) {
 	each(@locale-tallglyph-languages, {
 		// Take each language in the list, apply the @rules to them.
 		// @value is used to generate an appropriate selector for the @rules.
 		// Ex: `.enact-locale-th & { @rules(); }`
-		.enact-locale(@value; @rules);
+		.enact-locale(@value; @rules; @target);
 	});
 }
 
