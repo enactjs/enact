@@ -273,7 +273,7 @@ const Spotlight = (function () {
 
 			const lastContainerNode = getContainerNode(lastContainerId);
 
-			if (!lastFocusedElement || !lastContainerNode.getBoundingClientRect || !lastFocusedElement.getBoundingClientRect || !contains(lastContainerNode.getBoundingClientRect(), lastFocusedElement.getBoundingClientRect())) {
+			if (!lastFocusedElement || (lastContainerNode.getBoundingClientRect && lastFocusedElement.getBoundingClientRect && !contains(lastContainerNode.getBoundingClientRect(), lastFocusedElement.getBoundingClientRect()))) {
 				lastFocusedElement = getContainerConfig(lastContainerId).overflow && getNearestTargetFromPosition(position, lastContainerId);
 			}
 
