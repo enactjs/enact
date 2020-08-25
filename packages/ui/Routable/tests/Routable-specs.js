@@ -44,11 +44,13 @@ describe('Routable', () => {
 
 		const expected = 1;
 
+		// click once to navigate to new path
 		subject.find('a').simulate('click');
 		
 		let actual = subject.find('#page2').length;
 		expect(actual).toBe(expected);
 
+		// clicking again should use the same base path "/app" for the same result
 		subject.find('a').simulate('click');
 
 		actual = subject.find('#page2').length;
