@@ -392,9 +392,7 @@ const useScrollBase = (props) => {
 		}
 
 		return () => {
-			const scrollbarVisibilityChanged = isVerticalScrollbarVisible !== ref.prevState.isVerticalScrollbarVisible || isHorizontalScrollbarVisible !== ref.prevState.isHorizontalScrollbarVisible;
-
-			if (scrollbarVisibilityChanged) {
+			if (ref.scrolling) {
 				ref.scrollStopJob.run();
 			}
 			ref.scrollStopJob.stop();
