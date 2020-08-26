@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Routable` to respect the current path on first render when using relative paths in links
+- `ui/Scroller` and `ui/VirtualList` to call `onScrollStop` when scrollbar's visibility changed while scrolling
 
 ## [3.4.6] - 2020-08-24
 
