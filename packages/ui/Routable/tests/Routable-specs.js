@@ -1,10 +1,8 @@
-/* eslint no-console: ["error", { allow: ["warn", "error"] }], react/jsx-no-bind: off */
-
-import React from 'react';
 import {mount} from 'enzyme';
+import React from 'react';
 
-import Routable from '../Routable';
 import Link from '../Link';
+import Routable from '../Routable';
 import Route from '../Route';
 
 describe('Routable', () => {
