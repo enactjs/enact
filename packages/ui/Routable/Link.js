@@ -5,7 +5,7 @@ import useHandlers from '@enact/core/useHandlers';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {resolve, RouteContext} from './util';
+import useLink from './useLink';
 
 const LinkBase = kind({
 	name: 'Link',
@@ -36,26 +36,6 @@ const LinkBase = kind({
 	}
 });
 
-function useLink ({path: currentPath, navigate}) {
-	const handleNavigate = React.useCallback(
-		({path}) => {
-			if (!navigate) return;
-
-			navigate({
-				path: resolve(currentPath, path)
-			});
-		},
-		// omitting currentPath in order to cache the value used a mount time to avoid evaluating
-		// relative paths against updated currentPath values
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[navigate]
-	);
-
-	return {
-		navigate: handleNavigate
-	};
-}
-
 const Linkable = hoc({navigate: 'onClick'}, (config, Wrapped) => {
 	const {navigate} = config;
 
@@ -70,8 +50,7 @@ const Linkable = hoc({navigate: 'onClick'}, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	function Linkable (props) {
-		const ctx = React.useContext(RouteContext);
-		const link = useLink(ctx);
+		const link = useLink();
 		const handlers = useHandlers(navHandlers, props, link);
 
 		return (
@@ -79,6 +58,7 @@ const Linkable = hoc({navigate: 'onClick'}, (config, Wrapped) => {
 		);
 	}
 
+	// TODO: Added to maintain `ref` compatibility with 3.x. Remove in 4.0
 	return class LinkableAdapter extends React.Component {
 		render () {
 			return (

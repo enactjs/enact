@@ -1,17 +1,16 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }], react/jsx-no-bind: off */
 
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {mount} from 'enzyme';
 
 import Routable from '../Routable';
 import Link from '../Link';
 import Route from '../Route';
-import {Router, RouterBase} from '../Router';
 
 describe('Routable', () => {
 
 	test('should render nothing for a partially valid path', function () {
-		function App (props) {
+		function App () {
 			return (
 				<div>
 					<Link path="./page2">Page 2</Link>
@@ -19,7 +18,7 @@ describe('Routable', () => {
 			);
 		}
 
-		function Page2 (props) {
+		function Page2 () {
 			return (
 				<div id="page2" />
 			);
@@ -29,7 +28,7 @@ describe('Routable', () => {
 
 		function Sample (props) {
 			const [path, nav] = React.useState('/app');
-			const handleNavigate = React.useCallback(({path}) => nav(path), [nav]);
+			const handleNavigate = React.useCallback((ev) => nav(ev.path), [nav]);
 
 			return (
 				<Views {...props} path={path} onNavigate={handleNavigate}>
@@ -46,7 +45,7 @@ describe('Routable', () => {
 
 		// click once to navigate to new path
 		subject.find('a').simulate('click');
-		
+
 		let actual = subject.find('#page2').length;
 		expect(actual).toBe(expected);
 
