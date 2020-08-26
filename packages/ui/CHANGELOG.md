@@ -7,6 +7,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Scroller` and `ui/VirtualList` to call remaining scrollStopJob function in cleanup phase
+## [3.4.6] - 2020-08-24
+
+### Added
+
+- `ui/MarqueeDecorator` warning against nested `Marquee`'s
 
 ## [3.4.5] - 2020-08-18
 
