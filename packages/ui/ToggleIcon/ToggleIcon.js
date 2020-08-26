@@ -111,12 +111,17 @@ const ToggleIconBase = kind({
 		iconClassName: ({iconClasses, css}) => iconClasses ? `${css.icon} ${iconClasses}` : css.icon
 	},
 
-	render: ({children, iconComponent: IconComponent, iconClassName, ...rest}) => {
-		delete rest.selected;
+	render: ({children, disabled, iconComponent: IconComponent, iconClassName, selected, ...rest}) => {
 		delete rest.iconClasses;
 
 		return (
-			<div {...rest}>
+			<div
+				aria-checked={selected}
+				aria-disabled={disabled}
+				disabled={disabled}
+				role="checkbox"
+				{...rest}
+			>
 				<IconComponent className={iconClassName}>{children}</IconComponent>
 			</div>
 		);
