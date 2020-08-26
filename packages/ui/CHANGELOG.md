@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/ToggleIcon ` to support accessibility features
+
 ## [3.4.6] - 2020-08-24
 
 ### Added
