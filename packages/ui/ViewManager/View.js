@@ -190,7 +190,12 @@ class View extends React.Component {
 	// TransitionGroup. It will block other animations from occurring until callback is called. It
 	// will not be called on the initial render of a TransitionGroup.
 	componentWillEnter (callback) {
-		const {arranger, reverseTransition} = this.props;
+		const {appearing, arranger, reverseTransition, enteringProp} = this.props;
+		// This can happen if the panel was going to be removed and the animation was canceled,
+		// causing this panel to re-enter.
+		if (!appearing && enteringProp && !this.state.entering) {
+			this.setState({entering: true});
+		}
 		if (arranger) {
 			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
 		} else {
@@ -265,7 +270,7 @@ class View extends React.Component {
 		this.animation.onfinish = () => {
 			this.animation = null;
 			// Possible for the animation callback to still be fired after the node has been
-			// umounted if it finished before the unmount can cancel it so we check for that.
+			// unmounted if it finished before the unmount can cancel it so we check for that.
 			if (this.node) {
 				callback();
 			}

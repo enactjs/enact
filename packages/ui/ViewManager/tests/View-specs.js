@@ -43,7 +43,7 @@ describe('View', () => {
 		'should pass enteringProp as false for an appearing view',
 		() => {
 			// Views visible on mount are "appearing" and shouldn't perform "entering" logic like
-			// defering children rendering
+			// deferring children rendering
 			const subject = mount(
 				<View duration={1000} enteringProp="data-entering" appearing>
 					<span />
