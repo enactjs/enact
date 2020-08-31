@@ -151,6 +151,10 @@ class View extends React.Component {
 
 	shouldComponentUpdate (nextProps) {
 		if (nextProps.leaving) {
+			// FIXME: This is generally a bad practice to mutate local state in sCU but is necessary
+			// for the time being to ensure that a view that is reversed before it completes
+			// entering will transition correctly out of the viewport.
+			this.changeDirection = this.shouldChangeDirection(this.props, nextProps);
 			return false;
 		}
 
@@ -158,7 +162,7 @@ class View extends React.Component {
 	}
 
 	componentDidUpdate (prevProps) {
-		this.changeDirection = this.animation ? this.props.reverseTransition !== prevProps.reverseTransition : false;
+		this.changeDirection = this.shouldChangeDirection(prevProps, this.props);
 	}
 
 	componentWillUnmount () {
@@ -167,6 +171,10 @@ class View extends React.Component {
 		if (this.animation) {
 			this.animation.cancel();
 		}
+	}
+
+	shouldChangeDirection (prevProps, nextProps) {
+		return this.animation ? prevProps.reverseTransition !== nextProps.reverseTransition : false;
 	}
 
 	enteringJob = new Job(() => {
