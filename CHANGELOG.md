@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.4.7] - 2020-09-01
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to call `onScrollStop` when scrollbar's visibility changed while scrolling
+- `ui/ViewManager` to handle transitioning away and back to a view before a transition completes
+
 ## [3.4.6] - 2020-08-24
 
 ### Added
