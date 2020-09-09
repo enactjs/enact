@@ -179,7 +179,7 @@ const ViewManagerBase = class extends React.Component {
 		/**
 		 * Explicitly sets the transition direction.
 		 *
-		 * If omitted, the direction is determined automaticallly based on the change of index or a
+		 * If omitted, the direction is determined automatically based on the change of index or a
 		 * string comparison of the first child's key.
 		 *
 		 * @type {Boolean}
