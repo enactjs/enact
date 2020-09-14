@@ -1,0 +1,39 @@
+// Needle.less
+//
+// @import '../styles/variables.less';
+// @import '../styles/skin.less';
+
+.needle {
+	// --needle-src: url("../Gauge/assets/needle1.svg");
+	// --needle-scale: 2;
+
+	position: absolute;
+	transform: rotate(calc(var(--needle-start-degree) * 1deg));
+	pointer-events: none;
+
+	.fill {
+		position: absolute;
+		z-index: 1;
+		left: 50%;
+		top: 50%;
+		transform: ~"rotate(calc(var(--ui-progressbar-proportion-end) * var(--needle-range-degrees) * 1deg))";
+
+		&::before {
+			// @needle-scale: unit((300px / 2) / 100px);
+
+			content: "";
+			display: block;
+			position: absolute;
+			// height: calc(100px * var(--needle-scale));
+			// width: calc(10px * var(--needle-scale));
+			// transform: translate(-50%, -80%);
+			background-image: var(--needle-src);
+			background-repeat: no-repeat;
+			background-position: center center;
+		}
+	}
+
+	.load {
+		/* Public Exported */
+	}
+}

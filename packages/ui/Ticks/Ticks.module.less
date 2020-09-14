@@ -1,0 +1,38 @@
+// Gauge.less
+//
+// @import '../styles/variables.less';
+// @import '../styles/skin.less';
+
+.ticks {
+	position: absolute;
+	// left: 50%;
+	// top: 50%;
+	transform: rotate(calc(var(--ticks-start-degree) * 1deg));
+	pointer-events: none;
+
+	// Tick marks
+	.tick {
+		position: absolute;
+		transform-origin: center top;
+	}
+
+	&.inward .tick {
+		transform+_: translateX(-50%) rotate(calc(var(--tick-degree) * 1deg)) translateY(calc(var(--ticks-distance) * -1));
+	}
+
+	&.outward .tick {
+		.inward.tick();
+		transform+_: rotate(180deg) translateY(-100%);
+	}
+
+	&.horizon .tick {
+		.inward.tick();
+		transform+_: var(--tick-custom-rotation);
+	}
+
+	&.level .tick {
+		// transform+_: translateX(-50%) rotate(calc(var(--tick-degree) * 1deg)) translateY(calc(var(--ticks-distance) * -1)) translateY(50%) rotate(calc((var(--tick-degree) + var(--ticks-start-degree)) * -1deg)) translateY(-50%);
+		.inward.tick();
+		transform+_: translateY(50%) rotate(calc((var(--tick-degree) + var(--ticks-start-degree)) * -1deg)) translateY(-50%);
+	}
+}
