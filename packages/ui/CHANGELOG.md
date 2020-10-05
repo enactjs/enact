@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Button` to be clicked properly when pressed by touch
+
 ## [3.4.7] - 2020-09-01
 
 ### Fixed

@@ -156,7 +156,7 @@ const handleTouchEnd = handle(
 	// block the next mousedown to prevent duplicate touchable events
 	returnsTrue(call('setLastTouchEnd')),
 	call('isTracking'),
-	complement(call('hasTouchLeftTarget')),
+	call('isActive'),
 	returnsTrue(call('endTouch')),
 	handleUp
 );
@@ -588,6 +588,10 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		isTracking () {
 			// verify we had a target and the up target is still within the current node
 			return this.target;
+		}
+
+		isActive () {
+			return this.state.active === States.Active;
 		}
 
 		isPaused () {
