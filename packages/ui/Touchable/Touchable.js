@@ -9,7 +9,6 @@
 import {adaptEvent, call, forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
-import complement from 'ramda/src/complement';
 import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
