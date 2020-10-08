@@ -226,5 +226,29 @@ const kind = (config) => {
 	return Component;
 };
 
+const useKind = (props, config) => {
+	const {
+		computed: cfgComputed,
+		contextType = NoContext,
+		handlers,
+		styles: cfgStyles
+	} = config;
+
+	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
+	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
+	const ctx = React.useContext(contextType);
+	const boundHandlers = useHandlers(handlers, props, ctx);
+
+	let merged = {
+		...props,
+		...boundHandlers
+	};
+
+	if (renderStyles) merged = renderStyles(merged, ctx);
+	if (renderComputed) merged = renderComputed(merged, ctx);
+
+	return {props: merged, context: ctx};
+};
+
 export default kind;
-export {kind};
+export {kind, useKind};
