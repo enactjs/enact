@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.4.8] - 2020-10-08
+
+### Fixed
+
+- `ui/Button` to prevent browser's default styling when pressed by touch
+
 ## [3.4.7] - 2020-09-01
 
 ### Fixed
