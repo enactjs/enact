@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Button` to be clicked properly when pressed by touch
+- `ui/Button` to prevent browser's default styling when pressed by touch
 
 ## [3.4.7] - 2020-09-01
 
