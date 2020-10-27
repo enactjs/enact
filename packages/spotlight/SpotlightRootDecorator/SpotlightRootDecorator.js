@@ -77,10 +77,27 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (!noAutoFocus) {
 				Spotlight.focus();
 			}
+
+			document.addEventListener('pointerover', this.handleMode);
 		}
 
 		componentWillUnmount () {
 			Spotlight.terminate();
+
+			document.removeEventListener('pointerover', this.handleMode);
+		}
+
+		handleMode = (ev) => {
+			if (ev.pointerType === 'touch') {
+				document.querySelector('#root > div').classList.remove('mouse-mode');
+				document.querySelector('#root > div').classList.add('touch-mode');
+			} else if (ev.pointerType === 'mouse') {
+				document.querySelector('#root > div').classList.add('mouse-mode');
+				document.querySelector('#root > div').classList.remove('touch-mode');
+			} else {
+				document.querySelector('#root > div').classList.remove('mouse-mode');
+				document.querySelector('#root > div').classList.remove('touch-mode');
+			}
 		}
 
 		navigableFilter = (elem) => {

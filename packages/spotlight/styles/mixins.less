@@ -16,18 +16,38 @@
 
 // Focused Spottable elements
 .focus(@rules; @target) when (isruleset(@rules)) and (@target = parent) {
-	.spottable({
-		&:focus {
-			@rules();
-		}
-	}, @target);
+	:global(.mouse-mode) & {
+		.spottable({
+			&:focus {
+				@rules();
+			}
+		}, @target);
+	}
+
+	:global(.touch-mode) & {
+		.spottable({
+			&:active {
+				@rules();
+			}
+		}, @target);
+	}
 }
 .focus(@rules) when (isruleset(@rules)) {
-	.spottable({
-		&:focus {
-			@rules();
-		}
-	});
+	:global(.mouse-mode) & {
+		.spottable({
+			&:focus {
+				@rules();
+			}
+		});
+	}
+
+	:global(.touch-mode) & {
+		.spottable({
+			&:active {
+				@rules();
+			}
+		});
+	}
 }
 
 // Muted elements
