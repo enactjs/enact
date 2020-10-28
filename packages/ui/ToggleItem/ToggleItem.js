@@ -278,7 +278,7 @@ const ToggleItemBase = kind({
  */
 const ToggleItemDecorator = compose(
 	ForwardRef({prop: 'componentRef'}),
-	Toggleable({toggleProp: 'onTap', eventProps: ['value']}),
+	Toggleable({toggleProp: 'onClick', eventProps: ['value']}),
 	Touchable
 );
 
