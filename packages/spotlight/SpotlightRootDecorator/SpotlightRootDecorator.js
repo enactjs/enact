@@ -78,6 +78,8 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				Spotlight.focus();
 			}
 
+			this.rootContainer = document.querySelector('#root > div');
+
 			document.addEventListener('pointerover', this.handleMouseTouch);
 			document.addEventListener('keydown', this.handleKeyDown);
 		}
@@ -91,20 +93,20 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleMouseTouch = (ev) => {
 			if (ev.pointerType === 'touch') {
-				document.querySelector('#root > div').classList.remove('mouse-mode');
-				document.querySelector('#root > div').classList.add('touch-mode');
+				this.rootContainer.classList.remove('mouse-mode');
+				this.rootContainer.classList.add('touch-mode');
 			} else if (ev.pointerType === 'mouse') {
-				document.querySelector('#root > div').classList.add('mouse-mode');
-				document.querySelector('#root > div').classList.remove('touch-mode');
+				this.rootContainer.classList.add('mouse-mode');
+				this.rootContainer.classList.remove('touch-mode');
 			} else {
-				document.querySelector('#root > div').classList.remove('mouse-mode');
-				document.querySelector('#root > div').classList.remove('touch-mode');
+				this.rootContainer.classList.remove('mouse-mode');
+				this.rootContainer.classList.remove('touch-mode');
 			}
 		};
 
 		handleKeyDown = (ev) => {
-			document.querySelector('#root > div').classList.add('mouse-mode');
-			document.querySelector('#root > div').classList.remove('touch-mode');
+			this.rootContainer.classList.add('mouse-mode');
+			this.rootContainer.classList.remove('touch-mode');
 		};
 
 		navigableFilter = (elem) => {
