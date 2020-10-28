@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact i18n module, newest chan
 
 ### Added
 
-- `i18n/I18nDecorator` to add class `non-italic` for scriptName `Kore`
+- `i18n/I18nDecorator` global class `enact-locale-non-italic` for scriptName `Kore`
 
 ## [3.4.8] - 2020-10-08
 
