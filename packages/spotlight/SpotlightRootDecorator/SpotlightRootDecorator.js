@@ -98,7 +98,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				document.querySelector('#root > div').classList.remove('mouse-mode');
 				document.querySelector('#root > div').classList.remove('touch-mode');
 			}
-		}
+		};
 
 		navigableFilter = (elem) => {
 			while (elem && elem !== document && elem.nodeType === 1) {
