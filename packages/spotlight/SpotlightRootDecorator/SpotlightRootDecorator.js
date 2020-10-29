@@ -104,7 +104,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		};
 
-		handleKeyDown = (ev) => {
+		handleKeyDown = () => {
 			this.rootContainer.classList.add('mouse-mode');
 			this.rootContainer.classList.remove('touch-mode');
 		};
