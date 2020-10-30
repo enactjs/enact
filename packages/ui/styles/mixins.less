@@ -1,5 +1,5 @@
+@import "./internal/utils.less";
 @import "./variables.less";
-
 
 // Disabled elements
 .disabled(@rules; @target) when (isruleset(@rules)) and (@target = parent) {
@@ -22,56 +22,78 @@
 }
 
 // Applies RTL-compatible start and end position to a selector
-.position-start-end (@start, @end) {
+// Simple "when" here just assumes that if the first argument is a list with more than 1 entry,
+// then units are correct. If it's just 1, then we varify the value is a number (measurement).
+.position-start-end (@trbl; @target: "") when (length(@trbl) > 1) or ((iskeyword(@target)) or (@target = "")) {
+	.position(@trbl);
+
+	.enact-locale-rtl({
+		.position(
+			// Note: swapping left and right values
+			.extract(@trbl; top)[]
+			.extract(@trbl; left)[]
+			.extract(@trbl; bottom)[]
+			.extract(@trbl; right)[]
+		);
+	}; @target);
+}
+
+.position-start-end (@start; @end; @target: "") when (default()) {
 	left: @start;
 	right: @end;
 
-	:global(.enact-locale-right-to-left) & {
+	.enact-locale-rtl({
 		left: @end;
 		right: @start;
-	}
+	}, @target);
 }
 
 // Applies RTL-compatible start and end margins to a selector
-.margin-start-end(@start; @end; @target) when (@target = parent) {
-    margin-left: @start;
-    margin-right: @end;
+.margin-start-end (@trbl; @target: "") when (length(@trbl) > 1) or ((iskeyword(@target)) or (@target = "")) {
+	margin: @trbl;
 
-    :global(.enact-locale-right-to-left)& {
-        margin-left: @end;
-        margin-right: @start;
-    }
+	.enact-locale-rtl({
+		margin:
+			// Note: swapping left and right values
+			.extract(@trbl; top)[]
+			.extract(@trbl; left)[]
+			.extract(@trbl; bottom)[]
+			.extract(@trbl; right)[]
+		;
+	}; @target);
 }
-
-.margin-start-end (@start, @end) {
+.margin-start-end(@start; @end; @target: "") when (default()) {
 	margin-left: @start;
 	margin-right: @end;
 
-	:global(.enact-locale-right-to-left) & {
+	.enact-locale-rtl({
 		margin-left: @end;
 		margin-right: @start;
-	}
+	}, @target);
 }
 
 // Applies RTL-compatible start and end padding to a selector
-.padding-start-end(@start; @end; @target) when (@target = parent) {
-    padding-left: @start;
-    padding-right: @end;
+.padding-start-end (@trbl; @target: "") when (length(@trbl) > 1) or ((iskeyword(@target)) or (@target = "")) {
+	padding: @trbl;
 
-    :global(.enact-locale-right-to-left)& {
-        padding-left: @end;
-        padding-right: @start;
-    }
+	.enact-locale-rtl({
+		padding:
+			// Note: swapping left and right values
+			.extract(@trbl; top)[]
+			.extract(@trbl; left)[]
+			.extract(@trbl; bottom)[]
+			.extract(@trbl; right)[]
+		;
+	}; @target);
 }
-
-.padding-start-end (@start, @end) {
+.padding-start-end(@start; @end; @target: "") when (default()) {
 	padding-left: @start;
 	padding-right: @end;
 
-	:global(.enact-locale-right-to-left) & {
+	.enact-locale-rtl({
 		padding-left: @end;
 		padding-right: @start;
-	}
+	}, @target);
 }
 
 // NOTE: Until we are able to automatically remove these JSDoc-style comments, they should remain LESS-commented
