@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.4.9] - 2020-10-30
+
+### Fixed
+
+- `i18n/I18nDecorator` to add global class `enact-locale-non-italic` for scriptName `Kore`
+
 ## [3.4.8] - 2020-10-08
 
 ### Fixed

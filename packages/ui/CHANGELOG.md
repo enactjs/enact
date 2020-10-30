@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [3.4.9] - 2020-10-30
+
+No significant changes.
+
 ## [3.4.8] - 2020-10-08
 
 ### Fixed
