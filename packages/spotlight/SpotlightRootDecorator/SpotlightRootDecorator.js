@@ -77,11 +77,37 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (!noAutoFocus) {
 				Spotlight.focus();
 			}
+
+			this.rootContainer = document.querySelector('#root > div');
+
+			document.addEventListener('pointerover', this.handleMouseTouch, {capture: true});
+			document.addEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
 
 		componentWillUnmount () {
 			Spotlight.terminate();
+
+			document.removeEventListener('pointerover', this.handleMouseTouch, {capture: true});
+			document.removeEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
+
+		handleMouseTouch = (ev) => {
+			if (ev.pointerType === 'touch') {
+				this.rootContainer.classList.remove('mouse-mode');
+				this.rootContainer.classList.add('touch-mode');
+			} else if (ev.pointerType === 'mouse') {
+				this.rootContainer.classList.add('mouse-mode');
+				this.rootContainer.classList.remove('touch-mode');
+			} else {
+				this.rootContainer.classList.remove('mouse-mode');
+				this.rootContainer.classList.remove('touch-mode');
+			}
+		};
+
+		handleKeyDown = () => {
+			this.rootContainer.classList.add('mouse-mode');
+			this.rootContainer.classList.remove('touch-mode');
+		};
 
 		navigableFilter = (elem) => {
 			while (elem && elem !== document && elem.nodeType === 1) {
