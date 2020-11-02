@@ -45,7 +45,7 @@ function getClassesForLocale (li, options) {
 		})
 	], function (classes) {
 		const scriptName = li.getScript();
-		if (scriptName !== 'Latn' && scriptName !== 'Cyrl' && scriptName !== 'Grek') {
+		if (scriptName !== 'Latn' && scriptName !== 'Cyrl' && scriptName !== 'Grek' && scriptName !== 'Kore') {
 			// GF-45884: allow enact to avoid setting italic fonts for those scripts that do not
 			// commonly use italics
 			classes.push(base + 'non-italic');
