@@ -80,15 +80,15 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.rootContainer = document.querySelector('#root > div');
 
-			document.addEventListener('pointerover', this.handleMouseTouch);
-			document.addEventListener('keydown', this.handleKeyDown);
+			document.addEventListener('pointerover', this.handleMouseTouch, {capture: true});
+			document.addEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
 
 		componentWillUnmount () {
 			Spotlight.terminate();
 
-			document.removeEventListener('pointerover', this.handleMouseTouch);
-			document.removeEventListener('keydown', this.handleKeyDown);
+			document.removeEventListener('pointerover', this.handleMouseTouch, {capture: true});
+			document.removeEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
 
 		handleMouseTouch = (ev) => {
