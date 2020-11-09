@@ -104,9 +104,15 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		};
 
-		handleKeyDown = () => {
-			this.rootContainer.classList.add('mouse-mode');
-			this.rootContainer.classList.remove('touch-mode');
+		handleKeyDown = (ev) => {
+			const {keyCode} = ev;
+
+			if (keyCode === 13 && this.rootContainer.classList.contains('touch-mode')) {
+				ev.stopPropagation();
+			} else {
+				this.rootContainer.classList.add('mouse-mode');
+				this.rootContainer.classList.remove('touch-mode');
+			}
 		};
 
 		navigableFilter = (elem) => {
