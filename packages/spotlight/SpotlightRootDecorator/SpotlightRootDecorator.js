@@ -6,6 +6,7 @@
  * @exports SpotlightRootDecorator
  */
 
+import {is} from '@enact/core/keymap';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
@@ -80,37 +81,38 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.rootContainer = document.querySelector('#root > div');
 
-			document.addEventListener('pointerover', this.handleMouseTouch, {capture: true});
+			document.addEventListener('pointerover', this.handlePointerOver, {capture: true});
 			document.addEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
 
 		componentWillUnmount () {
 			Spotlight.terminate();
 
-			document.removeEventListener('pointerover', this.handleMouseTouch, {capture: true});
+			document.removeEventListener('pointerover', this.handlePointerOver, {capture: true});
 			document.removeEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
 
-		handleMouseTouch = (ev) => {
+		handlePointerOver = (ev) => {
 			if (ev.pointerType === 'touch') {
-				this.rootContainer.classList.remove('mouse-mode');
+				this.rootContainer.classList.remove('non-touch-mode');
 				this.rootContainer.classList.add('touch-mode');
 			} else if (ev.pointerType === 'mouse') {
-				this.rootContainer.classList.add('mouse-mode');
+				this.rootContainer.classList.add('non-touch-mode');
 				this.rootContainer.classList.remove('touch-mode');
 			} else {
-				this.rootContainer.classList.remove('mouse-mode');
+				this.rootContainer.classList.remove('non-touch-mode');
 				this.rootContainer.classList.remove('touch-mode');
 			}
 		};
 
 		handleKeyDown = (ev) => {
 			const {keyCode} = ev;
+			console.log(keyCode)
 
-			if (keyCode === 13 && this.rootContainer.classList.contains('touch-mode')) {
+			if (is('enter', keyCode) && this.rootContainer.classList.contains('touch-mode')) {
 				ev.stopPropagation();
 			} else {
-				this.rootContainer.classList.add('mouse-mode');
+				this.rootContainer.classList.add('non-touch-mode');
 				this.rootContainer.classList.remove('touch-mode');
 			}
 		};

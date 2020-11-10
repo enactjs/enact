@@ -16,7 +16,7 @@
 
 // Focused Spottable elements
 .focus(@rules; @target) when (isruleset(@rules)) and (@target = parent) {
-	:global(.mouse-mode) & {
+	:global(.non-touch-mode) & {
 		.spottable({
 			&:focus {
 				@rules();
@@ -33,7 +33,7 @@
 	}
 }
 .focus(@rules) when (isruleset(@rules)) {
-	:global(.mouse-mode) & {
+	:global(.non-touch-mode) & {
 		.spottable({
 			&:focus {
 				@rules();
