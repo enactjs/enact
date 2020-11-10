@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Fixed
 
-- `spotlight` to call stopPropagation when `enter` key is pressed in touch mode
+- `spotlight/SpotlightRootDecorator` to call stopPropagation when `enter` key is pressed in touch mode
 
 ## [3.4.9] - 2020-10-30
 
