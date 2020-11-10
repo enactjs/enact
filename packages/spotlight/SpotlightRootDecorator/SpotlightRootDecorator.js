@@ -6,8 +6,8 @@
  * @exports SpotlightRootDecorator
  */
 
-import {is} from '@enact/core/keymap';
 import hoc from '@enact/core/hoc';
+import {is} from '@enact/core/keymap';
 import React from 'react';
 
 import Spotlight from '../src/spotlight';
