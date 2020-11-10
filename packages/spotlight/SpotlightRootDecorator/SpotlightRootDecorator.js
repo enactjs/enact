@@ -80,6 +80,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.rootContainer = document.querySelector('#root > div');
+			this.rootContainer.classList.add('non-touch-mode');
 
 			document.addEventListener('pointerover', this.handlePointerOver, {capture: true});
 			document.addEventListener('keydown', this.handleKeyDown, {capture: true});
