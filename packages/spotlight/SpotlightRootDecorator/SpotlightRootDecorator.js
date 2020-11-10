@@ -108,7 +108,6 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleKeyDown = (ev) => {
 			const {keyCode} = ev;
-			console.log(keyCode)
 
 			if (is('enter', keyCode) && this.rootContainer.classList.contains('touch-mode')) {
 				ev.stopPropagation();
