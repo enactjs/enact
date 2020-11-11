@@ -244,7 +244,7 @@ class Media extends React.Component {
 	};
 
 	play () {
-		this.media.play();
+		return this.media.play();
 	}
 
 	pause () {
