@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
-- `ui/Media` play function to return promise
+- `ui/Media` `play` function to return promise
 
 ### Fixed
 
