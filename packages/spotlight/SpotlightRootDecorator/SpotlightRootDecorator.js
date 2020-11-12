@@ -62,6 +62,8 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
+			this.containerRef = React.createRef();
+
 			if (typeof window === 'object') {
 				Spotlight.initialize({
 					selector: '.' + spottableClass,
@@ -79,8 +81,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				Spotlight.focus();
 			}
 
-			this.rootContainer = document.querySelector('#root > div');
-			this.rootContainer.classList.add('non-touch-mode');
+			this.containerRef.current.classList.add('non-touch-mode');
 
 			document.addEventListener('pointerover', this.handlePointerOver, {capture: true});
 			document.addEventListener('keydown', this.handleKeyDown, {capture: true});
@@ -95,25 +96,25 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handlePointerOver = (ev) => {
 			if (ev.pointerType === 'touch') {
-				this.rootContainer.classList.remove('non-touch-mode');
-				this.rootContainer.classList.add('touch-mode');
+				this.containerRef.current.classList.remove('non-touch-mode');
+				this.containerRef.current.classList.add('touch-mode');
 			} else if (ev.pointerType === 'mouse') {
-				this.rootContainer.classList.add('non-touch-mode');
-				this.rootContainer.classList.remove('touch-mode');
+				this.containerRef.current.classList.add('non-touch-mode');
+				this.containerRef.current.classList.remove('touch-mode');
 			} else {
-				this.rootContainer.classList.remove('non-touch-mode');
-				this.rootContainer.classList.remove('touch-mode');
+				this.containerRef.current.classList.remove('non-touch-mode');
+				this.containerRef.current.classList.remove('touch-mode');
 			}
 		};
 
 		handleKeyDown = (ev) => {
 			const {keyCode} = ev;
 
-			if (is('enter', keyCode) && this.rootContainer.classList.contains('touch-mode')) {
+			if (is('enter', keyCode) && this.containerRef.current.classList.contains('touch-mode')) {
 				ev.stopPropagation();
 			} else {
-				this.rootContainer.classList.add('non-touch-mode');
-				this.rootContainer.classList.remove('touch-mode');
+				this.containerRef.current.classList.add('non-touch-mode');
+				this.containerRef.current.classList.remove('touch-mode');
 			}
 		};
 
@@ -125,7 +126,11 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		render () {
-			return <Wrapped {...this.props} />;
+			return (
+				<div ref={this.containerRef}>
+					<Wrapped {...this.props} />
+				</div>
+			);
 		}
 	};
 });
