@@ -62,6 +62,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
+			// In other modules, this reference DOM element could be referred by `#root > div`.
 			this.containerRef = React.createRef();
 
 			if (typeof window === 'object') {
