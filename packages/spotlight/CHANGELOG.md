@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `spotlight/SpotlightRootDecorator` to remove focus effect when touching up
+- `spotlight/SpotlightRootDecorator` to call stopPropagation when `enter` key is pressed in touch mode
+
 ## [3.4.9] - 2020-10-30
 
 No significant changes.
