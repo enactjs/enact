@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
-- `ui/Scroller` and `ui/VirtualList` not to scroll diagonally by flick
+- `ui/Scroller` and `ui/VirtualList` to not scroll diagonally by flick
 
 ## [3.4.9] - 2020-10-30
 
