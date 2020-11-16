@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Changed
+
+- `ui/Media` `play` function to return promise
+
 ### Fixed
 
 - `ui/MarqueeDecorator` to restart animation when text changed while focus retained
