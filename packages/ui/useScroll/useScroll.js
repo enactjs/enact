@@ -577,27 +577,18 @@ const useScrollBase = (props) => {
 	function onFlick (ev) {
 		const isVerticalFlick = ev.direction === 'vertical';
 
-		if (scrollMode === 'translate') {
+		if (scrollMode === 'translate' || !mutableRef.current.isTouching) { // except touch input in 'native' mode
 			mutableRef.current.flickTarget = mutableRef.current.animator.simulate(
 				mutableRef.current.scrollLeft,
 				mutableRef.current.scrollTop,
 				(direction !== 'vertical' && !isVerticalFlick) ? getRtlX(-ev.velocityX) : 0,
 				(direction !== 'horizontal' && isVerticalFlick) ? -ev.velocityY : 0
 			);
-		} else if (scrollMode === 'native') {
-			if (!mutableRef.current.isTouching) {
-				mutableRef.current.flickTarget = mutableRef.current.animator.simulate(
-					mutableRef.current.scrollLeft,
-					mutableRef.current.scrollTop,
-					(direction !== 'vertical' && !isVerticalFlick) ? getRtlX(-ev.velocityX) : 0,
-					(direction !== 'horizontal' && isVerticalFlick) ? -ev.velocityY : 0
-				);
-			} else if (mutableRef.current.overscrollEnabled && overscrollEffectOn && overscrollEffectOn.drag) {
-				mutableRef.current.flickTarget = {
-					targetX: mutableRef.current.scrollLeft + (!isVerticalFlick ? getRtlX(-ev.velocityX) : 0) * overscrollVelocityFactor, // 'horizontal' or 'both'
-					targetY: mutableRef.current.scrollTop + (isVerticalFlick ? -ev.velocityY : 0) * overscrollVelocityFactor // 'vertical' or 'both'
-				};
-			}
+		} else if (mutableRef.current.overscrollEnabled && overscrollEffectOn && overscrollEffectOn.drag) { // overscroll is required on touch input in 'native' mode
+			mutableRef.current.flickTarget = {
+				targetX: mutableRef.current.scrollLeft + (!isVerticalFlick ? getRtlX(-ev.velocityX) : 0) * overscrollVelocityFactor, // 'horizontal' or 'both'
+				targetY: mutableRef.current.scrollTop + (isVerticalFlick ? -ev.velocityY : 0) * overscrollVelocityFactor // 'vertical' or 'both'
+			};
 		}
 
 		if (props.onFlick) {
