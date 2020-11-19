@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
-## [3.4.9-touch-alpha] - 2020-11-19
+## [3.4.9-experimental-1] - 2020-11-19
 
 No significant changes.
 

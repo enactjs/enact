@@ -1,7 +1,7 @@
 {
   "name": "@enact/i18n",
   "main": "./src/index.js",
-  "version": "3.4.9-touch-alpha",
+  "version": "3.4.9-experimental-1",
   "description": "Internationalization support for Enact using iLib",
   "scripts": {
     "clean": "enact clean",
@@ -41,7 +41,7 @@
     ]
   },
   "dependencies": {
-    "@enact/core": "^3.4.9-touch-alpha",
+    "@enact/core": "^3.4.9-experimental-1",
     "prop-types": "^15.7.2",
     "ramda": "^0.24.1",
     "react": "^16.8.0",
