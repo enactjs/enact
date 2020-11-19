@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [3.4.9-touch-alpha] - 2020-11-19
+
+No significant changes.
+
 ## [3.4.9] - 2020-10-30
 
 ### Fixed

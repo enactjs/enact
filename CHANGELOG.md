@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.4.9-touch-alpha] - 2020-11-19
+
+### Changed
+
+- `spotlight/SpotlightRootDecorator` to remove focus effect when touching up
+- `ui/Scroller` and `ui/VirtualList` to not scroll diagonally by flick
+
 ## [3.4.9] - 2020-10-30
 
 ### Fixed

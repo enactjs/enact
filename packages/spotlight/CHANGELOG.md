@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
+## [3.4.9-touch-alpha] - 2020-11-19
 
 ### Changed
 
