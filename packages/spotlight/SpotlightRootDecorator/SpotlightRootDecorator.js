@@ -7,7 +7,6 @@
  */
 
 import hoc from '@enact/core/hoc';
-import {is} from '@enact/core/keymap';
 import React from 'react';
 
 import Spotlight from '../src/spotlight';
@@ -108,15 +107,9 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		};
 
-		handleKeyDown = (ev) => {
-			const {keyCode} = ev;
-
-			if (is('enter', keyCode) && this.containerRef.current.classList.contains('touch-mode')) {
-				ev.stopPropagation();
-			} else {
-				this.containerRef.current.classList.add('non-touch-mode');
-				this.containerRef.current.classList.remove('touch-mode');
-			}
+		handleKeyDown = () => {
+			this.containerRef.current.classList.add('non-touch-mode');
+			this.containerRef.current.classList.remove('touch-mode');
 		};
 
 		navigableFilter = (elem) => {
