@@ -4,6 +4,9 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [3.4.9-experimental-1] - 2020-11-19
 
+### Added
+- `ui/Item` unit tests for click event
+
 ### Changed
 
 - `ui/Scroller` and `ui/VirtualList` to not scroll diagonally by flick
