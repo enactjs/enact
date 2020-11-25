@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Fixed
 
-- `spotlight/SpotlightRootDecorator` to call preventDefault when `enter` key is pressed in touch mode
+- `spotlight/SpotlightRootDecorator` to ignore `enter` key in touch mode
 
 ## [3.4.9-experimental-1] - 2020-11-19
 
