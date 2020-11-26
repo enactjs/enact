@@ -93,12 +93,14 @@ const useScrollbar = (props) => {
 		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-progress-ratio', scrollbarThumbProgressRatio);
 	}
 
-	scrollbarHandle.current = {
-		getContainerRef,
-		showScrollbarTrack,
-		startHidingScrollbarTrack,
-		update
-	};
+	if (scrollbarHandle) {
+		scrollbarHandle.current = {
+			getContainerRef,
+			showScrollbarTrack,
+			startHidingScrollbarTrack,
+			update
+		};
+	}
 
 	return {
 		restProps: rest,
