@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight/SpotlightRootDecorator` to ignore `enter` key in touch mode
+
 ## [3.4.9-experimental-1] - 2020-11-19
 
 ### Changed
