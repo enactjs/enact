@@ -23,6 +23,6 @@
   },
   "devDependencies": {
     "eslint-config-enact-proxy": "^1.0.0",
-    "lerna": "2.8.0"
+    "lerna": "3.22.1"
   }
 }
