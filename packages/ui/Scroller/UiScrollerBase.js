@@ -100,7 +100,7 @@ class ScrollerBase extends Component {
 
 	getRtlPositionX = (x) => {
 		if (this.props.rtl) {
-			return (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
+			return (platform.ios || platform.safari || platform.chrome >= 85) ? -x : this.scrollBounds.maxLeft - x;
 		}
 		return x;
 	};
