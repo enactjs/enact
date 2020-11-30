@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Fixed
+
+- `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to scroll correctly on latest Chrome
+
 ### Changed
 
 - `ui/Media` `play` function to return promise
