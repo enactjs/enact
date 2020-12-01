@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Scroller`, `ui/VirtualList`, and `ui/VirtualGridList` to scroll correctly on latest Chrome
+- `ui/Scroller` and `ui/VirtualList` to scroll correctly on Chrome 85 or higher in RTL locales
 
 ### Changed
 
