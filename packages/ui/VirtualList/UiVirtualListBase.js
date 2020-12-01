@@ -762,7 +762,7 @@ const VirtualListBaseFactory = (type) => {
 				}
 
 				if (rtl) {
-					x = (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
+					x = (platform.ios || platform.safari || platform.chrome >= 85) ? -x : this.scrollBounds.maxLeft - x;
 				}
 
 				this.containerRef.current.scrollTo(x, y);
