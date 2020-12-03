@@ -168,6 +168,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		const {cancel} = useCancel({
+			...props,
 			modal,
 			onCancel: onConfiguredCancel(onCancel)
 		});

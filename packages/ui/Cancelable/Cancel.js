@@ -7,10 +7,14 @@ class Cancel {
 		this.dispatch = dispatchCancelToConfig(onCancel);
 	}
 
+	setContext (props) {
+		this.props = props;
+	}
+
 	handle = handle.bind(this);
 
 	handleCancel = handle(
-		() => (this.dispatch()),
+		() => (this.dispatch(this.props)),
 		stop,
 		stopImmediate
 	);
