@@ -2,7 +2,6 @@ import {forward, handle, preventDefault, stop} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 
 import {getContainersForNode} from '../src/container';
-import {hasPointerMoved} from '../src/pointer';
 import {getDirection, Spotlight} from '../src/spotlight';
 
 const REMOTE_OK_KEY = 16777221;
@@ -105,7 +104,7 @@ class Spot {
 				}
 			}
 		}
-	}
+	};
 
 	forwardSpotlightEvents = (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp}) => {
 		const {keyCode} = ev;
@@ -121,12 +120,17 @@ class Spot {
 		}
 
 		return true;
-	}
+	};
 
 	forwardAndResetLastSelectTarget = (ev, props) => {
 		const {keyCode, notPrevented} = ev;
 		const {selectionKeys} = props;
 		const key = selectionKeys.find((value) => keyCode === value);
+
+		// FIXME: temporary patch to maintain compatibility with moonstone 3.2.5 which
+		// deconstructs `preventDefault` from the event which is incompatible with React's
+		// synthetic event.
+		ev.preventDefault = ev.preventDefault.bind(ev);
 
 		// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
 		if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
@@ -137,7 +141,7 @@ class Spot {
 		selectCancelled = false;
 		lastSelectTarget = null;
 		return notPrevented && allow;
-	}
+	};
 
 	shouldEmulateMouse = (ev, props) => {
 		if (!this.config.emulateMouse) {
@@ -167,9 +171,9 @@ class Spot {
 		}
 
 		return keyCode && !repeat;
-	}
+	};
 
-	isActionable = (ev, props) => isSpottable(props)
+	isActionable = (ev, props) => isSpottable(props);
 
 	handleSelect = ({which}, props) => {
 		const {selectionKeys} = props;
@@ -182,9 +186,9 @@ class Spot {
 			lastSelectTarget = this;
 		}
 		return true;
-	}
+	};
 
-	handle = handle.bind(this)
+	handle = handle.bind(this);
 
 	handleKeyDown = this.handle(
 		this.forwardSpotlightEvents,
@@ -192,14 +196,14 @@ class Spot {
 		this.handleSelect,
 		this.shouldEmulateMouse
 		// `forwardMouseUp` is usually called out of the useSpot if the `this.shouldEmulateMouse` returns true.
-	)
+	);
 
 	handleKeyUp = this.handle(
 		this.forwardAndResetLastSelectTarget,
 		this.isActionable,
 		this.shouldEmulateMouse
 		// `forwardMouseDown` and `forwardClick` are usually called out of the useSpot if the `this.shouldEmulateMouse` returns true.
-	)
+	);
 
 	handleFocus = (ev) => {
 		if (this.props.spotlightDisabled) {
@@ -219,7 +223,7 @@ class Spot {
 		}
 
 		return true;
-	}
+	};
 
 	handleBlur = (ev) => {
 		if (this.shouldPreventBlur) return false;
@@ -241,19 +245,15 @@ class Spot {
 		}
 
 		return true;
-	}
+	};
 
-	handleEnter = (ev) => {
-		if (hasPointerMoved(ev.clientX, ev.clientY)) {
-			this.isHovered = true;
-		}
-	}
+	handleEnter = () => {
+		this.isHovered = true;
+	};
 
-	handleLeave = (ev) => {
-		if (hasPointerMoved(ev.clientX, ev.clientY)) {
-			this.isHovered = false;
-		}
-	}
+	handleLeave = () => {
+		this.isHovered = false;
+	};
 }
 
 export default Spot;

@@ -55,7 +55,7 @@ describe('useSpot', () => {
 		rest.onKeyDown = handle(
 			forwardKeyDownWithPrevent,
 			spot.keyDown,
-			forwardMouseDown,
+			forwardMouseDown
 		);
 		rest.onKeyUp = handle(
 			adaptEvent(
