@@ -7,13 +7,13 @@ class Cancel {
 		this.dispatch = dispatchCancelToConfig(onCancel);
 	}
 
-	handle = handle.bind(this)
+	handle = handle.bind(this);
 
 	handleCancel = handle(
 		() => (this.dispatch()),
 		stop,
 		stopImmediate
-	)
+	);
 }
 
 export default Cancel;

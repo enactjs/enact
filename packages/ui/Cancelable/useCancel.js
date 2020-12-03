@@ -54,7 +54,7 @@ function mountEffect (state, modal) {
 function useCancel ({modal = false, ...config} = {}) {
 	const cancel = useClass(Cancel, config);
 
-	React.useLayoutEffect(mountEffect(cancel, modal), [cancel]);
+	React.useLayoutEffect(mountEffect(cancel, modal), [cancel]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return {
 		cancel: cancel.handleCancel
