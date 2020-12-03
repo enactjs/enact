@@ -27,12 +27,12 @@ class FloatingLayerContainer {
 			(typeof document !== 'undefined' && document.getElementById(this.config.floatLayerId)) ||
 			null
 		);
-	}
+	};
 
 	handleNotify = oneOf(
 		[forAction('register'), call('notifyMount')],
 		[forAction('closeAll'), call('handleCloseAll')]
-	).bind(this)
+	).bind(this);
 
 	handleCloseAll () {
 		this.registry.notify({action: 'close'});
@@ -47,7 +47,7 @@ class FloatingLayerContainer {
 
 	setFloatingLayer = (node) => {
 		this.floatingLayer = node;
-	}
+	};
 }
 
 export default FloatingLayerContainer;
