@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [3.4.9-experimental-2] - 2020-12-03
+
+### Fixed
+
+- `spotlight/SpotlightRootDecorator` to ignore `enter` key in touch mode
+
 ## [3.4.9-experimental-1] - 2020-11-19
 
 ### Changed
