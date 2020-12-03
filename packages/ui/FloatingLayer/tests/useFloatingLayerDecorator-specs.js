@@ -1,11 +1,11 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import {FloatingLayerBase} from '../FloatingLayer';
-import {useFloatingLayer} from '../FloatingLayerDecorator';
+import {useFloatingLayerDecorator} from '../FloatingLayerDecorator';
 
 describe('FloatingLayer Specs', () => {
 	function Root (props) {
-		const hook = useFloatingLayer();
+		const hook = useFloatingLayerDecorator();
 
 		return hook.provideFloatingLayer(
 			<div key="floatWrapped" {...props} />

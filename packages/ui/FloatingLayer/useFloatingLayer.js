@@ -6,18 +6,18 @@ import FloatingLayerContainer from './FloatingLayerContainer';
 const FloatingLayerContext = React.createContext();
 
 /**
- * Configuration for `useFloatingLayer`
+ * Configuration for `useFloatingLayerDecorator`
  *
- * @typedef {Object} useFloatingLayerConfig
+ * @typedef {Object} useFloatingLayerDecoratorConfig
  * @memberof ui/FloatingLayerDecorator
  * @property {Function} [floatLayerId] Floating layer id
  * @private
  */
 
 /**
- * Object returned by `useFloatingLayer`
+ * Object returned by `useFloatingLayerDecorator`
  *
- * @typedef {Object} useFloatingLayerInterface
+ * @typedef {Object} useFloatingLayerDecoratorInterface
  * @memberof ui/FloatingLayerDecorator
  * @property {Function} provideFloatingLayer Provide the wrapper DOM elements
  * @private
@@ -26,11 +26,11 @@ const FloatingLayerContext = React.createContext();
 /**
  * Close all floating layers registered in the same id
  *
- * @param {useFloatingLayerConfig} config Configuration options
- * @returns {useFloatingLayerInterface}
+ * @param {useFloatingLayerDecoratorConfig} config Configuration options
+ * @returns {useFloatingLayerDecoratorInterface}
  * @private
  */
-function useFloatingLayer (config = {}) {
+function useFloatingLayerDecorator (config = {}) {
 	const {className, floatLayerId = 'floatLayer'} = config;
 	const floating = useClass(FloatingLayerContainer, {floatLayerId});
 
@@ -54,8 +54,8 @@ function useFloatingLayer (config = {}) {
 	};
 }
 
-export default useFloatingLayer;
+export default useFloatingLayerDecorator;
 export {
 	FloatingLayerContext,
-	useFloatingLayer
+	useFloatingLayerDecorator
 };
