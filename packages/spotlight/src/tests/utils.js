@@ -62,6 +62,7 @@ const container = (props) => node({
 	...coerceProps(props)
 });
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
 const someNodes = R.useWith(R.compose(R.join('\n'), R.map), [R.identity, R.range(0)]);
 const someSpottables = someNodes(spottable);
 const someContainers = someNodes(container);

@@ -32,7 +32,7 @@ class Provider {
 		};
 
 		return id;
-	}
+	};
 }
 
 export default Provider;

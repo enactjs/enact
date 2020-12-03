@@ -24,7 +24,7 @@ describe('LS2Request', () => {
 			const request = new LS2Request();
 			const onFailure = jest.fn();
 
-			request.callback(nop, onFailure, nop, );
+			request.callback(nop, onFailure, nop );
 
 			const expected = {errorCode: -1};
 			const actual = onFailure.mock.calls[0][0];

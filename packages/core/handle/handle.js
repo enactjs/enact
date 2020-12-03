@@ -131,9 +131,11 @@ const makeHandler = (handlers) => {
 };
 
 // Loose check to determine if obj is component-ish if it has both props and context members
-const hasPropsAndContext = (obj) => {
-	return obj && obj.hasOwnProperty && obj.hasOwnProperty('props') && obj.hasOwnProperty('context');
-};
+const hasPropsAndContext = (obj) => (
+	obj &&
+		Object.prototype.hasOwnProperty.call(obj, 'props') &&
+		Object.prototype.hasOwnProperty.call(obj, 'context')
+);
 
 const named = (fn, name) => {
 	if (__DEV__) {
@@ -696,6 +698,57 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
 });
 
 /**
+ * Creates a handler that will forward the event to a function at `name` on `props`.
+ *
+ * If `adapter` is not specified, a new event payload will be generated with a `type` member with
+ * the `name` of the custom event. If `adapter` is specified, the `type` member is added to the
+ * value returned by `adapter`.
+ *
+ * The `adapter` function receives the same arguments as any handler. The value returned from
+ * `adapter` is passed as the first argument to `handler` with the remaining arguments kept the
+ * same. This is often useful to generate a custom event payload before forwarding on to a callback.
+ *
+ * Example:
+ * ```
+ * import {forwardCustom} from '@enact/core/handle';
+ *
+ * // calls the onChange callback with the event: {type: 'onChange'}
+ * const forwardChange = forwardCustom('onChange');
+ *
+ * // calls the onChange callback with the event: {type: 'onChange', index}
+ * const forwardChangeWithIndex = forwardCustom('onChange', (ev, {index}) => ({index}));
+ * ```
+ *
+ * @method   forwardCustom
+ * @param    {String}        name      Name of method on the `props`
+ * @param    {EventAdapter}  [adapter] Function to adapt the event payload
+ *
+ * @returns  {HandlerFunction}         Returns an [event handler]{@link core/handle.EventHandler}
+ *                                     (suitable for passing to handle or used directly within
+ *                                     `handlers` in [kind]{@link core/kind}) that will forward the
+ *                                     custom event.
+ * @memberof core/handle
+ * @public
+ */
+const forwardCustom = handle.forwardCustom = (name, adapter) => handle(
+	adaptEvent(
+		(...args) => {
+			let ev = adapter ? adapter(...args) : null;
+
+			// Handle either no adapter or a non-object return from the adapter
+			if (!ev || typeof ev !== 'object') {
+				ev = {};
+			}
+
+			ev.type = name;
+
+			return ev;
+		},
+		forward(name)
+	)
+).named('forwardCustom');
+
+/**
  * Accepts a handler and returns the logical complement of the value returned from the handler.
  *
  * Example:
@@ -728,6 +781,7 @@ export {
 	call,
 	callOnEvent,
 	forward,
+	forwardCustom,
 	forwardWithPrevent,
 	forEventProp,
 	forKey,

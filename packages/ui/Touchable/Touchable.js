@@ -215,7 +215,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 	} = config;
 
 	return class extends React.Component {
-		static displayName = 'Touchable'
+		static displayName = 'Touchable';
 
 		static propTypes = /** @lends ui/Touchable.Touchable.prototype */ {
 			/**
@@ -383,12 +383,12 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			onUp: PropTypes.func
-		}
+		};
 
 		static defaultProps = {
 			disabled: false,
 			noResume: false
-		}
+		};
 
 		constructor (props) {
 			super(props);
@@ -460,6 +460,11 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				flick: this.props.flickConfig,
 				hold: this.props.holdConfig
 			});
+
+			// Update the props onHold, onHoldEnd, onHoldPulse on any gesture (hold, flick, drag).
+			this.hold.updateProps(this.props);
+			this.flick.updateProps(this.props);
+			this.drag.updateProps(this.props);
 		}
 
 		componentWillUnmount () {

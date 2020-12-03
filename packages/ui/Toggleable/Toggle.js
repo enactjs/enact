@@ -12,7 +12,8 @@ class Toggle {
 		this.context = {};
 	}
 
-	setContext (value, onToggle) {
+	setContext (props, value, onToggle) {
+		this.props = {...this.props, ...props};
 		this.context.value = value;
 		this.context.onToggle = onToggle;
 	}
@@ -25,19 +26,19 @@ class Toggle {
 		isEnabled,
 		adaptEvent((ev, props) => makeEvent(props, true), forward('onToggle')),
 		returnsTrue((ev, props, context) => context.onToggle(true))
-	).bindAs(this, 'handleActivate')
+	).bindAs(this, 'handleActivate');
 
 	handleDeactivate = handle(
 		isEnabled,
 		adaptEvent((ev, props) => makeEvent(props, false), forward('onToggle')),
 		returnsTrue((ev, props, context) => context.onToggle(false))
-	).bindAs(this, 'handleDeactivate')
+	).bindAs(this, 'handleDeactivate');
 
 	handleToggle = handle(
 		isEnabled,
 		adaptEvent((ev, props, {value}) => makeEvent(props, !value), forward('onToggle')),
 		returnsTrue((ev, props, {onToggle, value}) => onToggle(!value))
-	).bindAs(this, 'handleToggle')
+	).bindAs(this, 'handleToggle');
 }
 
 export default Toggle;

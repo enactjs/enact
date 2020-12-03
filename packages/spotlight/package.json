@@ -1,6 +1,6 @@
 {
   "name": "@enact/spotlight",
-  "version": "3.3.0-alpha.9",
+  "version": "3.4.9",
   "description": "A focus management library",
   "main": "src/spotlight.js",
   "scripts": {
@@ -17,11 +17,8 @@
       "baseSize": 24
     }
   },
-  "eslintConfig": {
-    "extends": "enact/strict"
-  },
   "dependencies": {
-    "@enact/core": "^3.3.0-alpha.9",
+    "@enact/core": "^3.4.9",
     "prop-types": "^15.7.2",
     "ramda": "^0.24.1",
     "react": "^16.7.0",

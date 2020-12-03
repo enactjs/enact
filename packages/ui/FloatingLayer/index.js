@@ -11,10 +11,12 @@
 
 import {FloatingLayer, FloatingLayerBase} from './FloatingLayer';
 import {FloatingLayerDecorator} from './FloatingLayerDecorator';
+import {useFloatingLayer} from './useFloatingLayer';
 
 export default FloatingLayer;
 export {
 	FloatingLayer,
 	FloatingLayerBase,
-	FloatingLayerDecorator
+	FloatingLayerDecorator,
+	useFloatingLayer
 };

@@ -171,11 +171,11 @@ class Media extends React.Component {
 		 * @public
 		 */
 		source: PropTypes.any
-	}
+	};
 
 	static defaultProps = {
 		mediaEventsMap: handledMediaEventsMap
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -221,13 +221,13 @@ class Media extends React.Component {
 		for (let eventName in this.handledCustomMediaForwards) {
 			on(eventName, this.handledCustomMediaForwards[eventName], this.media);
 		}
-	}
+	};
 
 	detachCustomMediaEvents = () => {
 		for (let eventName in this.handledCustomMediaForwards) {
 			off(eventName, this.handledCustomMediaForwards[eventName], this.media);
 		}
-	}
+	};
 
 	handleEvent = (ev) => {
 		forward('onUpdate', {type: 'onUpdate'}, this.props);
@@ -237,14 +237,14 @@ class Media extends React.Component {
 		if (fwd) {
 			fwd(ev, this.props);
 		}
-	}
+	};
 
 	mediaRef = (node) => {
 		this.media = node;
-	}
+	};
 
 	play () {
-		this.media.play();
+		return this.media.play();
 	}
 
 	pause () {

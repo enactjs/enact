@@ -122,15 +122,24 @@ class View extends React.Component {
 		 * @type {Boolean}
 		 * @default false
 		 */
-		reverseTransition: PropTypes.bool
-	}
+		reverseTransition: PropTypes.bool,
+
+		/**
+		 * When `true`, indicates the current locale uses right-to-left reading order.
+		 *
+		 * The effect depends on how the provided `arranger` handles this option.
+		 *
+		 * @type {Boolean}
+		 */
+		rtl: PropTypes.bool
+	};
 
 	static defaultProps = {
 		appearing: false,
 		enteringDelay: 0,
 		index: 0,
 		reverseTransition: false
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -142,6 +151,10 @@ class View extends React.Component {
 
 	shouldComponentUpdate (nextProps) {
 		if (nextProps.leaving) {
+			// FIXME: This is generally a bad practice to mutate local state in sCU but is necessary
+			// for the time being to ensure that a view that is reversed before it completes
+			// entering will transition correctly out of the viewport.
+			this.changeDirection = this.shouldChangeDirection(this.props, nextProps);
 			return false;
 		}
 
@@ -149,7 +162,7 @@ class View extends React.Component {
 	}
 
 	componentDidUpdate (prevProps) {
-		this.changeDirection = this.animation ? this.props.reverseTransition !== prevProps.reverseTransition : false;
+		this.changeDirection = this.shouldChangeDirection(prevProps, this.props);
 	}
 
 	componentWillUnmount () {
@@ -160,9 +173,13 @@ class View extends React.Component {
 		}
 	}
 
+	shouldChangeDirection (prevProps, nextProps) {
+		return this.animation ? prevProps.reverseTransition !== nextProps.reverseTransition : false;
+	}
+
 	enteringJob = new Job(() => {
 		this.setState(clearEntering);
-	})
+	});
 
 	componentWillAppear (callback) {
 		const {arranger} = this.props;
@@ -181,7 +198,12 @@ class View extends React.Component {
 	// TransitionGroup. It will block other animations from occurring until callback is called. It
 	// will not be called on the initial render of a TransitionGroup.
 	componentWillEnter (callback) {
-		const {arranger, reverseTransition} = this.props;
+		const {appearing, arranger, reverseTransition, enteringProp} = this.props;
+		// This can happen if the panel was going to be removed and the animation was canceled,
+		// causing this panel to re-enter.
+		if (!appearing && enteringProp && !this.state.entering) {
+			this.setState({entering: true});
+		}
 		if (arranger) {
 			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
 		} else {
@@ -231,7 +253,7 @@ class View extends React.Component {
 	 * @private
 	 */
 	prepareTransition = (arranger, callback, noAnimation) => {
-		const {duration, index, previousIndex = index, reverseTransition} = this.props;
+		const {duration, index, previousIndex = index, reverseTransition, rtl} = this.props;
 
 		// Need to ensure that we have a valid node reference before we animation. Sometimes, React
 		// will replace the node after mount causing a reference cached there to be invalid.
@@ -245,6 +267,7 @@ class View extends React.Component {
 				from: previousIndex,
 				node: this.node,
 				reverse: reverseTransition,
+				rtl,
 				to: index,
 				fill: 'forwards',
 				duration
@@ -255,7 +278,7 @@ class View extends React.Component {
 		this.animation.onfinish = () => {
 			this.animation = null;
 			// Possible for the animation callback to still be fired after the node has been
-			// umounted if it finished before the unmount can cancel it so we check for that.
+			// unmounted if it finished before the unmount can cancel it so we check for that.
 			if (this.node) {
 				callback();
 			}
@@ -265,7 +288,7 @@ class View extends React.Component {
 		if (noAnimation || this.props.noAnimation) {
 			this.animation.finish();
 		}
-	}
+	};
 
 	render () {
 		const {enteringProp, children, childProps} = this.props;
