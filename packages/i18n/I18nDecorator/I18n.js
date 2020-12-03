@@ -70,7 +70,7 @@ class I18n {
 	}
 
 	/**
-	 * Adds the `languagechange` event listener and initiaties async resource retrieval.
+	 * Adds the `languagechange` event listener and initiates async resource retrieval.
 	 *
 	 * Should only be called after `window` is available and the DOM is ready.
 	 *
@@ -155,7 +155,7 @@ class I18n {
 					rtl: rtlResult
 				};
 			});
-			// TODO: Resolve how to handle failed resource resquests
+			// TODO: Resolve how to handle failed resource requests
 			// .catch(...);
 
 			this.loadResourceJob.promise(resources);
@@ -167,7 +167,7 @@ class I18n {
 	 */
 	handleLocaleChange = () => {
 		onWindowFocus(this.updateLocale);
-	}
+	};
 
 	/**
 	 * Updates the locale for the application.
@@ -181,7 +181,7 @@ class I18n {
 	 */
 	updateLocale = (newLocale) => {
 		this.loadResources(newLocale);
-	}
+	};
 }
 
 export default I18n;

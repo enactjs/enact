@@ -15,7 +15,7 @@ import css from './Scroller.module.less';
  * @public
  */
 class ScrollerBasic extends Component {
-	static displayName = 'ui:ScrollerBasic'
+	static displayName = 'ui:ScrollerBasic';
 
 	static propTypes = /** @lends ui/Scroller.ScrollerBasic.prototype */ {
 		children: PropTypes.node.isRequired,
@@ -28,6 +28,30 @@ class ScrollerBasic extends Component {
 		 * @private
 		 */
 		cbScrollTo: PropTypes.func,
+
+		/**
+		 * Disable voice control feature of component.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		'data-webos-voice-disabled': PropTypes.bool,
+
+		/**
+		 * Activates the component for voice control.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		'data-webos-voice-focused': PropTypes.bool,
+
+		/**
+		 * The voice control group label.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		'data-webos-voice-group-label': PropTypes.string,
 
 		/**
 		 * Direction of the scroller.
@@ -66,7 +90,7 @@ class ScrollerBasic extends Component {
 		 * @private
 		 */
 		scrollContentRef: EnactPropTypes.ref
-	}
+	};
 
 	componentDidMount () {
 		this.calculateMetrics();
@@ -86,21 +110,21 @@ class ScrollerBasic extends Component {
 		scrollHeight: 0,
 		maxLeft: 0,
 		maxTop: 0
-	}
+	};
 
 	scrollPos = {
 		top: 0,
 		left: 0
-	}
+	};
 
-	getScrollBounds = () => this.scrollBounds
+	getScrollBounds = () => this.scrollBounds;
 
 	getRtlPositionX = (x) => {
 		if (this.props.rtl) {
 			return (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
 		}
 		return x;
-	}
+	};
 
 	setScrollPosition (x, y) {
 		const node = this.props.scrollContentRef.current;
@@ -140,15 +164,15 @@ class ScrollerBasic extends Component {
 			width: nodeWidth,
 			height: nodeHeight
 		};
-	}
+	};
 
 	isVertical = () => {
 		return (this.props.direction !== 'horizontal');
-	}
+	};
 
 	isHorizontal = () => {
 		return (this.props.direction !== 'vertical');
-	}
+	};
 
 	calculateMetrics () {
 		const
@@ -162,6 +186,25 @@ class ScrollerBasic extends Component {
 		scrollBounds.maxLeft = Math.max(0, scrollWidth - clientWidth);
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
+
+	syncClientSize = () => {
+		const node = this.props.scrollContentRef.current;
+
+		if (!node) {
+			return false;
+		}
+
+		const
+			{clientWidth, clientHeight} = node,
+			{scrollBounds} = this;
+
+		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
+			this.calculateMetrics();
+			return true;
+		}
+
+		return false;
+	};
 
 	render () {
 		const

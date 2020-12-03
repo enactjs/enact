@@ -122,7 +122,7 @@ class Accelerator {
 				this.reset();
 				return callback(event);
 		}
-	}
+	};
 
 	/**
 	 * Resets the Accelerator instance to the default values.
@@ -138,7 +138,7 @@ class Accelerator {
 		this.keyCode = 0;
 		this.canceled = false;
 		this.accelerating = false;
-	}
+	};
 
 	/**
 	 * Cancels the Accelerator.
@@ -150,7 +150,7 @@ class Accelerator {
 	 */
 	cancel = () => {
 		this.canceled = true;
-	}
+	};
 
 	/**
 	 * Verifies that the Accelerator is active.
@@ -162,7 +162,7 @@ class Accelerator {
 	 */
 	isAccelerating = () => {
 		return this.accelerating;
-	}
+	};
 }
 
 export default Accelerator;

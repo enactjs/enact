@@ -24,7 +24,7 @@ describe('View', () => {
 	);
 
 	test(
-		'should pass the value of appearing to its child in enteringProp',
+		'should pass the value of entering to its child in enteringProp',
 		() => {
 			const subject = mount(
 				<View duration={1000} enteringProp="data-entering">
@@ -43,7 +43,7 @@ describe('View', () => {
 		'should pass enteringProp as false for an appearing view',
 		() => {
 			// Views visible on mount are "appearing" and shouldn't perform "entering" logic like
-			// defering children rendering
+			// deferring children rendering
 			const subject = mount(
 				<View duration={1000} enteringProp="data-entering" appearing>
 					<span />
@@ -110,6 +110,36 @@ describe('View', () => {
 
 				const expected = true;
 				const actual = spy.mock.calls.length === 1;
+
+				expect(actual).toBe(expected);
+			}
+		);
+
+		test(
+			'should reset entering if a rendered panel re-enters',
+			() => {
+				const spy = jest.fn();
+				const subject = mount(
+					<View duration={16} enteringProp="data-entering" >
+						<span />
+					</View>
+				);
+
+				// This is a bit bad, but we need to clear entering without waiting
+				// Could be updated to use `enteringDelay` and a small timeout
+				subject.instance().componentDidAppear(spy);
+				subject.update();
+
+				const firstExpected = false;
+				const firstActual = subject.find('span').prop('data-entering');
+
+				expect(firstActual).toBe(firstExpected);
+
+				subject.instance().componentWillEnter(spy);
+				subject.update();
+
+				const expected = true;
+				const actual = subject.find('span').prop('data-entering');
 
 				expect(actual).toBe(expected);
 			}

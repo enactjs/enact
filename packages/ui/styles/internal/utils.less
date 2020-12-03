@@ -1,0 +1,64 @@
+//
+// Computational mixins that return values
+//
+
+
+// Normalizes a list of values, using the logic from padding and margin short-hand, and expands it up
+// to the full long-hand representation, giving a consistent list length to extract from.
+// Supports 1, 2, 3, or 4 values in a space separated list.
+// Always returns a list of 4.
+// .normalize-shorthand(11px 21px 31px 41px)[]  -->  11px 21px 31px 41px
+// .normalize-shorthand(11px 21px 31px)[]       -->  11px 21px 31px 21px
+// .normalize-shorthand(11px 21px)[]            -->  11px 21px 11px 21px
+// .normalize-shorthand(11px)[]                 -->  11px 11px 11px 11px
+//
+// NOTE: The [] is required at the end of the method call, which instructs LESS to return a value.
+// For details see: http://lesscss.org/features/#mixins-feature-unnamed-lookups
+.normalize-shorthand(@trbl) when ((length(@trbl) >= 1) and (length(@trbl) <= 4)) {
+	@result:
+		extract(@trbl, 1)
+		extract(@trbl, if((length(@trbl) >= 2), 2, 1) )
+		extract(@trbl, if((length(@trbl) >= 3), 3, 1) )
+		extract(@trbl, if((length(@trbl) >= 4), 4, if((length(@trbl) >= 2), 2, 1) ))
+	;
+}
+
+// Extracts one or all short-hand values out of a list (See `.normalize-shorthand`), returning all
+// values or a requested value.
+// padding-left: .extract(11px 21px 31px 41px, left)[]  -->  41px
+// padding-left: .extract(11px 21px 31px, left)[]       -->  21px
+// padding-left: .extract(11px 21px, left)[]            -->  21px
+// padding-left: .extract(11px, left)[]                 -->  11px
+// padding: .extract(11px 21px 31px 41px)[]             -->  11px 21px 31px 41px
+//
+// NOTE: The [] is required at the end of the method call, which instructs LESS to return a value.
+// For details see: http://lesscss.org/features/#mixins-feature-unnamed-lookups
+.extract(@trbl; @position) when (@position = top) {
+	@result: extract(.normalize-shorthand(@trbl)[], 1);
+}
+.extract(@trbl; @position) when (@position = right) {
+	@result: extract(.normalize-shorthand(@trbl)[], 2);
+}
+.extract(@trbl; @position) when (@position = bottom) {
+	@result: extract(.normalize-shorthand(@trbl)[], 3);
+}
+.extract(@trbl; @position) when (@position = left) {
+	@result: extract(.normalize-shorthand(@trbl)[], 4);
+}
+.extract(@trbl) {
+	@result: .normalize-shorthand(@trbl)[];
+}
+
+// Extracts one value out of a short-hand list, given a position. Works like the built-in `extract`
+// LESS function, but is safe to use on lists of arbitrary or unknown length.
+// Always returns 1 value.
+// padding-left: .extract(11px 21px 31px 41px, 4)[]  -->  41px
+// padding-left: .extract(11px 21px 31px, 4)[]       -->  21px
+// padding-left: .extract(11px 21px, 4)[]            -->  21px
+// padding-left: .extract(11px, 4)[]                 -->  11px
+//
+// NOTE: The [] is required at the end of the method call, which instructs LESS to return a value.
+// For details see: http://lesscss.org/features/#mixins-feature-unnamed-lookups
+.extract(@trbl; @position) when ((@position >= 1) and (@position <= 4)) {
+	@result: extract(.normalize-shorthand(@trbl)[], @position);
+}

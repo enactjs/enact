@@ -6,7 +6,7 @@
  * @exports spottableClass
  */
 
-import {adaptEvent, forward, forwardWithPrevent, returnsTrue} from '@enact/core/handle';
+import {adaptEvent, forward, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -23,8 +23,8 @@ const
 	forwardMouseEnter = forward('onMouseEnter'),
 	forwardMouseLeave = forward('onMouseLeave');
 const
-	forwardKeyDownWithPrevent = forwardWithPrevent('onKeyDown'),
-	forwardKeyUpWithPrevent = forwardWithPrevent('onKeyUp');
+	forwardKeyDownWithPrevent = forward('onKeyDown'),
+	forwardKeyUpWithPrevent = forward('onKeyUp');
 
 /**
  * Default configuration for Spottable
@@ -115,7 +115,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		rest.onKeyDown = handle(
 			forwardKeyDownWithPrevent,
 			spot.keyDown,
-			forwardMouseDown,
+			forwardMouseDown
 		);
 		rest.onKeyUp = handle(
 			adaptEvent(
@@ -123,15 +123,15 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				spot.keyUp
 			),
 			forwardMouseUp,
-			forwardClick,
+			forwardClick
 		);
 		rest.onBlur = handle(
 			spot.blur,
-			forwardBlur,
+			forwardBlur
 		);
 		rest.onFocus = handle(
 			spot.focus,
-			forwardFocus,
+			forwardFocus
 		);
 		rest.onMouseEnter = handle(
 			returnsTrue((ev) => forwardMouseEnter(ev, props)),

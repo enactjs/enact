@@ -56,7 +56,7 @@ import hoc from '@enact/core/hoc';
  */
 const VoiceControlDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 	return class extends React.Component {
-		static displayName = 'VoiceControlDecorator'
+		static displayName = 'VoiceControlDecorator';
 
 		static propTypes = /** @lends webos/speech.VoiceControlDecorator.prototype */ {
 			/**
@@ -67,7 +67,7 @@ const VoiceControlDecorator = hoc((config, Wrapped) => {	// eslint-disable-line 
 			 * @public
 			 */
 			onVoice: PropTypes.func.isRequired
-		}
+		};
 
 		componentDidMount () {
 			this.node = findDOMNode(this);	// eslint-disable-line

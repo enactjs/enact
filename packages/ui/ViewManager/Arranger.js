@@ -37,6 +37,10 @@ export const arrange = ({duration, node, reverse}, keyframes, options) => {
  * @param {Node} config.node                                   - DOM node to be animated.
  * @param {Boolean} config.reverse                             - `true` when the animation should be
  *                                                               reversed.
+ * @param {Boolean} config.rtl                                 - `true` when the ViewManager was
+ *                                                                configured with `rtl` for locales
+ *                                                                that use right-to-left reading
+ *                                                                order.
  * @param {Number} config.to                                   - Index to which the ViewManager is
  *                                                               transitioning.
  * @returns {Animation} An `Animation`-compatible object

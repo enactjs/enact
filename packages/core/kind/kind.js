@@ -166,7 +166,7 @@ const kind = (config) => {
 	} else {
 		// eslint-disable-next-line enact/display-name
 		Component = class extends React.Component {
-			static contextType = contextType
+			static contextType = contextType;
 
 			constructor () {
 				super();

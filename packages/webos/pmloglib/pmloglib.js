@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-/* global console */
 /**
  * Provides a wrapper around PmLogLib logging API
  *

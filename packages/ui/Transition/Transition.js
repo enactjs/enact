@@ -133,8 +133,8 @@ const TransitionBase = kind({
 		 * Controls how long the transition should take.
 		 * Supported preset durations are: `'short'` (250ms), `'medium'` (500ms), and `'long'` (1s).
 		 * `'medium'` (500ms) is default when no others are specified.
-		 * Any valid CSS duration value is also accepted, e.g. "200ms" or "3s". Pure numeric values
-		 * are also supported and treated as milliseconds.
+		 * Any valid CSS duration value is also accepted when `type` is set to `'clip'`,
+		 * e.g. "200ms" or "3s". Pure numeric values are also supported and treated as milliseconds.
 		 *
 		 * @type {String|Number}
 		 * @default 'medium'
@@ -416,7 +416,7 @@ class Transition extends React.Component {
 		 * @public
 		 */
 		visible: PropTypes.bool
-	}
+	};
 
 	static defaultProps = {
 		direction: 'up',
@@ -425,7 +425,7 @@ class Transition extends React.Component {
 		timingFunction: 'ease-in-out',
 		type: 'slide',
 		visible: true
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -506,7 +506,7 @@ class Transition extends React.Component {
 		this.setState({
 			renderState: TRANSITION_STATE.MEASURE
 		});
-	})
+	});
 
 	handleResize = () => {
 		// @TODO oddly, using the setState callback is required here to ensure that the bounds
@@ -514,7 +514,7 @@ class Transition extends React.Component {
 		this.setState({
 			initialHeight: null
 		}, this.measureInner);
-	}
+	};
 
 	handleTransitionEnd = (ev) => {
 		forwardTransitionEnd(ev, this.props);
@@ -526,7 +526,7 @@ class Transition extends React.Component {
 				forwardOnShow(ev, this.props);
 			}
 		}
-	}
+	};
 
 	measureInner = () => {
 		if (this.childNode) {
@@ -540,11 +540,11 @@ class Transition extends React.Component {
 				});
 			}
 		}
-	}
+	};
 
 	childRef = (node) => {
 		this.childNode = node;
-	}
+	};
 
 	render () {
 		let {visible, ...props} = this.props;

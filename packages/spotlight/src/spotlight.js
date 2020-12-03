@@ -26,6 +26,7 @@ import last from 'ramda/src/last';
 import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
 import {isPaused, pause, resume} from '../Pause';
+import {contains} from './utils';
 
 import {
 	addContainer,
@@ -264,11 +265,20 @@ const Spotlight = (function () {
 
 			// only prepend last focused if it exists so that Spotlight.focus() doesn't receive
 			// a falsy target
-			const lastFocused = getContainerConfig(lastContainerId).overflow && getNearestTargetFromPosition(position, lastContainerId) ||
-				getContainerLastFocusedElement(lastContainerId);
+			let lastFocusedElement = getContainerLastFocusedElement(lastContainerId);
 
-			if (lastFocused) {
-				next.unshift(lastFocused);
+			while (isContainer(lastFocusedElement)) {
+				({lastFocusedElement} = getContainerConfig(lastFocusedElement));
+			}
+
+			const lastContainerNode = getContainerNode(lastContainerId);
+
+			if (!lastFocusedElement || (lastContainerNode.getBoundingClientRect && lastFocusedElement.getBoundingClientRect && !contains(lastContainerNode.getBoundingClientRect(), lastFocusedElement.getBoundingClientRect()))) {
+				lastFocusedElement = getContainerConfig(lastContainerId).overflow && getNearestTargetFromPosition(position, lastContainerId);
+			}
+
+			if (lastFocusedElement) {
+				next.unshift(lastFocusedElement);
 			}
 		} else {
 			next = [rootContainerId];

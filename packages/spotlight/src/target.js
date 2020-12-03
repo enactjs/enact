@@ -9,10 +9,10 @@ import {
 	getContainerNode,
 	getContainerPreviousTarget,
 	getContainersForNode,
+	getDeepSpottableDescendants,
 	getDefaultContainer,
 	getLastContainer,
 	getNavigableContainersForNode,
-	getSpottableDescendants,
 	isContainer,
 	isNavigable
 } from './container';
@@ -65,10 +65,10 @@ function getContainersToSearch (containerId) {
 	return range;
 }
 
-function getTargetByContainer (containerId) {
+function getTargetByContainer (containerId, enterTo) {
 	return getContainersToSearch(containerId)
 		.reduce((next, id) => {
-			return next || getContainerFocusTarget(id);
+			return next || getContainerFocusTarget(id, enterTo);
 		}, null);
 }
 
@@ -100,12 +100,6 @@ function getTargetBySelector (selector) {
 function isRestrictedContainer (containerId) {
 	const config = getContainerConfig(containerId);
 	return config && (config.enterTo === 'last-focused' || config.enterTo === 'default-element');
-}
-
-function getSpottableDescendantsWithoutContainers (containerId, containerIds) {
-	return getSpottableDescendants(containerId).filter(n => {
-		return !isContainer(n) || containerIds.indexOf(n.dataset.spotlightId) === -1;
-	});
 }
 
 function filterRects (elementRects, boundingRect) {
@@ -183,7 +177,7 @@ function getOverflowContainerRect (containerId) {
 }
 
 function getTargetInContainerByDirectionFromPosition (direction, containerId, positionRect, elementContainerIds, boundingRect) {
-	const elements = getSpottableDescendantsWithoutContainers(containerId, elementContainerIds);
+	const elements = getDeepSpottableDescendants(containerId);
 	let elementRects = filterRects(getRects(elements), boundingRect);
 
 	let next = null;
@@ -254,7 +248,7 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 
 
 function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds, boundingRect) {
-	const elements = getSpottableDescendantsWithoutContainers(containerId, elementContainerIds);
+	const elements = getDeepSpottableDescendants(containerId);
 
 	// shortcut for previous target from element if it were saved
 	const previous = getContainerPreviousTarget(containerId, direction, element);
@@ -305,12 +299,27 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 			break;
 		}
 
+		// If one of the downstream containers is configured for partition, we use that
+		// container's bounds as the partition rect for navigation.
+		const partitionContainer = elementContainerIds
+			.slice(elementContainerIds.indexOf(containerId) + 1)
+			.find(id => {
+				const cfg = getContainerConfig(id);
+				return cfg && cfg.partition;
+			});
+
+		let partitionRect = elementRect;
+		if (partitionContainer) {
+			partitionRect = getContainerRect(partitionContainer);
+		}
+
 		// try to navigate from element to one of the candidates in containerId
 		next = navigate(
 			elementRect,
 			direction,
 			elementRects,
-			getContainerConfig(containerId)
+			getContainerConfig(containerId),
+			partitionRect
 		);
 
 		// if we match a container,
@@ -357,7 +366,7 @@ function getTargetByDirectionFromElement (direction, element) {
 
 	const elementRect = getRect(element);
 
-	return getNavigableContainersForNode(element)
+	const next = getNavigableContainersForNode(element)
 		.reduceRight((result, containerId, index, elementContainerIds) => {
 			result = result || getTargetInContainerByDirectionFromElement(
 				direction,
@@ -380,6 +389,10 @@ function getTargetByDirectionFromElement (direction, element) {
 
 			return result;
 		}, null);
+
+	// if the reduce above returns the original element, it means it hit a `leaveFor` config that
+	// prevents navigation so we enforce that here by returning null.
+	return next !== element ? next : null;
 }
 
 function getTargetByDirectionFromPosition (direction, position, containerId) {

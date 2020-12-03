@@ -217,7 +217,7 @@ function generateDistancefunction (targetRect) {
 	};
 }
 
-function navigate (targetRect, direction, rects, config) {
+function navigate (targetRect, direction, rects, config, partitionRect = targetRect) {
 	if (!targetRect || !direction || !rects || !rects.length || !config) {
 		return null;
 	}
@@ -227,7 +227,7 @@ function navigate (targetRect, direction, rects, config) {
 
 	const groups = partition(
 		rects,
-		targetRect,
+		partitionRect,
 		straightOverlapThreshold,
 		(rect, destRect) => (
 			calcGroupId(

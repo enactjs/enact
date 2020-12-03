@@ -17,7 +17,7 @@ import {propTypes, stringifyRoutes, toSegments} from './util';
  * @private
  */
 const RouterBase = class extends React.Component {
-	static displayName = 'Router'
+	static displayName = 'Router';
 
 	static propTypes = /** @lends ui/Routable.Router.prototype */ {
 		/**
@@ -96,11 +96,11 @@ const RouterBase = class extends React.Component {
 		 * @public
 		 */
 		routes: PropTypes.object
-	}
+	};
 
 	static defaultProps = {
 		component: 'div'
-	}
+	};
 
 	constructor (props) {
 		super(props);

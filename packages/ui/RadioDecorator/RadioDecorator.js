@@ -65,9 +65,9 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardDeactivate = forward(deactivate);
 
 	return class extends React.Component {
-		static displayName = 'RadioDecorator'
+		static displayName = 'RadioDecorator';
 
-		static contextType = RadioContext
+		static contextType = RadioContext;
 
 		componentDidMount () {
 			if (this.context && typeof this.context === 'function') {
@@ -101,7 +101,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props[prop]) {
 				forwardDeactivate(null, this.props);
 			}
-		}
+		};
 
 		handleActivate = () => {
 			if (this.controller) {
@@ -109,7 +109,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			forwardActivate(null, this.props);
-		}
+		};
 
 		handleDeactivate = () => {
 			if (this.controller) {
@@ -117,7 +117,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			forwardDeactivate(null, this.props);
-		}
+		};
 
 		render () {
 			let props = this.props;

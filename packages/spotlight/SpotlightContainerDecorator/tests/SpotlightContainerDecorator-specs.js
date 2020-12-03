@@ -1,4 +1,3 @@
-/* global beforeAll, afterAll*/
 import {mount} from 'enzyme';
 import React from 'react';
 import Spotlight from '../../src/spotlight';

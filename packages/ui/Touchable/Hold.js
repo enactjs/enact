@@ -8,7 +8,7 @@ class Hold {
 		this.next = null;
 	}
 
-	isHolding = () => this.holdConfig != null
+	isHolding = () => this.holdConfig != null;
 
 	isWithinTolerance = ({x, y}) => {
 		const {moveTolerance} = this.holdConfig;
@@ -16,7 +16,7 @@ class Hold {
 		const dy = this.startY - y;
 
 		return Math.sqrt(dx * dx + dy * dy) < moveTolerance;
-	}
+	};
 
 	begin = (defaultConfig, {holdConfig, noResume, onHold, onHoldEnd, onHoldPulse}, {x, y}) => {
 		if (!onHold && !onHoldPulse) return;
@@ -47,7 +47,18 @@ class Hold {
 			this.holdStart = window.performance.now();
 			this.startJob();
 		}
-	}
+	};
+
+	// This method will get the `onHold`, `onHoldEnd`, `onHoldPulse` props and update in the existing `holdConfig`.
+	updateProps = ({onHold, onHoldEnd, onHoldPulse}) => {
+		// check `isHolding` gesture is not in progress. Check if gesture exists before updating the references to the `holdConfig`
+		if (!this.isHolding()) return;
+
+		// Update the original values with new values of the gestures
+		this.holdConfig.onHoldPulse = onHoldPulse;
+		this.holdConfig.onHold = onHold;
+		this.holdConfig.onHoldEnd = onHoldEnd;
+	};
 
 	move = (coords) => {
 		if (!this.isHolding()) return;
@@ -67,7 +78,7 @@ class Hold {
 				this.resume();
 			}
 		}
-	}
+	};
 
 	blur = () => {
 		if (!this.isHolding()) return;
@@ -75,7 +86,7 @@ class Hold {
 		if (!this.holdConfig.global) {
 			this.end();
 		}
-	}
+	};
 
 	end = () => {
 		if (!this.isHolding()) return;
@@ -92,7 +103,7 @@ class Hold {
 		this.suspend();
 		this.pulsing = false;
 		this.holdConfig = null;
-	}
+	};
 
 	enter = () => {
 		if (!this.isHolding()) return;
@@ -102,7 +113,7 @@ class Hold {
 		if (resume && !cancelOnMove) {
 			this.resume();
 		}
-	}
+	};
 
 	leave = () => {
 		if (!this.isHolding()) return;
@@ -116,19 +127,19 @@ class Hold {
 		} else {
 			this.end();
 		}
-	}
+	};
 
 	suspend = () => {
 		clearInterval(this.holdJob);
 		this.holdJob = null;
-	}
+	};
 
 	resume = () => {
 		if (this.holdJob !== null) return;
 
 		this.handlePulse();
 		this.startJob();
-	}
+	};
 
 	startJob () {
 		const {frequency} = this.holdConfig;
@@ -172,7 +183,7 @@ class Hold {
 				});
 			}
 		}
-	}
+	};
 }
 
 const defaultHoldConfig = {
