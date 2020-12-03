@@ -1,8 +1,7 @@
-/* globals console */
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
 import React from 'react';
-import {mount} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import kind from '@enact/core/kind';
 import Slottable from '../Slottable';
 
@@ -185,6 +184,107 @@ describe('Slottable Specs', () => {
 			const expectedTitle = 'Div A';
 			const actualTitle = subject.find('.root-div').childAt(2).prop('title');
 			expect(actualTitle).toBe(expectedTitle);
+		}
+	);
+
+	test('should preserve values in \'slot\' property', () => {
+		// This suppresses the unique key warning that this implementation creates. Also, we can't
+		// restore this because it breaks our global warning listener.
+		jest.spyOn(console, 'error').mockImplementation(() => {});
+
+		const Component = Slottable({slots: ['a']}, ({a}) => (
+			<div>
+				{a}
+			</div>
+		));
+		const subject = mount(
+			<Component a={<div key="X">X</div>}>
+				<div slot="a" key="A">A</div>
+			</Component>
+		);
+
+		const expected = 'XA';
+		const actual = subject.text();
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should add values to existing array in \'slot\' property', () => {
+		const Component = Slottable({slots: ['a']}, ({a}) => (
+			<div>
+				{a}
+			</div>
+		));
+
+		/* eslint-disable jsx-a11y/anchor-is-valid */
+		const subject = shallow(
+			<Component a={['a', 'b']}>
+				<a>c</a>
+			</Component>
+		);
+		/* eslint-enable jsx-a11y/anchor-is-valid */
+
+		const expected = ['a', 'b', 'c'];
+		const actual = subject.prop('a');
+
+		expect(actual).toEqual(expected);
+	});
+
+	test(
+		'should distribute multiple children with the same slot into the same slot',
+		() => {
+			// eslint-disable-next-line enact/prop-types
+			function ComponentBase ({a}) {
+				return (
+					<div className="root-div">
+						{a}
+					</div>
+				);
+			}
+
+			const Component = Slottable({slots: ['a']}, ComponentBase);
+
+			const subject = mount(
+				<Component>
+					<div slot="a">A</div>
+					<div slot="a">A</div>
+					<div slot="a">A</div>
+				</Component>
+			);
+
+			const expected = 'AAA';
+			const actual = subject.text();
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should allow downstream component to have default value for unset slot',
+		() => {
+			// eslint-disable-next-line enact/prop-types
+			function ComponentBase ({a}) {
+				return (
+					<div>
+						{a}
+					</div>
+				);
+			}
+
+			ComponentBase.defaultProps = {
+				a: 'Default A'
+			};
+
+			const Component = Slottable({slots: ['a']}, ComponentBase);
+
+			const subject = mount(
+				<Component />
+			);
+
+			const expected = ComponentBase.defaultProps.a;
+			const actual = subject.text();
+
+			expect(actual).toBe(expected);
 		}
 	);
 });

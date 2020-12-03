@@ -350,4 +350,122 @@ describe('ViewManager', () => {
 
 		expect(subject.find('View')).toHaveLength(3);
 	});
+
+	test('should fire onTransition once per transition', () => {
+		const spy = jest.fn();
+		const subject = mount(
+			<ViewManager index={0} onTransition={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		spy.mockClear();
+
+		subject.setProps({index: 1});
+
+		expect(spy).toHaveBeenCalledTimes(1);
+	});
+
+	it('should not receive onTransition event on mount', () => {
+		const spy = jest.fn();
+
+		mount(
+			<ViewManager index={0} onTransition={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		const expected = 0;
+		const actual = spy.mock.calls.length;
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should include the current index and previous index in onTransition event payload', () => {
+		const spy = jest.fn();
+		const subject = mount(
+			<ViewManager index={0} onTransition={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		spy.mockClear();
+
+		subject.setProps({index: 1});
+
+		expect(spy).toHaveBeenLastCalledWith({index: 1, previousIndex: 0});
+
+		subject.setProps({index: 0});
+
+		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1});
+	});
+
+	test('should fire onWillTransition once per transition', () => {
+		const spy = jest.fn();
+		const subject = mount(
+			<ViewManager index={0} onWillTransition={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		subject.setProps({index: 1});
+
+		expect(spy).toHaveBeenCalledTimes(1);
+	});
+
+	test('should include the current index and previous index in onWillTransition event payload', () => {
+		const spy = jest.fn();
+		const subject = mount(
+			<ViewManager index={0} onWillTransition={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		subject.setProps({index: 1});
+
+		expect(spy).toHaveBeenLastCalledWith({index: 1, previousIndex: 0});
+
+		subject.setProps({index: 0});
+
+		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1});
+	});
+
+	test('should pass `rtl` prop to arranger when `true`', () => {
+		const spy = jest.spyOn(MockArranger, 'stay');
+		mount(
+			<ViewManager arranger={MockArranger} index={0} rtl>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		const expected = {rtl: true};
+		const actual = spy.mock.calls[0][0];
+
+		expect(actual).toMatchObject(expected);
+
+		spy.mockRestore();
+	});
+
+	test('should pass `rtl` prop to arranger when unset', () => {
+		const spy = jest.spyOn(MockArranger, 'stay');
+		mount(
+			<ViewManager arranger={MockArranger} index={0}>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		const expected = {rtl: false};
+		const actual = spy.mock.calls[0][0];
+
+		expect(actual).toMatchObject(expected);
+
+		spy.mockRestore();
+	});
 });

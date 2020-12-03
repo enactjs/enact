@@ -6,7 +6,7 @@
  * @exports spottableClass
  */
 
-import {forward, forwardWithPrevent, handle, preventDefault, stop} from '@enact/core/handle';
+import {forward, handle, preventDefault, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
@@ -14,7 +14,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {getContainersForNode} from '../src/container';
-import {hasPointerMoved} from '../src/pointer';
 import {getDirection, Spotlight} from '../src/spotlight';
 
 /**
@@ -98,7 +97,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const {emulateMouse} = config;
 
 	return class extends React.Component {
-		static displayName = 'Spottable'
+		static displayName = 'Spottable';
 
 		static propTypes = /** @lends spotlight/Spottable.Spottable.prototype */ {
 			/**
@@ -191,11 +190,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			tabIndex: PropTypes.number
-		}
+		};
 
 		static defaultProps = {
 			selectionKeys: [ENTER_KEY, REMOTE_OK_KEY]
-		}
+		};
 
 		constructor (props) {
 			super(props);
@@ -276,7 +275,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			return keyCode && !repeat;
-		}
+		};
 
 		forwardSpotlightEvents = (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp}) => {
 			const {keyCode} = ev;
@@ -292,7 +291,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			return true;
-		}
+		};
 
 		handleSelect = ({which}, props) => {
 			const {selectionKeys} = props;
@@ -305,13 +304,20 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				lastSelectTarget = this;
 			}
 			return true;
-		}
+		};
 
 		forwardAndResetLastSelectTarget = (ev, props) => {
 			const {keyCode} = ev;
 			const {selectionKeys} = props;
 			const key = selectionKeys.find((value) => keyCode === value);
-			const notPrevented = forwardWithPrevent('onKeyUp', ev, props);
+
+			// FIXME: temporary patch to maintain compatibility with moonstone 3.2.5 which
+			// deconstructs `preventDefault` from the event which is incompatible with React's
+			// synthetic event.
+			ev.preventDefault = ev.preventDefault.bind(ev);
+
+			forward('onKeyUp', ev, props);
+			const notPrevented = !ev.defaultPrevented;
 
 			// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
 			if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
@@ -322,20 +328,21 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			selectCancelled = false;
 			lastSelectTarget = null;
 			return notPrevented && allow;
-		}
+		};
 
-		isActionable = (ev, props) => isSpottable(props)
+		isActionable = (ev, props) => isSpottable(props);
 
-		handle = handle.bind(this)
+		handle = handle.bind(this);
 
 		handleKeyDown = this.handle(
-			forwardWithPrevent('onKeyDown'),
+			forward('onKeyDown'),
+			(ev) => !ev.defaultPrevented,
 			this.forwardSpotlightEvents,
 			this.isActionable,
 			this.handleSelect,
 			this.shouldEmulateMouse,
 			forward('onMouseDown')
-		)
+		);
 
 		handleKeyUp = this.handle(
 			this.forwardAndResetLastSelectTarget,
@@ -343,7 +350,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.shouldEmulateMouse,
 			forward('onMouseUp'),
 			forward('onClick')
-		)
+		);
 
 		handleBlur = (ev) => {
 			if (this.shouldPreventBlur) return;
@@ -363,7 +370,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			} else {
 				forward('onBlur', ev, this.props);
 			}
-		}
+		};
 
 		handleFocus = (ev) => {
 			if (this.props.spotlightDisabled) {
@@ -382,21 +389,17 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			} else {
 				forward('onFocus', ev, this.props);
 			}
-		}
+		};
 
 		handleEnter = (ev) => {
 			forward('onMouseEnter', ev, this.props);
-			if (hasPointerMoved(ev.clientX, ev.clientY)) {
-				this.isHovered = true;
-			}
-		}
+			this.isHovered = true;
+		};
 
 		handleLeave = (ev) => {
 			forward('onMouseLeave', ev, this.props);
-			if (hasPointerMoved(ev.clientX, ev.clientY)) {
-				this.isHovered = false;
-			}
-		}
+			this.isHovered = false;
+		};
 
 		render () {
 			const {disabled, spotlightId, spotlightDisabled, ...rest} = this.props;

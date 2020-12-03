@@ -5,8 +5,8 @@
 // Using string refs from the source code of ReactTransitionGroup
 /* eslint-disable react/no-string-refs */
 
-import {forward} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import {forward} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import eqBy from 'ramda/src/eqBy';
 import findIndex from 'ramda/src/findIndex';
@@ -27,6 +27,7 @@ import React from 'react';
  * @method
  * @private
  */
+// eslint-disable-next-line react-hooks/rules-of-hooks
 const indexOfChild = useWith(findIndex, [propEq('key'), identity]);
 
 /**
@@ -98,10 +99,10 @@ class TransitionGroup extends React.Component {
 		/**
 		 * Called with a reference to [component]{@link ui/ViewManager.TransitionGroup#component}
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Current Index the ViewManager is on
@@ -164,13 +165,13 @@ class TransitionGroup extends React.Component {
 		 * @default 2
 		 */
 		size: PropTypes.number
-	}
+	};
 
 	static defaultProps = {
 		childFactory: identity,
 		component: 'div',
 		size: 2
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -227,7 +228,7 @@ class TransitionGroup extends React.Component {
 		// that have fallen out of the `children` array and manually clean them up from the map.
 		prevChildKeys
 			.filter(key => !nextChildKeys.includes(key))
-			.forEach(key => this.completeTransition(key));
+			.forEach(key => this.completeTransition({key}));
 	}
 
 	reconcileChildren (prevActiveChildMapping, nextActiveChildMapping) {
@@ -243,7 +244,7 @@ class TransitionGroup extends React.Component {
 		}
 
 		// remove any "dropped" children from the list of transitioning children
-		droppedKeys.forEach(key => this.completeTransition(key));
+		droppedKeys.forEach(key => this.completeTransition({key}));
 
 		// mark any new child as entering
 		nextChildKeys.forEach((key, index) => {
@@ -292,11 +293,13 @@ class TransitionGroup extends React.Component {
 		keysToLeave.forEach(this.performLeave);
 	}
 
-	completeTransition (key) {
-		delete this.currentlyTransitioningKeys[key];
+	completeTransition ({key, noForwarding = false}) {
+		if (key in this.currentlyTransitioningKeys) {
+			delete this.currentlyTransitioningKeys[key];
 
-		if (Object.keys(this.currentlyTransitioningKeys).length === 0) {
-			forwardOnTransition(null, this.props);
+			if (!noForwarding && Object.keys(this.currentlyTransitioningKeys).length === 0) {
+				forwardOnTransition(null, this.props);
+			}
 		}
 	}
 
@@ -312,7 +315,7 @@ class TransitionGroup extends React.Component {
 		} else {
 			this._handleDoneAppearing(key);
 		}
-	}
+	};
 
 	_handleDoneAppearing = (key) => {
 		const component = this.groupRefs[key];
@@ -324,7 +327,7 @@ class TransitionGroup extends React.Component {
 			view: component
 		}, this.props);
 
-		this.completeTransition(key);
+		this.completeTransition({key, noForwarding: true});
 
 		let currentChildMapping = mapChildren(this.props.children);
 
@@ -332,7 +335,7 @@ class TransitionGroup extends React.Component {
 			// This was removed before it had fully appeared. Remove it.
 			this.performLeave(key);
 		}
-	}
+	};
 
 	performEnter = (key) => {
 		this.currentlyTransitioningKeys[key] = true;
@@ -346,7 +349,7 @@ class TransitionGroup extends React.Component {
 		} else {
 			this._handleDoneEntering(key);
 		}
-	}
+	};
 
 	_handleDoneEntering = (key) => {
 		const component = this.groupRefs[key];
@@ -358,8 +361,8 @@ class TransitionGroup extends React.Component {
 			view: component
 		}, this.props);
 
-		this.completeTransition(key);
-	}
+		this.completeTransition({key});
+	};
 
 	performStay = (key) => {
 		const component = this.groupRefs[key];
@@ -371,7 +374,7 @@ class TransitionGroup extends React.Component {
 		} else {
 			this._handleDoneStaying(key);
 		}
-	}
+	};
 
 	_handleDoneStaying = (key) => {
 		const component = this.groupRefs[key];
@@ -382,7 +385,7 @@ class TransitionGroup extends React.Component {
 		forwardOnStay({
 			view: component
 		}, this.props);
-	}
+	};
 
 	performLeave = (key) => {
 		this.currentlyTransitioningKeys[key] = true;
@@ -396,7 +399,7 @@ class TransitionGroup extends React.Component {
 			// is done.
 			this._handleDoneLeaving(key);
 		}
-	}
+	};
 
 	_handleDoneLeaving = (key) => {
 		const component = this.groupRefs[key];
@@ -409,17 +412,17 @@ class TransitionGroup extends React.Component {
 			view: component
 		}, this.props);
 
-		this.completeTransition(key);
+		this.completeTransition({key});
 
 		this.setState(function (state) {
 			const index = indexOfChild(key, state.children);
 			return {children: remove(index, 1, state.children)};
 		});
-	}
+	};
 
 	storeRefs = key => node => {
 		this.groupRefs[key] = node;
-	}
+	};
 
 	render () {
 		// support wrapping arbitrary children with a component that supports the necessary

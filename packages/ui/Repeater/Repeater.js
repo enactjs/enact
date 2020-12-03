@@ -5,8 +5,8 @@
  * @exports Repeater
  */
 
-import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -82,10 +82,10 @@ const RepeaterBase = kind({
 		/**
 		 * Called with a reference to [component]{@link ui/Repeater.Repeater#component}
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * The property on each `childComponent` that receives the index of the item in the `Repeater`.

@@ -17,6 +17,7 @@
  */
 
 import {forward} from '@enact/core/handle';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
 import React from 'react';
@@ -51,11 +52,11 @@ const TransitionBase = kind({
 		 *
 		 *Useful if you need to measure or interact with the node directly.
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @default null
 		 * @public
 		 */
-		childRef: PropTypes.func,
+		childRef: EnactPropTypes.ref,
 
 		/**
 		 * The node to be transitioned.
@@ -415,7 +416,7 @@ class Transition extends React.Component {
 		 * @public
 		 */
 		visible: PropTypes.bool
-	}
+	};
 
 	static defaultProps = {
 		direction: 'up',
@@ -424,7 +425,7 @@ class Transition extends React.Component {
 		timingFunction: 'ease-in-out',
 		type: 'slide',
 		visible: true
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -505,7 +506,7 @@ class Transition extends React.Component {
 		this.setState({
 			renderState: TRANSITION_STATE.MEASURE
 		});
-	})
+	});
 
 	handleResize = () => {
 		// @TODO oddly, using the setState callback is required here to ensure that the bounds
@@ -513,7 +514,7 @@ class Transition extends React.Component {
 		this.setState({
 			initialHeight: null
 		}, this.measureInner);
-	}
+	};
 
 	handleTransitionEnd = (ev) => {
 		forwardTransitionEnd(ev, this.props);
@@ -525,7 +526,7 @@ class Transition extends React.Component {
 				forwardOnShow(ev, this.props);
 			}
 		}
-	}
+	};
 
 	measureInner = () => {
 		if (this.childNode) {
@@ -539,11 +540,11 @@ class Transition extends React.Component {
 				});
 			}
 		}
-	}
+	};
 
 	childRef = (node) => {
 		this.childNode = node;
-	}
+	};
 
 	render () {
 		let {visible, ...props} = this.props;

@@ -49,6 +49,10 @@ const componentOverride = PropTypes.oneOfType([
 	component
 ]);
 
+const ref = PropTypes.oneOfType([PropTypes.shape({
+	current: PropTypes.any
+}), PropTypes.func]);
+
 /*
  * Wrap a prop type validator with a deprecation warning when the prop has a non-null value
  *
@@ -70,6 +74,7 @@ const deprecated = (base, config) => {
 const EnactPropTypes = {
 	component,
 	componentOverride,
+	ref,
 	deprecated,
 	renderable,
 	renderableOverride

@@ -1,6 +1,8 @@
 import useClass from '@enact/core/useClass';
 import React from 'react';
 
+import ilib from '../src/index.js';
+
 import I18n from './I18n';
 
 /**
@@ -37,6 +39,9 @@ import I18n from './I18n';
  * @private
  */
 function useI18n ({locale, ...config} = {}) {
+	const ilibLocale = ilib.getLocale();
+	locale = locale && locale !== ilibLocale ? locale : ilibLocale;
+
 	const [state, setState] = React.useState({
 		locale,
 		loaded: Boolean(config.sync)

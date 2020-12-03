@@ -14,6 +14,7 @@
  */
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import handle, {adaptEvent, call, forward} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -33,7 +34,7 @@ import {wrapWithView} from './View';
  * @public
  */
 const ViewManagerBase = class extends React.Component {
-	static displayName = 'ViewManager'
+	static displayName = 'ViewManager';
 
 	static propTypes = /** @lends ui/ViewManager.ViewManagerBase.prototype */ {
 		/**
@@ -71,10 +72,10 @@ const ViewManagerBase = class extends React.Component {
 		/**
 		 * Called with a reference to [component]{@link ui/ViewManager.ViewManager#component}
 		 *
-		 * @type {Function}
+		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: PropTypes.func,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Time in milliseconds to complete a transition
@@ -178,12 +179,22 @@ const ViewManagerBase = class extends React.Component {
 		/**
 		 * Explicitly sets the transition direction.
 		 *
-		 * If omitted, the direction is determined automaticallly based on the change of index or a
+		 * If omitted, the direction is determined automatically based on the change of index or a
 		 * string comparison of the first child's key.
 		 *
 		 * @type {Boolean}
 		 */
 		reverseTransition: PropTypes.bool,
+
+		/**
+		 * Indicates the current locale uses right-to-left reading order.
+		 *
+		 * `rtl` is passed to the `arranger` in order to alter the animation (e.g. reversing the
+		 * horizontal direction).
+		 *
+		 * @type {Boolean}
+		 */
+		rtl: PropTypes.bool,
 
 		/**
 		 * Index of first visible view. Defaults to the current value of `index`.
@@ -192,13 +203,13 @@ const ViewManagerBase = class extends React.Component {
 		 * @default value of index
 		 */
 		start: PropTypes.number
-	}
+	};
 
 	static defaultProps = {
 		component: 'div',
 		duration: 300,
 		index: 0
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -224,8 +235,26 @@ const ViewManagerBase = class extends React.Component {
 		return null;
 	}
 
+	makeTransitionEvent () {
+		return {index: this.props.index, previousIndex: this.state.prevIndex};
+	}
+
+	handleTransition = handle(
+		adaptEvent(
+			call('makeTransitionEvent'),
+			forward('onTransition')
+		)
+	).bindAs(this, 'handleTransition');
+
+	handleWillTransition = handle(
+		adaptEvent(
+			call('makeTransitionEvent'),
+			forward('onWillTransition')
+		)
+	).bindAs(this, 'handleWillTransition');
+
 	render () {
-		const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, ...rest} = this.props;
+		const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, rtl, ...rest} = this.props;
 		let {end = index, start = index} = this.props;
 		const {prevIndex: previousIndex, reverseTransition} = this.state;
 		const childrenList = React.Children.toArray(children);
@@ -246,7 +275,8 @@ const ViewManagerBase = class extends React.Component {
 			reverseTransition,
 			enteringDelay,
 			enteringProp,
-			childProps
+			childProps,
+			rtl: Boolean(rtl)
 		});
 
 		delete rest.end;
@@ -254,7 +284,14 @@ const ViewManagerBase = class extends React.Component {
 		delete rest.start;
 
 		return (
-			<TransitionGroup {...rest} childFactory={childFactory} size={size} currentIndex={index}>
+			<TransitionGroup
+				{...rest}
+				childFactory={childFactory}
+				currentIndex={index}
+				onTransition={this.handleTransition}
+				onWillTransition={this.handleWillTransition}
+				size={size}
+			>
 				{views}
 			</TransitionGroup>
 		);
