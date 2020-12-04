@@ -1,8 +1,10 @@
-import {adaptEvent, forward, forwardWithPrevent} from '@enact/core/handle';
+import handle, {adaptEvent, forward, forwardWithPrevent} from '@enact/core/handle';
+import useHandlers from '@enact/core/useHandlers';
 import Spotlight from '../../src/spotlight.js';
 import classNames from 'classnames';
 import {mount} from 'enzyme';
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import useSpot from '../useSpot';
 
@@ -13,10 +15,6 @@ const
 const
 	forwardKeyDownWithPrevent = forwardWithPrevent('onKeyDown'),
 	forwardKeyUpWithPrevent = forwardWithPrevent('onKeyUp');
-
-const handleWithProps = (props) => (...handlers) => (ev) => {
-	handlers.reduce((ret, fn) => (ret && fn(ev, props) || false), true);
-};
 
 const makeKeyEvent = (keyCode) => {
 	return {
@@ -30,11 +28,31 @@ const REMOTE_OK_KEY = 16777221;
 let compRef = null;
 let getCurrent = Spotlight.getCurrent;
 
+const callContext = (name) => (ev, props, context) => context[name](ev, props);
+const spotHandlers = {
+	onKeyDown: handle(
+		forwardKeyDownWithPrevent,
+		callContext('onKeyDown'),
+		forwardMouseDown
+	),
+	onKeyUp: handle(
+		adaptEvent(
+			(ev, props) => ({notPrevented: forwardKeyUpWithPrevent(ev, props), ...ev}), // eslint-disable-line no-shadow
+			callContext('onKeyUp')
+		),
+		forwardMouseUp
+	),
+	onBlur: callContext('onBlur'),
+	onFocus: callContext('onFocus'),
+	onMouseEnter: callContext('onMouseEnter'),
+	onMouseLeave: callContext('onMouseLeave')
+};
+
 describe('useSpot', () => {
 
-	function Component (props) {
+	function SpottableBase (props) {
 		// eslint-disable-next-line enact/prop-types
-		const {className, component, disabled, emulateMouse, onSelectionCancel, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, selectionKeys, spotlightDisabled, ...rest} = props;
+		const {className, component, componentRef, disabled, emulateMouse, onSelectionCancel, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, selectionKeys, spotlightDisabled, ...rest} = props;
 		const spot = useSpot({
 			disabled,
 			emulateMouse,
@@ -48,37 +66,38 @@ describe('useSpot', () => {
 			spotlightDisabled
 		});
 		const Comp = component || 'div';
-		const handle = handleWithProps(props);
 
 		rest.tabIndex = -1;
 
-		rest.onKeyDown = handle(
-			forwardKeyDownWithPrevent,
-			spot.keyDown,
-			forwardMouseDown
-		);
-		rest.onKeyUp = handle(
-			adaptEvent(
-				(ev, props) => ({notPrevented: forwardKeyUpWithPrevent(ev, props), ...ev}), // eslint-disable-line no-shadow
-				spot.keyUp
-			),
-			forwardMouseUp
-		);
-		rest.onBlur = (ev) => spot.blur(ev, props);
-		rest.onFocus = (ev) => spot.focus(ev, props);
-		rest.onMouseEnter = (ev) => spot.mouseEnter(ev, props);
-		rest.onMouseLeave = (ev) => spot.mouseLeave(ev, props);
+		const handlers = useHandlers(spotHandlers, rest, spot);
 
-		compRef = spot.ref;
+		compRef = componentRef;
 
 		return (
 			<Comp
 				{...rest}
+				{...spot.attributes}
+				{...handlers}
 				className={classNames(className, spot.className)}
 				disabled={disabled}
 				ref={spot.ref}
 			/>
 		);
+	}
+
+	class Component extends React.Component {
+		componentDidMount () {
+			// eslint-disable-next-line react/no-find-dom-node
+			this.node = ReactDOM.findDOMNode(this);
+		}
+
+		get componentRef () {
+			return this.node;
+		}
+
+		render () {
+			return <SpottableBase {...this.props} componentRef={this.componentRef} />;
+		}
 	}
 
 	beforeEach(() => {
