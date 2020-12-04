@@ -49,7 +49,7 @@ const RoutableViews = Routable({navigate: 'onNavigate'}, ({children}) => <>{chil
 
 storiesOf('UI', module)
 	.add(
-		'Route',
+		'Routable',
 		() => {
 			let [path, setPath] = React.useState('/app');
 			const handleNavigate = (ev) => {
@@ -72,7 +72,7 @@ storiesOf('UI', module)
 		},
 		{
 			info: {
-				text: 'Basic usage of Route'
+				text: 'Basic usage of Routable'
 			}
 		}
 	);
