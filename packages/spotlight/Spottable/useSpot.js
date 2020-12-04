@@ -54,10 +54,9 @@ const REMOTE_OK_KEY = 16777221;
  * @private
  */
 
-const useSpot = ({emulateMouse, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
+const useSpot = ({componentRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
 	const useForceUpdate = () => (React.useReducer(x => x + 1, 0));
 	const spot = useClass(Spot, {emulateMouse, useForceUpdate});
-	const ref = React.useRef(null);
 	const context = React.useRef({
 		prevSpotlightDisabled: spotlightDisabled,
 		spotlightDisabled
@@ -72,7 +71,7 @@ const useSpot = ({emulateMouse, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spot
 
 	React.useEffect(() => {
 		// eslint-disable-next-line react/no-find-dom-node
-		spot.load(ReactDOM.findDOMNode(ref.current));
+		spot.load(ReactDOM.findDOMNode(componentRef && componentRef.current || null));
 
 		return () => {
 			spot.unload();
@@ -88,8 +87,7 @@ const useSpot = ({emulateMouse, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spot
 		keyDown: spot.handleKeyDown,
 		keyUp: spot.handleKeyUp,
 		mouseEnter: spot.handleEnter,
-		mouseLeave: spot.handleLeave,
-		ref
+		mouseLeave: spot.handleLeave
 	};
 };
 

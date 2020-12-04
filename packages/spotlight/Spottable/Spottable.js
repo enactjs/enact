@@ -8,9 +8,11 @@
 
 import {adaptEvent, forward, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import {spottableClass, useSpot} from './useSpot';
 
@@ -73,10 +75,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		handlers.reduce((ret, fn) => (ret && fn(ev, props) || false), true);
 	};
 
-	// eslint-disable-next-line no-shadow
-	function Spottable (props) {
+	function SpottableBase (props) {
 		const {
 			className,
+			componentRef,
 			disabled,
 			onSpotlightDisappear,
 			onSpotlightDown,
@@ -89,6 +91,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			...rest
 		} = props;
 		const spot = useSpot({
+			componentRef,
 			disabled,
 			emulateMouse,
 			onSelectionCancel: rest.onMouseUp,
@@ -147,12 +150,19 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				{...rest}
 				className={classNames(className, spot.className)}
 				disabled={disabled}
-				ref={spot.ref}
 			/>
 		);
 	}
 
-	Spottable.propTypes = /** @lends spotlight/Spottable.Spottable.prototype */ {
+	SpottableBase.propTypes = /** @lends spotlight/Spottable.Spottable.prototype */ {
+		/*
+		 * Called with a reference to [component]{@link spotlight/Spottable.Spottable#component}
+		 *
+		 * @type {Object|Function}
+		 * @private
+		 */
+		componentRef: EnactPropTypes.ref,
+
 		/**
 		 * Whether or not the component is in a disabled state.
 		 *
@@ -244,6 +254,22 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		tabIndex: PropTypes.number
 	};
+
+	// eslint-disable-next-line no-shadow
+	class Spottable extends React.Component {
+		componentDidMount () {
+			// eslint-disable-next-line react/no-find-dom-node
+			this.node = ReactDOM.findDOMNode(this);
+		}
+
+		get componentRef () {
+			return this.node;
+		}
+
+		render () {
+			return <SpottableBase {...this.props} componentRef={this.componentRef} />;
+		}
+	}
 
 	return Spottable;
 });
