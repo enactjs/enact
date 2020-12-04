@@ -7,14 +7,26 @@
  * @exports removeCancelHandle
  */
 
-import {forward} from '@enact/core/handle';
+import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import useHandlers from '@enact/core/useHandlers';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import {addCancelHandler, removeCancelHandler} from './cancelHandler';
 import {isCancel, useCancel} from './useCancel';
+
+const callContext = (name) => (ev, props, context) => context[name](ev, props);
+const cancelHandlers = {
+	onKeyUp: handle(
+		forward('onKeyUp'),
+		forProp('modal', false),
+		callContext('isCancel'),
+		forward('onCancel'),
+		callContext('cancel')
+	)
+};
 
 /**
  * Default config for {@link ui/Cancelable.Cancelable}
@@ -133,17 +145,17 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		);
 	}
 
-	function renderWrapped (props, handleKeyUp) {
+	function renderWrapped (props, {onKeyUp}) {
 		return (
-			<Component onKeyUp={handleKeyUp}>
+			<Component onKeyUp={onKeyUp}>
 				<Wrapped {...props} />
 			</Component>
 		);
 	}
 
-	function renderUnwrapped (props, handleKeyUp) {
+	function renderUnwrapped (props, {onKeyUp}) {
 		return (
-			<Wrapped {...props} onKeyUp={handleKeyUp} />
+			<Wrapped {...props} onKeyUp={onKeyUp} />
 		);
 	}
 
@@ -167,26 +179,19 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		const {cancel} = useCancel({
+		const hook = useCancel({
 			...props,
 			modal,
 			onCancel: onConfiguredCancel(onCancel)
 		});
-
-		const handleKeyUp = (ev) => {
-			forward('onKeyUp', ev, updated);
-			if (!modal && isCancel(ev)) {
-				forward('onCancel', ev, updated);
-				cancel(ev);
-			}
-		};
+		const handlers = useHandlers(cancelHandlers, {...props, modal}, {...hook, isCancel});
 
 		delete updated.onCancel;
 		delete updated[onCancel];
 
 		return	modal && renderModal(updated) ||
-				Component && renderWrapped(updated, handleKeyUp) ||
-				renderUnwrapped(updated, handleKeyUp);
+				Component && renderWrapped(updated, handlers) ||
+				renderUnwrapped(updated, handlers);
 	}
 
 	Cancelable.propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
