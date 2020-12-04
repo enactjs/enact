@@ -189,25 +189,6 @@ describe('useSpot', () => {
 			expect(actual).toEqual(expected);
 		});
 
-		test('should emit {onSelectionCancel} when the component was focused and become disabled', () => {
-			const spy = jest.fn();
-
-			const subject = mount(
-				<Component onSelectionCancel={spy} selectionKeys={[1]} />
-			);
-
-			subject.simulate('focus');
-			subject.simulate('keydown', makeKeyEvent(1));
-			subject.setProps({
-				disabled: true
-			});
-
-			const expected = 1;
-			const actual = spy.mock.calls.length;
-
-			expect(actual).toEqual(expected);
-		});
-
 		test('should emulate {onMouseDown} when REMOTE_OK_KEY key is pressed', () => {
 			const spy = jest.fn();
 
