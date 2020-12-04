@@ -136,7 +136,7 @@ describe('useSpot', () => {
 		});
 
 		const expected = 'spottable';
-		const actual = subject.find('div').prop('className');
+		const actual = subject.find('SpottableBase').find('div').prop('className');
 
 		expect(actual).toEqual(expected);
 	});
@@ -231,8 +231,8 @@ describe('useSpot', () => {
 				<Component onSpotlightDisappear={spy} />
 			);
 
-			subject.simulate('focus');
-			subject.unmount();
+			subject.find('SpottableBase').simulate('focus');
+			subject.find('SpottableBase').unmount();
 
 			const expected = 1;
 			const actual = spy.mock.calls.length;
