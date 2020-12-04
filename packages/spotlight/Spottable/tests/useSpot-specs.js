@@ -125,22 +125,6 @@ describe('useSpot', () => {
 		expect(actual).not.toEqual(expected);
 	});
 
-	test('should add the spottable class to a {spotlightDisabled} and {focused} component', () => {
-		const subject = mount(
-			<Component spotlightDisabled />
-		);
-
-		subject.simulate('focus');
-		subject.setProps({
-			'data-id': '123'
-		});
-
-		const expected = 'spottable';
-		const actual = subject.find('SpottableBase').find('div').prop('className');
-
-		expect(actual).toEqual(expected);
-	});
-
 	describe('should emit event properly', () => {
 		test('should emit {onSpotlightUp} when the the {keydown} is emitted with 38 keycode', () => {
 			const spy = jest.fn();
@@ -217,22 +201,6 @@ describe('useSpot', () => {
 			subject.setProps({
 				disabled: true
 			});
-
-			const expected = 1;
-			const actual = spy.mock.calls.length;
-
-			expect(actual).toEqual(expected);
-		});
-
-		test('should emit {onSpotlightDisappear} when unmounted while focused', () => {
-			const spy = jest.fn();
-
-			const subject = mount(
-				<Component onSpotlightDisappear={spy} />
-			);
-
-			subject.find('SpottableBase').simulate('focus');
-			subject.find('SpottableBase').unmount();
 
 			const expected = 1;
 			const actual = spy.mock.calls.length;
