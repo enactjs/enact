@@ -69,7 +69,7 @@ const useSpot = ({componentRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE
 
 	let attributes = {};
 	if (props.spotlightId) {
-		attributes['data-spotlight-id'] = spotlightId;
+		attributes['data-spotlight-id'] = props.spotlightId;
 	}
 
 	spot.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context.current);

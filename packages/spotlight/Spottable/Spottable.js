@@ -39,7 +39,7 @@ const spotHandlers = {
 	onKeyUp: handle(
 		adaptEvent(
 			(ev, props) => ({notPrevented: forwardKeyUpWithPrevent(ev, props), ...ev}), // eslint-disable-line no-shadow
-			callContext('onKeyUp'),
+			callContext('onKeyUp')
 		),
 		forwardMouseUp,
 		forwardClick
@@ -118,7 +118,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			onSpotlightUp,
 			selectionKeys,
 			spotlightDisabled,
-			spotlightId,
 			...rest
 		} = props;
 		const spot = useSpot({
@@ -142,6 +141,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		rest.tabIndex = tabIndex;
 
 		const handlers = useHandlers(spotHandlers, rest, spot);
+
+		delete rest.spotlightId;
 
 		return (
 			<Wrapped
