@@ -6,7 +6,8 @@
  * @exports spottableClass
  */
 
-import {adaptEvent, forward, returnsTrue} from '@enact/core/handle';
+import handle, {adaptEvent, forward, returnsTrue} from '@enact/core/handle';
+import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import classNames from 'classnames';
@@ -27,6 +28,39 @@ const
 const
 	forwardKeyDownWithPrevent = forward('onKeyDown'),
 	forwardKeyUpWithPrevent = forward('onKeyUp');
+
+const callContext = (name) => (ev, props, context) => context[name](ev, props);
+const spotHandlers = {
+	onKeyDown: handle(
+		forwardKeyDownWithPrevent,
+		callContext('onKeyDown'),
+		forwardMouseDown
+	),
+	onKeyUp: handle(
+		adaptEvent(
+			(ev, props) => ({notPrevented: forwardKeyUpWithPrevent(ev, props), ...ev}), // eslint-disable-line no-shadow
+			callContext('onKeyUp'),
+		),
+		forwardMouseUp,
+		forwardClick
+	),
+	onBlur: handle(
+		callContext('onBlur'),
+		forwardBlur
+	),
+	onFocus: handle(
+		callContext('onFocus'),
+		forwardFocus
+	),
+	onMouseEnter: handle(
+		returnsTrue((ev, props) => forwardMouseEnter(ev, props)),
+		callContext('onMouseEnter')
+	),
+	onMouseLeave: handle(
+		returnsTrue((ev, props) => forwardMouseLeave(ev, props)),
+		callContext('onMouseLeave')
+	)
+};
 
 /**
  * Default configuration for Spottable
@@ -71,9 +105,6 @@ const defaultConfig = {
  */
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const {emulateMouse} = config;
-	const handleWithProps = (props) => (...handlers) => (ev) => {
-		handlers.reduce((ret, fn) => (ret && fn(ev, props) || false), true);
-	};
 
 	function SpottableBase (props) {
 		const {
@@ -103,7 +134,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			selectionKeys,
 			spotlightDisabled
 		});
-		const handle = handleWithProps(props);
 
 		let tabIndex = rest.tabIndex;
 		if (tabIndex == null) {
@@ -111,43 +141,13 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 		rest.tabIndex = tabIndex;
 
-		if (spotlightId) {
-			rest['data-spotlight-id'] = spotlightId;
-		}
-
-		rest.onKeyDown = handle(
-			forwardKeyDownWithPrevent,
-			spot.keyDown,
-			forwardMouseDown
-		);
-		rest.onKeyUp = handle(
-			adaptEvent(
-				(ev, props) => ({notPrevented: forwardKeyUpWithPrevent(ev, props), ...ev}), // eslint-disable-line no-shadow
-				spot.keyUp
-			),
-			forwardMouseUp,
-			forwardClick
-		);
-		rest.onBlur = handle(
-			spot.blur,
-			forwardBlur
-		);
-		rest.onFocus = handle(
-			spot.focus,
-			forwardFocus
-		);
-		rest.onMouseEnter = handle(
-			returnsTrue((ev) => forwardMouseEnter(ev, props)),
-			spot.mouseEnter
-		);
-		rest.onMouseLeave = handle(
-			returnsTrue((ev) => forwardMouseLeave(ev, props)),
-			spot.mouseLeave
-		);
+		const handlers = useHandlers(spotHandlers, rest, spot);
 
 		return (
 			<Wrapped
 				{...rest}
+				{...spot.attributes}
+				{...handlers}
 				className={classNames(className, spot.className)}
 				disabled={disabled}
 			/>

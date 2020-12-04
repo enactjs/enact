@@ -67,6 +67,11 @@ const useSpot = ({componentRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE
 		spotlightDisabled
 	};
 
+	let attributes = {};
+	if (props.spotlightId) {
+		attributes['data-spotlight-id'] = spotlightId;
+	}
+
 	spot.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context.current);
 
 	React.useEffect(() => {
@@ -81,13 +86,14 @@ const useSpot = ({componentRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE
 	React.useEffect(spot.didUpdate); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return {
-		blur: spot.handleBlur,
+		attributes,
 		className: spot.spottableClass || null,
-		focus: spot.handleFocus,
-		keyDown: spot.handleKeyDown,
-		keyUp: spot.handleKeyUp,
-		mouseEnter: spot.handleEnter,
-		mouseLeave: spot.handleLeave
+		onBlur: spot.handleBlur,
+		onFocus: spot.handleFocus,
+		onKeyDown: spot.handleKeyDown,
+		onKeyUp: spot.handleKeyUp,
+		onMouseEnter: spot.handleEnter,
+		onMouseLeave: spot.handleLeave
 	};
 };
 
