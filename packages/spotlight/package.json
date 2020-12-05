@@ -21,8 +21,8 @@
     "@enact/core": "^3.4.9",
     "prop-types": "^15.7.2",
     "ramda": "^0.24.1",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "warning": "^3.0.0"
   }
 }

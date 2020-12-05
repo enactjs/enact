@@ -1365,9 +1365,9 @@
         "invariant": "^2.2.2",
         "prop-types": "^15.7.2",
         "ramda": "^0.24.1",
-        "react": "^16.8.0",
-        "react-dom": "^16.8.0",
-        "react-is": "^16.8.3",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
+        "react-is": "^17.0.1",
         "recompose": "^0.26.0",
         "warning": "^4.0.3"
       }
@@ -1389,9 +1389,9 @@
         "graceful-fs": "^4.2.4",
         "import-fresh": "^3.2.1",
         "mock-require": "^3.0.3",
-        "react": "^16.13.1",
-        "react-dom": "^16.13.1",
-        "react-is": "^16.13.1",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
+        "react-is": "^17.0.1",
         "react-reconciler": "^0.25.1",
         "react-test-renderer": "^16.13.1",
         "resolve": "^1.17.0",
@@ -1459,8 +1459,8 @@
         "@enact/core": "^3.4.9",
         "prop-types": "^15.7.2",
         "ramda": "^0.24.1",
-        "react": "^16.8.0",
-        "react-dom": "^16.8.0",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
         "xhr": "^2.4.1"
       }
     },
@@ -1472,8 +1472,8 @@
         "@enact/core": "^3.4.9",
         "prop-types": "^15.7.2",
         "ramda": "^0.24.1",
-        "react": "^16.7.0",
-        "react-dom": "^16.7.0",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
         "warning": "^3.0.0"
       },
       "dependencies": {
@@ -1534,8 +1534,8 @@
         "invariant": "^2.2.2",
         "prop-types": "^15.7.2",
         "ramda": "^0.24.1",
-        "react": "^16.8.0",
-        "react-dom": "^16.8.0",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
         "recompose": "^0.26.0",
         "warning": "^3.0.0"
       },
@@ -1557,8 +1557,8 @@
       "requires": {
         "@enact/core": "^3.4.9",
         "prop-types": "^15.7.2",
-        "react": "^16.8.0",
-        "react-dom": "^16.8.0"
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1"
       }
     },
     "@icons/material": {
@@ -1632,7 +1632,7 @@
         "global": "^4.3.2",
         "polished": "^3.3.1",
         "prop-types": "^15.7.2",
-        "react": "^16.8.3",
+        "react": "^17.0.1",
         "react-inspector": "^4.0.0",
         "uuid": "^3.3.2"
       },
@@ -1695,10 +1695,10 @@
         "marksy": "^8.0.0",
         "nested-object-assign": "^1.0.3",
         "prop-types": "^15.7.2",
-        "react": "^16.8.3",
+        "react": "^17.0.1",
         "react-addons-create-fragment": "^15.6.2",
         "react-element-to-jsx-string": "^14.0.2",
-        "react-is": "^16.8.3",
+        "react-is": "^17.0.1",
         "react-lifecycles-compat": "^3.0.4",
         "util-deprecate": "^1.0.2"
       },
@@ -1850,7 +1850,7 @@
             "lodash": "^4.17.15",
             "memoizerific": "^1.11.3",
             "prop-types": "^15.6.2",
-            "react": "^16.8.3",
+            "react": "^17.0.1",
             "semver": "^6.0.0",
             "shallow-equal": "^1.1.0",
             "store2": "^2.7.1",
@@ -1930,7 +1930,7 @@
         "lodash": "^4.17.15",
         "memoizerific": "^1.11.3",
         "prop-types": "^15.6.2",
-        "react": "^16.8.3",
+        "react": "^17.0.1",
         "semver": "^6.0.0",
         "shallow-equal": "^1.1.0",
         "store2": "^2.7.1",
@@ -2063,8 +2063,8 @@
         "polished": "^3.3.1",
         "popper.js": "^1.14.7",
         "prop-types": "^15.7.2",
-        "react": "^16.8.3",
-        "react-dom": "^16.8.3",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
         "react-focus-lock": "^2.1.0",
         "react-helmet-async": "^1.0.2",
         "react-popper-tooltip": "^2.8.3",
@@ -3935,8 +3935,8 @@
         "polished": "^3.3.1",
         "prop-types": "^15.7.2",
         "qs": "^6.6.0",
-        "react": "^16.8.3",
-        "react-dom": "^16.8.3",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
         "react-draggable": "^4.0.3",
         "react-helmet-async": "^1.0.2",
         "react-hotkeys": "2.0.0",
@@ -3969,7 +3969,7 @@
             "lodash": "^4.17.15",
             "memoizerific": "^1.11.3",
             "prop-types": "^15.6.2",
-            "react": "^16.8.3",
+            "react": "^17.0.1",
             "semver": "^6.0.0",
             "shallow-equal": "^1.1.0",
             "store2": "^2.7.1",
@@ -4013,8 +4013,8 @@
             "polished": "^3.3.1",
             "popper.js": "^1.14.7",
             "prop-types": "^15.7.2",
-            "react": "^16.8.3",
-            "react-dom": "^16.8.3",
+            "react": "^17.0.1",
+            "react-dom": "^17.0.1",
             "react-focus-lock": "^2.1.0",
             "react-helmet-async": "^1.0.2",
             "react-popper-tooltip": "^2.8.3",
@@ -4749,7 +4749,7 @@
         "object.entries": "^1.1.2",
         "prop-types": "^15.7.2",
         "prop-types-exact": "^1.2.0",
-        "react-is": "^16.13.1"
+        "react-is": "^17.0.1"
       }
     },
     "ajv": {
@@ -7483,7 +7483,7 @@
           "integrity": "sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==",
           "dev": true,
           "requires": {
-            "react-is": "^16.7.0"
+            "react-is": "^17.0.1"
           }
         }
       }
@@ -12136,7 +12136,7 @@
       "requires": {
         "loose-envify": "^1.4.0",
         "object-assign": "^4.1.1",
-        "react-is": "^16.8.1"
+        "react-is": "^17.0.1"
       }
     },
     "prop-types-exact": {
@@ -12711,7 +12711,7 @@
       "requires": {
         "object-assign": "^4.1.1",
         "prop-types": "^15.6.2",
-        "react-is": "^16.8.6",
+        "react-is": "^17.0.1",
         "scheduler": "^0.19.1"
       }
     },
