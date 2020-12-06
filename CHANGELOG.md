@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/Transition` to support any valid CSS duration for any `type` prop
+
 ## [3.4.9] - 2020-10-30
 
 ### Fixed
