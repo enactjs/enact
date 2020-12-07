@@ -1,12 +1,13 @@
 import {action} from '@enact/storybook-utils/addons/actions';
 import React from 'react';
+import ri from '@enact/ui/resolution';
 import Heading from '@enact/ui/Heading';
 import {Linkable, Routable, Route} from '@enact/ui/Routable';
 import {storiesOf} from '@storybook/react';
 
 const LinkedButton = Linkable('button');
-const viewStyle = {padding: '6px', border: '1px solid black'};
-const buttonStyle = {margin: '6px', padding: '6px'};
+const viewStyle = {padding: ri.scaleToRem(6), margin: ri.scaleToRem(6), border: '1px solid black'};
+const buttonStyle = {margin: ri.scaleToRem(6), padding: ri.scaleToRem(6)};
 
 const AppView = () => (
 	<div style={viewStyle}>
@@ -26,21 +27,11 @@ const SettingsView = () => (
 );
 const HomeView = () => (<Heading style={viewStyle}>/app/home</Heading>);
 
-const WifiView = () => (
+const SettingModuleComponents = {};
+// eslint-disable-next-line enact/display-name
+const SettingModuleView = (settingModuleName) => () => (
 	<div style={viewStyle}>
-		<Heading>/app/settings/wifi</Heading>
-		<LinkedButton style={buttonStyle} path="/app">Back To App</LinkedButton>
-	</div>
-);
-const WiredView = () => (
-	<div style={viewStyle}>
-		<Heading>/app/settings/wired</Heading>
-		<LinkedButton style={buttonStyle} path="/app">Back To App</LinkedButton>
-	</div>
-);
-const BluetoothView = () => (
-	<div style={viewStyle}>
-		<Heading>/app/settings/blutooth</Heading>
+		<Heading>/app/settings/{settingModuleName}</Heading>
 		<LinkedButton style={buttonStyle} path="/app">Back To App</LinkedButton>
 	</div>
 );
@@ -61,9 +52,10 @@ storiesOf('UI', module)
 				<RoutableViews onNavigate={handleNavigate} path={path}>
 					<Route path="app" component={AppView}>
 						<Route path="settings" component={SettingsView}>
-							<Route path="wifi" component={WifiView} />
-							<Route path="wired" component={WiredView} />
-							<Route path="bluetooth" component={BluetoothView} />
+							{['wifi', 'wired', 'bluetooth'].map((settingModule) => {
+								SettingModuleComponents[settingModule] = SettingModuleComponents[settingModule] || SettingModuleView(settingModule);
+								return <Route key={settingModule} path={settingModule} component={SettingModuleComponents[settingModule]} />;
+							})}
 						</Route>
 						<Route path="home" component={HomeView} />
 					</Route>
