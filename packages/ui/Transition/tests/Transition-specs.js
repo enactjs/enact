@@ -99,8 +99,7 @@ describe('Transition Specs', () => {
 	const durationCombination = [
 		[css.short, 'short'],
 		[css.medium, 'medium'],
-		[css.long, 'long'],
-		['1000ms', '1000ms']
+		[css.long, 'long']
 	];
 
 	const timingFunctionCombination = [
