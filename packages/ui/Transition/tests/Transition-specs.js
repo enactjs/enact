@@ -119,20 +119,26 @@ describe('Transition Specs', () => {
 		['timingFunction', timingFunctionCombination]
 	];
 
+	const types = [
+		'slide', 'clip', 'fade'
+	];
+
 	propStyleCombination.forEach(([prop, val]) => {
-		val.forEach(([key, value]) => {
-			test(`should apply classes for ${prop}="${value}"`, () => {
-				const propValue = {
-					[prop]: value
-				};
-				const wrapped = mount(
-					<Transition {...propValue} visible>Body</Transition>
-				);
+		types.forEach(type => {
+			val.forEach(([key, value]) => {
+				test(`should apply classes for ${prop}="${value}"`, () => {
+					const propValue = {
+						[prop]: value
+					};
+					const wrapped = mount(
+						<Transition {...propValue} type={type} visible>Body</Transition>
+					);
 
-				const expected = key;
-				const actual = wrapped.find('div').at(0).prop('className');
+					const expected = key;
+					const actual = wrapped.find('div').at(0).prop('className');
 
-				expect(actual).toContain(expected);
+					expect(actual).toContain(expected);
+				});
 			});
 		});
 	});
