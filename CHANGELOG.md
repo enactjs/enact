@@ -2,7 +2,11 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [3.4.10] - 2020-11-27
+## [3.4.10] - 2020-12-09
+
+### Added
+
+- `ui/Routable` sample
 
 ### Changed
 

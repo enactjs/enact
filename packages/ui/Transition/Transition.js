@@ -133,8 +133,8 @@ const TransitionBase = kind({
 		 * Controls how long the transition should take.
 		 * Supported preset durations are: `'short'` (250ms), `'medium'` (500ms), and `'long'` (1s).
 		 * `'medium'` (500ms) is default when no others are specified.
-		 * Any valid CSS duration value is also accepted, e.g. "200ms" or "3s". Pure numeric values
-		 * are also supported and treated as milliseconds.
+		 * Any valid CSS duration value is also accepted when `type` is set to `'clip'`,
+		 * e.g. "200ms" or "3s". Pure numeric values are also supported and treated as milliseconds.
 		 *
 		 * @type {String|Number}
 		 * @default 'medium'
