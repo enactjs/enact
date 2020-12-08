@@ -68,7 +68,17 @@ const defaultConfig = {
 	 * @public
 	 * @memberof spotlight/Spottable.Spottable.defaultConfig
 	 */
-	emulateMouse: true
+	emulateMouse: true,
+
+	/**
+	 * Prop to pass the status whether or not the component is focused.
+	 *
+	 * @type {String}
+	 * @default null
+	 * @public
+	 * @memberof spotlight/Spottable.Spottable.defaultConfig
+	 */
+	focusedProp: '',
 };
 
 /**
@@ -94,7 +104,7 @@ const defaultConfig = {
  * @returns {Function} Spottable
  */
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
-	const {emulateMouse} = config;
+	const {emulateMouse, focusedProp} = config;
 
 	return class extends React.Component {
 		static displayName = 'Spottable';
@@ -430,6 +440,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (spotlightId) {
 				rest['data-spotlight-id'] = spotlightId;
+			}
+
+			if (focusedProp) {
+				rest[focusedProp] = this.isFocused;
 			}
 
 			return (
