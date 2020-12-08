@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `spotlight/Spottable` HOC config prop `focusedProp` to pass the status whether or not the component is focused
+
 ## [3.4.9] - 2020-10-30
 
 No significant changes.
