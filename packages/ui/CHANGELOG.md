@@ -2,6 +2,21 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [3.4.10] - 2020-12-09
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to scroll correctly on Chrome 85 or higher in RTL locales
+
+### Changed
+
+- `ui/Media` `play` function to return promise
+
+### Fixed
+
+- `ui/MarqueeDecorator` to restart animation when text changed while focus retained
+- `ui/Routable` to respect the current path on first render when using relative paths in links
+
 ## [3.4.9] - 2020-10-30
 
 No significant changes.

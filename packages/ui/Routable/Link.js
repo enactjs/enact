@@ -1,10 +1,11 @@
 import kind from '@enact/core/kind';
 import {forProp, forward, handle, preventDefault} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import useHandlers from '@enact/core/useHandlers';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {RouteContext} from './util';
+import useLink from './useLink';
 
 const LinkBase = kind({
 	name: 'Link',
@@ -38,30 +39,33 @@ const LinkBase = kind({
 const Linkable = hoc({navigate: 'onClick'}, (config, Wrapped) => {
 	const {navigate} = config;
 
-	return kind({
-		name: 'Linkable',
+	const navHandlers = {
+		[navigate]: handle(
+			forward(navigate),
+			(ev, props, hook) => {
+				hook.navigate(props);
+			}
+		)
+	};
 
-		contextType: RouteContext,
+	// eslint-disable-next-line no-shadow
+	function Linkable (props) {
+		const link = useLink();
+		const handlers = useHandlers(navHandlers, props, link);
 
-		propTypes: {
-			path: PropTypes.string.isRequired
-		},
+		return (
+			<Wrapped {...props} {...handlers} />
+		);
+	}
 
-		handlers: {
-			[navigate]: handle(
-				forward(navigate),
-				(ev, {path}, {navigate: nav}) => {
-					if (nav) nav({path});
-				}
-			)
-		},
-
-		render: (props) => {
+	// TODO: Added to maintain `ref` compatibility with 3.x. Remove in 4.0
+	return class LinkableAdapter extends React.Component {
+		render () {
 			return (
-				<Wrapped {...props} />
+				<Linkable {...this.props} />
 			);
 		}
-	});
+	};
 });
 
 const Link = Linkable(LinkBase);
