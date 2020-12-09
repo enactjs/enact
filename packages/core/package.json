@@ -1,6 +1,6 @@
 {
   "name": "@enact/core",
-  "version": "3.4.9",
+  "version": "3.4.10",
   "description": "Enact is an open source JavaScript framework containing everything you need to create a fast, scalable mobile or web application.",
   "main": "index.js",
   "scripts": {
@@ -32,7 +32,6 @@
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
     "react-is": "^16.8.3",
-    "recompose": "^0.26.0",
     "warning": "^4.0.3"
   }
 }
