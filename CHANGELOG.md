@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.4.11] - 2020-12-11
+
+### Fixed
+
+- `ui` documentation problem in styles/internal directory
+
 ## [3.4.10] - 2020-12-09
 
 ### Added
