@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- documentation issue
+- documentation problem in styles/internal directory
 
 ## [3.4.10] - 2020-12-09
 
