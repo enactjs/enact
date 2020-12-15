@@ -846,7 +846,7 @@ class VirtualListBasic extends Component {
 	scrollToPosition (x, y, rtl = this.props.rtl) {
 		if (this.props.scrollContentRef.current && this.props.scrollContentRef.current.scrollTo) {
 			if (rtl) {
-				x = (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
+				x = (platform.ios || platform.safari || platform.chrome >= 85) ? -x : this.scrollBounds.maxLeft - x;
 			}
 
 			this.props.scrollContentRef.current.scrollTo(x, y);
