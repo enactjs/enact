@@ -24,7 +24,7 @@
 // Applies RTL-compatible start and end position to a selector
 // Simple "when" here just assumes that if the first argument is a list with more than 1 entry,
 // then units are correct. If it's just 1, then we varify the value is a number (measurement).
-.position-start-end (@trbl; @target: "") when (length(@trbl) > 1) or ((iskeyword(@target)) or (@target = "")) {
+.position-start-end (@trbl; @target: "") when (length(@trbl) > 1) or (@target = "") {
 	.position(@trbl);
 
 	.enact-locale-rtl({
