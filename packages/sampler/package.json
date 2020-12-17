@@ -1,35 +1,35 @@
 {
-  "name": "enact-sampler",
-  "version": "3.4.11",
-  "description": "Component and QA samples for Enact",
-  "private": true,
-  "main": "index.js",
-  "scripts": {
-    "lint": "enact lint --strict",
-    "test": "echo \"No test suite\" && exit 0",
-    "pack": "build-storybook -c .storybook -o dist",
-    "serve": "start-storybook -p 8080 -c .storybook --ci"
-  },
-  "license": "Apache-2.0",
-  "dependencies": {
-    "@enact/core": "^3.4.11",
-    "@enact/i18n": "^3.4.11",
-    "@enact/spotlight": "^3.4.11",
-    "@enact/ui": "^3.4.11",
-    "@enact/webos": "^3.4.11",
-    "classnames": "^2.2.6",
-    "ilib": "^14.4.0",
-    "prop-types": "^15.7.2",
-    "query-string": "^6.7.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
-  },
-  "devDependencies": {
-    "@enact/storybook-utils": "^2.0.0",
-    "@storybook/addons": "5.3.5",
-    "@storybook/react": "5.3.5",
-    "@storybook/theming": "5.3.5",
-    "babel-loader": "^8.0.6",
-    "core-js": "^3.6.4"
-  }
+    "name": "enact-sampler",
+    "version": "3.4.11",
+    "description": "Component and QA samples for Enact",
+    "private": true,
+    "main": "index.js",
+    "scripts": {
+        "lint": "enact lint --strict",
+        "test": "echo \"No test suite\" && exit 0",
+        "pack": "build-storybook -c .storybook -o dist",
+        "serve": "start-storybook -p 8080 -c .storybook --ci"
+    },
+    "license": "Apache-2.0",
+    "dependencies": {
+        "@enact/core": "^3.4.11",
+        "@enact/i18n": "^3.4.11",
+        "@enact/spotlight": "^3.4.11",
+        "@enact/ui": "^3.4.11",
+        "@enact/webos": "^3.4.11",
+        "classnames": "^2.2.6",
+        "ilib": "^14.4.0",
+        "prop-types": "^15.7.2",
+        "query-string": "^6.7.0",
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6"
+    },
+    "devDependencies": {
+        "@enact/storybook-utils": "../../../utils/storybook-utils/",
+        "@storybook/addons": "5.3.21",
+        "@storybook/react": "5.3.21",
+        "@storybook/theming": "5.3.21",
+        "babel-loader": "^8.2.2",
+        "core-js": "^3.6.4"
+    }
 }
