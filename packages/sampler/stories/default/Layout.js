@@ -34,10 +34,5 @@ storiesOf('UI', module)
 					</Cell>
 				</Layout>
 			</div>
-		),
-		{
-			info: {
-				text: 'Basic usage of Layout'
-			}
-		}
+		)
 	);

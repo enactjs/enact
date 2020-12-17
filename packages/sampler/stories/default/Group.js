@@ -66,10 +66,5 @@ storiesOf('UI', module)
 			>
 				{['Item 1', 'Item 2', 'Item 3']}
 			</Group>
-		),
-		{
-			info: {
-				text: 'Basic usage of Group'
-			}
-		}
+		)
 	);

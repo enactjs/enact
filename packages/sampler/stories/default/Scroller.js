@@ -46,11 +46,6 @@ storiesOf('UI', module)
 					</div>
 				</div>
 			</Scroller>
-		),
-		{
-			info: {
-				text: 'Basic usage of Scroller'
-			}
-		}
+		)
 	);
 

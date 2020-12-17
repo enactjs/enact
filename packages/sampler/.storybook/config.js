@@ -1,7 +1,6 @@
 import 'core-js';
 import {addParameters, addDecorator} from '@storybook/react';
 import {create} from '@storybook/theming';
-import {withInfo} from '@enact/storybook-utils/addons/info';
 import configure from '../src/configure';
 
 const stories = require.context('../stories/default', false, /.js$/);
@@ -20,7 +19,5 @@ addParameters({
 		panelPosition: 'bottom'
 	}
 });
-
-addDecorator(withInfo());
 
 configure(stories, module);

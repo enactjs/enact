@@ -79,10 +79,5 @@ storiesOf('UI', module)
 				spacing={ri.scale(number('spacing', VirtualGridListConfig, 20))}
 				verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, VirtualGridListConfig)}
 			/>
-		),
-		{
-			info: {
-				text: 'Basic usage of VirtualGridList'
-			}
-		}
+		)
 	);

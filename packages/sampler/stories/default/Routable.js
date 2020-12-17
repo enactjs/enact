@@ -61,10 +61,5 @@ storiesOf('UI', module)
 					</Route>
 				</RoutableViews>
 			);
-		},
-		{
-			info: {
-				text: 'Basic usage of Routable'
-			}
 		}
 	);

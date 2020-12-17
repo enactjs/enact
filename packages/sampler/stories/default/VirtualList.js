@@ -66,10 +66,5 @@ storiesOf('UI', module)
 					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, VirtualListConfig)}
 				/>
 			);
-		},
-		{
-			info: {
-				text: 'Basic usage of VirtualList'
-			}
 		}
 	);

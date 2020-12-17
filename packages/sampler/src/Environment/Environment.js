@@ -127,10 +127,6 @@ const StorybookDecorator = (story, config) => {
 		groupId: 'Development'
 	};
 
-	if (sample && sample.props && sample.props.info) {
-		config.description = sample.props.info;
-	}
-
 	const args = getArgs();
 	const classes = {
 		aria: boolean('debug aria', DevelopmentConfig, getKnobFromArgs(args, 'debug aria')),
