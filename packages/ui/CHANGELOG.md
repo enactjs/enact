@@ -2,7 +2,17 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [3.4.11] - 2020-12-11
+
+### Fixed
+
+- documentation problem in styles/internal directory
+
+## [3.4.10] - 2020-12-09
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to scroll correctly on Chrome 85 or higher in RTL locales
 
 ### Changed
 
