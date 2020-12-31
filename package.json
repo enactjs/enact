@@ -15,13 +15,15 @@
     "test": "lerna --concurrency 1 run test",
     "test-ss": "lerna --concurrency 1 run test-ss",
     "test-ui": "lerna --concurrency 1 run test-ui",
-    "clean": "lerna clean"
+    "clean": "lerna clean",
+    "validate-docs": "validate-docs --strict --standalone --path packages"
   },
   "license": "Apache-2.0",
   "eslintConfig": {
     "extends": "enact-proxy/strict"
   },
   "devDependencies": {
+    "@enact/docs-utils": "^0.3.3",
     "eslint-config-enact-proxy": "^1.0.0",
     "lerna": "^2.11.0"
   }
