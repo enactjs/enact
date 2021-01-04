@@ -7,7 +7,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Changed
 
-- `ui/Transition` to support any valid CSS duration for any `type` prop
+- `ui/Transition` prop `duration` to support any valid CSS value for `slide` and `fade` `type`
 
 ## [3.4.11] - 2020-12-11
 
