@@ -31,7 +31,7 @@ const forwardTransitionEnd = forward('onTransitionEnd');
 const forwardOnShow = forward('onShow');
 const forwardOnHide = forward('onHide');
 
-const validateDuration = (duration) => (typeof duration === 'number' ? duration + 'ms' : duration);
+const formatter = (duration) => (typeof duration === 'number' ? duration + 'ms' : duration);
 /**
  * The stateless structure of the component.
  *
@@ -241,7 +241,7 @@ const TransitionBase = kind({
 				style.width = clipWidth;
 			} else if ((type === 'fade' || type === 'slide') && duration && !css[duration]) {
 				// If it's a number, assume it's miliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
-				style.transitionDuration = validateDuration(duration);
+				style.transitionDuration = formatter(duration);
 			}
 
 			return style;
@@ -259,7 +259,7 @@ const TransitionBase = kind({
 				// If duration isn't a known named string, assume it is a CSS duration value
 				if (duration && !css[duration]) {
 					// If it's a number, assume it's miliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
-					style.transitionDuration = validateDuration(duration);
+					style.transitionDuration = formatter(duration);
 				}
 			}
 
