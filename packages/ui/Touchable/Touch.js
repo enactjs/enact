@@ -1,11 +1,3 @@
-/**
- * Application support for gestures.
- *
- * @module ui/Touchable
- * @exports Touchable
- * @exports configure
- */
-
 import {adaptEvent, call, forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
 import {on, off} from '@enact/core/dispatcher';
 import complement from 'ramda/src/complement';
@@ -176,19 +168,6 @@ const handleBlur = handle(
 	call('blurGesture')
 );
 
-/**
- * A higher-order component that provides a consistent set of pointer events -- `onDown`, `onUp`,
- * and `onTap` -- across mouse and touch interfaces along with support for common gestures including
- * `onFlick`, `onDrag`, `onHold`, and `onHoldPulse`.
- *
- * Note: This HoC passes a number of props to the wrapped component that should be passed to the
- * main DOM node or consumed by the wrapped component.
- *
- * @class Touchable
- * @memberof ui/Touchable
- * @hoc
- * @public
- */
 class Touch {
 	constructor () {
 		this.context = {};

@@ -124,6 +124,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		/**
 		 * Disables the component.
 		 *
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Boolean}
 		 * @default false
 		 * @public
@@ -134,6 +135,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * Instance-specific overrides of the drag configuration.
 		 *
 		 * @see {@link ui/Touchable.configure}
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Object}
 		 * @public
 		 */
@@ -143,6 +145,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * Instance-specific overrides of the flick configuration.
 		 *
 		 * @see {@link ui/Touchable.configure}
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Object}
 		 * @public
 		 */
@@ -152,6 +155,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * Instance-specific overrides of the hold configuration.
 		 *
 		 * @see {@link ui/Touchable.configure}
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Object}
 		 * @public
 		 */
@@ -160,6 +164,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		/**
 		 * Prevents resuming the touch events and gestures when re-entering the component.
 		 *
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Boolean}
 		 * @default false
 		 * @public
@@ -169,6 +174,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		/**
 		 * Event handler for 'down' pointer events.
 		 *
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
 		 * @public
 		 */
@@ -183,6 +189,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * * `x` - Horizontal position of the drag, relative to the viewport
 		 * * `y` - Vertical position of the drag, relative to the viewport
 		 *
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
 		 * @public
 		 */
@@ -195,6 +202,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 *
 		 * * `type` - Type of event, `'onDragEnd'`
 		 *
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
 		 * @public
 		 */
@@ -209,6 +217,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * * `x` - Horizontal position of the drag, relative to the viewport
 		 * * `y` - Vertical position of the drag, relative to the viewport
 		 *
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
 		 * @public
 		 */
@@ -225,6 +234,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * * `velocityX` - Velocity of flick along te horizontal axis
 		 * * `velocityY` - Velocity of flick along te vertical axis
 		 *
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
 		 * @public
 		 */
@@ -240,6 +250,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * * `time` - Time, in milliseconds, configured for this hold which may vary slightly
 		 *            from time since the hold began
 		 *
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
 		 * @public
 		 */
@@ -253,6 +264,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * * `type` - Type of event, `'onHoldEnd'`
 		 * * `time` - Time, in milliseconds, since the hold began
 		 *
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
 		 * @public
 		 */
@@ -266,6 +278,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * * `type` - Type of event, `'onHoldPulse'`
 		 * * `time` - Time, in milliseconds, since the hold began
 		 *
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
 		 * @public
 		 */
@@ -274,6 +287,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		/**
 		 * Event handler for 'move' pointer events
 		 *
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
 		 * @public
 		 */
@@ -282,6 +296,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		/**
 		 * Event handler for 'tap' pointer events
 		 *
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
 		 * @public
 		 */
@@ -290,6 +305,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		/**
 		 * Event handler for 'up' pointer events
 		 *
+		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
 		 * @public
 		 */
