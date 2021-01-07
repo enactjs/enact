@@ -2,11 +2,141 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [3.4.11] - 2020-12-11
+
+### Fixed
+
+- documentation problem in styles/internal directory
+
+## [3.4.10] - 2020-12-09
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to scroll correctly on Chrome 85 or higher in RTL locales
+
+### Changed
+
+- `ui/Media` `play` function to return promise
+
+### Fixed
+
+- `ui/MarqueeDecorator` to restart animation when text changed while focus retained
+- `ui/Routable` to respect the current path on first render when using relative paths in links
+
+## [3.4.9] - 2020-10-30
+
+No significant changes.
+
+## [3.4.8] - 2020-10-08
+
+### Fixed
+
+- `ui/Button` to prevent browser's default styling when pressed by touch
+
+## [3.4.7] - 2020-09-01
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to call `onScrollStop` when scrollbar's visibility changed while scrolling
+- `ui/ViewManager` to handle transitioning away and back to a view before a transition completes
+
+## [3.4.6] - 2020-08-24
 
 ### Added
 
-- `ui/Group` prop `selectedEventProp` to configure the key that `ui/GroupItem` uses to hold the value that it gives the `onSelect` event
+- `ui/MarqueeDecorator` warning against nested `Marquee`'s
+
+## [3.4.5] - 2020-08-18
+
+No significant changes.
+
+## [3.4.4] - 2020-08-17
+
+### Fixed
+
+- `ui/FloatingLayer` and `ui/Slider` to prevent global classname leaks
+
+## [3.4.3] - 2020-08-10
+
+No significant changes.
+
+## [3.4.2] - 2020-08-05
+
+No significant changes.
+
+## [3.4.1] - 2020-08-05
+
+### Fixed
+
+- `ui/Touchable` to invoke event callbacks updated during gesture
+
+## [3.4.0] - 2020-07-29
+
+### Added
+
+- `ui/AnnounceDecorator.Announce` method `announce` parameter `clear` to clear previous message before setting the new message
+- `ui/ViewManager` prop and `ui/ViewManager.Arranger` callback config prop `rtl` to allow arrangers to adjust animations to be locale aware
+
+### Fixed
+
+- `ui/Marquee` to correctly animate when scaled or when less than 1px longer than its container
+- `ui/Scroller` prop `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label`
+- `ui/Scroller` and `ui/VirtualList` to re-render when its size changed
+- `ui/Scroller` and `ui/VirtualList` to not fire `onScrollStop` event redundantly
+- `ui/VirtualList` with scrollMode `native` to not scrollTo bottom when dataSize changed to smaller and scrollTo called with `animate: false` option
+
+## [3.3.1] - 2020-07-20
+
+### Changed
+
+- `ui/Scroller` by increasing the scrollbar's inactivity timeout to 1000 ms
+
+## [3.3.0] - 2020-07-13
+
+### Changed
+
+- `ui/ViewManager.TransitionGroup` to suppress `onTransition` events when a view appears or stays
+
+## [3.3.0-alpha.15] - 2020-07-07
+
+No significant changes.
+
+## [3.3.0-alpha.14] - 2020-06-29
+
+### Fixed
+
+- `ui/Scroller` to update when `clientSize` is changed
+- `ui/VirtualList` to reset scroll position when `clientSize` is changed
+
+## [3.3.0-alpha.13] - 2020-06-22
+
+No significant changes.
+
+## [3.3.0-alpha.12] - 2020-06-15
+
+### Added
+
+- `ui/Button` prop `iconFlip` to set the `flip` prop of `iconComponent`
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to not cause unnecessary rerenders
+- `ui/Scroller` and `ui/VirtualList` to not inadvertently scroll due to click events when in RTL locales
+- `ui/Skinnable` to not force all `Skinnable` children to update if a parent updates
+
+## [3.3.0-alpha.11] - 2020-06-08
+
+No significant changes.
+
+## [3.3.0-alpha.10] - 2020-05-26
+
+### Added
+
+- `ui/Group` prop `selectedEventProp` to configure the key used to hold the value in the `onSelect` event
+
+### Fixed
+
+- `Toggleable` to recognize changes in `disabled` and `onToggle`
 
 ## [3.3.0-alpha.9] - 2020-05-11
 

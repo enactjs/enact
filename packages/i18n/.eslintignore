@@ -1,5 +1,0 @@
-node_modules/*
-build/*
-dist/*
-ilib/*
-webpack.config.js

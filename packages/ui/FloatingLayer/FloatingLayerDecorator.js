@@ -58,7 +58,7 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {floatLayerId, wrappedClassName} = config;
 
 	return class extends React.Component {
-		static displayName = 'FloatingLayerDecorator'
+		static displayName = 'FloatingLayerDecorator';
 
 		constructor (props) {
 			super(props);
@@ -80,12 +80,12 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				(typeof document !== 'undefined' && document.getElementById(floatLayerId)) ||
 				null
 			);
-		}
+		};
 
 		handleNotify = oneOf(
 			[forAction('register'), call('notifyMount')],
 			[forAction('closeAll'), call('handleCloseAll')]
-		).bind(this)
+		).bind(this);
 
 		handleCloseAll () {
 			this.registry.notify({action: 'close'});
@@ -100,7 +100,7 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		setFloatingLayer = (node) => {
 			this.floatingLayer = node;
-		}
+		};
 
 		render () {
 			const {className, ...rest} = this.props;

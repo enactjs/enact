@@ -30,7 +30,7 @@ const forwardOpen = forwardWithType('onOpen');
  * @public
  */
 class FloatingLayerBase extends React.Component {
-	static displayName = 'FloatingLayer'
+	static displayName = 'FloatingLayer';
 
 	static propTypes = /** @lends ui/FloatingLayer.FloatingLayerBase.prototype */ {
 		/**
@@ -107,9 +107,9 @@ class FloatingLayerBase extends React.Component {
 		 * @public
 		 */
 		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none'])
-	}
+	};
 
-	static contextType = FloatingLayerContext
+	static contextType = FloatingLayerContext;
 
 	static defaultProps = {
 		floatLayerClassName: 'enact-fit enact-clip enact-untouchable',
@@ -117,7 +117,7 @@ class FloatingLayerBase extends React.Component {
 		noAutoDismiss: false,
 		open: false,
 		scrimType: 'translucent'
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -182,7 +182,7 @@ class FloatingLayerBase extends React.Component {
 	handleNotify = oneOf(
 		[forEventProp('action', 'close'), call('handleClose')],
 		[forEventProp('action', 'mount'), call('setFloatingLayer')]
-	).bind(this)
+	).bind(this);
 
 	setFloatingLayer ({floatingLayer}) {
 		const isNewLayer = !this.floatingLayer && floatingLayer;
@@ -198,19 +198,19 @@ class FloatingLayerBase extends React.Component {
 	handleClose = handle(
 		forProp('open', true),
 		forwardDismiss
-	).bind(this)
+	).bind(this);
 
 	handleClick = handle(
 		forProp('noAutoDismiss', false),
 		forProp('open', true),
 		forward('onDismiss')
-	).bind(this)
+	).bind(this);
 
 	handleScroll = (ev) => {
 		const {currentTarget} = ev;
 		currentTarget.scrollTop = 0;
 		currentTarget.scrollLeft = 0;
-	}
+	};
 
 	stopPropagation = (ev) => {
 		ev.nativeEvent.stopImmediatePropagation();
@@ -218,7 +218,7 @@ class FloatingLayerBase extends React.Component {
 		if (this.props.children.props.onClick) {
 			this.props.children.props.onClick();
 		}
-	}
+	};
 
 	renderNode () {
 		const {floatLayerClassName} = this.props;

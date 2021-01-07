@@ -1,6 +1,6 @@
 {
   "name": "@enact/webos",
-  "version": "3.3.0-alpha.9",
+  "version": "3.4.11",
   "description": "webOS support library",
   "main": "index.js",
   "scripts": {
@@ -24,11 +24,8 @@
       "baseSize": 24
     }
   },
-  "eslintConfig": {
-    "extends": "enact/strict"
-  },
   "dependencies": {
-    "@enact/core": "^3.3.0-alpha.9",
+    "@enact/core": "^3.4.11",
     "prop-types": "^15.7.2",
     "react": "^16.8.0",
     "react-dom": "^16.8.0"

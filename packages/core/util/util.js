@@ -12,10 +12,12 @@
  * @exports memoize
  * @exports mergeClassNameMaps
  * @exports perfNow
+ * @exports mapAndFilterChildren
  */
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
 import unless from 'ramda/src/unless';
+import React from 'react';
 import * as ReactIs from 'react-is';
 
 import Job from './Job';
@@ -229,6 +231,39 @@ const memoize = (fn) => {
 	};
 };
 
+/**
+ * Maps over the `children`, discarding any `null` children before and after calling the callback.
+ *
+ * A replacement for `React.Children.map`.
+ *
+ * @function
+ * @param {*}        children  Children to map over
+ * @param {Function} callback  Function to apply to each child. Will not be called if the child is
+ *                              `null`. If `callback` returns `null`, the child will be removed from
+ *                              the result. If `null` is returned, the item will not be included in
+ *                              the final output, regardless of the filter function.
+ * @param {Function} [filter]  Filter function applied after mapping.
+ *
+ * @returns {*}                The processed children or the value of `children` if not an array.
+ * @memberof core/util
+ * @see https://reactjs.org/docs/react-api.html#reactchildrenmap
+ * @public
+ */
+const mapAndFilterChildren = (children, callback, filter) => {
+	const result = React.Children.map(children, (child, ...rest) => {
+		if (child != null) {
+			return callback(child, ...rest);
+		} else {
+			return child;
+		}
+	});
+	if (result && filter) {
+		return result.filter(filter);
+	} else {
+		return result;
+	}
+};
+
 export {
 	cap,
 	clamp,
@@ -239,5 +274,6 @@ export {
 	Job,
 	memoize,
 	mergeClassNameMaps,
-	perfNow
+	perfNow,
+	mapAndFilterChildren
 };

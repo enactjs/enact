@@ -2,6 +2,88 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [3.4.11] - 2020-12-11
+
+No significant changes.
+
+## [3.4.10] - 2020-12-09
+
+### Added
+
+- `ui/Routable` sample
+
+## [3.4.9] - 2020-10-30
+
+No significant changes.
+
+## [3.4.8] - 2020-10-08
+
+No significant changes.
+
+## [3.4.7] - 2020-09-01
+
+No significant changes.
+
+## [3.4.6] - 2020-08-24
+
+No significant changes.
+
+## [3.4.5] - 2020-08-18
+
+No significant changes.
+
+## [3.4.4] - 2020-08-17
+
+No significant changes.
+
+## [3.4.3] - 2020-08-10
+
+No significant changes.
+
+## [3.4.2] - 2020-08-05
+
+No significant changes.
+
+## [3.4.1] - 2020-08-05
+
+No significant changes.
+
+## [3.4.0] - 2020-07-29
+
+No significant changes.
+
+## [3.3.1] - 2020-07-20
+
+No significant changes.
+
+## [3.3.0] - 2020-07-13
+
+No significant changes.
+
+## [3.3.0-alpha.15] - 2020-07-07
+
+No significant changes.
+
+## [3.3.0-alpha.14] - 2020-06-29
+
+No significant changes.
+
+## [3.3.0-alpha.13] - 2020-06-22
+
+No significant changes.
+
+## [3.3.0-alpha.12] - 2020-06-15
+
+No significant changes.
+
+## [3.3.0-alpha.11] - 2020-06-08
+
+No significant changes.
+
+## [3.3.0-alpha.10] - 2020-05-26
+
+No significant changes.
+
 ## [3.3.0-alpha.9] - 2020-05-11
 
 No significant changes.

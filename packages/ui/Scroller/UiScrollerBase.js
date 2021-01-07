@@ -16,7 +16,7 @@ import css from './UiScroller.module.less';
  * @public
  */
 class ScrollerBase extends Component {
-	static displayName = 'ui:ScrollerBase'
+	static displayName = 'ui:ScrollerBase';
 
 	static propTypes = /** @lends ui/Scroller.ScrollerBase.prototype */ {
 		children: PropTypes.node.isRequired,
@@ -59,11 +59,11 @@ class ScrollerBase extends Component {
 		 * @private
 		 */
 		rtl: PropTypes.bool
-	}
+	};
 
 	static defaultProps = {
 		direction: 'both'
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -89,21 +89,21 @@ class ScrollerBase extends Component {
 		scrollHeight: 0,
 		maxLeft: 0,
 		maxTop: 0
-	}
+	};
 
 	scrollPos = {
 		top: 0,
 		left: 0
-	}
+	};
 
-	getScrollBounds = () => this.scrollBounds
+	getScrollBounds = () => this.scrollBounds;
 
 	getRtlPositionX = (x) => {
 		if (this.props.rtl) {
-			return (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
+			return (platform.ios || platform.safari || platform.chrome >= 85) ? -x : this.scrollBounds.maxLeft - x;
 		}
 		return x;
-	}
+	};
 
 	// for Scrollable
 	setScrollPosition (x, y) {
@@ -144,15 +144,15 @@ class ScrollerBase extends Component {
 			width: nodeWidth,
 			height: nodeHeight
 		};
-	}
+	};
 
 	isVertical = () => {
 		return (this.props.direction !== 'horizontal');
-	}
+	};
 
 	isHorizontal = () => {
 		return (this.props.direction !== 'vertical');
-	}
+	};
 
 	calculateMetrics () {
 		const

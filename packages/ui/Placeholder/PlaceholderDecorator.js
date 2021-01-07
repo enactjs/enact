@@ -48,9 +48,9 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const placeholderStyle = Object.assign({}, defaultConfig.style, style);
 
 	return class extends React.PureComponent {
-		static displayName = 'PlaceholderDecorator'
+		static displayName = 'PlaceholderDecorator';
 
-		static contextType = PlaceholderContext
+		static contextType = PlaceholderContext;
 
 		constructor () {
 			super();
@@ -89,7 +89,7 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		initPlaceholderRef = (ref) => {
 			this.placeholderRef = ref;
-		}
+		};
 
 		render () {
 			const {visible} = this.state;

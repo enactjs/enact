@@ -1,3 +1,6 @@
+@import "./utils.less";
+@import "./variables.less";
+
 // Disabled elements
 .disabled(@rules; @target) when (isruleset(@rules)) and (@target = parent) {
 	[disabled] {
@@ -19,56 +22,78 @@
 }
 
 // Applies RTL-compatible start and end position to a selector
-.position-start-end (@start, @end) {
+// Simple "when" here just assumes that if the first argument is a list with more than 1 entry,
+// then units are correct. If it's just 1, then we varify the value is a number (measurement).
+.position-start-end (@trbl; @target: "") when (length(@trbl) > 1) or ((iskeyword(@target)) or (@target = "")) {
+	.position(@trbl);
+
+	.enact-locale-rtl({
+		.position(
+			// Note: swapping left and right values
+			.extract(@trbl; top)[]
+			.extract(@trbl; left)[]
+			.extract(@trbl; bottom)[]
+			.extract(@trbl; right)[]
+		);
+	}; @target);
+}
+
+.position-start-end (@start; @end; @target: "") when (default()) {
 	left: @start;
 	right: @end;
 
-	:global(.enact-locale-right-to-left) & {
+	.enact-locale-rtl({
 		left: @end;
 		right: @start;
-	}
+	}, @target);
 }
 
 // Applies RTL-compatible start and end margins to a selector
-.margin-start-end(@start; @end; @target) when (@target = parent) {
-    margin-left: @start;
-    margin-right: @end;
+.margin-start-end (@trbl; @target: "") when (length(@trbl) > 1) or ((iskeyword(@target)) or (@target = "")) {
+	margin: @trbl;
 
-    :global(.enact-locale-right-to-left)& {
-        margin-left: @end;
-        margin-right: @start;
-    }
+	.enact-locale-rtl({
+		margin:
+			// Note: swapping left and right values
+			.extract(@trbl; top)[]
+			.extract(@trbl; left)[]
+			.extract(@trbl; bottom)[]
+			.extract(@trbl; right)[]
+		;
+	}; @target);
 }
-
-.margin-start-end (@start, @end) {
+.margin-start-end(@start; @end; @target: "") when (default()) {
 	margin-left: @start;
 	margin-right: @end;
 
-	:global(.enact-locale-right-to-left) & {
+	.enact-locale-rtl({
 		margin-left: @end;
 		margin-right: @start;
-	}
+	}, @target);
 }
 
 // Applies RTL-compatible start and end padding to a selector
-.padding-start-end(@start; @end; @target) when (@target = parent) {
-    padding-left: @start;
-    padding-right: @end;
+.padding-start-end (@trbl; @target: "") when (length(@trbl) > 1) or ((iskeyword(@target)) or (@target = "")) {
+	padding: @trbl;
 
-    :global(.enact-locale-right-to-left)& {
-        padding-left: @end;
-        padding-right: @start;
-    }
+	.enact-locale-rtl({
+		padding:
+			// Note: swapping left and right values
+			.extract(@trbl; top)[]
+			.extract(@trbl; left)[]
+			.extract(@trbl; bottom)[]
+			.extract(@trbl; right)[]
+		;
+	}; @target);
 }
-
-.padding-start-end (@start, @end) {
+.padding-start-end(@start; @end; @target: "") when (default()) {
 	padding-left: @start;
 	padding-right: @end;
 
-	:global(.enact-locale-right-to-left) & {
+	.enact-locale-rtl({
 		padding-left: @end;
 		padding-right: @start;
-	}
+	}, @target);
 }
 
 // NOTE: Until we are able to automatically remove these JSDoc-style comments, they should remain LESS-commented
@@ -345,8 +370,97 @@
 	});
 }
 
-.locale-japanese-line-break() {
-	:global(.enact-locale-ja) & {
-		line-break: strict;
+//
+// Locale Mixins
+//
+
+// .enact-locale-line-height()
+//
+// Assign line-height rules specifically to the languages designated
+// as needing special support for tall-glyphs.
+//
+// Set line-height for normal and tallglyphs with 1 list argument
+// Ex:
+//   .enact-locale-line-height(1.4em 1.6em);
+// Or:
+//   @lineheight: 1.4em 1.6em;
+//   .enact-locale-line-height(@lineheight);
+.enact-locale-line-height(@both; @target: normal) when (length(@both) = 2) {
+	.enact-locale-tallglyph(line-height; @both; @target);
+}
+
+
+// .enact-locale-tallglyph()
+//
+// Rulename and a normal value followed by a tallglyph value (3 arguments)
+// Ex:
+//   .enact-locale-tallglyph(font-size; 1.4em; 1.6em);  ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
+.enact-locale-tallglyph(@rule; @normal; @tallglyph; @target) when (iskeyword(@rule)) {
+	@{rule}: @normal;
+	.enact-locale-tallglyph(@rule; @tallglyph; @target);
+}
+
+// Rulename and 2 value second variable (2 arguments, 2nd being a list)
+// Ex:
+//   .enact-locale-tallglyph(font-size; 1.4em 1.6em);  ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
+// Or:
+//   @fontsize: 1.4em 1.6em;
+//   .enact-locale-tallglyph(font-size, @fontsize);    ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
+.enact-locale-tallglyph(@rule; @val; @target: normal) when (iskeyword(@rule)) and (length(@val) = 2) {
+	@{rule}: extract(@val, 1);
+	.enact-locale-tallglyph(@rule; extract(@val, 2); @target);
+}
+
+// Rulename and a tallglyph value
+// Ex:
+//   .enact-locale-tallglyph(font-size; 1.6em);  ->  tallglyphs font-size: 1.6em;
+.enact-locale-tallglyph(@rule; @val; @target: normal) when (iskeyword(@rule)) and (default()) {
+	.enact-locale-tallglyph({
+		@{rule}: @val;
+	}, @target);
+}
+
+// Accept a ruleset and apply it to the list of tall-glyph languages
+// Ex:
+//   .enact-locale-tallglyph({
+//     font-size: 1.6em;
+//   });
+.enact-locale-tallglyph(@rules; @target: normal) when (isruleset(@rules)) and (default()) {
+	each(@locale-tallglyph-languages, {
+		// Take each language in the list, apply the @rules to them.
+		// @value is used to generate an appropriate selector for the @rules.
+		// Ex: `.enact-locale-th & { @rules(); }`
+		.enact-locale(@value; @rules; @target);
+	});
+}
+
+
+// Assign rules specifically to RTL locales with a convenient shorthand.
+// Apply these rules to the current selector, not the general parent.
+.enact-locale-rtl(@rules; @target) when (isruleset(@rules)) and (@target = self) {
+	.enact-locale(right-to-left; @rules; @target);
+}
+// Assign rules specifically to RTL locales with a convenient shorthand.
+.enact-locale-rtl(@rules; @target: normal) when (isruleset(@rules)) and (default()) {
+	.enact-locale(right-to-left; @rules; @target);
+}
+
+// Generates an appropriate selector given the locale-target, and injects the given rules into it.
+// Apply these rules to the current selector, not the general parent.
+.enact-locale(@locale-target; @rules; @target) when (iskeyword(@locale-target)) and (isruleset(@rules)) and (@target = self) {
+	&:global(.enact-locale-@{locale-target}) {
+		@rules();
 	}
+}
+// Generates an appropriate selector given the locale-target, and injects the given rules into it.
+.enact-locale(@locale-target; @rules; @target: normal) when (iskeyword(@locale-target)) and (isruleset(@rules)) and (default()) {
+	:global(.enact-locale-@{locale-target}) & {
+		@rules();
+	}
+}
+
+.locale-japanese-line-break() {
+	.enact-locale(ja; {
+		line-break: strict;
+	});
 }
