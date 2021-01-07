@@ -297,6 +297,13 @@ class Touch {
 		this.hold.end();
 	}
 
+	updateProps (props) {
+		// Update the props onHold, onHoldEnd, onHoldPulse on any gesture (hold, flick, drag).
+		this.hold.updateProps(props);
+		this.flick.updateProps(props);
+		this.drag.updateProps(props);
+	}
+
 	// Gesture Support
 
 	startTouch ({currentTarget}) {
@@ -408,7 +415,7 @@ class Touch {
 		this.clickAllow.setLastTouchEnd(ev);
 	}
 
-	getHandlers = () => (this.handlers)
+	getHandlers = () => (this.handlers);
 }
 
 export default Touch;

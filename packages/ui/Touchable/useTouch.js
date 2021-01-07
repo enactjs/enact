@@ -5,7 +5,11 @@ import {States} from './state';
 import Touch from './Touch';
 
 function useTouch (config = {}) {
-	const {getActive = false, disabled, dragConfig, flickConfig, holdConfig} = config;
+	const {
+		getActive = false, disabled,
+		dragConfig, flickConfig, holdConfig,
+		onDrag, onDragEnd, onDragStart, onHold, onHoldEnd, onHoldPulse, onFlick
+	} = config;
 
 	const touch = useClass(Touch);
 	const [state, setState] = useState(States.Inactive);
@@ -24,6 +28,10 @@ function useTouch (config = {}) {
 	useEffect(() => {
 		touch.updateGestureConfig(dragConfig, flickConfig, holdConfig);
 	}, [dragConfig, flickConfig, holdConfig]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
+		touch.updateProps(config);
+	}, [onDrag, onDragEnd, onDragStart, onHold, onHoldEnd, onHoldPulse, onFlick]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		if (disabled) {
