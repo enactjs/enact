@@ -6,9 +6,10 @@
  */
 
 import hoc from '@enact/core/hoc';
-import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+import useA11y from './useA11y';
 
 /**
  * Default config for {@link ui/A11yDecorator.A11yDecorator}.
@@ -60,66 +61,54 @@ const defaultConfig = {
 const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {prop} = config;
 
-	return kind({
-		name: 'A11yDecorator',
+	// eslint-disable-next-line no-shadow
+	const A11yDecorator = React.forwardRef(({accessibilityHint, accessibilityPreHint, 'aria-label': ariaLabel, [prop]: content, ...rest}, ref) => {
+		const a11y = useA11y({
+			accessibilityHint,
+			accessibilityPreHint,
+			'aria-label': ariaLabel,
+			content
+		});
 
-		propTypes: /** @lends ui/A11yDecorator.A11yDecorator.prototype */ {
-			/**
-			 * Sets the hint text to be read after the content.
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			accessibilityHint: PropTypes.string,
-
-			/**
-			 * Sets the hint text to be read before the content.
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			accessibilityPreHint: PropTypes.string,
-
-			/**
-			 * Sets the value of the `aria-label` attribute for the wrapped component.
-			 *
-			 * @memberof ui/A11yDecorator.A11yDecorator.prototype
-			 * @type {String}
-			 * @public
-			 */
-			'aria-label': PropTypes.string
-		},
-
-		computed: {
-			'aria-label': ({'aria-label': aria, accessibilityPreHint: prehint, accessibilityHint: hint, [prop]: content}) => {
-				if (!aria) {
-					const
-						prefix = content || null,
-						label = prehint && prefix && hint && (prehint + ' ' + prefix + ' ' + hint) ||
-							prehint && prefix && (prehint + ' ' + prefix) ||
-							prehint && hint && (prehint + ' ' + hint) ||
-							hint && prefix && (prefix + ' ' + hint) ||
-							prehint ||
-							hint ||
-							null;
-					return label;
-				}
-				return aria;
-			}
-		},
-
-		render: (props) => {
-			delete props.accessibilityPreHint;
-			delete props.accessibilityHint;
-
-			return (
-				<Wrapped {...props} />
-			);
-		}
+		return (
+			<Wrapped {...rest} {...a11y} ref={ref} />
+		);
 	});
+
+	A11yDecorator.displayName = 'A11yDecorator';
+
+	A11yDecorator.propTypes = /** @lends ui/A11yDecorator.A11yDecorator.prototype */ {
+		/**
+		 * Sets the hint text to be read after the content.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		accessibilityHint: PropTypes.string,
+
+		/**
+		 * Sets the hint text to be read before the content.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		accessibilityPreHint: PropTypes.string,
+
+		/**
+		 * Sets the value of the `aria-label` attribute for the wrapped component.
+		 *
+		 * @memberof ui/A11yDecorator.A11yDecorator.prototype
+		 * @type {String}
+		 * @public
+		 */
+		'aria-label': PropTypes.string
+	};
+
+	return A11yDecorator;
 });
 
 export default A11yDecorator;
 export {
-	A11yDecorator
+	A11yDecorator,
+	useA11y
 };
