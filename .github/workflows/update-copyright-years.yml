@@ -2,7 +2,7 @@ name: Update copyright year(s) in license file
 
 on:
   schedule:
-    - cron: "45 8 11 1 *"
+    - cron: "10 1 1 1 *"
 
 jobs:
   run:
