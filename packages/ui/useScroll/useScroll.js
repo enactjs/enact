@@ -146,6 +146,8 @@ const useScrollBase = (props) => {
 
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
+	const [isScrollVertically, setIsScrollVertically] = useState(false);
+	const [isScrollHorizontally, setIsScrollHorizontally] = useState(false);
 
 	const mutableRef = useRef({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
@@ -342,6 +344,13 @@ const useScrollBase = (props) => {
 			removeEventListeners();
 		};
 	});
+
+	useEffect(() => {
+		const bounds = getScrollBounds();
+		setIsScrollVertically(canScrollVertically(bounds));
+		setIsScrollHorizontally(canScrollHorizontally(bounds));
+	}, [])
+
 
 	// scrollMode 'translate' [[
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
@@ -1561,7 +1570,9 @@ const useScrollBase = (props) => {
 	return {
 		scrollContentWrapper: noScrollByDrag ? 'div' : TouchableDiv,
 		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible
+		isVerticalScrollbarVisible,
+		isScrollVertically,
+		isScrollHorizontally
 	};
 };
 
@@ -1611,7 +1622,9 @@ const useScroll = (props) => {
 	const {
 		scrollContentWrapper,
 		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible
+		isVerticalScrollbarVisible,
+		isScrollVertically,
+		isScrollHorizontally
 	} = useScrollBase({
 		...props,
 		assignProperties,
@@ -1637,7 +1650,10 @@ const useScroll = (props) => {
 		scrollContentWrapper,
 		scrollContentHandle,
 		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible
+		isVerticalScrollbarVisible,
+		checkScrollVertically,
+		isScrollVertically,
+		isScrollHorizontally
 	};
 };
 
