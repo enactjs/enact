@@ -46,7 +46,7 @@ This module is built upon the [iLib](http://github.com/iLib-js/iLib) library.
 Unless otherwise specified, all content, including all source code files and
 documentation files in this repository are:
 
-Copyright (c) 2016-2020 LG Electronics
+Copyright (c) 2016-2021 LG Electronics
 
 Unless otherwise specified or set forth in the NOTICE file, all content,
 including all source code files and documentation files in this repository are:
