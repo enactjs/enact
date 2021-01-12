@@ -4,6 +4,7 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ### Changed
 
+- `addon-knobs`and `addon-actions` registration
 - `sampler` configuration by updating to Storybook 6
 
 ## [3.4.11] - 2020-12-11
