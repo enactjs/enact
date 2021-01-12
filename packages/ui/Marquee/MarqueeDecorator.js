@@ -117,6 +117,10 @@ const didPropChange = (propList, prev, next) => {
 	return hasPropsChanged.indexOf(true) !== -1;
 };
 
+const getMarqueeOn = function (props, context, marqueeOnDefault = 'focus') {
+	return (props.marqueeOn || (context && context.marqueeOn) || marqueeOnDefault);
+};
+
 /*
  * There's only one timer shared for Marquee so we need to keep track of what we may be using it
  * for. We may need to clean up certain things as we move among states.
@@ -307,7 +311,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static defaultProps = {
 			marqueeDelay: 1000,
-			marqueeOn: 'focus',
 			marqueeOnRenderDelay: 1000,
 			marqueeResetDelay: 1000,
 			marqueeSpacing: '50%',
@@ -341,7 +344,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.validateTextDirection();
-			if (this.props.marqueeOn === 'render') {
+			if (getMarqueeOn(this.props, this.context) === 'render') {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 			on('keydown', this.handlePointerHide);
@@ -355,7 +358,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeSpeed, rtl} = this.props;
+			const {children, disabled, forceDirection, locale, marqueeOn = getMarqueeOn(this.props, this.context), marqueeDisabled, marqueeSpacing, marqueeSpeed, rtl} = this.props;
 
 			let forceRestartMarquee = false;
 
@@ -375,7 +378,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.cancelAnimation();
 				this.resetAnimation();
 			} else if (
-				prevProps.marqueeOn !== marqueeOn ||
+				// prevProps.marqueeOn !== marqueeOn ||
+				getMarqueeOn(prevProps, this.context) !== marqueeOn ||
 				prevProps.marqueeDisabled !== marqueeDisabled ||
 				prevProps.marqueeSpeed !== marqueeSpeed ||
 				prevProps.forceDirection !== forceDirection
@@ -387,7 +391,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.validateTextDirection();
 			if (forceRestartMarquee || this.shouldStartMarquee()) {
-				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
+				this.tryStartingAnimation(marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
 		}
 
@@ -466,7 +470,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {Boolean} - `true` if a possible marquee condition exists
 		 */
 		shouldStartMarquee () {
-			const {disabled, marqueeDisabled, marqueeOn} = this.props;
+			const {disabled, marqueeDisabled, marqueeOn = getMarqueeOn(this.props, this.context)} = this.props;
 			return !marqueeDisabled && (
 				marqueeOn === 'render' ||
 				!this.sync && (
@@ -779,7 +783,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forwardBlur(ev, this.props);
 			if (this.isFocused) {
 				this.isFocused = false;
-				if (!this.sync && !(this.isHovered && this.props.marqueeOn === 'hover')) {
+				if (!this.sync && !(this.isHovered && getMarqueeOn(this.props, this.context) === 'hover')) {
 					this.cancelAnimation();
 				}
 			}
@@ -787,7 +791,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = (ev) => {
 			this.isHovered = true;
-			if (this.props.marqueeOn === 'hover') {
+			if (getMarqueeOn(this.props, this.context) === 'hover') {
 				if (this.sync) {
 					this.context.enter(this);
 				} else if (!this.state.animating) {
@@ -811,7 +815,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleUnhover () {
 			this.isHovered = false;
-			if (this.props.marqueeOn === 'hover') {
+			if (getMarqueeOn(this.props, this.context) === 'hover') {
 				if (this.sync) {
 					this.context.leave(this);
 				} else {
@@ -836,7 +840,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				alignment,
 				children,
 				disabled,
-				marqueeOn,
+				marqueeOn = getMarqueeOn(this.props, this.context),
 				marqueeSpeed,
 				...rest
 			} = this.props;
