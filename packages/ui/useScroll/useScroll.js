@@ -349,7 +349,7 @@ const useScrollBase = (props) => {
 		const bounds = getScrollBounds();
 		setIsScrollVertically(canScrollVertically(bounds));
 		setIsScrollHorizontally(canScrollHorizontally(bounds));
-	}, [])
+	}, [getScrollBounds, canScrollVertically, canScrollHorizontally]);
 
 
 	// scrollMode 'translate' [[
