@@ -1651,7 +1651,6 @@ const useScroll = (props) => {
 		scrollContentHandle,
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
-		checkScrollVertically,
 		isScrollVertically,
 		isScrollHorizontally
 	};
