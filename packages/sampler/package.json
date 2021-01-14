@@ -25,11 +25,11 @@
     "react-dom": "^16.8.6"
   },
   "devDependencies": {
-    "@enact/storybook-utils": "^2.0.0",
-    "@storybook/addons": "5.3.5",
-    "@storybook/react": "5.3.5",
-    "@storybook/theming": "5.3.5",
-    "babel-loader": "^8.0.6",
-    "core-js": "^3.6.4"
+    "@enact/storybook-utils": "https://github.com/enactjs/storybook-utils#feature/storybook_migration_to_v6",
+    "@storybook/addons": "6.1.11",
+    "@storybook/react": "6.1.11",
+    "@storybook/theming": "6.1.11",
+    "babel-loader": "^8.2.2",
+    "core-js": "^3.8.1"
   }
 }

@@ -7,7 +7,6 @@ import Group from '@enact/ui/Group';
 import {SlotItem as UISlotItem} from '@enact/ui/SlotItem';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {storiesOf} from '@storybook/react';
 
 import css from './Group.module.less';
 
@@ -32,15 +31,17 @@ const SlotItem = kind({
 	},
 
 	render: ({children, ...rest}) => (
-		<UISlotItem {...rest} component={Item}>{children}</UISlotItem>
+		<UISlotItem {...rest} component={Item}>
+			{children}
+		</UISlotItem>
 	)
 });
 
 // Set up some defaults for info and knobs
 const prop = {
 	children: {
-		'Button': Button,
-		'SlotItem': SlotItem
+		Button: Button,
+		SlotItem: SlotItem
 	}
 };
 
@@ -48,28 +49,23 @@ const getComponent = (name) => prop.children[name];
 
 Group.displayName = 'Group';
 
-storiesOf('UI', module)
-	.add(
-		'Group',
-		() => (
-			<Group
-				childComponent={getComponent(select('childComponent', Object.keys(prop.children), Group, 'Button'))}
-				className={css.group}
-				itemProps={{
-					css,
-					inline: boolean('ItemProps-Inline', Group)
-				}}
-				select={select('select', ['single', 'radio', 'multiple'], Group, 'radio')}
-				selectedProp="selected"
-				defaultSelected={0}
-				onSelect={action('onSelect')}
-			>
-				{['Item 1', 'Item 2', 'Item 3']}
-			</Group>
-		),
-		{
-			info: {
-				text: 'Basic usage of Group'
-			}
-		}
-	);
+export default {
+	title: 'UI'
+};
+
+export const _Group = () => (
+	<Group
+		childComponent={getComponent(select('childComponent', Object.keys(prop.children), Group, 'Button'))}
+		className={css.group}
+		itemProps={{
+			css,
+			inline: boolean('ItemProps-Inline', Group)
+		}}
+		select={select('select', ['single', 'radio', 'multiple'], Group, 'radio')}
+		selectedProp="selected"
+		defaultSelected={0}
+		onSelect={action('onSelect')}
+	>
+		{['Item 1', 'Item 2', 'Item 3']}
+	</Group>
+);

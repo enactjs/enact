@@ -4,7 +4,6 @@ import {Item as UiItem} from '@enact/ui/Item';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import React from 'react';
 import ri from '@enact/ui/resolution';
-import {storiesOf} from '@storybook/react';
 import {VirtualList, VirtualListBasic} from '@enact/ui/VirtualList';
 
 const
@@ -31,7 +30,7 @@ const
 
 const updateDataSize = (dataSize) => {
 	const
-		itemNumberDigits = dataSize > 0 ? ((dataSize - 1) + '').length : 0,
+		itemNumberDigits = dataSize > 0 ? (dataSize - 1 + '').length : 0,
 		headingZeros = Array(itemNumberDigits).join('0');
 
 	items.length = 0;
@@ -47,29 +46,30 @@ updateDataSize(defaultDataSize);
 
 const VirtualListConfig = mergeComponentMetadata('VirtualList', VirtualListBasic, VirtualList);
 
-storiesOf('UI', module)
-	.add(
-		'VirtualList',
-		() => {
-			return (
-				<VirtualList
-					dataSize={updateDataSize(number('dataSize', VirtualListConfig, defaultDataSize))}
-					horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, VirtualListConfig)}
-					itemRenderer={uiRenderItem(ri.scale(number('itemSize', VirtualListConfig, 72)))}
-					itemSize={ri.scale(number('itemSize', VirtualListConfig, 72))}
-					key={select('scrollMode', prop.scrollModeOption, VirtualListConfig)}
-					noScrollByWheel={boolean('noScrollByWheel', VirtualListConfig)}
-					onScrollStart={action('onScrollStart')}
-					onScrollStop={action('onScrollStop')}
-					scrollMode={select('scrollMode', prop.scrollModeOption, VirtualListConfig)}
-					spacing={ri.scale(number('spacing', VirtualListConfig))}
-					verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, VirtualListConfig)}
-				/>
-			);
-		},
-		{
-			info: {
-				text: 'Basic usage of VirtualList'
-			}
-		}
+export default {
+	title: 'UI'
+};
+
+export const _VirtualList = () => {
+	return (
+		<VirtualList
+			dataSize={updateDataSize(
+				number('dataSize', VirtualListConfig, defaultDataSize)
+			)}
+			horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, VirtualListConfig)}
+			itemRenderer={uiRenderItem(ri.scale(number('itemSize', VirtualListConfig, 72)))}
+			itemSize={ri.scale(number('itemSize', VirtualListConfig, 72))}
+			key={select('scrollMode', prop.scrollModeOption, VirtualListConfig)}
+			noScrollByWheel={boolean('noScrollByWheel', VirtualListConfig)}
+			onScrollStart={action('onScrollStart')}
+			onScrollStop={action('onScrollStop')}
+			scrollMode={select('scrollMode', prop.scrollModeOption, VirtualListConfig)}
+			spacing={ri.scale(number('spacing', VirtualListConfig))}
+			verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, VirtualListConfig)}
+		/>
 	);
+};
+
+_VirtualList.story = {
+	name: 'VirtualList'
+};
