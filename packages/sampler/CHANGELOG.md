@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+### Changed
+
+- `sampler` configuration by updating to Storybook 6
+
 ## [3.4.11] - 2020-12-11
 
 No significant changes.
