@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+- `ui/A11yDecorator`, to be removed in 4.0.0
+
 ## [3.4.11] - 2020-12-11
 
 ### Fixed
