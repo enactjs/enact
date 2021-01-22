@@ -112,13 +112,11 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {keyCode} = ev;
 			if (is('enter', keyCode) && this.containerRef.current.classList.contains('touch-mode')) {
 				// Prevent onclick event trigger by enter key
-				this.containerRef.current.classList.add('non-touch-mode');
-				this.containerRef.current.classList.remove('touch-mode');
 				ev.preventDefault();
-			} else {
-				this.containerRef.current.classList.add('non-touch-mode');
-				this.containerRef.current.classList.remove('touch-mode');
 			}
+
+			this.containerRef.current.classList.add('non-touch-mode');
+			this.containerRef.current.classList.remove('touch-mode');
 		};
 
 		navigableFilter = (elem) => {
