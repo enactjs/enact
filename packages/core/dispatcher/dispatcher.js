@@ -23,7 +23,7 @@ let defaultTarget = typeof document === 'object' && document;
  * @private
  */
 const setRootId = (rootId) => {
-	defaultTarget = typeof document === 'object' && document.querySelector('#' + rootId) || false;
+	defaultTarget = typeof document === 'object' && document.querySelector('#' + rootId) || defaultTarget;
 };
 
 /*
