@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight/SpotlightRootDecorator` to show focus effect when `enter` key is pressed in touch mode
+
 ## [3.4.9-experimental-2] - 2020-12-03
 
 ### Fixed
