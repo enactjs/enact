@@ -6,6 +6,22 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
+- `ui/Transition` prop `duration` to support any valid CSS value for `slide` and `fade` `type`
+
+## [3.4.11] - 2020-12-11
+
+### Fixed
+
+- documentation problem in styles/internal directory
+
+## [3.4.10] - 2020-12-09
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to scroll correctly on Chrome 85 or higher in RTL locales
+
+### Changed
+
 - `ui/Media` `play` function to return promise
 
 ### Fixed

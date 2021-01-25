@@ -31,6 +31,7 @@ const forwardTransitionEnd = forward('onTransitionEnd');
 const forwardOnShow = forward('onShow');
 const forwardOnHide = forward('onHide');
 
+const formatter = (duration) => (typeof duration === 'number' ? duration + 'ms' : duration);
 /**
  * The stateless structure of the component.
  *
@@ -133,8 +134,8 @@ const TransitionBase = kind({
 		 * Controls how long the transition should take.
 		 * Supported preset durations are: `'short'` (250ms), `'medium'` (500ms), and `'long'` (1s).
 		 * `'medium'` (500ms) is default when no others are specified.
-		 * Any valid CSS duration value is also accepted when `type` is set to `'clip'`,
-		 * e.g. "200ms" or "3s". Pure numeric values are also supported and treated as milliseconds.
+		 * Any valid CSS duration value is also accepted, e.g. "200ms" or "3s". Pure numeric values
+		 * are also supported and treated as milliseconds.
 		 *
 		 * @type {String|Number}
 		 * @default 'medium'
@@ -233,14 +234,19 @@ const TransitionBase = kind({
 			!noAnimation && timingFunction && css[timingFunction],
 			css[type]
 		),
-		innerStyle: ({clipWidth, direction, type}) => {
+		innerStyle: ({clipWidth, css, direction, duration, type}) => {
+			const style = {};
+
 			if (type === 'clip' && (direction === 'left' || direction === 'right')) {
-				return {
-					width: clipWidth
-				};
+				style.width = clipWidth;
+			} else if ((type === 'fade' || type === 'slide') && duration && !css[duration]) {
+				// If it's a number, assume it's miliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
+				style.transitionDuration = formatter(duration);
 			}
+
+			return style;
 		},
-		style: ({css, clipHeight, direction, duration, type, visible, style}) => {
+		style: ({clipHeight, css, direction, duration, type, visible, style}) => {
 			if (type === 'clip') {
 				style = {
 					...style,
@@ -253,7 +259,7 @@ const TransitionBase = kind({
 				// If duration isn't a known named string, assume it is a CSS duration value
 				if (duration && !css[duration]) {
 					// If it's a number, assume it's miliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
-					style.transitionDuration = (typeof duration === 'number' ? duration + 'ms' : duration);
+					style.transitionDuration = formatter(duration);
 				}
 			}
 

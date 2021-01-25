@@ -2,6 +2,33 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+- `ui/A11yDecorator`, to be removed in 4.0.0
+
+## [3.4.11] - 2020-12-11
+
+### Fixed
+
+- `ui` documentation problem in styles/internal directory
+
+## [3.4.10] - 2020-12-09
+
+### Added
+
+- `ui/Routable` sample
+
+### Changed
+
+- `ui/Media` `play` function to return promise
+
+### Fixed
+
+- `ui/MarqueeDecorator` to restart animation when text changed while focus retained
+- `ui/Routable` to respect the current path on first render when using relative paths in links
+
 ## [3.4.9] - 2020-10-30
 
 ### Fixed
