@@ -17,6 +17,7 @@ let defaultTarget = typeof document === 'object' && document;
  * Sets a selector for the default target. If no selector is set, `document` is the default target.
  *
  * @function
+ * @param	{String}	id	Node id of the default target
  *
  * @returns {undefined}
  * @memberof core/dispatcher
