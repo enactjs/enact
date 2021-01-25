@@ -22,8 +22,8 @@ let defaultTarget = typeof document === 'object' && document;
  * @memberof core/dispatcher
  * @private
  */
-const setRootId = (rootId) => {
-	defaultTarget = typeof document === 'object' && document.querySelector('#' + rootId) || defaultTarget;
+const setDefaultTargetById = (id) => {
+	defaultTarget = typeof document === 'object' && document.querySelector('#' + id) || defaultTarget;
 };
 
 /*
@@ -153,5 +153,5 @@ export {
 	off,
 	on,
 	once,
-	setRootId
+	setDefaultTargetById
 };
