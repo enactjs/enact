@@ -127,6 +127,7 @@ const StorybookDecorator = (story, config) => {
 		groupId: 'Development'
 	};
 
+	const hasText = config.parameters && config.parameters.info && config.parameters.info.text;
 	const args = getArgs();
 	const classes = {
 		aria: boolean('debug aria', DevelopmentConfig, getKnobFromArgs(args, 'debug aria')),
@@ -141,7 +142,7 @@ const StorybookDecorator = (story, config) => {
 		<PanelsBase
 			className={classnames(classes)}
 			title={`${config.kind} ${config.story}`.trim()}
-			description={config.description}
+			description={hasText ? config.parameters.info.text : null}
 			locale={select('locale', locales, Config)}
 			style={{
 				'--env-background': backgroundLabelMap[select('background', backgroundLabels, Config, getKnobFromArgs(args, 'background'))]
