@@ -74,7 +74,7 @@ _VirtualList.story = {
 	name: 'VirtualList',
 	parameters: {
 		info: {
-		  text: 'Basic usage of VirtualList',
-		},
-	  },
+			text: 'Basic usage of VirtualList'
+		}
+	}
 };

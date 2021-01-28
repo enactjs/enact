@@ -72,8 +72,8 @@ export const _Group = () => (
 
 _Group.story = {
 	parameters: {
-	  info: {
-		text: 'Basic usage of Group',
-	  },
-	},
-  };
+		info: {
+			text: 'Basic usage of Group'
+		}
+	}
+};

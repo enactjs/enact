@@ -41,8 +41,8 @@ export const _Layout = () => (
 
 _Layout.story = {
 	parameters: {
-	  info: {
-		text: 'Basic usage of Layout',
-	  },
-	},
-  };
+		info: {
+			text: 'Basic usage of Layout'
+		}
+	}
+};

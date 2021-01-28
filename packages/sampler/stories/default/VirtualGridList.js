@@ -85,7 +85,7 @@ VirtualListVirtualGridList.story = {
 	name: 'VirtualList.VirtualGridList',
 	parameters: {
 		info: {
-		  text: 'Basic usage of VirtualGridList',
-		},
-	  },
+			text: 'Basic usage of VirtualGridList'
+		}
+	}
 };
