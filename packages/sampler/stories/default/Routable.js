@@ -93,3 +93,11 @@ export const _Routable = () => {
 		</RoutableViews>
 	);
 };
+
+_Routable.story = {
+	parameters: {
+	  info: {
+		text: 'Basic usage of Routable',
+	  },
+	},
+  };

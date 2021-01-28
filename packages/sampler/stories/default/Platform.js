@@ -25,7 +25,7 @@ export default {
 	title: 'Core'
 };
 
-export const Platform = () => (
+export const _Platform = () => (
 	<Scroller>
 		<h3>Platform:</h3>
 		{logObject(platform)}

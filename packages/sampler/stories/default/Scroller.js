@@ -50,3 +50,11 @@ export const _Scroller = () => (
 		</div>
 	</Scroller>
 );
+
+_Scroller.story = {
+	parameters: {
+	  info: {
+		text: 'Basic usage of Scroller',
+	  },
+	},
+  };

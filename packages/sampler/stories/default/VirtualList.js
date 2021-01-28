@@ -71,5 +71,10 @@ export const _VirtualList = () => {
 };
 
 _VirtualList.story = {
-	name: 'VirtualList'
+	name: 'VirtualList',
+	parameters: {
+		info: {
+		  text: 'Basic usage of VirtualList',
+		},
+	  },
 };

@@ -69,3 +69,11 @@ export const _Group = () => (
 		{['Item 1', 'Item 2', 'Item 3']}
 	</Group>
 );
+
+_Group.story = {
+	parameters: {
+	  info: {
+		text: 'Basic usage of Group',
+	  },
+	},
+  };
