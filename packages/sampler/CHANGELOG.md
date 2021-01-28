@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+### Added
+
+- `addon-docs` to substitude `addon-info`
+
 ### Changed
 
 - `addon-knobs`and `addon-actions` registration

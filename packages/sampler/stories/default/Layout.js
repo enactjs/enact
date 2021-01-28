@@ -38,3 +38,11 @@ export const _Layout = () => (
 		</Layout>
 	</div>
 );
+
+_Layout.story = {
+	parameters: {
+		info: {
+			text: 'Basic usage of Layout'
+		}
+	}
+};
