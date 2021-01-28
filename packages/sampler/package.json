@@ -25,7 +25,7 @@
     "react-dom": "^16.8.6"
   },
   "devDependencies": {
-    "@enact/storybook-utils": "../../../utils/storybook-utils",
+    "@enact/storybook-utils": "https://github.com/enactjs/storybook-utils#feature/storybook_migration_to_v6",
     "@storybook/addons": "^6.1.15",
     "@storybook/react": "^6.1.15",
     "@storybook/theming": "^6.1.15",
