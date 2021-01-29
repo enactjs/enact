@@ -61,7 +61,7 @@ const RoutableViews = Routable({navigate: 'onNavigate'}, ({children}) => (
 ));
 
 export default {
-	title: 'UI'
+	title: 'UI/Routable'
 };
 
 export const _Routable = () => {

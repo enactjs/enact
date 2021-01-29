@@ -22,7 +22,7 @@ function logObject (object) {
 }
 
 export default {
-	title: 'Core'
+	title: 'Core/Platform'
 };
 
 export const _Platform = () => (
