@@ -50,7 +50,7 @@ const getComponent = (name) => prop.children[name];
 Group.displayName = 'Group';
 
 export default {
-	title: 'UI'
+	title: 'UI/Group'
 };
 
 export const _Group = () => (
