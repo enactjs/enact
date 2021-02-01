@@ -10,7 +10,8 @@ Layout.displayName = 'Layout';
 Cell.displayName = 'Cell';
 
 export default {
-	title: 'UI/Layout'
+	title: 'UI/Layout',
+	component: 'Layout'
 };
 
 export const _Layout = () => (

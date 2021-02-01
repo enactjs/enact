@@ -47,7 +47,8 @@ updateDataSize(defaultDataSize);
 const VirtualListConfig = mergeComponentMetadata('VirtualList', VirtualListBasic, VirtualList);
 
 export default {
-	title: 'UI/VirtualList'
+	title: 'UI/VirtualList',
+	component: 'VirtualList'
 };
 
 export const _VirtualList = () => {

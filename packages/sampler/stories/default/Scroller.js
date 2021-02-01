@@ -14,7 +14,8 @@ const prop = {
 const scrollerConfig = mergeComponentMetadata('Scroller', Scroller);
 
 export default {
-	title: 'UI/Scroller'
+	title: 'UI/Scroller',
+	component: 'Scroller'
 };
 
 export const _Scroller = () => (

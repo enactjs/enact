@@ -94,7 +94,7 @@ export const ATourOfSampler = () => (
 			length={24}
 			pointerPosition="above"
 		>
-			Click <b>Show Info</b> to see the live source code for the sample
+			Click <b>Docs</b> to see the live source code for the sample
 		</HintDialog>
 		<HintDialog
 			style={riSafe({position: 'relative', top: 60, left: 0})}

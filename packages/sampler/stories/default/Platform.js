@@ -22,7 +22,8 @@ function logObject (object) {
 }
 
 export default {
-	title: 'Core/Platform'
+	title: 'Core/Platform',
+	component: 'Platform'
 };
 
 export const _Platform = () => (
