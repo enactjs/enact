@@ -15,7 +15,7 @@ export default {
 };
 
 export const _Layout = () => (
-	<div className="debug" style={{height: ri.unit(50, 'rem')}}>
+	<div className="debug" style={{height: ri.unit(399, 'rem')}}>
 		<Layout
 			align={select('align', ['start', 'center', 'stretch', 'end'], Layout, 'start')}
 			className={css.layout}

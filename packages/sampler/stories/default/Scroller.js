@@ -52,7 +52,7 @@ export const _Scroller = () => (
 	</Scroller>
 );
 
-_Scroller.parameters: {
+_Scroller.parameters = {
 	info: {
 		text: 'Basic usage of Scroller'
 	}
