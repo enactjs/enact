@@ -40,10 +40,8 @@ export const _Layout = () => (
 	</div>
 );
 
-_Layout.story = {
-	parameters: {
-		info: {
-			text: 'Basic usage of Layout'
-		}
+_Layout.parameters = {
+	info: {
+		text: 'Basic usage of Layout'
 	}
 };

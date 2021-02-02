@@ -94,10 +94,8 @@ export const _Routable = () => {
 	);
 };
 
-_Routable.story = {
-	parameters: {
-		info: {
-			text: 'Basic usage of Routable'
-		}
+_Routable.parameters = {
+	info: {
+		text: 'Basic usage of Routable'
 	}
 };

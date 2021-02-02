@@ -52,10 +52,8 @@ export const _Scroller = () => (
 	</Scroller>
 );
 
-_Scroller.story = {
-	parameters: {
-		info: {
-			text: 'Basic usage of Scroller'
-		}
+_Scroller.parameters: {
+	info: {
+		text: 'Basic usage of Scroller'
 	}
 };

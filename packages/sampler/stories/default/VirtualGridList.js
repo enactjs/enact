@@ -82,11 +82,9 @@ export const VirtualListVirtualGridList = () => (
 	/>
 );
 
-VirtualListVirtualGridList.story = {
-	name: 'VirtualList.VirtualGridList',
-	parameters: {
-		info: {
-			text: 'Basic usage of VirtualGridList'
-		}
+VirtualListVirtualGridList.storyNname = 'VirtualList.VirtualGridList';
+VirtualListVirtualGridList.parameters = {
+	info: {
+		text: 'Basic usage of VirtualGridList'
 	}
 };

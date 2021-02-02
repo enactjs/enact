@@ -90,7 +90,7 @@ export const ATourOfSampler = () => (
 			Click me
 		</Button>
 		<HintDialog
-			style={{top: 36, right: 48}}
+			style={{top: 0, left: 114}}
 			length={24}
 			pointerPosition="above"
 		>
@@ -116,6 +116,4 @@ export const ATourOfSampler = () => (
 	</div>
 );
 
-ATourOfSampler.story = {
-	name: 'A Tour of Sampler'
-};
+ATourOfSampler.storyName = 'A Tour of Sampler';
