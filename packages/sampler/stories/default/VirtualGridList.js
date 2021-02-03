@@ -58,7 +58,7 @@ updateDataSize(defaultDataSize);
 const VirtualGridListConfig = mergeComponentMetadata('VirtualGridList', VirtualListBasic, VirtualGridList);
 
 export default {
-	title: 'UI/VirtualList/VirtualGridList',
+	title: 'UI/VirtualList.VirtualGridList',
 	component: 'VirtualGridList'
 };
 
@@ -82,7 +82,7 @@ export const VirtualListVirtualGridList = () => (
 	/>
 );
 
-VirtualListVirtualGridList.storyNname = 'VirtualList.VirtualGridList';
+VirtualListVirtualGridList.storyName = 'VirtualList.VirtualGridList';
 VirtualListVirtualGridList.parameters = {
 	info: {
 		text: 'Basic usage of VirtualGridList'
