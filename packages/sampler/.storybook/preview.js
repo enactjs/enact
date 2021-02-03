@@ -1,8 +1,8 @@
-import {addDecorator} from '@storybook/react';
 import {configureActions} from '@enact/storybook-utils/addons/actions';
-import {withKnobs} from '@enact/storybook-utils/addons/knobs';
 import {DocsPage, DocsContainer} from '@enact/storybook-utils/addons/docs';
-import { themes } from '@storybook/theming';
+import {withKnobs} from '@enact/storybook-utils/addons/knobs';
+import {addDecorator} from '@storybook/react';
+import {themes} from '@storybook/theming';
 
 import Environment from '../src/Environment';
 
