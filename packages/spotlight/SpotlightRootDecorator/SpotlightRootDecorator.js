@@ -8,6 +8,7 @@
 
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
+import LS2Request from '@enact/webos/LS2Request/LS2Request';
 import React from 'react';
 
 import Spotlight from '../src/spotlight';
@@ -78,6 +79,8 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
+			this.getLastInputType();
+
 			if (!noAutoFocus) {
 				Spotlight.focus();
 			}
@@ -94,6 +97,31 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			document.removeEventListener('pointerover', this.handlePointerOver, {capture: true});
 			document.removeEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
+
+		// FIXME: This is a temporary support for NMRM
+		getLastInputType = () => new Promise((resolve, reject) => {
+			console.log('getLastInputType');
+			if (window.PalmSystem) {
+				new LS2Request().send({
+					service: 'luna://com.webos.surfacemanager',
+					method: 'getLastInputType',
+					subscribe: true,
+					onSuccess: function (res) {
+						console.log('onSucess');
+						console.log(res);
+						console.log(res.lastInputType);
+
+						// TODO : Change touch mode
+						resolve();
+					},
+					onFailure: function (err) {
+						reject('Failed to get system LastInputType: ' + JSON.stringify(err));
+					}
+				});
+			} else {
+				resolve();
+			}
+		});
 
 		handlePointerOver = (ev) => {
 			if (ev.pointerType === 'touch') {
