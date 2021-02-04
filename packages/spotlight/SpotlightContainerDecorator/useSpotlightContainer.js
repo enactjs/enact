@@ -93,7 +93,7 @@ function useSpotlightContainer (config = {}) {
 		restrict
 	});
 
-	React.useEffect(() => {
+	React.useLayoutEffect(() => {
 		return () => {
 			spotlightContainer.unload();
 		};
