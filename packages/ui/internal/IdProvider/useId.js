@@ -31,7 +31,7 @@ import Provider from './Provider';
 const useIdProvider = ({prefix}) => {
 	const provider = useClass(Provider, prefix);
 
-	React.useEffect(() => {
+	React.useLayoutEffect(() => {
 		return () => provider.unload();
 	}, [provider]);
 

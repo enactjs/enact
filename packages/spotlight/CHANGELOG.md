@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight/SpotlightContainerDecorator` to properly save the last-focused element with React 17
+
 ## [3.5.0] - 2021-02-05
 
 No significant changes.
