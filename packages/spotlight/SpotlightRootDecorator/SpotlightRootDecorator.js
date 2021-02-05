@@ -56,6 +56,7 @@ const defaultConfig = {
  */
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {noAutoFocus} = config;
+	let lastInputType = 'key';
 
 	return class extends React.Component {
 		static displayName = 'SpotlightRootDecorator';
@@ -79,13 +80,14 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			this.getLastInputType();
-
-			if (!noAutoFocus) {
-				Spotlight.focus();
-			}
-
-			this.containerRef.current.classList.add('non-touch-mode');
+			this.getLastInputType().finally(() => {
+				if (!noAutoFocus && lastInputType !== 'touch') {
+					Spotlight.focus();
+				}
+				if (lastInputType === 'touch') {
+					this.containerRef.current.classList.add('non-touch-mode');
+				}
+			});
 
 			document.addEventListener('pointerover', this.handlePointerOver, {capture: true});
 			document.addEventListener('keydown', this.handleKeyDown, {capture: true});
@@ -107,11 +109,8 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					method: 'getLastInputType',
 					subscribe: true,
 					onSuccess: function (res) {
-						console.log('onSucess');
 						console.log(res);
-						console.log(res.lastInputType);
-
-						// TODO : Change touch mode
+						lastInputType = res.lastInputType;
 						resolve();
 					},
 					onFailure: function (err) {
