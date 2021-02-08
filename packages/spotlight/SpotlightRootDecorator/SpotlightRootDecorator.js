@@ -81,46 +81,69 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidMount () {
 			this.getLastInputType().finally(() => {
-				if (!noAutoFocus && lastInputType !== 'touch') {
-					Spotlight.focus();
-				}
-				if (lastInputType === 'touch') {
-					this.containerRef.current.classList.add('non-touch-mode');
+				if (this && this.containerRef && this.containerRef.current) {
+					// Set initial mode
+					if (lastInputType === 'touch') {
+						this.containerRef.current.classList.remove('non-touch-mode');
+						this.containerRef.current.classList.add('touch-mode');
+					} else {
+						this.containerRef.current.classList.add('non-touch-mode');
+						this.containerRef.current.classList.remove('touch-mode');
+					}
 				}
 			});
 
+			if (!noAutoFocus) {
+				Spotlight.focus();
+			}
+
+			document.addEventListener('visibilitychange', this.handleVisibilityChange, {capture: true});
 			document.addEventListener('pointerover', this.handlePointerOver, {capture: true});
 			document.addEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
 
 		componentWillUnmount () {
 			Spotlight.terminate();
-
+			document.removeEventListener('visibilitychange', this.handleVisibilityChange, {capture: true});
 			document.removeEventListener('pointerover', this.handlePointerOver, {capture: true});
 			document.removeEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
 
 		// FIXME: This is a temporary support for NMRM
-		getLastInputType = () => new Promise((resolve, reject) => {
-			console.log('getLastInputType');
-			if (window.PalmSystem) {
-				new LS2Request().send({
-					service: 'luna://com.webos.surfacemanager',
-					method: 'getLastInputType',
-					subscribe: true,
-					onSuccess: function (res) {
-						console.log(res);
-						lastInputType = res.lastInputType;
-						resolve();
-					},
-					onFailure: function (err) {
-						reject('Failed to get system LastInputType: ' + JSON.stringify(err));
-					}
-				});
-			} else {
-				resolve();
+		getLastInputType = () => {
+			const that = this;
+			return new Promise(function (resolve, reject) {
+				if (window.PalmSystem) {
+					new LS2Request().send({
+						service: 'luna://com.webos.surfacemanager',
+						method: 'getLastInputType',
+						subscribe: true,
+						onSuccess: function (res) {
+							lastInputType = res.lastInputType;
+							resolve();
+						},
+						onFailure: function (err) {
+							reject('Failed to get system LastInputType: ' + JSON.stringify(err));
+						}
+					});
+				} else {
+					resolve();
+				}
 			}
-		});
+			);
+		};
+
+		handleVisibilityChange = () => {
+			if (document.hidden === false) {
+				if (lastInputType === 'touch') {
+					this.containerRef.current.classList.remove('non-touch-mode');
+					this.containerRef.current.classList.add('touch-mode');
+				} else {
+					this.containerRef.current.classList.add('non-touch-mode');
+					this.containerRef.current.classList.remove('touch-mode');
+				}
+			}
+		};
 
 		handlePointerOver = (ev) => {
 			if (ev.pointerType === 'touch') {
