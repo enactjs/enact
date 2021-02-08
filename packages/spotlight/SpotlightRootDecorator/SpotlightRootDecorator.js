@@ -111,7 +111,6 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		// FIXME: This is a temporary support for NMRM
 		getLastInputType = () => {
-			const that = this;
 			return new Promise(function (resolve, reject) {
 				if (window.PalmSystem) {
 					new LS2Request().send({
