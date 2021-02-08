@@ -128,8 +128,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				} else {
 					resolve();
 				}
-			}
-			);
+			});
 		};
 
 		handleVisibilityChange = () => {
