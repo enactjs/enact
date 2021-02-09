@@ -1,4 +1,3 @@
-import React from 'react';
 import platform from '@enact/core/platform';
 import webosPlatform from '@enact/webos/platform';
 import {storiesOf} from '@storybook/react';
