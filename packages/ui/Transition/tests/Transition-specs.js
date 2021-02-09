@@ -1,4 +1,3 @@
-import React from 'react';
 import {mount} from 'enzyme';
 import Transition, {TransitionBase} from '../Transition';
 import css from '../Transition.module.less';

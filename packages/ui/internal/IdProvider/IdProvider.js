@@ -1,5 +1,4 @@
 import hoc from '@enact/core/hoc';
-import React from 'react';
 
 import useId from './useId';
 
