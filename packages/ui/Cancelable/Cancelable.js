@@ -12,7 +12,7 @@ import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
-import React from 'react';
+import * as React from 'react';
 
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
 import {addModal, removeModal} from './modalHandler';

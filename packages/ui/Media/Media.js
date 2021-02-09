@@ -12,7 +12,7 @@ import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Children, isValidElement, Component as ReactComponent} from 'react';
 
 /**
  * Generates a key representing the source node or nodes provided
@@ -37,8 +37,8 @@ import React from 'react';
  * @public
  */
 const getKeyFromSource = (source = '') => {
-	if (React.isValidElement(source)) {
-		return React.Children.toArray(source)
+	if (isValidElement(source)) {
+		return Children.toArray(source)
 			.filter(s => !!s)
 			.map(s => s.props.src)
 			.join('+');
@@ -118,7 +118,7 @@ const handledMediaEventsMap = {
  * @ui
  * @public
  */
-class Media extends React.Component {
+class Media extends ReactComponent {
 	static propTypes = /** @lends ui/Media.Media.prototype */ {
 		/**
 		 * A type of media component.

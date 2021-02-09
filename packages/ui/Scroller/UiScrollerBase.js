@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {createRef, Component} from 'react';
 
 import css from './UiScroller.module.less';
 
@@ -68,7 +68,7 @@ class ScrollerBase extends Component {
 	constructor (props) {
 		super(props);
 
-		this.containerRef = React.createRef();
+		this.containerRef = createRef();
 	}
 
 	componentDidMount () {

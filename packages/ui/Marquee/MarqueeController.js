@@ -1,7 +1,7 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
-import React from 'react';
+import {createContext, Component} from 'react';
 
 const STATE = {
 	inactive: 0,	// Marquee is not necessary (render or focus not happened)
@@ -9,7 +9,7 @@ const STATE = {
 	ready: 2		// Marquee completed or not needed, but state is active
 };
 
-const MarqueeControllerContext = React.createContext(null);
+const MarqueeControllerContext = createContext(null);
 
 /**
  * Default configuration parameters for {@link ui/Marquee.MarqueeController}.
@@ -43,7 +43,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
 
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'MarqueeController';
 
 		constructor (props) {

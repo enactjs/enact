@@ -5,7 +5,7 @@ import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 import shallowEqual from 'recompose/shallowEqual';
 import warning from 'warning';
 
@@ -160,7 +160,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		return rtl;
 	};
 
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'ui:MarqueeDecorator';
 
 		static propTypes = /** @lends ui/Marquee.MarqueeDecorator.prototype */ {
