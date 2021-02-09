@@ -12,7 +12,7 @@ import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
-import * as React from 'react';
+import {Component as ReactComponent} from 'react';
 
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
 import {addModal, removeModal} from './modalHandler';
@@ -153,7 +153,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		return stopped;
 	};
 
-	return class extends React.Component {
+	return class extends ReactComponent {
 		static displayName = 'Cancelable';
 
 		static propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
