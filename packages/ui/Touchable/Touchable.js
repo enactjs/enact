@@ -199,7 +199,7 @@ const defaultConfig = {
 /**
  * A higher-order component that provides a consistent set of pointer events -- `onDown`, `onUp`,
  * and `onTap` -- across mouse and touch interfaces along with support for common gestures including
- * `onFlick`, `onDrag`, `onHold`, and `onHoldPulse`.
+ * `onFlick`, `onDrag`, `onHoldStart`, `onHold`, and `onHoldEnd`.
  *
  * Note: This HoC passes a number of props to the wrapped component that should be passed to the
  * main DOM node or consumed by the wrapped component.
@@ -328,14 +328,12 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onFlick: PropTypes.func,
 
 			/**
-			 * Event handler for hold events.
+			 * Event handler for hold pulse events
 			 *
 			 * Event payload includes:
 			 *
 			 * * `type` - Type of event, `'onHold'`
-			 * * `name` - The name of the hold as configured in the events list
-			 * * `time` - Time, in milliseconds, configured for this hold which may vary slightly
-			 *            from time since the hold began
+			 * * `time` - Time, in milliseconds, since the hold began
 			 *
 			 * @type {Function}
 			 * @public
@@ -356,17 +354,19 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onHoldEnd: PropTypes.func,
 
 			/**
-			 * Event handler for hold pulse events
+			 * Event handler for hold events.
 			 *
 			 * Event payload includes:
 			 *
-			 * * `type` - Type of event, `'onHoldPulse'`
-			 * * `time` - Time, in milliseconds, since the hold began
+			 * * `type` - Type of event, `'onHoldStart'`
+			 * * `name` - The name of the hold as configured in the events list
+			 * * `time` - Time, in milliseconds, configured for this hold which may vary slightly
+			 *            from time since the hold began
 			 *
 			 * @type {Function}
 			 * @public
 			 */
-			onHoldPulse: PropTypes.func,
+			onHoldStart: PropTypes.func,
 
 			/**
 			 * Event handler for 'tap' pointer events
@@ -461,7 +461,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				hold: this.props.holdConfig
 			});
 
-			// Update the props onHold, onHoldEnd, onHoldPulse on any gesture (hold, flick, drag).
+			// Update the props onHoldStart, onHoldEnd, onHold on any gesture (hold, flick, drag).
 			this.hold.updateProps(this.props);
 			this.flick.updateProps(this.props);
 			this.drag.updateProps(this.props);
@@ -654,7 +654,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.onFlick;
 			delete props.onHold;
 			delete props.onHoldEnd;
-			delete props.onHoldPulse;
+			delete props.onHoldStart;
 			delete props.onTap;
 			delete props.onUp;
 

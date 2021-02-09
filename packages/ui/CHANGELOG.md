@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/Touchable` event `onHold` and `onHoldPulse` to `onHoldStart` and `onHold` respectively to match with general event semantics
+
 ## [3.5.0] - 2021-02-05
 
 ### Deprecated
