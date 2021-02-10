@@ -57,6 +57,7 @@ const defaultConfig = {
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {noAutoFocus} = config;
 	let lastInputType = 'key';
+	let needChangeTouchMode = false;
 
 	return class extends React.Component {
 		static displayName = 'SpotlightRootDecorator';
@@ -83,13 +84,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.getLastInputType().finally(() => {
 				if (this && this.containerRef && this.containerRef.current) {
 					// Set initial mode
-					if (lastInputType === 'touch') {
-						this.containerRef.current.classList.remove('non-touch-mode');
-						this.containerRef.current.classList.add('touch-mode');
-					} else {
-						this.containerRef.current.classList.add('non-touch-mode');
-						this.containerRef.current.classList.remove('touch-mode');
-					}
+					this.setTouchModeClass(lastInputType);
 				}
 			});
 
@@ -97,14 +92,15 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				Spotlight.focus();
 			}
 
-			document.addEventListener('visibilitychange', this.handleVisibilityChange, {capture: true});
+			document.addEventListener('focusin', this.handleFocusIn, {capture: true});
 			document.addEventListener('pointerover', this.handlePointerOver, {capture: true});
 			document.addEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
 
 		componentWillUnmount () {
 			Spotlight.terminate();
-			document.removeEventListener('visibilitychange', this.handleVisibilityChange, {capture: true});
+
+			document.removeEventListener('focusin', this.handleFocusIn, {capture: true});
 			document.removeEventListener('pointerover', this.handlePointerOver, {capture: true});
 			document.removeEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
@@ -119,6 +115,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						subscribe: true,
 						onSuccess: function (res) {
 							lastInputType = res.lastInputType;
+							needChangeTouchMode = true;
 							resolve();
 						},
 						onFailure: function (err) {
@@ -131,28 +128,25 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			});
 		};
 
-		handleVisibilityChange = () => {
-			if (document.hidden === false) {
-				if (lastInputType === 'touch') {
-					this.containerRef.current.classList.remove('non-touch-mode');
-					this.containerRef.current.classList.add('touch-mode');
-				} else {
-					this.containerRef.current.classList.add('non-touch-mode');
-					this.containerRef.current.classList.remove('touch-mode');
-				}
-			}
-		};
-
-		handlePointerOver = (ev) => {
-			if (ev.pointerType === 'touch') {
+		setTouchModeClass (inputType) {
+			if (inputType === 'touch') {
 				this.containerRef.current.classList.remove('non-touch-mode');
 				this.containerRef.current.classList.add('touch-mode');
-			} else if (ev.pointerType === 'mouse') {
+			} else if (inputType === 'mouse' || inputType === 'key') {
 				this.containerRef.current.classList.add('non-touch-mode');
 				this.containerRef.current.classList.remove('touch-mode');
 			} else {
 				this.containerRef.current.classList.remove('non-touch-mode');
 				this.containerRef.current.classList.remove('touch-mode');
+			}
+			needChangeTouchMode = false;
+		}
+
+		handlePointerOver = (ev) => this.setTouchModeClass(ev.pointerType);
+
+		handleFocusIn = () => {
+			if (needChangeTouchMode) {
+				this.setTouchModeClass (lastInputType);
 			}
 		};
 
@@ -163,8 +157,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				ev.preventDefault();
 			}
 
-			this.containerRef.current.classList.add('non-touch-mode');
-			this.containerRef.current.classList.remove('touch-mode');
+			this.setTouchModeClass('key');
 		};
 
 		navigableFilter = (elem) => {
