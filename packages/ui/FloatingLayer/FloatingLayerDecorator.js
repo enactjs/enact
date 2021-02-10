@@ -5,11 +5,11 @@
 import {call, forEventProp, oneOf} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import Registry from '@enact/core/internal/Registry';
-import React from 'react';
+import {createContext, Component} from 'react';
 
 const forAction = forEventProp('action');
 
-const FloatingLayerContext = React.createContext();
+const FloatingLayerContext = createContext();
 
 /**
  * Default config for {@link ui/FloatingLayer.FloatingLayerDecorator}.
@@ -57,7 +57,7 @@ const defaultConfig = {
 const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {floatLayerId, wrappedClassName} = config;
 
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'FloatingLayerDecorator';
 
 		constructor (props) {
