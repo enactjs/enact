@@ -8,6 +8,7 @@
 
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
+import LS2Request from '@enact/webos/LS2Request/LS2Request';
 import React from 'react';
 
 import Spotlight from '../src/spotlight';
@@ -55,6 +56,8 @@ const defaultConfig = {
  */
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {noAutoFocus} = config;
+	let lastInputType = 'key';
+	let needChangeTouchMode = false;
 
 	return class extends React.Component {
 		static displayName = 'SpotlightRootDecorator';
@@ -78,12 +81,18 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
+			this.getLastInputType().finally(() => {
+				if (this && this.containerRef && this.containerRef.current) {
+					// Set initial mode
+					this.setTouchModeClass(lastInputType);
+				}
+			});
+
 			if (!noAutoFocus) {
 				Spotlight.focus();
 			}
 
-			this.containerRef.current.classList.add('non-touch-mode');
-
+			document.addEventListener('focusin', this.handleFocusIn, {capture: true});
 			document.addEventListener('pointerover', this.handlePointerOver, {capture: true});
 			document.addEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
@@ -91,20 +100,53 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillUnmount () {
 			Spotlight.terminate();
 
+			document.removeEventListener('focusin', this.handleFocusIn, {capture: true});
 			document.removeEventListener('pointerover', this.handlePointerOver, {capture: true});
 			document.removeEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
 
-		handlePointerOver = (ev) => {
-			if (ev.pointerType === 'touch') {
+		// FIXME: This is a temporary support for NMRM
+		getLastInputType = () => {
+			return new Promise(function (resolve, reject) {
+				if (window.PalmSystem) {
+					new LS2Request().send({
+						service: 'luna://com.webos.surfacemanager',
+						method: 'getLastInputType',
+						subscribe: true,
+						onSuccess: function (res) {
+							lastInputType = res.lastInputType;
+							needChangeTouchMode = true;
+							resolve();
+						},
+						onFailure: function (err) {
+							reject('Failed to get system LastInputType: ' + JSON.stringify(err));
+						}
+					});
+				} else {
+					resolve();
+				}
+			});
+		};
+
+		setTouchModeClass (inputType) {
+			if (inputType === 'touch') {
 				this.containerRef.current.classList.remove('non-touch-mode');
 				this.containerRef.current.classList.add('touch-mode');
-			} else if (ev.pointerType === 'mouse') {
+			} else if (inputType === 'mouse' || inputType === 'key') {
 				this.containerRef.current.classList.add('non-touch-mode');
 				this.containerRef.current.classList.remove('touch-mode');
 			} else {
 				this.containerRef.current.classList.remove('non-touch-mode');
 				this.containerRef.current.classList.remove('touch-mode');
+			}
+			needChangeTouchMode = false;
+		}
+
+		handlePointerOver = (ev) => this.setTouchModeClass(ev.pointerType);
+
+		handleFocusIn = () => {
+			if (needChangeTouchMode) {
+				this.setTouchModeClass (lastInputType);
 			}
 		};
 
@@ -115,8 +157,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				ev.preventDefault();
 			}
 
-			this.containerRef.current.classList.add('non-touch-mode');
-			this.containerRef.current.classList.remove('touch-mode');
+			this.setTouchModeClass('key');
 		};
 
 		navigableFilter = (elem) => {

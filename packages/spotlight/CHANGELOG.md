@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight/SpotlightRootDecorator` to refer the last input type from webos
+
 ## [3.4.9-experimental-3] - 2021-01-26
 
 ### Fixed
