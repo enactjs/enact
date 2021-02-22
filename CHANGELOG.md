@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.5.0] - 2021-02-05
+
+### Deprecated
+
+- `ui/A11yDecorator`, to be removed in 4.0.0
+
+### Changed
+
+- `ui/Transition` prop `duration` to support any valid CSS value for `slide` and `fade` `type`
+
 ## [3.4.11] - 2020-12-11
 
 ### Fixed
