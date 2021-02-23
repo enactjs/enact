@@ -24,23 +24,20 @@ const
 	forwardBlur = forward('onBlur'),
 	forwardFocus = forward('onFocus'),
 	forwardMouseEnter = forward('onMouseEnter'),
-	forwardMouseLeave = forward('onMouseLeave');
-const
-	forwardKeyDownWithPrevent = forward('onKeyDown'),
-	forwardKeyUpWithPrevent = forward('onKeyUp');
+	forwardMouseLeave = forward('onMouseLeave'),
+	forwardKeyDown = forward('onKeyDown'),
+	forwardKeyUp = forward('onKeyUp');
 
 const callContext = (name) => (ev, props, context) => context[name](ev, props);
 const spotHandlers = {
 	onKeyDown: handle(
-		forwardKeyDownWithPrevent,
+		forwardKeyDown,
 		callContext('onKeyDown'),
 		forwardMouseDown
 	),
 	onKeyUp: handle(
-		adaptEvent(
-			(ev, props) => ({notPrevented: forwardKeyUpWithPrevent(ev, props), ...ev}), // eslint-disable-line no-shadow
-			callContext('onKeyUp')
-		),
+		forwardKeyUp,
+		callContext('onKeyUp'),
 		forwardMouseUp,
 		forwardClick
 	),

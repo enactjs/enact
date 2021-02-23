@@ -1,4 +1,4 @@
-@import "./internal/utils.less";
+@import "./utils.less";
 @import "./variables.less";
 
 // Disabled elements
@@ -24,7 +24,7 @@
 // Applies RTL-compatible start and end position to a selector
 // Simple "when" here just assumes that if the first argument is a list with more than 1 entry,
 // then units are correct. If it's just 1, then we varify the value is a number (measurement).
-.position-start-end (@trbl; @target: "") when (length(@trbl) > 1) or ((iskeyword(@target)) or (@target = "")) {
+.position-start-end (@trbl; @target: "") when (length(@trbl) > 1) or (@target = parent) or (@target = self) or (@target = "") {
 	.position(@trbl);
 
 	.enact-locale-rtl({
@@ -49,7 +49,7 @@
 }
 
 // Applies RTL-compatible start and end margins to a selector
-.margin-start-end (@trbl; @target: "") when (length(@trbl) > 1) or ((iskeyword(@target)) or (@target = "")) {
+.margin-start-end (@trbl; @target: "") when (length(@trbl) > 1) or (@target = parent) or (@target = self) or (@target = "") {
 	margin: @trbl;
 
 	.enact-locale-rtl({
@@ -73,7 +73,7 @@
 }
 
 // Applies RTL-compatible start and end padding to a selector
-.padding-start-end (@trbl; @target: "") when (length(@trbl) > 1) or ((iskeyword(@target)) or (@target = "")) {
+.padding-start-end (@trbl; @target: "") when (length(@trbl) > 1) or (@target = parent) or (@target = self) or (@target = "") {
 	padding: @trbl;
 
 	.enact-locale-rtl({
