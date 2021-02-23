@@ -123,16 +123,10 @@ class Spot {
 	};
 
 	forwardAndResetLastSelectTarget = (ev, props) => {
-		const {keyCode, notPrevented} = ev;
+		const {keyCode} = ev;
 		const {selectionKeys} = props;
 		const key = selectionKeys.find((value) => keyCode === value);
-
-		// FIXME: temporary patch to maintain compatibility with moonstone 3.2.5 which
-		// deconstructs `preventDefault` from the event which is incompatible with React's
-		// synthetic event.
-		if (ev.preventDefault && ev.preventDefault.bind) {
-			ev.preventDefault = ev.preventDefault.bind(ev);
-		}
+		const notPrevented = !ev.defaultPrevented;
 
 		// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
 		if (!key && (!is('enter', keyCode) || !getDirection(keyCode))) {
@@ -193,18 +187,19 @@ class Spot {
 	handle = handle.bind(this);
 
 	handleKeyDown = this.handle(
+		(ev) => !ev.defaultPrevented,
 		this.forwardSpotlightEvents,
 		this.isActionable,
 		this.handleSelect,
 		this.shouldEmulateMouse
-		// `forwardMouseUp` is usually called out of the useSpot if the `this.shouldEmulateMouse` returns true.
+		// `forwardMouseDown` is usually called out of the useSpot if the `this.shouldEmulateMouse` returns true.
 	);
 
 	handleKeyUp = this.handle(
 		this.forwardAndResetLastSelectTarget,
 		this.isActionable,
 		this.shouldEmulateMouse
-		// `forwardMouseDown` and `forwardClick` are usually called out of the useSpot if the `this.shouldEmulateMouse` returns true.
+		// `forwardMouseUp` and `forwardClick` are usually called out of the useSpot if the `this.shouldEmulateMouse` returns true.
 	);
 
 	handleFocus = (ev) => {

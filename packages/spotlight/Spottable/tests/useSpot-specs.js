@@ -1,4 +1,4 @@
-import handle, {adaptEvent, forward, forwardWithPrevent} from '@enact/core/handle';
+import handle, {forward} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
 import Spotlight from '../../src/spotlight.js';
 import classNames from 'classnames';
@@ -10,11 +10,9 @@ import useSpot from '../useSpot';
 
 const
 	forwardMouseUp = forward('onMouseUp'),
-	forwardMouseDown = forward('onMouseDown');
-
-const
-	forwardKeyDownWithPrevent = forwardWithPrevent('onKeyDown'),
-	forwardKeyUpWithPrevent = forwardWithPrevent('onKeyUp');
+	forwardMouseDown = forward('onMouseDown'),
+	forwardKeyDown = forward('onKeyDown'),
+	forwardKeyUp = forward('onKeyUp');
 
 const makeKeyEvent = (keyCode) => {
 	return {
@@ -31,15 +29,13 @@ let getCurrent = Spotlight.getCurrent;
 const callContext = (name) => (ev, props, context) => context[name](ev, props);
 const spotHandlers = {
 	onKeyDown: handle(
-		forwardKeyDownWithPrevent,
+		forwardKeyDown,
 		callContext('onKeyDown'),
 		forwardMouseDown
 	),
 	onKeyUp: handle(
-		adaptEvent(
-			(ev, props) => ({notPrevented: forwardKeyUpWithPrevent(ev, props), ...ev}), // eslint-disable-line no-shadow
-			callContext('onKeyUp')
-		),
+		forwardKeyUp,
+		callContext('onKeyUp'),
 		forwardMouseUp
 	),
 	onBlur: callContext('onBlur'),
@@ -239,7 +235,7 @@ describe('useSpot', () => {
 			expect(actual).toEqual(expected);
 		});
 
-		test('should not emulate {onMouseUp} if passing ev.notPrevented of false even though {REMOTE_OK_KEY} key is pressed', () => {
+		test('should not emulate {onMouseUp} if the default behavior is prevented even though {REMOTE_OK_KEY} key is pressed', () => {
 			const spy = jest.fn();
 			function onKeyUp (ev) {
 				ev.preventDefault();

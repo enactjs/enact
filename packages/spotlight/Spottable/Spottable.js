@@ -6,7 +6,7 @@
  * @exports spottableClass
  */
 
-import handle, {adaptEvent, forward, returnsTrue} from '@enact/core/handle';
+import handle, {forward, returnsTrue} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
 import EnactPropTypes from '@enact/core/internal/prop-types';
