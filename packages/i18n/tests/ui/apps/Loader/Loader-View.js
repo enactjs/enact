@@ -1,5 +1,3 @@
-import React from 'react';
-
 import I18nDecorator, {I18nContextDecorator} from '../../../../I18nDecorator';
 import Text from '../../../../Text';
 

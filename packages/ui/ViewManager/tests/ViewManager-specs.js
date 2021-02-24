@@ -1,5 +1,5 @@
 /* eslint-disable enact/prop-types */
-import React from 'react';
+import {Component} from 'react';
 import {mount} from 'enzyme';
 import ViewManager from '../';
 
@@ -140,7 +140,7 @@ describe('ViewManager', () => {
 
 	test('should allow child props to update', () => {
 		const content = 'updated';
-		class ViewManagerTest extends React.Component {
+		class ViewManagerTest extends Component {
 			render () {
 				return (
 					<ViewManager>

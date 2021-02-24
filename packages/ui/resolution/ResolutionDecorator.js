@@ -4,7 +4,7 @@
  * not jsdoc module on purpose
  */
 
-import React from 'react';
+import {Component} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
@@ -67,7 +67,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		defineScreenTypes(config.screenTypes);
 	}
 
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'ResolutionDecorator';
 
 		static propTypes = /** @lends ui/resolution.ResolutionDecorator.prototype */ {

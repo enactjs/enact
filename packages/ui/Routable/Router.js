@@ -1,6 +1,6 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Children, createElement, Component as ReactComponent} from 'react';
 import warning from 'warning';
 
 import ForwardRef from '../ForwardRef';
@@ -16,7 +16,7 @@ import {propTypes, stringifyRoutes, toSegments} from './util';
  * @ui
  * @private
  */
-const RouterBase = class extends React.Component {
+const RouterBase = class extends ReactComponent {
 	static displayName = 'Router';
 
 	static propTypes = /** @lends ui/Routable.Router.prototype */ {
@@ -115,7 +115,7 @@ const RouterBase = class extends React.Component {
 	 * @returns {Object}                   Route configuration object
 	 */
 	createRoutes (children, routes) {
-		React.Children.forEach(children, child => {
+		Children.forEach(children, child => {
 			const {path, children: grandchildren, component, ...rest} = child.props;
 			if (path && component) {
 				routes[path] = {
@@ -147,7 +147,7 @@ const RouterBase = class extends React.Component {
 			const subPath = segments.slice(0, index + 1).join('/');
 			route = route && route[segment];
 			if (route && route.$component) {
-				return React.createElement(route.$component, {
+				return createElement(route.$component, {
 					...route.$props,
 					key: 'view$/' + subPath,
 					spotlightId: `panel-${subPath.replace(/\//g, '-')}`

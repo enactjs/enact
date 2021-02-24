@@ -1,4 +1,3 @@
-import React from 'react';
 import {mount, shallow} from 'enzyme';
 import BodyText, {BodyTextBase} from '../BodyText';
 import {Cell} from '../../Layout';

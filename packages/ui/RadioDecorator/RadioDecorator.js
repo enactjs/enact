@@ -8,7 +8,7 @@
 
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import React from 'react';
+import {Component} from 'react';
 
 import {RadioContext, RadioControllerDecorator} from './RadioControllerDecorator';
 
@@ -64,7 +64,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardActivate = forward(activate);
 	const forwardDeactivate = forward(deactivate);
 
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'RadioDecorator';
 
 		static contextType = RadioContext;

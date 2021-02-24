@@ -7,7 +7,7 @@
  * @private
  */
 
-import React from 'react';
+import {useCallback} from 'react';
 import warning from 'warning';
 
 // Safely handles functional and object refs (and ignores invalid refs)
@@ -48,7 +48,7 @@ function chainRefs (...refs) {
  */
 function useChainRefs (...refs) {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	return React.useCallback(chainRefs(...refs), refs);
+	return useCallback(chainRefs(...refs), refs);
 }
 
 export default useChainRefs;

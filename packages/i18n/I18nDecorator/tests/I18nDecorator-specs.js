@@ -2,7 +2,6 @@
 
 import {shallow, mount} from 'enzyme';
 import ilib from 'ilib';
-import React from 'react';
 
 import {updateLocale} from '../../locale';
 import {I18nContextDecorator, I18nDecorator} from '../I18nDecorator';

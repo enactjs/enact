@@ -7,7 +7,7 @@
  */
 
 import hoc from '@enact/core/hoc';
-import React from 'react';
+import {Component} from 'react';
 
 /**
  * Default config for {@link ui/internal/Pure.Pure}.
@@ -54,7 +54,7 @@ const defaultConfig = {
 const Pure = hoc(defaultConfig, (config, Wrapped) => {
 	const {propComparators} = config;
 
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'Pure';
 
 		static propTypes = {};

@@ -9,7 +9,6 @@ import hoc from '@enact/core/hoc';
 import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 /**
  * Default config for {@link ui/A11yDecorator.A11yDecorator}.

@@ -1,5 +1,5 @@
 import hoc from '@enact/core/hoc';
-import React from 'react';
+import {PureComponent} from 'react';
 
 import {PlaceholderContext} from './PlaceholderControllerDecorator';
 
@@ -47,7 +47,7 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {placeholderComponent: PlaceholderComponent, style} = config;
 	const placeholderStyle = Object.assign({}, defaultConfig.style, style);
 
-	return class extends React.PureComponent {
+	return class extends PureComponent {
 		static displayName = 'PlaceholderDecorator';
 
 		static contextType = PlaceholderContext;

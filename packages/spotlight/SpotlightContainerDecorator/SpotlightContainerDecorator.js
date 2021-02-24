@@ -8,7 +8,7 @@
 import handle, {forward} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
-import React from 'react';
+import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import useSpotlightContainer from './useSpotlightContainer';
@@ -219,7 +219,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	};
 
 	// Wrapping with a React.Component to maintain ref support
-	return class SpotlightContainerDecoratorAdapter extends React.Component {
+	return class SpotlightContainerDecoratorAdapter extends Component {
 		render () {
 			return (
 				<SpotlightContainerDecorator {...this.props} />
