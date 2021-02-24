@@ -8,7 +8,6 @@
  */
 
 import hoc from '@enact/core/hoc';
-import React from 'react';
 
 import useSlots from './useSlots';
 

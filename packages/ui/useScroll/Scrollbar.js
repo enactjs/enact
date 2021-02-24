@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import React, {memo, useEffect, useRef} from 'react';
+import {memo, useEffect, useRef} from 'react';
 import ReactDOM from 'react-dom';
 
 import ri from '../resolution';

@@ -1,11 +1,11 @@
-import React from 'react';
+import {createContext, Component} from 'react';
 import {mount} from 'enzyme';
 import Registry from '../Registry';
 
-const SomeContext = React.createContext();
+const SomeContext = createContext();
 
 describe('Registry', () => {
-	class NotifiesTree extends React.Component {
+	class NotifiesTree extends Component {
 		static contextType = SomeContext;
 
 		componentDidMount () {
@@ -28,7 +28,7 @@ describe('Registry', () => {
 		}
 	}
 
-	class HandlesNotification extends React.Component {
+	class HandlesNotification extends Component {
 		static contextType = SomeContext;
 
 		state = {

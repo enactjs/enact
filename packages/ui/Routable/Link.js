@@ -3,7 +3,7 @@ import {forProp, forward, handle, preventDefault} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import useHandlers from '@enact/core/useHandlers';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 
 import useLink from './useLink';
 
@@ -59,7 +59,7 @@ const Linkable = hoc({navigate: 'onClick'}, (config, Wrapped) => {
 	}
 
 	// TODO: Added to maintain `ref` compatibility with 3.x. Remove in 4.0
-	return class LinkableAdapter extends React.Component {
+	return class LinkableAdapter extends Component {
 		render () {
 			return (
 				<Linkable {...this.props} />

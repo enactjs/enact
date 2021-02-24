@@ -2,7 +2,7 @@ import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import Registry from '@enact/core/internal/Registry';
-import React from 'react';
+import {createContext, Component} from 'react';
 import ReactDOM from 'react-dom';
 
 /**
@@ -46,7 +46,7 @@ const defaultConfig = {
 	thresholdFactor: 1.5
 };
 
-const PlaceholderContext = React.createContext();
+const PlaceholderContext = createContext();
 
 /**
  * A higher-order component (HOC) that render placeholder components.
@@ -62,7 +62,7 @@ const PlaceholderContext = React.createContext();
 const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {bounds, notify, thresholdFactor} = config;
 
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'PlaceholderControllerDecorator';
 
 		componentDidMount () {

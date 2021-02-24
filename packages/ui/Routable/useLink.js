@@ -1,10 +1,10 @@
-import React from 'react';
+import {useContext, useCallback} from 'react';
 
 import {resolve, RouteContext} from './util';
 
 function useLink () {
-	const {path: currentPath, navigate} = React.useContext(RouteContext) || {};
-	const handleNavigate = React.useCallback(
+	const {path: currentPath, navigate} = useContext(RouteContext) || {};
+	const handleNavigate = useCallback(
 		({path}) => {
 			if (!navigate) return;
 

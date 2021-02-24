@@ -1,7 +1,7 @@
 /* eslint-disable enact/prop-types */
 
 import {mount} from 'enzyme';
-import React from 'react';
+import {createRef} from 'react';
 
 import useChainRefs from '../useChainRefs';
 
@@ -22,7 +22,7 @@ describe('useChainRefs', () => {
 	});
 
 	test('should call a single object ref', () => {
-		const ref = React.createRef();
+		const ref = createRef();
 		mount(<Component refs={[ref]} />);
 
 		const expected = 'DIV';

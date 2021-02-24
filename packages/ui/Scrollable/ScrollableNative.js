@@ -6,7 +6,7 @@ import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
-import React, {Component} from 'react';
+import {createRef, Component} from 'react';
 
 import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
@@ -393,9 +393,9 @@ class ScrollableBaseNative extends Component {
 			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
 		};
 
-		this.containerRef = React.createRef();
-		this.horizontalScrollbarRef = React.createRef();
-		this.verticalScrollbarRef = React.createRef();
+		this.containerRef = createRef();
+		this.horizontalScrollbarRef = createRef();
+		this.verticalScrollbarRef = createRef();
 
 		this.horizontalScrollbarProps = {
 			ref: this.horizontalScrollbarRef,

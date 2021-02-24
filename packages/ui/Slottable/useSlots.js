@@ -1,4 +1,4 @@
-import React from 'react';
+import {createElement, isValidElement, Children} from 'react';
 import warning from 'warning';
 
 // ** WARNING ** This is an intentional but likely dangerous hack necessary to clone a child while
@@ -10,14 +10,14 @@ function cloneElement (child, index) {
 	delete newProps.slot;
 	newProps.key = `slot-${index}`;
 
-	return React.createElement(child.type, newProps);
+	return createElement(child.type, newProps);
 }
 
 function distributeChild (child, index, slots, props) {
 	let c, slot;
 	const hasSlot = (name) => slots.indexOf(name) !== -1;
 
-	if (!React.isValidElement(child)) {
+	if (!isValidElement(child)) {
 		return false;
 	} else if (child.props.slot) {
 		const hasUserSlot = hasSlot(slot = child.props.slot);
@@ -66,7 +66,7 @@ function distribute ({children, ...slots}) {
 
 	if (slotNames.length > 0) {
 		const remaining = [];
-		React.Children.forEach(children, (child, index) => {
+		Children.forEach(children, (child, index) => {
 			if (!distributeChild(child, index, slotNames, props)) {
 				remaining.push(child);
 			}

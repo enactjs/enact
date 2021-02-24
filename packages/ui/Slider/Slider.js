@@ -12,7 +12,6 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import React from 'react';
 
 import Changeable from '../Changeable';
 import ComponentOverride from '../ComponentOverride';

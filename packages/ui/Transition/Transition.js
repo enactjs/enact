@@ -20,7 +20,7 @@ import {forward} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
-import React from 'react';
+import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
@@ -302,7 +302,7 @@ const TRANSITION_STATE = {
  * @memberof ui/Transition
  * @public
  */
-class Transition extends React.Component {
+class Transition extends Component {
 
 	static contextType = ResizeContext;
 

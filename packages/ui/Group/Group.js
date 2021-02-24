@@ -8,7 +8,6 @@
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
 
 import Changeable from '../Changeable';
