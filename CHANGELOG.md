@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.0.0-alpha.1] - 2021-02-24
+
+-  The framework was updated to support React 17.0.1
+
+### Fixed
+
+- `spotlight/SpotlightContainerDecorator` to properly save the last-focused element with React 17
+
 ## [3.5.0] - 2021-02-05
 
 ### Deprecated

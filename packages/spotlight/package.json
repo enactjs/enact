@@ -18,7 +18,7 @@
     }
   },
   "dependencies": {
-    "@enact/core": "^3.5.0",
+    "@enact/core": "4.0.0-alpha.1",
     "prop-types": "^15.7.2",
     "ramda": "^0.24.1",
     "react": "^17.0.1",
