@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import React, {PureComponent, Component} from 'react';
+import {createRef, PureComponent, Component} from 'react';
 import ReactDOM from 'react-dom';
 
 import ri from '../resolution';
@@ -101,8 +101,8 @@ class ScrollbarBase extends PureComponent {
 	constructor (props) {
 		super(props);
 
-		this.containerRef = React.createRef();
-		this.thumbRef = React.createRef();
+		this.containerRef = createRef();
+		this.thumbRef = createRef();
 	}
 
 	componentDidMount () {

@@ -1,5 +1,5 @@
 import {mount} from 'enzyme';
-import React from 'react';
+import {useState, useCallback} from 'react';
 
 import Link from '../Link';
 import Routable from '../Routable';
@@ -25,8 +25,8 @@ describe('Routable', () => {
 		const Views = Routable({navigate: 'onNavigate'}, ({children}) => <div>{children}</div>);
 
 		function Sample (props) {
-			const [path, nav] = React.useState('/app');
-			const handleNavigate = React.useCallback((ev) => nav(ev.path), [nav]);
+			const [path, nav] = useState('/app');
+			const handleNavigate = useCallback((ev) => nav(ev.path), [nav]);
 
 			return (
 				<Views {...props} path={path} onNavigate={handleNavigate}>

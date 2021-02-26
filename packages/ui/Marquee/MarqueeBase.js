@@ -2,7 +2,7 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forProp, forward, handle, stop} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Children, Fragment} from 'react';
 
 import componentCss from './Marquee.module.less';
 
@@ -194,7 +194,7 @@ const MarqueeBase = kind({
 	computed: {
 		'aria-label': ({'aria-label': aria, children, distance, willAnimate}) => {
 			if (children != null && aria == null && willAnimate && distance > 0) {
-				return React.Children.map(children, c => typeof c === 'string' && c)
+				return Children.map(children, c => typeof c === 'string' && c)
 					.filter(Boolean)
 					.join(' ') || aria;
 			} else {
@@ -255,10 +255,10 @@ const MarqueeBase = kind({
 				>
 					{children}
 					{duplicate ? (
-						<React.Fragment>
+						<Fragment>
 							<div className={css.spacing} ref={applyOffset} />
 							{children}
-						</React.Fragment>
+						</Fragment>
 					) : null}
 				</div>
 			</div>

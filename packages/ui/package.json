@@ -1,6 +1,6 @@
 {
   "name": "@enact/ui",
-  "version": "3.4.11",
+  "version": "4.0.0-alpha.1",
   "description": "A collection of simplified unstyled cross-platform UI components for Enact",
   "main": "index.js",
   "scripts": {
@@ -25,14 +25,14 @@
     }
   },
   "dependencies": {
-    "@enact/core": "^3.4.11",
+    "@enact/core": "^4.0.0-alpha.1",
     "classnames": "^2.2.5",
     "direction": "^1.0.1",
     "invariant": "^2.2.2",
     "prop-types": "^15.7.2",
     "ramda": "^0.24.1",
-    "react": "^16.8.0",
-    "react-dom": "^16.8.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "recompose": "^0.26.0",
     "warning": "^3.0.0"
   }

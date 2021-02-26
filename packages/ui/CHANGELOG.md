@@ -2,7 +2,15 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [4.0.0-alpha.1] - 2021-02-24
+
+No significant changes.
+
+## [3.5.0] - 2021-02-05
+
+### Deprecated
+
+- `ui/A11yDecorator`, to be removed in 4.0.0
 
 ### Changed
 
@@ -26,7 +34,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/MarqueeDecorator` to restart animation when text changed while focus retained
 - `ui/Routable` to respect the current path on first render when using relative paths in links
 
 ## [3.4.9] - 2020-10-30

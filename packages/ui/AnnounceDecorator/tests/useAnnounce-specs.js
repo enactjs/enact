@@ -1,4 +1,4 @@
-import React from 'react';
+import {isValidElement} from 'react';
 import {mount, shallow} from 'enzyme';
 
 import useAnnounce from '../useAnnounce';
@@ -35,7 +35,7 @@ describe('useAnnounce', () => {
 		);
 
 		const expected = true;
-		const actual = React.isValidElement(subject.prop('children'));
+		const actual = isValidElement(subject.prop('children'));
 
 		expect(actual).toBe(expected);
 	});

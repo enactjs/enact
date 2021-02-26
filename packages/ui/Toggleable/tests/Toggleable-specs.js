@@ -1,5 +1,4 @@
 /* eslint-disable enact/prop-types */
-import React from 'react';
 import {mount, shallow} from 'enzyme';
 import Toggleable from '../Toggleable';
 

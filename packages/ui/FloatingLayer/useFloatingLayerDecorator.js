@@ -1,9 +1,9 @@
 import useClass from '@enact/core/useClass';
-import React from 'react';
+import {createContext, useCallback, useEffect} from 'react';
 
 import FloatingLayerContainer from './FloatingLayerContainer';
 
-const FloatingLayerContext = React.createContext();
+const FloatingLayerContext = createContext();
 
 /**
  * Configuration for `useFloatingLayerDecorator`
@@ -34,11 +34,11 @@ function useFloatingLayerDecorator (config = {}) {
 	const {className, floatLayerId = 'floatLayer'} = config;
 	const floating = useClass(FloatingLayerContainer, {floatLayerId});
 
-	React.useEffect(() => {
+	useEffect(() => {
 		floating.load();
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	const provideFloatingLayer = React.useCallback((children) => {
+	const provideFloatingLayer = useCallback((children) => {
 		return (
 			<FloatingLayerContext.Provider value={floating.registry.register}>
 				<div className={className}>

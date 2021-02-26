@@ -1,6 +1,5 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }], react/jsx-no-bind: off */
 
-import React from 'react';
 import {shallow, mount} from 'enzyme';
 import Route from '../Route';
 import {Router, RouterBase} from '../Router';

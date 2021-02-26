@@ -3,7 +3,6 @@
  */
 
 import hoc from '@enact/core/hoc';
-import React from 'react';
 
 import {FloatingLayerContext, useFloatingLayerDecorator} from './useFloatingLayerDecorator';
 

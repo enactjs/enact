@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React, {forwardRef} from 'react';
+import {forwardRef} from 'react';
 
 import css from './ScrollbarTrack.module.less';
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import {useRef} from 'react';
 
 /**
  * Creates one instance of the class, `Ctor` with the provided `args`, for the life of the
@@ -29,7 +29,7 @@ import React from 'react';
  * @private
  */
 function useClass (Ctor, ...args) {
-	const ref = React.useRef(null);
+	const ref = useRef(null);
 	ref.current = ref.current || new Ctor(...args);
 
 	return ref.current;

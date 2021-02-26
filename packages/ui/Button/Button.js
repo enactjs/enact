@@ -10,7 +10,6 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import Touchable from '../Touchable';

@@ -11,7 +11,7 @@ import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {PureComponent} from 'react';
 import warning from 'warning';
 
 /**
@@ -68,7 +68,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 	const {prop, change} = config;
 	const defaultPropKey = 'default' + cap(prop);
 
-	return class extends React.PureComponent {
+	return class extends PureComponent {
 		static displayName = 'Changeable';
 
 		static propTypes = /** @lends ui/Changeable.Changeable.prototype */ {
