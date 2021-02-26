@@ -3,7 +3,7 @@ import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
-import React, {Component} from 'react';
+import {createRef, cloneElement, Component} from 'react';
 
 import css from './UiVirtualList.module.less';
 
@@ -234,9 +234,9 @@ const VirtualListBaseFactory = (type) => {
 
 			super(props);
 
-			this.containerRef = React.createRef();
-			this.contentRef = React.createRef();
-			this.itemContainerRef = React.createRef();
+			this.containerRef = createRef();
+			this.contentRef = createRef();
+			this.itemContainerRef = createRef();
 
 			if (props.clientSize) {
 				this.calculateMetrics(props);
@@ -1009,7 +1009,7 @@ const VirtualListBaseFactory = (type) => {
 				}),
 				componentProps = getComponentProps && getComponentProps(index) || {};
 
-			this.cc[key] = React.cloneElement(itemElement, {
+			this.cc[key] = cloneElement(itemElement, {
 				...componentProps,
 				className: classNames(css.listItem, itemElement.props.className),
 				style: {...itemElement.props.style, ...(this.composeStyle(...rest))}

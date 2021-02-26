@@ -1,4 +1,4 @@
-import React from 'react';
+import {useRef, useCallback} from 'react';
 
 import Announce from './Announce';
 
@@ -31,8 +31,8 @@ import Announce from './Announce';
  * @private
  */
 function useAnnouce () {
-	const ref = React.useRef(null);
-	const announce = React.useCallback(message => {
+	const ref = useRef(null);
+	const announce = useCallback(message => {
 		if (ref.current) {
 			ref.current.announce(message);
 		}

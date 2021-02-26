@@ -8,7 +8,6 @@
  */
 
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import {ResizeContext} from '../Resizable';
 import useScroll from '../useScroll';

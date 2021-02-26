@@ -1,5 +1,4 @@
 import {mount} from 'enzyme';
-import React from 'react';
 import Spotlight from '../../src/spotlight';
 import {updatePointerPosition} from '../../src/pointer';
 

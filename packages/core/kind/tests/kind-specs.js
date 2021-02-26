@@ -1,11 +1,11 @@
-import React from 'react';
+import {createContext, useState} from 'react';
 import PropTypes from 'prop-types';
 import {mount} from 'enzyme';
 import kind from '../kind';
 
 describe('kind', () => {
 
-	const TestContext = React.createContext({
+	const TestContext = createContext({
 		value: 'initial'
 	});
 	const Kind = kind({
@@ -135,7 +135,7 @@ describe('kind', () => {
 			functional: true,
 			render: () => {
 				// eslint-disable-next-line react-hooks/rules-of-hooks
-				const [state, setState] = React.useState(0);
+				const [state, setState] = useState(0);
 
 				// eslint-disable-next-line react/jsx-no-bind
 				return <button onClick={() => setState(state + 1)}>{state}</button>;

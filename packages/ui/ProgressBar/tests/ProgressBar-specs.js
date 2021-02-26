@@ -1,4 +1,3 @@
-import React from 'react';
 import {mount} from 'enzyme';
 import ProgressBar from '../ProgressBar';
 import css from '../ProgressBar.module.less';

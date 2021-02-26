@@ -8,7 +8,7 @@
 
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 
 import {configure} from './config';
 
