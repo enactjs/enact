@@ -2,14 +2,9 @@
  * A higher-order component that adds a FloatingLayer adjacent to wrapped component.
  */
 
-import {call, forEventProp, oneOf} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import Registry from '@enact/core/internal/Registry';
-import {createContext, Component} from 'react';
 
-const forAction = forEventProp('action');
-
-const FloatingLayerContext = createContext();
+import {FloatingLayerContext, useFloatingLayerDecorator} from './useFloatingLayerDecorator';
 
 /**
  * Default config for {@link ui/FloatingLayer.FloatingLayerDecorator}.
@@ -57,67 +52,22 @@ const defaultConfig = {
 const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {floatLayerId, wrappedClassName} = config;
 
-	return class extends Component {
-		static displayName = 'FloatingLayerDecorator';
+	// eslint-disable-next-line no-shadow
+	function FloatingLayerDecorator (props) {
+		const {className, ...rest} = props;
+		const hook = useFloatingLayerDecorator({className, floatLayerId});
 
-		constructor (props) {
-			super(props);
-			this.registry = Registry.create(this.handleNotify);
-			this.floatingLayer = null;
-		}
+		return hook.provideFloatingLayer(
+			<Wrapped key="floatWrapped" {...rest} className={wrappedClassName} />
+		);
+	}
 
-		componentDidMount () {
-			this.notifyMount();
-		}
-
-		getFloatingLayer = () => {
-			// FIXME: if a component that resides in the floating layer is rendered at the same time
-			// as the floating layer, this.floatingLayer may not have been initialized yet since
-			// componentDidMount runs inside-out. As a fallback, we search by id but this could
-			// introduce issues (e.g. for duplicate layer ids).
-			return (
-				this.floatingLayer ||
-				(typeof document !== 'undefined' && document.getElementById(floatLayerId)) ||
-				null
-			);
-		};
-
-		handleNotify = oneOf(
-			[forAction('register'), call('notifyMount')],
-			[forAction('closeAll'), call('handleCloseAll')]
-		).bind(this);
-
-		handleCloseAll () {
-			this.registry.notify({action: 'close'});
-		}
-
-		notifyMount () {
-			this.registry.notify({
-				action: 'mount',
-				floatingLayer: this.getFloatingLayer()
-			});
-		}
-
-		setFloatingLayer = (node) => {
-			this.floatingLayer = node;
-		};
-
-		render () {
-			const {className, ...rest} = this.props;
-			return (
-				<FloatingLayerContext.Provider value={this.registry.register}>
-					<div className={className}>
-						<Wrapped key="floatWrapped" {...rest} className={wrappedClassName} />
-						<div id={floatLayerId} key="floatLayer" ref={this.setFloatingLayer} />
-					</div>
-				</FloatingLayerContext.Provider>
-			);
-		}
-	};
+	return FloatingLayerDecorator;
 });
 
 export default FloatingLayerDecorator;
 export {
 	FloatingLayerContext,
-	FloatingLayerDecorator
+	FloatingLayerDecorator,
+	useFloatingLayerDecorator
 };
