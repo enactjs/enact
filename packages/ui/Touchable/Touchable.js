@@ -8,7 +8,7 @@
 
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
-import {Component} from 'react';
+import {forwardRef} from 'react';
 
 import {configure} from './config';
 
@@ -105,7 +105,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 	} = config;
 
 	// eslint-disable-next-line no-shadow
-	function Touchable (props) {
+	const Touchable = forwardRef((props, ref) => {
 		const {configForHook, propsForWrapped} = selectProps(props);
 		const hook = useTouch({getActive: !!activeProp, ...configForHook});
 
@@ -116,9 +116,9 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		return (
-			<Wrapped {...propsForWrapped} />
+			<Wrapped {...propsForWrapped} ref={ref} />
 		);
-	}
+	});
 
 	Touchable.propTypes = {
 		/**
