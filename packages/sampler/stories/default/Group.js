@@ -5,7 +5,6 @@ import Button from '@enact/ui/Button';
 import Item from '@enact/ui/Item';
 import Group from '@enact/ui/Group';
 import {SlotItem as UISlotItem} from '@enact/ui/SlotItem';
-import React from 'react';
 import PropTypes from 'prop-types';
 import {storiesOf} from '@storybook/react';
 

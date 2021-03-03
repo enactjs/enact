@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import {createContext} from 'react';
 
-const RouteContext = React.createContext(null);
+const RouteContext = createContext(null);
 
 const toSegments = (path) => Array.isArray(path) ? path : path.split('/').filter(Boolean);
 

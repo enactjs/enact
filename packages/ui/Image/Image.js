@@ -7,7 +7,6 @@
 
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 import warning from 'warning';
 
 import {selectSrc} from '../resolution';

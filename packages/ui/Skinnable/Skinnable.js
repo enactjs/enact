@@ -14,7 +14,6 @@
 import classnames from 'classnames';
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import useSkins from './useSkins';
 import {objectify} from './util';

@@ -12,7 +12,7 @@ import {on, off} from '@enact/core/dispatcher';
 import complement from 'ramda/src/complement';
 import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 
 import {configure, mergeConfig} from './config';
 import {activate, deactivate, pause, States} from './state';
@@ -214,7 +214,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		activeProp
 	} = config;
 
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'Touchable';
 
 		static propTypes = /** @lends ui/Touchable.Touchable.prototype */ {

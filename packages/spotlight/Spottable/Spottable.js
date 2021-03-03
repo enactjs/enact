@@ -10,7 +10,7 @@ import {forward, handle, preventDefault, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 import ReactDOM from 'react-dom';
 
 import {getContainersForNode} from '../src/container';
@@ -96,7 +96,7 @@ const defaultConfig = {
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const {emulateMouse} = config;
 
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'Spottable';
 
 		static propTypes = /** @lends spotlight/Spottable.Spottable.prototype */ {

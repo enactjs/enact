@@ -8,7 +8,6 @@
 
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import Announce from './Announce';
 import useAnnounce from './useAnnounce';

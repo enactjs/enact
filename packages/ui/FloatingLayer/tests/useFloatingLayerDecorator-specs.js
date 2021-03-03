@@ -1,9 +1,15 @@
 import {mount} from 'enzyme';
 import {FloatingLayerBase} from '../FloatingLayer';
-import FloatingLayerDecorator from '../FloatingLayerDecorator';
+import {useFloatingLayerDecorator} from '../FloatingLayerDecorator';
 
 describe('FloatingLayer Specs', () => {
-	const Root = FloatingLayerDecorator('div');
+	function Root (props) {
+		const hook = useFloatingLayerDecorator();
+
+		return hook.provideFloatingLayer(
+			<div key="floatWrapped" {...props} />
+		);
+	}
 
 	test('should not render if FloatingLayer is not open', () => {
 		const subject = mount(

@@ -1,4 +1,4 @@
-import React from 'react';
+import {Component} from 'react';
 import PropTypes from 'prop-types';
 import {findDOMNode} from 'react-dom';
 import hoc from '@enact/core/hoc';
@@ -55,7 +55,7 @@ import hoc from '@enact/core/hoc';
  * @public
  */
 const VoiceControlDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'VoiceControlDecorator';
 
 		static propTypes = /** @lends webos/speech.VoiceControlDecorator.prototype */ {

@@ -8,7 +8,7 @@
 import {call, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import invariant from 'invariant';
-import React from 'react';
+import {createContext, Component} from 'react';
 
 /**
  * Used internally for things to notify children that they need to resize because of a parent
@@ -17,7 +17,7 @@ import React from 'react';
  * @type Object
  * @private
  */
-const ResizeContext = React.createContext();
+const ResizeContext = createContext();
 
 /**
  * Default config for `Resizable`.
@@ -73,7 +73,7 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 
 	invariant(resize, `resize is required by Resizable but was omitted when applied to ${Wrapped.displayName}`);
 
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'Resizable';
 
 		static contextType = ResizeContext;
