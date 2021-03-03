@@ -328,7 +328,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			onFlick: PropTypes.func,
 
 			/**
-			 * Event handler for hold pulse events
+			 * Event handler for hold pulse events.
 			 *
 			 * Event payload includes:
 			 *
