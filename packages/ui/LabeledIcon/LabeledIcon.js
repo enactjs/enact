@@ -144,7 +144,6 @@ const LabeledIconBase = kind({
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default 'large'
 		 * @public
 		 */
 		size: PropTypes.string
@@ -152,8 +151,7 @@ const LabeledIconBase = kind({
 
 	defaultProps: {
 		labelPosition: 'below',
-		inline: false,
-		size: 'large'
+		inline: false
 	},
 
 	styles: {
