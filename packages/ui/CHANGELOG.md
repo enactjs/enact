@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Touchable` event `onHold` and `onHoldPulse` to `onHoldStart` and `onHold` respectively to match with the naming convention
 
+### Removed
+
+- `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` default size values
+
 ## [4.0.0-alpha.1] - 2021-02-24
 
 No significant changes.
