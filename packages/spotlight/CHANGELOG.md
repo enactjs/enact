@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `spotlight/Accelerator` to allow not only number array type but also number type variable for `frequency`.
+
 ## [4.0.0-alpha.1] - 2021-02-24
 
 ### Fixed
