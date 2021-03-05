@@ -277,7 +277,7 @@ class Touch {
 	}
 
 	updateProps (props) {
-		// Update the props onHold, onHoldEnd, onHoldPulse on any gesture (hold, flick, drag).
+		// Update the props onHoldStart, onHold, and onHoldEnd on any gesture (hold, flick, drag).
 		this.hold.updateProps(props);
 		this.flick.updateProps(props);
 		this.drag.updateProps(props);

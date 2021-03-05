@@ -47,7 +47,36 @@ describe('Touchable', () => {
 		);
 
 		test(
-			'should update state configurations onHoldPulse events',
+			'should update state configurations onHold events',
+			(done) => {
+				const holdConfig = {
+					events: [
+						{name: 'hold', time: 10}
+					],
+					frequency: 10
+				};
+
+				const Component = Touchable(DivComponent);
+				const handler = jest.fn();
+				const subject = mount(
+					<Component onHoldStart={() => {}} holdConfig={holdConfig} />
+				);
+
+				const ev = {};
+				subject.simulate('mousedown', ev);
+				subject.setProps({
+					onHold: handler
+				});
+
+				setTimeout(() => {
+					expect(handler).toHaveBeenCalled();
+					done();
+				}, 20);
+			}
+		);
+
+		test(
+			'should update state configurations onHoldStart events',
 			(done) => {
 				const holdConfig = {
 					events: [
@@ -65,36 +94,7 @@ describe('Touchable', () => {
 				const ev = {};
 				subject.simulate('mousedown', ev);
 				subject.setProps({
-					onHoldPulse: handler
-				});
-
-				setTimeout(() => {
-					expect(handler).toHaveBeenCalled();
-					done();
-				}, 20);
-			}
-		);
-
-		test(
-			'should update state configurations onHold events',
-			(done) => {
-				const holdConfig = {
-					events: [
-						{name: 'hold', time: 10}
-					],
-					frequency: 10
-				};
-
-				const Component = Touchable(DivComponent);
-				const handler = jest.fn();
-				const subject = mount(
-					<Component onHoldPulse={() => {}} holdConfig={holdConfig} />
-				);
-
-				const ev = {};
-				subject.simulate('mousedown', ev);
-				subject.setProps({
-					onHold: handler
+					onHoldStart: handler
 				});
 
 				setTimeout(() => {
@@ -117,7 +117,7 @@ describe('Touchable', () => {
 				const Component = Touchable(DivComponent);
 				const handler = jest.fn();
 				const subject = mount(
-					<Component onHoldPulse={() => {}} holdConfig={holdConfig} />
+					<Component onHold={() => {}} holdConfig={holdConfig} />
 				);
 
 				const ev = {currentTarget: {}};

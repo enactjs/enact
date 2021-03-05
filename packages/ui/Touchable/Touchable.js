@@ -33,7 +33,7 @@ const selectProps = (props) => {
 		onDown,
 		onDrag, onDragEnd, onDragStart,
 		onFlick,
-		onHold, onHoldEnd, onHoldPulse,
+		onHold, onHoldEnd, onHoldStart,
 		onMove,
 		onTap,
 		onUp,
@@ -57,7 +57,7 @@ const selectProps = (props) => {
 			onDown,
 			onDrag, onDragEnd, onDragStart,
 			onFlick,
-			onHold, onHoldEnd, onHoldPulse,
+			onHold, onHoldEnd, onHoldStart,
 			onMove,
 			onTap,
 			onUp
@@ -89,7 +89,7 @@ const defaultConfig = {
 /**
  * A higher-order component that provides a consistent set of pointer events -- `onDown`, `onUp`,
  * and `onTap` -- across mouse and touch interfaces along with support for common gestures including
- * `onFlick`, `onDrag`, `onHold`, and `onHoldPulse`.
+ * `onFlick`, `onDrag`, `onHoldStart`, `onHold`, and `onHoldEnd`.
  *
  * Note: This HoC passes a number of props to the wrapped component that should be passed to the
  * main DOM node or consumed by the wrapped component.
@@ -241,14 +241,12 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		onFlick: PropTypes.func,
 
 		/**
-		 * Event handler for hold events.
+		 * Event handler for hold pulse events.
 		 *
 		 * Event payload includes:
 		 *
 		 * * `type` - Type of event, `'onHold'`
-		 * * `name` - The name of the hold as configured in the events list
-		 * * `time` - Time, in milliseconds, configured for this hold which may vary slightly
-		 *            from time since the hold began
+		 * * `time` - Time, in milliseconds, since the hold began
 		 *
 		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
@@ -271,21 +269,23 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		onHoldEnd: PropTypes.func,
 
 		/**
-		 * Event handler for hold pulse events
+		 * Event handler for hold events.
 		 *
 		 * Event payload includes:
 		 *
-		 * * `type` - Type of event, `'onHoldPulse'`
-		 * * `time` - Time, in milliseconds, since the hold began
+		 * * `type` - Type of event, `'onHoldStart'`
+		 * * `name` - The name of the hold as configured in the events list
+		 * * `time` - Time, in milliseconds, configured for this hold which may vary slightly
+		 *            from time since the hold began
 		 *
 		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
 		 * @public
 		 */
-		onHoldPulse: PropTypes.func,
+		onHoldStart: PropTypes.func,
 
 		/**
-		 * Event handler for 'move' pointer events
+		 * Event handler for 'move' pointer events.
 		 *
 		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
@@ -294,7 +294,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		onMove: PropTypes.func,
 
 		/**
-		 * Event handler for 'tap' pointer events
+		 * Event handler for 'tap' pointer events.
 		 *
 		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
@@ -303,7 +303,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		onTap: PropTypes.func,
 
 		/**
-		 * Event handler for 'up' pointer events
+		 * Event handler for 'up' pointer events.
 		 *
 		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}

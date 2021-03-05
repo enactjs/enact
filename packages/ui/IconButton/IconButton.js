@@ -138,7 +138,6 @@ const IconButtonBase = kind({
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default 'large'
 		 * @public
 		 */
 		size: PropTypes.string
@@ -147,8 +146,7 @@ const IconButtonBase = kind({
 	defaultProps: {
 		disabled: false,
 		pressed: false,
-		selected: false,
-		size: 'large'
+		selected: false
 	},
 
 	styles: {

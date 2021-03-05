@@ -130,7 +130,6 @@ const Icon = kind({
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default 'small'
 		 * @public
 		 */
 		size: PropTypes.string
@@ -138,8 +137,7 @@ const Icon = kind({
 
 	defaultProps: {
 		iconList: {},
-		pressed: false,
-		size: 'small'
+		pressed: false
 	},
 
 	styles: {

@@ -30,9 +30,9 @@ import Touch from './Touch';
  * @property {Function}  onDragEnd       Event handler for the end of a drag gesture
  * @property {Function}  onDragStart     Event handler for the start of a drag gesture
  * @property {Function}  onFlick         Event handler for a flick gesture
- * @property {Function}  onHold          Event handler for hold events
+ * @property {Function}  onHold          Event handler for hold pulse events
  * @property {Function}  onHoldEnd       Event handler for the end of hold events
- * @property {Function}  onHoldPulse     Event handler for hold pulse events
+ * @property {Function}  onHoldStart     Event handler for hold events
  * @property {Function}  onMove          Event handler for a pointer moving
  * @property {Function}  onTap           Event handler for 'tap' pointer events
  * @property {Function}  onUp            Event handler for 'up' pointer events
@@ -53,7 +53,7 @@ import Touch from './Touch';
 /**
  * Provides a consistent set of pointer events -- `onDown`, `onUp`, and `onTap` --
  * across mouse and touch interfaces along with support for common gestures including
- * `onFlick`, `onDrag`, `onHold`, `onHoldPulse`, and `onHoldEnd`.
+ * `onFlick`, `onDrag`, `onHoldStart`, `onHold`, and `onHoldEnd`.
  * @param {useTouchConfig} config Configuration options
  * @returns {useTouchInterface}
  * @private
@@ -62,7 +62,7 @@ function useTouch (config = {}) {
 	const {
 		getActive = false, disabled,
 		dragConfig, flickConfig, holdConfig,
-		onDrag, onDragEnd, onDragStart, onHold, onHoldEnd, onHoldPulse, onFlick
+		onDrag, onDragEnd, onDragStart, onHold, onHoldEnd, onHoldStart, onFlick
 	} = config;
 
 	const touch = useClass(Touch);
@@ -85,7 +85,7 @@ function useTouch (config = {}) {
 
 	useEffect(() => {
 		touch.updateProps(config);
-	}, [onDrag, onDragEnd, onDragStart, onHold, onHoldEnd, onHoldPulse, onFlick]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [onDrag, onDragEnd, onDragStart, onHold, onHoldEnd, onHoldStart, onFlick]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		if (disabled) {

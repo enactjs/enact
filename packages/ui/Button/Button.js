@@ -158,7 +158,6 @@ const ButtonBase = kind({
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default 'large'
 		 * @public
 		 */
 		size: PropTypes.string
