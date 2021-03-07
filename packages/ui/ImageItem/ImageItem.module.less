@@ -2,24 +2,25 @@
 //
 .imageItem {
 	box-sizing: border-box;
+	height: 100%;
 
 	.image {
 		display: block; // leaving this to prevent whitespace between inline-block elements
 		margin: 0;
 	}
-	
+
 	.caption,
 	&.selected {
 		/* Public Class Names */
 	}
-	
+
 	&.horizontal {
 		.image {
 			width: 25%;
 			height: 100%;
 		}
 	}
-	
+
 	&.vertical {
 		.image {
 			width: 100%;
