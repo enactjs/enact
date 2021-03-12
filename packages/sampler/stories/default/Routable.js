@@ -1,5 +1,5 @@
 import {action} from '@enact/storybook-utils/addons/actions';
-import React from 'react';
+import {useState} from 'react';
 import ri from '@enact/ui/resolution';
 import Heading from '@enact/ui/Heading';
 import {Linkable, Routable, Route} from '@enact/ui/Routable';
@@ -65,7 +65,7 @@ export default {
 };
 
 export const _Routable = () => {
-	let [path, setPath] = React.useState('/app');
+	let [path, setPath] = useState('/app');
 	const handleNavigate = (ev) => {
 		action('onNavigate')(ev);
 		setPath(ev.path);

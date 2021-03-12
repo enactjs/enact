@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 
 /**
  * An unstyled component with an imperative API to alert the user.
@@ -36,7 +36,7 @@ import React from 'react';
  * @memberof ui/AnnounceDecorator
  * @public
  */
-const Announce = class extends React.Component {
+const Announce = class extends Component {
 	static displayName = 'Announce';
 
 	static propTypes = /** @lends ui/AnnounceDecorator.Announce.prototype */ {

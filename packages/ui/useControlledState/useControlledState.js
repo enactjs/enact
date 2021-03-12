@@ -1,4 +1,4 @@
-import React from 'react';
+import {useRef, useState, useMemo} from 'react';
 
 function nop () {}
 
@@ -29,12 +29,12 @@ function calcValue (defaultValue, propValue, stateValue, controlled) {
 }
 
 function useControlledState (defaultValue, propValue, controlled) {
-	const isControlled = React.useRef(controlled);
+	const isControlled = useRef(controlled);
 
 	// Store both the value and the "controlled" flag in a state hook
-	const [value, onChange] = React.useState(defaultValue);
+	const [value, onChange] = useState(defaultValue);
 
-	const memoOnChange = React.useMemo(
+	const memoOnChange = useMemo(
 		createHandler, [onChange, value, isControlled.current]
 	);
 

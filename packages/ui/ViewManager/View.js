@@ -3,7 +3,7 @@
  */
 
 import {Job} from '@enact/core/util';
-import React from 'react';
+import {cloneElement, Children, Component} from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 
@@ -24,7 +24,7 @@ const clearEntering = ({entering}) => {
  * @memberof ui/ViewManager
  * @private
  */
-class View extends React.Component {
+class View extends Component {
 
 	static propTypes = /** @lends ui/ViewManager.View.prototype */ {
 		children: PropTypes.node.isRequired,
@@ -299,9 +299,9 @@ class View extends React.Component {
 				props[enteringProp] = this.state.entering;
 			}
 
-			return React.cloneElement(children, props);
+			return cloneElement(children, props);
 		} else {
-			return React.Children.only(children);
+			return Children.only(children);
 		}
 	}
 }

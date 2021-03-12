@@ -1,7 +1,6 @@
 import {action} from '@enact/storybook-utils/addons/actions';
 import {boolean, select} from '@enact/storybook-utils/addons/knobs';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
-import React from 'react';
 import ri from '@enact/ui/resolution';
 import {Scroller} from '@enact/ui/Scroller';
 

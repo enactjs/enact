@@ -6,7 +6,7 @@
  */
 
 import invariant from 'invariant';
-import React from 'react';
+import {Component} from 'react';
 
 import hoc from '../../hoc';
 
@@ -71,7 +71,7 @@ const ApiDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		'ApiDecorator: api is a required config property'
 	);
 
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'ApiDecorator';
 
 		setProvider = (provider) => {

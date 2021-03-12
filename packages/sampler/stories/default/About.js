@@ -4,7 +4,6 @@ import {boolean} from '@enact/storybook-utils/addons/knobs';
 import BodyText from '@enact/ui/BodyText';
 import {Button as UIButton} from '@enact/ui/Button';
 import ri from '@enact/ui/resolution';
-import React from 'react';
 import PropTypes from 'prop-types';
 
 import css from './About.module.less';

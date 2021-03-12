@@ -84,7 +84,7 @@ Below is an example of HOC declaration:
 /**
  * A higher-order component that provides a consistent set of pointer events -- `onDown`, `onUp`,
  * and `onTap` -- across mouse and touch interfaces along with support for common gestures including
- * `onFlick`, `onDrag`, `onHold`, and `onHoldPulse`.
+ * `onFlick`, `onDrag`, `onHoldStart`, `onHold`, and `onHoldEnd`.
  *
  * @class Touchable
  * @memberof ui/Touchable

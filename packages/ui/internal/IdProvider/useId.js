@@ -1,5 +1,5 @@
 import useClass from '@enact/core/useClass';
-import React from 'react';
+import {useLayoutEffect} from 'react';
 
 import Provider from './Provider';
 
@@ -31,7 +31,7 @@ import Provider from './Provider';
 const useIdProvider = ({prefix}) => {
 	const provider = useClass(Provider, prefix);
 
-	React.useLayoutEffect(() => {
+	useLayoutEffect(() => {
 		return () => provider.unload();
 	}, [provider]);
 

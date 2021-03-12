@@ -2,7 +2,6 @@ import {action} from '@enact/storybook-utils/addons/actions';
 import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
 import {Item as UiItem} from '@enact/ui/Item';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
-import React from 'react';
 import ri from '@enact/ui/resolution';
 import {VirtualList, VirtualListBasic} from '@enact/ui/VirtualList';
 

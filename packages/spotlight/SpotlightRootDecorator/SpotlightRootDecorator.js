@@ -7,7 +7,7 @@
  */
 
 import hoc from '@enact/core/hoc';
-import React from 'react';
+import {Component} from 'react';
 
 import Spotlight from '../src/spotlight';
 import {spottableClass} from '../Spottable';
@@ -55,7 +55,7 @@ const defaultConfig = {
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {noAutoFocus} = config;
 
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'SpotlightRootDecorator';
 
 		constructor (props) {

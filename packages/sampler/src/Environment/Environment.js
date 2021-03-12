@@ -2,7 +2,6 @@
 
 import classnames from 'classnames';
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
 import BodyText from '@enact/ui/BodyText';
 import {Column, Cell} from '@enact/ui/Layout';

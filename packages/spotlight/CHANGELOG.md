@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
+## [4.0.0-alpha.1] - 2021-02-24
 
 ### Fixed
 

@@ -16,7 +16,7 @@ import propEq from 'ramda/src/propEq';
 import remove from 'ramda/src/remove';
 import unionWith from 'ramda/src/unionWith';
 import useWith from 'ramda/src/useWith';
-import React from 'react';
+import {Children, cloneElement, createElement, Component} from 'react';
 
 /**
  * Returns the index of a child in an array found by `key` matching
@@ -39,7 +39,7 @@ const indexOfChild = useWith(findIndex, [propEq('key'), identity]);
  * @private
  */
 const mapChildren = function (children) {
-	const result = children && React.Children.toArray(children);
+	const result = children && Children.toArray(children);
 	return result ? result.filter(c => !!c) : [];
 };
 
@@ -75,7 +75,7 @@ const forwardOnWillTransition = forward('onWillTransition');
  * @private
  */
 
-class TransitionGroup extends React.Component {
+class TransitionGroup extends Component {
 	static propTypes = /** @lends ui/ViewManager.TransitionGroup.prototype */ {
 		children: PropTypes.node.isRequired,
 
@@ -430,7 +430,7 @@ class TransitionGroup extends React.Component {
 		const childrenToRender = this.state.children.map(child => {
 			const isLeaving = child.props['data-index'] !== this.props.currentIndex && typeof child.props['data-index'] !== 'undefined';
 
-			return React.cloneElement(
+			return cloneElement(
 				this.props.childFactory(child),
 				{key: child.key, ref: this.storeRefs(child.key), leaving: isLeaving, appearing: !this.hasMounted}
 			);
@@ -452,7 +452,7 @@ class TransitionGroup extends React.Component {
 		delete props.onWillTransition;
 		delete props.size;
 
-		return React.createElement(
+		return createElement(
 			this.props.component,
 			props,
 			childrenToRender

@@ -2,7 +2,7 @@ import {on, off} from '@enact/core/dispatcher';
 import {adaptEvent, forward, forProp, handle, oneOf, stop, forEventProp, call} from '@enact/core/handle';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {cloneElement, Component} from 'react';
 import ReactDOM from 'react-dom';
 
 import Cancelable from '../Cancelable';
@@ -29,7 +29,7 @@ const forwardOpen = forwardWithType('onOpen');
  * @ui
  * @public
  */
-class FloatingLayerBase extends React.Component {
+class FloatingLayerBase extends Component {
 	static displayName = 'FloatingLayer';
 
 	static propTypes = /** @lends ui/FloatingLayer.FloatingLayerBase.prototype */ {
@@ -255,7 +255,7 @@ class FloatingLayerBase extends React.Component {
 			return ReactDOM.createPortal(
 				<div {...rest}>
 					{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
-					{React.cloneElement(children, {onClick: this.stopPropagation})}
+					{cloneElement(children, {onClick: this.stopPropagation})}
 				</div>,
 				this.node
 			);

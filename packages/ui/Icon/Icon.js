@@ -8,7 +8,6 @@
 import kind from '@enact/core/kind';
 import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import ri from '../resolution';
 
@@ -131,7 +130,6 @@ const Icon = kind({
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default 'small'
 		 * @public
 		 */
 		size: PropTypes.string
@@ -139,8 +137,7 @@ const Icon = kind({
 
 	defaultProps: {
 		iconList: {},
-		pressed: false,
-		size: 'small'
+		pressed: false
 	},
 
 	styles: {

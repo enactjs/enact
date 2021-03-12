@@ -10,7 +10,6 @@ import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
-import React from 'react';
 import warning from 'warning';
 
 import {Link, Linkable} from './Link';

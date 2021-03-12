@@ -1,7 +1,6 @@
 import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
 import Item from '@enact/ui/Item';
 import Layout, {Cell} from '@enact/ui/Layout';
-import React from 'react';
 import ri from '@enact/ui/resolution';
 
 import css from './Layout.module.less';
