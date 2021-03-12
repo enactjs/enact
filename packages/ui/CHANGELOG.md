@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/FloatingLayerDecorator` to render floating node properly
+- `ui/Touchable' to handle touch related events only for valid targets
 
 ## [4.0.0-alpha.1] - 2021-02-24
 
