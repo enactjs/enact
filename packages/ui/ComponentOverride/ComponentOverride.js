@@ -10,7 +10,7 @@
  * @exports ComponentOverride
  */
 
-import React from 'react';
+import {isValidElement, cloneElement} from 'react';
 import {isValidElementType} from 'react-is';
 
 /**
@@ -61,8 +61,8 @@ const ComponentOverride = ({component: Component, ...props}) => {
 	return Component && (
 		isValidElementType(Component) && (
 			<Component {...props} />
-		) || React.isValidElement(Component) && (
-			React.cloneElement(Component, props)
+		) || isValidElement(Component) && (
+			cloneElement(Component, props)
 		)
 	) || null;
 };

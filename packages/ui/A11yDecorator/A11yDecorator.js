@@ -6,9 +6,9 @@
  */
 
 import hoc from '@enact/core/hoc';
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 /**
  * Default config for {@link ui/A11yDecorator.A11yDecorator}.
@@ -108,14 +108,17 @@ const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		},
 
-		render: (props) => {
+		render: deprecate((props) => {
 			delete props.accessibilityPreHint;
 			delete props.accessibilityHint;
 
 			return (
 				<Wrapped {...props} />
 			);
-		}
+		}, {
+			name: 'ui/A11yDecorator',
+			until: '4.0.0'
+		})
 	});
 });
 

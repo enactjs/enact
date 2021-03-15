@@ -7,7 +7,7 @@
  * @private
  */
 
-import React from 'react';
+import {useCallback} from 'react';
 import warning from 'warning';
 
 // Safely handles functional and object refs (and ignores invalid refs)
@@ -15,7 +15,7 @@ function updateRef (ref, node) {
 	if (ref) {
 		if (typeof ref === 'function') {
 			ref(node);
-		} else if (ref.hasOwnProperty('current')) {
+		} else if (Object.prototype.hasOwnProperty.call(ref, 'current')) {
 			ref.current = node;
 		} else {
 			// warn for a truthy ref that isn't a function or is an object without `current`
@@ -48,7 +48,7 @@ function chainRefs (...refs) {
  */
 function useChainRefs (...refs) {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	return React.useCallback(chainRefs(...refs), refs);
+	return useCallback(chainRefs(...refs), refs);
 }
 
 export default useChainRefs;

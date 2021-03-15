@@ -1,7 +1,7 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
-import React from 'react';
+import {createContext, Component} from 'react';
 
 const STATE = {
 	inactive: 0,	// Marquee is not necessary (render or focus not happened)
@@ -9,7 +9,7 @@ const STATE = {
 	ready: 2		// Marquee completed or not needed, but state is active
 };
 
-const MarqueeControllerContext = React.createContext(null);
+const MarqueeControllerContext = createContext(null);
 
 /**
  * Default configuration parameters for {@link ui/Marquee.MarqueeController}.
@@ -43,8 +43,8 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
 
-	return class extends React.Component {
-		static displayName = 'MarqueeController'
+	return class extends Component {
+		static displayName = 'MarqueeController';
 
 		constructor (props) {
 			super(props);
@@ -66,7 +66,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			this.cancelJob.stop();
 		}
 
-		cancelJob = new Job(() => this.doCancel(), 30)
+		cancelJob = new Job(() => this.doCancel(), 30);
 
 		/*
 		 * Registers `component` with a set of handlers for `start` and `stop`.
@@ -89,7 +89,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			if (needsStart) {
 				this.dispatch('start');
 			}
-		}
+		};
 
 		/*
 		 * Unregisters `component` for synchronization
@@ -110,7 +110,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			if (wasRunning && !this.anyRunning()) {
 				this.dispatch('start');
 			}
-		}
+		};
 
 		/*
 		 * Handler for the `start` context function
@@ -125,7 +125,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				this.markAll(STATE.ready);
 				this.dispatch('start', component);
 			}
-		}
+		};
 
 		/*
 		 * Handler for the `cancel` context function
@@ -138,7 +138,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.anyRunning()) {
 				this.cancelJob.start();
 			}
-		}
+		};
 
 		doCancel = () => {
 			if (this.isHovered || this.isFocused) {
@@ -146,7 +146,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			}
 			this.markAll(STATE.inactive);
 			this.dispatch('stop');
-		}
+		};
 
 		/*
 		 * Handler for the `complete` context function
@@ -161,7 +161,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				this.markAll(STATE.ready);
 				this.dispatch('start');
 			}
-		}
+		};
 
 		handleEnter = () => {
 			this.isHovered = true;
@@ -169,12 +169,12 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				this.dispatch('start');
 			}
 			this.cancelJob.stop();
-		}
+		};
 
 		handleLeave = () => {
 			this.isHovered = false;
 			this.cancelJob.start();
-		}
+		};
 
 		/*
 		 * Handler for the focus event
@@ -186,7 +186,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			}
 			this.cancelJob.stop();
 			forwardFocus(ev, this.props);
-		}
+		};
 
 		/*
 		 * Handler for the blur event
@@ -197,7 +197,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				this.cancelJob.start();
 			}
 			forwardBlur(ev, this.props);
-		}
+		};
 
 		/*
 		 * Invokes the `action` handler for each synchronized component except the invoking

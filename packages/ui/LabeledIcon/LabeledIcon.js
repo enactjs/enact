@@ -11,7 +11,7 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import React from 'react';
+import {isValidElement} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
@@ -156,7 +156,6 @@ const LabeledIconBase = kind({
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default 'large'
 		 * @public
 		 */
 		size: PropTypes.string
@@ -164,8 +163,7 @@ const LabeledIconBase = kind({
 
 	defaultProps: {
 		labelPosition: 'below',
-		inline: false,
-		size: 'large'
+		inline: false
 	},
 
 	styles: {
@@ -191,7 +189,7 @@ const LabeledIconBase = kind({
 		// `icon` is normally passed to `iconComponent` as children, but if `icon` is instead a
 		// rendered JSX component, it should become a child of `Cell.icon` and iconComponent should
 		// use Cell's default value. We must also reposition the `icon` class
-		if (React.isValidElement(icon)) {
+		if (isValidElement(icon)) {
 			icon = ComponentOverride({
 				component: icon,
 				className: iconClassName,

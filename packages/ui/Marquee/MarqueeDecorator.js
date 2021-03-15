@@ -5,14 +5,17 @@ import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 import shallowEqual from 'recompose/shallowEqual';
+import warning from 'warning';
 
 import {scale} from '../resolution';
 import {ResizeContext} from '../Resizable';
 
 import MarqueeBase from './MarqueeBase';
 import {MarqueeControllerContext} from './MarqueeController';
+
+import css from './Marquee.module.less';
 
 /**
  * Default configuration parameters for {@link ui/Marquee.MarqueeDecorator}
@@ -157,8 +160,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		return rtl;
 	};
 
-	return class extends React.Component {
-		static displayName = 'ui:MarqueeDecorator'
+	return class extends Component {
+		static displayName = 'ui:MarqueeDecorator';
 
 		static propTypes = /** @lends ui/Marquee.MarqueeDecorator.prototype */ {
 			/**
@@ -300,7 +303,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			rtl: PropTypes.bool
-		}
+		};
 
 		static defaultProps = {
 			marqueeDelay: 1000,
@@ -309,9 +312,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeResetDelay: 1000,
 			marqueeSpacing: '50%',
 			marqueeSpeed: 60
-		}
+		};
 
-		static contextType = MarqueeControllerContext
+		static contextType = MarqueeControllerContext;
 
 		constructor (props) {
 			super(props);
@@ -406,11 +409,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (!this.contentFits) {
 				this.setState(state => state.promoted ? null : {promoted: true});
 			}
-		})
+		});
 
 		demoteJob = new Job(() => {
 			this.setState(state => (!state.animating && state.promoted) ? {promoted: false} : null);
-		})
+		});
 
 		demote () {
 			this.promoteJob.stop();
@@ -494,6 +497,35 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			});
 		}
 
+		moveChildren (from, to) {
+			while (from.childNodes.length) {
+				to.appendChild(from.childNodes.item(0));
+			}
+		}
+
+		measureWidths () {
+			if (this.node.querySelector(`.${css.marquee}`)) {
+				warning(false, 'Marquee should not be nested inside another Marquee');
+
+				return {scrollWidth: this.node.scrollWidth, width: this.node.getBoundingClientRect().width};
+			}
+
+			// move all the children into the wrapper node ...
+			const wrapper = document.createElement('span');
+			this.moveChildren(this.node, wrapper);
+			this.node.appendChild(wrapper);
+
+			// measure it to find the precise floating point width of the content ...
+			const {width: scrollWidth} = wrapper.getBoundingClientRect();
+			const {width} = this.node.getBoundingClientRect();
+
+			// and move all the children back and remove the wrapper
+			this.node.removeChild(wrapper);
+			this.moveChildren(wrapper, this.node);
+
+			return {scrollWidth, width};
+		}
+
 		/*
 		* Determines if the component should marquee and the distance to animate
 		*
@@ -504,8 +536,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
 			if (node && this.distance == null && !this.props.marqueeDisabled) {
-				const {width} = node.getBoundingClientRect();
-				const {scrollWidth} = node;
+				const {width, scrollWidth} = this.measureWidths();
 
 				this.spacing = this.getSpacing(width);
 				this.distance = this.calculateDistance(width, scrollWidth, this.spacing);
@@ -549,7 +580,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{String}				text-overflow value
 		 */
 		calculateTextOverflow (distance) {
-			return distance < 1 ? 'clip' : 'ellipsis';
+			return distance === 0 ? 'clip' : 'ellipsis';
 		}
 
 		getSpacing (width) {
@@ -574,7 +605,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{Boolean}				`true` if it should animated
 		 */
 		shouldAnimate (distance) {
-			return distance >= 1;
+			return distance > 0;
 		}
 
 		/*
@@ -605,7 +636,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					}
 				}, delay, TimerState.START_PENDING);
 			}
-		}
+		};
 
 		/*
 		 * Stops the animation
@@ -622,7 +653,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.demote();
-		}
+		};
 
 		/*
 		 * Starts marquee animation with synchronization, if not already animating and a timer is
@@ -635,7 +666,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.state.animating || this.timerState !== TimerState.CLEAR) return;
 
 			this.startAnimation(delay);
-		}
+		};
 
 		/*
 		 * Starts marquee animation with synchronization
@@ -661,7 +692,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else {
 				this.start(delay);
 			}
-		}
+		};
 
 		/*
 		 * Resets the marquee and restarts it after `marqueeDelay` milliseconds.
@@ -678,7 +709,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else if (!this.state.animating) {
 				this.startAnimation(delay);
 			}
-		}
+		};
 
 		/*
 		 * Resets and restarts the marquee after `marqueeResetDelay` milliseconds
@@ -702,7 +733,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.restartAnimation(delay);
 				}, 0, TimerState.RESET_PENDING);
 			}
-		}
+		};
 
 		/*
 		 * Cancels the marquee
@@ -716,7 +747,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.stop();
-		}
+		};
 
 		handleResize = () => {
 			if (this.node && !this.props.marqueeDisabled) {
@@ -726,11 +757,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.resetAnimation();
 				}
 			}
-		}
+		};
 
 		handleMarqueeComplete = () => {
 			this.resetAnimation();
-		}
+		};
 
 		handleFocus = (ev) => {
 			this.isFocused = true;
@@ -740,7 +771,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}
 			forwardFocus(ev, this.props);
-		}
+		};
 
 		handleBlur = (ev) => {
 			this.promoteJob.stop();
@@ -751,7 +782,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.cancelAnimation();
 				}
 			}
-		}
+		};
 
 		handleEnter = (ev) => {
 			this.isHovered = true;
@@ -763,19 +794,19 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}
 			forwardEnter(ev, this.props);
-		}
+		};
 
 		handleLeave = (ev) => {
 			this.promoteJob.stop();
 			this.handleUnhover();
 			forwardLeave(ev, this.props);
-		}
+		};
 
 		handlePointerHide = ({keyCode}) => {
 			if (is('pointerHide', keyCode)) {
 				this.handleUnhover();
 			}
-		}
+		};
 
 		handleUnhover () {
 			this.isHovered = false;
@@ -790,7 +821,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		cacheNode = (node) => {
 			this.node = node;
-		}
+		};
 
 		validateTextDirection () {
 			this.setState((state, props) => {

@@ -1,5 +1,4 @@
-
-import React from 'react';
+import {forwardRef} from 'react';
 import {mount} from 'enzyme';
 
 import ToggleItem, {ToggleItemBase} from '../ToggleItem';
@@ -7,7 +6,7 @@ import Icon from '../../Icon';
 import SlotItem from '../../SlotItem';
 import Item from '../../Item';
 
-const SlottedItem = React.forwardRef((props, ref) => (
+const SlottedItem = forwardRef((props, ref) => (
 	<SlotItem {...props} component={Item} ref={ref} />
 ));
 

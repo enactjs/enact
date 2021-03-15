@@ -20,7 +20,7 @@ import {forward} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
-import React from 'react';
+import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
@@ -31,6 +31,7 @@ const forwardTransitionEnd = forward('onTransitionEnd');
 const forwardOnShow = forward('onShow');
 const forwardOnHide = forward('onHide');
 
+const formatter = (duration) => (typeof duration === 'number' ? duration + 'ms' : duration);
 /**
  * The stateless structure of the component.
  *
@@ -233,14 +234,19 @@ const TransitionBase = kind({
 			!noAnimation && timingFunction && css[timingFunction],
 			css[type]
 		),
-		innerStyle: ({clipWidth, direction, type}) => {
+		innerStyle: ({clipWidth, css, direction, duration, type}) => {
+			const style = {};
+
 			if (type === 'clip' && (direction === 'left' || direction === 'right')) {
-				return {
-					width: clipWidth
-				};
+				style.width = clipWidth;
+			} else if ((type === 'fade' || type === 'slide') && duration && !css[duration]) {
+				// If it's a number, assume it's miliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
+				style.transitionDuration = formatter(duration);
 			}
+
+			return style;
 		},
-		style: ({css, clipHeight, direction, duration, type, visible, style}) => {
+		style: ({clipHeight, css, direction, duration, type, visible, style}) => {
 			if (type === 'clip') {
 				style = {
 					...style,
@@ -253,7 +259,7 @@ const TransitionBase = kind({
 				// If duration isn't a known named string, assume it is a CSS duration value
 				if (duration && !css[duration]) {
 					// If it's a number, assume it's miliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
-					style.transitionDuration = (typeof duration === 'number' ? duration + 'ms' : duration);
+					style.transitionDuration = formatter(duration);
 				}
 			}
 
@@ -296,7 +302,7 @@ const TRANSITION_STATE = {
  * @memberof ui/Transition
  * @public
  */
-class Transition extends React.Component {
+class Transition extends Component {
 
 	static contextType = ResizeContext;
 
@@ -416,7 +422,7 @@ class Transition extends React.Component {
 		 * @public
 		 */
 		visible: PropTypes.bool
-	}
+	};
 
 	static defaultProps = {
 		direction: 'up',
@@ -425,7 +431,7 @@ class Transition extends React.Component {
 		timingFunction: 'ease-in-out',
 		type: 'slide',
 		visible: true
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -506,7 +512,7 @@ class Transition extends React.Component {
 		this.setState({
 			renderState: TRANSITION_STATE.MEASURE
 		});
-	})
+	});
 
 	handleResize = () => {
 		// @TODO oddly, using the setState callback is required here to ensure that the bounds
@@ -514,7 +520,7 @@ class Transition extends React.Component {
 		this.setState({
 			initialHeight: null
 		}, this.measureInner);
-	}
+	};
 
 	handleTransitionEnd = (ev) => {
 		forwardTransitionEnd(ev, this.props);
@@ -526,7 +532,7 @@ class Transition extends React.Component {
 				forwardOnShow(ev, this.props);
 			}
 		}
-	}
+	};
 
 	measureInner = () => {
 		if (this.childNode) {
@@ -540,11 +546,11 @@ class Transition extends React.Component {
 				});
 			}
 		}
-	}
+	};
 
 	childRef = (node) => {
 		this.childNode = node;
-	}
+	};
 
 	render () {
 		let {visible, ...props} = this.props;

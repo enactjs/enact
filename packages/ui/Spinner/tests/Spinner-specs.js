@@ -1,4 +1,3 @@
-import React from 'react';
 import {shallow} from 'enzyme';
 import {SpinnerBase} from '../Spinner';
 import css from '../Spinner.module.less';

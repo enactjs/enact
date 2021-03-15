@@ -1,5 +1,5 @@
 import useClass from '@enact/core/useClass';
-import React from 'react';
+import {useState, useEffect} from 'react';
 
 import ilib from '../src/index.js';
 
@@ -42,7 +42,7 @@ function useI18n ({locale, ...config} = {}) {
 	const ilibLocale = ilib.getLocale();
 	locale = locale && locale !== ilibLocale ? locale : ilibLocale;
 
-	const [state, setState] = React.useState({
+	const [state, setState] = useState({
 		locale,
 		loaded: Boolean(config.sync)
 	});
@@ -51,7 +51,7 @@ function useI18n ({locale, ...config} = {}) {
 	i18n.setContext(locale, setState);
 
 	// Add/remove listeners on mount/unmount
-	React.useEffect(() => {
+	useEffect(() => {
 		i18n.load();
 
 		return () => i18n.unload();

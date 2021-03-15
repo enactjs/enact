@@ -10,7 +10,6 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import React from 'react';
 
 import ri from '../resolution';
 import ForwardRef from '../ForwardRef';
@@ -145,7 +144,6 @@ const IconBase = kind({
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default 'small'
 		 * @public
 		 */
 		size: PropTypes.string
@@ -153,8 +151,7 @@ const IconBase = kind({
 
 	defaultProps: {
 		iconList: {},
-		pressed: false,
-		size: 'small'
+		pressed: false
 	},
 
 	styles: {

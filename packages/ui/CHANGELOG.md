@@ -4,15 +4,115 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Removed
+
+- `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` default size values
+
 ### Added
 
 - `ui/BodyText`, `ui/Button`, `ui/Group`, `ui/Heading`, `ui/Icon`, `ui/IconButton`, `ui/Image`, `ui/ImageItem`, `ui/LabeledIcon`, `ui/Layout`, `ui/ProgressBar`, `ui/Repeater`, `ui/Slider`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleIcon`, `ui/ToggleItem`, `ui/ViewManager` support for forwarding `ref`s to the respective root component
 
+### Changed
+
+- `ui/Touchable` event `onHold` and `onHoldPulse` to `onHoldStart` and `onHold` respectively to match with the naming convention
+
 ### Fixed
 
-- `ui/VirtualList` with scrollMode `native` to not scrollTo bottom when dataSize changed to smaller and scrollTo called with `animate: false` option
+- `ui/FloatingLayerDecorator` to render floating node properly
+- `ui/Touchable' to handle touch related events only for valid targets
+
+## [4.0.0-alpha.1] - 2021-02-24
+
+No significant changes.
+
+## [3.5.0] - 2021-02-05
+
+### Deprecated
+
+- `ui/A11yDecorator`, to be removed in 4.0.0
+
+### Changed
+
+- `ui/Transition` prop `duration` to support any valid CSS value for `slide` and `fade` `type`
+
+## [3.4.11] - 2020-12-11
+
+### Fixed
+
+- documentation problem in styles/internal directory
+
+## [3.4.10] - 2020-12-09
+
+### Changed
+
+- `ui/Media` `play` function to return promise
+
+### Fixed
+
+- `ui/Routable` to respect the current path on first render when using relative paths in links
+- `ui/Scroller` and `ui/VirtualList` to scroll correctly on Chrome 85 or higher in RTL locales
+
+## [3.4.9] - 2020-10-30
+
+No significant changes.
+
+## [3.4.8] - 2020-10-08
+
+### Fixed
+
+- `ui/Button` to prevent browser's default styling when pressed by touch
+
+## [3.4.7] - 2020-09-01
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to call `onScrollStop` when scrollbar's visibility changed while scrolling
+- `ui/ViewManager` to handle transitioning away and back to a view before a transition completes
+
+## [3.4.6] - 2020-08-24
+
+### Added
+
+- `ui/MarqueeDecorator` warning against nested `Marquee`'s
+
+## [3.4.5] - 2020-08-18
+
+No significant changes.
+
+## [3.4.4] - 2020-08-17
+
+### Fixed
+
+- `ui/FloatingLayer` and `ui/Slider` to prevent global classname leaks
+
+## [3.4.3] - 2020-08-10
+
+No significant changes.
+
+## [3.4.2] - 2020-08-05
+
+No significant changes.
+
+## [3.4.1] - 2020-08-05
+
+### Fixed
+
+- `ui/Touchable` to invoke event callbacks updated during gesture
+
+## [3.4.0] - 2020-07-29
+
+### Added
+
+- `ui/AnnounceDecorator.Announce` method `announce` parameter `clear` to clear previous message before setting the new message
+- `ui/ViewManager` prop and `ui/ViewManager.Arranger` callback config prop `rtl` to allow arrangers to adjust animations to be locale aware
+
+### Fixed
+
+- `ui/Marquee` to correctly animate when scaled or when less than 1px longer than its container
+- `ui/Scroller` prop `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label`
 - `ui/Scroller` and `ui/VirtualList` to re-render when its size changed
 - `ui/Scroller` and `ui/VirtualList` to not fire `onScrollStop` event redundantly
+- `ui/VirtualList` with scrollMode `native` to not scrollTo bottom when dataSize changed to smaller and scrollTo called with `animate: false` option
 
 ## [3.3.1] - 2020-07-20
 

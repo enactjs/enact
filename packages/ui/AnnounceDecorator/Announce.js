@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 
 /**
  * An unstyled component with an imperative API to alert the user.
@@ -36,8 +36,8 @@ import React from 'react';
  * @memberof ui/AnnounceDecorator
  * @public
  */
-const Announce = class extends React.Component {
-	static displayName = 'Announce'
+const Announce = class extends Component {
+	static displayName = 'Announce';
 
 	static propTypes = /** @lends ui/AnnounceDecorator.Announce.prototype */ {
 		/**
@@ -51,14 +51,14 @@ const Announce = class extends React.Component {
 		 * @public
 		 */
 		timeout: PropTypes.number
-	}
+	};
 
 	static defaultProps = {
 		// 500ms is somewhat arbitrary. Would like to do some further usability testing to determine
 		// how frequently we should allow alerting. Should also consider if this timeout should be
 		// "global" such that multiple instances of Announce respect each other.
 		timeout: 500
-	}
+	};
 
 	componentWillUnmount () {
 		this.clearTimeout();
@@ -73,13 +73,14 @@ const Announce = class extends React.Component {
 	resetAlert = () => {
 		this.alertTimeout = null;
 		this.alert.removeAttribute('aria-label');
-	}
+	};
 
 	/**
 	 * Call to update the message for the alert.
 	 *
 	 * @method
 	 * @param   {String}     message  Message to notify the user
+	 * @param   {Boolean}    clear    Clears a previous message before setting the new message
 	 * @returns {undefined}
 	 * @public
 	 */
@@ -93,11 +94,11 @@ const Announce = class extends React.Component {
 			this.alert.setAttribute('aria-label', message);
 			this.alertTimeout = setTimeout(this.resetAlert, this.props.timeout);
 		}
-	}
+	};
 
 	setAlertRef = (node) => {
 		this.alert = node;
-	}
+	};
 
 	render () {
 		const props = Object.assign({}, this.props);

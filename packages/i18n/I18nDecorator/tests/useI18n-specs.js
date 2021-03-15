@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 
 import {shallow} from 'enzyme';
-import React from 'react';
+import {useState} from 'react';
 
 import {updateLocale} from '../../locale';
 
@@ -21,7 +21,7 @@ describe('useI18n', () => {
 
 	// eslint-disable-next-line enact/prop-types
 	function Component ({locale, latinLanguageOverrides, nonLatinLanguageOverrides}) {
-		const [state, setState] = React.useState({
+		const [state, setState] = useState({
 			rtl: false,
 			className: null
 		});

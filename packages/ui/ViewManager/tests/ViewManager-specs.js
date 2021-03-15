@@ -1,5 +1,5 @@
 /* eslint-disable enact/prop-types */
-import React from 'react';
+import {Component} from 'react';
 import {mount} from 'enzyme';
 import ViewManager from '../';
 
@@ -140,7 +140,7 @@ describe('ViewManager', () => {
 
 	test('should allow child props to update', () => {
 		const content = 'updated';
-		class ViewManagerTest extends React.Component {
+		class ViewManagerTest extends Component {
 			render () {
 				return (
 					<ViewManager>
@@ -433,5 +433,39 @@ describe('ViewManager', () => {
 		subject.setProps({index: 0});
 
 		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1});
+	});
+
+	test('should pass `rtl` prop to arranger when `true`', () => {
+		const spy = jest.spyOn(MockArranger, 'stay');
+		mount(
+			<ViewManager arranger={MockArranger} index={0} rtl>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		const expected = {rtl: true};
+		const actual = spy.mock.calls[0][0];
+
+		expect(actual).toMatchObject(expected);
+
+		spy.mockRestore();
+	});
+
+	test('should pass `rtl` prop to arranger when unset', () => {
+		const spy = jest.spyOn(MockArranger, 'stay');
+		mount(
+			<ViewManager arranger={MockArranger} index={0}>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		const expected = {rtl: false};
+		const actual = spy.mock.calls[0][0];
+
+		expect(actual).toMatchObject(expected);
+
+		spy.mockRestore();
 	});
 });

@@ -1,7 +1,6 @@
 /* eslint-disable enact/prop-types */
 /* eslint-disable react/jsx-no-bind */
 
-import React from 'react';
 import {shallow, mount} from 'enzyme';
 
 import Touchable from '../Touchable';
@@ -45,6 +44,94 @@ describe('Touchable', () => {
 				const actual = 'pressed' in wrapped.props();
 
 				expect(actual).toBe(expected);
+			}
+		);
+
+		test(
+			'should update state configurations onHold events',
+			(done) => {
+				const holdConfig = {
+					events: [
+						{name: 'hold', time: 10}
+					],
+					frequency: 10
+				};
+
+				const Component = Touchable(DivComponent);
+				const handler = jest.fn();
+				const subject = mount(
+					<Component onHoldStart={() => {}} holdConfig={holdConfig} />
+				);
+
+				const ev = {};
+				subject.simulate('mousedown', ev);
+				subject.setProps({
+					onHold: handler
+				});
+
+				setTimeout(() => {
+					expect(handler).toHaveBeenCalled();
+					done();
+				}, 20);
+			}
+		);
+
+		test(
+			'should update state configurations onHoldStart events',
+			(done) => {
+				const holdConfig = {
+					events: [
+						{name: 'hold', time: 10}
+					],
+					frequency: 10
+				};
+
+				const Component = Touchable(DivComponent);
+				const handler = jest.fn();
+				const subject = mount(
+					<Component onHold={() => {}} holdConfig={holdConfig} />
+				);
+
+				const ev = {};
+				subject.simulate('mousedown', ev);
+				subject.setProps({
+					onHoldStart: handler
+				});
+
+				setTimeout(() => {
+					expect(handler).toHaveBeenCalled();
+					done();
+				}, 20);
+			}
+		);
+
+		test(
+			'should update state configurations onHoldEnd events',
+			(done) => {
+				const holdConfig = {
+					events: [
+						{name: 'hold', time: 10}
+					],
+					frequency: 10
+				};
+
+				const Component = Touchable(DivComponent);
+				const handler = jest.fn();
+				const subject = mount(
+					<Component onHold={() => {}} holdConfig={holdConfig} />
+				);
+
+				const ev = {currentTarget: {}};
+				subject.simulate('mousedown', ev);
+				subject.setProps({
+					onHoldEnd: handler
+				});
+
+				setTimeout(() => {
+					subject.simulate('mouseup', ev);
+					expect(handler).toHaveBeenCalled();
+					done();
+				}, 30);
 			}
 		);
 

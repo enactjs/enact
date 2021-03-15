@@ -1,18 +1,18 @@
-import React from 'react';
+import {useState, useCallback, useContext, useEffect} from 'react';
 
 import {FloatingLayerContext} from './FloatingLayerDecorator';
 
 function useFloatingLayer () {
-	const [floatingLayerId, setId] = React.useState(null);
-	const handler = React.useCallback((ev) => {
+	const [floatingLayerId, setId] = useState(null);
+	const handler = useCallback((ev) => {
 		if (ev.action === 'mount' && ev.floatingLayer) {
 			setId(ev.floatingLayer.id);
 		}
 	}, [setId]);
 
-	const registerFloatingLayer = React.useContext(FloatingLayerContext);
+	const registerFloatingLayer = useContext(FloatingLayerContext);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (registerFloatingLayer) {
 			registerFloatingLayer(handler);
 		}

@@ -1,10 +1,10 @@
-import React from 'react';
+import {Component as ReactComponent} from 'react';
 import {mount} from 'enzyme';
 import ApiDecorator from '../ApiDecorator';
 
 describe('ApiDecorator', () => {
 
-	const ApiProvider = class extends React.Component {
+	const ApiProvider = class extends ReactComponent {
 		static displayName = 'ApiProvider';
 
 		constructor (props) {
@@ -14,13 +14,13 @@ describe('ApiDecorator', () => {
 			props.setApiProvider(this);
 		}
 
-		arrowFunction = () => 'arrow'
+		arrowFunction = () => 'arrow';
 
 		instanceFunction () {
 			return 'instance';
 		}
 
-		instanceProperty = 'property'
+		instanceProperty = 'property';
 
 		render () {
 			return (

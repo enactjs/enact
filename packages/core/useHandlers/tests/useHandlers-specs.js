@@ -1,7 +1,6 @@
 /* eslint-disable enact/prop-types */
 
 import {shallow} from 'enzyme';
-import React from 'react';
 
 import useHandlers from '../useHandlers';
 

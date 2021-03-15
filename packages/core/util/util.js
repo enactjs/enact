@@ -17,7 +17,7 @@
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
 import unless from 'ramda/src/unless';
-import React from 'react';
+import {Children} from 'react';
 import * as ReactIs from 'react-is';
 
 import Job from './Job';
@@ -250,7 +250,7 @@ const memoize = (fn) => {
  * @public
  */
 const mapAndFilterChildren = (children, callback, filter) => {
-	const result = React.Children.map(children, (child, ...rest) => {
+	const result = Children.map(children, (child, ...rest) => {
 		if (child != null) {
 			return callback(child, ...rest);
 		} else {

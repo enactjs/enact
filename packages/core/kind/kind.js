@@ -5,7 +5,7 @@
  * @exports kind
  */
 
-import React from 'react';
+import {createContext, useContext, Component as ReactComponent} from 'react';
 
 import useHandlers from '../useHandlers';
 import Handlers from '../useHandlers/Handlers';
@@ -16,7 +16,7 @@ import styles from './styles';
 // Because contextType is optional and hooks must be called in the same order, we need a fallback
 // context when none is specified. This likely has some overhead so we may want to deprecate and
 // remove contextType support for 4.0 since the context APIs have improved since this was added.
-const NoContext = React.createContext(null);
+const NoContext = createContext(null);
 
 /**
  * @callback RenderFunction
@@ -153,7 +153,7 @@ const kind = (config) => {
 	// removed.
 	if (functional) {
 		Component = function (props) {
-			const ctx = React.useContext(contextType);
+			const ctx = useContext(contextType);
 			const boundHandlers = useHandlers(handlers, props, ctx);
 
 			const merged = {
@@ -165,8 +165,8 @@ const kind = (config) => {
 		};
 	} else {
 		// eslint-disable-next-line enact/display-name
-		Component = class extends React.Component {
-			static contextType = contextType
+		Component = class extends ReactComponent {
+			static contextType = contextType;
 
 			constructor () {
 				super();

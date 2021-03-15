@@ -10,7 +10,7 @@ import deprecate from '@enact/core/internal/deprecate';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Fragment} from 'react';
 
 import {Column, Cell} from '../Layout';
 import Icon from '../Icon';
@@ -189,12 +189,10 @@ const GridListImageItem = kind({
 			}
 		},
 		subComponents: ({caption, captionComponent: Caption, css, subCaption, subComponents}) => {
-			return (
-				subComponents ? subComponents : <React.Fragment>
-					{caption ? (<Cell className={css.caption} component={Caption} shrink>{caption}</Cell>) : null}
-					{subCaption ? (<Cell className={css.subCaption} component={Caption} shrink>{subCaption}</Cell>) : null}
-				</React.Fragment>
-			);
+			return subComponents ? subComponents : <Fragment>
+				{caption ? (<Cell className={css.caption} component={Caption} shrink>{caption}</Cell>) : null}
+				{subCaption ? (<Cell className={css.subCaption} component={Caption} shrink>{subCaption}</Cell>) : null}
+			</Fragment>;
 		}
 	},
 

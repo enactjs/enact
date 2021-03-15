@@ -1,6 +1,6 @@
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
-import React from 'react';
+import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {validateRangeOnce, validateSteppedOnce} from '../internal/validators';
@@ -14,8 +14,8 @@ const validateStepValue = validateSteppedOnce((props) => props, {'component': 'P
 const validateStepMax = validateSteppedOnce((props) => props, {'component': 'PositionDecorator', valueName: 'max'});
 
 const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
-	return class extends React.Component {
-		static displayName = 'PositionDecorator'
+	return class extends Component {
+		static displayName = 'PositionDecorator';
 
 		static propTypes = {
 			disabled: PropTypes.bool,
@@ -25,7 +25,7 @@ const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-u
 			orientation: PropTypes.string,
 			step: PropTypes.number,
 			value: PropTypes.number
-		}
+		};
 
 		static defaultProps = {
 			disabled: false,
@@ -33,7 +33,7 @@ const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-u
 			min: 0,
 			orientation: 'horizontal',
 			step: 1
-		}
+		};
 
 		constructor (props) {
 			super(props);

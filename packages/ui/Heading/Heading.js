@@ -16,7 +16,6 @@ import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import React from 'react';
 
 import ForwardRef from '../ForwardRef';
 

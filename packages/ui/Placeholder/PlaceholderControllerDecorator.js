@@ -2,7 +2,7 @@ import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import Registry from '@enact/core/internal/Registry';
-import React from 'react';
+import {createContext, Component} from 'react';
 import ReactDOM from 'react-dom';
 
 /**
@@ -46,7 +46,7 @@ const defaultConfig = {
 	thresholdFactor: 1.5
 };
 
-const PlaceholderContext = React.createContext();
+const PlaceholderContext = createContext();
 
 /**
  * A higher-order component (HOC) that render placeholder components.
@@ -62,8 +62,8 @@ const PlaceholderContext = React.createContext();
 const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {bounds, notify, thresholdFactor} = config;
 
-	return class extends React.Component {
-		static displayName = 'PlaceholderControllerDecorator'
+	return class extends Component {
+		static displayName = 'PlaceholderControllerDecorator';
 
 		componentDidMount () {
 			this.setBounds();
@@ -74,11 +74,11 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.notifyAllJob.stop();
 		}
 
-		bounds = null
-		leftThreshold = -1
-		node = null
-		topThreshold = -1
-		registry = Registry.create(this.handleRegister.bind(this))
+		bounds = null;
+		leftThreshold = -1;
+		node = null;
+		topThreshold = -1;
+		registry = Registry.create(this.handleRegister.bind(this));
 
 		setBounds () {
 			if (bounds != null) {
@@ -108,10 +108,10 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				leftThreshold,
 				topThreshold
 			});
-		}
+		};
 
 		// queue up notifications when placeholders are first created
-		notifyAllJob = new Job(this.notifyAll, 32)
+		notifyAllJob = new Job(this.notifyAll, 32);
 
 		setThresholds (top, left) {
 			const {height, width} = this.bounds;
@@ -125,14 +125,14 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handle = handle.bind(this)
+		handle = handle.bind(this);
 
 		handleNotify = this.handle(
 			forward(notify),
 			({scrollLeft, scrollTop}) => {
 				this.setThresholds(scrollTop, scrollLeft);
 			}
-		)
+		);
 
 		render () {
 			const props = Object.assign({}, this.props);

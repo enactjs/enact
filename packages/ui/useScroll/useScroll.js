@@ -17,7 +17,7 @@ import {platform} from '@enact/core/platform'; // scrollMode 'native'
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
-import React, {useCallback, useContext, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
+import {useCallback, useContext, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
 import warning from 'warning';
 
 import ForwardRef from '../ForwardRef';
@@ -392,6 +392,9 @@ const useScrollBase = (props) => {
 		}
 
 		return () => {
+			if (ref.scrolling) {
+				ref.scrollStopJob.run();
+			}
 			ref.scrollStopJob.stop();
 		};
 	}, [direction, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl, scrollMode, spotlightContainerDisabled]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -758,7 +761,7 @@ const useScrollBase = (props) => {
 		}
 
 		if (rtl && canScrollH) {
-			scrollLeft = (platform.ios || platform.safari) ? -scrollLeft : bounds.maxLeft - scrollLeft;
+			scrollLeft = (platform.ios || platform.safari || platform.chrome >= 85) ? -scrollLeft : bounds.maxLeft - scrollLeft;
 		}
 
 		if (scrollLeft !== mutableRef.current.scrollLeft) {

@@ -15,7 +15,7 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import React from 'react';
+import {Children} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
@@ -151,7 +151,6 @@ const IconButtonBase = kind({
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default 'large'
 		 * @public
 		 */
 		size: PropTypes.string
@@ -160,8 +159,7 @@ const IconButtonBase = kind({
 	defaultProps: {
 		disabled: false,
 		pressed: false,
-		selected: false,
-		size: 'large'
+		selected: false
 	},
 
 	styles: {
@@ -189,7 +187,7 @@ const IconButtonBase = kind({
 			minWidth: false,
 			children: [
 				<Icon key="icon" flip={flip} size={size} className={css.icon}>{icon}</Icon>,
-				...React.Children.toArray(children)
+				...Children.toArray(children)
 			],
 			ref: componentRef
 		});

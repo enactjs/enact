@@ -1,7 +1,5 @@
-/* globals console */
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
-import React from 'react';
 import {mount} from 'enzyme';
 
 import useSlots from '../useSlots';

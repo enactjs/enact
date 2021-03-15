@@ -1,8 +1,8 @@
 import hoc from '@enact/core/hoc';
 import Registry from '@enact/core/internal/Registry';
-import React from 'react';
+import {createContext, Component} from 'react';
 
-const RadioContext = React.createContext();
+const RadioContext = createContext();
 
 /**
  * A higher-order component that establishes a radio group context for its descendants.
@@ -16,8 +16,8 @@ const RadioContext = React.createContext();
  */
 const RadioControllerDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
 
-	return class extends React.Component {
-		static displayName = 'RadioControllerDecorator'
+	return class extends Component {
+		static displayName = 'RadioControllerDecorator';
 
 		constructor (props) {
 			super(props);

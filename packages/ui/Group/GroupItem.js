@@ -6,7 +6,6 @@
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
 
 import {isSelected, select as selectItem} from '../internal/selection';
 

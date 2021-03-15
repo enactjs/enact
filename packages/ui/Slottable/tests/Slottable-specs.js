@@ -1,7 +1,5 @@
-/* globals console */
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
-import React from 'react';
 import {mount, shallow} from 'enzyme';
 import kind from '@enact/core/kind';
 import Slottable from '../Slottable';
@@ -216,11 +214,14 @@ describe('Slottable Specs', () => {
 				{a}
 			</div>
 		));
+
+		/* eslint-disable jsx-a11y/anchor-is-valid */
 		const subject = shallow(
 			<Component a={['a', 'b']}>
 				<a>c</a>
 			</Component>
 		);
+		/* eslint-enable jsx-a11y/anchor-is-valid */
 
 		const expected = ['a', 'b', 'c'];
 		const actual = subject.prop('a');

@@ -3,7 +3,7 @@ import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
-import React, {Component} from 'react';
+import {createRef, cloneElement, Component} from 'react';
 
 import css from './UiVirtualList.module.less';
 
@@ -218,7 +218,7 @@ const VirtualListBaseFactory = (type) => {
 			 * @private
 			 */
 			updateStatesAndBounds: PropTypes.func
-		}
+		};
 
 		static defaultProps = {
 			cbScrollTo: nop,
@@ -227,16 +227,16 @@ const VirtualListBaseFactory = (type) => {
 			overhang: 3,
 			pageScroll: false,
 			spacing: 0
-		}
+		};
 
 		constructor (props) {
 			let nextState = null;
 
 			super(props);
 
-			this.containerRef = React.createRef();
-			this.contentRef = React.createRef();
-			this.itemContainerRef = React.createRef();
+			this.containerRef = createRef();
+			this.contentRef = createRef();
+			this.itemContainerRef = createRef();
 
 			if (props.clientSize) {
 				this.calculateMetrics(props);
@@ -393,33 +393,33 @@ const VirtualListBaseFactory = (type) => {
 			scrollHeight: 0,
 			maxLeft: 0,
 			maxTop: 0
-		}
+		};
 
 		moreInfo = {
 			firstVisibleIndex: null,
 			lastVisibleIndex: null
-		}
+		};
 
-		primary = null
-		secondary = null
+		primary = null;
+		secondary = null;
 
-		isPrimaryDirectionVertical = true
-		isItemSized = false
+		isPrimaryDirectionVertical = true;
+		isItemSized = false;
 
-		shouldUpdateBounds = false
+		shouldUpdateBounds = false;
 
-		dimensionToExtent = 0
-		threshold = 0
-		maxFirstIndex = 0
-		curDataSize = 0
-		hasDataSizeChanged = false
-		cc = []
-		scrollPosition = 0
-		scrollPositionTarget = 0
+		dimensionToExtent = 0;
+		threshold = 0;
+		maxFirstIndex = 0;
+		curDataSize = 0;
+		hasDataSizeChanged = false;
+		cc = [];
+		scrollPosition = 0;
+		scrollPositionTarget = 0;
 
 		// For individually sized item
-		itemPositions = []
-		indexToScrollIntoView = -1
+		itemPositions = [];
+		indexToScrollIntoView = -1;
 
 		updateScrollPosition = ({x, y}, rtl = this.props.rtl) => {
 			if (type === Native) {
@@ -427,15 +427,15 @@ const VirtualListBaseFactory = (type) => {
 			} else {
 				this.setScrollPosition(x, y, rtl, x, y);
 			}
-		}
+		};
 
-		isVertical = () => this.isPrimaryDirectionVertical
+		isVertical = () => this.isPrimaryDirectionVertical;
 
-		isHorizontal = () => !this.isPrimaryDirectionVertical
+		isHorizontal = () => !this.isPrimaryDirectionVertical;
 
-		getScrollBounds = () => this.scrollBounds
+		getScrollBounds = () => this.scrollBounds;
 
-		getMoreInfo = () => this.moreInfo
+		getMoreInfo = () => this.moreInfo;
 
 		getGridPosition (index) {
 			const
@@ -478,12 +478,12 @@ const VirtualListBaseFactory = (type) => {
 			} else {
 				return index * this.primary.gridSize - this.props.spacing;
 			}
-		}
+		};
 
 		// For individually sized item
 		getItemTopPositionFromPreviousItemBottomPosition = (index, spacing) => {
 			return index === 0 ? 0 : this.getItemBottomPosition(index - 1) + spacing;
-		}
+		};
 
 		getItemPosition = (index, stickTo = 'start') => {
 			const
@@ -502,17 +502,17 @@ const VirtualListBaseFactory = (type) => {
 			position.primaryPosition -= offset;
 
 			return this.gridPositionToItemPosition(position);
-		}
+		};
 
 		gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
-			(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
+			(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition});
 
-		getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
+		getXY = (primaryPosition, secondaryPosition) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition});
 
 		getClientSize = (node) => ({
 			clientWidth: node.clientWidth,
 			clientHeight: node.clientHeight
-		})
+		});
 
 		emitUpdateItems () {
 			const {dataSize} = this.props;
@@ -625,7 +625,7 @@ const VirtualListBaseFactory = (type) => {
 				firstIndex: Math.min(newFirstIndex, this.maxFirstIndex),
 				numOfItems: numOfItems
 			};
-		}
+		};
 
 		calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff, firstIndex) {
 			const
@@ -694,7 +694,7 @@ const VirtualListBaseFactory = (type) => {
 				this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
 				this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
 			}
-		}
+		};
 
 		updateMoreInfo (dataSize, primaryPosition) {
 			const
@@ -762,7 +762,7 @@ const VirtualListBaseFactory = (type) => {
 				}
 
 				if (rtl) {
-					x = (platform.ios || platform.safari) ? -x : this.scrollBounds.maxLeft - x;
+					x = (platform.ios || platform.safari || platform.chrome >= 85) ? -x : this.scrollBounds.maxLeft - x;
 				}
 
 				this.containerRef.current.scrollTo(x, y);
@@ -979,7 +979,7 @@ const VirtualListBaseFactory = (type) => {
 			const ref = this.itemContainerRef.current;
 
 			return ref ? ref.children[index % this.state.numOfItems] : null;
-		}
+		};
 
 		composeStyle (width, height, primaryPosition, secondaryPosition) {
 			const
@@ -1009,17 +1009,17 @@ const VirtualListBaseFactory = (type) => {
 				}),
 				componentProps = getComponentProps && getComponentProps(index) || {};
 
-			this.cc[key] = React.cloneElement(itemElement, {
+			this.cc[key] = cloneElement(itemElement, {
 				...componentProps,
 				className: classNames(css.listItem, itemElement.props.className),
 				style: {...itemElement.props.style, ...(this.composeStyle(...rest))}
 			});
-		}
+		};
 
 		applyStyleToHideNode = (index) => {
 			const key = index % this.state.numOfItems;
 			this.cc[key] = <div key={key} style={{display: 'none'}} />;
-		}
+		};
 
 		positionItems () {
 			const
@@ -1075,9 +1075,9 @@ const VirtualListBaseFactory = (type) => {
 			}
 		}
 
-		getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
+		getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight);
 
-		getScrollWidth = () => (this.isPrimaryDirectionVertical ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension())
+		getScrollWidth = () => (this.isPrimaryDirectionVertical ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension());
 
 		getVirtualScrollDimension = () => {
 			if (this.props.itemSizes) {
@@ -1089,7 +1089,7 @@ const VirtualListBaseFactory = (type) => {
 
 				return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
 			}
-		}
+		};
 
 		syncClientSize = () => {
 			const
@@ -1112,7 +1112,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			return false;
-		}
+		};
 
 		// render
 

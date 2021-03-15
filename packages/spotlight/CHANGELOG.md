@@ -2,6 +2,69 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [4.0.0-alpha.1] - 2021-02-24
+
+### Fixed
+
+- `spotlight/SpotlightContainerDecorator` to properly save the last-focused element with React 17
+
+## [3.5.0] - 2021-02-05
+
+No significant changes.
+
+## [3.4.11] - 2020-12-11
+
+No significant changes.
+
+## [3.4.10] - 2020-12-09
+
+No significant changes.
+
+## [3.4.9] - 2020-10-30
+
+No significant changes.
+
+## [3.4.8] - 2020-10-08
+
+No significant changes.
+
+## [3.4.7] - 2020-09-01
+
+No significant changes.
+
+## [3.4.6] - 2020-08-24
+
+### Fixed
+
+- `spotlight` to correctly prioritize next spottable elements when wrapped by a container that does not also wrap the currently focused element
+- `spotlight` to restore focus to last focused elements in an overflow container if they are visible
+
+## [3.4.5] - 2020-08-18
+
+### Fixed
+
+- `spotlight/SpotlightContainerDecorator` to allow use of `ref`
+
+## [3.4.4] - 2020-08-17
+
+No significant changes.
+
+## [3.4.3] - 2020-08-10
+
+No significant changes.
+
+## [3.4.2] - 2020-08-05
+
+No significant changes.
+
+## [3.4.1] - 2020-08-05
+
+No significant changes.
+
+## [3.4.0] - 2020-07-29
+
+No significant changes.
+
 ## [3.3.1] - 2020-07-20
 
 ### Fixed

@@ -4,7 +4,7 @@
  * not jsdoc module on purpose
  */
 
-import React from 'react';
+import {Component} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
@@ -67,12 +67,12 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		defineScreenTypes(config.screenTypes);
 	}
 
-	return class extends React.Component {
-		static displayName = 'ResolutionDecorator'
+	return class extends Component {
+		static displayName = 'ResolutionDecorator';
 
 		static propTypes = /** @lends ui/resolution.ResolutionDecorator.prototype */ {
 			className: PropTypes.string
-		}
+		};
 
 		constructor (props) {
 			super(props);
@@ -98,7 +98,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (classNames) {
 				this.setState({resolutionClasses: classNames});
 			}
-		}
+		};
 
 		/*
 		 * Compare our current version of the resolved resolution class names with a fresh

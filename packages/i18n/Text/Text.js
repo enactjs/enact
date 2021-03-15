@@ -10,7 +10,7 @@ import hoc from '@enact/core/hoc';
 import ilib from 'ilib';
 import IString from 'ilib/lib/IString';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 
 import {I18nContextDecorator} from '../I18nDecorator';
 import {createResBundle, getIStringFromBundle, getResBundle} from '../src/resBundle';
@@ -110,8 +110,8 @@ const defaultConfig = {
 const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {mapPropsToText} = config;
 
-	const Decorator = class extends React.Component {
-		static displayName = 'TextDecorator'
+	const Decorator = class extends Component {
+		static displayName = 'TextDecorator';
 
 		static propTypes = /** @lends i18n/Text.TextDecorator.prototype */ {
 			/**
@@ -134,7 +134,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			locale: PropTypes.string
-		}
+		};
 
 		constructor (props) {
 			super(props);

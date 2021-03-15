@@ -16,7 +16,6 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import clamp from 'ramda/src/clamp';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import {validateRange} from '../internal/validators';
 import ForwardRef from '../ForwardRef';
@@ -169,7 +168,7 @@ const ProgressBarBase = kind({
 					progressAnchor,
 					backgroundProgress,
 					'--ui-progressbar-proportion-start-background',
-					'--ui-progressbar-proportion-end-background',
+					'--ui-progressbar-proportion-end-background'
 				),
 				...calcBarStyle(
 					'progress',

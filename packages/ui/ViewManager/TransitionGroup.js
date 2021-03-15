@@ -16,7 +16,7 @@ import propEq from 'ramda/src/propEq';
 import remove from 'ramda/src/remove';
 import unionWith from 'ramda/src/unionWith';
 import useWith from 'ramda/src/useWith';
-import React from 'react';
+import {Children, cloneElement, createElement, Component} from 'react';
 
 /**
  * Returns the index of a child in an array found by `key` matching
@@ -27,6 +27,7 @@ import React from 'react';
  * @method
  * @private
  */
+// eslint-disable-next-line react-hooks/rules-of-hooks
 const indexOfChild = useWith(findIndex, [propEq('key'), identity]);
 
 /**
@@ -38,7 +39,7 @@ const indexOfChild = useWith(findIndex, [propEq('key'), identity]);
  * @private
  */
 const mapChildren = function (children) {
-	const result = children && React.Children.toArray(children);
+	const result = children && Children.toArray(children);
 	return result ? result.filter(c => !!c) : [];
 };
 
@@ -74,7 +75,7 @@ const forwardOnWillTransition = forward('onWillTransition');
  * @private
  */
 
-class TransitionGroup extends React.Component {
+class TransitionGroup extends Component {
 	static propTypes = /** @lends ui/ViewManager.TransitionGroup.prototype */ {
 		children: PropTypes.node.isRequired,
 
@@ -164,13 +165,13 @@ class TransitionGroup extends React.Component {
 		 * @default 2
 		 */
 		size: PropTypes.number
-	}
+	};
 
 	static defaultProps = {
 		childFactory: identity,
 		component: 'div',
 		size: 2
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -314,7 +315,7 @@ class TransitionGroup extends React.Component {
 		} else {
 			this._handleDoneAppearing(key);
 		}
-	}
+	};
 
 	_handleDoneAppearing = (key) => {
 		const component = this.groupRefs[key];
@@ -334,7 +335,7 @@ class TransitionGroup extends React.Component {
 			// This was removed before it had fully appeared. Remove it.
 			this.performLeave(key);
 		}
-	}
+	};
 
 	performEnter = (key) => {
 		this.currentlyTransitioningKeys[key] = true;
@@ -348,7 +349,7 @@ class TransitionGroup extends React.Component {
 		} else {
 			this._handleDoneEntering(key);
 		}
-	}
+	};
 
 	_handleDoneEntering = (key) => {
 		const component = this.groupRefs[key];
@@ -361,7 +362,7 @@ class TransitionGroup extends React.Component {
 		}, this.props);
 
 		this.completeTransition({key});
-	}
+	};
 
 	performStay = (key) => {
 		const component = this.groupRefs[key];
@@ -373,7 +374,7 @@ class TransitionGroup extends React.Component {
 		} else {
 			this._handleDoneStaying(key);
 		}
-	}
+	};
 
 	_handleDoneStaying = (key) => {
 		const component = this.groupRefs[key];
@@ -384,7 +385,7 @@ class TransitionGroup extends React.Component {
 		forwardOnStay({
 			view: component
 		}, this.props);
-	}
+	};
 
 	performLeave = (key) => {
 		this.currentlyTransitioningKeys[key] = true;
@@ -398,7 +399,7 @@ class TransitionGroup extends React.Component {
 			// is done.
 			this._handleDoneLeaving(key);
 		}
-	}
+	};
 
 	_handleDoneLeaving = (key) => {
 		const component = this.groupRefs[key];
@@ -417,11 +418,11 @@ class TransitionGroup extends React.Component {
 			const index = indexOfChild(key, state.children);
 			return {children: remove(index, 1, state.children)};
 		});
-	}
+	};
 
 	storeRefs = key => node => {
 		this.groupRefs[key] = node;
-	}
+	};
 
 	render () {
 		// support wrapping arbitrary children with a component that supports the necessary
@@ -429,7 +430,7 @@ class TransitionGroup extends React.Component {
 		const childrenToRender = this.state.children.map(child => {
 			const isLeaving = child.props['data-index'] !== this.props.currentIndex && typeof child.props['data-index'] !== 'undefined';
 
-			return React.cloneElement(
+			return cloneElement(
 				this.props.childFactory(child),
 				{key: child.key, ref: this.storeRefs(child.key), leaving: isLeaving, appearing: !this.hasMounted}
 			);
@@ -451,7 +452,7 @@ class TransitionGroup extends React.Component {
 		delete props.onWillTransition;
 		delete props.size;
 
-		return React.createElement(
+		return createElement(
 			this.props.component,
 			props,
 			childrenToRender

@@ -7,7 +7,7 @@
  */
 
 import hoc from '@enact/core/hoc';
-import React, {useState, useRef, useLayoutEffect} from 'react';
+import {useState, useRef, useLayoutEffect} from 'react';
 
 /**
  * Default config for {@link ui/Measurable.Measurable}.

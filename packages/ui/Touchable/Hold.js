@@ -8,7 +8,7 @@ class Hold {
 		this.next = null;
 	}
 
-	isHolding = () => this.holdConfig != null
+	isHolding = () => this.holdConfig != null;
 
 	isWithinTolerance = ({x, y}) => {
 		const {moveTolerance} = this.holdConfig;
@@ -16,10 +16,10 @@ class Hold {
 		const dy = this.startY - y;
 
 		return Math.sqrt(dx * dx + dy * dy) < moveTolerance;
-	}
+	};
 
-	begin = (defaultConfig, {holdConfig, noResume, onHold, onHoldEnd, onHoldPulse}, {x, y}) => {
-		if (!onHold && !onHoldPulse) return;
+	begin = (defaultConfig, {holdConfig, noResume, onHoldStart, onHoldEnd, onHold}, {x, y}) => {
+		if (!onHoldStart && !onHold) return;
 
 		this.startX = x;
 		this.startY = y;
@@ -27,9 +27,9 @@ class Hold {
 		this.holdConfig = {
 			...defaultConfig,
 			...holdConfig,
-			onHold,
+			onHoldStart,
 			onHoldEnd,
-			onHoldPulse,
+			onHold,
 			resume: !noResume
 		};
 
@@ -47,7 +47,18 @@ class Hold {
 			this.holdStart = window.performance.now();
 			this.startJob();
 		}
-	}
+	};
+
+	// This method will get the `onHoldStart`, `onHoldEnd`, `onHold` props and update in the existing `holdConfig`.
+	updateProps = ({onHoldStart, onHoldEnd, onHold}) => {
+		// check `isHolding` gesture is not in progress. Check if gesture exists before updating the references to the `holdConfig`
+		if (!this.isHolding()) return;
+
+		// Update the original values with new values of the gestures
+		this.holdConfig.onHold = onHold;
+		this.holdConfig.onHoldStart = onHoldStart;
+		this.holdConfig.onHoldEnd = onHoldEnd;
+	};
 
 	move = (coords) => {
 		if (!this.isHolding()) return;
@@ -67,7 +78,7 @@ class Hold {
 				this.resume();
 			}
 		}
-	}
+	};
 
 	blur = () => {
 		if (!this.isHolding()) return;
@@ -75,7 +86,7 @@ class Hold {
 		if (!this.holdConfig.global) {
 			this.end();
 		}
-	}
+	};
 
 	end = () => {
 		if (!this.isHolding()) return;
@@ -92,7 +103,7 @@ class Hold {
 		this.suspend();
 		this.pulsing = false;
 		this.holdConfig = null;
-	}
+	};
 
 	enter = () => {
 		if (!this.isHolding()) return;
@@ -102,7 +113,7 @@ class Hold {
 		if (resume && !cancelOnMove) {
 			this.resume();
 		}
-	}
+	};
 
 	leave = () => {
 		if (!this.isHolding()) return;
@@ -116,19 +127,19 @@ class Hold {
 		} else {
 			this.end();
 		}
-	}
+	};
 
 	suspend = () => {
 		clearInterval(this.holdJob);
 		this.holdJob = null;
-	}
+	};
 
 	resume = () => {
 		if (this.holdJob !== null) return;
 
 		this.handlePulse();
 		this.startJob();
-	}
+	};
 
 	startJob () {
 		const {frequency} = this.holdConfig;
@@ -143,16 +154,16 @@ class Hold {
 
 		let n = this.next;
 		while (n && n.time <= holdTime) {
-			const {events, onHold} = this.holdConfig;
+			const {events, onHoldStart} = this.holdConfig;
 			this.pulsing = true;
-			if (onHold) {
-				onHold({
-					type: 'onHold',
+			if (onHoldStart) {
+				onHoldStart({
+					type: 'onHoldStart',
 					...n
 				});
 			}
 
-			// if the hold is canceled from the onHold handler, we should bail early and prevent
+			// if the hold is canceled from the onHoldStart handler, we should bail early and prevent
 			// additional hold/pulse events
 			if (!this.isHolding()) {
 				this.pulsing = false;
@@ -163,16 +174,16 @@ class Hold {
 		}
 
 		if (this.pulsing) {
-			const {onHoldPulse} = this.holdConfig;
+			const {onHold} = this.holdConfig;
 
-			if (onHoldPulse) {
-				onHoldPulse({
-					type: 'onHoldPulse',
+			if (onHold) {
+				onHold({
+					type: 'onHold',
 					time: holdTime
 				});
 			}
 		}
-	}
+	};
 }
 
 const defaultHoldConfig = {

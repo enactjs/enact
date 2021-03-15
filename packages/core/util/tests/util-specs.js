@@ -1,4 +1,4 @@
-import React from 'react';
+import {forwardRef, memo, lazy} from 'react';
 
 import {mapAndFilterChildren, memoize, isRenderable} from '../util';
 
@@ -20,21 +20,21 @@ describe('util', () => {
 
 		test('should return {true} for React.forwardRef', () => {
 			const expected = true;
-			const actual = isRenderable(React.forwardRef(() => {}));
+			const actual = isRenderable(forwardRef(() => {}));
 
 			expect(actual).toEqual(expected);
 		});
 
 		test('should return {true} for React.memo', () => {
 			const expected = true;
-			const actual = isRenderable(React.memo(() => {}));
+			const actual = isRenderable(memo(() => {}));
 
 			expect(actual).toEqual(expected);
 		});
 
 		test('should return {true} for React.lazy', () => {
 			const expected = true;
-			const actual = isRenderable(React.lazy(() => {}));
+			const actual = isRenderable(lazy(() => {}));
 
 			expect(actual).toEqual(expected);
 		});

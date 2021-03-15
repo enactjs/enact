@@ -1,6 +1,6 @@
 {
   "name": "enact-sampler",
-  "version": "3.3.1",
+  "version": "4.0.0-alpha.1",
   "description": "Component and QA samples for Enact",
   "private": true,
   "main": "index.js",
@@ -11,23 +11,21 @@
     "serve": "start-storybook -p 8080 -c .storybook --ci"
   },
   "license": "Apache-2.0",
-  "eslintConfig": {
-    "extends": "enact/strict"
-  },
   "dependencies": {
-    "@enact/core": "^3.3.1",
-    "@enact/i18n": "^3.3.1",
-    "@enact/spotlight": "^3.3.1",
-    "@enact/ui": "^3.3.1",
-    "@enact/webos": "^3.3.1",
+    "@enact/core": "^4.0.0-alpha.1",
+    "@enact/i18n": "^4.0.0-alpha.1",
+    "@enact/spotlight": "^4.0.0-alpha.1",
+    "@enact/ui": "^4.0.0-alpha.1",
+    "@enact/webos": "^4.0.0-alpha.1",
     "classnames": "^2.2.6",
     "ilib": "^14.4.0",
+    "prop-types": "^15.7.2",
     "query-string": "^6.7.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "devDependencies": {
-    "@enact/storybook-utils": "^1.0.0",
+    "@enact/storybook-utils": "^3.0.0",
     "@storybook/addons": "5.3.5",
     "@storybook/react": "5.3.5",
     "@storybook/theming": "5.3.5",

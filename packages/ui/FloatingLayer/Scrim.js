@@ -1,4 +1,4 @@
-import React from 'react';
+import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import css from './Scrim.module.less';
@@ -60,7 +60,7 @@ function removeTranslucentScrim (scrim) {
  * @ui
  * @private
  */
-class Scrim extends React.Component {
+class Scrim extends Component {
 	static propTypes = /** @lends ui/FloatingLayer.Scrim.prototype */ {
 		/**
 		 * Types of scrim. It can be either `'transparent'` or `'translucent'`.
@@ -70,11 +70,11 @@ class Scrim extends React.Component {
 		 * @public
 		 */
 		type: PropTypes.oneOf(['transparent', 'translucent'])
-	}
+	};
 
 	static defaultProps = {
 		type: 'translucent'
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -109,9 +109,9 @@ class Scrim extends React.Component {
 		}
 	}
 
-	show = () => this.setState({visible: true})
+	show = () => this.setState({visible: true});
 
-	hide = () => this.setState({visible: false})
+	hide = () => this.setState({visible: false});
 
 	render () {
 		if (this.state.visible) {

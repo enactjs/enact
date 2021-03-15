@@ -2,6 +2,64 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [4.0.0-alpha.1] - 2021-02-24
+
+No significant changes.
+
+## [3.5.0] - 2021-02-05
+
+No significant changes.
+
+## [3.4.11] - 2020-12-11
+
+No significant changes.
+
+## [3.4.10] - 2020-12-09
+
+No significant changes.
+
+## [3.4.9] - 2020-10-30
+
+### Fixed
+
+- `i18n/I18nDecorator` to add global class `enact-locale-non-italic` for scriptName `Kore`
+
+## [3.4.8] - 2020-10-08
+
+No significant changes.
+
+## [3.4.7] - 2020-09-01
+
+No significant changes.
+
+## [3.4.6] - 2020-08-24
+
+No significant changes.
+
+## [3.4.5] - 2020-08-18
+
+No significant changes.
+
+## [3.4.4] - 2020-08-17
+
+No significant changes.
+
+## [3.4.3] - 2020-08-10
+
+No significant changes.
+
+## [3.4.2] - 2020-08-05
+
+No significant changes.
+
+## [3.4.1] - 2020-08-05
+
+No significant changes.
+
+## [3.4.0] - 2020-07-29
+
+No significant changes.
+
 ## [3.3.1] - 2020-07-20
 
 No significant changes.

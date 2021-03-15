@@ -1,7 +1,7 @@
 {
   "name": "@enact/i18n",
   "main": "./src/index.js",
-  "version": "3.3.1",
+  "version": "4.0.0-alpha.1",
   "description": "Internationalization support for Enact using iLib",
   "scripts": {
     "clean": "enact clean",
@@ -33,9 +33,6 @@
       "baseSize": 24
     }
   },
-  "eslintConfig": {
-    "extends": "enact/strict"
-  },
   "jest": {
     "collectCoverageFrom": [
       "**/*.{js,jsx,ts,tsx}",
@@ -44,18 +41,18 @@
     ]
   },
   "dependencies": {
-    "@enact/core": "^3.3.1",
+    "@enact/core": "^4.0.0-alpha.1",
     "prop-types": "^15.7.2",
     "ramda": "^0.24.1",
-    "react": "^16.8.0",
-    "react-dom": "^16.8.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "xhr": "^2.4.1"
   },
   "peerDependencies": {
-    "ilib": "^14.4.0 || ^14.4.0-webostv1"
+    "ilib": "^14.4.0 || ^14.6.0-webos"
   },
   "devDependencies": {
-    "@enact/ui-test-utils": "^0.3.2",
+    "@enact/ui-test-utils": "^0.6.0",
     "ilib": "^14.4.0"
   }
 }

@@ -94,8 +94,8 @@ const mergeConfig = (cfg) => {
  *     may move before cancelling the hold. Ignored when `cancelOnMove` is `false`. Defaults to
  *     `16`.
  *   * `frequency` - The time, in milliseconds, to poll for hold events. Defaults to `200`.
- *   * `events` - An array of `onHold` events which each contain a `name` and `time`. The `time`
- *     controls the amount of time that must pass before this `onHold` event is fired and should
+ *   * `events` - An array of `onHoldStart` events which each contain a `name` and `time`. The `time`
+ *     controls the amount of time that must pass before this `onHoldStart` event is fired and should
  *     be a multiple of `frequency`.
  *
  * @function

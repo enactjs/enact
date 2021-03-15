@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import React, {memo, useEffect, useRef} from 'react';
+import {memo, useEffect, useRef} from 'react';
 import ReactDOM from 'react-dom';
 
 import ri from '../resolution';
@@ -13,15 +13,21 @@ import componentCss from './Scrollbar.module.less';
 const scrollbarTrackHidingDelay = 900; // 900ms + 100ms(fade out duration) = 1000ms.
 
 const addClass = (element, className) => {
-	ReactDOM.findDOMNode(element).classList.add(className); // eslint-disable-line react/no-find-dom-node
+	const node = ReactDOM.findDOMNode(element); // eslint-disable-line react/no-find-dom-node
+	if (node) {
+		node.classList.add(className);
+	}
 };
 
 const removeClass = (element, className) => {
-	ReactDOM.findDOMNode(element).classList.remove(className); // eslint-disable-line react/no-find-dom-node
+	const node = ReactDOM.findDOMNode(element); // eslint-disable-line react/no-find-dom-node
+	if (node) {
+		node.classList.remove(className);
+	}
 };
 
 /*
- * Set CSS Varaible value.
+ * Set CSS Variable value.
  *
  * @method
  * @param {Node} element - Node.
@@ -74,8 +80,8 @@ const useScrollbar = (props) => {
 
 	function update (bounds) {
 		const
-			primaryDimenstion = vertical ? 'clientHeight' : 'clientWidth',
-			trackSize = clientSize ? clientSize[primaryDimenstion] : scrollbarContainerRef.current[primaryDimenstion],
+			primaryDimension = vertical ? 'clientHeight' : 'clientWidth',
+			trackSize = clientSize ? clientSize[primaryDimension] : scrollbarContainerRef.current[primaryDimension],
 			scrollViewSize = vertical ? bounds.clientHeight : bounds.clientWidth,
 			scrollContentSize = vertical ? bounds.scrollHeight : bounds.scrollWidth,
 			scrollOrigin = vertical ? bounds.scrollTop : bounds.scrollLeft,
@@ -87,12 +93,14 @@ const useScrollbar = (props) => {
 		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-progress-ratio', scrollbarThumbProgressRatio);
 	}
 
-	scrollbarHandle.current = {
-		getContainerRef,
-		showScrollbarTrack,
-		startHidingScrollbarTrack,
-		update
-	};
+	if (scrollbarHandle) {
+		scrollbarHandle.current = {
+			getContainerRef,
+			showScrollbarTrack,
+			startHidingScrollbarTrack,
+			update
+		};
+	}
 
 	return {
 		restProps: rest,
@@ -151,9 +159,9 @@ Scrollbar.propTypes = /** @lends ui/useScroll.Scrollbar.prototype */ {
 	}),
 
 	/**
-	 * If `true`, add the corner between vertical and horizontal scrollbars.
+	 * Adds a corner between the vertical and horizontal scrollbars.
 	 *
-	 * @type {Booelan}
+	 * @type {Boolean}
 	 * @default false
 	 * @public
 	 */
@@ -174,7 +182,8 @@ Scrollbar.propTypes = /** @lends ui/useScroll.Scrollbar.prototype */ {
 
 	/**
 	 * The minimum size of the thumb.
-	 * This value will be applied ri.scale.
+	 *
+	 * This value will be scaled.
 	 *
 	 * @type {number}
 	 * @public

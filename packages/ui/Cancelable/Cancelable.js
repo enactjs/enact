@@ -12,7 +12,7 @@ import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component as ReactComponent} from 'react';
 
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
 import {addModal, removeModal} from './modalHandler';
@@ -153,7 +153,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		return stopped;
 	};
 
-	return class extends React.Component {
+	return class extends ReactComponent {
 		static displayName = 'Cancelable';
 
 		static propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
@@ -167,7 +167,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			onCancel: PropTypes.func
-		}
+		};
 
 		constructor (props) {
 			super(props);
@@ -180,7 +180,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handle = handle.bind(this)
+		handle = handle.bind(this);
 
 		handleCancel = this.handle(
 			forCancel,
@@ -188,14 +188,14 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			dispatchCancelToConfig,
 			stop,
 			stopImmediate
-		)
+		);
 
 		handleKeyUp = this.handle(
 			forward('onKeyUp'),
 			// nesting handlers for DRYness. note that if any conditions return false in
 			// this.handleCancel(), this handler chain will stop too
 			this.handleCancel
-		)
+		);
 
 		renderWrapped (props) {
 			return (

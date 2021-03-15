@@ -8,9 +8,8 @@
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import compose from 'ramda/src/compose';
-import React from 'react';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 
 import Changeable from '../Changeable';
 import ForwardRef from '../ForwardRef';
