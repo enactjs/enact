@@ -4,6 +4,8 @@
  * @module ui/Group
  * @exports Group
  * @exports GroupBase
+ * @exports GroupDecorator
+ * @exports GroupItem
  */
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
@@ -223,4 +225,9 @@ const Group = GroupDecorator(
 );
 
 export default Group;
-export {Group, GroupBase, GroupItem};
+export {
+	Group,
+	GroupBase,
+	GroupDecorator,
+	GroupItem
+};
