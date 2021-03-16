@@ -7,13 +7,18 @@
  *
  * @module ui/ProgressBar
  * @exports ProgressBar
+ * @exports ProgressBarBase
+ * @exports ProgressBarDecorator
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import clamp from 'ramda/src/clamp';
+import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
 
 import {validateRange} from '../internal/validators';
+import ForwardRef from '../ForwardRef';
 
 import componentCss from './ProgressBar.module.less';
 
@@ -36,15 +41,15 @@ const calcBarStyle = (prop, anchor, value = anchor, startProp, endProp) => {
 /**
  * An unstyled progress bar component that can be customized by a theme or application.
  *
- * @class ProgressBar
+ * @class ProgressBarBase
  * @memberof ui/ProgressBar
  * @ui
  * @public
  */
-const ProgressBar = kind({
+const ProgressBarBase = kind({
 	name: 'ui:ProgressBar',
 
-	propTypes: /** @lends ui/ProgressBar.ProgressBar.prototype */ {
+	propTypes: /** @lends ui/ProgressBar.ProgressBarBase.prototype */ {
 		/**
 		 * The proportion of the loaded portion of the progress bar.
 		 *
@@ -63,6 +68,17 @@ const ProgressBar = kind({
 		 * @public
 		 */
 		children: PropTypes.node,
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/ProgressBar.ProgressBar}, the `ref` prop is forwarded to this
+		 * component as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -165,14 +181,14 @@ const ProgressBar = kind({
 		}
 	},
 
-	render: ({children, css, ...rest}) => {
+	render: ({children, componentRef, css, ...rest}) => {
 		delete rest.backgroundProgress;
 		delete rest.orientation;
 		delete rest.progress;
 		delete rest.progressAnchor;
 
 		return (
-			<div role="progressbar" {...rest}>
+			<div role="progressbar" {...rest} ref={componentRef}>
 				<div className={css.bar}>
 					<div className={css.load} />
 					<div className={css.fill} />
@@ -183,7 +199,35 @@ const ProgressBar = kind({
 	}
 });
 
+/**
+ * A higher-order component that adds behavior to
+ * [ProgressBar]{@link ui/ProgressBar.ProgressBarBase}.
+ *
+ * @hoc
+ * @memberof ui/ProgressBar
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const ProgressBarDecorator = compose(
+	ForwardRef({prop: 'componentRef'})
+);
+
+/**
+ * An unstyled progress bar component that can be customized by a theme or application.
+ *
+ * @class ProgressBar
+ * @memberof ui/ProgressBar
+ * @extends ui/ProgressBar.ProgressBarBase
+ * @mixes ui/ProgressBar.ProgressBarDecorator
+ * @omit componentRef
+ * @ui
+ * @public
+ */
+const ProgressBar = ProgressBarDecorator(ProgressBarBase);
+
 export default ProgressBar;
 export {
-	ProgressBar
+	ProgressBar,
+	ProgressBarBase,
+	ProgressBarDecorator
 };

@@ -3,13 +3,17 @@
  *
  * @module ui/Icon
  * @exports Icon
+ * @exports IconDecorator
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 
 import ri from '../resolution';
+import ForwardRef from '../ForwardRef';
 
 import componentCss from './Icon.module.less';
 
@@ -50,21 +54,21 @@ const isUri = function (c) {
 /**
  * A basic icon component structure without any behaviors applied to it.
  *
- * @class Icon
+ * @class IconBase
  * @memberof ui/Icon
  * @ui
  * @public
  */
-const Icon = kind({
+const IconBase = kind({
 	name: 'ui:Icon',
 
-	propTypes: /** @lends ui/Icon.Icon.prototype */ {
+	propTypes: /** @lends ui/Icon.IconBase.prototype */ {
 		/**
 		 * The icon content.
 		 *
 		 * May be specified as either:
 		 *
-		 * * A string that represents an icon from the [iconList]{@link ui/Icon.Icon.iconList},
+		 * * A string that represents an icon from the [iconList]{@link ui/Icon.IconBase.iconList},
 		 * * An HTML entity string, Unicode reference or hex value (in the form '0x...'),
 		 * * A URL specifying path to an icon image, or
 		 * * An object representing a resolution independent resource (See {@link ui/resolution}).
@@ -75,14 +79,25 @@ const Icon = kind({
 		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Icon.Icon}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
+
+		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal elements and states of this component.
 		 *
 		 * The following classes are supported:
 		 *
 		 * * `icon` - The root component class
-		 * * `dingbat` - Applied when the value of [`icon`]{@link ui/Icon.Icon.icon} is not
-		 *   found in [iconList]{@link ui/Icon.Icon.iconList}
+		 * * `dingbat` - Applied when the value of [`icon`]{@link ui/Icon.IconBase.icon} is not
+		 *   found in [iconList]{@link ui/Icon.IconBase.iconList}
 		 * * `large` - Applied when `size` prop is `'large'`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 * * `small` - Applied when `size` prop is `'small'`
@@ -199,7 +214,7 @@ const Icon = kind({
 		}
 	},
 
-	render: ({iconProps, ...rest}) => {
+	render: ({componentRef, iconProps, ...rest}) => {
 		delete rest.iconList;
 		delete rest.pressed;
 		delete rest.size;
@@ -209,12 +224,40 @@ const Icon = kind({
 				aria-hidden
 				{...rest}
 				{...iconProps}
+				ref={componentRef}
 			/>
 		);
 	}
 });
 
+/**
+ * A higher-order component that adds behavior to [Icon]{@link ui/Icon.IconBase}.
+ *
+ * @hoc
+ * @memberof ui/Icon
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const IconDecorator = compose(
+	ForwardRef({prop: 'componentRef'})
+);
+
+/**
+ * An Icon component.
+ *
+ * @class Icon
+ * @extends ui/Icon.IconBase
+ * @mixes ui/Icon.IconDecorator
+ * @omit componentRef
+ * @memberof ui/Icon
+ * @ui
+ * @public
+ */
+const Icon = IconDecorator(IconBase);
+
 export default Icon;
 export {
-	Icon
+	Icon,
+	IconBase,
+	IconDecorator
 };

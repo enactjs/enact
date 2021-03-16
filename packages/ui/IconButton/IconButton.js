@@ -14,9 +14,11 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import {Children} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
+import ForwardRef from '../ForwardRef';
 import Touchable from '../Touchable';
 
 import componentCss from './IconButton.module.less';
@@ -65,6 +67,17 @@ const IconButtonBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node,
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/IconButton.IconButton}, the `ref` prop is forwarded to this
+		 * component as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -159,7 +172,7 @@ const IconButtonBase = kind({
 		className: ({size, styler}) => styler.append(size)
 	},
 
-	render: ({buttonComponent, children, css, flip, icon, iconComponent: Icon, size, ...rest}) => {
+	render: ({buttonComponent, children, componentRef, css, flip, icon, iconComponent: Icon, size, ...rest}) => {
 		// To support the simpler use case of only specifying the icon as the children within
 		// <IconButton>, this falls back on using children if icon isn't specified.
 		if (!icon && children) {
@@ -175,21 +188,25 @@ const IconButtonBase = kind({
 			children: [
 				<Icon key="icon" flip={flip} size={size} className={css.icon}>{icon}</Icon>,
 				...Children.toArray(children)
-			]
+			],
+			ref: componentRef
 		});
 	}
 });
-
 
 /**
  * A higher-order component that adds universal button behaviors to an [IconButtonBase]{@link ui/IconButton.IconButtonBase}.
  *
  * @hoc
  * @memberof ui/IconButton
+ * @mixes ui/ForwardRef.ForwardRef
  * @mixes ui/Touchable.Touchable
  * @public
  */
-const IconButtonDecorator = Touchable({activeProp: 'pressed'});
+const IconButtonDecorator = compose(
+	ForwardRef({prop: 'componentRef'}),
+	Touchable({activeProp: 'pressed'})
+);
 
 /**
  * A minimally styled, but interactive, Button ready for customization by a theme.
@@ -202,9 +219,10 @@ const IconButtonDecorator = Touchable({activeProp: 'pressed'});
  * ```
  *
  * @class IconButton
- * @memberof ui/IconButton
  * @extends ui/IconButton.IconButtonBase
  * @mixes ui/IconButton.IconButtonDecorator
+ * @omit componentRef
+ * @memberof ui/IconButton
  * @ui
  * @public
  */

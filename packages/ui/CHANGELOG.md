@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` default size values
 
+### Added
+
+- `ui/BodyText`, `ui/Button`, `ui/Group`, `ui/Heading`, `ui/Icon`, `ui/IconButton`, `ui/Image`, `ui/ImageItem`, `ui/LabeledIcon`, `ui/Layout`, `ui/ProgressBar`, `ui/Repeater`, `ui/Slider`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleIcon`, `ui/ToggleItem`, and `ui/ViewManager` support for forwarding `ref`s to the respective root component
+
 ### Changed
 
 - `ui/Touchable` event `onHold` and `onHoldPulse` to `onHoldStart` and `onHold` respectively to match with the naming convention
@@ -39,10 +43,6 @@ No significant changes.
 
 ## [3.4.10] - 2020-12-09
 
-### Fixed
-
-- `ui/Scroller` and `ui/VirtualList` to scroll correctly on Chrome 85 or higher in RTL locales
-
 ### Changed
 
 - `ui/Media` `play` function to return promise
@@ -50,6 +50,7 @@ No significant changes.
 ### Fixed
 
 - `ui/Routable` to respect the current path on first render when using relative paths in links
+- `ui/Scroller` and `ui/VirtualList` to scroll correctly on Chrome 85 or higher in RTL locales
 
 ## [3.4.9] - 2020-10-30
 

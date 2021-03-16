@@ -78,10 +78,13 @@ const SpinnerBase = kind({
 		centered: PropTypes.bool,
 
 		/**
-		 * Called with a reference to [component]{@link ui/Spinner.Spinner#component}
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Spinner.Spinner}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
 		 *
 		 * @type {Object|Function}
-		 * @private
+		 * @public
 		 */
 		componentRef: EnactPropTypes.ref,
 
@@ -198,6 +201,7 @@ const SpinnerDecorator = ForwardRef({prop: 'componentRef'});
  * @memberof ui/Spinner
  * @extends ui/Spinner.SpinnerBase
  * @mixes ui/Spinner.SpinnerDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 
-import {shallow} from 'enzyme';
-import {RepeaterBase} from '../Repeater';
+import {mount, shallow} from 'enzyme';
+import Repeater, {RepeaterBase} from '../Repeater';
 
 describe('Repeater Specs', () => {
 	const stringItems = ['One', 'Two', 'Three'];
@@ -153,6 +153,18 @@ describe('Repeater Specs', () => {
 
 		const expected = 'listbox';
 		const actual = subject.prop('role');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should return a DOM node reference for `componentRef``', () => {
+		const ref = jest.fn();
+		mount(
+			<Repeater component="div" childComponent="div" ref={ref}>{stringItems}</Repeater>
+		);
+
+		const expected = 'DIV';
+		const actual = ref.mock.calls[0][0].nodeName;
 
 		expect(actual).toBe(expected);
 	});
