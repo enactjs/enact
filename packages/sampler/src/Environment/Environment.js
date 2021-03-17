@@ -140,7 +140,7 @@ const StorybookDecorator = (story, config) => {
 	return (
 		<PanelsBase
 			className={classnames(classes)}
-			title={`${config.kind}`.replaceAll('/', ' ').trim()}
+			title={`${config.kind}`.replace(/\//g, ' ').trim()}
 			description={hasText ? config.parameters.info.text : null}
 			locale={select('locale', locales, Config)}
 			style={{
