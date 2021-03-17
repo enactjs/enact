@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.4.9-experimental-5] - 2021-03-17
+
+### Fixed
+
+- `ui/Touchable' to handle touch related events only for valid targets
+
 ## [3.4.9-experimental-4] - 2021-02-23
 
 ### Fixed
