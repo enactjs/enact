@@ -3,13 +3,17 @@
  *
  * @module ui/ImageItem
  * @exports ImageItem
+ * @exports ImageItemBase
+ * @exports ImageItemDecorator
  */
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 
 import ComponentOverride from '../ComponentOverride';
+import ForwardRef from '../ForwardRef';
 import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
@@ -26,7 +30,7 @@ function ImageOverride ({imageComponent, ...rest}) {
 /**
  * A basic image item without any behavior.
  *
- * @class ImageItem
+ * @class ImageItemBase
  * @memberof ui/ImageItem
  * @ui
  * @public
@@ -34,7 +38,7 @@ function ImageOverride ({imageComponent, ...rest}) {
 const ImageItemBase = kind({
 	name: 'ui:ImageItem',
 
-	propTypes: /** @lends ui/ImageItem.ImageItem.prototype */ {
+	propTypes: /** @lends ui/ImageItem.ImageItemBase.prototype */ {
 		/**
 		 * The caption displayed with the image.
 		 *
@@ -42,6 +46,17 @@ const ImageItemBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node,
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/ImageItem.ImageItem}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -125,14 +140,14 @@ const ImageItemBase = kind({
 		})
 	},
 
-	render: ({children, css, imageComponent, orientation, placeholder, src, ...rest}) => {
+	render: ({children, componentRef, css, imageComponent, orientation, placeholder, src, ...rest}) => {
 		delete rest.selected;
 
 		const isHorizontal = orientation === 'horizontal';
 		const Component = isHorizontal ? Row : Column;
 
 		return (
-			<Component {...rest}>
+			<Component {...rest} ref={componentRef}>
 				<Cell
 					className={css.image}
 					component={ImageOverride}
@@ -156,8 +171,35 @@ const ImageItemBase = kind({
 	}
 });
 
-export default ImageItemBase;
+/**
+ * A higher-order component that adds behaviors to an
+ * [ImageItemBase]{@link ui/ImageItem.ImageItemBase}.
+ *
+ * @hoc
+ * @memberof ui/ImageItem
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const ImageItemDecorator = compose(
+	ForwardRef({prop: 'componentRef'})
+);
+
+/**
+ * A minimally styled ImageItem ready for customization by a theme.
+ *
+ * @class ImageItem
+ * @memberof ui/ImageItem
+ * @extends ui/ImageItem.ImageItemBase
+ * @mixes ui/ImageItem.ImageItemDecorator
+ * @omit componentRef
+ * @ui
+ * @public
+ */
+const ImageItem = ImageItemDecorator(ImageItemBase);
+
+export default ImageItem;
 export {
-	ImageItemBase as ImageItem,
-	ImageItemBase
+	ImageItem,
+	ImageItemBase,
+	ImageItemDecorator
 };

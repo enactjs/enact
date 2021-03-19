@@ -10,8 +10,10 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 
 import ComponentOverride from '../ComponentOverride';
+import ForwardRef from '../ForwardRef';
 import Touchable from '../Touchable';
 
 import componentCss from './Button.module.less';
@@ -28,6 +30,18 @@ const ButtonBase = kind({
 	name: 'ui:Button',
 
 	propTypes: /** @lends ui/Button.ButtonBase.prototype */ {
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Button.Button}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
+
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal elements and states of this component.
@@ -210,7 +224,7 @@ const ButtonBase = kind({
 		}
 	},
 
-	render: ({children, css, decoration, disabled, icon, ...rest}) => {
+	render: ({children, componentRef, css, decoration, disabled, icon, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconFlip;
 		delete rest.minWidth;
@@ -219,7 +233,7 @@ const ButtonBase = kind({
 		delete rest.size;
 
 		return (
-			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
+			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled} ref={componentRef}>
 				{decoration ? (
 					<div className={css.decoration}>{decoration}</div>
 				) : null}
@@ -238,15 +252,19 @@ const ButtonBase = kind({
  * @mixes ui/Touchable.Touchable
  * @public
  */
-const ButtonDecorator = Touchable({activeProp: 'pressed'});
+const ButtonDecorator = compose(
+	ForwardRef({prop: 'componentRef'}),
+	Touchable({activeProp: 'pressed'})
+);
 
 /**
  * A minimally-styled button component with touch support.
  *
  * @class Button
- * @extends ui/Button.ButtonBase
  * @memberof ui/Button
+ * @extends ui/Button.ButtonBase
  * @mixes ui/Button.ButtonDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

@@ -122,7 +122,7 @@ const handleClick = handle(
 
 const handleTouchStart = handle(
 	forward('onTouchStart'),
-	returnsTrue(call('startTouch')),
+	call('startTouch'),
 	handleDown
 );
 
@@ -285,9 +285,13 @@ class Touch {
 
 	// Gesture Support
 
-	startTouch ({currentTarget}) {
-		on('contextmenu', preventDefault);
-		this.targetBounds = currentTarget.getBoundingClientRect();
+	startTouch ({target, currentTarget}) {
+		if (currentTarget.contains(target)) {
+			on('contextmenu', preventDefault);
+			this.targetBounds = currentTarget.getBoundingClientRect();
+			return true;
+		}
+		return false;
 	}
 
 	endTouch () {

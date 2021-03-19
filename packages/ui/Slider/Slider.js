@@ -15,6 +15,7 @@ import compose from 'ramda/src/compose';
 
 import Changeable from '../Changeable';
 import ComponentOverride from '../ComponentOverride';
+import ForwardRef from '../ForwardRef';
 import Touchable from '../Touchable';
 
 import Knob from './Knob';
@@ -64,6 +65,17 @@ const SliderBase = kind({
 		 * @public
 		 */
 		backgroundProgress: PropTypes.number,
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Slider.Slider}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -269,6 +281,7 @@ const SliderBase = kind({
 
 	render: ({
 		backgroundProgress,
+		componentRef,
 		css,
 		disabled,
 		knobComponent,
@@ -287,7 +300,7 @@ const SliderBase = kind({
 		delete rest.step;
 
 		return (
-			<div {...rest} disabled={disabled}>
+			<div {...rest} disabled={disabled} ref={componentRef}>
 				<ComponentOverride
 					backgroundProgress={backgroundProgress}
 					component={progressBarComponent}
@@ -320,6 +333,7 @@ const SliderBase = kind({
  * @public
  */
 const SliderDecorator = compose(
+	ForwardRef({prop: 'componentRef'}),
 	Changeable,
 	PositionDecorator,
 	Touchable({activeProp: 'pressed'})
@@ -332,6 +346,7 @@ const SliderDecorator = compose(
  * @extends ui/Slider.SliderBase
  * @memberof ui/Slider
  * @mixes ui/Slider.SliderDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

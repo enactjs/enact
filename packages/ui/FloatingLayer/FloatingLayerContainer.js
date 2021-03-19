@@ -1,7 +1,4 @@
-import {call, forEventProp, oneOf} from '@enact/core/handle';
 import Registry from '@enact/core/internal/Registry';
-
-const forAction = forEventProp('action');
 
 class FloatingLayerContainer {
 	constructor (config) {
@@ -29,10 +26,13 @@ class FloatingLayerContainer {
 		);
 	};
 
-	handleNotify = oneOf(
-		[forAction('register'), call('notifyMount')],
-		[forAction('closeAll'), call('handleCloseAll')]
-	).bind(this);
+	handleNotify = ({action}) => {
+		if (action === 'register') {
+			this.notifyMount();
+		} else if (action === 'closeAll') {
+			this.handleCloseAll();
+		}
+	};
 
 	handleCloseAll () {
 		this.registry.notify({action: 'close'});

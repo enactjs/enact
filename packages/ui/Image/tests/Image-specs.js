@@ -1,5 +1,6 @@
 import {mount, shallow} from 'enzyme';
-import ImageBase from '../Image';
+
+import Image, {ImageBase} from '../Image';
 import css from '../Image.module.less';
 
 const src = {
@@ -15,7 +16,7 @@ describe('Image Specs', () => {
 		);
 
 		const expected = css.image;
-		const actual = image.find('div').prop('className');
+		const actual = image.find('.image').prop('className');
 
 		expect(actual).toBe(expected);
 	});
@@ -26,7 +27,7 @@ describe('Image Specs', () => {
 		);
 
 		const expected = true;
-		const actual = image.find('div').hasClass(css.fill);
+		const actual = image.find('.image').hasClass(css.fill);
 
 		expect(actual).toBe(expected);
 	});
@@ -37,7 +38,7 @@ describe('Image Specs', () => {
 		);
 
 		const expected = true;
-		const actual = image.find('div').hasClass(css.fit);
+		const actual = image.find('.image').hasClass(css.fit);
 
 		expect(actual).toBe(expected);
 	});
@@ -49,8 +50,21 @@ describe('Image Specs', () => {
 		);
 
 		const expected = 'img';
-		const actual = image.prop('role');
+		const actual = image.find('.image').prop('role');
 
 		expect(actual).toBe(expected);
 	});
+
+	test('should return a DOM node reference for `componentRef`', () => {
+		const ref = jest.fn();
+		mount(
+			<Image ref={ref} src={src} />
+		);
+
+		const expected = 'DIV';
+		const actual = ref.mock.calls[0][0].nodeName;
+
+		expect(actual).toBe(expected);
+	});
+
 });

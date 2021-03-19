@@ -3,13 +3,18 @@
  *
  * @module ui/Image
  * @exports Image
+ * @exports ImageBase
+ * @exports ImageDecorator
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 import warning from 'warning';
 
 import {selectSrc} from '../resolution';
+import ForwardRef from '../ForwardRef';
 
 import componentCss from './Image.module.less';
 
@@ -36,7 +41,7 @@ import componentCss from './Image.module.less';
  *
  * > If you need a naturally sized image, you can use the native `<img>` element instead.
  *
- * @class Image
+ * @class ImageBase
  * @memberof ui/Image
  * @ui
  * @public
@@ -44,7 +49,7 @@ import componentCss from './Image.module.less';
 const ImageBase = kind({
 	name: 'ui:Image',
 
-	propTypes: /** @lends ui/Image.Image.prototype */ {
+	propTypes: /** @lends ui/Image.ImageBase.prototype */ {
 		/**
 		 * String value for the alt attribute of the image.
 		 *
@@ -71,6 +76,17 @@ const ImageBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node,
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Image.Image}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -162,13 +178,13 @@ const ImageBase = kind({
 		imgSrc: ({src}) => selectSrc(src) || null
 	},
 
-	render: ({alt, 'aria-label': ariaLabel, bgImage, children, css, imgSrc, onError, onLoad, style, ...rest}) => {
+	render: ({alt, 'aria-label': ariaLabel, bgImage, children, componentRef, css, imgSrc, onError, onLoad, style, ...rest}) => {
 		delete rest.placeholder;
 		delete rest.sizing;
 		delete rest.src;
 
 		return (
-			<div role="img" {...rest} aria-label={ariaLabel || alt} style={{...style, backgroundImage: bgImage}}>
+			<div role="img" {...rest} aria-label={ariaLabel || alt} ref={componentRef} style={{...style, backgroundImage: bgImage}}>
 				{children}
 				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
 			</div>
@@ -176,8 +192,34 @@ const ImageBase = kind({
 	}
 });
 
-export default ImageBase;
+/**
+ * A higher-order component that adds behaviors to an [ImageBase]{@link ui/Image.ImageBase}.
+ *
+ * @hoc
+ * @memberof ui/Image
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const ImageDecorator = compose(
+	ForwardRef({prop: 'componentRef'})
+);
+
+/**
+ * A minimally styled Image ready for customization by a theme.
+ *
+ * @class Image
+ * @memberof ui/Image
+ * @extends ui/Image.ImageBase
+ * @mixes ui/Image.ImageDecorator
+ * @omit componentRef
+ * @ui
+ * @public
+ */
+const Image = ImageDecorator(ImageBase);
+
+export default Image;
 export {
-	ImageBase as Image,
-	ImageBase
+	Image,
+	ImageBase,
+	ImageDecorator
 };
