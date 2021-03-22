@@ -1,5 +1,5 @@
 import useClass from '@enact/core/useClass';
-import React from 'react';
+import {useLayoutEffect, useReducer, useRef} from 'react';
 import ReactDOM from 'react-dom';
 
 import {Spot, spottableClass} from './Spot';
@@ -55,9 +55,9 @@ const REMOTE_OK_KEY = 16777221;
  */
 
 const useSpot = ({componentRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
-	const useForceUpdate = () => (React.useReducer(x => x + 1, 0));
+	const useForceUpdate = () => (useReducer(x => x + 1, 0));
 	const spot = useClass(Spot, {emulateMouse, useForceUpdate});
-	const context = React.useRef({
+	const context = useRef({
 		prevSpotlightDisabled: spotlightDisabled,
 		spotlightDisabled
 	});
@@ -74,7 +74,7 @@ const useSpot = ({componentRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE
 
 	spot.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context.current);
 
-	React.useLayoutEffect(() => {
+	useLayoutEffect(() => {
 		// eslint-disable-next-line react/no-find-dom-node
 		spot.load(ReactDOM.findDOMNode(componentRef && componentRef.current || null));
 
@@ -83,7 +83,7 @@ const useSpot = ({componentRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE
 		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	React.useLayoutEffect(spot.didUpdate); // eslint-disable-line react-hooks/exhaustive-deps
+	useLayoutEffect(spot.didUpdate); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return {
 		attributes,

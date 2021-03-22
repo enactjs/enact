@@ -115,6 +115,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			onSpotlightUp,
 			selectionKeys,
 			spotlightDisabled,
+			spotlightId,
 			...rest
 		} = props;
 		const spot = useSpot({
@@ -128,7 +129,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			onSpotlightRight,
 			onSpotlightUp,
 			selectionKeys,
-			spotlightDisabled
+			spotlightDisabled,
+			spotlightId
 		});
 
 		let tabIndex = rest.tabIndex;

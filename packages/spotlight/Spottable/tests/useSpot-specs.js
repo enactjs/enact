@@ -48,7 +48,7 @@ describe('useSpot', () => {
 
 	function SpottableBase (props) {
 		// eslint-disable-next-line enact/prop-types
-		const {className, component, componentRef, disabled, emulateMouse, onSelectionCancel, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, selectionKeys, spotlightDisabled, ...rest} = props;
+		const {className, component, componentRef, disabled, emulateMouse, onSelectionCancel, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, selectionKeys, spotlightDisabled, spotlightId, ...rest} = props;
 		const spot = useSpot({
 			disabled,
 			emulateMouse,
@@ -59,7 +59,8 @@ describe('useSpot', () => {
 			onSpotlightRight,
 			onSpotlightUp,
 			selectionKeys,
-			spotlightDisabled
+			spotlightDisabled,
+			spotlightId
 		});
 		const Comp = component || 'div';
 
