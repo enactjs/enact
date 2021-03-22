@@ -55,32 +55,6 @@ const App = () => {
 };
 ```
 
-### ui/A11yDecorator
-
-[ui/A11yDecorator](../../modules/ui/A11yDecorator/) is a Higher-Order Component that helps provide constant hint text to precede or follow the `aria-label` for a component. This is most useful in cases where the `aria-label` changes but the content before or after it is constant.
-
-```js
-import A11yDecorator from '@enact/ui/A11yDecorator';
-
-import CustomComponent from './components/CustomComponent';
-
-const Component = A11yDecorator(CustomComponent);
-
-const App = (props) => {
-    return (
-        /* 
-         * passes aria-label to CustomComponent with accessibilityPreHint, props.label, and
-         * accessibiltyHint joined together with spaces
-         */
-        <Component
-            accessibilityPreHint="before text"
-            aria-label={props.label}
-            accessibilityHint="after text"
-        />
-    );
-};
-```
-
 ### ui/AnnounceDecorator
 
 [ui/AnnounceDecorator](../../modules/ui/AnnounceDecorator/) provides a Higher-Order Component that adds the ability for the Wrapped component to notify the user of a state change. It provides a callback to the Wrapped component that can be called with a string which is inserted into a node with the [`alert` role](https://www.w3.org/TR/wai-aria/#alert) to notify the user.
