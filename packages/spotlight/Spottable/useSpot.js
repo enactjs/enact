@@ -74,7 +74,7 @@ const useSpot = ({componentRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE
 
 	spot.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context.current);
 
-	React.useEffect(() => {
+	React.useLayoutEffect(() => {
 		// eslint-disable-next-line react/no-find-dom-node
 		spot.load(ReactDOM.findDOMNode(componentRef && componentRef.current || null));
 
@@ -83,7 +83,7 @@ const useSpot = ({componentRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE
 		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	React.useEffect(spot.didUpdate); // eslint-disable-line react-hooks/exhaustive-deps
+	React.useLayoutEffect(spot.didUpdate); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return {
 		attributes,
