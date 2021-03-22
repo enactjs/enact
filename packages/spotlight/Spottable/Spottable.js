@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 import {Component} from 'react';
 import ReactDOM from 'react-dom';
 
-import {spottableClass, useSpot} from './useSpot';
+import {spottableClass, useSpottable} from './useSpottable';
 
 const
 	forwardMouseDown = forward('onMouseDown'),
@@ -118,7 +118,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			spotlightId,
 			...rest
 		} = props;
-		const spot = useSpot({
+		const spot = useSpottable({
 			componentRef,
 			disabled,
 			emulateMouse,
@@ -278,5 +278,5 @@ export default Spottable;
 export {
 	Spottable,
 	spottableClass,
-	useSpot
+	useSpottable
 };

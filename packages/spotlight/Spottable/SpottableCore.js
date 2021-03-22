@@ -40,7 +40,7 @@ let lastSelectTarget = null;
 // Should we prevent select being passed through
 let selectCancelled = false;
 
-class Spot {
+class SpottableCore {
 	constructor ({emulateMouse, useForceUpdate}) {
 		this.config = {
 			emulateMouse,
@@ -192,14 +192,14 @@ class Spot {
 		this.isActionable,
 		this.handleSelect,
 		this.shouldEmulateMouse
-		// `forwardMouseDown` is usually called out of the useSpot if the `this.shouldEmulateMouse` returns true.
+		// `forwardMouseDown` is usually called out of the useSpottable if the `this.shouldEmulateMouse` returns true.
 	);
 
 	handleKeyUp = this.handle(
 		this.forwardAndResetLastSelectTarget,
 		this.isActionable,
 		this.shouldEmulateMouse
-		// `forwardMouseUp` and `forwardClick` are usually called out of the useSpot if the `this.shouldEmulateMouse` returns true.
+		// `forwardMouseUp` and `forwardClick` are usually called out of the useSpottable if the `this.shouldEmulateMouse` returns true.
 	);
 
 	handleFocus = (ev) => {
@@ -253,8 +253,8 @@ class Spot {
 	};
 }
 
-export default Spot;
+export default SpottableCore;
 export {
-	Spot,
+	SpottableCore,
 	spottableClass
 };

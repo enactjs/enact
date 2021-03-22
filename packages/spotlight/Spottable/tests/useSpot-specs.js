@@ -6,7 +6,7 @@ import {Component} from 'react';
 import ReactDOM from 'react-dom';
 
 import Spotlight from '../../src/spotlight.js';
-import useSpot from '../useSpot';
+import useSpottable from '../useSpottable';
 
 const
 	forwardMouseUp = forward('onMouseUp'),
@@ -44,12 +44,12 @@ const spotHandlers = {
 	onMouseLeave: callContext('onMouseLeave')
 };
 
-describe('useSpot', () => {
+describe('useSpottable', () => {
 
 	function SpottableBase (props) {
 		// eslint-disable-next-line enact/prop-types
 		const {className, component, componentRef, disabled, emulateMouse, onSelectionCancel, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, selectionKeys, spotlightDisabled, spotlightId, ...rest} = props;
-		const spot = useSpot({
+		const spot = useSpottable({
 			disabled,
 			emulateMouse,
 			onSelectionCancel,
@@ -100,7 +100,7 @@ describe('useSpot', () => {
 	beforeEach(() => {
 		// Spotlight.getCurrent() did not work in unit tests. It always returns `undefined`.
 		// So Spotlight.getCurrent() is replaced with the function returning the wrapped component by the Component
-		// including `useSpot`.
+		// including `useSpottable`.
 		Spotlight.getCurrent = () => (compRef.current);
 	});
 

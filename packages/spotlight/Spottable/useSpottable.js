@@ -2,13 +2,13 @@ import useClass from '@enact/core/useClass';
 import {useLayoutEffect, useReducer, useRef} from 'react';
 import ReactDOM from 'react-dom';
 
-import {Spot, spottableClass} from './Spot';
+import {SpottableCore, spottableClass} from './SpottableCore';
 
 const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
 
 /**
- * Configuration for `useSpot`
+ * Configuration for `useSpottable`
  *
  * @typedef {Object} useSpotConfig
  * @memberof ui/Spottable
@@ -28,7 +28,7 @@ const REMOTE_OK_KEY = 16777221;
  */
 
 /**
- * Object returned by `useSpot`
+ * Object returned by `useSpottable`
  *
  * @typedef {Object} useSpotInterface
  * @memberof ui/Spottable
@@ -54,9 +54,9 @@ const REMOTE_OK_KEY = 16777221;
  * @private
  */
 
-const useSpot = ({componentRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
+const useSpottable = ({componentRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
 	const useForceUpdate = () => (useReducer(x => x + 1, 0));
-	const spot = useClass(Spot, {emulateMouse, useForceUpdate});
+	const hook = useClass(SpottableCore, {emulateMouse, useForceUpdate});
 	const context = useRef({
 		prevSpotlightDisabled: spotlightDisabled,
 		spotlightDisabled
@@ -72,33 +72,33 @@ const useSpot = ({componentRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE
 		attributes['data-spotlight-id'] = props.spotlightId;
 	}
 
-	spot.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context.current);
+	hook.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context.current);
 
 	useLayoutEffect(() => {
 		// eslint-disable-next-line react/no-find-dom-node
-		spot.load(ReactDOM.findDOMNode(componentRef || null));
+		hook.load(ReactDOM.findDOMNode(componentRef || null));
 
 		return () => {
-			spot.unload();
+			hook.unload();
 		};
 	}, [componentRef]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useLayoutEffect(spot.didUpdate); // eslint-disable-line react-hooks/exhaustive-deps
+	useLayoutEffect(hook.didUpdate); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return {
 		attributes,
-		className: spot.spottableClass || null,
-		onBlur: spot.handleBlur,
-		onFocus: spot.handleFocus,
-		onKeyDown: spot.handleKeyDown,
-		onKeyUp: spot.handleKeyUp,
-		onMouseEnter: spot.handleEnter,
-		onMouseLeave: spot.handleLeave
+		className: hook.spottableClass || null,
+		onBlur: hook.handleBlur,
+		onFocus: hook.handleFocus,
+		onKeyDown: hook.handleKeyDown,
+		onKeyUp: hook.handleKeyUp,
+		onMouseEnter: hook.handleEnter,
+		onMouseLeave: hook.handleLeave
 	};
 };
 
-export default useSpot;
+export default useSpottable;
 export {
 	spottableClass,
-	useSpot
+	useSpottable
 };
