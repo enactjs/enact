@@ -11,7 +11,6 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import React from 'react';
 
 import Touchable from '../Touchable';
 import ForwardRef from '../ForwardRef';
@@ -143,6 +142,7 @@ const ItemDecorator = compose(
  * @memberof ui/Item
  * @extends ui/Item.ItemBase
  * @mixes ui/Item.ItemDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

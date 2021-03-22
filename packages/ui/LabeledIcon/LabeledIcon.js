@@ -11,9 +11,10 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import React from 'react';
+import {isValidElement} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
+import ForwardRef from '../ForwardRef';
 import {CellBase, LayoutBase} from '../Layout';
 import Slottable from '../Slottable';
 
@@ -41,6 +42,17 @@ const LabeledIconBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node,
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/LabeledIcon.LabeledIcon}, the `ref` prop is forwarded to this
+		 * component as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -144,7 +156,6 @@ const LabeledIconBase = kind({
 		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
-		 * @default 'large'
 		 * @public
 		 */
 		size: PropTypes.string
@@ -152,8 +163,7 @@ const LabeledIconBase = kind({
 
 	defaultProps: {
 		labelPosition: 'below',
-		inline: false,
-		size: 'large'
+		inline: false
 	},
 
 	styles: {
@@ -170,7 +180,7 @@ const LabeledIconBase = kind({
 		}
 	},
 
-	render: ({css, children, disabled, flip, icon, iconComponent: Icon, orientation, size, ...rest}) => {
+	render: ({css, children, componentRef, disabled, flip, icon, iconComponent: Icon, orientation, size, ...rest}) => {
 		delete rest.inline;
 
 		let iconClassName = css.icon;
@@ -179,7 +189,7 @@ const LabeledIconBase = kind({
 		// `icon` is normally passed to `iconComponent` as children, but if `icon` is instead a
 		// rendered JSX component, it should become a child of `Cell.icon` and iconComponent should
 		// use Cell's default value. We must also reposition the `icon` class
-		if (React.isValidElement(icon)) {
+		if (isValidElement(icon)) {
 			icon = ComponentOverride({
 				component: icon,
 				className: iconClassName,
@@ -198,6 +208,7 @@ const LabeledIconBase = kind({
 		return LayoutBase.inline({
 			...rest,
 			align: 'center center',
+			componentRef,
 			disabled,
 			orientation,
 			children: [
@@ -238,6 +249,7 @@ const LabeledIconBase = kind({
  * @public
  */
 const LabeledIconDecorator = compose(
+	ForwardRef({prop: 'componentRef'}),
 	Slottable({slots: ['icon']})
 );
 
@@ -255,6 +267,7 @@ const LabeledIconDecorator = compose(
  * @memberof ui/LabeledIcon
  * @extends ui/LabeledIcon.LabeledIconBase
  * @mixes ui/LabeledIcon.LabeledIconDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

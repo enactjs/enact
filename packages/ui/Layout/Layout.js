@@ -126,7 +126,6 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import ForwardRef from '../ForwardRef';
 
@@ -206,10 +205,13 @@ const LayoutBase = kind({
 		component:  EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to [component]{@link ui/Layout.Layout#component}
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Layout.Layout}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
 		 *
 		 * @type {Object|Function}
-		 * @private
+		 * @public
 		 */
 		componentRef: EnactPropTypes.ref,
 
@@ -336,6 +338,7 @@ const LayoutDecorator = ForwardRef({prop: 'componentRef'});
  * @memberof ui/Layout
  * @extends ui/Layout.LayoutBase
  * @mixes ui/ForwardRef.ForwardRef
+ * @omit componentRef
  * @ui
  * @public
  */

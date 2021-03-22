@@ -8,7 +8,6 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import ForwardRef from '../ForwardRef';
 
@@ -50,10 +49,13 @@ const BodyTextBase = kind({
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to [component]{@link ui/BodyText.BodyText#component}
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/BodyText.BodyText}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
 		 *
 		 * @type {Object|Function}
-		 * @private
+		 * @public
 		 */
 		componentRef: EnactPropTypes.ref,
 
@@ -114,6 +116,9 @@ const BodyTextDecorator = ForwardRef({prop: 'componentRef'});
  *
  * @class BodyText
  * @memberof ui/BodyText
+ * @extends ui/BodyText.BodyTextBase
+ * @mixes ui/BodyText.BodyTextDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

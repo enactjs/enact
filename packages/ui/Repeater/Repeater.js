@@ -8,7 +8,6 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import ForwardRef from '../ForwardRef';
 
@@ -80,10 +79,13 @@ const RepeaterBase = kind({
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to [component]{@link ui/Repeater.Repeater#component}
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Repeater.Repeater}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
 		 *
 		 * @type {Object|Function}
-		 * @private
+		 * @public
 		 */
 		componentRef: EnactPropTypes.ref,
 
@@ -154,6 +156,7 @@ const RepeaterDecorator = ForwardRef({prop: 'componentRef'});
  * @memberof ui/Repeater
  * @extends ui/Repeater.RepeaterBase
  * @mixes ui/Repeater.RepeaterDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

@@ -12,7 +12,7 @@ import hoc from '@enact/core/hoc';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 import ReactDOM from 'react-dom';
 
 import {spottableClass, useSpot} from './useSpot';
@@ -254,7 +254,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	};
 
 	// eslint-disable-next-line no-shadow
-	class Spottable extends React.Component {
+	class Spottable extends Component {
 		componentDidMount () {
 			// eslint-disable-next-line react/no-find-dom-node
 			this.node = ReactDOM.findDOMNode(this);

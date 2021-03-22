@@ -1,5 +1,5 @@
 import useClass from '@enact/core/useClass';
-import React from 'react';
+import {useLayoutEffect} from 'react';
 
 import SpotlightContainer from './SpotlightContainer';
 
@@ -93,7 +93,7 @@ function useSpotlightContainer (config = {}) {
 		restrict
 	});
 
-	React.useEffect(() => {
+	useLayoutEffect(() => {
 		return () => {
 			spotlightContainer.unload();
 		};

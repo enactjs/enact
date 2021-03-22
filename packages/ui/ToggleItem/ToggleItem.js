@@ -15,7 +15,7 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import React, {Fragment} from 'react';
+import {Fragment} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
@@ -110,10 +110,13 @@ const ToggleItemBase = kind({
 		iconComponent: EnactPropTypes.componentOverride.isRequired,
 
 		/**
-		 * Called with a reference to [component]{@link ui/ToggleItem.ToggleItemBase#component}
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/ToggleItem.ToggleItem}, the `ref` prop is forwarded to this
+		 * component as `componentRef`.
 		 *
 		 * @type {Object|Function}
-		 * @private
+		 * @public
 		 */
 		componentRef: EnactPropTypes.ref,
 
@@ -294,6 +297,7 @@ const ToggleItemDecorator = compose(
  * @memberof ui/ToggleItem
  * @extends ui/ToggleItem.ToggleItemBase
  * @mixes ui/ToggleItem.ToggleItemDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

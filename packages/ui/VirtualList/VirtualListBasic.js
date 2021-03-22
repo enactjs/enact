@@ -5,7 +5,7 @@ import {platform} from '@enact/core/platform';
 import {clamp} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
-import React, {Component} from 'react';
+import {createRef, Component} from 'react';
 
 import css from './VirtualList.module.less';
 
@@ -312,7 +312,7 @@ class VirtualListBasic extends Component {
 
 		super(props);
 
-		this.contentRef = React.createRef();
+		this.contentRef = createRef();
 		this.itemContainerRefs = [];
 
 		if (props.clientSize) {

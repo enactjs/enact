@@ -1,6 +1,5 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
 
 import ForwardRef from '../ForwardRef';
@@ -61,10 +60,13 @@ const CellBase = kind({
 		component:  EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to [component]{@link ui/Cell.Cell#component}
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Layout.Cell}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
 		 *
 		 * @type {Object|Function}
-		 * @private
+		 * @public
 		 */
 		componentRef: EnactPropTypes.ref,
 
@@ -166,6 +168,7 @@ const CellDecorator = ForwardRef({prop: 'componentRef'});
  * @memberof ui/Layout
  * @extends ui/Layout.CellBase
  * @mixes ui/Layout.CellDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

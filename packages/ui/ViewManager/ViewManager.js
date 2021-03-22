@@ -16,7 +16,7 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import handle, {adaptEvent, call, forward} from '@enact/core/handle';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Children, Component} from 'react';
 
 import ForwardRef from '../ForwardRef';
 
@@ -33,7 +33,7 @@ import {wrapWithView} from './View';
  * @ui
  * @public
  */
-const ViewManagerBase = class extends React.Component {
+const ViewManagerBase = class extends Component {
 	static displayName = 'ViewManager';
 
 	static propTypes = /** @lends ui/ViewManager.ViewManagerBase.prototype */ {
@@ -70,10 +70,13 @@ const ViewManagerBase = class extends React.Component {
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to [component]{@link ui/ViewManager.ViewManager#component}
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/ViewManager.ViewManager}, the `ref` prop is forwarded to this
+		 * component as `componentRef`.
 		 *
 		 * @type {Object|Function}
-		 * @private
+		 * @public
 		 */
 		componentRef: EnactPropTypes.ref,
 
@@ -257,7 +260,7 @@ const ViewManagerBase = class extends React.Component {
 		const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, rtl, ...rest} = this.props;
 		let {end = index, start = index} = this.props;
 		const {prevIndex: previousIndex, reverseTransition} = this.state;
-		const childrenList = React.Children.toArray(children);
+		const childrenList = Children.toArray(children);
 
 		if (index > end) end = index;
 		if (index < start) start = index;
@@ -316,6 +319,7 @@ const ViewManagerDecorator = ForwardRef({prop: 'componentRef'});
  * @memberof ui/ViewManager
  * @extends ui/ViewManager.ViewManagerBase
  * @mixes ui/ViewManager.ViewManagerDecorator
+ * @omit componentRef
  * @ui
  * @public
  */

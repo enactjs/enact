@@ -1,14 +1,13 @@
-import React from 'react';
-import {shallow} from 'enzyme';
-import Icon from '../Icon';
+import {mount, shallow} from 'enzyme';
+import Icon, {IconBase} from '../Icon';
 
-describe('Icon Specs', () => {
+describe('Icon', () => {
 	test('should allow icon-name words to pass through', () => {
 		const iconName = 'hollow_star';
 		const icon = shallow(
-			<Icon>
+			<IconBase>
 				{iconName}
-			</Icon>
+			</IconBase>
 		);
 
 		const expected = iconName;
@@ -19,9 +18,9 @@ describe('Icon Specs', () => {
 	test('should allow single-byte characters to pass through', () => {
 		const iconName = '+';
 		const icon = shallow(
-			<Icon>
+			<IconBase>
 				{iconName}
-			</Icon>
+			</IconBase>
 		);
 
 		const expected = iconName;
@@ -32,9 +31,9 @@ describe('Icon Specs', () => {
 	test('should allow multi-byte characters to pass through', () => {
 		const iconName = '󰂪';
 		const icon = shallow(
-			<Icon>
+			<IconBase>
 				{iconName}
-			</Icon>
+			</IconBase>
 		);
 
 		const expected = iconName;
@@ -50,9 +49,9 @@ describe('Icon Specs', () => {
 			factory: 'F'
 		};
 		const icon = shallow(
-			<Icon iconList={iconList}>
+			<IconBase iconList={iconList}>
 				{iconName}
-			</Icon>
+			</IconBase>
 		);
 
 		const expected = iconGlyph;
@@ -67,9 +66,9 @@ describe('Icon Specs', () => {
 			factory: 'F'
 		};
 		const icon = shallow(
-			<Icon iconList={iconList}>
+			<IconBase iconList={iconList}>
 				{iconName}
-			</Icon>
+			</IconBase>
 		);
 
 		const expected = iconName;
@@ -80,9 +79,9 @@ describe('Icon Specs', () => {
 	test('should allow URIs to be used as an icon', () => {
 		const src = 'images/icon.png';
 		const icon = shallow(
-			<Icon>
+			<IconBase>
 				{src}
-			</Icon>
+			</IconBase>
 		);
 
 		const expected = {
@@ -95,9 +94,9 @@ describe('Icon Specs', () => {
 	test('should allow URLs to be used as an icon', () => {
 		const src = 'http://enactjs.com/images/logo';
 		const icon = shallow(
-			<Icon>
+			<IconBase>
 				{src}
-			</Icon>
+			</IconBase>
 		);
 
 		const expected = {
@@ -110,9 +109,9 @@ describe('Icon Specs', () => {
 	test('should merge author styles with image URLs', () => {
 		const src = 'images/icon.png';
 		const icon = shallow(
-			<Icon style={{color: 'green'}}>
+			<IconBase style={{color: 'green'}}>
 				{src}
-			</Icon>
+			</IconBase>
 		);
 
 		const expected = {
@@ -121,6 +120,16 @@ describe('Icon Specs', () => {
 		};
 		const actual = icon.prop('style');
 		expect(actual).toEqual(expected);
+	});
+
+	test('should return a DOM node reference for `componentRef`', () => {
+		const ref = jest.fn();
+		mount(<Icon ref={ref} />);
+
+		const expected = 'DIV';
+		const actual = ref.mock.calls[0][0].nodeName;
+
+		expect(actual).toBe(expected);
 	});
 });
 

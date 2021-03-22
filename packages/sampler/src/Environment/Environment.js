@@ -2,7 +2,6 @@
 
 import classnames from 'classnames';
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
 import BodyText from '@enact/ui/BodyText';
 import {Column, Cell} from '@enact/ui/Layout';
@@ -127,10 +126,7 @@ const StorybookDecorator = (story, config) => {
 		groupId: 'Development'
 	};
 
-	if (sample && sample.props && sample.props.info) {
-		config.description = sample.props.info;
-	}
-
+	const hasText = config.parameters && config.parameters.info && config.parameters.info.text;
 	const args = getArgs();
 	const classes = {
 		aria: boolean('debug aria', DevelopmentConfig, getKnobFromArgs(args, 'debug aria')),
@@ -144,8 +140,8 @@ const StorybookDecorator = (story, config) => {
 	return (
 		<PanelsBase
 			className={classnames(classes)}
-			title={`${config.kind} ${config.story}`.trim()}
-			description={config.description}
+			title={`${config.kind}`.replace(/\//g, ' ').trim()}
+			description={hasText ? config.parameters.info.text : null}
 			locale={select('locale', locales, Config)}
 			style={{
 				'--env-background': backgroundLabelMap[select('background', backgroundLabels, Config, getKnobFromArgs(args, 'background'))]

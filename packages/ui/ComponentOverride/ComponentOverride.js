@@ -10,7 +10,8 @@
  * @exports ComponentOverride
  */
 
-import React from 'react';
+import {isValidElement, cloneElement} from 'react';
+import {isValidElementType} from 'react-is';
 
 /**
  * Utility to either create or clone a component instance with the given set of props.
@@ -56,11 +57,12 @@ import React from 'react';
  * @public
  */
 const ComponentOverride = ({component: Component, ...props}) => {
+
 	return Component && (
-		(typeof Component === 'function' || typeof Component === 'string') && (
+		isValidElementType(Component) && (
 			<Component {...props} />
-		) || React.isValidElement(Component) && (
-			React.cloneElement(Component, props)
+		) || isValidElement(Component) && (
+			cloneElement(Component, props)
 		)
 	) || null;
 };

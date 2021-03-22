@@ -1,4 +1,3 @@
-import React from 'react';
 import {mount} from 'enzyme';
 
 import ToggleIcon from '../ToggleIcon';
@@ -74,4 +73,17 @@ describe('ToggleIcon Specs', () => {
 		expect(expected).toBe(actual);
 	});
 
+	test('should return a DOM node reference for `componentRef`', () => {
+		const ref = jest.fn();
+		mount(
+			<ToggleIcon ref={ref}>
+				star
+			</ToggleIcon>
+		);
+
+		const expected = 'DIV';
+		const actual = ref.mock.calls[0][0].nodeName;
+
+		expect(actual).toBe(expected);
+	});
 });

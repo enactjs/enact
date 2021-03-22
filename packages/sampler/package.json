@@ -1,6 +1,6 @@
 {
   "name": "enact-sampler",
-  "version": "3.5.0",
+  "version": "4.0.0-alpha.1",
   "description": "Component and QA samples for Enact",
   "private": true,
   "main": "index.js",
@@ -12,24 +12,24 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@enact/core": "^3.5.0",
-    "@enact/i18n": "^3.5.0",
-    "@enact/spotlight": "^3.5.0",
-    "@enact/ui": "^3.5.0",
-    "@enact/webos": "^3.5.0",
+    "@enact/core": "^4.0.0-alpha.1",
+    "@enact/i18n": "^4.0.0-alpha.1",
+    "@enact/spotlight": "^4.0.0-alpha.1",
+    "@enact/ui": "^4.0.0-alpha.1",
+    "@enact/webos": "^4.0.0-alpha.1",
     "classnames": "^2.2.6",
     "ilib": "^14.4.0",
     "prop-types": "^15.7.2",
     "query-string": "^6.7.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "devDependencies": {
-    "@enact/storybook-utils": "^2.0.0",
-    "@storybook/addons": "5.3.5",
-    "@storybook/react": "5.3.5",
-    "@storybook/theming": "5.3.5",
-    "babel-loader": "^8.0.6",
-    "core-js": "^3.6.4"
+    "@enact/storybook-utils": "^4.0.0",
+    "@storybook/addons": "^6.1.15",
+    "@storybook/react": "^6.1.15",
+    "@storybook/theming": "^6.1.15",
+    "babel-loader": "^8.2.2",
+    "core-js": "^3.8.1"
   }
 }
