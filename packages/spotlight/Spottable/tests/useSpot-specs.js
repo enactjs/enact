@@ -1,11 +1,11 @@
 import handle, {forward} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
-import Spotlight from '../../src/spotlight.js';
 import classNames from 'classnames';
 import {mount} from 'enzyme';
-import React from 'react';
+import {Component} from 'react';
 import ReactDOM from 'react-dom';
 
+import Spotlight from '../../src/spotlight.js';
 import useSpot from '../useSpot';
 
 const
@@ -82,7 +82,7 @@ describe('useSpot', () => {
 		);
 	}
 
-	class Component extends React.Component {
+	class SpottableComponent extends Component {
 		componentDidMount () {
 			// eslint-disable-next-line react/no-find-dom-node
 			this.node = ReactDOM.findDOMNode(this);
@@ -110,7 +110,7 @@ describe('useSpot', () => {
 
 	test('should add the spottable class', () => {
 		const subject = mount(
-			<Component />
+			<SpottableComponent />
 		);
 
 		const expected = 'spottable';
@@ -121,7 +121,7 @@ describe('useSpot', () => {
 
 	test('should add the spottable class to a {disabled} component', () => {
 		const subject = mount(
-			<Component disabled />
+			<SpottableComponent disabled />
 		);
 
 		const expected = 'spottable';
@@ -132,7 +132,7 @@ describe('useSpot', () => {
 
 	test('should not add the spottable class to a {spotlightDisabled} component', () => {
 		const subject = mount(
-			<Component spotlightDisabled />
+			<SpottableComponent spotlightDisabled />
 		);
 
 		const expected = 'spottable';
@@ -146,7 +146,7 @@ describe('useSpot', () => {
 			const spy = jest.fn();
 
 			const subject = mount(
-				<Component onSpotlightUp={spy} />
+				<SpottableComponent onSpotlightUp={spy} />
 			);
 
 			subject.simulate('keydown', makeKeyEvent(38));
@@ -162,7 +162,7 @@ describe('useSpot', () => {
 			const spy = jest.fn();
 
 			const subject = mount(
-				<Component onSpotlightDown={spy} />
+				<SpottableComponent onSpotlightDown={spy} />
 			);
 
 			subject.simulate('keydown', makeKeyEvent(40));
@@ -178,7 +178,7 @@ describe('useSpot', () => {
 			const spy = jest.fn();
 
 			const subject = mount(
-				<Component onSpotlightLeft={spy} />
+				<SpottableComponent onSpotlightLeft={spy} />
 			);
 
 			subject.simulate('keydown', makeKeyEvent(37));
@@ -194,7 +194,7 @@ describe('useSpot', () => {
 			const spy = jest.fn();
 
 			const subject = mount(
-				<Component onSpotlightRight={spy} />
+				<SpottableComponent onSpotlightRight={spy} />
 			);
 
 			subject.simulate('keydown', makeKeyEvent(39));
@@ -209,7 +209,7 @@ describe('useSpot', () => {
 			const spy = jest.fn();
 
 			const subject = mount(
-				<Component emulateMouse onMouseDown={spy} selectionKeys={[13]} />
+				<SpottableComponent emulateMouse onMouseDown={spy} selectionKeys={[13]} />
 			);
 
 			subject.simulate('keydown', makeKeyEvent(REMOTE_OK_KEY));
@@ -224,7 +224,7 @@ describe('useSpot', () => {
 			const spy = jest.fn();
 
 			const subject = mount(
-				<Component emulateMouse onMouseUp={spy} selectionKeys={[13]} />
+				<SpottableComponent emulateMouse onMouseUp={spy} selectionKeys={[13]} />
 			);
 
 			subject.simulate('keydown', makeKeyEvent(REMOTE_OK_KEY));
@@ -243,7 +243,7 @@ describe('useSpot', () => {
 			}
 
 			const subject = mount(
-				<Component emulateMouse onKeyUp={onKeyUp} onMouseUp={spy} selectionKeys={[13]} />
+				<SpottableComponent emulateMouse onKeyUp={onKeyUp} onMouseUp={spy} selectionKeys={[13]} />
 			);
 
 			subject.simulate('keydown', makeKeyEvent(REMOTE_OK_KEY));
@@ -262,7 +262,7 @@ describe('useSpot', () => {
 			const spy = jest.fn((props) => <div {...props} />);
 
 			const subject = mount(
-				<Component component={spy} />
+				<SpottableComponent component={spy} />
 			);
 
 			subject.setProps({
@@ -279,7 +279,7 @@ describe('useSpot', () => {
 			const spy = jest.fn((props) => <div {...props} />);
 
 			const subject = mount(
-				<Component component={spy} selectionKeys={[1, 2, 3]} />
+				<SpottableComponent component={spy} selectionKeys={[1, 2, 3]} />
 			);
 
 			subject.setProps({
@@ -296,7 +296,7 @@ describe('useSpot', () => {
 			const spy = jest.fn((props) => <div {...props} />);
 
 			const subject = mount(
-				<Component component={spy} />
+				<SpottableComponent component={spy} />
 			);
 
 			subject.simulate('focus');
