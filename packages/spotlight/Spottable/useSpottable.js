@@ -54,7 +54,7 @@ const REMOTE_OK_KEY = 16777221;
  * @private
  */
 
-const useSpottable = ({componentRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
+const useSpottable = ({spotRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
 	const useForceUpdate = () => (useReducer(x => x + 1, 0));
 	const hook = useClass(SpottableCore, {emulateMouse, useForceUpdate});
 	const context = useRef({
@@ -76,12 +76,12 @@ const useSpottable = ({componentRef, emulateMouse, selectionKeys = [ENTER_KEY, R
 
 	useLayoutEffect(() => {
 		// eslint-disable-next-line react/no-find-dom-node
-		hook.load(ReactDOM.findDOMNode(componentRef || null));
+		hook.load(ReactDOM.findDOMNode(spotRef || null));
 
 		return () => {
 			hook.unload();
 		};
-	}, [componentRef]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [spotRef]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useLayoutEffect(hook.didUpdate); // eslint-disable-line react-hooks/exhaustive-deps
 

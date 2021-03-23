@@ -106,7 +106,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	function SpottableBase (props) {
 		const {
 			className,
-			componentRef,
 			disabled,
 			onSpotlightDisappear,
 			onSpotlightDown,
@@ -116,10 +115,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			selectionKeys,
 			spotlightDisabled,
 			spotlightId,
+			spotRef,
 			...rest
 		} = props;
 		const spot = useSpottable({
-			componentRef,
 			disabled,
 			emulateMouse,
 			onSelectionCancel: rest.onMouseUp,
@@ -130,7 +129,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			onSpotlightUp,
 			selectionKeys,
 			spotlightDisabled,
-			spotlightId
+			spotlightId,
+			spotRef
 		});
 
 		let tabIndex = rest.tabIndex;
@@ -155,14 +155,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	}
 
 	SpottableBase.propTypes = /** @lends spotlight/Spottable.Spottable.prototype */ {
-		/*
-		 * Called with a reference to [component]{@link spotlight/Spottable.Spottable#component}
-		 *
-		 * @type {Object|Function}
-		 * @private
-		 */
-		componentRef: EnactPropTypes.ref,
-
 		/**
 		 * Whether or not the component is in a disabled state.
 		 *
@@ -245,6 +237,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		spotlightId: PropTypes.string,
 
+		/*
+		 * Called with a reference to [component]{@link spotlight/Spottable.Spottable#component}
+		 *
+		 * @type {Object|Function}
+		 * @private
+		 */
+		spotRef: EnactPropTypes.ref,
+
 		/**
 		 * The tabIndex of the component. This value will default to -1 if left
 		 * unset and the control is spottable.
@@ -263,12 +263,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.forceUpdate();
 		}
 
-		get componentRef () {
+		get spotRef () {
 			return this.node;
 		}
 
 		render () {
-			return <SpottableBase {...this.props} componentRef={this.componentRef} />;
+			return <SpottableBase {...this.props} spotRef={this.spotRef} />;
 		}
 	}
 
