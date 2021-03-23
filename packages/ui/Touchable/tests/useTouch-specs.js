@@ -3,23 +3,22 @@
 
 import {shallow, mount} from 'enzyme';
 
-import Touchable from '../Touchable';
+import useTouch from '../useTouch';
 import {configure, getConfig, resetDefaultConfig} from '../config';
 
-describe('Touchable', () => {
+describe('useTouch', () => {
 
-	const DivComponent = ({children = 'Toggle', id, onClick, onMouseDown, onMouseLeave, onMouseUp, onTouchStart, onTouchEnd}) => {
+	const DivComponent = () => (<div />);
+	const TouchableComponent = ({id, activeProp, ...rest}) => {
+		const hook = useTouch({getActive: !!activeProp, ...rest});
 		return (
 			<div
 				id={id}
-				onClick={onClick}
-				onMouseDown={onMouseDown}
-				onMouseUp={onMouseUp}
-				onMouseLeave={onMouseLeave}
-				onTouchStart={onTouchStart}
-				onTouchEnd={onTouchEnd}
+				{...hook.handlers}
 			>
-				{children}
+				<DivComponent
+					{...{[activeProp]: hook.active}}
+				/>
 			</div>
 		);
 	};
@@ -31,11 +30,10 @@ describe('Touchable', () => {
 		afterEach(resetDefaultConfig);
 
 		test(
-			'should pass active state to the wrapped component when activeProp is configured',
+			'should return active state when activeProp is configured',
 			() => {
-				const Component = Touchable({activeProp: 'active'}, DivComponent);
 				const subject = shallow(
-					<Component />
+					<TouchableComponent activeProp="active" />
 				);
 				const wrapped = subject.find(DivComponent);
 
@@ -43,94 +41,6 @@ describe('Touchable', () => {
 				const actual = 'active' in wrapped.props();
 
 				expect(actual).toBe(expected);
-			}
-		);
-
-		test(
-			'should update state configurations onHold events',
-			(done) => {
-				const holdConfig = {
-					events: [
-						{name: 'hold', time: 10}
-					],
-					frequency: 10
-				};
-
-				const Component = Touchable(DivComponent);
-				const handler = jest.fn();
-				const subject = mount(
-					<Component onHoldStart={() => {}} holdConfig={holdConfig} />
-				);
-
-				const ev = {};
-				subject.simulate('mousedown', ev);
-				subject.setProps({
-					onHold: handler
-				});
-
-				setTimeout(() => {
-					expect(handler).toHaveBeenCalled();
-					done();
-				}, 20);
-			}
-		);
-
-		test(
-			'should update state configurations onHoldStart events',
-			(done) => {
-				const holdConfig = {
-					events: [
-						{name: 'hold', time: 10}
-					],
-					frequency: 10
-				};
-
-				const Component = Touchable(DivComponent);
-				const handler = jest.fn();
-				const subject = mount(
-					<Component onHold={() => {}} holdConfig={holdConfig} />
-				);
-
-				const ev = {};
-				subject.simulate('mousedown', ev);
-				subject.setProps({
-					onHoldStart: handler
-				});
-
-				setTimeout(() => {
-					expect(handler).toHaveBeenCalled();
-					done();
-				}, 20);
-			}
-		);
-
-		test(
-			'should update state configurations onHoldEnd events',
-			(done) => {
-				const holdConfig = {
-					events: [
-						{name: 'hold', time: 10}
-					],
-					frequency: 10
-				};
-
-				const Component = Touchable(DivComponent);
-				const handler = jest.fn();
-				const subject = mount(
-					<Component onHold={() => {}} holdConfig={holdConfig} />
-				);
-
-				const ev = {currentTarget: {}};
-				subject.simulate('mousedown', ev);
-				subject.setProps({
-					onHoldEnd: handler
-				});
-
-				setTimeout(() => {
-					subject.simulate('mouseup', ev);
-					expect(handler).toHaveBeenCalled();
-					done();
-				}, 30);
 			}
 		);
 
@@ -202,12 +112,13 @@ describe('Touchable', () => {
 
 	describe('#onDown', () => {
 		test('should invoke onDown handle on mouse down', () => {
-			const Component = Touchable(DivComponent);
 			const handler = jest.fn();
 			const subject = mount(
-				<Component onDown={handler} />
+				<TouchableComponent
+					activeProp="active"
+					onDown={handler}
+				/>
 			);
-
 			subject.simulate('mousedown', {});
 
 			const expected = 1;
@@ -219,15 +130,15 @@ describe('Touchable', () => {
 
 	describe('#onUp', () => {
 		test('should invoke onUp handle on mouse up', () => {
-			const Component = Touchable({activeProp: 'active'}, DivComponent);
 			const handler = jest.fn();
 			const subject = mount(
-				<Component onUp={handler} />
+				<TouchableComponent
+					activeProp="active"
+					onUp={handler}
+				/>
 			);
-
-			const ev = {};
-			subject.simulate('mousedown', ev);
-			subject.simulate('mouseup', ev);
+			subject.simulate('mousedown', {});
+			subject.simulate('mouseup', {});
 
 			const expected = 1;
 			const actual = handler.mock.calls.length;
@@ -238,15 +149,15 @@ describe('Touchable', () => {
 
 	describe('#onTap', () => {
 		test('should be called on mouse up', () => {
-			const Component = Touchable({activeProp: 'active'}, DivComponent);
 			const handler = jest.fn();
 			const subject = mount(
-				<Component onTap={handler} />
+				<TouchableComponent
+					activeProp="active"
+					onTap={handler}
+				/>
 			);
-
-			const ev = {};
-			subject.simulate('mousedown', ev);
-			subject.simulate('mouseup', ev);
+			subject.simulate('mousedown', {});
+			subject.simulate('mouseup', {});
 
 			const expected = 1;
 			const actual = handler.mock.calls.length;
@@ -255,12 +166,13 @@ describe('Touchable', () => {
 		});
 
 		test('should be called on click', () => {
-			const Component = Touchable({activeProp: 'active'}, DivComponent);
 			const handler = jest.fn();
 			const subject = mount(
-				<Component onTap={handler} />
+				<TouchableComponent
+					activeProp="active"
+					onTap={handler}
+				/>
 			);
-
 			subject.simulate('click');
 
 			const expected = 1;
@@ -270,12 +182,14 @@ describe('Touchable', () => {
 		});
 
 		test('should be called before onClick on click', () => {
-			const Component = Touchable({activeProp: 'active'}, DivComponent);
 			const handler = jest.fn();
 			const subject = mount(
-				<Component onTap={handler} onClick={handler} />
+				<TouchableComponent
+					activeProp="active"
+					onClick={handler}
+					onTap={handler}
+				/>
 			);
-
 			subject.simulate('click');
 
 			const expected = ['onTap', 'click'];
@@ -285,12 +199,14 @@ describe('Touchable', () => {
 		});
 
 		test('should be called before onCLick on mouse up', () => {
-			const Component = Touchable({activeProp: 'active'}, DivComponent);
 			const handler = jest.fn();
 			const subject = mount(
-				<Component onTap={handler} onClick={handler} />
+				<TouchableComponent
+					activeProp="active"
+					onClick={handler}
+					onTap={handler}
+				/>
 			);
-
 			const ev = {
 				// a matching timeStamp is used by Touchable to prevent multiple onTaps on "true"
 				// click (mouseup + click)
@@ -307,15 +223,16 @@ describe('Touchable', () => {
 		});
 
 		test('should be preventable via onUp handler', () => {
-			const Component = Touchable({activeProp: 'active'}, DivComponent);
 			const handler = jest.fn();
 			const subject = mount(
-				<Component onTap={handler} onUp={preventDefault} />
+				<TouchableComponent
+					activeProp="active"
+					onTap={handler}
+					onUp={preventDefault}
+				/>
 			);
-
-			const ev = {};
-			subject.simulate('mousedown', ev);
-			subject.simulate('mouseup', ev);
+			subject.simulate('mousedown', {});
+			subject.simulate('mouseup', {});
 
 			const expected = 0;
 			const actual = handler.mock.calls.length;
@@ -329,15 +246,15 @@ describe('Touchable', () => {
 			test(
 				'should update active state on mouse down when activeProp is configured',
 				() => {
-					const Component = Touchable({activeProp: 'active'}, DivComponent);
 					const handler = jest.fn();
 					const subject = mount(
-						<Component onDown={handler} />
+						<TouchableComponent
+							activeProp="active"
+							onDown={handler}
+						/>
 					);
-
-					const ev = {};
 					const beforeDown = subject.find(DivComponent).prop('active');
-					subject.simulate('mousedown', ev);
+					subject.simulate('mousedown', {});
 					const afterDown = subject.find(DivComponent).prop('active');
 
 					const expected = false;
@@ -350,12 +267,14 @@ describe('Touchable', () => {
 			test(
 				'should not update active state on mouse down when disabled',
 				() => {
-					const Component = Touchable({activeProp: 'active'}, DivComponent);
 					const handler = jest.fn();
 					const subject = mount(
-						<Component onDown={handler} disabled />
+						<TouchableComponent
+							activeProp="active"
+							disabled
+							onDown={handler}
+						/>
 					);
-
 					subject.simulate('mousedown', {});
 
 					const expected = false;
@@ -368,12 +287,12 @@ describe('Touchable', () => {
 			test(
 				'should not update active state on mouse down when preventDefault is called',
 				() => {
-					const Component = Touchable({activeProp: 'active'}, DivComponent);
-					const handler = (ev) => ev.preventDefault();
 					const subject = mount(
-						<Component onDown={handler} />
+						<TouchableComponent
+							activeProp="active"
+							onDown={preventDefault}
+						/>
 					);
-
 					subject.simulate('mousedown', {});
 
 					const expected = false;
@@ -388,17 +307,16 @@ describe('Touchable', () => {
 			test(
 				'should update active state on mouse up when activeProp is configured',
 				() => {
-					const Component = Touchable({activeProp: 'active'}, DivComponent);
 					const handler = jest.fn();
 					const subject = mount(
-						<Component onDown={handler} />
+						<TouchableComponent
+							activeProp="active"
+							onDown={handler}
+						/>
 					);
-
-					const ev = {};
-					subject.simulate('mousedown', ev);
-
+					subject.simulate('mousedown', {});
 					const beforeUp = subject.find(DivComponent).prop('active');
-					subject.simulate('mouseup', ev);
+					subject.simulate('mouseup', {});
 					const afterUp = subject.find(DivComponent).prop('active');
 
 					const expected = false;
@@ -411,17 +329,17 @@ describe('Touchable', () => {
 			test(
 				'should not update active state on mouse down when disabled',
 				() => {
-					const Component = Touchable({activeProp: 'active'}, DivComponent);
 					const handler = jest.fn();
 					const subject = mount(
-						<Component onDown={handler} disabled />
+						<TouchableComponent
+							activeProp="active"
+							disabled
+							onDown={handler}
+						/>
 					);
-
-					const ev = {};
-					subject.simulate('mousedown', ev);
-
+					subject.simulate('mousedown', {});
 					const beforeUp = subject.find(DivComponent).prop('active');
-					subject.simulate('mouseup', ev);
+					subject.simulate('mouseup', {});
 					const afterUp = subject.find(DivComponent).prop('active');
 
 					const expected = true;
@@ -434,16 +352,15 @@ describe('Touchable', () => {
 			test(
 				'should not update active state on mouse down when preventDefault is called',
 				() => {
-					const Component = Touchable({activeProp: 'active'}, DivComponent);
 					const subject = mount(
-						<Component onDown={preventDefault} />
+						<TouchableComponent
+							activeProp="active"
+							onDown={preventDefault}
+						/>
 					);
-
-					const ev = {};
-					subject.simulate('mousedown', ev);
-
+					subject.simulate('mousedown', {});
 					const beforeUp = subject.find(DivComponent).prop('active');
-					subject.simulate('mouseup', ev);
+					subject.simulate('mouseup', {});
 					const afterUp = subject.find(DivComponent).prop('active');
 
 					const expected = true;
@@ -457,14 +374,27 @@ describe('Touchable', () => {
 
 	describe('touch', () => {
 		test('should only emit onTap once when tapping an child instance of Touchable', () => {
-			const Component = Touchable(DivComponent);
 			const handler = jest.fn();
+			const Component = () => {
+				const outerHook = useTouch({onTap: handler});
+				const innerHook = useTouch();
+				return (
+					<div
+						id="outer"
+						{...outerHook.handlers}
+					>
+						<div
+							id="inner"
+							{...innerHook.handlers}
+						>
+							<DivComponent />
+						</div>
+					</div>
+				);
+			};
 			const subject = mount(
-				<Component onTap={handler} id="outer">
-					<Component id="inner" />
-				</Component>
+				<Component />
 			);
-
 			const mouseEvent = {
 				timeStamp: 1
 			};
