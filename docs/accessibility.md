@@ -41,7 +41,6 @@ We've included a few custom components that may be useful to build accessible ap
 import Region from '@enact/moonstone/Region';
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
 import Group from '@enact/ui/Group';
-import React from 'react';
 
 const App = () => {
     return (

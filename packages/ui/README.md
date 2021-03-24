@@ -9,7 +9,6 @@ This library contains a set of unstyled components as well as a number of Higher
 One of the components supplied is `Repeater`. A repeater stamps out copies of a component (the `childComponent` prop) using the elements of an array provided as its `children`:
 ```
 import kind from '@enact/core/kind';
-import React from 'react';
 import Repeater from '@enact/ui/Repeater';
 
 const MyApp = kind({
