@@ -21,7 +21,7 @@ and you will now see below lint warning after packing or linting if you didn't c
 warning  'React' is defined but never used  no-unused-vars
 ```
 
-Well, you may see lots of them! But don't be afraid. Fortunately, React provides a module that automatically converts the code on behalf of you. It's "react-codemod". Please see more details on [here](https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html#removing-unused-react-imports.).
+Well, you may see lots of them! But don't be afraid. Fortunately, React provides a module that automatically converts the code on behalf of you. It's `react-codemod`. Please see more details on [here](https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html#removing-unused-react-imports).
 
 ### cli
 `cli` must be upgraded to version `4.0.0` or newer.
@@ -45,8 +45,8 @@ The `ui/A11yDecorator` has been removed.
 ### `Button`, `Icon`, `IconButton`, and `LabeledIcon`
 The default `size` value has been removed.
 
-### `BodyText`, `Button`, `Goup`, `Heading`, `Icon`, `IconButton`, `Image`, `ImageItem`, `LabeledIcon`, `Layout`, `ProgressBar`, `Repeater`, `Slider`, `SlotItem`, `Spinner`, `ToggleIcon`, `ToggleItem`, and `ViewManager`
-The forwarding `ref`s to the repective root component support is added.
+### `BodyText`, `Button`, `Group`, `Heading`, `Icon`, `IconButton`, `Image`, `ImageItem`, `LabeledIcon`, `Layout`, `ProgressBar`, `Repeater`, `Slider`, `SlotItem`, `Spinner`, `ToggleIcon`, `ToggleItem`, and `ViewManager`
+The forwarding `ref`s to the respective root component support is added.
 
 ### `Touchable`
 The `onHold` and `onHoldPulse` changed to `onHoldStart` and `onHold` respectively.
