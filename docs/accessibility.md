@@ -10,7 +10,6 @@ We address native semantic meaning and accessibility by assigning [ARIA roles](h
 
 ```js
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
-import React from 'react';
 
 const App = (props) => {
     return (
@@ -61,9 +60,9 @@ const App = () => {
 
 ```js
 import AnnounceDecorator from '@enact/ui/AnnounceDecorator';
-import React from 'react';
+import {Component} from 'react';
 
-const ExampleComponentBase = class extends React.Component {
+const ExampleComponentBase = class extends Component {
     static propTypes = {
         // passed by AnnounceDecorator
         announce: PropTypes.func

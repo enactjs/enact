@@ -74,7 +74,7 @@ You can even use `Moonstone` themed components after installing `@enact/moonston
 import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
 import { MoonstoneDecorator } from '@enact/moonstone/MoonstoneDecorator';
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 class App extends Component {
 	render() {
@@ -115,7 +115,7 @@ is a good reference for enabling CSS modules prior to `2.0.0`.
 // App.js
 import Button from '@enact/moonstone/Button';
 import { MoonstoneDecorator } from '@enact/moonstone/MoonstoneDecorator';
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 import buttonCss from './Button.module.css';
 
