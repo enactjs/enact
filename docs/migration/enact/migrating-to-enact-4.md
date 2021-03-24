@@ -21,7 +21,7 @@ and you will now see below lint warning after packing or linting if you didn't c
 warning  'React' is defined but never used  no-unused-vars
 ```
 
-Well, you may see lots of them! But don't be afraid. Fortunately, React provides a module that automatically converts the code on behalf of you. It's `react-codemod`. Please see more details on [here](https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html#removing-unused-react-imports).
+Well, you may see lots of them! But don't be afraid. Fortunately, React provides a module that automatically converts the code on behalf of you. It's `react-codemod`. Please see more details [here](https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html#removing-unused-react-imports).
 
 ### cli
 `cli` must be upgraded to version `4.0.0` or newer.
@@ -50,6 +50,12 @@ The forwarding `ref`s to the respective root component support is added.
 
 ### `Touchable`
 The `onHold` and `onHoldPulse` changed to `onHoldStart` and `onHold` respectively.
+
+| 3.x | 4.0 |
+|---|---|
+| onHold | onHoldStart |
+| onHoldPulse | onHold |
+| onHoldEnd | onHoldEnd |
 
 #### Example
 ##### 3.x
