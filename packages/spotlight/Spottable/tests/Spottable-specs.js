@@ -73,7 +73,7 @@ describe('Spottable', () => {
 				'data-id': '123'
 			});
 
-			const expected = 2;
+			const expected = 3;
 			const actual = spy.mock.calls.length;
 
 			expect(actual).toEqual(expected);
@@ -91,7 +91,7 @@ describe('Spottable', () => {
 				selectionKeys: [2, 1, 3]
 			});
 
-			const expected = 2;
+			const expected = 3;
 			const actual = spy.mock.calls.length;
 
 			expect(actual).toEqual(expected);
@@ -107,7 +107,7 @@ describe('Spottable', () => {
 
 			subject.simulate('focus');
 
-			const expected = 1;
+			const expected = 2;
 			const actual = spy.mock.calls.length;
 
 			expect(actual).toEqual(expected);
