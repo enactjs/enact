@@ -7,6 +7,7 @@ cache:
     - $(npm config get cache)
 install:
     - npm config set prefer-offline true
+    - npm config set package-lock false
     - npm install -g enactjs/cli#develop
     - npm install -g codecov
     - npm install
