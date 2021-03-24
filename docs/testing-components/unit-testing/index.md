@@ -302,7 +302,7 @@ Unfortunately, we can't always write pure functions. Sometimes we may have to us
 to make an AJAX call, etc. These are good reasons to not use pure functions. These functions are tougher to test but, not
 impossible. For example, if you are using Redux for complex application/component state management, you may be using side
 effects to get some of your data.  The Async Action Creators section in
-[http://redux.js.org/docs/recipes/WritingTests.html](https://redux.js.org/recipes/writing-tests) shows how you can
+[https://redux.js.org/recipes/writing-tests](https://redux.js.org/recipes/writing-tests) shows how you can
 write tests in those cases.
 
 ## What to do next
