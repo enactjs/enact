@@ -12,14 +12,14 @@ import hoc from '@enact/core/hoc';
  *
  * Usage:
  * ```
- * import React from 'react';
+ * import {Component} from 'react';
  * import Item from '@enact/moonstone/Item';
  * import {VoiceControlDecorator} from '@enact/webos/speech';
  *
  * const VoiceDiv = VoiceControlDecorator('div');
  * const VoiceItem = VoiceControlDecorator(Item);
  *
- * class Sample extends React.Component {
+ * class Sample extends Component {
  *   handlePlayListControl = (e) => {
  *     const {intent, control} = e.detail;
  *     // Change the app status refer to the `control` value.

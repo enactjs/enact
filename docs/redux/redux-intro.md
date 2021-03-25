@@ -17,15 +17,15 @@ We recommend using the most recent version of Redux. To see which version of Red
 
 ##### Single source of truth
 
-The entire **[state](http://redux.js.org/docs/Glossary.html#state)** of the application will be represented by one JavaScript object, a **[store](http://redux.js.org/docs/Glossary.html#store)**.
+The entire **[state](https://redux.js.org/understanding/thinking-in-redux/glossary#state)** of the application will be represented by one JavaScript object, a **[store](https://redux.js.org/understanding/thinking-in-redux/glossary#store)**.
 
 ##### State is read-only
 
-If you want to change the state, you have to **dispatch** an **[action](http://redux.js.org/docs/Glossary.html#action)**, an object describing the change.
+If you want to change the state, you have to **dispatch** an **[action](https://redux.js.org/understanding/thinking-in-redux/glossary#action)**, an object describing the change.
 
 ##### Changes are made with pure functions
 
-To describe state mutations you have to write a function that takes the previous state of the app and the action being dispatched, then returns the next state of the app. This function is called the [Reducer](http://redux.js.org/docs/Glossary.html#reducer).
+To describe state mutations you have to write a function that takes the previous state of the app and the action being dispatched, then returns the next state of the app. This function is called the [Reducer](https://redux.js.org/understanding/thinking-in-redux/glossary#reducer).
 
 #### What You Need
 
@@ -101,7 +101,7 @@ const todo = (state, action) => {
 
 ##### Store
 
-The store is where the state tree is stored. It is configured with a reducer. It can also be given an optional initial state tree and optional enhancer functions. We use the enhancer functions to be able to handle async actions through `applyMiddleware` (provided by Redux). The store is created via the [`createStore()`](http://redux.js.org/docs/api/createStore.html) method of the Redux module. The store allows access to the state via [`getState()`](http://redux.js.org/docs/api/Store.html#getState) method. It only allows updates to the state by using the [`dispatch()`](http://redux.js.org/docs/api/Store.html#dispatch) method (i.e. `dispatch(action)`). It can register listeners via [`subscribe(listener)`](http://redux.js.org/docs/api/Store.html#subscribe) and handles unregistering of listeners with the function returned by `subscribe()`.
+The store is where the state tree is stored. It is configured with a reducer. It can also be given an optional initial state tree and optional enhancer functions. We use the enhancer functions to be able to handle async actions through `applyMiddleware` (provided by Redux). The store is created via the [`createStore()`](https://redux.js.org/api/createstore) method of the Redux module. The store allows access to the state via [`getState()`](https://redux.js.org/api/store#getstate) method. It only allows updates to the state by using the [`dispatch()`](https://redux.js.org/api/store#dispatchaction) method (i.e. `dispatch(action)`). It can register listeners via [`subscribe(listener)`](https://redux.js.org/api/store#subscribelistener) and handles unregistering of listeners with the function returned by `subscribe()`.
 
 ### Redux Data Flow
 
@@ -152,7 +152,7 @@ Live demo: [http://jsbin.com/keyahus/edit?html,js,output](http://jsbin.com/keyah
 ```js
 import {createStore} from 'redux';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 import ReactDOM from 'react-dom';
 // reducer
 function counter (state = 0, action) {
@@ -199,7 +199,7 @@ Live Demo: [http://jsbin.com/nemofa/edit?html,js,output](http://jsbin.com/nemofa
 
 ### Redux and React
 
-As mentioned above Redux can be used without React. React bindings for redux is available from [react-redux](https://github.com/reactjs/react-redux), which is a generic library that connects React components to a Redux store. More on how to use it is available [here](http://redux.js.org/docs/basics/UsageWithReact.html).
+As mentioned above Redux can be used without React. React bindings for redux is available from [react-redux](https://github.com/reduxjs/react-redux), which is a generic library that connects React components to a Redux store. More on how to use it is available [here](https://redux.js.org/tutorials/fundamentals/part-5-ui-react).
 
 #### Presentational and Container Components
 
@@ -209,11 +209,11 @@ Redux embraces the separation of presentational and container components idea an
 
 #### What `react-redux` does
 
-`react-redux` allows you to specify how react components get data from the redux store and how they behave by specifying props and the actions to dispatch. We use `react-redux` module's [connect()](https://github.com/reactjs/react-redux/blob/master/docs/api.md#connectmapstatetoprops-mapdispatchtoprops-mergeprops-options) method to connect the relevant container component to its presentational one.
+`react-redux` allows you to specify how react components get data from the redux store and how they behave by specifying props and the actions to dispatch. We use `react-redux` module's [connect()](https://github.com/reduxjs/react-redux/blob/master/docs/api/connect.md) method to connect the relevant container component to its presentational one.
 
 An optional `mapStateToProps()` method will map a key of the state tree to the connected presentational component's props (i.e. when you do `connect(mapStateToProps)(PresentationalComponent)`). Container components can also dispatch actions by using the `mapDispatchToProps()` method. It allows you to pass callback props to the presentational component.
 
-Container components need access to the Redux store so they can subscribe to it. This can be cumbersome as your number of components grows and you have to manually pass store around. `react-redux` incorporates [context](https://facebook.github.io/react/docs/context.html) in React and provides a [`<Provider />`](https://github.com/reactjs/react-redux/blob/master/docs/api.md#provider-store) component to make store available to all container components without passings stores around by hand. You only need to use it once at the `render()` of root component.
+Container components need access to the Redux store so they can subscribe to it. This can be cumbersome as your number of components grows and you have to manually pass store around. `react-redux` incorporates [context](https://reactjs.org/docs/context.html) in React and provides a [`<Provider />`](https://github.com/reduxjs/react-redux/blob/master/docs/api/Provider.md) component to make store available to all container components without passings stores around by hand. You only need to use it once at the `render()` of root component.
 
 #### Example
 
@@ -221,7 +221,7 @@ Container components need access to the Redux store so they can subscribe to it.
 import {createStore} from 'redux';
 import {connect, Provider} from 'react-redux';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import {Component} from 'react';
 import {render} from 'react-dom';
 // reducer
 function counter (state = 0, action) {

@@ -1,11 +1,11 @@
-import React from 'react';
+import {forwardRef} from 'react';
 import {mount} from 'enzyme';
 
 import SlotItem from '../SlotItem';
 
 describe('SlotItem', () => {
 	test('should return a DOM node reference for `componentRef`', () => {
-		const component = React.forwardRef((props, fn) => <div ref={fn} />);
+		const component = forwardRef((props, fn) => <div ref={fn} />);
 		const ref = jest.fn();
 		mount(
 			<SlotItem ref={ref} component={component} />

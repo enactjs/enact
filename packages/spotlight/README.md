@@ -12,7 +12,6 @@ computer-with-mouse.
 
 ```
 import kind from '@enact/core/kind';
-import React from 'react';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator'
 import Spottable from '@enact/spotlight/Spottable'
 

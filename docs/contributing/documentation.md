@@ -20,19 +20,21 @@ There are three general levels of documentation that will appear within the sour
 
 ## Module Documentation
 
-Each module (and, consequently, directory) within Enact should have one (and only one) file that includes the `@module` tag. The name of the module should be prefixed with the name of the package that contains it (e.g. `moonstone/Button`). Each module has a limited number of exports so they should be documented within the module block using the `@exports` tag. The module description should not list the exports or repeat information that should appear at the component level.
+Each module (and, consequently, directory) within Enact should have one (and only one) file that includes the `@module` tag. The name of the module should be prefixed with the name of the package that contains it (e.g. `ui/Heading`). Each module has a limited number of exports so they should be documented within the module block using the `@exports` tag. The module description should not list the exports or repeat information that should appear at the component level.
 
 ```js
 /**
- * Provides Moonstone-themed button components and behaviors.
+ * A component for instantiating a section of content with a title.
  *
  * @example
- * <Button size="small">Hello Enact!</Button>
+ * <Heading spacing="none">
+ *   A Content Section Heading
+ * </Heading>
  *
- * @module moonstone/Button
- * @exports Button
- * @exports ButtonBase
- * @exports ButtonDecorator
+ * @module ui/Heading
+ * @exports Heading
+ * @exports HeadingBase
+ * @exports HeadingDecorator
  */
 ```
 
@@ -50,18 +52,20 @@ Below is an example block for a component:
 
 ```js
 /**
- * A Moonstone-styled button with built-in support for tooltips, marqueed text, and
- * Spotlight focus.
+ * An icon component with a label without any behaviors applied to it.
  *
  * Usage:
  * ```
- * <Button>Press me!</Button>
+ * <LabeledIcon icon="star" labelPosition="after">
+ *   Favorite
+ * </LabeledIcon>
  * ```
  *
- * @class Button
- * @memberof moonstone/Button
- * @extends moonstone/Button.ButtonBase
- * @mixes moonstone/Button.ButtonDecorator
+ * @class LabeledIcon
+ * @memberof ui/LabeledIcon
+ * @extends ui/LabeledIcon.LabeledIconBase
+ * @mixes ui/LabeledIcon.LabeledIconDecorator
+ * @omit componentRef
  * @ui
  * @public
  */
@@ -126,18 +130,19 @@ const defaultConfig = {
 Property-level documentation refers to documentation within a component or HOC. In particular, this refers to the public API provided via properties. Each component (even those within HOCs) that has a `propTypes` member should be documented as follows:
 
 ```js
-propTypes: /** @lends moonstone/ExpandableList.ExpandableListBase.prototype */ {
+propTypes: /** @lends ui/Group.Group.prototype */ {
 /**
-	* The items to be displayed in the list
+	* Component type to repeat. This can be a React component or a string describing a DOM
+	* node (e.g. `'div'`)
 	*
-	* @type {String[]}
+	* @type {String|Component}
 	* @required
 	* @public
 	*/
-children: PropTypes.arrayOf(PropTypes.string).isRequired,
+childComponent: EnactPropTypes.renderable.isRequired,
 ...
 /**
-	* Selection mode for the list
+	* Selection mode for the group
 	*
 	* * `'single'` - Allows for 0 or 1 item to be selected. The selected item may be deselected.
 	* * `'radio'` - Allows for 0 or 1 item to be selected. The selected item may only be
@@ -152,12 +157,12 @@ children: PropTypes.arrayOf(PropTypes.string).isRequired,
 select: PropTypes.oneOf(['single', 'radio', 'multiple']),
 
 /**
-	* Index or array of indices of the selected item(s)
+	* The index(es) of the currently activated item.
 	*
-	* @type {Number|Number[]}
+	* @type {Number|Array}
 	* @public
 	*/
-selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
+selected: PropTypes.oneOfType([PropTypes.number, PropTypes.array]])
 
 ```
 
@@ -211,7 +216,7 @@ Tips:
 
 Good:
 
-* A Moonstone-styled button with built-in support for ...
+* Unstyled button components and behaviors to be ...
 * The color of the underline beneath button's content.
 * Applies a disabled style and prevents interacting with the component.
 * Called when the internal input is focused.

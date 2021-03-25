@@ -34,7 +34,7 @@ component or item under test and end with the `"-specs.js"` suffix.
 We use a dizzying number of tools to perform unit testing.  A quick overview of the different tools can be helpful.
 
 *   [Jest](https://jestjs.io/) - A test framework. This tool allows us to setup, assert and run tests. We can also use `jest` as a mocking library.
-*   [Enzyme](http://airbnb.io/enzyme/) - A test library for use with React.  It allows us to shallowly render components and inspect the output.
+*   [Enzyme](https://enzymejs.github.io/enzyme/) - A test library for use with React.  It allows us to shallowly render components and inspect the output.
 *   [jsdom](https://github.com/jsdom/jsdom) - A pure-JavaScript implementation of many web standards, notably the WHATWG DOM and HTML Standards, for use with Node.js.
 
 ## Unit Testing
@@ -45,7 +45,7 @@ Unit testing is the core of our testing platform. Unit testing only tests the sm
 just tests a function/method. For Enact framework developers testing will also extend into component and virtual DOM testing.
 
 We are using [Jest](https://jestjs.io/) as our testing framework. We won't cover all the functions this gives us in this document. We
-suggest looking at the [Jest Docs](https://jestjs.io/docs/en/api) after finishing this if you want to know all of the things Jest can give you.
+suggest looking at the [Jest Docs](https://jestjs.io/docs/api) after finishing this if you want to know all of the things Jest can give you.
 
 Say you have a function like this:
 
@@ -115,7 +115,7 @@ and outputs we can test basically any JavaScript function that returns a value.
 
 ## Testing React
 
-To test react we use [Enzyme](http://airbnb.io/enzyme/) plus other tools you can find out about [here](../test-driven-development/index.md).
+To test react we use [Enzyme](https://enzymejs.github.io/enzyme/) plus other tools you can find out about [here](../test-driven-development/index.md).
 
 ```js
 const Text = (props) => {
@@ -133,23 +133,23 @@ test('Should contain text', () => {
 });
 ```
 
-If you wish to learn more about Enzyme's library of functions look [here](https://github.com/airbnb/enzyme).
+If you wish to learn more about Enzyme's library of functions look [here](https://github.com/enzymejs/enzyme).
 
 The three main parts about Enzyme that you need to know are it's rendering methods.
 
 ### shallow()
 
-[Shallow](https://github.com/airbnb/enzyme/blob/master/docs/api/shallow.md) is the virtual DOM representation. It will only render the component plus one level of children. This allows
+[Shallow](https://github.com/enzymejs/enzyme/blob/master/docs/api/shallow.md) is the virtual DOM representation. It will only render the component plus one level of children. This allows
 us to stay within the smaller confines of a component when testing.
 
 ### mount()
 
-[mount](https://github.com/airbnb/enzyme/blob/master/docs/api/mount.md) is the virtual DOM representation. It will render everything inside the component, including all nested children.
+[mount](https://github.com/enzymejs/enzyme/blob/master/docs/api/mount.md) is the virtual DOM representation. It will render everything inside the component, including all nested children.
 This is a little beyond unit testing as you start to test the integration of a few components.
 
 ### render()
 
-[render](https://github.com/airbnb/enzyme/blob/master/docs/api/render.md) is the DOM representation. It will print a string of the output dom that the browser sees.
+[render](https://github.com/enzymejs/enzyme/blob/master/docs/api/render.md) is the DOM representation. It will print a string of the output dom that the browser sees.
 
 ## Why Unit Testing?
 
@@ -302,7 +302,7 @@ Unfortunately, we can't always write pure functions. Sometimes we may have to us
 to make an AJAX call, etc. These are good reasons to not use pure functions. These functions are tougher to test but, not
 impossible. For example, if you are using Redux for complex application/component state management, you may be using side
 effects to get some of your data.  The Async Action Creators section in
-[http://redux.js.org/docs/recipes/WritingTests.html](http://redux.js.org/docs/recipes/WritingTests.html) shows how you can
+[https://redux.js.org/recipes/writing-tests](https://redux.js.org/recipes/writing-tests) shows how you can
 write tests in those cases.
 
 ## What to do next
