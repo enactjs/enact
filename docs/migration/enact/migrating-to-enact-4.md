@@ -17,7 +17,7 @@ React 17 introduced the new JSX Transform. The big change is, with the new JSX T
 you can use JSX without importing React. Enact CLI 4 supports this feature on related commands
 and you will now see below lint warning after packing or linting if you didn't change your code.
 
-```js
+```sh
 warning  'React' is defined but never used  no-unused-vars
 ```
 
