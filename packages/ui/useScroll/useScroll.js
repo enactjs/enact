@@ -311,7 +311,7 @@ const useScrollBase = (props) => {
 		}
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		mutableRef.current.resizeRegistry.parent = context;
 
 		// componentWillUnmount
@@ -382,7 +382,7 @@ const useScrollBase = (props) => {
 		mutableRef.current.resizeRegistry = Registry.create(handleResize);
 	}
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		const ref = mutableRef.current;
 
 		if (scrollMode === 'translate') {

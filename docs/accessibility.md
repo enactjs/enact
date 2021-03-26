@@ -10,7 +10,6 @@ We address native semantic meaning and accessibility by assigning [ARIA roles](h
 
 ```js
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
-import React from 'react';
 
 const App = (props) => {
     return (
@@ -42,7 +41,6 @@ We've included a few custom components that may be useful to build accessible ap
 import Region from '@enact/moonstone/Region';
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
 import Group from '@enact/ui/Group';
-import React from 'react';
 
 const App = () => {
     return (
@@ -55,41 +53,15 @@ const App = () => {
 };
 ```
 
-### ui/A11yDecorator
-
-[ui/A11yDecorator](../../modules/ui/A11yDecorator/) is a Higher-Order Component that helps provide constant hint text to precede or follow the `aria-label` for a component. This is most useful in cases where the `aria-label` changes but the content before or after it is constant.
-
-```js
-import A11yDecorator from '@enact/ui/A11yDecorator';
-
-import CustomComponent from './components/CustomComponent';
-
-const Component = A11yDecorator(CustomComponent);
-
-const App = (props) => {
-    return (
-        /* 
-         * passes aria-label to CustomComponent with accessibilityPreHint, props.label, and
-         * accessibiltyHint joined together with spaces
-         */
-        <Component
-            accessibilityPreHint="before text"
-            aria-label={props.label}
-            accessibilityHint="after text"
-        />
-    );
-};
-```
-
 ### ui/AnnounceDecorator
 
 [ui/AnnounceDecorator](../../modules/ui/AnnounceDecorator/) provides a Higher-Order Component that adds the ability for the Wrapped component to notify the user of a state change. It provides a callback to the Wrapped component that can be called with a string which is inserted into a node with the [`alert` role](https://www.w3.org/TR/wai-aria/#alert) to notify the user.
 
 ```js
 import AnnounceDecorator from '@enact/ui/AnnounceDecorator';
-import React from 'react';
+import {Component} from 'react';
 
-const ExampleComponentBase = class extends React.Component {
+const ExampleComponentBase = class extends Component {
     static propTypes = {
         // passed by AnnounceDecorator
         announce: PropTypes.func

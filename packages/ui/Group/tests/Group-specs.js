@@ -1,5 +1,5 @@
 import {mount, shallow} from 'enzyme';
-import {GroupBase} from '../Group';
+import Group, {GroupBase} from '../Group';
 
 describe('Group', () => {
 	const stringItems = ['One', 'Two', 'Three'];
@@ -156,6 +156,20 @@ describe('Group', () => {
 
 		const expected = 'group';
 		const actual = subject.prop('role');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should return a DOM node reference for `componentRef`', () => {
+		const ref = jest.fn();
+		mount(
+			<Group ref={ref} childComponent="div">
+				{stringItems}
+			</Group>
+		);
+
+		const expected = 'SPAN';
+		const actual = ref.mock.calls[0][0].nodeName;
 
 		expect(actual).toBe(expected);
 	});

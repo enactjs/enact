@@ -8,22 +8,28 @@
  *
  * @module ui/Heading
  * @exports Heading
+ * @exports HeadingBase
+ * @exports HeadingDecorator
  */
 
 import kind from '@enact/core/kind';
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
+
+import ForwardRef from '../ForwardRef';
 
 import css from './Heading.module.less';
 
 /**
  * A labeled Heading component.
  *
- * @class Heading
+ * @class HeadingBase
  * @memberof ui/Heading
  * @ui
  * @public
  */
-const Heading = kind({
+const HeadingBase = kind({
 	name: 'ui:Heading',
 
 	propTypes: /** @lends ui/Heading.Heading.prototype */ {
@@ -34,6 +40,17 @@ const Heading = kind({
 		 * @public
 		 */
 		children: PropTypes.node,
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Heading.Heading}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -123,17 +140,44 @@ const Heading = kind({
 		}
 	},
 
-	render: ({Tag, ...rest}) => {
+	render: ({Tag, componentRef, ...rest}) => {
 		delete rest.size;
 		delete rest.spacing;
 
 		return (
-			<Tag {...rest} />
+			<Tag {...rest} ref={componentRef} />
 		);
 	}
 });
 
+/**
+ * A higher-order component that adds behavior to [Heading]{@link ui/Heading.HeadingBase}.
+ *
+ * @hoc
+ * @memberof ui/Heading
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
+const HeadingDecorator = compose(
+	ForwardRef({prop: 'componentRef'})
+);
+
+/**
+ * A labeled Heading component.
+ *
+ * @class Heading
+ * @memberof ui/Heading
+ * @extends ui/Heading.HeadingBase
+ * @mixes ui/Heading.HeadingDecorator
+ * @omit componentRef
+ * @ui
+ * @public
+ */
+const Heading = HeadingDecorator(HeadingBase);
+
 export default Heading;
 export {
-	Heading
+	Heading,
+	HeadingBase,
+	HeadingDecorator
 };

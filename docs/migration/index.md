@@ -7,3 +7,4 @@ The following documents will assist developers with migrating from Enyo and prev
 * [Enyo Migration Guides](./enyo/index.md)
 * [Migrating to Enact 2.0](./enact/migrating-to-enact-2.md)
 * [Migrating to Enact 3.0](./enact/migrating-to-enact-3.md)
+* [Migrating to Enact 4.0](./enact/migrating-to-enact-4.md)

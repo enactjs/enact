@@ -34,9 +34,9 @@
  * Example:
  * ```
  * import {forKey, forward, handle, preventDefault} from '@enact/core/handle';
- * import React from 'react';
+ * import {Component} from 'react';
  *
- * class MyComponent extends React.Component {
+ * class MyComponent extends Component {
  *   // bind handle() to the instance
  *   constructor () {
  *     super();

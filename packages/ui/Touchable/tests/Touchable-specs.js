@@ -4,7 +4,6 @@
 import {shallow, mount} from 'enzyme';
 
 import Touchable from '../Touchable';
-import {activate, deactivate} from '../state';
 import {configure, getConfig, resetDefaultConfig} from '../config';
 
 describe('Touchable', () => {
@@ -34,21 +33,50 @@ describe('Touchable', () => {
 		test(
 			'should pass active state to the wrapped component when activeProp is configured',
 			() => {
-				const Component = Touchable({activeProp: 'pressed'}, DivComponent);
+				const Component = Touchable({activeProp: 'active'}, DivComponent);
 				const subject = shallow(
 					<Component />
 				);
 				const wrapped = subject.find(DivComponent);
 
 				const expected = true;
-				const actual = 'pressed' in wrapped.props();
+				const actual = 'active' in wrapped.props();
 
 				expect(actual).toBe(expected);
 			}
 		);
 
 		test(
-			'should update state configurations onHoldPulse events',
+			'should update state configurations onHold events',
+			(done) => {
+				const holdConfig = {
+					events: [
+						{name: 'hold', time: 10}
+					],
+					frequency: 10
+				};
+
+				const Component = Touchable(DivComponent);
+				const handler = jest.fn();
+				const subject = mount(
+					<Component onHoldStart={() => {}} holdConfig={holdConfig} />
+				);
+
+				const ev = {};
+				subject.simulate('mousedown', ev);
+				subject.setProps({
+					onHold: handler
+				});
+
+				setTimeout(() => {
+					expect(handler).toHaveBeenCalled();
+					done();
+				}, 20);
+			}
+		);
+
+		test(
+			'should update state configurations onHoldStart events',
 			(done) => {
 				const holdConfig = {
 					events: [
@@ -66,36 +94,7 @@ describe('Touchable', () => {
 				const ev = {};
 				subject.simulate('mousedown', ev);
 				subject.setProps({
-					onHoldPulse: handler
-				});
-
-				setTimeout(() => {
-					expect(handler).toHaveBeenCalled();
-					done();
-				}, 20);
-			}
-		);
-
-		test(
-			'should update state configurations onHold events',
-			(done) => {
-				const holdConfig = {
-					events: [
-						{name: 'hold', time: 10}
-					],
-					frequency: 10
-				};
-
-				const Component = Touchable(DivComponent);
-				const handler = jest.fn();
-				const subject = mount(
-					<Component onHoldPulse={() => {}} holdConfig={holdConfig} />
-				);
-
-				const ev = {};
-				subject.simulate('mousedown', ev);
-				subject.setProps({
-					onHold: handler
+					onHoldStart: handler
 				});
 
 				setTimeout(() => {
@@ -118,7 +117,7 @@ describe('Touchable', () => {
 				const Component = Touchable(DivComponent);
 				const handler = jest.fn();
 				const subject = mount(
-					<Component onHoldPulse={() => {}} holdConfig={holdConfig} />
+					<Component onHold={() => {}} holdConfig={holdConfig} />
 				);
 
 				const ev = {currentTarget: {}};
@@ -220,7 +219,7 @@ describe('Touchable', () => {
 
 	describe('#onUp', () => {
 		test('should invoke onUp handle on mouse up', () => {
-			const Component = Touchable({activeProp: 'pressed'}, DivComponent);
+			const Component = Touchable({activeProp: 'active'}, DivComponent);
 			const handler = jest.fn();
 			const subject = mount(
 				<Component onUp={handler} />
@@ -327,28 +326,6 @@ describe('Touchable', () => {
 
 	describe('state management', () => {
 		describe('activate', () => {
-			test('should return null when active', () => {
-				const state = {
-					active: 2
-				};
-
-				const expected = null;
-				const actual = activate(state);
-
-				expect(actual).toBe(expected);
-			});
-
-			test('should return updated state when inactive', () => {
-				const state = {
-					active: 0
-				};
-
-				const expected = {active: 2};
-				const actual = activate(state);
-
-				expect(actual).toEqual(expected);
-			});
-
 			test(
 				'should update active state on mouse down when activeProp is configured',
 				() => {
@@ -359,9 +336,9 @@ describe('Touchable', () => {
 					);
 
 					const ev = {};
-					const beforeDown = subject.state('active');
+					const beforeDown = subject.find(DivComponent).prop('active');
 					subject.simulate('mousedown', ev);
-					const afterDown = subject.state('active');
+					const afterDown = subject.find(DivComponent).prop('active');
 
 					const expected = false;
 					const actual = beforeDown === afterDown;
@@ -381,8 +358,8 @@ describe('Touchable', () => {
 
 					subject.simulate('mousedown', {});
 
-					const expected = 0;
-					const actual = subject.state('active');
+					const expected = false;
+					const actual = subject.find(DivComponent).prop('active');
 
 					expect(actual).toBe(expected);
 				}
@@ -399,8 +376,8 @@ describe('Touchable', () => {
 
 					subject.simulate('mousedown', {});
 
-					const expected = 0;
-					const actual = subject.state('active');
+					const expected = false;
+					const actual = subject.find(DivComponent).prop('active');
 
 					expect(actual).toBe(expected);
 				}
@@ -408,28 +385,6 @@ describe('Touchable', () => {
 		});
 
 		describe('deactivate', () => {
-			test('should return null when inactive', () => {
-				const state = {
-					active: 0
-				};
-
-				const expected = null;
-				const actual = deactivate(state);
-
-				expect(actual).toBe(expected);
-			});
-
-			test('should return updated state when active', () => {
-				const state = {
-					active: 2
-				};
-
-				const expected = {active: 0};
-				const actual = deactivate(state);
-
-				expect(actual).toEqual(expected);
-			});
-
 			test(
 				'should update active state on mouse up when activeProp is configured',
 				() => {
@@ -442,9 +397,9 @@ describe('Touchable', () => {
 					const ev = {};
 					subject.simulate('mousedown', ev);
 
-					const beforeUp = subject.state('active');
+					const beforeUp = subject.find(DivComponent).prop('active');
 					subject.simulate('mouseup', ev);
-					const afterUp = subject.state('active');
+					const afterUp = subject.find(DivComponent).prop('active');
 
 					const expected = false;
 					const actual = beforeUp === afterUp;
@@ -465,9 +420,9 @@ describe('Touchable', () => {
 					const ev = {};
 					subject.simulate('mousedown', ev);
 
-					const beforeUp = subject.state('active');
+					const beforeUp = subject.find(DivComponent).prop('active');
 					subject.simulate('mouseup', ev);
-					const afterUp = subject.state('active');
+					const afterUp = subject.find(DivComponent).prop('active');
 
 					const expected = true;
 					const actual = beforeUp === afterUp;
@@ -487,9 +442,9 @@ describe('Touchable', () => {
 					const ev = {};
 					subject.simulate('mousedown', ev);
 
-					const beforeUp = subject.state('active');
+					const beforeUp = subject.find(DivComponent).prop('active');
 					subject.simulate('mouseup', ev);
-					const afterUp = subject.state('active');
+					const afterUp = subject.find(DivComponent).prop('active');
 
 					const expected = true;
 					const actual = beforeUp === afterUp;

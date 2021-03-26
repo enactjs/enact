@@ -2,7 +2,7 @@
 title: Creating Components the Enact Way
 ---
 
-The Enact framework is built upon the foundation of [React](https://facebook.github.io/react).
+The Enact framework is built upon the foundation of [React](https://reactjs.org).
 As a result, any component that is built for React can be used in Enact and any of the patterns for
 creating a component in React can also be used in Enact. To address some of the common use cases we
 encountered, we've included a few modules with `@enact/core` that standardize the "Enact way" for
@@ -40,7 +40,6 @@ with any passed-in `className`), it computes a new value for `children` and rend
 
 ```js
 import kind from '@enact/core/kind';
-import React from 'react';
 import PropTypes from 'prop-types';
 
 const Badge = kind({
@@ -84,7 +83,7 @@ While SFCs have some important benefits, not every problem can be effectively so
 alone. Sometimes creating component instances that extend `React.Component` is necessary. Here are a
 few possible reasons:
 
-* You need access to the [component lifecycle methods](https://facebook.github.io/react/docs/react-component.html#the-component-lifecycle)
+* You need access to the [component lifecycle methods](https://reactjs.org/docs/react-component.html#the-component-lifecycle)
 * You need to maintain some component state (and it's not managed by something like Redux)
 * You need consistent event handler references to prevent unnecessary renders
 * You need to expose imperative APIs (though you should always avoid this when possible)
@@ -101,7 +100,7 @@ components. In the general sense, they are functions that accept a component (a 
 `div`, an SFC, or a `React.Component`), decorate that component in some way, and return either the
 original component or a new component that wraps the original component.
 
-Enact provides several HOCs within `@enact/ui` and `@enact/moonstone` that allow us to provide consistent
+Enact provides several HOCs within `@enact/ui` and `@enact/sandstone` that allow us to provide consistent
 behaviors across components. All of these HOCs were created using the `hoc()` factory from
 `@enact/core/hoc`. This factory gives them a couple key features:
 
@@ -132,8 +131,10 @@ a component.
 Here's a simple example to illustrate:
 
 ```js
+import {Component} from 'react';
+
 const Countable = hoc({prop: 'data-count'}, (config, Wrapped) => {
-	return class extends React.Component {
+	return class extends Component {
 		constructor (props) {
 			super(props);
 			this.state = {
@@ -160,14 +161,14 @@ const CountableDivAsDataNumber = CountableAsDataNumber('div');
 
 Occasionally, you'll want to modify the appearance of an Enact component, and usually, simply applying external styling to the outer-most element of the component, via `className` or `style` will work just fine. However, what if you need to customize one of the deeper child elements?
 
-We've got you covered! In Enact 2.0 we've added a built-in theming capability to make this significantly easier and even safer. Using the [theming system](./theming.md) is as straight-forward as importing your CSS/LESS file and passing it to the `css` prop on the component you want to customize. The class names defined in your CSS file that match the published class names of the target component will be applied directly to the internal elements of the component. They will be applied in addition to the existing class names, not in lieu of, so you can simply add your customizations, rather than repeat the existing styling. Each customizable component will include documentation for the `css` prop, which will list what classes are available and a brief description of what role they play.
+We've got you covered! Since Enact 2.0 we've added a built-in theming capability to make this significantly easier and even safer. Using the [theming system](./theming.md) is as straight-forward as importing your CSS/LESS file and passing it to the `css` prop on the component you want to customize. The class names defined in your CSS file that match the published class names of the target component will be applied directly to the internal elements of the component. They will be applied in addition to the existing class names, not in lieu of, so you can simply add your customizations, rather than repeat the existing styling. Each customizable component will include documentation for the `css` prop, which will list what classes are available and a brief description of what role they play.
 
-How about an example to make this more clear. Let's customize the background color of a [`moonstone/Button`](../../modules/moonstone/Button/). `Button` exposes several classes for customization: 'button', 'bg', 'small', and 'selected', and in this case we're interested in 'button' and 'bg'.  In our customized component LESS file, the following should do the trick:
+How about an example to make this more clear. Let's customize the background color of a [`sandstone/Button`](https://github.com/enactjs/sandstone/tree/master/Button). `Button` exposes several classes for customization: 'button', 'bg', 'small', and 'selected', and in this case we're interested in 'button' and 'bg'.  In our customized component LESS file, the following should do the trick:
 
 ```css
 // CustomButton.less
 //
-@import '~@enact/moonstone/styles/skin.less';
+@import '~@enact/sandstone/styles/skin.less';
 
 .button {
 	.applySkins({
@@ -178,14 +179,13 @@ How about an example to make this more clear. Let's customize the background col
 }
 ```
 
-*The `.applySkins` is added here because Moonstone uses our skinning system too, which is in charge of applying colors independent from measurements, layout, and metrics.*
+*The `.applySkins` is added here because Sandstone uses our skinning system too, which is in charge of applying colors independent from measurements, layout, and metrics.*
 
 Then, in our component we'll just apply the imported LESS file to the component with the `css` property.
 
 ```js
-import React from 'react';
 import kind from '@enact/core/kind';
-import Button from '@enact/moonstone/Button';
+import Button from '@enact/sandstone/Button';
 
 import css from './CustomButton.less';
 

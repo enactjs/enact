@@ -105,4 +105,24 @@ describe('Layout Specs', () => {
 			);
 		});
 	});
+
+	test('should return a DOM node reference for `componentRef` on `Layout`', () => {
+		const ref = jest.fn();
+		mount(<Layout ref={ref} />);
+
+		const expected = 'DIV';
+		const actual = ref.mock.calls[0][0].nodeName;
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should return a DOM node reference for `componentRef` on `Cell`', () => {
+		const ref = jest.fn();
+		mount(<Cell ref={ref} />);
+
+		const expected = 'DIV';
+		const actual = ref.mock.calls[0][0].nodeName;
+
+		expect(actual).toBe(expected);
+	});
 });

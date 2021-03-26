@@ -24,7 +24,7 @@ describe('Heading Specs', () => {
 		);
 
 		const expected = css.large;
-		const actual = subject.children().prop('className');
+		const actual = subject.find('.heading').prop('className');
 
 		expect(actual).toContain(expected);
 	});
@@ -35,7 +35,7 @@ describe('Heading Specs', () => {
 		);
 
 		const expected = css.largeSpacing;
-		const actual = subject.children().prop('className');
+		const actual = subject.find('.heading').prop('className');
 
 		expect(actual).toContain(expected);
 	});
@@ -46,8 +46,18 @@ describe('Heading Specs', () => {
 		);
 
 		const expected = css.smallSpacing;
-		const actual = subject.children().prop('className');
+		const actual = subject.find('.heading').prop('className');
 
 		expect(actual).toContain(expected);
+	});
+
+	test('should return a DOM node reference for `componentRef`', () => {
+		const ref = jest.fn();
+		mount(<Heading size="large" ref={ref} />);
+
+		const expected = 'H3';
+		const actual = ref.mock.calls[0][0].nodeName;
+
+		expect(actual).toBe(expected);
 	});
 });

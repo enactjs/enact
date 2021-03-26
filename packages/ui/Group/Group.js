@@ -4,13 +4,17 @@
  * @module ui/Group
  * @exports Group
  * @exports GroupBase
+ * @exports GroupDecorator
+ * @exports GroupItem
  */
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 
 import Changeable from '../Changeable';
+import ForwardRef from '../ForwardRef';
 import Repeater from '../Repeater';
 
 import {GroupItem, pickGroupItemProps} from './GroupItem';
@@ -79,6 +83,17 @@ const GroupBase = kind({
 		 * @public
 		 */
 		childSelect: PropTypes.string,
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Group.Group}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * The property on each `childComponent` that receives the index of the item
@@ -165,17 +180,31 @@ const GroupBase = kind({
 		)
 	},
 
-	render: (props) => {
-		delete props.onSelect;
-		delete props.childSelect;
-		delete props.select;
-		delete props.selected;
-		delete props.selectedEventProp;
-		delete props.selectedProp;
+	render: ({componentRef, ...rest}) => {
+		delete rest.onSelect;
+		delete rest.childSelect;
+		delete rest.select;
+		delete rest.selected;
+		delete rest.selectedEventProp;
+		delete rest.selectedProp;
 
-		return <Repeater role="group" {...props} childComponent={GroupItem} />;
+		return <Repeater role="group" {...rest} childComponent={GroupItem} ref={componentRef} />;
 	}
 });
+
+/**
+ * A higher-order component that adds behavior to [Group]{@link ui/Group.GroupBase}.
+ *
+ * @hoc
+ * @memberof ui/Group
+ * @mixes ui/ForwardRef.ForwardRef
+ * @mixes ui/Changeable.Changeable
+ * @public
+ */
+const GroupDecorator = compose(
+	ForwardRef({prop: 'componentRef'}),
+	Changeable({change: 'onSelect', prop: 'selected'})
+);
 
 /**
  * A component that supports selection of its child items via configurable properties and
@@ -185,14 +214,20 @@ const GroupBase = kind({
  *
  * @class Group
  * @memberof ui/Group
- * @mixes ui/Changeable.Changeable
+ * @extends ui/Group.GroupBase
+ * @mixes ui/Group.GroupDecorator
+ * @omit componentRef
  * @ui
  * @public
  */
-const Group = Changeable(
-	{change: 'onSelect', prop: 'selected'},
+const Group = GroupDecorator(
 	GroupBase
 );
 
 export default Group;
-export {Group, GroupBase, GroupItem};
+export {
+	Group,
+	GroupBase,
+	GroupDecorator,
+	GroupItem
+};
