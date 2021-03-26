@@ -11,7 +11,7 @@ When building your own theme, it's important to understand how to leverage the m
 
 ### publicClassNames
 
-Components built with the `kind` feature can use the `publicClassNames` key in the `styles` block of their component definition. This key allows a component to define an array of CSS class names that will be available for a component consumer to add styling to. For brevity and convenience, if you simply specify `true` as the value (`publicClassNames: true`), every class from your CSS file will be exported and available. All components in `@enact/ui` and many in `@enact/moonstone` and other themes have already been imbued with this feature, which allows direct access to customize that component's appearance.
+Components built with the `kind` feature can use the `publicClassNames` key in the `styles` block of their component definition. This key allows a component to define an array of CSS class names that will be available for a component consumer to add styling to. For brevity and convenience, if you simply specify `true` as the value (`publicClassNames: true`), every class from your CSS file will be exported and available. All components in `@enact/ui` and many in `@enact/sandstone` and other themes have already been imbued with this feature, which allows direct access to customize that component's appearance.
 
 Sometimes, behavior is built into a component, but no visual qualities are assigned to that behavior. For example, Enact handles the `selected` state of a `Button`, and it's implemented in our `ui` package, so it's universally available to all themes. `ui` has no opinion on how this state is visually represented, so it simply exports a blank class that the consuming theme can style to its liking.
 
@@ -47,10 +47,9 @@ In the above example, we define our base component class `.button`, then set up 
 
 ### Using a UI Component
 
-Let's look at an example, Moonstone's `Button`:
+Let's look at an example, Sandstone's `Button`:
 
 ```jsx
-import React from 'react';
 import kind from '@enact/core/kind';
 import UiButton from '@enact/ui/Button';
 
@@ -73,11 +72,11 @@ const Button = kind({
 export default Button;
 ```
 
-In this example, we've imported the unstyled `ui/Button`, which exports all available classes for customization (by setting `publicClassNames: true`), and we've imported our LESS file where we have many styles defined for the available states that a button can be in: large, small, selected, pressed, disabled, etc. We also have access to the internal element classes: bg, client, and marquee. Each of these classes match one of the public class names made available by the `ui/Button` component. So what can we do with this? We, as the component authors, have access to all of the class names which were made available in the components we're using, however, we can choose to restrict the available classes being made available to our consumers. In the above example we've only chosen to export four (4) classes for customization. It is the theme's discretion to determine how customizable or rigid it should be. Moonstone, for example, is relatively rigid so it maintains consistency for its visual identity. Our `ui` package, on the other hand, is *completely* open to customization and expresses only minimal initial styling. It makes prolific use of `publicClassNames: true`, which is shorthand for allowing *all* classes to be customized.
+In this example, we've imported the unstyled `ui/Button`, which exports all available classes for customization (by setting `publicClassNames: true`), and we've imported our LESS file where we have many styles defined for the available states that a button can be in: large, small, selected, pressed, disabled, etc. We also have access to the internal element classes: bg, client, and marquee. Each of these classes match one of the public class names made available by the `ui/Button` component. So what can we do with this? We, as the component authors, have access to all of the class names which were made available in the components we're using, however, we can choose to restrict the available classes being made available to our consumers. In the above example we've only chosen to export four (4) classes for customization. It is the theme's discretion to determine how customizable or rigid it should be. Sandstone, for example, is relatively rigid so it maintains consistency for its visual identity. Our `ui` package, on the other hand, is *completely* open to customization and expresses only minimal initial styling. It makes prolific use of `publicClassNames: true`, which is shorthand for allowing *all* classes to be customized.
 
 ### Adding State Classes
 
-Moonstone also adds its own props, which are specific to Moonstone; things like the `backgroundOpacity` prop and the `color` prop. They are added to the example above via the `computed` block:
+Sandstone also adds its own props, which are specific to Sandstone; things like the `backgroundOpacity` prop and the `color` prop. They are added to the example above via the `computed` block:
 
 ```js
 computed: {
@@ -123,16 +122,16 @@ import css from './Button.module.less';
 
 Here, `kind()` handles the mapping from the `css` hash to your `'button'` class name. A similar process happens when you include the `publicClassNames` key and array in this block. The names of your classes are mapped to the previously published class names, and they are paired up.
 
-For example, `Button` publishes the `.bg` class from `ui`. Moonstone adds its own styling rules to the existing `.bg` class simply by giving its custom rules the same name as `ui`. Internally, Enact is attaching both the `ui` and `moonstone` classes together for the `.bg` original class name key, like: `{bg: 'ui_Button_bg moonstone_Button_bg'}`. Excluding a class name from the `publicClassNames` array will ignore that class when they're appended to the map.
+For example, `Button` publishes the `.bg` class from `ui`. Sandstone adds its own styling rules to the existing `.bg` class simply by giving its custom rules the same name as `ui`. Internally, Enact is attaching both the `ui` and `sandstone` classes together for the `.bg` original class name key, like: `{bg: 'ui_Button_bg sandstone_Button_bg'}`. Excluding a class name from the `publicClassNames` array will ignore that class when they're appended to the map.
 
 ### The `css` prop
 
-You can access the full collection of mapped class names via the automatically added `css` prop. The `css` prop doesn't behave like normal props, though. It does not automatically pass down to deeper layers, via props-spreading. This is because we wanted to be conscious of when we are passing classes down to another layer. When you add a `publicClassNames` key to your component, it will automatically receive the `css` prop in its collection of props, which can be used in the `render` or `computed` functions just like any other prop. To reference an earlier example, when `moonstone/Button` encounters the `css` prop, it is an object like this:
+You can access the full collection of mapped class names via the automatically added `css` prop. The `css` prop doesn't behave like normal props, though. It does not automatically pass down to deeper layers, via props-spreading. This is because we wanted to be conscious of when we are passing classes down to another layer. When you add a `publicClassNames` key to your component, it will automatically receive the `css` prop in its collection of props, which can be used in the `render` or `computed` functions just like any other prop. To reference an earlier example, when `sandstone/Button` encounters the `css` prop, it is an object like this:
 
 ```js
 {
-	button: 'ui_Button_button moonstone_Button_button',
-	bg: 'ui_Button_bg moonstone_Button_bg'
+	button: 'ui_Button_button sandstone_Button_button',
+	bg: 'ui_Button_bg sandstone_Button_bg'
 }
 ```
 
@@ -154,7 +153,6 @@ Conveniently, the base class name is applied automatically to the `className` pr
 Let's look at our combined example again.
 
 ```js
-import React from 'react';
 import kind from '@enact/core/kind';
 import UiButton from '@enact/ui/Button';
 
@@ -189,7 +187,7 @@ All of the Enact components follow a naming strategy that we call "visually divo
 
 ### States
 
-Typically, we'll represent the state of a component using a class. The presence of the class means "on" and the absence of it means "off". This works really well for boolean properties, but can also be used to represent enumerated properties. The `orientation` prop is a good example of this. A Slider can choose an orientation, which applies one of the allowed values as a class. `moonstone/Slider` currently supports `orientation="horizontal"` and `orientation="vertical"`. These values are applied literally to the component as classes `.horizontal` and `.vertical`. That being said, there's no reason why new orientations like "radial" or "2d" couldn't be implemented, which we can then fully style using CSS however we want; maybe "radial" describes a speedometer-like dial and "2d" describes a graph-like square. `Slider` imposes no expectations on how the values it manages are used, it just makes them available. The visual designer is then able to use this available information to design, restriction-free, how ever is most appropriate for their theme.
+Typically, we'll represent the state of a component using a class. The presence of the class means "on" and the absence of it means "off". This works really well for boolean properties, but can also be used to represent enumerated properties. The `orientation` prop is a good example of this. A Slider can choose an orientation, which applies one of the allowed values as a class. `sandstone/Slider` currently supports `orientation="horizontal"` and `orientation="vertical"`. These values are applied literally to the component as classes `.horizontal` and `.vertical`. That being said, there's no reason why new orientations like "radial" or "2d" couldn't be implemented, which we can then fully style using CSS however we want; maybe "radial" describes a speedometer-like dial and "2d" describes a graph-like square. `Slider` imposes no expectations on how the values it manages are used, it just makes them available. The visual designer is then able to use this available information to design, restriction-free, how ever is most appropriate for their theme.
 
 Something like the following is easy to read, understand, maintain, and extend:
 

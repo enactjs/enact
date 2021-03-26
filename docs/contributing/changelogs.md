@@ -8,7 +8,7 @@ you, fear not. This guide will help you understand this humble file and its use 
 ### Locations
 
 Each Enact library and tool has its own CHANGELOG.md file. This file is located in the corresponding base directory
-(e.g. the CHANGELOG.md for Moonstone is located in `enact/packages/moonstone`). The Enact monorepo also has a root-level
+(e.g. the CHANGELOG.md for Spotlight is located in `enact/packages/spotlight`). The Enact monorepo also has a root-level
 CHANGELOG.md. Developers will primarily concern themselves with the versions located in the libraries and the tools as
 the root level is only updated before releases.
 
@@ -30,7 +30,7 @@ information rather than too little. Some examples may help illustrate this:
 *   Fixed a non-user-visible bug
 
 Comments should be written as markdown and each should begin with a bullet `*`. Component names should be wrapped in ``  `  ``
-and include the library name (\`moonstone/Component\`, for example).
+and include the library name (\`ui/Component\`, for example).
 
 ### Sections
 
@@ -45,7 +45,7 @@ This section is used to call attention to new features, properties and component
 that the word 'Added' appears before the text. Example:
 
 ```
-* `moonstone/NewComponent` Component
+* `ui/NewComponent` Component
 ```
 
 #### Changed
@@ -53,7 +53,7 @@ that the word 'Added' appears before the text. Example:
 This section highlights changes to existing features, properties and components. Example:
 
 ```
-* `moonstone/ChangedComponent` to no longer accept the `invalid` property
+* `ui/ChangedComponent` to no longer accept the `invalid` property
 ```
 
 #### Fixed

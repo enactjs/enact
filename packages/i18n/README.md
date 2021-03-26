@@ -10,7 +10,6 @@ and to update the current locale.
 
 ```
 import {I18nContextDecorator, I18nDecorator} from '@enact/i18n/I18nDecorator';
-import React from 'react';
 
 const MyComponent = I18nContextDecorator(
 	{rtlProp: 'rtl'},

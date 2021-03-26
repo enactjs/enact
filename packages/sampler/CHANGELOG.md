@@ -2,11 +2,11 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [unreleased]
+## [4.0.0] - 2021-03-26
 
 ### Changed
 
-- Migrate Storybook to 6
+- `sampler` look and feel by updating to Storybook 6
 
 ## [4.0.0-alpha.1] - 2021-02-24
 

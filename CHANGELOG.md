@@ -2,6 +2,27 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.0.0] - 2021-03-26
+
+### Removed
+
+- `ui/A11yDecorator`
+- `ui/Button`, `ui/Icon`, `ui/IconButton`, and `ui/LabeledIcon` default size values
+
+### Added
+
+- `ui/BodyText`, `ui/Button`, `ui/Group`, `ui/Heading`, `ui/Icon`, `ui/IconButton`, `ui/Image`, `ui/ImageItem`, `ui/LabeledIcon`, `ui/Layout`, `ui/ProgressBar`, `ui/Repeater`, `ui/Slider`, `ui/SlotItem`, `ui/Spinner`, `ui/ToggleIcon`, `ui/ToggleItem`, and `ui/ViewManager` support for forwarding `ref`s to the respective root component
+
+### Changed
+
+- `sampler` look and feel by updating to Storybook 6 
+- `ui/Touchable` event `onHold` and `onHoldPulse` to `onHoldStart` and `onHold` respectively to match with the naming convention
+
+### Fixed
+
+- `ui/FloatingLayerDecorator` to render floating node properly
+- `ui/Touchable' to handle touch related events only for valid targets
+
 ## [4.0.0-alpha.1] - 2021-02-24
 
 -  The framework was updated to support React 17.0.1
