@@ -69,7 +69,9 @@ const platforms = [
 	{platform: 'webos', regex: /Web0S;.*Chrome\/38/, forceVersion: 3},
 	{platform: 'webos', regex: /Web0S;.*Chrome\/53/, forceVersion: 4},
 	{platform: 'webos', regex: /Web0S;.*Chrome\/68/, forceVersion: 5},
-	// LG webOS of indeterminate version
+	{platform: 'webos', regex: /Web0S;.*Chrome\/79/, forceVersion: 6},
+	{platform: 'webos', regex: /Web0S;.*Chrome\/(\d+)/, forceVersion: 7},
+	// LG webOS of indeterminate versionre
 	{platform: 'webos', regex: /Web0S;/, forceVersion: -1},
 	// LuneOS
 	{platform: 'webos', regex: /LuneOS/, forceVersion: -1, extra: {luneos: 1}},
@@ -119,6 +121,10 @@ const parseUserAgent = (userAgent) => {
 
 			if ('forceVersion' in p) {
 				v = p.forceVersion;
+
+				if (p.platform  === 'webos' && v >= 7) {
+					plat.chrome = m[1];
+				}
 			} else {
 				v = Number(m[1]);
 			}
