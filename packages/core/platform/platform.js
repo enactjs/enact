@@ -123,7 +123,7 @@ const parseUserAgent = (userAgent) => {
 				v = p.forceVersion;
 
 				if (p.platform  === 'webos' && v >= 7) {
-					plat.chrome = m[1];
+					plat.chrome = Number(m[1]);
 				}
 			} else {
 				v = Number(m[1]);
