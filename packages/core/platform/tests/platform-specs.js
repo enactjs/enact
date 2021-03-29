@@ -4,7 +4,7 @@ describe('platform', () => {
 
 	describe('webOS', () => {
 		// From http://webostv.developer.lge.com/discover/specifications/web-engine/
-		const webOSTV7 = 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 WebAppManager';
+		const webOSTVNext = 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 WebAppManager';
 		const webOSTV6 = 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3440.106 Safari/537.36 WebAppManager';
 		const webOSTV5 = 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36 WebAppManager';
 		const webOSTV4 = 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.1785.34 Safari/537.36 WebAppManager';
@@ -66,9 +66,9 @@ describe('platform', () => {
 			expect(actual).toMatchObject(expected);
 		});
 
-		test('should return webOS 7 and chrome 87', () => {
+		test('should return webOS Next and chrome 87', () => {
 			const expected = {webos: -1, chrome: 87};
-			const actual = parseUserAgent(webOSTV7);
+			const actual = parseUserAgent(webOSTVNext);
 
 			expect(actual).toMatchObject(expected);
 		});
