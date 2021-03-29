@@ -1,11 +1,11 @@
-import React from 'react';
+import {forwardRef} from 'react';
 import {mount} from 'enzyme';
 
 import IconButton from '../IconButton';
 
 describe('IconButton', () => {
 
-	const Button = React.forwardRef((props, fn) => <div ref={fn} />);
+	const Button = forwardRef((props, fn) => <div ref={fn} />);
 	function Icon () {
 		return <div />;
 	}

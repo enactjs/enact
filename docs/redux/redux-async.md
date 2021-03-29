@@ -7,7 +7,7 @@ Most complex apps rely heavily on fetching data asynchronously. In this document
 
 ### Introduction to Middleware and `redux-thunk`
 
-When using an API, you are probably dealing with asynchronous actions. However, the Redux store only supports synchronous actions without using [middleware](http://redux.js.org/docs/advanced/Middleware.html) (more on that later). To use middleware in Redux, we use the [`applyMiddleware()`](http://redux.js.org/docs/api/applyMiddleware.html) store enhancer from Redux. `redux-thunk` middleware is the standard way to handle asynchronous actions.
+When using an API, you are probably dealing with asynchronous actions. However, the Redux store only supports synchronous actions without using [middleware](https://redux.js.org/tutorials/fundamentals/part-4-store#middleware) (more on that later). To use middleware in Redux, we use the [`applyMiddleware()`](https://redux.js.org/api/applymiddleware) store enhancer from Redux. `redux-thunk` middleware is the standard way to handle asynchronous actions.
 
 We use `redux-thunk` middleware to enable asynchronous requests to work with synchronous action creators. It allows an action creator to return a function instead of an object (action) and executes that function when it is returned. This allows non-pure actions (i.e. ones that can call APIs that might have different data each time). These action creators can dispatch other actions, so, for example, you can dispatch a `REQUEST_BEGIN` action, then fetch remote data asynchronously and, after it returns, dispatch the `REQUEST_SUCCESS` or `REQUEST_ERROR` actions.
 
@@ -38,7 +38,6 @@ A combination of `redux-thunk` and `LS2Request` allows us to fetch and display d
 At the root level, we use `<Provider />` to pass store down the component hierarchy.
 
 ```js
-import React from 'react';
 import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 import configureStore from './store';
@@ -112,11 +111,11 @@ export default function systemSettingsReducer (state = {}, action) {
 Connected container dispatches ``getSystemSettings`` on componentDidMount and renders a ``pictureMode`` prop that's been hooked up with a redux store.
 
 ```js
-import React from 'react';
+import {Component} from 'react';
 import {connect} from 'react-redux';
 import {getSystemSettings} from '../actions';
 
-class App extends React.Component {
+class App extends Component {
 	componentDidMount () {
 		this.props.dispatch(getSystemSettings({
 			category: 'picture',

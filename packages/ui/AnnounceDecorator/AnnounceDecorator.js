@@ -41,9 +41,9 @@ const defaultConfig = {
  * Example:
  * ```
  * import AnnounceDecorator from '@enact/ui/AnnounceDecorator';
- * import React from 'react';
+ * import {Component} from 'react';
  *
- * const Example = AnnounceDecorator(class extends React.Component {
+ * const Example = AnnounceDecorator(class extends Component {
  *   static propTypes = {
  *     // passed by AnnounceDecorator
  *     announce: PropTypes.func

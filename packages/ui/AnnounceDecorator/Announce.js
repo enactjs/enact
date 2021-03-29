@@ -9,9 +9,9 @@ import {Component} from 'react';
  * Example:
  * ```
  * import {Announce} from '@enact/ui/AnnounceDecorator';
- * import React from 'react';
+ * import {Component} from 'react';
  *
- * class Example extends React.Component {
+ * class Example extends Component {
  *   notify = () => {
  *     if (this.announce) {
  *       this.announce.announce('this text will be alerted to user by TTS');

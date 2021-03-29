@@ -10,11 +10,11 @@ Context is the easiest way to update the locale. Call the `updateLocale` functio
 
 ```js
 import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
-import React from 'react';
+import {Component} from 'react';
 
 const SomeComponent = I18nContextDecorator(
 	{updateLocaleProp: 'updateLocale'},
-	class extends React.Component {
+	class extends Component {
 		...
 		changeLocale = (locale) => {
 			this.props.updateLocale(locale);
