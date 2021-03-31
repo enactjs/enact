@@ -16,18 +16,38 @@
 
 // Focused Spottable elements
 .focus(@rules; @target) when (isruleset(@rules)) and (@target = parent) {
-	.spottable({
-		&:focus {
-			@rules();
-		}
-	}, @target);
+	:global(.spotlight-on-focus) & {
+		.spottable({
+			&:focus {
+				@rules();
+			}
+		}, @target);
+	}
+
+	:global(.spotlight-on-active) & {
+		.spottable({
+			&:active {
+				@rules();
+			}
+		}, @target);
+	}
 }
 .focus(@rules) when (isruleset(@rules)) {
-	.spottable({
-		&:focus {
-			@rules();
-		}
-	});
+	:global(.spotlight-on-focus) & {
+		.spottable({
+			&:focus {
+				@rules();
+			}
+		});
+	}
+
+	:global(.spotlight-on-active) & {
+		.spottable({
+			&:active {
+				@rules();
+			}
+		});
+	}
 }
 
 // Muted elements

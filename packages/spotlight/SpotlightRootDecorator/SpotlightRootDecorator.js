@@ -7,7 +7,8 @@
  */
 
 import hoc from '@enact/core/hoc';
-import {Component} from 'react';
+import {is} from '@enact/core/keymap';
+import {Component, createRef} from 'react';
 
 import Spotlight from '../src/spotlight';
 import {spottableClass} from '../Spottable';
@@ -53,13 +54,18 @@ const defaultConfig = {
  * @hoc
  */
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {noAutoFocus} = config;
+	const {getConfigEffect, noAutoFocus, rootId} = config;
+	const rootNode = typeof document === 'object' && document.querySelector('#' + rootId) || document;
+	let lastInputType = 'key';
+	let needConfigEffect = false;
 
 	return class extends Component {
 		static displayName = 'SpotlightRootDecorator';
 
 		constructor (props) {
 			super(props);
+
+			this.containerRef = createRef();
 
 			if (typeof window === 'object') {
 				Spotlight.initialize({
@@ -71,27 +77,80 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					overflow: true
 				});
 			}
+
+			if (typeof getConfigEffect === 'function') {
+				getConfigEffect(this.configEffect);
+			}
 		}
 
 		componentDidMount () {
 			if (!noAutoFocus) {
 				Spotlight.focus();
 			}
+
+			rootNode.addEventListener('focusin', this.handleFocusIn, {capture: true});
+			rootNode.addEventListener('pointerover', this.handlePointerOver, {capture: true});
+			rootNode.addEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
 
 		componentWillUnmount () {
 			Spotlight.terminate();
+
+			rootNode.removeEventListener('focusin', this.handleFocusIn, {capture: true});
+			rootNode.removeEventListener('pointerover', this.handlePointerOver, {capture: true});
+			rootNode.removeEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
 
+		configEffect = (inputType) => {
+			if (this && this.containerRef && this.containerRef.current) {
+				if (inputType === 'touch') {
+					this.containerRef.current.classList.remove('spotlight-on-focus');
+					this.containerRef.current.classList.add('spotlight-on-active');
+				} else if (inputType === 'mouse' || inputType === 'key') {
+					this.containerRef.current.classList.add('spotlight-on-focus');
+					this.containerRef.current.classList.remove('spotlight-on-active');
+				} else {
+					this.containerRef.current.classList.remove('spotlight-on-focus');
+					this.containerRef.current.classList.remove('spotlight-on-active');
+				}
+				needConfigEffect = false;
+			} else {
+				lastInputType = inputType;
+				needConfigEffect = true;
+			}
+		};
+
+		handlePointerOver = (ev) => this.configEffect(ev.pointerType);
+
+		handleFocusIn = () => {
+			if (needConfigEffect) {
+				this.configEffect(lastInputType);
+			}
+		};
+
+		handleKeyDown = (ev) => {
+			const {keyCode} = ev;
+			if (is('enter', keyCode) && this.containerRef.current.classList.contains('spotlight-on-active')) {
+				// Prevent onclick event trigger by enter key
+				ev.preventDefault();
+			}
+
+			this.configEffect('key');
+		};
+
 		navigableFilter = (elem) => {
-			while (elem && elem !== document && elem.nodeType === 1) {
+			while (elem && elem !== rootNode && elem.nodeType === 1) {
 				if (elem.getAttribute('data-spotlight-container-disabled') === 'true') return false;
 				elem = elem.parentNode;
 			}
 		};
 
 		render () {
-			return <Wrapped {...this.props} />;
+			return (
+				<div ref={this.containerRef}>
+					<Wrapped {...this.props} />
+				</div>
+			);
 		}
 	};
 });

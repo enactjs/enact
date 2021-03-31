@@ -32,7 +32,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-is": "^17.0.1",
-    "recompose": "^0.26.0",
+    "recompose": "^0.30.0",
     "warning": "^4.0.3"
   }
 }
