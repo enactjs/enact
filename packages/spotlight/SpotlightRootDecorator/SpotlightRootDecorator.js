@@ -152,12 +152,11 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleKeyDown = (ev) => {
 			const {keyCode} = ev;
-			if (this.containerRef.current.classList.contains('touch-mode')) {
-				if (is('enter', keyCode)) {
-					// Prevent onclick event trigger by enter key
-					ev.preventDefault();
-				}
+			if (is('enter', keyCode) && this.containerRef.current.classList.contains('touch-mode')) {
+				// Prevent onclick event trigger by enter key
+				ev.preventDefault();
 			}
+
 			setTimeout(() => {
 				this.setTouchModeClass(lastInputType);
 			}, 0);
