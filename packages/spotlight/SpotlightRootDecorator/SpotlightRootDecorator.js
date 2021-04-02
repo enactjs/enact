@@ -157,10 +157,10 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					// Prevent onclick event trigger by enter key
 					ev.preventDefault();
 				}
-				setTimeout(() => {
-					this.setTouchModeClass(lastInputType);
-				}, 0);
 			}
+			setTimeout(() => {
+				this.setTouchModeClass(lastInputType);
+			}, 0);
 		};
 
 		navigableFilter = (elem) => {
