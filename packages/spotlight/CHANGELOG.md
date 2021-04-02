@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight/SpotlightRootDecorator` to not change to none touch mode when tapping VKB button
+
 ## [3.4.9-experimental-5] - 2021-03-17
 
 No significant changes.
