@@ -146,7 +146,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleFocusIn = () => {
 			if (needChangeTouchMode) {
-				this.setTouchModeClass (lastInputType);
+				this.setTouchModeClass(lastInputType);
 			}
 		};
 
@@ -157,7 +157,9 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				ev.preventDefault();
 			}
 
-			this.setTouchModeClass('key');
+			setTimeout(() => {
+				this.setTouchModeClass(lastInputType);
+			}, 0);
 		};
 
 		navigableFilter = (elem) => {
