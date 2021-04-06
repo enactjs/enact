@@ -39,6 +39,7 @@ const
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
 		nop: () => {},
+		overscrollDefaultRatio: 0.5,
 		overscrollTypeNone: 0,
 		overscrollTypeHold: 1,
 		overscrollTypeOnce: 2,
@@ -54,6 +55,7 @@ const
 		flickConfig,
 		isPageDown,
 		isPageUp,
+		overscrollDefaultRatio,
 		overscrollTypeDone,
 		overscrollTypeHold,
 		overscrollTypeNone,
@@ -609,10 +611,10 @@ const useScrollBase = (props) => {
 	}
 
 	/*
-	* wheel event handler;
-	* - for horizontal scroll, supports wheel action on any children nodes since web engine cannot support this
-	* - for vertical scroll, supports wheel action on scrollbars only
-	*/
+	 * wheel event handler;
+	 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot support this
+	 * - for vertical scroll, supports wheel action on scrollbars only
+	 */
 	function onWheel (ev) {
 		if (mutableRef.current.isDragging) {
 			ev.preventDefault();
@@ -682,13 +684,13 @@ const useScrollBase = (props) => {
 
 							ev.preventDefault();
 						} else if (overscrollEffectRequired) {
-							checkAndApplyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
+							checkAndApplyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, overscrollDefaultRatio);
 						}
 
 						ev.stopPropagation();
 					} else {
 						if (overscrollEffectRequired && (eventDelta < 0 && mutableRef.current.scrollTop <= 0 || eventDelta > 0 && mutableRef.current.scrollTop >= bounds.maxTop)) {
-							applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
+							applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, overscrollDefaultRatio);
 						}
 
 						needToHideScrollbarTrack = true;
@@ -702,7 +704,7 @@ const useScrollBase = (props) => {
 						ev.stopPropagation();
 					} else {
 						if (overscrollEffectRequired && (eventDelta < 0 && mutableRef.current.scrollLeft <= 0 || eventDelta > 0 && mutableRef.current.scrollLeft >= bounds.maxLeft)) {
-							applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
+							applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, overscrollDefaultRatio);
 						}
 
 						needToHideScrollbarTrack = true;
@@ -849,7 +851,7 @@ const useScrollBase = (props) => {
 		setOverscrollStatus(orientation, edge, overscrollEffectType === overscrollTypeOnce ? overscrollTypeDone : overscrollEffectType, ratio);
 	}
 
-	function checkAndApplyOverscrollEffect (orientation, edge, overscrollEffectType, ratio = 1) {
+	function checkAndApplyOverscrollEffect (orientation, edge, overscrollEffectType, ratio) {
 		const
 			isVertical = (orientation === 'vertical'),
 			curPos = isVertical ? mutableRef.current.scrollTop : mutableRef.current.scrollLeft,
@@ -925,7 +927,7 @@ const useScrollBase = (props) => {
 		if (mutableRef.current.isDragging) {
 			applyOverscrollEffectOnDrag(orientation, edge, targetPosition, overscrollTypeHold);
 		} else if (edge) {
-			checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
+			checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce, overscrollDefaultRatio);
 		}
 	}
 

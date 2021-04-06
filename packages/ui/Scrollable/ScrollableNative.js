@@ -24,6 +24,7 @@ const
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
 		nop: () => {},
+		overscrollDefaultRatio: 0.5,
 		overscrollTypeNone: 0,
 		overscrollTypeHold: 1,
 		overscrollTypeOnce: 2,
@@ -36,6 +37,7 @@ const
 		epsilon,
 		flickConfig,
 		nop,
+		overscrollDefaultRatio,
 		overscrollTypeDone,
 		overscrollTypeHold,
 		overscrollTypeNone,
@@ -707,13 +709,13 @@ class ScrollableBaseNative extends Component {
 
 						ev.preventDefault();
 					} else if (overscrollEffectRequired) {
-						this.checkAndApplyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
+						this.checkAndApplyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, overscrollDefaultRatio);
 					}
 
 					ev.stopPropagation();
 				} else {
 					if (overscrollEffectRequired && (eventDelta < 0 && this.scrollTop <= 0 || eventDelta > 0 && this.scrollTop >= bounds.maxTop)) {
-						this.applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
+						this.applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, overscrollDefaultRatio);
 					}
 					needToHideThumb = true;
 				}
@@ -726,7 +728,7 @@ class ScrollableBaseNative extends Component {
 					ev.stopPropagation();
 				} else {
 					if (overscrollEffectRequired && (eventDelta < 0 && this.scrollLeft <= 0 || eventDelta > 0 && this.scrollLeft >= bounds.maxLeft)) {
-						this.applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
+						this.applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, overscrollDefaultRatio);
 					}
 					needToHideThumb = true;
 				}
@@ -843,7 +845,7 @@ class ScrollableBaseNative extends Component {
 		this.setOverscrollStatus(orientation, edge, type === overscrollTypeOnce ? overscrollTypeDone : type, ratio);
 	};
 
-	checkAndApplyOverscrollEffect = (orientation, edge, type, ratio = 1) => {
+	checkAndApplyOverscrollEffect = (orientation, edge, type, ratio) => {
 		const
 			isVertical = (orientation === 'vertical'),
 			curPos = isVertical ? this.scrollTop : this.scrollLeft,
@@ -916,7 +918,7 @@ class ScrollableBaseNative extends Component {
 		if (this.isDragging) {
 			this.applyOverscrollEffectOnDrag(orientation, edge, targetPosition, overscrollTypeHold);
 		} else if (edge) {
-			this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
+			this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce, overscrollDefaultRatio);
 		}
 	};
 
