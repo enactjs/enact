@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [3.4.9-experimental-6] - 2021-04-07
+
+### Fixed
+
+- `spotlight/SpotlightRootDecorator` to not change to none touch mode when tapping VKB button
+
 ## [3.4.9-experimental-5] - 2021-03-17
 
 ### Fixed
