@@ -16,7 +16,8 @@
 
 // Focused Spottable elements
 .focus(@rules; @target) when (isruleset(@rules)) and (@target = parent) {
-	:global(.spotlight-on-focus) & {
+	:global(.spotlight-input-key) &,
+	:global(.spotlight-input-mouse) & {
 		.spottable({
 			&:focus {
 				@rules();
@@ -24,7 +25,7 @@
 		}, @target);
 	}
 
-	:global(.spotlight-on-active) & {
+	:global(.spotlight-input-touch) & {
 		.spottable({
 			&:active {
 				@rules();
@@ -33,7 +34,8 @@
 	}
 }
 .focus(@rules) when (isruleset(@rules)) {
-	:global(.spotlight-on-focus) & {
+	:global(.spotlight-input-key) &,
+	:global(.spotlight-input-mouse) & {
 		.spottable({
 			&:focus {
 				@rules();
@@ -41,7 +43,7 @@
 		});
 	}
 
-	:global(.spotlight-on-active) & {
+	:global(.spotlight-input-touch) & {
 		.spottable({
 			&:active {
 				@rules();

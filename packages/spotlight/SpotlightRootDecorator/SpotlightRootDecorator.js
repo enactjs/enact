@@ -32,7 +32,17 @@ const defaultConfig = {
 	 * @public
 	 * @memberof spotlight/SpotlightRootDecorator.SpotlightRootDecorator.defaultConfig
 	 */
-	noAutoFocus: false
+	noAutoFocus: false,
+
+	/**
+	 * Specifies the id of the React DOM tree root node
+	 *
+	 * @type {String}
+	 * @default 'root'
+	 * @public
+	 * @memberof spotlight/SpotlightRootDecorator.SpotlightRootDecorator.defaultConfig
+	 */
+	rootId: 'root'
 };
 
 /**
@@ -54,10 +64,11 @@ const defaultConfig = {
  * @hoc
  */
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {getConfigEffect, noAutoFocus, rootId} = config;
+	const {getInputTypeSetter, noAutoFocus, rootId} = config;
 	const rootNode = typeof document === 'object' && document.querySelector('#' + rootId) || document;
 	let lastInputType = 'key';
-	let needConfigEffect = false;
+	let inputTypeChanged = false;
+	let inputTypeActivated = false;
 
 	return class extends Component {
 		static displayName = 'SpotlightRootDecorator';
@@ -78,8 +89,8 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				});
 			}
 
-			if (typeof getConfigEffect === 'function') {
-				getConfigEffect(this.configEffect);
+			if (typeof getInputTypeSetter === 'function') {
+				getInputTypeSetter(this.setInputType, this.activateInputType);
 			}
 		}
 
@@ -101,41 +112,52 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			rootNode.removeEventListener('keydown', this.handleKeyDown, {capture: true});
 		}
 
-		configEffect = (inputType) => {
-			if (this && this.containerRef && this.containerRef.current) {
-				if (inputType === 'touch') {
-					this.containerRef.current.classList.remove('spotlight-on-focus');
-					this.containerRef.current.classList.add('spotlight-on-active');
-				} else if (inputType === 'mouse' || inputType === 'key') {
-					this.containerRef.current.classList.add('spotlight-on-focus');
-					this.containerRef.current.classList.remove('spotlight-on-active');
-				} else {
-					this.containerRef.current.classList.remove('spotlight-on-focus');
-					this.containerRef.current.classList.remove('spotlight-on-active');
-				}
-				needConfigEffect = false;
+		activateInputType = (activated) => {
+			inputTypeActivated = activated;
+		};
+
+		setInputType = (inputType) => {
+			const allowedInputTypes = {
+				key: false,
+				mouse: false,
+				touch: false
+			};
+
+			if (!Object.prototype.hasOwnProperty.call(allowedInputTypes, inputType)) {
+				return;
 			} else {
 				lastInputType = inputType;
-				needConfigEffect = true;
+				allowedInputTypes[inputType] = true;
+			}
+
+			if (this && this.containerRef && this.containerRef.current) {
+				Object.keys(allowedInputTypes).map((type) => {
+					this.containerRef.current.classList.toggle('spotlight-input-' + type, allowedInputTypes[type]);
+				});
+				inputTypeChanged = false;
+			} else {
+				inputTypeChanged = true;
 			}
 		};
 
-		handlePointerOver = (ev) => this.configEffect(ev.pointerType);
+		handlePointerOver = (ev) => this.setInputType(ev.pointerType);
 
 		handleFocusIn = () => {
-			if (needConfigEffect) {
-				this.configEffect(lastInputType);
+			if (inputTypeChanged) {
+				this.setInputType(lastInputType);
 			}
 		};
 
 		handleKeyDown = (ev) => {
 			const {keyCode} = ev;
-			if (is('enter', keyCode) && this.containerRef.current.classList.contains('spotlight-on-active')) {
+			if (is('enter', keyCode) && this.containerRef.current.classList.contains('spotlight-input-touch')) {
 				// Prevent onclick event trigger by enter key
 				ev.preventDefault();
 			}
 
-			this.configEffect('key');
+			if (!inputTypeActivated) {
+				this.setInputType('key');
+			}
 		};
 
 		navigableFilter = (elem) => {
