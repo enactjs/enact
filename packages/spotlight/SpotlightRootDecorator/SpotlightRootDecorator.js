@@ -66,9 +66,15 @@ const defaultConfig = {
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {getInputTypeSetter, noAutoFocus, rootId} = config;
 	const rootNode = typeof document === 'object' && document.querySelector('#' + rootId) || document;
-	let lastInputType = 'key';
-	let inputTypeChanged = false;
-	let inputTypeActivated = false;
+	const input = {
+		activated: false,
+		changed: false,
+		types: {
+			key: true,
+			mouse: false,
+			touch: false
+		}
+	};
 
 	return class extends Component {
 		static displayName = 'SpotlightRootDecorator';
@@ -113,38 +119,36 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		activateInputType = (activated) => {
-			inputTypeActivated = activated;
+			input.activated = activated;
+		};
+
+		applyInputType = () => {
+			if (this && this.containerRef && this.containerRef.current) {
+				Object.keys(input.types).map((type) => {
+					this.containerRef.current.classList.toggle('spotlight-input-' + type, input.types[type]);
+				});
+				input.changed = false;
+			} else {
+				input.changed = true;
+			}
 		};
 
 		setInputType = (inputType) => {
-			const allowedInputTypes = {
-				key: false,
-				mouse: false,
-				touch: false
-			};
-
-			if (!Object.prototype.hasOwnProperty.call(allowedInputTypes, inputType)) {
-				return;
-			} else {
-				lastInputType = inputType;
-				allowedInputTypes[inputType] = true;
-			}
-
-			if (this && this.containerRef && this.containerRef.current) {
-				Object.keys(allowedInputTypes).map((type) => {
-					this.containerRef.current.classList.toggle('spotlight-input-' + type, allowedInputTypes[type]);
+			if (Object.prototype.hasOwnProperty.call(input.types, inputType)) {
+				Object.keys(input.types).map((type) => {
+					input.types[type] = false;
 				});
-				inputTypeChanged = false;
-			} else {
-				inputTypeChanged = true;
+				input.types[inputType] = true;
+
+				this.applyInputType();
 			}
 		};
 
 		handlePointerOver = (ev) => this.setInputType(ev.pointerType);
 
 		handleFocusIn = () => {
-			if (inputTypeChanged) {
-				this.setInputType(lastInputType);
+			if (input.changed) {
+				this.applyInputType();
 			}
 		};
 
@@ -155,7 +159,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				ev.preventDefault();
 			}
 
-			if (!inputTypeActivated) {
+			if (!input.activated) {
 				this.setInputType('key');
 			}
 		};
