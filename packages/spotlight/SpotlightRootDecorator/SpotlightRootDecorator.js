@@ -68,7 +68,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const rootNode = typeof document === 'object' && document.querySelector('#' + rootId) || document;
 	const input = {
 		activated: false,
-		changed: false,
+		applied: false,
 		types: {
 			key: true,
 			mouse: false,
@@ -127,9 +127,9 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				Object.keys(input.types).map((type) => {
 					this.containerRef.current.classList.toggle('spotlight-input-' + type, input.types[type]);
 				});
-				input.changed = false;
+				input.applied = true;
 			} else {
-				input.changed = true;
+				input.applied = false;
 			}
 		};
 
@@ -147,7 +147,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handlePointerOver = (ev) => this.setInputType(ev.pointerType);
 
 		handleFocusIn = () => {
-			if (input.changed) {
+			if (!input.applied) {
 				this.applyInputType();
 			}
 		};
