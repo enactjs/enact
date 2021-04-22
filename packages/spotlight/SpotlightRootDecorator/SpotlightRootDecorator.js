@@ -128,23 +128,24 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.containerRef.current.classList.toggle('spotlight-input-' + type, input.types[type]);
 				});
 				input.applied = true;
-			} else {
-				input.applied = false;
 			}
 		};
 
 		setInputType = (inputType) => {
-			if (Object.prototype.hasOwnProperty.call(input.types, inputType)) {
+			if (Object.prototype.hasOwnProperty.call(input.types, inputType) && !input.types[inputType]) {
 				Object.keys(input.types).map((type) => {
 					input.types[type] = false;
 				});
 				input.types[inputType] = true;
 
-				this.applyInputType();
+				input.applied = false;
 			}
 		};
 
-		handlePointerOver = (ev) => this.setInputType(ev.pointerType);
+		handlePointerOver = (ev) => {
+			this.setInputType(ev.pointerType);
+			this.applyInputType();
+		};
 
 		handleFocusIn = () => {
 			if (!input.applied) {
@@ -159,9 +160,12 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				ev.preventDefault();
 			}
 
-			if (!input.activated) {
-				this.setInputType('key');
-			}
+			setTimeout(() => {
+				if (!input.activated) {
+					this.setInputType('key');
+				}
+				this.applyInputType();
+			}, 0);
 		};
 
 		navigableFilter = (elem) => {
