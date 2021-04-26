@@ -61,6 +61,33 @@ describe('Item', () => {
 
 			expect(actual).toBe(expected);
 		});
-	});
 
+		test('should call onClick when clicked', () => {
+			const handleClick = jest.fn();
+			const item = mount(
+				<Item onClick={handleClick}>I am a normal Item</Item>
+			);
+
+			item.simulate('click');
+
+			const expected = 1;
+			const actual = handleClick.mock.calls.length;
+
+			expect(actual).toBe(expected);
+		});
+
+		test('should not call onClick when clicked and disabled', () => {
+			const handleClick = jest.fn();
+			const item = mount(
+				<Item disabled onClick={handleClick}>I am a disabled Item</Item>
+			);
+
+			item.simulate('click');
+
+			const expected = 0;
+			const actual = handleClick.mock.calls.length;
+
+			expect(actual).toBe(expected);
+		});
+	});
 });

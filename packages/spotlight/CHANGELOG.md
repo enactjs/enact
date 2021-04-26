@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `spotlight/SpotlightRootDecorator` to remove focus effect when touching up
+
 ## [4.0.0] - 2021-03-26
 
 No significant changes.
