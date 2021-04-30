@@ -6,6 +6,7 @@
  * @exports spottableClass
  */
 
+ import {on, off} from '@enact/core/dispatcher';
 import handle, {forward, returnsTrue} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
@@ -261,6 +262,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			// eslint-disable-next-line react/no-find-dom-node
 			this.node = ReactDOM.findDOMNode(this);
 			this.forceUpdate();
+
+			on('forceupdate', this.forceUpdate, this.node);
 		}
 
 		get spotRef () {

@@ -1,5 +1,5 @@
 import useClass from '@enact/core/useClass';
-import {useLayoutEffect, useReducer, useRef} from 'react';
+import {useLayoutEffect, useRef} from 'react';
 import ReactDOM from 'react-dom';
 
 import {SpottableCore, spottableClass} from './SpottableCore';
@@ -55,8 +55,7 @@ const REMOTE_OK_KEY = 16777221;
  */
 
 const useSpottable = ({spotRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
-	const useForceUpdate = () => (useReducer(x => x + 1, 0));
-	const hook = useClass(SpottableCore, {emulateMouse, useForceUpdate});
+	const hook = useClass(SpottableCore, {emulateMouse});
 	const context = useRef({
 		prevSpotlightDisabled: spotlightDisabled,
 		spotlightDisabled
