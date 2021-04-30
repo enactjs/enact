@@ -14,7 +14,8 @@ const REMOTE_OK_KEY = 16777221;
  * @memberof ui/Spottable
  * @property {Boolean}  disabled             Whether or not the component is in a disabled state.
  * @property {Boolean}  emulateMouse         Whether or not the component should emulate mouse events as a response to Spotlight 5-way events.
- * @property {Function} onSelectionCancel    Is is called if the component is focused and became disabled.
+ * @property {Function} handleForceUpdate    It is called if the component needs to be force updated.
+ * @property {Function} onSelectionCancel    It is called if the component is focused and became disabled.
  * @property {Function} onSpotlightDisappear The handler to run when the component is removed while retaining focus.
  * @property {Function} onSpotlightDown      The handler to run when the 5-way down key is pressed.
  * @property {Function} onSpotlightLeft      The handler to run when the 5-way left key is pressed.

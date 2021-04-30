@@ -231,7 +231,7 @@ class SpottableCore {
 				// We only need to trigger a rerender if a focused item becomes disabled and still needs its focus.
 				// Once it blurs we need to rerender to remove the spottable class so it will not spot again.
 				// The reason we don't use state is for performance reasons to avoid updates.
-				forward('forceupdate');
+				this.props.handleForceUpdate();
 			}
 		}
 

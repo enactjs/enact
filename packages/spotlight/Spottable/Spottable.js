@@ -6,7 +6,6 @@
  * @exports spottableClass
  */
 
- import {on, off} from '@enact/core/dispatcher';
 import handle, {forward, returnsTrue} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
@@ -108,6 +107,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		const {
 			className,
 			disabled,
+			handleForceUpdate,
 			onSpotlightDisappear,
 			onSpotlightDown,
 			onSpotlightLeft,
@@ -122,6 +122,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		const spot = useSpottable({
 			disabled,
 			emulateMouse,
+			handleForceUpdate,
 			onSelectionCancel: rest.onMouseUp,
 			onSpotlightDisappear,
 			onSpotlightDown,
@@ -164,6 +165,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * The handler to force update the component.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		handleForceUpdate: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -262,16 +271,18 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			// eslint-disable-next-line react/no-find-dom-node
 			this.node = ReactDOM.findDOMNode(this);
 			this.forceUpdate();
-
-			on('forceupdate', this.forceUpdate, this.node);
 		}
+
+		handleForceUpdate = () => {
+			this.forceUpdate();
+		};
 
 		get spotRef () {
 			return this.node;
 		}
 
 		render () {
-			return <SpottableBase {...this.props} spotRef={this.spotRef} />;
+			return <SpottableBase {...this.props} handleForceUpdate={this.handleForceUpdate} spotRef={this.spotRef} />;
 		}
 	}
 
