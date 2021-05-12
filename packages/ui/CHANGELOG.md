@@ -21,6 +21,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/FloatingLayerDecorator` to render floating node properly
 - `ui/Touchable' to handle touch related events only for valid targets
+- `ui/ViewManager` to set `state.entering` to `false` when `noAnimation` prop is changed to `true`
 
 ## [4.0.0-alpha.1] - 2021-02-24
 
