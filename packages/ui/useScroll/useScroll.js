@@ -684,13 +684,13 @@ const useScrollBase = (props) => {
 
 							ev.preventDefault();
 						} else if (overscrollEffectRequired) {
-							checkAndApplyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, overscrollDefaultRatio);
+							checkAndApplyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
 						}
 
 						ev.stopPropagation();
 					} else {
 						if (overscrollEffectRequired && (eventDelta < 0 && mutableRef.current.scrollTop <= 0 || eventDelta > 0 && mutableRef.current.scrollTop >= bounds.maxTop)) {
-							applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, overscrollDefaultRatio);
+							applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
 						}
 
 						needToHideScrollbarTrack = true;
@@ -704,7 +704,7 @@ const useScrollBase = (props) => {
 						ev.stopPropagation();
 					} else {
 						if (overscrollEffectRequired && (eventDelta < 0 && mutableRef.current.scrollLeft <= 0 || eventDelta > 0 && mutableRef.current.scrollLeft >= bounds.maxLeft)) {
-							applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, overscrollDefaultRatio);
+							applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
 						}
 
 						needToHideScrollbarTrack = true;
@@ -846,12 +846,12 @@ const useScrollBase = (props) => {
 		return Math.min(1, 2 * overDistance / baseSize);
 	}
 
-	function applyOverscrollEffect (orientation, edge, overscrollEffectType, ratio) {
+	function applyOverscrollEffect (orientation, edge, overscrollEffectType, ratio = overscrollDefaultRatio) {
 		props.applyOverscrollEffect(orientation, edge, overscrollEffectType, ratio);
 		setOverscrollStatus(orientation, edge, overscrollEffectType === overscrollTypeOnce ? overscrollTypeDone : overscrollEffectType, ratio);
 	}
 
-	function checkAndApplyOverscrollEffect (orientation, edge, overscrollEffectType, ratio) {
+	function checkAndApplyOverscrollEffect (orientation, edge, overscrollEffectType, ratio = overscrollDefaultRatio) {
 		const
 			isVertical = (orientation === 'vertical'),
 			curPos = isVertical ? mutableRef.current.scrollTop : mutableRef.current.scrollLeft,
@@ -927,7 +927,7 @@ const useScrollBase = (props) => {
 		if (mutableRef.current.isDragging) {
 			applyOverscrollEffectOnDrag(orientation, edge, targetPosition, overscrollTypeHold);
 		} else if (edge) {
-			checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce, overscrollDefaultRatio);
+			checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
 	}
 

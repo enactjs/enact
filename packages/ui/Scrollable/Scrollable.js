@@ -35,7 +35,6 @@ const
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
 		nop: () => {},
-		overscrollDefaultRatio: 0.5,
 		overscrollTypeNone: 0,
 		overscrollTypeHold: 1,
 		overscrollTypeOnce: 2,
@@ -51,7 +50,6 @@ const
 		isPageDown,
 		isPageUp,
 		nop,
-		overscrollDefaultRatio,
 		overscrollTypeDone,
 		overscrollTypeHold,
 		overscrollTypeNone,
@@ -811,7 +809,7 @@ class ScrollableBase extends Component {
 		this.setOverscrollStatus(orientation, edge, type === overscrollTypeOnce ? overscrollTypeDone : type, ratio);
 	};
 
-	checkAndApplyOverscrollEffect = (orientation, edge, type, ratio) => {
+	checkAndApplyOverscrollEffect = (orientation, edge, type, ratio = 1) => {
 		const
 			isVertical = (orientation === 'vertical'),
 			curPos = isVertical ? this.scrollTop : this.scrollLeft,
@@ -870,7 +868,7 @@ class ScrollableBase extends Component {
 		if (this.isDragging) {
 			this.applyOverscrollEffectOnDrag(orientation, edge, targetPosition, overscrollTypeHold);
 		} else if (edge) {
-			this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce, overscrollDefaultRatio);
+			this.checkAndApplyOverscrollEffect(orientation, edge, overscrollTypeOnce);
 		}
 	};
 
