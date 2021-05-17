@@ -107,6 +107,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		const {
 			className,
 			disabled,
+			handleForceUpdate,
 			onSpotlightDisappear,
 			onSpotlightDown,
 			onSpotlightLeft,
@@ -121,6 +122,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		const spot = useSpottable({
 			disabled,
 			emulateMouse,
+			handleForceUpdate,
 			onSelectionCancel: rest.onMouseUp,
 			onSpotlightDisappear,
 			onSpotlightDown,
@@ -163,6 +165,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * The handler to force update the component.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		handleForceUpdate: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -263,12 +273,16 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.forceUpdate();
 		}
 
+		handleForceUpdate = () => {
+			this.forceUpdate();
+		};
+
 		get spotRef () {
 			return this.node;
 		}
 
 		render () {
-			return <SpottableBase {...this.props} spotRef={this.spotRef} />;
+			return <SpottableBase {...this.props} handleForceUpdate={this.handleForceUpdate} spotRef={this.spotRef} />;
 		}
 	}
 
