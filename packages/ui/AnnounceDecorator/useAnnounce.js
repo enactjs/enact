@@ -30,7 +30,7 @@ import Announce from './Announce';
  * @returns {useAnnounceInterface}
  * @private
  */
-function useAnnouce () {
+function useAnnounce () {
 	const ref = useRef(null);
 	const announce = useCallback(message => {
 		if (ref.current) {
@@ -44,7 +44,7 @@ function useAnnouce () {
 	};
 }
 
-export default useAnnouce;
+export default useAnnounce;
 export {
-	useAnnouce
+	useAnnounce
 };
