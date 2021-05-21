@@ -40,6 +40,13 @@ const hasTouchScreen = () => {
 	);
 };
 
+const webOSVersion = {
+	38: 3,
+	53: 4,
+	68: 5,
+	79: 6
+};
+
 const platforms = [
 	// Windows Phone 7 - 10
 	{platform: 'windowsPhone', regex: /Windows Phone (?:OS )?(\d+)[.\d]+/},
@@ -66,10 +73,8 @@ const platforms = [
 	// LG webOS
 	{platform: 'webos', regex: /Web0S;.*Safari\/537.41/, forceVersion: 1},
 	{platform: 'webos', regex: /Web0S;.*Safari\/538.2/, forceVersion: 2},
-	{platform: 'webos', regex: /Web0S;.*Chrome\/38/, forceVersion: 3},
-	{platform: 'webos', regex: /Web0S;.*Chrome\/53/, forceVersion: 4},
-	{platform: 'webos', regex: /Web0S;.*Chrome\/68/, forceVersion: 5},
-	// LG webOS of indeterminate version
+	{platform: 'webos', regex: /Web0S;.*Chrome\/(\d+)/},
+	// LG webOS of indeterminate versionre
 	{platform: 'webos', regex: /Web0S;/, forceVersion: -1},
 	// LuneOS
 	{platform: 'webos', regex: /LuneOS/, forceVersion: -1, extra: {luneos: 1}},
@@ -119,6 +124,12 @@ const parseUserAgent = (userAgent) => {
 
 			if ('forceVersion' in p) {
 				v = p.forceVersion;
+			} else if (p.platform  === 'webos') {
+				v = webOSVersion[m[1]] || -1;
+
+				if (v >= 7 || v === -1) {
+					plat.chrome = Number(m[1]);
+				}
 			} else {
 				v = Number(m[1]);
 			}

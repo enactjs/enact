@@ -41,10 +41,9 @@ let lastSelectTarget = null;
 let selectCancelled = false;
 
 class SpottableCore {
-	constructor ({emulateMouse, useForceUpdate}) {
+	constructor ({emulateMouse}) {
 		this.config = {
-			emulateMouse,
-			useForceUpdate
+			emulateMouse
 		};
 		this.props = {};
 		this.context = {};
@@ -232,7 +231,7 @@ class SpottableCore {
 				// We only need to trigger a rerender if a focused item becomes disabled and still needs its focus.
 				// Once it blurs we need to rerender to remove the spottable class so it will not spot again.
 				// The reason we don't use state is for performance reasons to avoid updates.
-				this.config.useForceUpdate();
+				this.props.handleForceUpdate();
 			}
 		}
 
