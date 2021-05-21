@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.0.1] - 2021-05-21
+
+### Changed
+
+- `spotlight/SpotlightRootDecorator` to remove focus effect when touching up
+
+### Fixed
+
+- `core/platform` to detect chromium version for webOS
+
 ## [4.0.0] - 2021-03-26
 
 ### Removed
