@@ -17,6 +17,35 @@ import {rootContainerId} from '../src/container';
 
 import '../styles/debug.less';
 
+const input = {
+	activated: false,
+	applied: false,
+	types: {
+		key: true,
+		mouse: false,
+		touch: false
+	}
+};
+
+const activateInputType = (activated) => {
+	input.activated = activated;
+};
+
+const getInputType = () => {
+	return Object.keys(input.types).find(type => input.types[type]);
+};
+
+const setInputType = (inputType) => {
+	if (Object.prototype.hasOwnProperty.call(input.types, inputType) && !input.types[inputType]) {
+		Object.keys(input.types).map((type) => {
+			input.types[type] = false;
+		});
+		input.types[inputType] = true;
+
+		input.applied = false;
+	}
+};
+
 /**
  * Default configuration for SpotlightRootDecorator
  *
@@ -32,17 +61,7 @@ const defaultConfig = {
 	 * @public
 	 * @memberof spotlight/SpotlightRootDecorator.SpotlightRootDecorator.defaultConfig
 	 */
-	noAutoFocus: false,
-
-	/**
-	 * Specifies the id of the React DOM tree root node
-	 *
-	 * @type {String}
-	 * @default 'root'
-	 * @public
-	 * @memberof spotlight/SpotlightRootDecorator.SpotlightRootDecorator.defaultConfig
-	 */
-	rootId: 'root'
+	noAutoFocus: false
 };
 
 /**
@@ -64,17 +83,7 @@ const defaultConfig = {
  * @hoc
  */
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {getInputTypeSetter, noAutoFocus, rootId} = config;
-	const rootNode = typeof document === 'object' && (document.querySelector('#' + rootId) || document);
-	const input = {
-		activated: false,
-		applied: false,
-		types: {
-			key: true,
-			mouse: false,
-			touch: false
-		}
-	};
+	const {noAutoFocus} = config;
 
 	return class extends Component {
 		static displayName = 'SpotlightRootDecorator';
@@ -94,10 +103,6 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					overflow: true
 				});
 			}
-
-			if (typeof getInputTypeSetter === 'function') {
-				getInputTypeSetter(this.setInputType, this.activateInputType);
-			}
 		}
 
 		componentDidMount () {
@@ -107,8 +112,9 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (typeof document === 'object') {
 				document.addEventListener('focusin', this.handleFocusIn, {capture: true});
-				document.addEventListener('pointerover', this.handlePointerOver, {capture: true});
 				document.addEventListener('keydown', this.handleKeyDown, {capture: true});
+				document.addEventListener('pointermove', this.handlePointerMove, {capture: true});
+				document.addEventListener('pointerover', this.handlePointerOver, {capture: true});
 			}
 		}
 
@@ -117,14 +123,11 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (typeof document === 'object') {
 				document.removeEventListener('focusin', this.handleFocusIn, {capture: true});
-				document.removeEventListener('pointerover', this.handlePointerOver, {capture: true});
 				document.removeEventListener('keydown', this.handleKeyDown, {capture: true});
+				document.removeEventListener('pointermove', this.handlePointerMove, {capture: true});
+				document.removeEventListener('pointerover', this.handlePointerOver, {capture: true});
 			}
 		}
-
-		activateInputType = (activated) => {
-			input.activated = activated;
-		};
 
 		applyInputType = () => {
 			if (this && this.containerRef && this.containerRef.current) {
@@ -135,28 +138,13 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		};
 
-		setInputType = (inputType) => {
-			if (Object.prototype.hasOwnProperty.call(input.types, inputType) && !input.types[inputType]) {
-				Object.keys(input.types).map((type) => {
-					input.types[type] = false;
-				});
-				input.types[inputType] = true;
-
-				input.applied = false;
-			}
-		};
-
-		handlePointerOver = (ev) => {
-			this.setInputType(ev.pointerType);
-			this.applyInputType();
-		};
-
 		handleFocusIn = () => {
 			if (!input.applied) {
 				this.applyInputType();
 			}
 		};
 
+		// For key input
 		handleKeyDown = (ev) => {
 			const {keyCode} = ev;
 			if (is('enter', keyCode) && this.containerRef.current.classList.contains('spotlight-input-touch')) {
@@ -166,14 +154,30 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			setTimeout(() => {
 				if (!input.activated) {
-					this.setInputType('key');
+					setInputType('key');
 				}
 				this.applyInputType();
 			}, 0);
 		};
 
+		// For mouse input
+		handlePointerMove = (ev) => {
+			if (ev.pointerType === 'mouse') {
+				setInputType('mouse');
+				this.applyInputType();
+			}
+		};
+
+		// For touch input
+		handlePointerOver = (ev) => {
+			if (ev.pointerType === 'touch') {
+				setInputType('touch');
+				this.applyInputType();
+			}
+		};
+
 		navigableFilter = (elem) => {
-			while (elem && elem !== rootNode && elem.nodeType === 1) {
+			while (elem && elem !== document && elem.nodeType === 1) {
 				if (elem.getAttribute('data-spotlight-container-disabled') === 'true') return false;
 				elem = elem.parentNode;
 			}
@@ -191,5 +195,8 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 export default SpotlightRootDecorator;
 export {
-	SpotlightRootDecorator
+	SpotlightRootDecorator,
+	activateInputType,
+	getInputType,
+	setInputType
 };
