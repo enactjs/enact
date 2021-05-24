@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.0.2] - 2021-05-24
+
+### Fixed
+
+- `spotlight/SpotlightRootDecorator` not to fail in isomorphic build
+
 ## [4.0.1] - 2021-05-21
 
 ### Changed
