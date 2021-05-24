@@ -65,7 +65,7 @@ const defaultConfig = {
  */
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {getInputTypeSetter, noAutoFocus, rootId} = config;
-	const rootNode = typeof document === 'object' && document.querySelector('#' + rootId) || document;
+	const rootNode = typeof document === 'object' && (document.querySelector('#' + rootId) || document);
 	const input = {
 		activated: false,
 		applied: false,
@@ -105,17 +105,21 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				Spotlight.focus();
 			}
 
-			rootNode.addEventListener('focusin', this.handleFocusIn, {capture: true});
-			rootNode.addEventListener('pointerover', this.handlePointerOver, {capture: true});
-			rootNode.addEventListener('keydown', this.handleKeyDown, {capture: true});
+			if (typeof document === 'object') {
+				document.addEventListener('focusin', this.handleFocusIn, {capture: true});
+				document.addEventListener('pointerover', this.handlePointerOver, {capture: true});
+				document.addEventListener('keydown', this.handleKeyDown, {capture: true});
+			}
 		}
 
 		componentWillUnmount () {
 			Spotlight.terminate();
 
-			rootNode.removeEventListener('focusin', this.handleFocusIn, {capture: true});
-			rootNode.removeEventListener('pointerover', this.handlePointerOver, {capture: true});
-			rootNode.removeEventListener('keydown', this.handleKeyDown, {capture: true});
+			if (typeof document === 'object') {
+				document.removeEventListener('focusin', this.handleFocusIn, {capture: true});
+				document.removeEventListener('pointerover', this.handlePointerOver, {capture: true});
+				document.removeEventListener('keydown', this.handleKeyDown, {capture: true});
+			}
 		}
 
 		activateInputType = (activated) => {
