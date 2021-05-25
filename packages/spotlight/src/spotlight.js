@@ -733,7 +733,7 @@ const Spotlight = (function () {
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
 		 */
-		focus: function (elem) {
+		focus: function (elem, enterTo) {
 			let target = elem;
 			let wasContainerId = false;
 
@@ -741,7 +741,7 @@ const Spotlight = (function () {
 				target = getTargetByContainer();
 			} else if (typeof elem === 'string') {
 				if (getContainerConfig(elem)) {
-					target = getTargetByContainer(elem);
+					target = getTargetByContainer(elem, enterTo);
 					wasContainerId = true;
 				} else if (/^[\w\d-]+$/.test(elem)) {
 					// support component IDs consisting of alphanumeric, dash, or underscore
@@ -750,7 +750,7 @@ const Spotlight = (function () {
 					target = getTargetBySelector(elem);
 				}
 			} else if (isContainer(elem)) {
-				target = getTargetByContainer(getContainerId(elem));
+				target = getTargetByContainer(getContainerId(elem), enterTo);
 			}
 
 			const nextContainerIds = getContainersForNode(target);
