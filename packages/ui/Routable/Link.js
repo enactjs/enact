@@ -9,13 +9,13 @@ import useLink from './useLink';
 
 /**
  * A component that is used to make a trigger to navigate inside of {@link ui/Routable.Routable} component.
- * 
+ *
  * In the following example, `Sample` would render `Main` with two Links for `About` and `FAQ`.
  * If `About` is clicked, the content of `About` would be displayed under `Main`.
- * 
+ *
  * ```
  * const Views = Routable({navigate: 'onNavigate'}, ({children}) => <div>{children}</div>);
- * 
+ *
  * const Main = () => (
  *	  <div>
  *		  <Link path="./about">About</Link>
@@ -24,9 +24,9 @@ import useLink from './useLink';
  * );
  *
  * const About = () => (<div>Greetings! We are Enact team.</div>);
- * 
+ *
  * const Faq = () => (<div>List of FAQ</div>);
- * 
+ *
  * const Sample = (props) => {
  *	  const [path, nav] = useState('main'); // use 'main' for the default path
  *	  const handleNavigate = useCallback((ev) => nav(ev.path), [nav]); // if onNavigate is called with a new path, update the state
@@ -96,7 +96,7 @@ const LinkBase = kind({
 /**
  * A higher-order component that adds support to a component to handle navigates actions.
  * When using Linked component you must give the `path` property. And the component should forward `onClick` event.
- * 
+ *
  * ```
  * const CustomItemBase = kind({
  *	  name: 'CustomItem',
