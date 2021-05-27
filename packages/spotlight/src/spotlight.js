@@ -730,10 +730,12 @@ const Spotlight = (function () {
 		 * @param {String|Node} [elem] The spotlight ID or selector for either a spottable
 		 *  component or a spotlight container, or spottable node. If not supplied, the default
 		 *  container will be focused.
+		 * @param {Object} [conatinerOption] A object containing `enterTo`.(optional)
+		 *  It will be passed to the getTargetByContainer when `elem` is container.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
 		 */
-		focus: function (elem, enterTo) {
+		focus: function (elem, conatinerOption = {}) {
 			let target = elem;
 			let wasContainerId = false;
 
@@ -741,7 +743,7 @@ const Spotlight = (function () {
 				target = getTargetByContainer();
 			} else if (typeof elem === 'string') {
 				if (getContainerConfig(elem)) {
-					target = getTargetByContainer(elem, enterTo);
+					target = getTargetByContainer(elem, conatinerOption.enterTo);
 					wasContainerId = true;
 				} else if (/^[\w\d-]+$/.test(elem)) {
 					// support component IDs consisting of alphanumeric, dash, or underscore
@@ -750,7 +752,7 @@ const Spotlight = (function () {
 					target = getTargetBySelector(elem);
 				}
 			} else if (isContainer(elem)) {
-				target = getTargetByContainer(getContainerId(elem), enterTo);
+				target = getTargetByContainer(getContainerId(elem), conatinerOption.enterTo);
 			}
 
 			const nextContainerIds = getContainersForNode(target);
