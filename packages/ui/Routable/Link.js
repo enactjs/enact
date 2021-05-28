@@ -28,8 +28,10 @@ import useLink from './useLink';
  * const Faq = () => (<div>List of FAQ</div>);
  *
  * const Sample = (props) => {
- *	  const [path, nav] = useState('main'); // use 'main' for the default path
- *	  const handleNavigate = useCallback((ev) => nav(ev.path), [nav]); // if onNavigate is called with a new path, update the state
+ *	  // use 'main' for the default path
+ *	  const [path, nav] = useState('main');
+ *	  // if onNavigate is called with a new path, update the state
+ *	  const handleNavigate = useCallback((ev) => nav(ev.path), [nav]);
  *
  *	  return (
  *		  <Views {...props} path={path} onNavigate={handleNavigate}>
