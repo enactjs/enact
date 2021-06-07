@@ -8,43 +8,9 @@ import {Component} from 'react';
 import useLink from './useLink';
 
 /**
- * A component that is used to make a trigger to navigate inside of {@link ui/Routable.Routable} component.
+ * A base component that is used to make a link.
  *
- * In the following example, `Sample` would render `Main` with two Links for `About` and `FAQ`.
- * If `About` is clicked, the content of `About` would be displayed under `Main`.
- *
- * ```
- * const Views = Routable({navigate: 'onNavigate'}, ({children}) => <div>{children}</div>);
- *
- * const Main = () => (
- *	  <div>
- *		  <Link path="./about">About</Link>
- *		  <Link path="./faq">FAQ</Link>
- *	  </div>
- * );
- *
- * const About = () => (<div>Greetings! We are Enact team.</div>);
- *
- * const Faq = () => (<div>List of FAQ</div>);
- *
- * const Sample = (props) => {
- *	  // use 'main' for the default path
- *	  const [path, nav] = useState('main');
- *	  // if onNavigate is called with a new path, update the state
- *	  const handleNavigate = useCallback((ev) => nav(ev.path), [nav]);
- *
- *	  return (
- *		  <Views {...props} path={path} onNavigate={handleNavigate}>
- *			  <Route path="main" component={Main}>
- *				  <Route path="about" component={About} />
- *				  <Route path="faq" component={Faq} />
- *			  </Route>
- *		  </Views>
- *	  );
- * };
- * ```
- *
- * @class Link
+ * @class LinkBase
  * @ui
  * @memberof ui/Routable
  * @public
@@ -52,14 +18,13 @@ import useLink from './useLink';
 const LinkBase = kind({
 	name: 'Link',
 
-	propTypes: {
+	propTypes: /** @lends ui/Routable.Link.prototype */ {
 		/**
-		 * The `path` to navigate matches the path of the {@link ui/Routable.Routable} container.
-		 *
+		 * The `path` to navigate that matches the path of the {@link ui/Routable.Routable} container.
+		 * 
 		 * @type {String}
 		 * @required
 		 * @public
-		 * @memberof ui/Routable.Link.prototype
 		 */
 		path: PropTypes.string.isRequired,
 
@@ -69,7 +34,6 @@ const LinkBase = kind({
 		 * @type {Boolean}
 		 * @default false
 		 * @public
-		 * @memberof ui/Routable.Link.prototype
 		 */
 		disabled: PropTypes.bool
 	},
@@ -96,9 +60,12 @@ const LinkBase = kind({
 });
 
 /**
- * A higher-order component that adds support to a component to handle navigates actions.
- * When using Linked component you must give the `path` property. And the component should forward `onClick` event.
+ * A higher-order component adds support to a component to handle `navigate` from [`Routable`]{@link ui/Routable.Routable}.
+ * It has configuration placed in the first argument to define which event will be used to navigate.
+ * `onClick` event is used by default. Thus, if you don't configure it, the component should forward `onClick` event
+ * to make [`Routable`]{@link ui/Routable.Routable} know when navigation is trigerred.
  *
+ * Example:
  * ```
  * const CustomItemBase = kind({
  *	  name: 'CustomItem',
@@ -116,7 +83,8 @@ const LinkBase = kind({
  *	  }
  * });
  *
- * const CustomItem = Linkable(CustomItemBase);
+ * const CustomItem = Linkable({navigate: 'onClick'}, CustomItemBase); 
+ * // same as const CustomItem = Linkable(CustomItemBase);
  *
  * const Main = () => (
  *	  <div>
@@ -163,6 +131,50 @@ const Linkable = hoc({navigate: 'onClick'}, (config, Wrapped) => {
 	};
 });
 
+/**
+ * A component that is used to make a link to navigate among [`Route`]{@link ui/Routable.Route} components.
+ *
+ * In the following example, `Sample` would render `Main` with two Links for `About` and `FAQ`.
+ * If `About` is clicked, the content of `About` would be displayed under `Main`.
+ *
+ * Example:
+ * ```
+ * const Views = Routable({navigate: 'onNavigate'}, ({children}) => <div>{children}</div>);
+ *
+ * const Main = () => (
+ *	  <div>
+ *		  <Link path="./about">About</Link>
+ *		  <Link path="./faq">FAQ</Link>
+ *	  </div>
+ * );
+ *
+ * const About = () => (<div>Greetings! We are Enact team.</div>);
+ *
+ * const Faq = () => (<div>List of FAQ</div>);
+ *
+ * const Sample = (props) => {
+ *	  // use 'main' for the default path
+ *	  const [path, nav] = useState('main');
+ *	  // if onNavigate is called with a new path, update the state
+ *	  const handleNavigate = useCallback((ev) => nav(ev.path), [nav]);
+ *
+ *	  return (
+ *		  <Views {...props} path={path} onNavigate={handleNavigate}>
+ *			  <Route path="main" component={Main}>
+ *				  <Route path="about" component={About} />
+ *				  <Route path="faq" component={Faq} />
+ *			  </Route>
+ *		  </Views>
+ *	  );
+ * };
+ * ```
+ *
+ * @class Link
+ * @ui
+ * @mixes ui/Routable.Linkable
+ * @memberof ui/Routable
+ * @public
+ */
 const Link = Linkable(LinkBase);
 
 export default Link;
