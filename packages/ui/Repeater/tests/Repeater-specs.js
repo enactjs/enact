@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-no-bind */
-
 import {mount, shallow} from 'enzyme';
 import Repeater, {RepeaterBase} from '../Repeater';
 
@@ -8,7 +6,6 @@ describe('Repeater Specs', () => {
 	const objItems = stringItems.map((content, key) => ({key, content}));
 
 	const CustomRootType = (props) => <div {...props} />;
-	// eslint-disable-next-line enact/prop-types, enact/display-name
 	const CustomType = (props) => <div>{props.content}</div>;
 
 	test('should have a root span element', () => {
