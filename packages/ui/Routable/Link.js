@@ -21,7 +21,7 @@ const LinkBase = kind({
 	propTypes: /** @lends ui/Routable.Link.prototype */ {
 		/**
 		 * The `path` to navigate that matches the path of the {@link ui/Routable.Routable} container.
-		 * 
+		 *
 		 * @type {String}
 		 * @required
 		 * @public
@@ -83,7 +83,7 @@ const LinkBase = kind({
  *	  }
  * });
  *
- * const CustomItem = Linkable({navigate: 'onClick'}, CustomItemBase); 
+ * const CustomItem = Linkable({navigate: 'onClick'}, CustomItemBase);
  * // same as const CustomItem = Linkable(CustomItemBase);
  *
  * const Main = () => (
