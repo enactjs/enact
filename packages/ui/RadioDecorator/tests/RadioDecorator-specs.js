@@ -3,7 +3,6 @@ import {RadioControllerDecorator, RadioDecorator} from '../RadioDecorator';
 
 describe('RadioDecorator', () => {
 
-	// eslint-disable-next-line enact/prop-types
 	const Item = ({onClick, active}) => (
 		<span onClick={onClick}>
 			{active ? 'Active' : 'Inactive'}
@@ -43,7 +42,7 @@ describe('RadioDecorator', () => {
 		'should be activated when its prop is set to true after mount',
 		() => {
 			const Component = RadioDecorator({prop: 'active'}, Item);
-			const Wrapper = ({active}) => (	// eslint-disable-line enact/prop-types
+			const Wrapper = ({active}) => (
 				<Controller>
 					<Component active={active} />
 				</Controller>
@@ -138,7 +137,7 @@ describe('RadioDecorator', () => {
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
 
 		// deactivate() is only called when there was a previously active item
-		const Wrapper = ({active}) => (	// eslint-disable-line enact/prop-types
+		const Wrapper = ({active}) => (
 			<Controller>
 				<Component active={!active} />
 				<Component active={active} />

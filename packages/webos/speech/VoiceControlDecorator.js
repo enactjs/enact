@@ -54,7 +54,7 @@ import hoc from '@enact/core/hoc';
  * @hoc
  * @public
  */
-const VoiceControlDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
+const VoiceControlDecorator = hoc((config, Wrapped) => {
 	return class extends Component {
 		static displayName = 'VoiceControlDecorator';
 

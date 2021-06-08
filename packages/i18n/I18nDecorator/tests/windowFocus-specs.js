@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-no-bind */
-
 import {onWindowFocus} from '../windowFocus';
 
 describe('windowFocus', () => {

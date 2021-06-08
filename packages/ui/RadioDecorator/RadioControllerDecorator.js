@@ -14,7 +14,7 @@ const RadioContext = createContext();
  * @hoc
  * @public
  */
-const RadioControllerDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
+const RadioControllerDecorator = hoc((config, Wrapped) => {
 
 	return class extends Component {
 		static displayName = 'RadioControllerDecorator';
