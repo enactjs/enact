@@ -11,13 +11,13 @@ can mix and match third-party libraries with Enact easily.
 ## Using Third-Party Components Inside of Enact
 
 When creating an app using `enact create`, it creates app boilerplate that is set up for a
-`Moonstone` styled app. However, if you want to use another UI library like
-[`material-ui`](https://material-ui.com/) (see: [Moonstone + material-ui example](https://codesandbox.io/s/l5my52r299)), [`reactstrap`](https://reactstrap.github.io/), or [`react-router`](https://reacttraining.com/react-router/), just use `npm install`.
+`Sandstone` styled app. However, if you want to use another UI library like
+[`material-ui`](https://material-ui.com/) (see: [Sandstone + material-ui example](https://codesandbox.io/s/enactsandstone-material-uicore-example-gjjl8)), [`reactstrap`](https://reactstrap.github.io/), or [`react-router`](https://reactrouter.com/), just use `npm install`.
 
 You can include components just like you normally would by using `import`.
 
 ```js
-import { Button } from 'reactstrap';
+import {Button} from 'reactstrap';
 
 const App = kind({
 	name: 'App',
@@ -38,7 +38,7 @@ For libraries like bootstrap, you can also import the css in your `App.less` fil
 
 The advantage of this is you get to use Enact's `cli` to develop, test, and build applications.
 
-There is also a [Moonstone starter template](https://codesandbox.io/s/z2wnj3jznx) on CodeSandbox that can be used to quickly test
+There is also a [Sandstone starter template](https://codesandbox.io/s/enactsandstone-starter-drkcy) on CodeSandbox that can be used to quickly test
 how third-party libraries and components can be used with Enact.
 
 ## Using Enact Outside of Enact
@@ -68,28 +68,25 @@ const App = kind({
 });
 ```
 
-You can even use `Moonstone` themed components after installing `@enact/moonstone`.
+You can even use `Sandstone` themed components after installing `@enact/sandstone`.
 
 ```js
-import BodyText from '@enact/moonstone/BodyText';
-import Button from '@enact/moonstone/Button';
-import { MoonstoneDecorator } from '@enact/moonstone/MoonstoneDecorator';
-import { Component } from 'react';
+import BodyText from '@enact/sandstone/BodyText';
+import Button from '@enact/sandstone/Button';
+import ThemeDecorator from '@enact/sandstone/ThemeDecorator';
 
-class App extends Component {
-	render() {
-		return (
-			<div>
-				<BodyText centered>
-					These are Enact Moonstone components in a CRA app
-				</BodyText>
-				<Button>Click me</Button>
-			</div>
-		);
-	};
+function App() {
+	return (
+		<div>
+			<BodyText centered>
+				These are Enact Sandstone components in a CRA app
+			</BodyText>
+			<Button>Click me</Button>
+		</div>
+	);
 }
 
-export default MoonstoneDecorator(App);
+export default ThemeDecorator(App);
 ```
 
 ### Styling Enact Components Outside of Enact
@@ -106,53 +103,50 @@ is a good reference for enabling CSS modules prior to `2.0.0`.
 
 ```css
 /* Button.module.css */
-.bg { /* public class name in Moonstone/Button */
+.bg { /* public class name in Sandstone/Button */
     background-color: #a4939d !important;
 }
 ```
 
 ```js
 // App.js
-import Button from '@enact/moonstone/Button';
-import { MoonstoneDecorator } from '@enact/moonstone/MoonstoneDecorator';
-import { Component } from 'react';
+import Button from '@enact/sandstone/Button';
+import ThemeDecorator from '@enact/sandstone/ThemeDecorator';
 
 import buttonCss from './Button.module.css';
 
-class App extends Component {
-	render() {
-		return (
-			<div>
-				<Button css={buttonCss}>Click me</Button>
-			</div>
-		);
-	};
+function App() {
+	return (
+		<div>
+			<Button css={buttonCss}>Click me</Button>
+		</div>
+	);
 }
 
-export default MoonstoneDecorator(App);
+export default ThemeDecorator(App);
 ```
 
 ### Internationalization Outside of Enact
 
 #### CRA Example
-In order to use the [`@enact/i18n`](../../developer-guide/i18n) library for internationalization, you can [eject](https://facebook.github.io/create-react-app/docs/available-scripts#npm-run-eject)
+In order to use the [`@enact/i18n`](../../developer-guide/i18n) library for internationalization, you can [eject](https://create-react-app.dev/docs/available-scripts/#npm-run-eject)
 your CRA app, install your required Enact libraries (plus, `@enact/dev-utils`), and update the webpack configuration.
 
 ```json
 // package.json
-
 ...
 "devDependencies" : {
-  "@enact/dev-utils": "2.0.0"
+  "@enact/dev-utils": "^4.1.1"
 },
 "dependencies": {
   ...
-  "@enact/i18n": "2.3.0",
-  "@enact/moonstone": "2.3.0",
+  "@enact/i18n": "^4.0.2",
+  "@enact/sandstone": "^1.5.1",
   ...
 }
 ...
-
+```
+```js
 // webpack.config.js
 ...
 const {GracefulFsPlugin, ILibPlugin} = require('@enact/dev-utils');
