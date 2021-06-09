@@ -7,7 +7,7 @@ describe('Skinnable Specs', () => {
 	function Base () {
 		return null;
 	}
-	function Component ({config}) { // eslint-disable-line enact/prop-types
+	function Component ({config}) {
 		const skins = useSkins(config);
 		return (
 			<Base {...skins} />

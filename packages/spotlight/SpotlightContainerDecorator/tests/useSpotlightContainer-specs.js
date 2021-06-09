@@ -1,5 +1,3 @@
-/* eslint-disable enact/prop-types */
-
 import {shallow} from 'enzyme';
 import Spotlight from '../../src/spotlight';
 import {getContainerConfig} from '../../src/container';
