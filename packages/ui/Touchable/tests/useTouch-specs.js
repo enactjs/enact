@@ -1,6 +1,3 @@
-/* eslint-disable enact/prop-types */
-/* eslint-disable react/jsx-no-bind */
-
 import {shallow, mount} from 'enzyme';
 
 import useTouch from '../useTouch';

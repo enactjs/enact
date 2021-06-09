@@ -1,4 +1,3 @@
-/* eslint-disable enact/prop-types */
 import {Component} from 'react';
 import {mount} from 'enzyme';
 import ViewManager from '../';
