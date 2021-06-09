@@ -928,7 +928,7 @@ const Spotlight = (function () {
 		/**
 		 * Focuses the next spottable control from the position specified in the direction specified.
 		 *
-		 * @param {String} direction Direction to move, one of `'left'`, `'right'`, `'up'` or `'down'`
+		 * @param {String} direction Direction to move, one of `'left'`, `'right'`, `'up'`, or `'down'`
 		 * @param {Object} position `x` and `y` coordinates for the pointer
 		 * @private
 		 */
