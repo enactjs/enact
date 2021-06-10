@@ -582,7 +582,7 @@ class VirtualListBasic extends Component {
 			offset = optionalOffset;
 		} else if (this.props.itemSizes) {
 			offset = primary.clientSize - this.props.itemSizes[index] - optionalOffset;
-		} if (stickTo === 'center') {
+		} else if (stickTo === 'center') {
 			offset = (primary.clientSize / 2) - (primary.gridSize / 2);
 		} else {
 			offset = primary.clientSize - primary.itemSize - optionalOffset;
