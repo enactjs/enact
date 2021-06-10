@@ -7,7 +7,6 @@ describe('useId', () => {
 		return null;
 	}
 
-	// eslint-disable-next-line enact/prop-types
 	function Component ({key, prefix, onUnmount}) {
 		const provider = useId({prefix});
 

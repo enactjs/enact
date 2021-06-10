@@ -1,5 +1,3 @@
-/* eslint-disable enact/prop-types */
-
 import {mount} from 'enzyme';
 import {createRef} from 'react';
 

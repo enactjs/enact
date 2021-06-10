@@ -1,4 +1,3 @@
-/* eslint-disable enact/prop-types */
 import {mount, shallow} from 'enzyme';
 import Toggleable from '../Toggleable';
 

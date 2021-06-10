@@ -3,7 +3,6 @@ import useControlledState from '../useControlledState';
 
 describe('useControlledState', () => {
 	function Component (props) {
-		// eslint-disable-next-line enact/prop-types
 		const [value, setValue] = useControlledState(props.defaultValue, props.value, 'value' in props);
 		return <div setValue={setValue}>{value}</div>;
 	}
