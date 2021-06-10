@@ -522,7 +522,7 @@ class VirtualListBasic extends Component {
 
 	getMoreInfo = () => this.moreInfo;
 
-	getCenterItemIndexFromScrollPosition = (scrollPosition) => Math.round((scrollPosition + (this.primary.clientSize / 2)) / this.primary.gridSize);
+	getCenterItemIndexFromScrollPosition = (scrollPosition) => Math.floor((scrollPosition + (this.primary.clientSize / 2)) / this.primary.gridSize) * this.dimensionToExtent + Math.floor(this.dimensionToExtent / 2);
 
 	getGridPosition (index) {
 		const
