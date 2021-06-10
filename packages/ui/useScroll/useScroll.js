@@ -640,7 +640,7 @@ const useScrollBase = (props) => {
 			}
 
 			if (snapToCenter) {
-				if (scrollMode === 'native' && canScrollV) {
+				if (scrollMode === 'native' && (canScrollV || canScrollH)) {
 					ev.preventDefault();
 					forward('onWheel', ev, props);
 					return;
