@@ -134,7 +134,7 @@ class Accelerator {
 	 */
 	setFrequency = (frequency) => {
 		this.frequency = frequency;
-	}
+	};
 
 	/**
 	 * Resets the Accelerator instance to the default values.
