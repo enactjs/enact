@@ -129,7 +129,7 @@ class Accelerator {
 	 *
 	 * @function
 	 * @returns {undefined}
-	 * @public
+	 * @private
 	 * @memberof spotlight/Accelerator.Accelerator.prototype
 	 */
 	setFrequency = (frequency) => {
