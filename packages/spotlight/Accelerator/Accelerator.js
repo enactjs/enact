@@ -125,18 +125,6 @@ class Accelerator {
 	};
 
 	/**
-	 * Sets the Accelerator frequency.
-	 *
-	 * @function
-	 * @returns {undefined}
-	 * @private
-	 * @memberof spotlight/Accelerator.Accelerator.prototype
-	 */
-	setFrequency = (frequency) => {
-		this.frequency = frequency;
-	};
-
-	/**
 	 * Resets the Accelerator instance to the default values.
 	 *
 	 * @function
