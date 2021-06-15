@@ -32,7 +32,6 @@ const LinkBase = kind({
 		 * Applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		disabled: PropTypes.bool
@@ -63,7 +62,7 @@ const LinkBase = kind({
  * A higher-order component adds support to a component to handle `navigate` from [`Routable`]{@link ui/Routable.Routable}.
  * It has configuration placed in the first argument to define which event will be used to navigate.
  * `onClick` event is used by default. Thus, if you don't configure it, the component should forward `onClick` event
- * to make [`Routable`]{@link ui/Routable.Routable} know when navigation is trigerred.
+ * to make [`Routable`]{@link ui/Routable.Routable} know when navigation is triggered.
  *
  * Example:
  * ```
@@ -171,6 +170,7 @@ const Linkable = hoc({navigate: 'onClick'}, (config, Wrapped) => {
  *
  * @class Link
  * @ui
+ * @extends ui/Routable.LinkBase
  * @mixes ui/Routable.Linkable
  * @memberof ui/Routable
  * @public
