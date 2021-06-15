@@ -107,12 +107,11 @@ const StorybookDecorator = (story, config) => {
 	// Executing `story` here allows the story knobs to register and render before the global knobs below.
 	const sample = story();
 
+	const {globals} = config;
+
 	const Config = {
 		defaultProps: {
-			locale: 'en-US',
-			'large text': false,
-			'high contrast': false,
-			skin: 'dark'
+			locale: 'en-US'
 		},
 		groupId: globalGroup
 	};
@@ -137,14 +136,17 @@ const StorybookDecorator = (story, config) => {
 		classes.debug = true;
 	}
 
+	globals.locale = select('locale', locales, Config, globals.locale);
+	globals.background = select('background', backgroundLabels, Config, getKnobFromArgs(args, 'background', globals.background));
+
 	return (
 		<PanelsBase
 			className={classnames(classes)}
 			title={`${config.kind}`.replace(/\//g, ' ').trim()}
 			description={hasText ? config.parameters.info.text : null}
-			locale={select('locale', locales, Config)}
+			locale={globals.locale}
 			style={{
-				'--env-background': backgroundLabelMap[select('background', backgroundLabels, Config, getKnobFromArgs(args, 'background'))]
+				'--env-background': backgroundLabelMap[globals.background]
 			}}
 			{...config.panelsProps}
 		>

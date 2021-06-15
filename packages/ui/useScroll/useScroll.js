@@ -110,6 +110,7 @@ const useScrollBase = (props) => {
 			scrollContentRef,
 			scrollMode,
 			setScrollContainerHandle,
+			snapToCenter,
 			spacing,
 			spotlightContainerDisabled,
 			verticalScrollbar,
@@ -636,6 +637,14 @@ const useScrollBase = (props) => {
 				}
 
 				return;
+			}
+
+			if (snapToCenter) {
+				if (scrollMode === 'native' && (canScrollV || canScrollH)) {
+					ev.preventDefault();
+					forward('onWheel', ev, props);
+					return;
+				}
 			}
 
 			if (scrollMode === 'translate') {
