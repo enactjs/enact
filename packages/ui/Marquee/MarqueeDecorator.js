@@ -344,7 +344,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.marqueeOn === 'render') {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
-			on('keydown', this.handlePointerHide);
+			on('keydown', this.handlePointerHide, document);
 		}
 
 		shouldComponentUpdate (nextProps, nextState) {
