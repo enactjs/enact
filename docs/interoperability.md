@@ -18,6 +18,7 @@ You can include components just like you normally would by using `import`.
 
 ```js
 import {Button} from 'reactstrap';
+import "bootstrap/dist/css/bootstrap.min.css"; // reactstrap needs to include Bootstrap CSS
 
 const App = kind({
 	name: 'App',
@@ -37,9 +38,7 @@ For libraries like bootstrap, you can also import the css in your `App.less` fil
 ```
 
 The advantage of this is you get to use Enact's `cli` to develop, test, and build applications.
-
-There is also a [Sandstone starter template](https://codesandbox.io/s/enactsandstone-starter-drkcy) on CodeSandbox that can be used to quickly test
-how third-party libraries and components can be used with Enact.
+If you need to configure Webpack plugin, you can use the [`eject` command](../../developer-tools/cli/ejecting-apps) to copy all the configuration options to the app directory such as the `npm run eject` of the CRA app. After doing that, you don't need `cli` and your application is fully under your control.
 
 ## Using Enact Outside of Enact
 If you're using something like `create-react-app`, it's pretty easy to use Enact as a module.
@@ -71,23 +70,29 @@ const App = kind({
 You can even use `Sandstone` themed components after installing `@enact/sandstone`.
 
 ```js
+import kind from '@enact/core/kind';
 import BodyText from '@enact/sandstone/BodyText';
 import Button from '@enact/sandstone/Button';
 import ThemeDecorator from '@enact/sandstone/ThemeDecorator';
 
-function App() {
-	return (
-		<div>
+const App = kind({
+	name: 'App',
+
+	render: (props) => (
+		<div {...props}>
 			<BodyText centered>
 				These are Enact Sandstone components in a CRA app
 			</BodyText>
 			<Button>Click me</Button>
 		</div>
-	);
-}
+	)
+});
 
 export default ThemeDecorator(App);
 ```
+
+There is also a [Sandstone starter template](https://codesandbox.io/s/enactsandstone-starter-drkcy) on CodeSandbox so that you could quickly test
+how Enact can be used with the app that is created from CRA(create-react-app).
 
 ### Styling Enact Components Outside of Enact
 
