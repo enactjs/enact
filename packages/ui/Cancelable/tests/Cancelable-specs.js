@@ -5,7 +5,6 @@ import {addCancelHandler, Cancelable, removeCancelHandler} from '../Cancelable';
 describe('Cancelable', () => {
 
 	// Suite-wide setup
-	// eslint-disable-next-line
 	const Component = ({children, className, onKeyUp}) => (
 		<div onKeyUp={onKeyUp} className={className}>
 			{children}
@@ -21,7 +20,6 @@ describe('Cancelable', () => {
 		};
 	};
 
-	/* eslint-disable react/jsx-no-bind */
 	const returnsTrue = () => true;
 	const stop = (ev) => ev.stopPropagation();
 

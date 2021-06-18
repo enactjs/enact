@@ -10,7 +10,6 @@ describe('ApiDecorator', () => {
 		constructor (props) {
 			super();
 
-			// eslint-disable-next-line
 			props.setApiProvider(this);
 		}
 

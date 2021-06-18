@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-no-bind */
-
 import {shallow, mount} from 'enzyme';
 import ilib from 'ilib';
 
@@ -39,7 +37,6 @@ describe('I18nDecorator', () => {
 	});
 
 	test('should add updateLocale context parameter', () => {
-		// eslint-disable-next-line enact/prop-types
 		const Component = ({updateLocale: update}) => (
 			<div>{typeof update}</div>
 		);
@@ -62,7 +59,6 @@ describe('I18nDecorator', () => {
 	test(
 		'should update the current locale when updateLocale is called',
 		() => {
-			// eslint-disable-next-line enact/prop-types
 			const Component = ({_updateLocale}) => {
 				const handleClick = () => _updateLocale('ar-SA');
 
@@ -89,7 +85,6 @@ describe('I18nDecorator', () => {
 	);
 
 	test('should update the rtl context parameter when RTL changes', () => {
-		// eslint-disable-next-line enact/prop-types
 		const Component = ({rtl, _updateLocale}) => {
 			const handleClick = () => _updateLocale('ar-SA');
 

@@ -13,7 +13,7 @@ const validateRange = validateRangeOnce((props) => props, {'component': 'Positio
 const validateStepValue = validateSteppedOnce((props) => props, {'component': 'PositionDecorator'});
 const validateStepMax = validateSteppedOnce((props) => props, {'component': 'PositionDecorator', valueName: 'max'});
 
-const PositionDecorator = hoc((config, Wrapped) => {	// eslint-disable-line no-unused-vars
+const PositionDecorator = hoc((config, Wrapped) => {
 	return class extends Component {
 		static displayName = 'PositionDecorator';
 

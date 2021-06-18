@@ -3,7 +3,6 @@
  */
 
 // Using string refs from the source code of ReactTransitionGroup
-/* eslint-disable react/no-string-refs */
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';

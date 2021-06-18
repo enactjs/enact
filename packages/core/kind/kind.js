@@ -164,7 +164,6 @@ const kind = (config) => {
 			return renderKind(merged, ctx);
 		};
 	} else {
-		// eslint-disable-next-line enact/display-name
 		Component = class extends ReactComponent {
 			static contextType = contextType;
 
