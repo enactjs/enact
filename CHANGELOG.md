@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.0.3] - 2021-06-18
+
+### Added
+
+- `spotlight` an optional `containerOption` parameter to `focus` function
+
 ## [4.0.2] - 2021-05-24
 
 ### Fixed
