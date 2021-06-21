@@ -402,7 +402,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.resizeRegistry.unregister(this.handleResize);
 			}
 
-			off('keydown', this.handlePointerHide);
+			off('keydown', this.handlePointerHide, document);
 		}
 
 		promoteJob = new Job(() => {
