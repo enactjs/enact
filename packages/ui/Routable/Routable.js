@@ -4,6 +4,8 @@
  * @module ui/Routable
  * @exports Routable
  * @exports Route
+ * @exports Link
+ * @exports Linkable
  */
 
 import hoc from '@enact/core/hoc';

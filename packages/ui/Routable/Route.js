@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
  * In the below example, `Panels` would render `SettingsPanel` with breadcrumbs to
  * navigate `AppPanel` and `HomePanel`.
  *
+ * Example:
  * ```
  *	<Panels path="/app/home/settings" onSelectBreadcrumb={this.handleNavigate}>
  *		<Route path="app" component={AppPanel}>
