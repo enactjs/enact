@@ -817,9 +817,7 @@ const useScrollBase = (props) => {
 	function getEdgeFromPosition (position, maxPosition) {
 		if (position <= 0) {
 			return 'before';
-		/* If a scroll size or a client size is not integer,
-			browser's max scroll position could be smaller than maxPos by 1 pixel.*/
-		} else if (scrollMode === 'translate' && position >= maxPosition || scrollMode === 'native' && position >= maxPosition - 1) {
+		} else if (position >= maxPosition - epsilon) {
 			return 'after';
 		} else {
 			return null;
@@ -866,10 +864,7 @@ const useScrollBase = (props) => {
 			curPos = isVertical ? mutableRef.current.scrollTop : mutableRef.current.scrollLeft,
 			maxPos = getScrollBounds()[isVertical ? 'maxTop' : 'maxLeft'];
 
-		if (
-			scrollMode === 'translate' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos) ||
-			scrollMode === 'native' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - 1)
-		) { // Already on the edge
+		if ((edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - epsilon)) { // Already on the edge
 			applyOverscrollEffect(orientation, edge, overscrollEffectType, ratio);
 		} else {
 			setOverscrollStatus(orientation, edge, overscrollEffectType, ratio);
@@ -942,8 +937,8 @@ const useScrollBase = (props) => {
 
 	// call scroll callbacks
 
-	function forwardScrollEvent (overscrollEffectType, reachedEdgeInfo) {
-		forward(overscrollEffectType, {scrollLeft: mutableRef.current.scrollLeft, scrollTop: mutableRef.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo}, props);
+	function forwardScrollEvent (type, reachedEdgeInfo) {
+		forward(type, {scrollLeft: mutableRef.current.scrollLeft, scrollTop: mutableRef.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo}, props);
 	}
 
 	// scrollMode 'native' [[
