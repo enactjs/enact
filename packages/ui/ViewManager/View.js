@@ -163,6 +163,12 @@ class View extends Component {
 
 	componentDidUpdate (prevProps) {
 		this.changeDirection = this.shouldChangeDirection(prevProps, this.props);
+
+		// this is needed to avoid setting enteringProp to true in the render method when noAnimation is true
+		if (prevProps.noAnimation !== this.props.noAnimation && this.state.entering) {
+			// eslint-disable-next-line react/no-did-update-set-state
+			this.setState({entering: false});
+		}
 	}
 
 	componentWillUnmount () {
