@@ -957,7 +957,7 @@ const useScrollBase = (props) => {
 
 	function forwardScrollEvent (type, reachedEdgeInfo) {
 		const data = {scrollLeft: mutableRef.current.scrollLeft, scrollTop: mutableRef.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo};
-		forward(type, data);
+		forward(type, data, props);
 		if (type === 'onScroll') {
 			for (const fn of mutableRef.current.watcherOnScroll) {
 				if (typeof fn === 'function') {
