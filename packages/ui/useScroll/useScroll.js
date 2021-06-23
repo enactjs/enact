@@ -203,6 +203,9 @@ const useScrollBase = (props) => {
 		// scroll animator
 		animator: null,
 
+		// scroll status watcher
+		watcherOnScroll: [],
+
 		// non-declared-variable.
 		accumulatedTargetX: null,
 		accumulatedTargetY: null,
@@ -937,8 +940,31 @@ const useScrollBase = (props) => {
 
 	// call scroll callbacks
 
+	const addWatcherOnScroll = useCallback((fn) => {
+		const {watcherOnScroll} = mutableRef.current;
+		if (!watcherOnScroll.includes(fn)) {
+			watcherOnScroll.push(fn);
+		}
+	}, []);
+
+	const removeWatcherOnScroll = useCallback((fn) => {
+		const {watcherOnScroll} = mutableRef.current;
+		const index = watcherOnScroll.indexOf(fn);
+		if (index !== -1) {
+			watcherOnScroll.splice(index, 1);
+		}
+	}, []);
+
 	function forwardScrollEvent (type, reachedEdgeInfo) {
-		forward(type, {scrollLeft: mutableRef.current.scrollLeft, scrollTop: mutableRef.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo}, props);
+		const data = {scrollLeft: mutableRef.current.scrollLeft, scrollTop: mutableRef.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo};
+		forward(type, data);
+		if (type === 'onScroll') {
+			for (const fn of mutableRef.current.watcherOnScroll) {
+				if (typeof fn === 'function') {
+					fn(data);
+				}
+			}
+		}
 	}
 
 	// scrollMode 'native' [[
@@ -1558,9 +1584,10 @@ const useScrollBase = (props) => {
 	};
 
 	return {
-		scrollContentWrapper: noScrollByDrag ? 'div' : TouchableDiv,
 		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible
+		isVerticalScrollbarVisible,
+		scrollContentWrapper: noScrollByDrag ? 'div' : TouchableDiv,
+		scrollWatcher: {addWatcherOnScroll, removeWatcherOnScroll}
 	};
 };
 
