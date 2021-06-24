@@ -463,7 +463,11 @@ const useScrollBase = (props) => {
 	}
 
 	function onMouseDown (ev) {
-		if (forwardWithPrevent('onMouseDown', ev, props)) {
+		if (snapToCenter) {
+			ev.preventDefault();
+		}
+
+		if (forwardWithPrevent('onMouseDown', ev, props) && !snapToCenter) {
 			stop();
 		}
 	}
