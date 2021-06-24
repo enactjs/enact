@@ -942,7 +942,7 @@ const useScrollBase = (props) => {
 
 	const addObserverOnScroll = useCallback((fn) => {
 		const {observerOnScroll} = mutableRef.current;
-		if (!observerOnScroll.includes(fn)) {
+		if (typeof fn === 'function' && !observerOnScroll.includes(fn)) {
 			observerOnScroll.push(fn);
 		}
 	}, []);
@@ -959,11 +959,7 @@ const useScrollBase = (props) => {
 		const data = {scrollLeft: mutableRef.current.scrollLeft, scrollTop: mutableRef.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo};
 		forward(type, data, props);
 		if (type === 'onScroll') {
-			for (const fn of mutableRef.current.observerOnScroll) {
-				if (typeof fn === 'function') {
-					fn(data);
-				}
-			}
+			mutableRef.current.observerOnScroll.forEach(fn => fn(data));
 		}
 	}
 
