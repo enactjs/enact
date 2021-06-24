@@ -203,8 +203,8 @@ const useScrollBase = (props) => {
 		// scroll animator
 		animator: null,
 
-		// scroll status watcher
-		watcherOnScroll: [],
+		// scroll status observer
+		observerOnScroll: [],
 
 		// non-declared-variable.
 		accumulatedTargetX: null,
@@ -940,18 +940,18 @@ const useScrollBase = (props) => {
 
 	// call scroll callbacks
 
-	const addWatcherOnScroll = useCallback((fn) => {
-		const {watcherOnScroll} = mutableRef.current;
-		if (!watcherOnScroll.includes(fn)) {
-			watcherOnScroll.push(fn);
+	const addObserverOnScroll = useCallback((fn) => {
+		const {observerOnScroll} = mutableRef.current;
+		if (!observerOnScroll.includes(fn)) {
+			observerOnScroll.push(fn);
 		}
 	}, []);
 
-	const removeWatcherOnScroll = useCallback((fn) => {
-		const {watcherOnScroll} = mutableRef.current;
-		const index = watcherOnScroll.indexOf(fn);
+	const removeObserverOnScroll = useCallback((fn) => {
+		const {observerOnScroll} = mutableRef.current;
+		const index = observerOnScroll.indexOf(fn);
 		if (index !== -1) {
-			watcherOnScroll.splice(index, 1);
+			observerOnScroll.splice(index, 1);
 		}
 	}, []);
 
@@ -959,7 +959,7 @@ const useScrollBase = (props) => {
 		const data = {scrollLeft: mutableRef.current.scrollLeft, scrollTop: mutableRef.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo};
 		forward(type, data, props);
 		if (type === 'onScroll') {
-			for (const fn of mutableRef.current.watcherOnScroll) {
+			for (const fn of mutableRef.current.observerOnScroll) {
 				if (typeof fn === 'function') {
 					fn(data);
 				}
@@ -1587,7 +1587,7 @@ const useScrollBase = (props) => {
 		isHorizontalScrollbarVisible,
 		isVerticalScrollbarVisible,
 		scrollContentWrapper: noScrollByDrag ? 'div' : TouchableDiv,
-		scrollWatcher: {addWatcherOnScroll, removeWatcherOnScroll}
+		scrollObserver: {addObserverOnScroll, removeObserverOnScroll}
 	};
 };
 
