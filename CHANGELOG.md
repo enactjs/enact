@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.0.3] - 2021-07-02
+
+### Fixed
+
+- `ui/MarqueeDecorator` to stop marquee properly after hiding pointer when `marqueeOn` is `hover`
+
 ## [4.0.3] - 2021-06-18
 
 ### Added
