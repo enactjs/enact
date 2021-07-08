@@ -46,7 +46,7 @@ class ViewManagerLayout extends Component {
 
 	render () {
 		const {selected} = this.state;
-	
+
 		return (
 			<Layout>
 				<Cell component={Scroller} size="7%">
