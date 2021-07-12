@@ -6,7 +6,7 @@ import Item from '@enact/ui/Item';
 import Layout, {Cell} from '@enact/ui/Layout';
 import Scroller from '@enact/ui/Scroller';
 import {arrange, SlideArranger, SlideBottomArranger, SlideLeftArranger, SlideRightArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
-import {Component} from 'react';
+import {useCallback, useState} from 'react';
 
 import css from './ViewManager.module.less';
 
@@ -18,7 +18,7 @@ ViewManagerConfig.defaultProps = {
 };
 
 const prop = {
-	arranger: ['SlideBottomArranger', 'SlideLeftArranger', 'SlideRightArranger', 'SlideTopArranger', 'SlideArranger', 'CustomArranger'],
+	arranger: ['SlideBottomArranger', 'SlideLeftArranger', 'SlideRightArranger', 'SlideTopArranger', 'SlideArranger', 'CustomArranger (FadeAndSlideArranger)'],
 	direction: ['bottom', 'left', 'right', 'top']
 };
 
@@ -36,44 +36,38 @@ const views = new Array(10).fill().map((i, index) => {
 	};
 });
 
-class ViewManagerLayout extends Component {
-	constructor () {
-		super();
-		this.state = {selected: 0};
-	}
+function ViewManagerLayout (props) {
+	const [selected, setSelected] = useState(0);
+	const handleChangeView = useCallback((state) => {
+		setSelected(state.selected);
+	}, [setSelected]);
 
-	handleChangeView = (state) => this.setState(state);
-
-	render () {
-		const {selected} = this.state;
-
-		return (
-			<Layout>
-				<Cell component={Scroller} size="7%">
-					<Group
-						className={css.group}
-						childComponent={Item}
-						itemProps={{className: css.navItem}}
-						onSelect={this.handleChangeView}
-						select="radio"
-					>
-						{views.map((view) => view.title)}
-					</Group>
-				</Cell>
-				<Cell
-					component={ViewManager}
-					index={selected}
-					{...this.props}
+	return (
+		<Layout>
+			<Cell component={Scroller} size="7%">
+				<Group
+					className={css.group}
+					childComponent={Item}
+					itemProps={{className: css.navItem}}
+					onSelect={handleChangeView}
+					select="radio"
 				>
-					{views.map((view, i) => (
-						<div key={i}>
-							{view.content}
-						</div>
-					))}
-				</Cell>
-			</Layout>
-		);
-	}
+					{views.map((view) => view.title)}
+				</Group>
+			</Cell>
+			<Cell
+				component={ViewManager}
+				index={selected}
+				{...props}
+			>
+				{views.map((view, i) => (
+					<div className={css.view} key={i}>
+						{view.content}
+					</div>
+				))}
+			</Cell>
+		</Layout>
+	);
 }
 
 export default {
@@ -89,7 +83,7 @@ export const _ViewManager = () => {
 		const amount = number('amount', ViewManagerConfig, {range: true, min: 0, max: 100}, 100);
 		const direction = select('direction', prop.direction, ViewManagerConfig, prop.direction[0]);
 		arranger = SlideArranger({amount, direction});
-	} else if (arrangerType === 'CustomArranger') {
+	} else if (arrangerType === 'CustomArranger (FadeAndSlideArranger)') {
 		// The following arranger is from sandstone/internal/Panels/Arrangers.
 		const quadInOut = 'cubic-bezier(0.455, 0.030, 0.515, 0.955)';
 		const animationOptions = {easing: quadInOut};
