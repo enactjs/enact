@@ -5,12 +5,12 @@ import Group from '@enact/ui/Group';
 import Item from '@enact/ui/Item';
 import Layout, {Cell} from '@enact/ui/Layout';
 import Scroller from '@enact/ui/Scroller';
-import {arrange, SlideArranger, SlideBottomArranger, SlideLeftArranger, SlideRightArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
+import {arrange, SlideArranger, SlideBottomArranger, SlideLeftArranger, SlideRightArranger, SlideTopArranger, ViewManager, ViewManagerBase} from '@enact/ui/ViewManager';
 import {useCallback, useState} from 'react';
 
 import css from './ViewManager.module.less';
 
-const ViewManagerConfig = mergeComponentMetadata('ViewManager', ViewManager);
+const ViewManagerConfig = mergeComponentMetadata('ViewManager', ViewManagerBase, ViewManager);
 
 ViewManagerConfig.defaultProps = {
 	duration: 300,
@@ -36,7 +36,7 @@ const views = new Array(10).fill().map((i, index) => {
 	};
 });
 
-function ViewManagerLayout (props) {
+const ViewManagerLayout = (props) => {
 	const [selected, setSelected] = useState(0);
 	const handleChangeView = useCallback((state) => {
 		setSelected(state.selected);
@@ -56,19 +56,20 @@ function ViewManagerLayout (props) {
 				</Group>
 			</Cell>
 			<Cell
+				className={css.viewport}
 				component={ViewManager}
 				index={selected}
 				{...props}
 			>
 				{views.map((view, i) => (
-					<div className={css.view} key={i}>
+					<div className={css.box} key={i}>
 						{view.content}
 					</div>
 				))}
 			</Cell>
 		</Layout>
 	);
-}
+};
 
 export default {
 	title: 'UI/ViewManager',
