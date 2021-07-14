@@ -38,8 +38,8 @@ const views = new Array(10).fill().map((i, index) => {
 
 const ViewManagerLayout = (props) => {
 	const [selected, setSelected] = useState(0);
-	const handleChangeView = useCallback((state) => {
-		setSelected(state.selected);
+	const handleChangeView = useCallback((ev) => {
+		setSelected(ev.selected);
 	}, [setSelected]);
 
 	return (
