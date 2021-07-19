@@ -91,7 +91,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.containerRef = createRef();
+			this.containerRef = null;
 
 			if (typeof window === 'object') {
 				Spotlight.initialize({
@@ -108,6 +108,10 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidMount () {
 			if (!noAutoFocus) {
 				Spotlight.focus();
+			}
+
+			if (this.containerRef === null && typeof document === 'object') {
+				this.containerRef = document.querySelector('#root > div');
 			}
 
 			if (typeof document === 'object') {
@@ -130,9 +134,9 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		applyInputType = () => {
-			if (this && this.containerRef && this.containerRef.current) {
+			if (this && this.containerRef) {
 				Object.keys(input.types).map((type) => {
-					this.containerRef.current.classList.toggle('spotlight-input-' + type, input.types[type]);
+					this.containerRef.classList.toggle('spotlight-input-' + type, input.types[type]);
 				});
 				input.applied = true;
 			}
@@ -147,7 +151,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		// For key input
 		handleKeyDown = (ev) => {
 			const {keyCode} = ev;
-			if (is('enter', keyCode) && this.containerRef.current.classList.contains('spotlight-input-touch')) {
+			if (is('enter', keyCode) && this.containerRef.classList.contains('spotlight-input-touch')) {
 				// Prevent onclick event trigger by enter key
 				ev.preventDefault();
 			}
@@ -185,9 +189,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			return (
-				<div ref={this.containerRef}>
-					<Wrapped {...this.props} />
-				</div>
+				<Wrapped {...this.props} />
 			);
 		}
 	};
