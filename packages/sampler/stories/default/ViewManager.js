@@ -12,21 +12,16 @@ import css from './ViewManager.module.less';
 
 const ViewManagerConfig = mergeComponentMetadata('ViewManager', ViewManagerBase, ViewManager);
 
-ViewManagerConfig.defaultProps = {
-	duration: 300,
-	enteringDelay: 0
-};
-
 const prop = {
-	arranger: ['SlideBottomArranger', 'SlideLeftArranger', 'SlideRightArranger', 'SlideTopArranger', 'SlideArranger', 'CustomArranger (FadeAndSlideArranger)'],
+	arranger: {
+		SlideBottomArranger,
+		SlideLeftArranger,
+		SlideRightArranger,
+		SlideTopArranger,
+		SlideArranger: null,
+		'CustomArranger (FadeAndSlideArranger)': null
+	},
 	direction: ['bottom', 'left', 'right', 'top']
-};
-
-const arrangers = {
-	'SlideBottomArranger': SlideBottomArranger,
-	'SlideLeftArranger': SlideLeftArranger,
-	'SlideRightArranger': SlideRightArranger,
-	'SlideTopArranger': SlideTopArranger
 };
 
 const views = new Array(10).fill().map((i, index) => {
@@ -46,7 +41,6 @@ const ViewManagerLayout = (props) => {
 		<Layout>
 			<Cell component={Scroller} size="7%">
 				<Group
-					className={css.group}
 					childComponent={Item}
 					itemProps={{className: css.navItem}}
 					onSelect={handleChangeView}
@@ -77,17 +71,17 @@ export default {
 };
 
 export const _ViewManager = () => {
-	const arrangerType = select('arranger', prop.arranger, ViewManagerConfig, prop.arranger[0]);
+	const arrangerType = select('arranger', Object.keys(prop.arranger), ViewManagerConfig, 'SlideBottomArranger');
 	let arranger;
 
 	if (arrangerType === 'SlideArranger') {
-		const amount = number('amount', ViewManagerConfig, {range: true, min: 0, max: 100}, 100);
-		const direction = select('direction', prop.direction, ViewManagerConfig, prop.direction[0]);
+		const SlideArrangerConfig = {displayName: 'SlideArranger'};
+		const amount = number('amount', SlideArrangerConfig, {range: true, min: 0, max: 100}, 100);
+		const direction = select('direction', prop.direction, SlideArrangerConfig, prop.direction[0]);
 		arranger = SlideArranger({amount, direction});
 	} else if (arrangerType === 'CustomArranger (FadeAndSlideArranger)') {
 		// The following arranger is from sandstone/internal/Panels/Arrangers.
-		const quadInOut = 'cubic-bezier(0.455, 0.030, 0.515, 0.955)';
-		const animationOptions = {easing: quadInOut};
+		const animationOptions = {easing: 'cubic-bezier(0.455, 0.030, 0.515, 0.955)'};
 		const FadeAndSlideArranger = {
 			enter: (config) => {
 				return arrange(config, [
@@ -106,13 +100,14 @@ export const _ViewManager = () => {
 		};
 		arranger = FadeAndSlideArranger;
 	} else {
-		arranger = arrangers[arrangerType];
+		arranger = prop.arranger[arrangerType];
 	}
 
 	return (
 		<ViewManagerLayout
 			arranger={arranger}
 			duration={number('duration', ViewManagerConfig)}
+			end={number('end', ViewManagerConfig)}
 			enteringDelay={number('enteringDelay', ViewManagerConfig)}
 			noAnimation={boolean('noAnimation', ViewManagerConfig)}
 			onAppear={action('onAppear')}
@@ -123,6 +118,7 @@ export const _ViewManager = () => {
 			onWillTransition={action('onWillTransition')}
 			reverseTransition={boolean('reverseTransition', ViewManagerConfig)}
 			rtl={boolean('rtl', ViewManagerConfig)}
+			start={number('start', ViewManagerConfig)}
 		/>
 	);
 };
