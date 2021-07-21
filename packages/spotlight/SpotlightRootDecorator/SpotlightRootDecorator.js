@@ -8,7 +8,7 @@
 
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
-import {Component, createRef} from 'react';
+import {Component} from 'react';
 
 import Spotlight from '../src/spotlight';
 import {spottableClass} from '../Spottable';
