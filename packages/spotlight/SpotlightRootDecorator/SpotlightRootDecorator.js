@@ -111,7 +111,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (this.containerRef === null && typeof document === 'object') {
-				this.containerRef = document.querySelector('#root > div');
+				this.containerRef = document.querySelector('#root');
 			}
 
 			if (typeof document === 'object') {
