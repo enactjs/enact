@@ -44,8 +44,8 @@ const ViewManagerLayout = (props) => {
 
 	const selectedEnd = select('end', prop.end, ViewManagerConfig, prop.end[0]);
 	const selectedStart = select('start', prop.start, ViewManagerConfig, prop.start[0]);
-	const endRange = [selected, selected+1, selected+2];
-	const startRange = [selected, selected-1, selected-2];
+	const endRange = [selected, selected + 1, selected + 2];
+	const startRange = [selected, selected - 1, selected - 2];
 	let end, start;
 
 	for (let i = 0; i < 3; i++) {
