@@ -4,6 +4,7 @@ import {mergeComponentMetadata} from '@enact/storybook-utils';
 import Group from '@enact/ui/Group';
 import Item from '@enact/ui/Item';
 import Layout, {Cell} from '@enact/ui/Layout';
+import ri from '@enact/ui/resolution';
 import Scroller from '@enact/ui/Scroller';
 import {arrange, SlideArranger, SlideBottomArranger, SlideLeftArranger, SlideRightArranger, SlideTopArranger, ViewManager, ViewManagerBase} from '@enact/ui/ViewManager';
 import {useCallback, useState} from 'react';
@@ -21,13 +22,17 @@ const prop = {
 		SlideArranger: null,
 		'CustomArranger (FadeAndSlideArranger)': null
 	},
-	direction: ['bottom', 'left', 'right', 'top']
+	direction: ['bottom', 'left', 'right', 'top'],
+	end: ['index', 'index+1', 'index+2'],
+	start: ['index', 'index-1', 'index-2']
 };
 
-const views = new Array(10).fill().map((i, index) => {
+const itemSize = 10;
+
+const views = new Array(itemSize).fill().map((i, index) => {
 	return {
-		title: `Item ${index + 1}`,
-		content: `This is View ${index + 1}`
+		title: `Item ${index}`,
+		content: `This is View ${index}`
 	};
 });
 
@@ -36,6 +41,27 @@ const ViewManagerLayout = (props) => {
 	const handleChangeView = useCallback((ev) => {
 		setSelected(ev.selected);
 	}, [setSelected]);
+
+	const selectedEnd = select('end', prop.end, ViewManagerConfig, prop.end[0]);
+	const selectedStart = select('start', prop.start, ViewManagerConfig, prop.start[0]);
+	const endRange = [selected, selected+1, selected+2];
+	const startRange = [selected, selected-1, selected-2];
+	let end, start;
+
+	for (let i = 0; i < 3; i++) {
+		if (selectedEnd === prop.end[i]) {
+			end = endRange[i];
+		}
+		if (selectedStart === prop.start[i]) {
+			start = startRange[i];
+		}
+	}
+	if (start < 0) {
+		start = 0;
+	}
+	if (end >= itemSize) {
+		end = itemSize - 1;
+	}
 
 	return (
 		<Layout>
@@ -50,9 +76,11 @@ const ViewManagerLayout = (props) => {
 				</Group>
 			</Cell>
 			<Cell
-				className={css.viewport}
 				component={ViewManager}
+				end={end}
 				index={selected}
+				start={start}
+				style={{height: ri.scale(42 * (end - start + 1)), overflow: 'hidden'}}
 				{...props}
 			>
 				{views.map((view, i) => (
@@ -107,7 +135,6 @@ export const _ViewManager = () => {
 		<ViewManagerLayout
 			arranger={arranger}
 			duration={number('duration', ViewManagerConfig)}
-			end={number('end', ViewManagerConfig)}
 			enteringDelay={number('enteringDelay', ViewManagerConfig)}
 			noAnimation={boolean('noAnimation', ViewManagerConfig)}
 			onAppear={action('onAppear')}
@@ -118,7 +145,6 @@ export const _ViewManager = () => {
 			onWillTransition={action('onWillTransition')}
 			reverseTransition={boolean('reverseTransition', ViewManagerConfig)}
 			rtl={boolean('rtl', ViewManagerConfig)}
-			start={number('start', ViewManagerConfig)}
 		/>
 	);
 };
