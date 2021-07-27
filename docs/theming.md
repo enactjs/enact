@@ -284,3 +284,29 @@ Generally avoid doing these for components:
 
 * Include HOCs (higher-order components), not allowing the theme to compose and decorate its own features, unless they are always necessary for function.
 * Define colors, measurements (that aren't critical for functionality), margins/paddings, or other purely visual aspects of the component's styles.
+
+## Creating theme via enact template
+
+You can create your own theme by using `@enact/template-theme` a template generator for `@enact/cli` to create Enact-based theme libraries. 
+
+### Installation
+
+The Enact CLI itself can install this via NPM or git URI.
+```bash
+enact template install @enact/template-theme
+```
+
+### Usage
+
+Once installed, you can specify the `theme` template in the creation command:
+```bash
+enact create -t theme uranium
+```
+This will create a new copy of the starter theme in the `uranium` directory.  All references to the original theme's name, LESS variables, etc. will be updated to the appropriate values for `uranium`.
+
+The starter theme comes with one skin, `default-skin`, and this can be updated on creation as well by passing the `--skin` flag:
+```bash
+enact create -t theme uranium --skin proton
+```
+
+Either way, the new theme is ready to be included as a dependency for your app.  Its aptly named README contains other valuable information on modifying the theme, so be sure to give it a look.
