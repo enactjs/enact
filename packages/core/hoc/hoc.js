@@ -70,9 +70,7 @@ const hoc = (defaultConfig, hawk) => {
 		defaults = null;
 	}
 
-	let Component;
-
-	Component = (config, maybeWrapped) => {
+	const Component = (config, maybeWrapped) => {
 		if (isRenderable(config)) {
 			return factory(defaults, config);
 		} else {
