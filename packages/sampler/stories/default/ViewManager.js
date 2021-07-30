@@ -23,8 +23,8 @@ const prop = {
 		'CustomArranger (FadeAndSlideArranger)': null
 	},
 	direction: ['bottom', 'left', 'right', 'top'],
-	end: ['index', 'index+1', 'index+2'],
-	start: ['index', 'index-1', 'index-2']
+	end: {'index': 0, 'index+1': 1, 'index+2': 2},
+	start: {'index': 0, 'index-1': 1, 'index-2': 2}
 };
 
 const itemSize = 10;
@@ -42,26 +42,12 @@ const ViewManagerLayout = (props) => {
 		setSelected(ev.selected);
 	}, [setSelected]);
 
-	const selectedEnd = select('end', prop.end, ViewManagerConfig, prop.end[0]);
-	const selectedStart = select('start', prop.start, ViewManagerConfig, prop.start[0]);
+	const selectedEnd = select('end', Object.keys(prop.end), ViewManagerConfig, 'index');
+	const selectedStart = select('start', Object.keys(prop.start), ViewManagerConfig, 'index');
 	const endRange = [selected, selected + 1, selected + 2];
 	const startRange = [selected, selected - 1, selected - 2];
-	let end, start;
-
-	for (let i = 0; i < 3; i++) {
-		if (selectedEnd === prop.end[i]) {
-			end = endRange[i];
-		}
-		if (selectedStart === prop.start[i]) {
-			start = startRange[i];
-		}
-	}
-	if (start < 0) {
-		start = 0;
-	}
-	if (end >= itemSize) {
-		end = itemSize - 1;
-	}
+	const end = Math.min(endRange[prop.end[selectedEnd]], itemSize - 1);
+	const start = Math.max(startRange[prop.start[selectedStart]], 0);
 
 	return (
 		<Layout>
