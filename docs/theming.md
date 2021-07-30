@@ -285,7 +285,7 @@ Generally avoid doing these for components:
 * Include HOCs (higher-order components), not allowing the theme to compose and decorate its own features, unless they are always necessary for function.
 * Define colors, measurements (that aren't critical for functionality), margins/paddings, or other purely visual aspects of the component's styles.
 
-## Creating theme via enact template
+## Creating Theme via Enact Template
 
 You can create your own theme by using `@enact/template-theme` a template generator for `@enact/cli` to create Enact-based theme libraries. 
 
