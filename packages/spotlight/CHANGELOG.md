@@ -2,13 +2,13 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
+## [4.0.5] - 2021-08-02
 
 ### Fixed
 
 - `spotlight/SpotlightRootDecorator` not to add locale specific classes in the wrong DOM after isomorphic build with multi locales
 
-## [4.0.3] - 2021-07-02
+## [4.0.4] - 2021-07-02
 
 No significant changes.
 
