@@ -70,7 +70,7 @@ const hoc = (defaultConfig, hawk) => {
 		defaults = null;
 	}
 
-	return (config, maybeWrapped) => {
+	const Component = (config, maybeWrapped) => {
 		if (isRenderable(config)) {
 			return factory(defaults, config);
 		} else {
@@ -82,6 +82,13 @@ const hoc = (defaultConfig, hawk) => {
 			}
 		}
 	};
+
+	if (defaults) {
+		Component.displayName = 'HOC';
+		Component.defaultConfig = defaults;
+	}
+
+	return Component;
 };
 
 export default hoc;
