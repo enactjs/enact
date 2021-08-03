@@ -2,7 +2,11 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
-## [4.0.3] - 2021-07-02
+## [4.0.5] - 2021-08-02
+
+No significant changes.
+
+## [4.0.4] - 2021-07-02
 
 No significant changes.
 
