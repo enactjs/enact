@@ -1096,15 +1096,8 @@ class VirtualListBasic extends Component {
 			key = index % this.state.numOfItems,
 			componentProps = getComponentProps && getComponentProps(index) || {},
 			itemContainerRef = (ref) => {
-				if (ref === null) {
-					itemRefs.current[key] = ref;
-				} else {
-					const itemNode = ref.children[0];
-
-					itemRefs.current[key] = (parseInt(itemNode.dataset.index) === index) ?
-						itemNode :
-						ref.querySelector(`[data-index="${index}"]`);
-
+				itemRefs.current[key] = ref;
+				if (ref !== null) {
 					this.itemContainerRefs[key] = ref;
 				}
 			};
