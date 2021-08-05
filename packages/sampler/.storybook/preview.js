@@ -10,13 +10,18 @@ configureActions();
 addDecorator(withKnobs);
 export const parameters = {
 	knobs: {
-		timestamps: true,
+		timestamps: true
 	},
 	docs: {
 		container: DocsContainer,
 		page: DocsPage,
 		iframeHeight: 360,
 		theme: themes.light
+	},
+	options: {
+		storySort: {
+			method: 'alphabetical'
+		}
 	}
 };
 export const decorators = [Environment];

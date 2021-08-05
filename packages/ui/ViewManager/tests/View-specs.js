@@ -1,4 +1,3 @@
-/* eslint-disable enact/prop-types */
 import {mount} from 'enzyme';
 import View from '../View';
 

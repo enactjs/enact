@@ -137,7 +137,6 @@ describe('kind', () => {
 				// eslint-disable-next-line react-hooks/rules-of-hooks
 				const [state, setState] = useState(0);
 
-				// eslint-disable-next-line react/jsx-no-bind
 				return <button onClick={() => setState(state + 1)}>{state}</button>;
 			}
 		});

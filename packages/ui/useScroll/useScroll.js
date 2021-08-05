@@ -39,6 +39,7 @@ const
 		isPageDown: is('pageDown'),
 		isPageUp: is('pageUp'),
 		nop: () => {},
+		overscrollDefaultRatio: 0.5,
 		overscrollTypeNone: 0,
 		overscrollTypeHold: 1,
 		overscrollTypeOnce: 2,
@@ -54,6 +55,7 @@ const
 		flickConfig,
 		isPageDown,
 		isPageUp,
+		overscrollDefaultRatio,
 		overscrollTypeDone,
 		overscrollTypeHold,
 		overscrollTypeNone,
@@ -108,6 +110,7 @@ const useScrollBase = (props) => {
 			scrollContentRef,
 			scrollMode,
 			setScrollContainerHandle,
+			snapToCenter,
 			spacing,
 			spotlightContainerDisabled,
 			verticalScrollbar,
@@ -199,6 +202,9 @@ const useScrollBase = (props) => {
 
 		// scroll animator
 		animator: null,
+
+		// scroll status observer
+		observerOnScroll: [],
 
 		// non-declared-variable.
 		accumulatedTargetX: null,
@@ -460,7 +466,11 @@ const useScrollBase = (props) => {
 	}
 
 	function onMouseDown (ev) {
-		if (forwardWithPrevent('onMouseDown', ev, props)) {
+		if (snapToCenter) {
+			ev.preventDefault();
+		}
+
+		if (forwardWithPrevent('onMouseDown', ev, props) && !snapToCenter) {
 			stop();
 		}
 	}
@@ -609,10 +619,10 @@ const useScrollBase = (props) => {
 	}
 
 	/*
-	* wheel event handler;
-	* - for horizontal scroll, supports wheel action on any children nodes since web engine cannot support this
-	* - for vertical scroll, supports wheel action on scrollbars only
-	*/
+	 * wheel event handler;
+	 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot support this
+	 * - for vertical scroll, supports wheel action on scrollbars only
+	 */
 	function onWheel (ev) {
 		if (mutableRef.current.isDragging) {
 			ev.preventDefault();
@@ -634,6 +644,14 @@ const useScrollBase = (props) => {
 				}
 
 				return;
+			}
+
+			if (snapToCenter) {
+				if (scrollMode === 'native' && (canScrollV || canScrollH)) {
+					ev.preventDefault();
+					forward('onWheel', ev, props);
+					return;
+				}
 			}
 
 			if (scrollMode === 'translate') {
@@ -688,7 +706,7 @@ const useScrollBase = (props) => {
 						ev.stopPropagation();
 					} else {
 						if (overscrollEffectRequired && (eventDelta < 0 && mutableRef.current.scrollTop <= 0 || eventDelta > 0 && mutableRef.current.scrollTop >= bounds.maxTop)) {
-							applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
+							applyOverscrollEffect('vertical', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
 						}
 
 						needToHideScrollbarTrack = true;
@@ -702,7 +720,7 @@ const useScrollBase = (props) => {
 						ev.stopPropagation();
 					} else {
 						if (overscrollEffectRequired && (eventDelta < 0 && mutableRef.current.scrollLeft <= 0 || eventDelta > 0 && mutableRef.current.scrollLeft >= bounds.maxLeft)) {
-							applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce, 1);
+							applyOverscrollEffect('horizontal', eventDelta > 0 ? 'after' : 'before', overscrollTypeOnce);
 						}
 
 						needToHideScrollbarTrack = true;
@@ -806,9 +824,7 @@ const useScrollBase = (props) => {
 	function getEdgeFromPosition (position, maxPosition) {
 		if (position <= 0) {
 			return 'before';
-		/* If a scroll size or a client size is not integer,
-			browser's max scroll position could be smaller than maxPos by 1 pixel.*/
-		} else if (scrollMode === 'translate' && position >= maxPosition || scrollMode === 'native' && position >= maxPosition - 1) {
+		} else if (position >= maxPosition - epsilon) {
 			return 'after';
 		} else {
 			return null;
@@ -844,21 +860,18 @@ const useScrollBase = (props) => {
 		return Math.min(1, 2 * overDistance / baseSize);
 	}
 
-	function applyOverscrollEffect (orientation, edge, overscrollEffectType, ratio) {
+	function applyOverscrollEffect (orientation, edge, overscrollEffectType, ratio = overscrollDefaultRatio) {
 		props.applyOverscrollEffect(orientation, edge, overscrollEffectType, ratio);
 		setOverscrollStatus(orientation, edge, overscrollEffectType === overscrollTypeOnce ? overscrollTypeDone : overscrollEffectType, ratio);
 	}
 
-	function checkAndApplyOverscrollEffect (orientation, edge, overscrollEffectType, ratio = 1) {
+	function checkAndApplyOverscrollEffect (orientation, edge, overscrollEffectType, ratio = overscrollDefaultRatio) {
 		const
 			isVertical = (orientation === 'vertical'),
 			curPos = isVertical ? mutableRef.current.scrollTop : mutableRef.current.scrollLeft,
 			maxPos = getScrollBounds()[isVertical ? 'maxTop' : 'maxLeft'];
 
-		if (
-			scrollMode === 'translate' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos) ||
-			scrollMode === 'native' && (edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - 1)
-		) { // Already on the edge
+		if ((edge === 'before' && curPos <= 0) || (edge === 'after' && curPos >= maxPos - epsilon)) { // Already on the edge
 			applyOverscrollEffect(orientation, edge, overscrollEffectType, ratio);
 		} else {
 			setOverscrollStatus(orientation, edge, overscrollEffectType, ratio);
@@ -931,8 +944,27 @@ const useScrollBase = (props) => {
 
 	// call scroll callbacks
 
-	function forwardScrollEvent (overscrollEffectType, reachedEdgeInfo) {
-		forward(overscrollEffectType, {scrollLeft: mutableRef.current.scrollLeft, scrollTop: mutableRef.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo}, props);
+	const addObserverOnScroll = useCallback((fn) => {
+		const {observerOnScroll} = mutableRef.current;
+		if (typeof fn === 'function' && !observerOnScroll.includes(fn)) {
+			observerOnScroll.push(fn);
+		}
+	}, []);
+
+	const removeObserverOnScroll = useCallback((fn) => {
+		const {observerOnScroll} = mutableRef.current;
+		const index = observerOnScroll.indexOf(fn);
+		if (index !== -1) {
+			observerOnScroll.splice(index, 1);
+		}
+	}, []);
+
+	function forwardScrollEvent (type, reachedEdgeInfo) {
+		const data = {scrollLeft: mutableRef.current.scrollLeft, scrollTop: mutableRef.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo};
+		forward(type, data, props);
+		if (type === 'onScroll') {
+			mutableRef.current.observerOnScroll.forEach(fn => fn(data));
+		}
 	}
 
 	// scrollMode 'native' [[
@@ -1552,9 +1584,10 @@ const useScrollBase = (props) => {
 	};
 
 	return {
-		scrollContentWrapper: noScrollByDrag ? 'div' : TouchableDiv,
 		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible
+		isVerticalScrollbarVisible,
+		scrollContentWrapper: noScrollByDrag ? 'div' : TouchableDiv,
+		scrollObserver: {addObserverOnScroll, removeObserverOnScroll}
 	};
 };
 
