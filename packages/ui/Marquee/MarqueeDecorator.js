@@ -3,10 +3,9 @@ import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
-import {Job} from '@enact/core/util';
+import {Job, shallowEqual} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import {Component} from 'react';
-import shallowEqual from 'recompose/shallowEqual';
+import {PureComponent} from 'react';
 import warning from 'warning';
 
 import {scale} from '../resolution';
@@ -160,7 +159,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		return rtl;
 	};
 
-	return class extends Component {
+	return class extends PureComponent {
 		static displayName = 'ui:MarqueeDecorator';
 
 		static propTypes = /** @lends ui/Marquee.MarqueeDecorator.prototype */ {
@@ -345,13 +344,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 			on('keydown', this.handlePointerHide, document);
-		}
-
-		shouldComponentUpdate (nextProps, nextState) {
-			return (
-				!shallowEqual(this.state, nextState) ||
-				!shallowEqual(this.props, nextProps)
-			);
 		}
 
 		componentDidUpdate (prevProps) {
