@@ -281,6 +281,10 @@ const shallowEqual = (a, b) => {
 		return true;
 	}
 
+	if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
+		return false;
+	}
+
 	const aKeys = Object.keys(a);
 	const bKeys = Object.keys(b);
 
