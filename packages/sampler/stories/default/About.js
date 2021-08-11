@@ -1,6 +1,5 @@
 import kind from '@enact/core/kind';
 import {action} from '@enact/storybook-utils/addons/actions';
-import {boolean} from '@enact/storybook-utils/addons/knobs';
 import BodyText from '@enact/ui/BodyText';
 import {Button as UIButton} from '@enact/ui/Button';
 import ri from '@enact/ui/resolution';
@@ -77,11 +76,11 @@ export default {
 	title: 'About'
 };
 
-export const ATourOfSampler = () => (
+export const ATourOfSampler = (args) => (
 	<div style={{overflow: 'hidden', height: '100%'}}>
 		<BodyText
 			style={{margin: `0 ${riSafe(12)} 0.8em`}}
-			centered={boolean('text centered', BodyText)}
+			centered={args['text centered']}
 		>
 			Welcome to the Enact sampler! Explore Enact components.
 		</BodyText>
@@ -116,3 +115,7 @@ export const ATourOfSampler = () => (
 );
 
 ATourOfSampler.storyName = 'A Tour of Sampler';
+
+ATourOfSampler.args = {
+	'text centered': false
+};
