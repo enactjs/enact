@@ -1,4 +1,3 @@
-import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
 import Item from '@enact/ui/Item';
 import Layout, {Cell} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
@@ -13,20 +12,20 @@ export default {
 	component: 'Layout'
 };
 
-export const _Layout = () => (
+export const _Layout = (args) => (
 	<div className="debug" style={{height: ri.unit(399, 'rem')}}>
 		<Layout
-			align={select('align', ['start', 'center', 'stretch', 'end'], Layout, 'start')}
+			align={args['align']}
 			className={css.layout}
-			orientation={select('orientation', ['horizontal', 'vertical'], Layout, 'horizontal')}
+			orientation={args['orientation']}
 		>
 			<Cell
-				size={number('cell size', Cell, {range: true, min: 0, max: 300, step: 5}, 100) + 'px'}
+				size={args['cell size'] + 'px'}
 				shrink
 			>
 				<Item>First</Item>
 			</Cell>
-			<Cell shrink={boolean('shrinkable cell', Cell)}>
+			<Cell shrink={args['shrinkable cell']}>
 				<Item>Second</Item>
 			</Cell>
 			<Cell>
@@ -42,5 +41,49 @@ export const _Layout = () => (
 _Layout.parameters = {
 	info: {
 		text: 'Basic usage of Layout'
+	}
+};
+
+_Layout.args = {
+	'align': 'start',
+	'orientation': 'horizontal',
+	'cell size': 100,
+	'shrinkable cell': false
+};
+
+_Layout.argTypes = {
+	'align': {
+		options: ['start', 'center', 'stretch', 'end'],
+		control: {
+			type: 'select'
+		},
+		table: {
+			category: Layout.displayName
+		}
+	},
+	'orientation': {
+		options: ['horizontal', 'vertical'],
+		control: {
+			type: 'select'
+		},
+		table: {
+			category: Layout.displayName
+		}
+	},
+	'cell size': {
+		control: {
+			type: 'range',
+			min: 0,
+			max: 300,
+			step: 5
+		},
+		table: {
+			category: Cell.displayName
+		}
+	},
+	'shrinkable cell': {
+		table: {
+			category: Cell.displayName
+		}
 	}
 };

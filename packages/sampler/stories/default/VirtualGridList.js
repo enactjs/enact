@@ -1,5 +1,4 @@
 import {action} from '@enact/storybook-utils/addons/actions';
-import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
 import {ImageItem as UiImageItem} from '@enact/ui/ImageItem';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import ri from '@enact/ui/resolution';
@@ -7,7 +6,7 @@ import {VirtualGridList, VirtualListBasic} from '@enact/ui/VirtualList';
 
 const
 	prop = {
-		direction: {horizontal: 'horizontal', vertical: 'vertical'},
+		direction: ['horizontal', 'vertical'],
 		scrollbarOption: ['auto', 'hidden', 'visible'],
 		scrollModeOption: ['native', 'translate']
 	},
@@ -61,29 +60,69 @@ export default {
 	component: 'VirtualGridList'
 };
 
-export const VirtualListVirtualGridList = () => (
+export const VirtualListVirtualGridList = (args) => (
 	<VirtualGridList
-		dataSize={updateDataSize(number('dataSize', VirtualGridListConfig, defaultDataSize))}
-		direction={select('direction', prop.direction, VirtualGridListConfig)}
-		horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, VirtualGridListConfig)}
+		dataSize={updateDataSize(args['dataSize'])}
+		direction={args['direction']}
+		horizontalScrollbar={args['horizontalScrollbar']}
 		itemRenderer={uiRenderItem}
 		itemSize={{
-			minWidth: ri.scale(number('minWidth', VirtualGridListConfig, 180)),
-			minHeight: ri.scale(number('minHeight', VirtualGridListConfig, 270))
+			minWidth: ri.scale(args['minWidth']),
+			minHeight: ri.scale(args['minHeight'])
 		}}
-		key={select('scrollMode', prop.scrollModeOption, VirtualGridListConfig)}
-		noScrollByWheel={boolean('noScrollByWheel', VirtualGridListConfig)}
+		key={args['scrollMode']}
+		noScrollByWheel={args['noScrollByWheel']}
 		onScrollStart={action('onScrollStart')}
 		onScrollStop={action('onScrollStop')}
-		scrollMode={select('scrollMode', prop.scrollModeOption, VirtualGridListConfig)}
-		spacing={ri.scale(number('spacing', VirtualGridListConfig, 20))}
-		verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, VirtualGridListConfig)}
+		scrollMode={args['scrollMode']}
+		spacing={ri.scale(args['spacing'])}
+		verticalScrollbar={args['verticalScrollbar']}
 	/>
 );
 
 VirtualListVirtualGridList.storyName = 'VirtualList.VirtualGridList';
+
 VirtualListVirtualGridList.parameters = {
 	info: {
 		text: 'Basic usage of VirtualGridList'
+	}
+};
+
+VirtualListVirtualGridList.args = {
+	'dataSize': defaultDataSize,
+	'direction': VirtualGridListConfig.defaultProps['direction'],
+	'horizontalScrollbar': VirtualGridListConfig.defaultProps['horizontalScrollbar'],
+	'minWidth': 180,
+	'minHeight': 270,
+	'scrollMode': VirtualGridListConfig.defaultProps['scrollMode'],
+	'noScrollByWheel': VirtualGridListConfig.defaultProps['noScrollByWheel'],
+	'spacing': 20,
+	'verticalScrollbar': VirtualGridListConfig.defaultProps['verticalScrollbar']
+};
+
+VirtualListVirtualGridList.argTypes = {
+	'direction': {
+		options: prop.direction,
+		control: {
+			type: 'select'
+		}
+	},
+	'horizontalScrollbar': {
+		options: prop.scrollbarOption,
+		control: {
+			type: 'select'
+		}
+	},
+	'scrollMode': {
+		options: prop.scrollModeOption,
+		control: {
+			type: 'select'
+		}
+	},
+	'verticalScrollbar': {
+		options: prop.scrollbarOption,
+		control: {
+			type: 'select'
+		}
 	}
 };

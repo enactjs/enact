@@ -1,5 +1,4 @@
 import {action} from '@enact/storybook-utils/addons/actions';
-import {boolean, select} from '@enact/storybook-utils/addons/knobs';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import ri from '@enact/ui/resolution';
 import {Scroller} from '@enact/ui/Scroller';
@@ -17,16 +16,16 @@ export default {
 	component: 'Scroller'
 };
 
-export const _Scroller = () => (
+export const _Scroller = (args) => (
 	<Scroller
-		direction={select('direction', prop.direction, scrollerConfig)}
-		horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, scrollerConfig)}
-		key={select('scrollMode', prop.scrollModeOption, scrollerConfig)}
-		noScrollByWheel={boolean('noScrollByWheel', scrollerConfig)}
+		direction={args['direction']}
+		horizontalScrollbar={args['horizontalScrollbar']}
+		key={args['scrollMode']}
+		noScrollByWheel={args['noScrollByWheel']}
 		onScrollStart={action('onScrollStart')}
 		onScrollStop={action('onScrollStop')}
-		scrollMode={select('scrollMode', prop.scrollModeOption, scrollerConfig)}
-		verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, scrollerConfig)}
+		scrollMode={args['scrollMode']}
+		verticalScrollbar={args['verticalScrollbar']}
 	>
 		<div
 			style={{
@@ -54,5 +53,40 @@ export const _Scroller = () => (
 _Scroller.parameters = {
 	info: {
 		text: 'Basic usage of Scroller'
+	}
+};
+
+_Scroller.args = {
+	'direction': scrollerConfig.defaultProps['direction'],
+	'horizontalScrollbar': scrollerConfig.defaultProps['horizontalScrollbar'],
+	'noScrollByWheel': scrollerConfig.defaultProps['noScrollByWheel'],
+	'scrollMode': scrollerConfig.defaultProps['scrollMode'],
+	'verticalScrollbar': scrollerConfig.defaultProps['verticalScrollbar']
+};
+
+_Scroller.argTypes = {
+	'direction': {
+		options: prop.direction,
+		control: {
+			type: 'select'
+		}
+	},
+	'horizontalScrollbar': {
+		options: prop.scrollbarOption,
+		control: {
+			type: 'select'
+		}
+	},
+	'scrollMode': {
+		options: prop.scrollModeOption,
+		control: {
+			type: 'select'
+		}
+	},
+	'verticalScrollbar': {
+		options: prop.scrollbarOption,
+		control: {
+			type: 'select'
+		}
 	}
 };
