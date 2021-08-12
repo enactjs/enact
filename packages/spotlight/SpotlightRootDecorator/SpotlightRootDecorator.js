@@ -8,7 +8,7 @@
 
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
-import {Component, createRef} from 'react';
+import {Component} from 'react';
 
 import Spotlight from '../src/spotlight';
 import {spottableClass} from '../Spottable';
@@ -91,7 +91,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.containerRef = createRef();
+			this.containerNode = null;
 
 			if (typeof window === 'object') {
 				Spotlight.initialize({
@@ -111,6 +111,8 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (typeof document === 'object') {
+				this.containerNode = document.querySelector('#root');
+
 				document.addEventListener('focusin', this.handleFocusIn, {capture: true});
 				document.addEventListener('keydown', this.handleKeyDown, {capture: true});
 				document.addEventListener('pointermove', this.handlePointerMove, {capture: true});
@@ -130,9 +132,9 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		applyInputType = () => {
-			if (this && this.containerRef && this.containerRef.current) {
+			if (this && this.containerNode) {
 				Object.keys(input.types).map((type) => {
-					this.containerRef.current.classList.toggle('spotlight-input-' + type, input.types[type]);
+					this.containerNode.classList.toggle('spotlight-input-' + type, input.types[type]);
 				});
 				input.applied = true;
 			}
@@ -147,7 +149,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		// For key input
 		handleKeyDown = (ev) => {
 			const {keyCode} = ev;
-			if (is('enter', keyCode) && this.containerRef.current.classList.contains('spotlight-input-touch')) {
+			if (is('enter', keyCode) && this.containerNode.classList.contains('spotlight-input-touch')) {
 				// Prevent onclick event trigger by enter key
 				ev.preventDefault();
 			}
@@ -185,9 +187,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			return (
-				<div ref={this.containerRef}>
-					<Wrapped {...this.props} />
-				</div>
+				<Wrapped {...this.props} />
 			);
 		}
 	};

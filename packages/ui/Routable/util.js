@@ -3,7 +3,7 @@ import {createContext} from 'react';
 
 const RouteContext = createContext(null);
 
-const toSegments = (path) => Array.isArray(path) ? path : path.split('/').filter(Boolean);
+const toSegments = (path) => Array.isArray(path) ? path : (path || '').split('/').filter(Boolean);
 
 const getPaths = (routes, base) => {
 	let result = [];
