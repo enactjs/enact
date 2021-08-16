@@ -163,12 +163,6 @@ class View extends Component {
 
 	componentDidUpdate (prevProps) {
 		this.changeDirection = this.shouldChangeDirection(prevProps, this.props);
-
-		// this is needed to avoid setting enteringProp to true in the render method when noAnimation is true
-		if (prevProps.noAnimation !== this.props.noAnimation && this.state.entering) {
-			// eslint-disable-next-line react/no-did-update-set-state
-			this.setState({entering: false});
-		}
 	}
 
 	componentWillUnmount () {
@@ -224,6 +218,8 @@ class View extends Component {
 			// FIXME: `startRafAfter` is a temporary solution using rAF. We need a better way to handle
 			// transition cycle and component life cycle to be in sync. See ENYO-4835.
 			this.enteringJob.startRafAfter(enteringDelay);
+		} else {
+			this.enteringJob.start();
 		}
 	}
 

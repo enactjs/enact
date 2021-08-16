@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
-
-### Fixed
-
-- `ui/ViewManager` to set `state.entering` to `false` when `noAnimation` prop is changed to `true`
-
 ## [4.0.5] - 2021-08-02
 
 No significant changes.
