@@ -1,5 +1,4 @@
 import {action} from '@enact/storybook-utils/addons/actions';
-import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import Group from '@enact/ui/Group';
 import Item from '@enact/ui/Item';
@@ -42,8 +41,8 @@ const ViewManagerLayout = (props) => {
 		setSelected(ev.selected);
 	}, [setSelected]);
 
-	const selectedEnd = select('end', Object.keys(prop.end), ViewManagerConfig, 'index');
-	const selectedStart = select('start', Object.keys(prop.start), ViewManagerConfig, 'index');
+	// eslint-disable-next-line enact/prop-types
+	const {selectedEnd, selectedStart} = props;
 	const endRange = [selected, selected + 1, selected + 2];
 	const startRange = [selected, selected - 1, selected - 2];
 	const end = Math.min(endRange[prop.end[selectedEnd]], itemSize - 1);
@@ -84,14 +83,13 @@ export default {
 	component: 'ViewManager'
 };
 
-export const _ViewManager = () => {
-	const arrangerType = select('arranger', Object.keys(prop.arranger), ViewManagerConfig, 'SlideBottomArranger');
+export const _ViewManager = (args) => {
+	const arrangerType = args['arranger'];
 	let arranger;
 
 	if (arrangerType === 'SlideArranger') {
-		const SlideArrangerConfig = {displayName: 'SlideArranger'};
-		const amount = number('amount', SlideArrangerConfig, {range: true, min: 0, max: 100}, 100);
-		const direction = select('direction', prop.direction, SlideArrangerConfig, prop.direction[0]);
+		const amount = args['amount'];
+		const direction = args['direction'];
 		arranger = SlideArranger({amount, direction});
 	} else if (arrangerType === 'CustomArranger (FadeAndSlideArranger)') {
 		// The following arranger is from sandstone/internal/Panels/Arrangers.
@@ -120,24 +118,81 @@ export const _ViewManager = () => {
 	return (
 		<ViewManagerLayout
 			arranger={arranger}
-			duration={number('duration', ViewManagerConfig)}
-			enteringDelay={number('enteringDelay', ViewManagerConfig)}
-			noAnimation={boolean('noAnimation', ViewManagerConfig)}
+			duration={args['duration']}
+			enteringDelay={args['enteringDelay']}
+			noAnimation={args['noAnimation']}
 			onAppear={action('onAppear')}
 			onEnter={action('onEnter')}
 			onLeave={action('onLeave')}
 			onStay={action('onStay')}
 			onTransition={action('onTransition')}
 			onWillTransition={action('onWillTransition')}
-			reverseTransition={boolean('reverseTransition', ViewManagerConfig)}
-			rtl={boolean('rtl', ViewManagerConfig)}
+			reverseTransition={args['reverseTransition']}
+			rtl={args['rtl']}
+			selectedEnd={args['end']}
+			selectedStart={args['start']}
 		/>
 	);
 };
 
 _ViewManager.storyName = 'ViewManager';
+
 _ViewManager.parameters = {
 	info: {
 		text: 'Basic usage of ViewManager'
+	}
+};
+
+_ViewManager.args = {
+	'arranger': 'SlideBottomArranger',
+	'duration': ViewManagerConfig.defaultProps['duration'],
+	'enteringDelay': ViewManagerConfig.defaultProps['enteringDelay'],
+	'noAnimation': false,
+	'reverseTransition': false,
+	'rtl': false,
+	'end': 'index',
+	'start': 'index',
+	'direction': prop.direction[0],
+	'amount': 100
+};
+
+_ViewManager.argTypes = {
+	'arranger': {
+		options: Object.keys(prop.arranger),
+		control: {
+			type: 'select'
+		}
+	},
+	'enteringDelay': {
+		control: {
+			type: 'number'
+		}
+	},
+	'end': {
+		options: Object.keys(prop.end),
+		control: {
+			type: 'select'
+		}
+	},
+	'start': {
+		options: Object.keys(prop.start),
+		control: {
+			type: 'select'
+		}
+	},
+	'direction': {
+		options: prop.direction,
+		name: 'direction (SlideArranger)',
+		control: {
+			type: 'select'
+		}
+	},
+	'amount': {
+		name: 'amount (SlideArranger)',
+		control: {
+			type: 'range',
+			min: 0,
+			max: 100
+		}
 	}
 };

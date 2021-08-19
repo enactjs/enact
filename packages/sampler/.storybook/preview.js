@@ -64,9 +64,6 @@ const getObjectType = (name, defaultValue, obj) => {
 
 configureActions();
 export const parameters = {
-	knobs: {
-		timestamps: true
-	},
 	docs: {
 		container: DocsContainer,
 		page: DocsPage,

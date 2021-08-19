@@ -109,7 +109,7 @@ export const ATourOfSampler = (args) => (
 			style={{bottom: riSafe(edgeDotKeepout), left: 114}}
 			length={30}
 		>
-			<b>Knobs</b> tab lets you adjust component properties
+			<b>Controls</b> tab lets you adjust component properties
 		</HintDialog>
 	</div>
 );
