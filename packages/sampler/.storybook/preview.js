@@ -1,4 +1,5 @@
 import {configureActions} from '@enact/storybook-utils/addons/actions';
+import {getBooleanType, getObjectType} from '@enact/storybook-utils/addons/controls';
 import {DocsPage, DocsContainer} from '@enact/storybook-utils/addons/docs';
 import {themes} from '@storybook/theming';
 
@@ -33,33 +34,6 @@ const backgrounds = {
 	'Space Station':           '#7c4590 url("http://picsum.photos/1280/720?image=967") no-repeat center/cover',
 	'Warm Pup':                '#5d6542 url("http://picsum.photos/1280/720?image=1025") no-repeat center/cover',
 	'Random':                  '#555 url("http://picsum.photos/1280/720") no-repeat center/cover'
-};
-
-const getBooleanType = (name) => {
-	return {
-		name,
-		defaultValue: 'false',
-		toolbar: {
-			items: ['true', 'false'],
-			showName: true
-		}
-	};
-};
-
-const getObjectType = (name, defaultValue, obj) => {
-	return {
-		name,
-		defaultValue,
-		toolbar: {
-			items: Object.keys(obj).map(title => {
-				return {
-					value: obj[title],
-					title
-				};
-			}),
-			showName: true
-		}
-	};
 };
 
 configureActions();

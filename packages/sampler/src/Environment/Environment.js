@@ -40,6 +40,7 @@ const StorybookDecorator = (story, config) => {
 
 	const hasText = config.parameters && config.parameters.info && config.parameters.info.text;
 
+	// NOTE: The properties of globals are only defined by string type.
 	const classes = {
 		aria: JSON.parse(globals['debug aria']),
 		layout: JSON.parse(globals['debug layout']),

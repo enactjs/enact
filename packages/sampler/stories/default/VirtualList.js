@@ -1,4 +1,5 @@
 import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, number, select} from '@enact/storybook-utils/addons/controls';
 import {Item as UiItem} from '@enact/ui/Item';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import ri from '@enact/ui/resolution';
@@ -67,41 +68,18 @@ export const _VirtualList = (args) => {
 	);
 };
 
+number('dataSize', _VirtualList, VirtualListConfig, defaultDataSize);
+select('horizontalScrollbar', _VirtualList, prop.scrollbarOption, VirtualListConfig);
+number('itemSize', _VirtualList, VirtualListConfig, 72);
+select('scrollMode', _VirtualList, prop.scrollModeOption, VirtualListConfig);
+boolean('noScrollByWheel', _VirtualList, VirtualListConfig);
+number('spacing', _VirtualList, VirtualListConfig);
+select('verticalScrollbar', _VirtualList, prop.scrollbarOption, VirtualListConfig);
+
 _VirtualList.storyName = 'VirtualList';
 
 _VirtualList.parameters = {
 	info: {
 		text: 'Basic usage of VirtualList'
-	}
-};
-
-_VirtualList.args = {
-	'dataSize': defaultDataSize,
-	'horizontalScrollbar': VirtualListConfig.defaultProps['horizontalScrollbar'],
-	'itemSize': 72,
-	'scrollMode': VirtualListConfig.defaultProps['scrollMode'],
-	'noScrollByWheel': VirtualListConfig.defaultProps['noScrollByWheel'],
-	'spacing': VirtualListConfig.defaultProps['spacing'],
-	'verticalScrollbar': VirtualListConfig.defaultProps['verticalScrollbar']
-};
-
-_VirtualList.argTypes = {
-	'horizontalScrollbar': {
-		options: prop.scrollbarOption,
-		control: {
-			type: 'select'
-		}
-	},
-	'scrollMode': {
-		options: prop.scrollModeOption,
-		control: {
-			type: 'select'
-		}
-	},
-	'verticalScrollbar': {
-		options: prop.scrollbarOption,
-		control: {
-			type: 'select'
-		}
 	}
 };

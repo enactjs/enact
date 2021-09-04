@@ -5,8 +5,8 @@ module.exports = {
 	addons: [
 		'@enact/storybook-utils/addons/actions/register',
 		'@enact/storybook-utils/addons/docs/register',
-		'@storybook/addon-controls',
-		'@storybook/addon-toolbars'
+		'@enact/storybook-utils/addons/controls/register',
+		'@enact/storybook-utils/addons/toolbars/register'
 	],
 	webpackFinal: async (config, {configType}) => {
 		return webpack(config, configType, __dirname);

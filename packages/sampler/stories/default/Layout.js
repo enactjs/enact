@@ -1,3 +1,4 @@
+import {boolean, range, select} from '@enact/storybook-utils/addons/controls';
 import Item from '@enact/ui/Item';
 import Layout, {Cell} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
@@ -38,52 +39,13 @@ export const _Layout = (args) => (
 	</div>
 );
 
+select('align', _Layout, ['start', 'center', 'stretch', 'end'], Layout, 'start');
+select('orientation', _Layout, ['horizontal', 'vertical'], Layout, 'horizontal');
+range('cell size', _Layout, Cell, {min: 0, max: 300, step: 5}, 100);
+boolean('shrinkable cell', _Layout, Cell);
+
 _Layout.parameters = {
 	info: {
 		text: 'Basic usage of Layout'
-	}
-};
-
-_Layout.args = {
-	'align': 'start',
-	'orientation': 'horizontal',
-	'cell size': 100,
-	'shrinkable cell': false
-};
-
-_Layout.argTypes = {
-	'align': {
-		options: ['start', 'center', 'stretch', 'end'],
-		control: {
-			type: 'select'
-		},
-		table: {
-			category: Layout.displayName
-		}
-	},
-	'orientation': {
-		options: ['horizontal', 'vertical'],
-		control: {
-			type: 'select'
-		},
-		table: {
-			category: Layout.displayName
-		}
-	},
-	'cell size': {
-		control: {
-			type: 'range',
-			min: 0,
-			max: 300,
-			step: 5
-		},
-		table: {
-			category: Cell.displayName
-		}
-	},
-	'shrinkable cell': {
-		table: {
-			category: Cell.displayName
-		}
 	}
 };

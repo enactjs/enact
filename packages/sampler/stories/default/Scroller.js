@@ -1,4 +1,5 @@
 import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, select} from '@enact/storybook-utils/addons/controls';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import ri from '@enact/ui/resolution';
 import {Scroller} from '@enact/ui/Scroller';
@@ -50,43 +51,14 @@ export const _Scroller = (args) => (
 	</Scroller>
 );
 
+select('direction', _Scroller, prop.direction, scrollerConfig);
+select('horizontalScrollbar', _Scroller, prop.scrollbarOption, scrollerConfig);
+boolean('noScrollByWheel', _Scroller, scrollerConfig);
+select('scrollMode', _Scroller, prop.scrollModeOption, scrollerConfig);
+select('verticalScrollbar', _Scroller, prop.scrollbarOption, scrollerConfig);
+
 _Scroller.parameters = {
 	info: {
 		text: 'Basic usage of Scroller'
-	}
-};
-
-_Scroller.args = {
-	'direction': scrollerConfig.defaultProps['direction'],
-	'horizontalScrollbar': scrollerConfig.defaultProps['horizontalScrollbar'],
-	'noScrollByWheel': scrollerConfig.defaultProps['noScrollByWheel'],
-	'scrollMode': scrollerConfig.defaultProps['scrollMode'],
-	'verticalScrollbar': scrollerConfig.defaultProps['verticalScrollbar']
-};
-
-_Scroller.argTypes = {
-	'direction': {
-		options: prop.direction,
-		control: {
-			type: 'select'
-		}
-	},
-	'horizontalScrollbar': {
-		options: prop.scrollbarOption,
-		control: {
-			type: 'select'
-		}
-	},
-	'scrollMode': {
-		options: prop.scrollModeOption,
-		control: {
-			type: 'select'
-		}
-	},
-	'verticalScrollbar': {
-		options: prop.scrollbarOption,
-		control: {
-			type: 'select'
-		}
 	}
 };

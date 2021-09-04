@@ -1,5 +1,6 @@
 import kind from '@enact/core/kind';
 import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean} from '@enact/storybook-utils/addons/controls';
 import BodyText from '@enact/ui/BodyText';
 import {Button as UIButton} from '@enact/ui/Button';
 import ri from '@enact/ui/resolution';
@@ -114,8 +115,6 @@ export const ATourOfSampler = (args) => (
 	</div>
 );
 
-ATourOfSampler.storyName = 'A Tour of Sampler';
+boolean('text centered', ATourOfSampler);
 
-ATourOfSampler.args = {
-	'text centered': false
-};
+ATourOfSampler.storyName = 'A Tour of Sampler';

@@ -1,4 +1,5 @@
 import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, number, select} from '@enact/storybook-utils/addons/controls';
 import {ImageItem as UiImageItem} from '@enact/ui/ImageItem';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import ri from '@enact/ui/resolution';
@@ -80,49 +81,20 @@ export const VirtualListVirtualGridList = (args) => (
 	/>
 );
 
+number('dataSize', VirtualListVirtualGridList, VirtualGridListConfig, defaultDataSize);
+select('direction', VirtualListVirtualGridList, prop.direction, VirtualGridListConfig);
+select('horizontalScrollbar', VirtualListVirtualGridList, prop.scrollbarOption, VirtualGridListConfig);
+number('minWidth', VirtualListVirtualGridList, VirtualGridListConfig, 180);
+number('minHeight', VirtualListVirtualGridList, VirtualGridListConfig, 270);
+select('scrollMode', VirtualListVirtualGridList, prop.scrollModeOption, VirtualGridListConfig);
+boolean('noScrollByWheel', VirtualListVirtualGridList, VirtualGridListConfig);
+number('spacing', VirtualListVirtualGridList, VirtualGridListConfig, 20);
+select('verticalScrollbar', VirtualListVirtualGridList, prop.scrollbarOption, VirtualGridListConfig);
+
 VirtualListVirtualGridList.storyName = 'VirtualList.VirtualGridList';
 
 VirtualListVirtualGridList.parameters = {
 	info: {
 		text: 'Basic usage of VirtualGridList'
-	}
-};
-
-VirtualListVirtualGridList.args = {
-	'dataSize': defaultDataSize,
-	'direction': VirtualGridListConfig.defaultProps['direction'],
-	'horizontalScrollbar': VirtualGridListConfig.defaultProps['horizontalScrollbar'],
-	'minWidth': 180,
-	'minHeight': 270,
-	'scrollMode': VirtualGridListConfig.defaultProps['scrollMode'],
-	'noScrollByWheel': VirtualGridListConfig.defaultProps['noScrollByWheel'],
-	'spacing': 20,
-	'verticalScrollbar': VirtualGridListConfig.defaultProps['verticalScrollbar']
-};
-
-VirtualListVirtualGridList.argTypes = {
-	'direction': {
-		options: prop.direction,
-		control: {
-			type: 'select'
-		}
-	},
-	'horizontalScrollbar': {
-		options: prop.scrollbarOption,
-		control: {
-			type: 'select'
-		}
-	},
-	'scrollMode': {
-		options: prop.scrollModeOption,
-		control: {
-			type: 'select'
-		}
-	},
-	'verticalScrollbar': {
-		options: prop.scrollbarOption,
-		control: {
-			type: 'select'
-		}
 	}
 };

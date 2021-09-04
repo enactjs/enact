@@ -1,5 +1,6 @@
 import kind from '@enact/core/kind';
 import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean, select} from '@enact/storybook-utils/addons/controls';
 import Button from '@enact/ui/Button';
 import Item from '@enact/ui/Item';
 import Group from '@enact/ui/Group';
@@ -69,29 +70,12 @@ export const _Group = (args) => (
 	</Group>
 );
 
+select('childComponent', _Group, Object.keys(prop.children), Group, 'Button');
+boolean('ItemProps-Inline', _Group, Group);
+select('select', _Group, ['single', 'radio', 'multiple'], Group, 'radio');
+
 _Group.parameters = {
 	info: {
 		text: 'Basic usage of Group'
-	}
-};
-
-_Group.args = {
-	'childComponent': 'Button',
-	'ItemProps-Inline': false,
-	'select': 'radio'
-};
-
-_Group.argTypes = {
-	'childComponent': {
-		options: Object.keys(prop.children),
-		control: {
-			type: 'select'
-		}
-	},
-	'select': {
-		options: ['single', 'radio', 'multiple'],
-		control: {
-			type: 'select'
-		}
 	}
 };
