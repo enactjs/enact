@@ -327,7 +327,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.sync = false;
 			this.timerState = TimerState.CLEAR;
 			this.distance = null;
-			this.contentFits = false;
+			this.contentFits = null;
 			this.resizeRegistry = null;
 		}
 
@@ -406,7 +406,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		promoteJob = new Job(() => {
-			if (!this.contentFits) {
+			if (this.contentFits === false) {
 				this.setState(state => state.promoted ? null : {promoted: true});
 			}
 		});
@@ -485,7 +485,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			// Null distance is the special value to allow recalculation
 			this.distance = null;
 			// Assume the marquee does not fit until calculations show otherwise
-			this.contentFits = false;
+			this.contentFits = null;
 
 			this.setState(state => {
 				if (state.overflow === 'ellipsis' && state.promoted === false) return null;
@@ -626,7 +626,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// our group already did it.
 				this.setTimeout(() => {
 					this.calculateMetrics();
-					if (!this.contentFits) {
+					if (this.contentFits === false) {
 						this.setState({
 							promoted: true,
 							animating: true
