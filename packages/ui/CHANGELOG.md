@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
-
-### Changed
-
-- `ui/MarqueeDecorator` to not separate layer when short text
-
 ## [4.0.5] - 2021-08-02
 
 No significant changes.
