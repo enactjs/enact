@@ -143,6 +143,8 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 		updateFocus = (prevState) => {
 			// focus node if `InputSpotlightDecorator` is pausing Spotlight or if Spotlight is paused
+			console.warn('InputSpotlightDecorator > updateFocus > getCurrent: ', Spotlight.getCurrent());
+			console.warn('InputSpotlightDecorator > updateFocus > isPaused: ', Spotlight.isPaused());
 			if (
 				this.state.node &&
 				Spotlight.getCurrent() !== this.state.node &&
@@ -293,17 +295,20 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		onKeyUp = (ev) => {
 			const {dismissOnEnter} = this.props;
 			const {currentTarget, keyCode, preventDefault, target} = ev;
-
+			console.warn('InputSpotlightDecorator > onKeyUp > target: ', target);
+			console.warn('InputSpotlightDecorator > onKeyUp > downTarget: ', this.downTarget);
 			// verify that we have a matching pair of key down/up events to avoid adjusting focus
 			// when the component received focus mid-press
 			if (target === this.downTarget) {
 				this.downTarget = null;
 
 				if (this.state.focused === 'input' && dismissOnEnter && is('enter', keyCode)) {
+					console.warn('InputSpotlightDecorator > onKeyUp > enter > currentTarget: ', currentTarget);
 					this.focusDecorator(currentTarget);
 					// prevent Enter onKeyPress which triggers an onMouseDown via Spotlight
 					preventDefault();
 				} else if (this.state.focused !== 'input' && is('enter', keyCode)) {
+					console.warn('InputSpotlightDecorator > onKeyUp > no input+enter > currentTarget: ', currentTarget);
 					this.focusInput(currentTarget);
 				}
 			}

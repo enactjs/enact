@@ -230,7 +230,9 @@ const InputBase = kind({
 
 	handlers: {
 		onChange: (ev, {onChange}) => {
+			console.warn('Input > onChange : ', onChange);
 			if (onChange) {
+				console.warn('Input > onChange > ev.target.value: ', ev.target.value);
 				onChange({value: ev.target.value});
 			}
 		}
