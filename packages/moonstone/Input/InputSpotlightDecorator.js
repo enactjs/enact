@@ -301,7 +301,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			// when the component received focus mid-press
 			if (target === this.downTarget) {
 				this.downTarget = null;
-
+				console.warn('InputSpotlightDecorator > onKeyUp > target === this.downTarget: true');
 				if (this.state.focused === 'input' && dismissOnEnter && is('enter', keyCode)) {
 					console.warn('InputSpotlightDecorator > onKeyUp > enter > currentTarget: ', currentTarget);
 					this.focusDecorator(currentTarget);
