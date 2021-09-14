@@ -61,7 +61,7 @@ export default {
 	component: 'VirtualGridList'
 };
 
-export const VirtualListVirtualGridList = (args) => (
+export const _VirtualGridList = (args) => (
 	<VirtualGridList
 		dataSize={updateDataSize(args['dataSize'])}
 		direction={args['direction']}
@@ -81,19 +81,19 @@ export const VirtualListVirtualGridList = (args) => (
 	/>
 );
 
-number('dataSize', VirtualListVirtualGridList, VirtualGridListConfig, defaultDataSize);
-select('direction', VirtualListVirtualGridList, prop.direction, VirtualGridListConfig);
-select('horizontalScrollbar', VirtualListVirtualGridList, prop.scrollbarOption, VirtualGridListConfig);
-number('minWidth', VirtualListVirtualGridList, VirtualGridListConfig, 180);
-number('minHeight', VirtualListVirtualGridList, VirtualGridListConfig, 270);
-select('scrollMode', VirtualListVirtualGridList, prop.scrollModeOption, VirtualGridListConfig);
-boolean('noScrollByWheel', VirtualListVirtualGridList, VirtualGridListConfig);
-number('spacing', VirtualListVirtualGridList, VirtualGridListConfig, 20);
-select('verticalScrollbar', VirtualListVirtualGridList, prop.scrollbarOption, VirtualGridListConfig);
+number('dataSize', _VirtualGridList, VirtualGridListConfig, defaultDataSize);
+select('direction', _VirtualGridList, prop.direction, VirtualGridListConfig);
+select('horizontalScrollbar', _VirtualGridList, prop.scrollbarOption, VirtualGridListConfig);
+number('minWidth', _VirtualGridList, VirtualGridListConfig, 180);
+number('minHeight', _VirtualGridList, VirtualGridListConfig, 270);
+select('scrollMode', _VirtualGridList, prop.scrollModeOption, VirtualGridListConfig);
+boolean('noScrollByWheel', _VirtualGridList, VirtualGridListConfig);
+number('spacing', _VirtualGridList, VirtualGridListConfig, 20);
+select('verticalScrollbar', _VirtualGridList, prop.scrollbarOption, VirtualGridListConfig);
 
-VirtualListVirtualGridList.storyName = 'VirtualList.VirtualGridList';
+_VirtualGridList.storyName = 'VirtualList.VirtualGridList';
 
-VirtualListVirtualGridList.parameters = {
+_VirtualGridList.parameters = {
 	info: {
 		text: 'Basic usage of VirtualGridList'
 	}
