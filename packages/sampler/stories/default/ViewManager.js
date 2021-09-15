@@ -13,6 +13,10 @@ import css from './ViewManager.module.less';
 
 const ViewManagerConfig = mergeComponentMetadata('ViewManager', ViewManagerBase, ViewManager);
 
+const SlideArrangerConfig = {
+	groupId: 'SlideArranger'
+};
+
 const prop = {
 	arranger: {
 		SlideBottomArranger,
@@ -89,8 +93,8 @@ export const _ViewManager = (args) => {
 	let arranger;
 
 	if (arrangerType === 'SlideArranger') {
-		const amount = args['amount (SlideArranger)'];
-		const direction = args['direction (SlideArranger)'];
+		const amount = args['amount'];
+		const direction = args['direction'];
 		arranger = SlideArranger({amount, direction});
 	} else if (arrangerType === 'CustomArranger (FadeAndSlideArranger)') {
 		// The following arranger is from sandstone/internal/Panels/Arrangers.
@@ -144,8 +148,8 @@ boolean('reverseTransition', _ViewManager, ViewManagerConfig);
 boolean('rtl', _ViewManager, ViewManagerConfig);
 select('end', _ViewManager, Object.keys(prop.end), ViewManagerConfig, 'index');
 select('start', _ViewManager, Object.keys(prop.start), ViewManagerConfig, 'index');
-select('direction (SlideArranger)', _ViewManager, prop.direction, ViewManagerConfig, prop.direction[0]);
-range('amount (SlideArranger)', _ViewManager, ViewManagerConfig, {min: 0, max: 100}, 100);
+select('direction', _ViewManager, prop.direction, SlideArrangerConfig, prop.direction[0]);
+range('amount', _ViewManager, SlideArrangerConfig, {min: 0, max: 100}, 100);
 
 _ViewManager.storyName = 'ViewManager';
 

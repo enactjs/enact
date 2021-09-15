@@ -51,10 +51,10 @@ export const parameters = {
 	}
 };
 export const globalTypes = {
+	'locale': getObjectType('locale', 'en-US', locales),
+	'background': getObjectType('background', 'default', backgrounds),
 	'debug aria': getBooleanType('debug aria'),
 	'debug layout': getBooleanType('debug layout'),
-	'debug spotlight': getBooleanType('debug spotlight'),
-	'locale': getObjectType('locale', 'en-US', locales),
-	'background': getObjectType('background', 'default', backgrounds)
+	'debug spotlight': getBooleanType('debug spotlight')
 };
 export const decorators = [Environment];
