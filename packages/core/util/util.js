@@ -264,6 +264,24 @@ const mapAndFilterChildren = (children, callback, filter) => {
 	}
 };
 
+const reportWebVitals = () => {
+		import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+			getCLS(sendToAnalytics);
+			getFID(sendToAnalytics);
+			getFCP(sendToAnalytics);
+			getLCP(sendToAnalytics);
+			getTTFB(sendToAnalytics);
+		});
+}
+
+function sendToAnalytics(metric) {
+	metric.date = Date.now();
+	const body = JSON.stringify(metric);
+
+	fetch('http://localhost:3000/web-vitals',
+		{method: 'POST', headers: new Headers({'content-type': 'application/json'}), body})
+}
+
 export {
 	cap,
 	clamp,
@@ -275,5 +293,6 @@ export {
 	memoize,
 	mergeClassNameMaps,
 	perfNow,
-	mapAndFilterChildren
+	mapAndFilterChildren,
+	reportWebVitals
 };
