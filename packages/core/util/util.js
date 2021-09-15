@@ -316,7 +316,11 @@ const reportWebVitals = () => {
 
 function sendToAnalytics(metric) {
 	metric.date = Date.now();
-	const body = JSON.stringify(metric);
+	let body = JSON.stringify({
+		date: Date.now(),
+		name: metric.name,
+		value: metric.value
+	});
 
 	fetch('http://localhost:3000/web-vitals',
 		{method: 'POST', headers: new Headers({'content-type': 'application/json'}), body})
