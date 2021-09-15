@@ -13,6 +13,7 @@
  * @exports mergeClassNameMaps
  * @exports perfNow
  * @exports mapAndFilterChildren
+ * @exports shallowEqual
  */
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
@@ -264,6 +265,45 @@ const mapAndFilterChildren = (children, callback, filter) => {
 	}
 };
 
+/**
+ * Performs shallow comparison for given objects.
+ *
+ * @function
+ * @param {Obejct}        a    An object to compare.
+ * @param {Obejct}        b    An object to compare.
+ *
+ * @returns {Boolean}          `true` if the values of all keys are strictly equal.
+ * @memberof core/util
+ * @public
+ */
+const shallowEqual = (a, b) => {
+	if (Object.is(a, b)) {
+		return true;
+	}
+
+	if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
+		return false;
+	}
+
+	const aKeys = Object.keys(a);
+	const bKeys = Object.keys(b);
+
+	// early bail out if the objects have a different number of keys
+	if (aKeys.length !== bKeys.length) {
+		return false;
+	}
+
+	const hasOwn = Object.prototype.hasOwnProperty.bind(b);
+	for (let i = 0; i < aKeys.length; i++) {
+		const prop = aKeys[i];
+		if (!hasOwn(prop) || !Object.is(a[prop], b[prop])) {
+			return false;
+		}
+	}
+
+	return true;
+};
+
 const reportWebVitals = () => {
 		import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
 			getCLS(sendToAnalytics);
@@ -294,5 +334,6 @@ export {
 	mergeClassNameMaps,
 	perfNow,
 	mapAndFilterChildren,
+	shallowEqual,
 	reportWebVitals
 };
