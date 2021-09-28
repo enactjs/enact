@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.0.7] - 2021-09-28
+
+### Fixed
+
+- `sampler` not to fail in build.
+
 ## [4.0.6] - 2021-09-28
 
 No significant changes.
