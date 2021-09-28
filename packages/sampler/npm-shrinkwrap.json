@@ -12750,9 +12750,9 @@
       }
     },
     "sanitize.css": {
-      "version": "13.0.0",
-      "resolved": "https://registry.npmjs.org/sanitize.css/-/sanitize.css-13.0.0.tgz",
-      "integrity": "sha512-ZRwKbh/eQ6w9vmTjkuG0Ioi3HBwPFce0O+v//ve+aOq1oeCy7jMV2qzzAlpsNuqpqCBjjriM1lbtZbF/Q8jVyA==",
+      "version": "12.0.1",
+      "resolved": "https://registry.npmjs.org/sanitize.css/-/sanitize.css-12.0.1.tgz",
+      "integrity": "sha512-QbusSBnWHaRBZeTxsJyknwI0q+q6m1NtLBmB76JfW/rdVN7Ws6Zz70w65+430/ouVcdNVT3qwrDgrM6PaYyRtw==",
       "dev": true
     },
     "scheduler": {
