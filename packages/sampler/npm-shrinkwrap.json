@@ -1,6 +1,6 @@
 {
   "name": "enact-sampler",
-  "version": "4.0.6",
+  "version": "4.0.7",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -1496,9 +1496,9 @@
       "dev": true
     },
     "@enact/core": {
-      "version": "4.0.6",
-      "resolved": "https://registry.npmjs.org/@enact/core/-/core-4.0.6.tgz",
-      "integrity": "sha512-bRhR+fY6Yj3uMMSdmCut6onkrQuniG6zY81EWUFYBTHebvgwYPQrJaxpge1DLhgXbsv1C3bgDYMyvZX2YSfjdQ==",
+      "version": "4.0.7",
+      "resolved": "https://registry.npmjs.org/@enact/core/-/core-4.0.7.tgz",
+      "integrity": "sha512-s1AlRhSESHoPvzOB+EP0NEFdfS5MJakQcpkDEciTP2wdIkbSsLBu9UdYOx2j7yGFjJONivuED35cuIaw29gW0A==",
       "requires": {
         "classnames": "^2.2.5",
         "invariant": "^2.2.2",
@@ -1590,11 +1590,11 @@
       }
     },
     "@enact/i18n": {
-      "version": "4.0.6",
-      "resolved": "https://registry.npmjs.org/@enact/i18n/-/i18n-4.0.6.tgz",
-      "integrity": "sha512-DMOjJAlPL3IscdXsxjzdpPizOdysxmIPN4iqdxh2tHOYn9UwZb29v0rbx41h6nfyYr7Pfqn5H8b7Nys0Wul0yA==",
+      "version": "4.0.7",
+      "resolved": "https://registry.npmjs.org/@enact/i18n/-/i18n-4.0.7.tgz",
+      "integrity": "sha512-DqNO6JRPIQUEKAMNYuW37Rvi4R4yKU9BTfu2hBKiM0DNZXFJ+4uSeBsmH6dv6HAtBeBzs/wwei353VJWQaP+OQ==",
       "requires": {
-        "@enact/core": "^4.0.6",
+        "@enact/core": "^4.0.7",
         "prop-types": "^15.7.2",
         "ramda": "^0.24.1",
         "react": "^17.0.1",
@@ -1603,11 +1603,11 @@
       }
     },
     "@enact/spotlight": {
-      "version": "4.0.6",
-      "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-4.0.6.tgz",
-      "integrity": "sha512-1g1InFzPsczz4yOWmL+tu6sa/gzucD+Vv1T+CO+59CBlfpb4gNHgoqoI7+wP3MYyq84k9W7Ao9gOk41PLI+rHg==",
+      "version": "4.0.7",
+      "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-4.0.7.tgz",
+      "integrity": "sha512-0K1nVs4YLIZ32coGDTuA/cI5/OH6zOstbBbVC/sesea1r6aVcO/c58oK2FFuUx5jtqt82g+0HALvtq+I4735sg==",
       "requires": {
-        "@enact/core": "^4.0.6",
+        "@enact/core": "^4.0.7",
         "classnames": "^2.2.6",
         "prop-types": "^15.7.2",
         "ramda": "^0.24.1",
@@ -1627,9 +1627,9 @@
       }
     },
     "@enact/storybook-utils": {
-      "version": "4.0.3",
-      "resolved": "https://registry.npmjs.org/@enact/storybook-utils/-/storybook-utils-4.0.3.tgz",
-      "integrity": "sha512-mIYBZk7kDR/apZkGQN1JRkpXXsI0uHjIzZmkLEIpnpyjG1+c9lyoyIFTm8SnBoax1AN8fxgt+VQ25Vrq0rMu/Q==",
+      "version": "4.0.4",
+      "resolved": "https://registry.npmjs.org/@enact/storybook-utils/-/storybook-utils-4.0.4.tgz",
+      "integrity": "sha512-cOe2iSXekoAoIVdGIKzlp+bL8jCzz07pYTWu+9Qd7FnQ22QTVs88bJL8Uk52QSyUrAYuPFBkAY1X+nLY5ZYu7Q==",
       "dev": true,
       "requires": {
         "@babel/core": "^7.12.10",
@@ -1652,15 +1652,16 @@
         "postcss-normalize": "^9.0.0",
         "postcss-preset-env": "^6.7.0",
         "postcss-resolution-independence": "^1.0.0",
-        "react-dev-utils": "^11.0.1"
+        "react-dev-utils": "^11.0.1",
+        "sanitize.css": "^12.0.1"
       }
     },
     "@enact/ui": {
-      "version": "4.0.6",
-      "resolved": "https://registry.npmjs.org/@enact/ui/-/ui-4.0.6.tgz",
-      "integrity": "sha512-ve77W2NtGMnuE3C1mUBTs6QYol65gRMOqw5+NsdGKjmPUdosrXD9CLiv8AQzO5TZNpQdk4oO51ylqqd7FrcT1Q==",
+      "version": "4.0.7",
+      "resolved": "https://registry.npmjs.org/@enact/ui/-/ui-4.0.7.tgz",
+      "integrity": "sha512-ihyNxJbZhXjGurRV0mMd2O6RLipDOZ/uU/kiA2hLat/xWVoxk8P1wNOVWRuwH6HBgg3gYjBqGClE6FdXJtwZTg==",
       "requires": {
-        "@enact/core": "^4.0.6",
+        "@enact/core": "^4.0.7",
         "classnames": "^2.2.5",
         "direction": "^1.0.1",
         "invariant": "^2.2.2",
@@ -1683,11 +1684,11 @@
       }
     },
     "@enact/webos": {
-      "version": "4.0.6",
-      "resolved": "https://registry.npmjs.org/@enact/webos/-/webos-4.0.6.tgz",
-      "integrity": "sha512-aYWJH7d1EBNZOtJl/DbOlp2wf0KZ/a+ahnzyDPMlKTFX8FZrnynn7Few+WYq3eBezP5rl0gT46BjHPyXjfJi6Q==",
+      "version": "4.0.7",
+      "resolved": "https://registry.npmjs.org/@enact/webos/-/webos-4.0.7.tgz",
+      "integrity": "sha512-G/nc/C4V7FW3LekaYIQNNwNg3x4mXJJNjPzdVvZxQq+pgPJxooqm5d8dlYQTBcoe7c2c77kImSJxIyqU8dfgXA==",
       "requires": {
-        "@enact/core": "^4.0.6",
+        "@enact/core": "^4.0.7",
         "prop-types": "^15.7.2",
         "react": "^17.0.1",
         "react-dom": "^17.0.1"
