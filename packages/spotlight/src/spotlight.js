@@ -546,6 +546,7 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		initialize: function (containerDefaults) {
+			console.log('spotlight:initialize()');
 			if (!_initialized) {
 				window.addEventListener('blur', onBlur);
 				window.addEventListener('focus', onFocus);
@@ -571,6 +572,7 @@ const Spotlight = (function () {
 				setPlatformPointerMode();
 				_initialized = true;
 			}
+			console.log('end::spotlight:initialize()');
 		},
 
 		/**
@@ -579,6 +581,7 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		terminate: function () {
+			console.log('spotlight:terminate()');
 			window.removeEventListener('blur', onBlur);
 			window.removeEventListener('focus', onFocus);
 			window.removeEventListener('keydown', onKeyDown);
@@ -604,6 +607,7 @@ const Spotlight = (function () {
 		 * @private
 		 */
 		clear: function () {
+			console.log('spotlight:clear()');
 			removeAllContainers();
 			setDefaultContainer();
 			setLastContainer();
@@ -736,6 +740,7 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		focus: function (elem, containerOption = {}) {
+			console.log('spotlight:focus() | containerIds: ', getAllContainerIds());
 			let target = elem;
 			let wasContainerId = false;
 

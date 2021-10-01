@@ -13,7 +13,7 @@ import {Component} from 'react';
 import Spotlight from '../src/spotlight';
 import {spottableClass} from '../Spottable';
 
-import {rootContainerId} from '../src/container';
+import {rootContainerId, getAllContainerIds} from '../src/container';
 
 import '../styles/debug.less';
 
@@ -89,6 +89,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'SpotlightRootDecorator';
 
 		constructor (props) {
+			console.log('SpotlightRootDecorator:constructor');
 			super(props);
 
 			this.containerNode = null;
@@ -103,9 +104,12 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					overflow: true
 				});
 			}
+			console.log('end::SpotlightRootDecorator:constructor');
+
 		}
 
 		componentDidMount () {
+			console.log('SpotlightRootDecorator:componentDidMount');
 			if (!noAutoFocus) {
 				Spotlight.focus();
 			}
@@ -118,9 +122,12 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				document.addEventListener('pointermove', this.handlePointerMove, {capture: true});
 				document.addEventListener('pointerover', this.handlePointerOver, {capture: true});
 			}
+			console.log('end::SpotlightRootDecorator:componentDidMount', getAllContainerIds());
+
 		}
 
 		componentWillUnmount () {
+			console.log('SpotlightRootDecorator:componentWillUnmount', getAllContainerIds());
 			Spotlight.terminate();
 
 			if (typeof document === 'object') {
@@ -129,6 +136,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				document.removeEventListener('pointermove', this.handlePointerMove, {capture: true});
 				document.removeEventListener('pointerover', this.handlePointerOver, {capture: true});
 			}
+			console.log('end::SpotlightRootDecorator:componentWillUnmount', getAllContainerIds());
 		}
 
 		applyInputType = () => {
@@ -186,6 +194,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		render () {
+			console.log('SpotlightRootDecorator:render');
 			return (
 				<Wrapped {...this.props} />
 			);

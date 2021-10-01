@@ -502,8 +502,9 @@ const configureContainer = (...args) => {
 	}
 
 	config = mergeConfig(containerConfigs.get(containerId) || {...GlobalConfig}, config);
+	console.log('configureContainer() > containerConfigs.set', containerId, config);
 	containerConfigs.set(containerId, config);
-
+	console.log(getAllContainerIds());
 	return containerId;
 };
 
@@ -521,6 +522,7 @@ const configureContainer = (...args) => {
  * @public
  */
 const addContainer = (...args) => {
+	console.log('container:addContainer');
 	const containerId = configureContainer(...args);
 	const config = getContainerConfig(containerId);
 	config.active = true;

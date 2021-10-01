@@ -39,6 +39,7 @@ class SpotlightContainer {
 	}
 
 	setProps (props) {
+		console.log('SpotlightContainer:setProps');
 		const {disabled, id, muted, restrict} = props;
 		this.props = props;
 

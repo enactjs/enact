@@ -149,6 +149,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	function SpotlightContainerDecorator (props) {
+		console.log('SpotlightContainerDecorator()');
 		const {spotlightDisabled, spotlightId, spotlightMuted, spotlightRestrict, ...rest} = props;
 
 		const spotlightContainer = useSpotlightContainer({
