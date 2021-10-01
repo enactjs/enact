@@ -6,6 +6,16 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 - Replaced the deprecated plugin `addon-knobs` with `addon-controls`
 
+## [4.0.7] - 2021-09-28
+
+### Fixed
+
+- `sampler` not to fail in build.
+
+## [4.0.6] - 2021-09-28
+
+No significant changes.
+
 ## [4.0.5] - 2021-08-02
 
 No significant changes.
@@ -30,7 +40,7 @@ No significant changes.
 
 ### Changed
 
-- `sampler` look and feel by updating to Storybook 6
+- `sampler` look and feel by updating to Storybook 6.
 
 ## [4.0.0-alpha.1] - 2021-02-24
 
