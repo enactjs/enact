@@ -5,7 +5,7 @@ import ri from '@enact/ui/resolution';
 import {Scroller} from '@enact/ui/Scroller';
 
 const prop = {
-	direction: ['both', 'horizontal', 'vertical'],
+	direction: ['both', 'horizontal', 'vertical', ''],
 	scrollbarOption: ['auto', 'hidden', 'visible'],
 	scrollModeOption: ['native', 'translate']
 };
@@ -17,39 +17,43 @@ export default {
 	component: 'Scroller'
 };
 
-export const _Scroller = (args) => (
-	<Scroller
-		direction={args['direction']}
-		horizontalScrollbar={args['horizontalScrollbar']}
-		key={args['scrollMode']}
-		noScrollByWheel={args['noScrollByWheel']}
-		onScrollStart={action('onScrollStart')}
-		onScrollStop={action('onScrollStop')}
-		scrollMode={args['scrollMode']}
-		verticalScrollbar={args['verticalScrollbar']}
-	>
-		<div
-			style={{
-				height: ri.scaleToRem(2004),
-				width: ri.scaleToRem(4002)
-			}}
+export const _Scroller = (args) => {
+	console.log(args);
+	
+	return (
+		<Scroller
+			direction={args['direction']}
+			horizontalScrollbar={args['horizontalScrollbar']}
+			key={args['scrollMode']}
+			noScrollByWheel={args['noScrollByWheel']}
+			onScrollStart={action('onScrollStart')}
+			onScrollStop={action('onScrollStop')}
+			scrollMode={args['scrollMode']}
+			verticalScrollbar={args['verticalScrollbar']}
 		>
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
-			Aenean id blandit nunc. Donec lacinia nisi vitae mi dictum, eget pulvinar
-			nunc tincidunt. Integer vehicula tempus rutrum. Sed efficitur neque in
-			arcu dignissim cursus.
 			<div
 				style={{
-					marginTop: ri.scaleToRem(1602)
+					height: ri.scaleToRem(2004),
+					width: ri.scaleToRem(4002)
 				}}
 			>
-				Mauris blandit sollicitudin mattis. Fusce commodo arcu vitae risus
-				consectetur sollicitudin. Aliquam eget posuere orci. Cras pellentesque
-				lobortis sapien non lacinia.
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
+				Aenean id blandit nunc. Donec lacinia nisi vitae mi dictum, eget pulvinar
+				nunc tincidunt. Integer vehicula tempus rutrum. Sed efficitur neque in
+				arcu dignissim cursus.
+				<div
+					style={{
+						marginTop: ri.scaleToRem(1602)
+					}}
+				>
+					Mauris blandit sollicitudin mattis. Fusce commodo arcu vitae risus
+					consectetur sollicitudin. Aliquam eget posuere orci. Cras pellentesque
+					lobortis sapien non lacinia.
+				</div>
 			</div>
-		</div>
-	</Scroller>
-);
+		</Scroller>
+	);
+};
 
 select('direction', _Scroller, prop.direction, scrollerConfig);
 select('horizontalScrollbar', _Scroller, prop.scrollbarOption, scrollerConfig);
