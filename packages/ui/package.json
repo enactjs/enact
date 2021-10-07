@@ -35,5 +35,11 @@
     "react-dom": "^17.0.1",
     "react-is": "^17.0.1",
     "warning": "^3.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^8.1.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.1.9"
   }
 }
