@@ -59,7 +59,7 @@ export const _Group = (args) => (
 		className={css.group}
 		itemProps={{
 			css,
-			inline: args['ItemProps-Inline']
+			inline: args['childComponent'] === 'SlotItem' ? args['ItemProps-Inline'] : null
 		}}
 		select={args['select']}
 		selectedProp="selected"

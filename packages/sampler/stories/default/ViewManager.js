@@ -27,7 +27,7 @@ const prop = {
 		'CustomArranger (FadeAndSlideArranger)': null
 	},
 	direction: ['bottom', 'left', 'right', 'top'],
-	end: {'index': 0, 'index+1': 1, 'index+2': 2},
+	end: {'index': 0, 'index plus 1': 1, 'index plus 2': 2},
 	start: {'index': 0, 'index-1': 1, 'index-2': 2}
 };
 
@@ -47,7 +47,7 @@ const ViewManagerLayout = (props) => {
 	}, [setSelected]);
 
 	// eslint-disable-next-line enact/prop-types
-	const {selectedEnd, selectedStart} = props;
+	const {selectedEnd, selectedStart, ...rest} = props;
 	const endRange = [selected, selected + 1, selected + 2];
 	const startRange = [selected, selected - 1, selected - 2];
 	const end = Math.min(endRange[prop.end[selectedEnd]], itemSize - 1);
@@ -71,7 +71,7 @@ const ViewManagerLayout = (props) => {
 				index={selected}
 				start={start}
 				style={{height: ri.scale(42 * (end - start + 1)), overflow: 'hidden'}}
-				{...props}
+				{...rest}
 			>
 				{views.map((view, i) => (
 					<div className={css.box} key={i}>
