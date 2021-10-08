@@ -28,7 +28,7 @@ const prop = {
 	},
 	direction: ['bottom', 'left', 'right', 'top'],
 	end: {'index': 0, 'index plus 1': 1, 'index plus 2': 2},
-	start: {'index': 0, 'index-1': 1, 'index-2': 2}
+	start: {'index': 0, 'index minus 1': 1, 'index minus 2': 2}
 };
 
 const itemSize = 10;
