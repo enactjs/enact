@@ -25,7 +25,7 @@
     "react-dom": "^17.0.1"
   },
   "devDependencies": {
-    "@enact/storybook-utils": "^4.0.5",
+    "@enact/storybook-utils": "^4.0.4",
     "@storybook/addons": "^6.3.10",
     "@storybook/react": "^6.3.10",
     "@storybook/theming": "^6.3.10",
