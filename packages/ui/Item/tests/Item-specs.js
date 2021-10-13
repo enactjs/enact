@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import {fireEvent, render, screen} from '@testing-library/react';
-import userEvent from "@testing-library/user-event";
+import userEvent from '@testing-library/user-event';
 
 import Item from '../Item';
 
@@ -16,14 +16,14 @@ describe('Item', () => {
 		const actual = screen.getByText('I am an item');
 
 		expect(actual).toBeInTheDocument();
-	})
+	});
 
 	test('should create a disabled item', () => {
 		render(<Item disabled>I am a disabled item</Item>);
 		const actual = screen.getByText('I am a disabled item');
 
 		expect(actual).toHaveAttribute('disabled');
-	})
+	});
 
 	describe('events', () => {
 		test('should call onTap when tapped', () => {
