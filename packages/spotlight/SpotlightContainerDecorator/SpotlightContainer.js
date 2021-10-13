@@ -114,13 +114,11 @@ class SpotlightContainer {
 	};
 
 	onPointerEnter = handle(
-		isNewPointerPosition,
 		() => Spotlight.setActiveContainer(this.id)
 	).bindAs(this, 'onPointerEnter');
 
 	onPointerLeave = handle(
 		not(forProp('restrict', 'self-only')),
-		isNewPointerPosition,
 		(ev) => {
 			const parentContainer = ev.currentTarget.parentNode.closest('[data-spotlight-container]');
 			let activeContainer = Spotlight.getActiveContainer();
