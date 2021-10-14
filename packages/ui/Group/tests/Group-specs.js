@@ -1,4 +1,6 @@
-import {mount, shallow} from 'enzyme';
+import '@testing-library/jest-dom';
+import {fireEvent, render, screen} from '@testing-library/react';
+
 import Group, {GroupBase} from '../Group';
 
 describe('Group', () => {
@@ -6,16 +8,15 @@ describe('Group', () => {
 
 	test('should call handler with selected on select', () => {
 		const handleClick = jest.fn();
-		const subject = mount(
+		render(
 			<GroupBase childComponent="div" onSelect={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
+		const selected = screen.getByText('Two');
+		fireEvent.click(selected);
 
-		const selected = 1;
-		subject.find('div').at(selected).simulate('click', {});
-
-		const expected = selected;
+		const expected = 1;
 		const actual = handleClick.mock.calls[0][0].selected;
 
 		expect(actual).toBe(expected);
@@ -23,16 +24,15 @@ describe('Group', () => {
 
 	test('should call handler with data on select', () => {
 		const handleClick = jest.fn();
-		const subject = mount(
+		render(
 			<GroupBase childComponent="div" onSelect={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
+		const selected = screen.getByText('Two');
+		fireEvent.click(selected);
 
-		const selected = 1;
-		subject.find('div').at(selected).simulate('click', {});
-
-		const expected = stringItems[selected];
+		const expected = stringItems[1];
 		const actual = handleClick.mock.calls[0][0].data;
 
 		expect(actual).toBe(expected);
@@ -40,130 +40,125 @@ describe('Group', () => {
 
 	test('should call handler with data on select stored in the key specified by `selectedEventProp`', () => {
 		const handleClick = jest.fn();
-		const subject = mount(
+		render(
 			<GroupBase childComponent="div" onSelect={handleClick} selectedEventProp="value">
 				{stringItems}
 			</GroupBase>
 		);
+		const selected = screen.getByText('Two');
+		fireEvent.click(selected);
 
-		const selected = 1;
-		subject.find('div').at(selected).simulate('click', {});
-
-		const expected = stringItems[selected];
+		const expected = stringItems[1];
 		const actual = handleClick.mock.calls[0][0].value;
 
 		expect(actual).toBe(expected);
 	});
 
-	test(
-		'should call handler on move when childSelect="onMouseMove"',
-		() => {
-			const handleClick = jest.fn();
-			const subject = mount(
-				<GroupBase childComponent="div" childSelect="onMouseMove" onSelect={handleClick}>
-					{stringItems}
-				</GroupBase>
-			);
+	test('should call handler on move when childSelect="onMouseMove"', () => {
+		const handleClick = jest.fn();
+		render(
+			<GroupBase childComponent="div" childSelect="onMouseMove" onSelect={handleClick}>
+				{stringItems}
+			</GroupBase>
+		);
+		const selected = screen.getByText('Two');
+		fireEvent.mouseMove(selected);
 
-			subject.find('div').at(0).simulate('mousemove', {});
+		const expected = 1;
+		const actual = handleClick.mock.calls.length;
 
-			const expected = 1;
-			const actual = handleClick.mock.calls.length;
-
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(actual).toBe(expected);
+	});
 
 	test('should select the third item with selected=2', () => {
 		const selected = 2;
 		const handleClick = jest.fn();
-		const subject = mount(
-			<GroupBase childComponent="div" selected={selected} onSelect={handleClick}>
+		render(
+			<GroupBase childComponent="div" onSelect={handleClick} selected={selected}>
 				{stringItems}
 			</GroupBase>
 		);
 
-		const expected = true;
-		const actual = subject.find('div').at(selected).prop('data-selected');
+		const expected = 'true';
+		const actual = screen.getByText('Three');
 
-		expect(actual).toBe(expected);
+		expect(actual).toHaveAttribute('data-selected', expected);
 	});
 
 	test('should set {data-active} on the first item', () => {
 		const selected = 0;
 		const handleClick = jest.fn();
-		const subject = mount(
-			<GroupBase childComponent="div" selected={selected} selectedProp="data-active" onSelect={handleClick}>
+		render(
+			<GroupBase childComponent="div" onSelect={handleClick} selected={selected} selectedProp="data-active">
 				{stringItems}
 			</GroupBase>
 		);
 
-		const expected = true;
-		const actual = subject.find('div').at(selected).prop('data-active');
+		const expected = 'true';
+		const actual = screen.getByText('One');
 
-		expect(actual).toBe(expected);
+		expect(actual).toHaveAttribute('data-active', expected);
 	});
 
 	test('should set {children} to be the item by default', () => {
 		const selected = 0;
 		const handleClick = jest.fn();
-		const subject = mount(
+		render(
 			<GroupBase childComponent="div" onSelect={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
 
 		const expected = stringItems[selected];
-		const actual = subject.find('div').at(selected).prop('children');
+		const actual = screen.getByText('One');
 
-		expect(actual).toBe(expected);
+		expect(actual).toHaveTextContent(expected);
 	});
 
 	test('should set {data-child} to be the item', () => {
 		const selected = 0;
 		const handleClick = jest.fn();
-		const subject = mount(
+		render(
 			<GroupBase childComponent="div" childProp="data-child" onSelect={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
 
 		const expected = stringItems[selected];
-		const actual = subject.find('div').at(selected).prop('data-child');
+		const actual = screen.getByRole('group').firstChild;
 
-		expect(actual).toBe(expected);
+		expect(actual).toHaveAttribute('data-child', expected);
 	});
 
 	test('should set aria-multiselectable when select="multiple"', () => {
-		const subject = shallow(
+		render(
 			<GroupBase childComponent="div" select="multiple">
 				{stringItems}
 			</GroupBase>
 		);
 
-		const expected = true;
-		const actual = subject.prop('aria-multiselectable');
+		const expected = 'true';
+		const actual = screen.getByRole('group');
 
-		expect(actual).toBe(expected);
+		expect(actual).toHaveAttribute('aria-multiselectable', expected);
 	});
 
 	test('should set role to group', () => {
-		const subject = shallow(
+		render(
 			<GroupBase childComponent="div" select="multiple">
 				{stringItems}
 			</GroupBase>
 		);
 
-		const expected = 'group';
-		const actual = subject.prop('role');
+		const actual = screen.getByRole('group');
 
-		expect(actual).toBe(expected);
+		expect(actual).toBeInTheDocument();
 	});
 
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
-		mount(
-			<Group ref={ref} childComponent="div">
+		render(
+			<Group childComponent="div" ref={ref}>
 				{stringItems}
 			</Group>
 		);
@@ -173,5 +168,4 @@ describe('Group', () => {
 
 		expect(actual).toBe(expected);
 	});
-
 });
