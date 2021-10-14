@@ -11,18 +11,27 @@ const tap = (node) => {
 
 describe('Item', () => {
 
-	test('should create an item', () => {
+	test('should render an item', () => {
 		render(<Item>I am an item</Item>);
 		const actual = screen.getByText('I am an item');
 
 		expect(actual).toBeInTheDocument();
 	});
 
-	test('should create a disabled item', () => {
+	test('should render a disabled item', () => {
 		render(<Item disabled>I am a disabled item</Item>);
 		const actual = screen.getByText('I am a disabled item');
 
 		expect(actual).toHaveAttribute('disabled');
+	});
+
+	test('should render an inline item', () => {
+		render(<Item inline>I am an inline item</Item>);
+		const actual = screen.getByText('I am an inline item');
+
+		const expected = 'inline';
+
+		expect(actual).toHaveClass(expected);
 	});
 
 	describe('events', () => {
@@ -34,9 +43,8 @@ describe('Item', () => {
 			tap(item);
 
 			const expected = 1;
-			const actual = handleClick.mock.calls.length;
 
-			expect(actual).toBe(expected);
+			expect(handleClick).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should not call onTap when tapped and disabled', () => {
@@ -46,10 +54,7 @@ describe('Item', () => {
 
 			tap(item);
 
-			const expected = 0;
-			const actual = handleClick.mock.calls.length;
-
-			expect(actual).toBe(expected);
+			expect(handleClick).not.toHaveBeenCalled();
 		});
 
 		test('should call onClick when clicked', () => {
@@ -60,9 +65,8 @@ describe('Item', () => {
 			userEvent.click(item);
 
 			const expected = 1;
-			const actual = handleClick.mock.calls.length;
 
-			expect(actual).toBe(expected);
+			expect(handleClick).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should not call onClick when clicked and disabled', () => {
@@ -72,10 +76,7 @@ describe('Item', () => {
 
 			userEvent.click(item);
 
-			const expected = 0;
-			const actual = handleClick.mock.calls.length;
-
-			expect(actual).toBe(expected);
+			expect(handleClick).not.toHaveBeenCalled();
 		});
 	});
 });
