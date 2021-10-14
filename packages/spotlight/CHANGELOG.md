@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight/SpotlightRootDecorator` to show focus effect after initial loading
+
 ## [4.0.7] - 2021-09-28
 
 No significant changes.
