@@ -1,43 +1,39 @@
-import {mount, shallow} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+
 import Icon, {IconBase} from '../Icon';
 
 describe('Icon', () => {
 	test('should allow icon-name words to pass through', () => {
 		const iconName = 'hollow_star';
-		const icon = shallow(
-			<IconBase>
-				{iconName}
-			</IconBase>
-		);
+		render(<IconBase data-testid="icon">{iconName}</IconBase>);
+		const icon = screen.getByTestId('icon');
 
 		const expected = iconName;
-		const actual = icon.text();
+		const actual = icon.textContent;
+
 		expect(actual).toEqual(expected);
 	});
 
 	test('should allow single-byte characters to pass through', () => {
 		const iconName = '+';
-		const icon = shallow(
-			<IconBase>
-				{iconName}
-			</IconBase>
-		);
+		render(<IconBase data-testid="icon">{iconName}</IconBase>);
+		const icon = screen.getByTestId('icon');
 
 		const expected = iconName;
-		const actual = icon.text();
+		const actual = icon.textContent;
+
 		expect(actual).toEqual(expected);
 	});
 
 	test('should allow multi-byte characters to pass through', () => {
 		const iconName = '󰂪';
-		const icon = shallow(
-			<IconBase>
-				{iconName}
-			</IconBase>
-		);
+		render(<IconBase data-testid="icon">{iconName}</IconBase>);
+		const icon = screen.getByTestId('icon');
 
 		const expected = iconName;
-		const actual = icon.text();
+		const actual = icon.textContent;
+
 		expect(actual).toEqual(expected);
 	});
 
@@ -48,14 +44,12 @@ describe('Icon', () => {
 			train: 'T',
 			factory: 'F'
 		};
-		const icon = shallow(
-			<IconBase iconList={iconList}>
-				{iconName}
-			</IconBase>
-		);
+		render(<IconBase data-testid="icon" iconList={iconList}>{iconName}</IconBase>);
+		const icon = screen.getByTestId('icon');
 
 		const expected = iconGlyph;
-		const actual = icon.text();
+		const actual = icon.textContent;
+
 		expect(actual).toEqual(expected);
 	});
 
@@ -65,66 +59,55 @@ describe('Icon', () => {
 			train: 'T',
 			factory: 'F'
 		};
-		const icon = shallow(
-			<IconBase iconList={iconList}>
-				{iconName}
-			</IconBase>
-		);
+		render(<IconBase data-testid="icon" iconList={iconList}>{iconName}</IconBase>);
+		const icon = screen.getByTestId('icon');
 
 		const expected = iconName;
-		const actual = icon.text();
+		const actual = icon.textContent;
+
 		expect(actual).toEqual(expected);
 	});
 
 	test('should allow URIs to be used as an icon', () => {
 		const src = 'images/icon.png';
-		const icon = shallow(
-			<IconBase>
-				{src}
-			</IconBase>
-		);
+		render(<IconBase data-testid="icon">{src}</IconBase>);
+		const icon = screen.getByTestId('icon');
 
 		const expected = {
 			backgroundImage: `url(${src})`
 		};
-		const actual = icon.prop('style');
-		expect(actual).toEqual(expected);
+
+		expect(icon).toHaveStyle(expected);
 	});
 
 	test('should allow URLs to be used as an icon', () => {
 		const src = 'http://enactjs.com/images/logo';
-		const icon = shallow(
-			<IconBase>
-				{src}
-			</IconBase>
-		);
+		render(<IconBase data-testid="icon">{src}</IconBase>);
+		const icon = screen.getByTestId('icon');
 
 		const expected = {
 			backgroundImage: `url(${src})`
 		};
-		const actual = icon.prop('style');
-		expect(actual).toEqual(expected);
+
+		expect(icon).toHaveStyle(expected);
 	});
 
 	test('should merge author styles with image URLs', () => {
 		const src = 'images/icon.png';
-		const icon = shallow(
-			<IconBase style={{color: 'green'}}>
-				{src}
-			</IconBase>
-		);
+		render(<IconBase data-testid="icon" style={{color: 'green'}}>{src}</IconBase>);
+		const icon = screen.getByTestId('icon');
 
 		const expected = {
 			color: 'green',
 			backgroundImage: `url(${src})`
 		};
-		const actual = icon.prop('style');
-		expect(actual).toEqual(expected);
+
+		expect(icon).toHaveStyle(expected);
 	});
 
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
-		mount(<Icon ref={ref} />);
+		render(<Icon ref={ref} />);
 
 		const expected = 'DIV';
 		const actual = ref.mock.calls[0][0].nodeName;
