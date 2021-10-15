@@ -8,20 +8,20 @@ import Routable from '../Routable';
 import Route from '../Route';
 
 describe('Routable', () => {
-	test('should render nothing for a partially valid path', function () {
+	test('should render nothing for a partially valid path', () => {
 		const App = () => {
 			return (
 				<div>
 					<Link path="./page2">Page 2</Link>
 				</div>
 			);
-		}
+		};
 
 		const Page2 = () => {
 			return (
 				<div data-testid="page2" />
 			);
-		}
+		};
 
 		const Views = Routable({navigate: 'onNavigate'}, ({children}) => <div>{children}</div>);
 
