@@ -1,4 +1,6 @@
-import {mount, shallow} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+
 import ImageItem, {ImageItemBase} from '../ImageItem';
 
 const src = {
@@ -8,83 +10,67 @@ const src = {
 };
 
 describe('ImageItem', () => {
-	function Img () {
+	let data = [];
+
+	const Img =  (props) => {
+		data = props;
 		return null;
-	}
+	};
 
 	test('should support `children` prop', () => {
+		// eslint-disable-next-line
+		console.error = () => {};
 		const children = 'children';
-		const subject = shallow(
-			<ImageItemBase>{children}</ImageItemBase>
-		);
+		render(<ImageItemBase data-testid="imageItem">{children}</ImageItemBase>);
 
 		const expected = children;
-		const actual = subject.find('.caption').prop('children');
+		const imageItem = screen.getByTestId('imageItem');
 
-		expect(actual).toBe(expected);
+		expect(imageItem).toHaveTextContent(expected);
 	});
 
 	test('should omit caption node when `children` is unset', () => {
-		const subject = shallow(
-			<ImageItemBase />
-		);
+		// eslint-disable-next-line
+		console.error = () => {};
+		render(<ImageItemBase data-testid="imageItem" />);
 
-		const actual = subject.find('.caption');
+		const expected = 1;
+		const imageItemChildren = screen.getByTestId('imageItem').children;
 
-		expect(actual).toHaveLength(0);
-	});
-
-	test('should use a `Row` when `orientation="horizontal"`', () => {
-		const subject = shallow(
-			<ImageItemBase orientation="horizontal" />
-		);
-
-		const actual = subject.find('Row.imageItem');
-
-		expect(actual).toHaveLength(1);
+		expect(imageItemChildren).toHaveLength(expected);
 	});
 
 	test('should apply `.horizontal` when `orientation="horizontal"`', () => {
-		const subject = shallow(
-			<ImageItemBase orientation="horizontal" />
-		);
+		// eslint-disable-next-line
+		console.error = () => {};
+		render(<ImageItem data-testid="imageItem" orientation="horizontal" />);
 
 		const expected = 'horizontal';
-		const actual = subject.prop('className');
+		const imageItem = screen.getByTestId('imageItem');
 
-		expect(actual).toContain(expected);
+		expect(imageItem).toHaveClass(expected);
 	});
 
-	test('should use a `Column` when `orientation="vertical"`', () => {
-		const subject = shallow(
-			<ImageItemBase orientation="vertical" />
-		);
-
-		const actual = subject.find('Column.imageItem');
-
-		expect(actual).toHaveLength(1);
-	});
-
-	test('should apply `.horizontal` when `orientation="vertical"`', () => {
-		const subject = shallow(
-			<ImageItemBase orientation="vertical" />
-		);
+	test('should apply `.vertical` when `orientation="vertical"`', () => {
+		// eslint-disable-next-line
+		console.error = () => {};
+		render(<ImageItemBase data-testid="imageItem" orientation="vertical" />);
 
 		const expected = 'vertical';
-		const actual = subject.prop('className');
+		const imageItem = screen.getByTestId('imageItem');
 
-		expect(actual).toContain(expected);
+		expect(imageItem).toHaveClass(expected);
 	});
 
 	test('should apply `.selected` when `selected`', () => {
-		const subject = shallow(
-			<ImageItemBase selected />
-		);
+		// eslint-disable-next-line
+		console.error = () => {};
+		render(<ImageItemBase data-testid="imageItem" selected />);
 
 		const expected = 'selected';
-		const actual = subject.prop('className');
+		const imageItem = screen.getByTestId('imageItem');
 
-		expect(actual).toContain(expected);
+		expect(imageItem).toHaveClass(expected);
 	});
 
 	test('should pass `src` and `placeholder` to `imageComponent` as component', () => {
@@ -93,15 +79,10 @@ describe('ImageItem', () => {
 			placeholder: 'place.png'
 		};
 
-		// Using mount() to render Img within Cell
-		const subject = mount(
-			<ImageItemBase imageComponent={Img} {...props} />
-		);
+		render(<ImageItemBase data-testid="imageItem" imageComponent={Img} {...props} />);
 
-		const expected = props;
-		const actual = subject.find(Img).props();
-
-		expect(actual).toMatchObject(expected);
+		expect(data).toHaveProperty('src', props.src);
+		expect(data).toHaveProperty('placeholder', props.placeholder);
 	});
 
 	test('should pass `src` and `placeholder` to `imageComponent` as element', () => {
@@ -110,15 +91,10 @@ describe('ImageItem', () => {
 			placeholder: 'place.png'
 		};
 
-		// Using mount() to render Img within Cell
-		const subject = mount(
-			<ImageItemBase imageComponent={<Img />} {...props} />
-		);
+		render(<ImageItemBase imageComponent={<Img />} {...props} />);
 
-		const expected = props;
-		const actual = subject.find(Img).props();
-
-		expect(actual).toMatchObject(expected);
+		expect(data).toHaveProperty('src', props.src);
+		expect(data).toHaveProperty('placeholder', props.placeholder);
 	});
 
 	test('should override `src` and `placeholder` when passing `imageComponent` as element', () => {
@@ -127,47 +103,37 @@ describe('ImageItem', () => {
 			placeholder: 'place.png'
 		};
 
-		// Using mount() to render Img within Cell
-		const subject = mount(
+		render(
 			<ImageItemBase
-				imageComponent={<Img src="my-src.png" placeholder="my-place.png" />}
+				imageComponent={<Img placeholder="my-place.png" src="my-src.png" />}
 				{...props}
 			/>
 		);
 
-		const expected = props;
-		const actual = subject.find(Img).props();
-
-		expect(actual).toMatchObject(expected);
+		expect(data).toHaveProperty('src', props.src);
+		expect(data).toHaveProperty('placeholder', props.placeholder);
 	});
 
 	test('should support string for `src` prop', () => {
-		const subject = shallow(
-			<ImageItemBase src={src.hd} />
-		);
+		render(<ImageItemBase data-testid="imageItem" src={src.hd} />);
 
-		const expected = {src: src.hd};
-		const actual = subject.find('.image').props();
+		const expected = src.hd;
+		const imgElement = screen.getByTestId('imageItem').children.item(0).children.item(0);
 
-		expect(actual).toMatchObject(expected);
+		expect(imgElement).toHaveAttribute('src', expected);
 	});
 
 	test('should support object for `src` prop', () => {
-		const subject = shallow(
-			<ImageItemBase src={src} />
-		);
+		render(<ImageItemBase data-testid="imageItem" src={src} />);
 
-		const expected = {src};
-		const actual = subject.find('.image').props();
+		const imgElementSrc = screen.getByTestId('imageItem').children.item(0).children.item(0).src;
 
-		expect(actual).toMatchObject(expected);
+		expect(imgElementSrc).not.toBeNull();
 	});
 
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
-		mount(
-			<ImageItem ref={ref} src={src} />
-		);
+		render(<ImageItem ref={ref} src={src} />);
 
 		const expected = 'DIV';
 		const actual = ref.mock.calls[0][0].nodeName;
