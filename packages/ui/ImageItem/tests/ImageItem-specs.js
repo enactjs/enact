@@ -22,9 +22,9 @@ describe('ImageItem', () => {
 		render(<ImageItemBase data-testid="imageItem">{children}</ImageItemBase>);
 
 		const expected = children;
-		const actual = screen.getByTestId('imageItem');
+		const imageItem = screen.getByTestId('imageItem');
 
-		expect(actual).toHaveTextContent(expected);
+		expect(imageItem).toHaveTextContent(expected);
 	});
 
 	test('should omit caption node when `children` is unset', () => {
@@ -32,37 +32,37 @@ describe('ImageItem', () => {
 			<ImageItemBase data-testid="imageItem" />
 		);
 
-		const actual = screen.getByTestId('imageItem').children;
 		const expected = 1;
+		const imageItemChildren = screen.getByTestId('imageItem').children;
 
-		expect(actual).toHaveLength(expected);
+		expect(imageItemChildren).toHaveLength(expected);
 	});
 
 	test('should apply `.horizontal` when `orientation="horizontal"`', () => {
 		render(<ImageItem data-testid="imageItem" orientation="horizontal" />);
 
 		const expected = 'horizontal';
-		const actual = screen.getByTestId('imageItem');
+		const imageItem = screen.getByTestId('imageItem');
 
-		expect(actual).toHaveClass(expected);
+		expect(imageItem).toHaveClass(expected);
 	});
 
 	test('should apply `.vertical` when `orientation="vertical"`', () => {
 		render(<ImageItemBase data-testid="imageItem" orientation="vertical" />);
 
 		const expected = 'vertical';
-		const actual = screen.getByTestId('imageItem');
+		const imageItem = screen.getByTestId('imageItem');
 
-		expect(actual).toHaveClass(expected);
+		expect(imageItem).toHaveClass(expected);
 	});
 
 	test('should apply `.selected` when `selected`', () => {
 		render(<ImageItemBase data-testid="imageItem" selected />);
 
 		const expected = 'selected';
-		const actual = screen.getByTestId('imageItem');
+		const imageItem = screen.getByTestId('imageItem');
 
-		expect(actual).toHaveClass(expected);
+		expect(imageItem).toHaveClass(expected);
 	});
 
 	test('should pass `src` and `placeholder` to `imageComponent` as component', () => {
