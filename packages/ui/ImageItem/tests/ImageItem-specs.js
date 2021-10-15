@@ -32,9 +32,7 @@ describe('ImageItem', () => {
 	test('should omit caption node when `children` is unset', () => {
 		// eslint-disable-next-line
 		console.error = () => {};
-		render(
-			<ImageItemBase data-testid="imageItem" />
-		);
+		render(<ImageItemBase data-testid="imageItem" />);
 
 		const expected = 1;
 		const imageItemChildren = screen.getByTestId('imageItem').children;
@@ -105,10 +103,9 @@ describe('ImageItem', () => {
 			placeholder: 'place.png'
 		};
 
-		// Using mount() to render Img within Cell
 		render(
 			<ImageItemBase
-				imageComponent={<Img src="my-src.png" placeholder="my-place.png" />}
+				imageComponent={<Img placeholder="my-place.png" src="my-src.png" />}
 				{...props}
 			/>
 		);
@@ -130,7 +127,7 @@ describe('ImageItem', () => {
 		render(<ImageItemBase data-testid="imageItem" src={src} />);
 
 		const imgElementSrc = screen.getByTestId('imageItem').children.item(0).children.item(0).src;
-		// const actual = subject.find('.image').props();
+
 		expect(imgElementSrc).not.toBeNull();
 	});
 

@@ -12,7 +12,7 @@ const src = {
 
 describe('Image Specs', () => {
 	test('should only have image class without sizing', () => {
-		render(<ImageBase data-testid="image" src={src} sizing="none" />);
+		render(<ImageBase data-testid="image" sizing="none" src={src} />);
 
 		const expected = css.image;
 		const imageElement = screen.getByTestId('image');
@@ -21,7 +21,7 @@ describe('Image Specs', () => {
 	});
 
 	test('should have class for fill', () => {
-		render(<ImageBase data-testid="image" src={src} sizing="fill" />);
+		render(<ImageBase data-testid="image" sizing="fill" src={src} />);
 
 		const expected = css.fill;
 		const imageElement = screen.getByTestId('image');
@@ -30,7 +30,7 @@ describe('Image Specs', () => {
 	});
 
 	test('should have class for fit', () => {
-		render(<ImageBase data-testid="image" src={src} sizing="fit" />);
+		render(<ImageBase data-testid="image" sizing="fit" src={src} />);
 
 		const expected = css.fit;
 		const imageElement = screen.getByTestId('image');
@@ -39,7 +39,7 @@ describe('Image Specs', () => {
 	});
 
 	test('should set role to img by default', () => {
-		render(<ImageBase data-testid="image" src={src} sizing="fit" />);
+		render(<ImageBase data-testid="image" sizing="fit" src={src} />);
 
 		const expected = 'img';
 		const imageElement = screen.getByTestId('image');
