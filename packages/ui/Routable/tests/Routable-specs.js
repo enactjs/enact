@@ -8,9 +8,8 @@ import Routable from '../Routable';
 import Route from '../Route';
 
 describe('Routable', () => {
-
 	test('should render nothing for a partially valid path', function () {
-		function App () {
+		const App = () => {
 			return (
 				<div>
 					<Link path="./page2">Page 2</Link>
@@ -18,7 +17,7 @@ describe('Routable', () => {
 			);
 		}
 
-		function Page2 () {
+		const Page2 = () => {
 			return (
 				<div data-testid="page2" />
 			);

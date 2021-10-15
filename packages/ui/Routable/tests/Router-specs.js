@@ -7,7 +7,6 @@ import Route from '../Route';
 import {Router, RouterBase} from '../Router';
 
 describe('Router', () => {
-
 	const View = () => <button data-testid="button" />;
 
 	// the internal representation of
