@@ -18,6 +18,8 @@ describe('ImageItem', () => {
 	};
 
 	test('should support `children` prop', () => {
+		// eslint-disable-next-line
+		console.error = () => {};
 		const children = 'children';
 		render(<ImageItemBase data-testid="imageItem">{children}</ImageItemBase>);
 
@@ -28,6 +30,8 @@ describe('ImageItem', () => {
 	});
 
 	test('should omit caption node when `children` is unset', () => {
+		// eslint-disable-next-line
+		console.error = () => {};
 		render(
 			<ImageItemBase data-testid="imageItem" />
 		);
@@ -39,6 +43,8 @@ describe('ImageItem', () => {
 	});
 
 	test('should apply `.horizontal` when `orientation="horizontal"`', () => {
+		// eslint-disable-next-line
+		console.error = () => {};
 		render(<ImageItem data-testid="imageItem" orientation="horizontal" />);
 
 		const expected = 'horizontal';
@@ -48,6 +54,8 @@ describe('ImageItem', () => {
 	});
 
 	test('should apply `.vertical` when `orientation="vertical"`', () => {
+		// eslint-disable-next-line
+		console.error = () => {};
 		render(<ImageItemBase data-testid="imageItem" orientation="vertical" />);
 
 		const expected = 'vertical';
@@ -57,6 +65,8 @@ describe('ImageItem', () => {
 	});
 
 	test('should apply `.selected` when `selected`', () => {
+		// eslint-disable-next-line
+		console.error = () => {};
 		render(<ImageItemBase data-testid="imageItem" selected />);
 
 		const expected = 'selected';
