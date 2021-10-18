@@ -237,7 +237,7 @@ describe('useSlots', () => {
 			const expectedTitle = 'Div A';
 			const actualChild = screen.getByTestId('useSlots').children[2];
 
-			expect(actualChild).toHaveAttribute('title', expectedTitle)
+			expect(actualChild).toHaveAttribute('title', expectedTitle);
 		}
 	);
 
