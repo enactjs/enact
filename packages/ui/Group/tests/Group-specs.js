@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import {fireEvent, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Group, {GroupBase} from '../Group';
 
@@ -14,7 +15,7 @@ describe('Group', () => {
 			</GroupBase>
 		);
 		const selected = screen.getByText('Two');
-		fireEvent.click(selected);
+		userEvent.click(selected);
 
 		const expected = 1;
 		const actual = handleClick.mock.calls[0][0].selected;
@@ -30,7 +31,7 @@ describe('Group', () => {
 			</GroupBase>
 		);
 		const selected = screen.getByText('Two');
-		fireEvent.click(selected);
+		userEvent.click(selected);
 
 		const expected = stringItems[1];
 		const actual = handleClick.mock.calls[0][0].data;
@@ -46,7 +47,7 @@ describe('Group', () => {
 			</GroupBase>
 		);
 		const selected = screen.getByText('Two');
-		fireEvent.click(selected);
+		userEvent.click(selected);
 
 		const expected = stringItems[1];
 		const actual = handleClick.mock.calls[0][0].value;
