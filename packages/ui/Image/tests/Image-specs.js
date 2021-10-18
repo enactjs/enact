@@ -1,4 +1,5 @@
-import {mount, shallow} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
 
 import Image, {ImageBase} from '../Image';
 import css from '../Image.module.less';
@@ -11,60 +12,48 @@ const src = {
 
 describe('Image Specs', () => {
 	test('should only have image class without sizing', () => {
-		const image = mount(
-			<ImageBase src={src} sizing="none" />
-		);
+		render(<ImageBase data-testid="image" sizing="none" src={src} />);
 
 		const expected = css.image;
-		const actual = image.find('.image').prop('className');
+		const imageElement = screen.getByTestId('image');
 
-		expect(actual).toBe(expected);
+		expect(imageElement).toHaveClass(expected);
 	});
 
 	test('should have class for fill', () => {
-		const image = mount(
-			<ImageBase src={src} sizing="fill" />
-		);
+		render(<ImageBase data-testid="image" sizing="fill" src={src} />);
 
-		const expected = true;
-		const actual = image.find('.image').hasClass(css.fill);
+		const expected = css.fill;
+		const imageElement = screen.getByTestId('image');
 
-		expect(actual).toBe(expected);
+		expect(imageElement).toHaveClass(expected);
 	});
 
 	test('should have class for fit', () => {
-		const image = mount(
-			<ImageBase src={src} sizing="fit" />
-		);
+		render(<ImageBase data-testid="image" sizing="fit" src={src} />);
 
-		const expected = true;
-		const actual = image.find('.image').hasClass(css.fit);
+		const expected = css.fit;
+		const imageElement = screen.getByTestId('image');
 
-		expect(actual).toBe(expected);
+		expect(imageElement).toHaveClass(expected);
 	});
 
-
 	test('should set role to img by default', () => {
-		const image = shallow(
-			<ImageBase src={src} sizing="fit" />
-		);
+		render(<ImageBase data-testid="image" sizing="fit" src={src} />);
 
 		const expected = 'img';
-		const actual = image.find('.image').prop('role');
+		const imageElement = screen.getByTestId('image');
 
-		expect(actual).toBe(expected);
+		expect(imageElement).toHaveAttribute('role', expected);
 	});
 
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
-		mount(
-			<Image ref={ref} src={src} />
-		);
+		render(<Image data-testid="image" ref={ref} src={src} />);
 
 		const expected = 'DIV';
 		const actual = ref.mock.calls[0][0].nodeName;
 
 		expect(actual).toBe(expected);
 	});
-
 });
