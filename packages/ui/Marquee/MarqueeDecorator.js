@@ -377,7 +377,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.validateTextDirection();
-			console.log('forceRestartMarquee : ', forceRestartMarquee);
+			console.log('1. forceRestartMarquee : ', forceRestartMarquee);
+			console.log('2. this.props.marqueeOn : ', this.props.marqueeOn);
 			if (forceRestartMarquee || this.shouldStartMarquee()) {
 				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
@@ -656,6 +657,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		tryStartingAnimation = (delay) => {
+			console.log('3.animating: ', this.state.animating);
+			console.log('4. timerState : ', this.timerState);
 			if (this.state.animating || this.timerState !== TimerState.CLEAR) return;
 
 			this.startAnimation(delay);
@@ -677,12 +680,15 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// us, so we can start with the (hopefully) faster hover delay.
 				if (this.timerState !== TimerState.CLEAR &&
 						this.timerState !== TimerState.SYNCSTART_PENDING) {
+					console.log('hahaha');
 					return;
 				}
 				this.setTimeout(() => {
+					console.log('xxxxx');
 					this.context.start();
 				}, delay, TimerState.SYNCSTART_PENDING);
 			} else {
+					console.log('yyyyyy');
 				this.start(delay);
 			}
 		};
