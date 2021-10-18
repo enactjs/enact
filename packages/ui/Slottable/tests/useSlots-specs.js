@@ -1,6 +1,7 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
 
 import useSlots from '../useSlots';
 
@@ -11,7 +12,7 @@ describe('useSlots', () => {
 			const slots = useSlots({a, b, c, children});
 
 			return (
-				<div>
+				<div data-testid="useSlots">
 					{slots.c}
 					{slots.b}
 					{slots.a}
@@ -19,7 +20,7 @@ describe('useSlots', () => {
 			);
 		}
 
-		const subject = mount(
+		render(
 			<Component>
 				<div slot="a">A</div>
 				<div slot="b">B</div>
@@ -27,10 +28,11 @@ describe('useSlots', () => {
 			</Component>
 		);
 
-		const expected = 'CBA';
-		const actual = subject.text();
+		const actual = screen.getByTestId('useSlots').children;
 
-		expect(actual).toBe(expected);
+		expect(actual[0]).toHaveTextContent('C');
+		expect(actual[1]).toHaveTextContent('B');
+		expect(actual[2]).toHaveTextContent('A');
 	});
 
 	test('should have no children when all have been distributed', () => {
@@ -38,13 +40,13 @@ describe('useSlots', () => {
 			const slots = useSlots({a, b, c, children});
 
 			return (
-				<div>
+				<div data-testid="useSlots">
 					{slots.children}
 				</div>
 			);
 		}
 
-		const subject = mount(
+		render(
 			<Component>
 				<div slot="a">A</div>
 				<div slot="b">B</div>
@@ -53,9 +55,9 @@ describe('useSlots', () => {
 		);
 
 		const expected = '';
-		const actual = subject.text();
+		const actual = screen.getByTestId('useSlots');
 
-		expect(actual).toBe(expected);
+		expect(actual).toHaveTextContent(expected);
 	});
 
 	test(
@@ -65,7 +67,7 @@ describe('useSlots', () => {
 				const slots = useSlots({a, b, c, children, custom});
 
 				return (
-					<div>
+					<div data-testid="useSlots">
 						{slots.c}
 						{slots.b}
 						{slots.a}
@@ -73,7 +75,7 @@ describe('useSlots', () => {
 					</div>
 				);
 			}
-			const subject = mount(
+			render(
 				<Component>
 					<div slot="a">A</div>
 					<div slot="b">B</div>
@@ -82,10 +84,12 @@ describe('useSlots', () => {
 				</Component>
 			);
 
-			const expected = 'CBAD';
-			const actual = subject.text();
+			const actual = screen.getByTestId('useSlots');
 
-			expect(actual).toBe(expected);
+			expect(actual.children[0]).toHaveTextContent('C');
+			expect(actual.children[1]).toHaveTextContent('B');
+			expect(actual.children[2]).toHaveTextContent('A');
+			expect(actual).toHaveTextContent('D');
 		}
 	);
 
@@ -101,7 +105,7 @@ describe('useSlots', () => {
 				const slots = useSlots({a, b, c, children});
 
 				return (
-					<div>
+					<div data-testid="useSlots">
 						{slots.c}
 						{slots.b}
 						{slots.a}
@@ -109,7 +113,7 @@ describe('useSlots', () => {
 				);
 			}
 
-			const subject = mount(
+			render(
 				<Component>
 					<div slot="a">A</div>
 					<div slot="b">B</div>
@@ -117,10 +121,11 @@ describe('useSlots', () => {
 				</Component>
 			);
 
-			const expected = 'CBA';
-			const actual = subject.text();
+			const actual = screen.getByTestId('useSlots');
 
-			expect(actual).toBe(expected);
+			expect(actual).toHaveTextContent('C');
+			expect(actual.children[1]).toHaveTextContent('B');
+			expect(actual.children[2]).toHaveTextContent('A');
 		}
 	);
 
@@ -131,14 +136,14 @@ describe('useSlots', () => {
 				const slots = useSlots({a, b, children});
 
 				return (
-					<div>
+					<div data-testid="useSlots">
 						{slots.children}
 						{slots.b}
 						{slots.a}
 					</div>
 				);
 			}
-			const subject = mount(
+			render(
 				<Component>
 					<div slot="a">A</div>
 					<div slot="b">B</div>
@@ -146,10 +151,11 @@ describe('useSlots', () => {
 				</Component>
 			);
 
-			const expected = 'CBA';
-			const actual = subject.text();
+			const actual = screen.getByTestId('useSlots').children;
 
-			expect(actual).toBe(expected);
+			expect(actual[0]).toHaveTextContent('C');
+			expect(actual[1]).toHaveTextContent('B');
+			expect(actual[2]).toHaveTextContent('A');
 		}
 	);
 
@@ -164,15 +170,14 @@ describe('useSlots', () => {
 				const slots = useSlots({a, b, children});
 
 				return (
-					<div>
+					<div data-testid="useSlots">
 						{slots.c}
 						{slots.b}
 						{slots.a}
 					</div>
 				);
 			}
-
-			const subject = mount(
+			render(
 				<Component>
 					<div slot="a">A</div>
 					<div slot="b">B</div>
@@ -180,10 +185,11 @@ describe('useSlots', () => {
 				</Component>
 			);
 
-			const expected = 'BA';
-			const actual = subject.text();
+			const actual = screen.getByTestId('useSlots').children;
 
-			expect(actual).toBe(expected);
+			expect(actual).toHaveLength(2);
+			expect(actual[0]).toHaveTextContent('B');
+			expect(actual[1]).toHaveTextContent('A');
 
 			// Check to make sure that we only get the one expected error
 			const actualErrorsLength = console.error.mock.calls.length;
@@ -205,7 +211,7 @@ describe('useSlots', () => {
 				const slots = useSlots({a, b, c, children, custom});
 
 				return (
-					<div className="root-div">
+					<div className="root-div" data-testid="useSlots">
 						{slots.c}
 						{slots.b}
 						{slots.a}
@@ -213,7 +219,7 @@ describe('useSlots', () => {
 					</div>
 				);
 			}
-			const subject = mount(
+			render(
 				<Component>
 					<div slot="a" title="Div A" />
 					<div slot="b">B</div>
@@ -222,14 +228,16 @@ describe('useSlots', () => {
 				</Component>
 			);
 
-			const expected = 'CBD';
-			const actual = subject.text();
+			const actual = screen.getByTestId('useSlots');
 
-			expect(actual).toBe(expected);
+			expect(actual.children[0]).toHaveTextContent('C');
+			expect(actual.children[1]).toHaveTextContent('B');
+			expect(actual).toHaveTextContent('D');
 
 			const expectedTitle = 'Div A';
-			const actualTitle = subject.find('.root-div').childAt(2).prop('title');
-			expect(actualTitle).toBe(expectedTitle);
+			const actualChild = screen.getByTestId('useSlots').children[2];
+
+			expect(actualChild).toHaveAttribute('title', expectedTitle)
 		}
 	);
 
@@ -239,12 +247,12 @@ describe('useSlots', () => {
 			function Component ({a, children}) {
 				const slots = useSlots({a, children});
 				return (
-					<div>
+					<div data-testid="useSlots">
 						{slots.a}
 					</div>
 				);
 			}
-			const subject = mount(
+			render(
 				<Component>
 					<div slot="a">A</div>
 					<div slot="a">A</div>
@@ -252,10 +260,11 @@ describe('useSlots', () => {
 				</Component>
 			);
 
-			const expected = 'AAA';
-			const actual = subject.text();
+			const actual = screen.getByTestId('useSlots').children;
 
-			expect(actual).toBe(expected);
+			expect(actual[0]).toHaveTextContent('A');
+			expect(actual[1]).toHaveTextContent('A');
+			expect(actual[2]).toHaveTextContent('A');
 		}
 	);
 
@@ -265,21 +274,20 @@ describe('useSlots', () => {
 			function Component ({a, children}) {
 				const slots = useSlots({a, children});
 				return (
-					<div>
+					<div data-testid="useSlots">
 						{slots.a}
 					</div>
 				);
 			}
-			const subject = mount(
+			render(
 				<Component a="B">
 					<div slot="a">A</div>
 				</Component>
 			);
 
-			const expected = 'A';
-			const actual = subject.text();
+			const actual = screen.getByTestId('useSlots').children[0];
 
-			expect(actual).toBe(expected);
+			expect(actual).toHaveTextContent('A');
 		}
 	);
 
@@ -289,19 +297,18 @@ describe('useSlots', () => {
 			function Component ({a, children}) {
 				const slots = useSlots({a, children});
 				return (
-					<div>
+					<div data-testid="useSlots">
 						{slots.a}
 					</div>
 				);
 			}
-			const subject = mount(
+			render(
 				<Component a="B" />
 			);
 
-			const expected = 'B';
-			const actual = subject.text();
+			const actual = screen.getByTestId('useSlots');
 
-			expect(actual).toBe(expected);
+			expect(actual).toHaveTextContent('B');
 		}
 	);
 });

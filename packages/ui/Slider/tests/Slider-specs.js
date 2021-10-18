@@ -1,4 +1,4 @@
-import {mount} from 'enzyme';
+import {render} from '@testing-library/react';
 
 import Slider from '../Slider';
 
@@ -9,7 +9,7 @@ describe('Slider', () => {
 
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
-		mount(
+		render(
 			<Slider ref={ref} progressBarComponent={ProgressBar} />
 		);
 
