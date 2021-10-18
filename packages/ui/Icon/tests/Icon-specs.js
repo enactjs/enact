@@ -9,10 +9,7 @@ describe('Icon', () => {
 		render(<IconBase data-testid="icon">{iconName}</IconBase>);
 		const icon = screen.getByTestId('icon');
 
-		const expected = iconName;
-		const actual = icon.textContent;
-
-		expect(actual).toEqual(expected);
+		expect(icon).toHaveTextContent(iconName);
 	});
 
 	test('should allow single-byte characters to pass through', () => {
@@ -20,10 +17,7 @@ describe('Icon', () => {
 		render(<IconBase data-testid="icon">{iconName}</IconBase>);
 		const icon = screen.getByTestId('icon');
 
-		const expected = iconName;
-		const actual = icon.textContent;
-
-		expect(actual).toEqual(expected);
+		expect(icon).toHaveTextContent(iconName);
 	});
 
 	test('should allow multi-byte characters to pass through', () => {
@@ -31,10 +25,7 @@ describe('Icon', () => {
 		render(<IconBase data-testid="icon">{iconName}</IconBase>);
 		const icon = screen.getByTestId('icon');
 
-		const expected = iconName;
-		const actual = icon.textContent;
-
-		expect(actual).toEqual(expected);
+		expect(icon).toHaveTextContent(iconName);
 	});
 
 	test('should allow pre-defined icon names as an icon', () => {
@@ -47,10 +38,7 @@ describe('Icon', () => {
 		render(<IconBase data-testid="icon" iconList={iconList}>{iconName}</IconBase>);
 		const icon = screen.getByTestId('icon');
 
-		const expected = iconGlyph;
-		const actual = icon.textContent;
-
-		expect(actual).toEqual(expected);
+		expect(icon).toHaveTextContent(iconGlyph);
 	});
 
 	test('should allow un-matched icon names to fall through, even when pre-defined icons exist', () => {
@@ -62,10 +50,7 @@ describe('Icon', () => {
 		render(<IconBase data-testid="icon" iconList={iconList}>{iconName}</IconBase>);
 		const icon = screen.getByTestId('icon');
 
-		const expected = iconName;
-		const actual = icon.textContent;
-
-		expect(actual).toEqual(expected);
+		expect(icon).toHaveTextContent(iconName);
 	});
 
 	test('should allow URIs to be used as an icon', () => {
@@ -115,4 +100,3 @@ describe('Icon', () => {
 		expect(actual).toBe(expected);
 	});
 });
-
