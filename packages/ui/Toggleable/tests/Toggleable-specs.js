@@ -1,4 +1,4 @@
-import {render} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import Toggleable from '../Toggleable';
@@ -8,17 +8,18 @@ describe('Toggleable', () => {
 
 	const DivComponent = (props) => {
 		data = props;
-		return <div>Toggle</div>;
+		return <div data-testid="selected-state">{props.selected?.toString()}</div>;
 	};
 
 	describe('#config', () => {
 		test('should pass "selected" to the wrapped component', () => {
 			const Component = Toggleable(DivComponent);
 			render(<Component />);
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expected = 'selected';
+			const expected = 'false';
 
-			expect(data).toHaveProperty(expected);
+			expect(toggleableDiv).toHaveTextContent(expected);
 		});
 
 		test('should pass configured "prop" "banana" as the toggled state\'s key to the wrapped component',
@@ -57,11 +58,11 @@ describe('Toggleable', () => {
 		test('should use defaultSelected prop when selected prop is omitted', () => {
 			const Component = Toggleable(DivComponent);
 			render(<Component defaultSelected />);
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expectedProp = 'selected';
-			const expectedValue = true;
+			const expected = 'true';
 
-			expect(data).toHaveProperty(expectedProp, expectedValue);
+			expect(toggleableDiv).toHaveTextContent(expected);
 		});
 
 		test('should warn when "defaultSelected" and "selected" props are provided', () => {
@@ -78,11 +79,11 @@ describe('Toggleable', () => {
 			const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 			const Component = Toggleable(DivComponent);
 			render(<Component defaultSelected selected={null} />);
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expectedProp = 'selected';
-			const expectedValue = true;
+			const expected = 'true';
 
-			expect(data).toHaveProperty(expectedProp, expectedValue);
+			expect(toggleableDiv).toHaveTextContent(expected);
 			expect(spy).toHaveBeenCalled();
 		});
 
@@ -94,11 +95,11 @@ describe('Toggleable', () => {
 			);
 
 			rerender(<Component defaultSelected selected={null} />);
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expectedProp = 'selected';
-			const expectedValue = false;
+			const expected = 'false';
 
-			expect(data).toHaveProperty(expectedProp, expectedValue);
+			expect(toggleableDiv).toHaveTextContent(expected);
 			expect(spy).toHaveBeenCalled();
 		});
 
@@ -107,11 +108,11 @@ describe('Toggleable', () => {
 			const Component = Toggleable(DivComponent);
 			// eslint-disable-next-line no-undefined
 			render(<Component defaultSelected selected={undefined} />);
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expectedProp = 'selected';
-			const expectedValue = true;
+			const expected = 'true';
 
-			expect(data).toHaveProperty(expectedProp, expectedValue);
+			expect(toggleableDiv).toHaveTextContent(expected);
 			expect(spy).toHaveBeenCalled();
 		});
 
@@ -121,11 +122,11 @@ describe('Toggleable', () => {
 			const {rerender} = render(<Component defaultSelected selected />);
 			// eslint-disable-next-line no-undefined
 			rerender(<Component defaultSelected selected={undefined} />);
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expectedProp = 'selected';
-			const expectedValue = false;
+			const expected = 'false';
 
-			expect(data).toHaveProperty(expectedProp, expectedValue);
+			expect(toggleableDiv).toHaveTextContent(expected);
 			expect(spy).toHaveBeenCalled();
 		});
 
@@ -133,11 +134,11 @@ describe('Toggleable', () => {
 			const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 			const Component = Toggleable(DivComponent);
 			render(<Component defaultSelected selected={false} />);
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expectedProp = 'selected';
-			const expectedValue = false;
+			const expected = 'false';
 
-			expect(data).toHaveProperty(expectedProp, expectedValue);
+			expect(toggleableDiv).toHaveTextContent(expected);
 			expect(spy).toHaveBeenCalled();
 		});
 	});
@@ -247,11 +248,11 @@ describe('Toggleable', () => {
 			const Component = Toggleable(DivComponent);
 			render(<Component defaultSelected />);
 			data.onToggle();
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expectedProp = 'selected';
-			const expectedValue = false;
+			const expected = 'false';
 
-			expect(data).toHaveProperty(expectedProp, expectedValue);
+			expect(toggleableDiv).toHaveTextContent(expected);
 		});
 
 		test('should update "selected" when "onJiggle" invoked and is not controlled', () => {
@@ -260,11 +261,11 @@ describe('Toggleable', () => {
 			const Component = Toggleable({toggleProp: 'onJiggle'}, DivComponent);
 			render(<Component defaultSelected />);
 			data.onJiggle();
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expectedProp = 'selected';
-			const expectedValue = false;
+			const expected = 'false';
 
-			expect(data).toHaveProperty(expectedProp, expectedValue);
+			expect(toggleableDiv).toHaveTextContent(expected);
 		});
 
 		test('should not update "selected" when "onToggle" invoked and is not controlled but disabled',
@@ -272,12 +273,11 @@ describe('Toggleable', () => {
 				const Component = Toggleable(DivComponent);
 				render(<Component defaultSelected disabled />);
 				data.onToggle();
+				const toggleableDiv = screen.getByTestId('selected-state');
 
-				const expectedProp = 'selected';
-				const expectedValue = true;
+				const expected = 'true';
 
-
-				expect(data).toHaveProperty(expectedProp, expectedValue);
+				expect(toggleableDiv).toHaveTextContent(expected);
 			});
 
 		test('should not update "selected" when "onActivate" invoked and is not controlled but disabled',
@@ -285,12 +285,11 @@ describe('Toggleable', () => {
 				const Component = Toggleable({activate: 'onActivate'}, DivComponent);
 				render(<Component defaultSelected={false} disabled />);
 				data.onActivate();
+				const toggleableDiv = screen.getByTestId('selected-state');
 
-				const expectedProp = 'selected';
-				const expectedValue = false;
+				const expected = 'false';
 
-
-				expect(data).toHaveProperty(expectedProp, expectedValue);
+				expect(toggleableDiv).toHaveTextContent(expected);
 			}
 		);
 
@@ -299,55 +298,55 @@ describe('Toggleable', () => {
 				const Component = Toggleable({deactivate: 'onDeactivate'}, DivComponent);
 				render(<Component defaultSelected disabled />);
 				data.onDeactivate();
+				const toggleableDiv = screen.getByTestId('selected-state');
 
-				const expectedProp = 'selected';
-				const expectedValue = true;
+				const expected = 'true';
 
-				expect(data).toHaveProperty(expectedProp, expectedValue);
+				expect(toggleableDiv).toHaveTextContent(expected);
 			});
 
 		test('should not update "selected" when "onToggle" invoked and is controlled', () => {
 			const Component = Toggleable(DivComponent);
 			render(<Component selected />);
 			data.onToggle();
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expectedProp = 'selected';
-			const expectedValue = true;
+			const expected = 'true';
 
-			expect(data).toHaveProperty(expectedProp, expectedValue);
+			expect(toggleableDiv).toHaveTextContent(expected);
 		});
 
 		test('should not update "selected" when "onJiggle" invoked and is controlled', () => {
 			const Component = Toggleable({toggleProp: 'onJiggle'}, DivComponent);
 			render(<Component selected />);
 			data.onJiggle();
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expectedProp = 'selected';
-			const expectedValue = true;
+			const expected = 'true';
 
-			expect(data).toHaveProperty(expectedProp, expectedValue);
+			expect(toggleableDiv).toHaveTextContent(expected);
 		});
 
 		test('should not update "selected" when "onActivate" invoked and is controlled', () => {
 			const Component = Toggleable({activate: 'onActivate'}, DivComponent);
 			render(<Component selected={false} />);
 			data.onActivate();
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expectedProp = 'selected';
-			const expectedValue = false;
+			const expected = 'false';
 
-			expect(data).toHaveProperty(expectedProp, expectedValue);
+			expect(toggleableDiv).toHaveTextContent(expected);
 		});
 
 		test('should not update "selected" when "onDeactivate" invoked and is controlled', () => {
 			const Component = Toggleable({deactivate: 'onDeactivate'}, DivComponent);
 			render(<Component selected />);
 			data.onDeactivate();
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expectedProp = 'selected';
-			const expectedValue = true;
+			const expected = 'true';
 
-			expect(data).toHaveProperty(expectedProp, expectedValue);
+			expect(toggleableDiv).toHaveTextContent(expected);
 		});
 	});
 
@@ -357,24 +356,25 @@ describe('Toggleable', () => {
 			const {rerender} = render(<Component selected />);
 
 			rerender(<Component selected={false} />);
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expected = 'selected';
+			const expected = 'false';
 
-			expect(data).toHaveProperty(expected);
+			expect(toggleableDiv).toHaveTextContent(expected);
 		});
 
 		test('should not update "selected" with new props when not controlled', () => {
 			const Component = Toggleable(DivComponent);
 			const {rerender} = render(<Component defaultSelected />);
+			const toggleableDiv = screen.getByTestId('selected-state');
 
-			const expectedProp = 'selected';
-			const expectedValue = true;
+			const expected = 'true';
 
-			expect(data).toHaveProperty(expectedProp, expectedValue);
+			expect(toggleableDiv).toHaveTextContent(expected);
 
 			rerender(<Component defaultSelected selected={false} />);
 
-			expect(data).toHaveProperty(expectedProp, expectedValue);
+			expect(toggleableDiv).toHaveTextContent(expected);
 		});
 
 		test('should not update "selected" with custom prop and new defaultProp when not controlled', () => {
@@ -399,10 +399,10 @@ describe('Toggleable', () => {
 		data.onToggle();
 
 		rerender(<Component />);
+		const toggleableDiv = screen.getByTestId('selected-state');
 
-		const expectedProp = 'selected';
-		const expectedValue = true;
+		const expected = 'true';
 
-		expect(data).toHaveProperty(expectedProp, expectedValue);
+		expect(toggleableDiv).toHaveTextContent(expected);
 	});
 });
