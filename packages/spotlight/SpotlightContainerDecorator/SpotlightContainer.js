@@ -1,9 +1,6 @@
 import {forProp, handle, not, stop} from '@enact/core/handle';
 
-import {hasPointerMoved} from '../src/pointer';
 import Spotlight from '../src/spotlight';
-
-const isNewPointerPosition = (ev) => hasPointerMoved(ev.clientX, ev.clientY);
 
 class SpotlightContainer {
 	// set up context and props so we can use handle binding

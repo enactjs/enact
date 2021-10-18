@@ -513,7 +513,6 @@ const Spotlight = (function () {
 		const {target} = evt;
 
 		if (getPointerMode()) {
-			console.log('onMouseOver');
 			const next = getNavigableTarget(target); // account for child controls
 
 			if (next && next !== getCurrent()) {
