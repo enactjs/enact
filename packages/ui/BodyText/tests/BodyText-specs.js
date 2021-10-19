@@ -20,7 +20,7 @@ describe('BodyText Specs', () => {
 		render(<BodyText>{content}</BodyText>);
 		const bodyText = screen.getByText(content);
 
-		expect(bodyText).toHaveTextContent(content);
+		expect(bodyText).toBeInTheDocument();
 	});
 
 	test('should not include the centered class by default', () => {
