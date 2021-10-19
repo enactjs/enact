@@ -165,6 +165,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = () => {
 			this.isHovered = true;
+			console.log('handleEnter!!');
 			if (!this.anyRunning()) {
 				this.dispatch('start');
 			}
@@ -181,6 +182,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		handleFocus = (ev) => {
 			this.isFocused = true;
+			console.log('handleFocus!!');
 			if (!this.anyRunning()) {
 				this.dispatch('start');
 			}
