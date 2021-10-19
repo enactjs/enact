@@ -331,7 +331,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
+			console.log('DidMount');
 			if (this.context && this.context.register) {
+				console.log('DidMount sync true!!');
 				this.sync = true;
 				this.context.register(this, {
 					start: this.start,
@@ -348,6 +350,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
+			console.log('DidUpdate');
 			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeSpeed, rtl} = this.props;
 
 			let forceRestartMarquee = false;
@@ -366,9 +369,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 				this.invalidateMetrics();
 				this.cancelAnimation();
-				if(!shallowEqual(prevProps.children, children)) {
-					this.resetAnimation();
-				}
 			} else if (
 				prevProps.marqueeOn !== marqueeOn ||
 				prevProps.marqueeDisabled !== marqueeDisabled ||
@@ -486,6 +486,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.contentFits = null;
 
 			this.setState(state => {
+				console.log('state.overflow: ',state.overflow);
+				console.log('state.promoted: ',state.promoted);
 				if (state.overflow === 'ellipsis' && state.promoted === false) return null;
 
 				return {
@@ -746,6 +748,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		cancelAnimation = () => {
+			console.log('sync : ', this.sync);
 			if (this.sync) {
 				this.context.cancel(this);
 				return;
