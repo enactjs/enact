@@ -7,19 +7,18 @@ import {Cell} from '../../Layout';
 import css from '../BodyText.module.less';
 
 describe('BodyText Specs', () => {
-	test('should render a BodyText', () => {
+	test('should render a single <p> tag', () => {
 		const msg = 'Hello BodyText!';
-		render(<BodyText>{msg}</BodyText>);
-		const bodyText = screen.getByText('Hello BodyText!');
+		const {container} = render(<BodyText>{msg}</BodyText>);
+		const bodyText = container.querySelector('p');
 
 		expect(bodyText).toBeInTheDocument();
 	});
 
 	test('should render BodyText with content', () => {
 		const content = 'Hello BodyText!';
-
 		render(<BodyText>{content}</BodyText>);
-		const bodyText = screen.getByText('Hello BodyText!');
+		const bodyText = screen.getByText(content);
 
 		expect(bodyText).toHaveTextContent(content);
 	});
