@@ -11,7 +11,7 @@ describe('ResolutionDecorator Specs', () => {
 		const div = screen.getByTestId('component');
 
 		expect(div).toHaveClass('enact-res-standard');
-		expect(div).toHaveClass('enact-orientation-portrait')
+		expect(div).toHaveClass('enact-orientation-portrait');
 	});
 
 	test('should allow custom screen types', () => {

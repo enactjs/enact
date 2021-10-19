@@ -14,7 +14,7 @@ describe('Repeater Specs', () => {
 		render(<RepeaterBase childComponent="div" data-testid="repeater">{stringItems}</RepeaterBase>);
 
 		const expected = 'span';
-		const rootElemementName = screen.getByTestId("repeater").nodeName.toLowerCase();
+		const rootElemementName = screen.getByTestId('repeater').nodeName.toLowerCase();
 
 		expect(rootElemementName).toBe(expected);
 	});
@@ -23,7 +23,7 @@ describe('Repeater Specs', () => {
 		render(<RepeaterBase childComponent="div" component="div" data-testid="repeater">{stringItems}</RepeaterBase>);
 
 		const expected = 'div';
-		const rootElemementName = screen.getByTestId("repeater").nodeName.toLowerCase();
+		const rootElemementName = screen.getByTestId('repeater').nodeName.toLowerCase();
 
 		expect(rootElemementName).toBe(expected);
 	});
@@ -32,7 +32,7 @@ describe('Repeater Specs', () => {
 		render(<RepeaterBase childComponent="div" component={CustomRootType} data-testid="repeater">{stringItems}</RepeaterBase>);
 
 		const expected = 'div';
-		const rootElemementName = screen.getByTestId("repeater").nodeName.toLowerCase();
+		const rootElemementName = screen.getByTestId('repeater').nodeName.toLowerCase();
 
 		expect(rootElemementName).toBe(expected);
 	});
@@ -41,7 +41,7 @@ describe('Repeater Specs', () => {
 		render(<RepeaterBase childComponent="div" data-testid="repeater">{stringItems}</RepeaterBase>);
 
 		const expected = 3;
-		const actual = screen.getByTestId("repeater").children.length;
+		const actual = screen.getByTestId('repeater').children.length;
 
 		expect(actual).toBe(expected);
 	});
@@ -50,16 +50,16 @@ describe('Repeater Specs', () => {
 		render(<RepeaterBase childComponent={CustomType} data-testid="repeater">{stringItems}</RepeaterBase>);
 
 		const expected = 3;
-		const actual = screen.getByTestId("repeater").children.length;
+		const actual = screen.getByTestId('repeater').children.length;
 
 		expect(actual).toBe(expected);
 	});
 
-	test('should create a number of children matching the length of items',() => {
+	test('should create a number of children matching the length of items', () => {
 		render(<RepeaterBase childComponent="div" data-testid="repeater">{stringItems}</RepeaterBase>);
 
 		const expected = stringItems.length;
-		const actual = screen.getByTestId("repeater").children.length;
+		const actual = screen.getByTestId('repeater').children.length;
 
 		expect(actual).toBe(expected);
 	});
@@ -68,7 +68,7 @@ describe('Repeater Specs', () => {
 		render(<RepeaterBase childComponent={CustomType} data-testid="repeater">{objItems}</RepeaterBase>);
 
 		const expected = objItems.length;
-		const actual = screen.getByTestId("repeater").children.length;
+		const actual = screen.getByTestId('repeater').children.length;
 
 		expect(actual).toBe(expected);
 	});
@@ -77,34 +77,34 @@ describe('Repeater Specs', () => {
 		render(<RepeaterBase childComponent="div" data-testid="repeater" itemProps={{title: 'test'}}>{stringItems}</RepeaterBase>);
 
 		const expected = 'test';
-		const actual = screen.getByTestId("repeater").children.item(0);
+		const actual = screen.getByTestId('repeater').children.item(0);
 
-		expect(actual).toHaveAttribute("title", expected);
+		expect(actual).toHaveAttribute('title', expected);
 	});
 
 	test('should pass index to each child', () => {
 		render(<RepeaterBase childComponent="div" data-testid="repeater">{stringItems}</RepeaterBase>);
 
-		const expected = "0";
-		const actual = screen.getByTestId("repeater").children.item(0);
+		const expected = '0';
+		const actual = screen.getByTestId('repeater').children.item(0);
 
-		expect(actual).toHaveAttribute("data-index", expected);
+		expect(actual).toHaveAttribute('data-index', expected);
 	});
 
 	test('should pass data to each child', () => {
 		render(<RepeaterBase childComponent="div" childProp="data-str" data-testid="repeater">{stringItems}</RepeaterBase>);
 
 		const expected = stringItems[0];
-		const actual = screen.getByTestId("repeater").children.item(0);
+		const actual = screen.getByTestId('repeater').children.item(0);
 
-		expect(actual).toHaveAttribute("data-str", expected);
+		expect(actual).toHaveAttribute('data-str', expected);
 	});
 
 	test('should pass item as children to each child', () => {
 		render(<RepeaterBase childComponent="div" data-testid="repeater">{stringItems}</RepeaterBase>);
 
 		const expected = stringItems[0];
-		const actual = screen.getByTestId("repeater").children.item(0);
+		const actual = screen.getByTestId('repeater').children.item(0);
 
 		expect(actual).toHaveTextContent(expected);
 	});
@@ -113,18 +113,18 @@ describe('Repeater Specs', () => {
 		render(<RepeaterBase childComponent="div" data-testid="repeater">{stringItems}</RepeaterBase>);
 
 		const expected = 'list';
-		const listElement = screen.getByTestId("repeater");
+		const listElement = screen.getByTestId('repeater');
 
-		expect(listElement).toHaveAttribute("role", expected);
+		expect(listElement).toHaveAttribute('role', expected);
 	});
 
 	test('should allow role to be overridden', () => {
 		render(<RepeaterBase childComponent="div" data-testid="repeater" role="listbox">{stringItems}</RepeaterBase>);
 
 		const expected = 'listbox';
-		const listElement = screen.getByTestId("repeater");
+		const listElement = screen.getByTestId('repeater');
 
-		expect(listElement).toHaveAttribute("role", expected);
+		expect(listElement).toHaveAttribute('role', expected);
 	});
 
 	test('should return a DOM node reference for `componentRef``', () => {
