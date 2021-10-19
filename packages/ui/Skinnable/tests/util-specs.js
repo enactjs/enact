@@ -1,7 +1,6 @@
 import {objectify, preferDefined} from '../util';
 
 describe('Skinnable/util/objectify Specs', () => {
-
 	test('should convert a plain string to an object with one key and value true', () => {
 		const subject = 'string1';
 
@@ -68,7 +67,6 @@ describe('Skinnable/util/objectify Specs', () => {
 });
 
 describe('Skinnable/util/preferDefined Specs', () => {
-
 	test('should return the first element if it is a normal string', () => {
 		const subject = ['string1', 'string2'];
 
@@ -122,5 +120,4 @@ describe('Skinnable/util/preferDefined Specs', () => {
 
 		expect(actual).toEqual(expected);
 	});
-
 });
