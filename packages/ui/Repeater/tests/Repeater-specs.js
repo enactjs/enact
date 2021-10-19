@@ -14,27 +14,27 @@ describe('Repeater Specs', () => {
 		render(<RepeaterBase childComponent="div" data-testid="repeater">{stringItems}</RepeaterBase>);
 
 		const expected = 'span';
-		const rootElemementName = screen.getByTestId('repeater').nodeName.toLowerCase();
+		const rootElementName = screen.getByTestId('repeater').nodeName.toLowerCase();
 
-		expect(rootElemementName).toBe(expected);
+		expect(rootElementName).toBe(expected);
 	});
 
 	test('should accept a nodeName as root element', () => {
 		render(<RepeaterBase childComponent="div" component="div" data-testid="repeater">{stringItems}</RepeaterBase>);
 
 		const expected = 'div';
-		const rootElemementName = screen.getByTestId('repeater').nodeName.toLowerCase();
+		const rootElementName = screen.getByTestId('repeater').nodeName.toLowerCase();
 
-		expect(rootElemementName).toBe(expected);
+		expect(rootElementName).toBe(expected);
 	});
 
 	test('should accept a function as root element', () => {
 		render(<RepeaterBase childComponent="div" component={CustomRootType} data-testid="repeater">{stringItems}</RepeaterBase>);
 
 		const expected = 'div';
-		const rootElemementName = screen.getByTestId('repeater').nodeName.toLowerCase();
+		const rootElementName = screen.getByTestId('repeater').nodeName.toLowerCase();
 
-		expect(rootElemementName).toBe(expected);
+		expect(rootElementName).toBe(expected);
 	});
 
 	test('should accept a nodeName as childComponent', () => {
