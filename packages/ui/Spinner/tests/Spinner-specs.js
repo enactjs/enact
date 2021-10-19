@@ -7,7 +7,7 @@ import css from '../Spinner.module.less';
 
 describe('Spinner Specs', () => {
 	test('should have centered class when centered prop equals true', () => {
-		render(<SpinnerBase component="div" centered>Loading...</SpinnerBase>);
+		render(<SpinnerBase centered component="div">Loading...</SpinnerBase>);
 		const spinner = screen.getByText('Loading...');
 
 		const expected = css.centered;
@@ -16,7 +16,7 @@ describe('Spinner Specs', () => {
 	});
 
 	test('should not have content class when Spinner has no children', () => {
-		render(<SpinnerBase data-testid="spinner" component="div" />);
+		render(<SpinnerBase component="div" data-testid="spinner" />);
 		const spinner = screen.getByTestId('spinner');
 
 		const expected = css.content;
@@ -25,7 +25,7 @@ describe('Spinner Specs', () => {
 	});
 
 	test('should have no scrim class when blockClickOn prop equals container', () => {
-		render(<SpinnerBase data-testid="spinner" component="div" blockClickOn="container" />);
+		render(<SpinnerBase blockClickOn="container" component="div" data-testid="spinner" />);
 		const spinnerContainer = screen.getByTestId('spinner').previousElementSibling;
 
 		const expected = css.scrim;
@@ -34,7 +34,7 @@ describe('Spinner Specs', () => {
 	});
 
 	test('should have scrim class when blockClickOn prop equals container and when scrim prop equals true', () => {
-		render(<SpinnerBase data-testid="spinner" component="div" blockClickOn="container" scrim />);
+		render(<SpinnerBase blockClickOn="container" component="div" data-testid="spinner" scrim />);
 		const spinnerContainer = screen.getByTestId('spinner').previousElementSibling;
 
 		const expected = css.scrim;
