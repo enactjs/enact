@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` and `spotlight/SpotlightContainerDecorator` to handle pointer events even when pointer hasn't moved.
+
 ## [4.0.7] - 2021-09-28
 
 ### Fixed

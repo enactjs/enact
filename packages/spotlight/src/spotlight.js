@@ -62,7 +62,6 @@ import {
 import {
 	getLastPointerPosition,
 	getPointerMode,
-	hasPointerMoved,
 	notifyKeyDown,
 	notifyPointerMove,
 	setPointerMode
@@ -513,7 +512,7 @@ const Spotlight = (function () {
 
 		const {target} = evt;
 
-		if (getPointerMode() && hasPointerMoved(evt.clientX, evt.clientY)) {
+		if (getPointerMode()) {
 			const next = getNavigableTarget(target); // account for child controls
 
 			if (next && next !== getCurrent()) {

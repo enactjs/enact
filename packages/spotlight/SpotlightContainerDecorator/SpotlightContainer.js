@@ -1,9 +1,6 @@
 import {forProp, handle, not, stop} from '@enact/core/handle';
 
-import {hasPointerMoved} from '../src/pointer';
 import Spotlight from '../src/spotlight';
-
-const isNewPointerPosition = (ev) => hasPointerMoved(ev.clientX, ev.clientY);
 
 class SpotlightContainer {
 	// set up context and props so we can use handle binding
@@ -114,13 +111,11 @@ class SpotlightContainer {
 	};
 
 	onPointerEnter = handle(
-		isNewPointerPosition,
 		() => Spotlight.setActiveContainer(this.id)
 	).bindAs(this, 'onPointerEnter');
 
 	onPointerLeave = handle(
 		not(forProp('restrict', 'self-only')),
-		isNewPointerPosition,
 		(ev) => {
 			const parentContainer = ev.currentTarget.parentNode.closest('[data-spotlight-container]');
 			let activeContainer = Spotlight.getActiveContainer();
