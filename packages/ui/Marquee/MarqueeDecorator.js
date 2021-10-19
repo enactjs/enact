@@ -366,6 +366,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 				this.invalidateMetrics();
 				this.cancelAnimation();
+				this.resetAnimation();
 			} else if (
 				prevProps.marqueeOn !== marqueeOn ||
 				prevProps.marqueeDisabled !== marqueeDisabled ||
