@@ -127,7 +127,7 @@ describe('Repeater Specs', () => {
 		expect(listElement).toHaveAttribute('role', expected);
 	});
 
-	test('should return a DOM node reference for `componentRef``', () => {
+	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
 		render(<Repeater childComponent="div" component="div" data-testid="repeater" ref={ref}>{stringItems}</Repeater>);
 
