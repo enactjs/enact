@@ -87,6 +87,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			});
 
 			if (needsStart) {
+				console.log('90 handle register');
 				this.dispatch('start');
 			}
 		};
@@ -108,6 +109,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}
 			if (wasRunning && !this.anyRunning()) {
+				console.log('112 handle unregister');
 				this.dispatch('start');
 			}
 		};
@@ -123,6 +125,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			this.cancelJob.stop();
 			if (!this.anyRunning()) {
 				this.markAll(STATE.ready);
+				console.log('128 handle start');
 				this.dispatch('start', component);
 			}
 		};
@@ -159,6 +162,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			const complete = this.markReady(component);
 			if (complete) {
 				this.markAll(STATE.ready);
+				console.log('163 handle complete');
 				this.dispatch('start');
 			}
 		};
@@ -167,6 +171,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			this.isHovered = true;
 			console.log('handleEnter!!');
 			if (!this.anyRunning()) {
+				console.log('171 handle enter');
 				this.dispatch('start');
 			}
 			this.cancelJob.stop();
@@ -184,6 +189,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			this.isFocused = true;
 			console.log('handleFocus!!');
 			if (!this.anyRunning()) {
+				console.log('189 handle focus');
 				this.dispatch('start');
 			}
 			this.cancelJob.stop();

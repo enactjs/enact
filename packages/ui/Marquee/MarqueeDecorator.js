@@ -341,6 +341,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.validateTextDirection();
 			if (this.props.marqueeOn === 'render') {
+				console.log('did mount');
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 			on('keydown', this.handlePointerHide, document);
@@ -661,6 +662,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			console.log('4. timerState : ', this.timerState);
 			if (this.state.animating || this.timerState !== TimerState.CLEAR) return;
 
+			console.log('try start');
 			this.startAnimation(delay);
 		};
 
@@ -706,6 +708,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.sync) {
 				this.context.complete(this);
 			} else if (!this.state.animating) {
+				console.log('restartAnimation');
 				this.startAnimation(delay);
 			}
 		};
@@ -766,6 +769,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.isFocused = true;
 			if (!this.sync) {
 				if (!this.state.animating) {
+					console.log('foucs handle');
 					this.startAnimation();
 				}
 			}
@@ -789,6 +793,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				if (this.sync) {
 					this.context.enter(this);
 				} else if (!this.state.animating) {
+					console.log('foucs enter');
 					this.startAnimation();
 				}
 			}
