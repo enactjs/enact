@@ -11,11 +11,11 @@ describe('useAnnounce', () => {
 		return <div data-testid="announce">{children}</div>;
 	}
 
-	function Component ({announceText}) {
+	function Component () {
 		const {announce, children} = useAnnounce();
 
 		return (
-			<Base announce={announce} onClick={() => announce(announceText)}>
+			<Base announce={announce}>
 				{children}
 			</Base>
 		);
