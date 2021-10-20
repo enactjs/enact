@@ -1,63 +1,61 @@
 import {isValidElement} from 'react';
 import {mount, shallow} from 'enzyme';
+import '@testing-library/jest-dom';
+import {fireEvent, render, screen} from '@testing-library/react';
+import {createRef} from 'react';
 
 import useAnnounce from '../useAnnounce';
+import userEvent from "@testing-library/user-event";
 
 describe('useAnnounce', () => {
-	function Base ({children}) {
-		return <div>{children}</div>;
+	let announceType;
+
+	function Base ({children, announce}) {
+		announceType = typeof announce;
+		return <div data-testid="announce">{children}</div>;
 	}
 
-	function Component () {
+	function Component ({announceText}) {
 		const {announce, children} = useAnnounce();
 
 		return (
-			<Base announce={announce}>
+			<Base announce={announce} onClick={() => announce(announceText)}>
 				{children}
 			</Base>
 		);
 	}
 
 	test('should return an announce function', () => {
-		const subject = shallow(
-			<Component />
-		);
+		render(<Component />);
 
 		const expected = 'function';
-		const actual = typeof subject.prop('announce');
 
-		expect(actual).toBe(expected);
+		expect(announceType).toBe(expected);
 	});
 
 	test('should return a single element in children', () => {
-		const subject = shallow(
-			<Component />
-		);
+		render(<Component />);
 
-		const expected = true;
-		const actual = isValidElement(subject.prop('children'));
+		const expected = 1;
+		const baseElementChildrenCount = screen.getByTestId('announce').children.length;
 
-		expect(actual).toBe(expected);
+		expect(baseElementChildrenCount).toBe(expected);
 	});
 
-	// this might be too specialized to the implmentation but we lack a better way to unit test this
+	// this might be too specialized to the implementation but we lack a better way to unit test this
 	// capability right now
 	test('should set the value passed to announce into the ARIA role="alert" node', () => {
 		const text = '__NOTIFY__';
-		const subject = mount(
-			<Component />
-		);
+		render(<Component announceText={text} />);
 
-		subject.find(Base).invoke('announce')(text);
-		subject.update();
-
+userEvent.click(screen.getByTestId('announce'));
+screen.debug();
 		const expected = text;
 		// Have to get the actual DOM node here since Announce updates the DOM directly so the
 		// change isn't represented in either the React or Enzyme views
-		const actual = subject.find({role: 'alert'}).instance().getAttribute('aria-label');
+		const actual = screen.getByTestId('announce')
 
-		expect(actual).toBe(expected);
+		expect(actual).toHaveAttribute('aria-label', expected);
 
 	});
-
 });
