@@ -1,20 +1,17 @@
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+
 import ResolutionDecorator from '../ResolutionDecorator';
 
 describe('ResolutionDecorator Specs', () => {
-
 	test('should apply resolution classes to the wrapped component', () => {
 		const Component = ResolutionDecorator('div');
-		const subject = mount(
-			<Component />
-		);
+		render(<Component data-testid="component" />);
 
-		const div = subject.find('div');
+		const div = screen.getByTestId('component');
 
-		const expected = true;
-		const actual = (div.hasClass('enact-res-standard') && (div.hasClass('enact-orientation-landscape') || div.hasClass('enact-orientation-portrait')));
-
-		expect(actual).toBe(expected);
+		expect(div).toHaveClass('enact-res-standard');
+		expect(div).toHaveClass('enact-orientation-portrait');
 	});
 
 	test('should allow custom screen types', () => {
@@ -23,14 +20,10 @@ describe('ResolutionDecorator Specs', () => {
 			{name: name, pxPerRem: 36, width: 1440, height: 920, aspectRatioName: 'hdtv', base: true}
 		];
 		const Component = ResolutionDecorator({screenTypes: screens}, 'div');
-		const subject = mount(
-			<Component />
-		);
+		render(<Component data-testid="component" />);
+		const div = screen.getByTestId('component');
 
-		const expected = true;
-		const actual = subject.find('div').hasClass('enact-res-mhd');
-
-		expect(actual).toBe(expected);
+		expect(div).toHaveClass('enact-res-mhd');
 	});
 
 	test.skip('should update the resolution when the screen is resized', function () {
@@ -43,5 +36,4 @@ describe('ResolutionDecorator Specs', () => {
 			// TODO: write a test
 		}
 	);
-
 });
