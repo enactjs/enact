@@ -350,7 +350,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			console.log('DidUpdate');
 			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeSpeed, rtl} = this.props;
 
 			let forceRestartMarquee = false;
@@ -363,12 +362,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
 			) {
 				// restart marqueeOn="render" marquees or synced marquees that were animating
+				console.log("1. animating: ", this.state.animating);
+				console.log("2 state: ", this.timerState);
 				forceRestartMarquee = marqueeOn === 'render' || (
 					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
 				);
 
 				this.invalidateMetrics();
 				this.cancelAnimation();
+				if(forceRestartMarquee && marqueeOn === 'focus')
+					this.resetAnimation();
 			} else if (
 				prevProps.marqueeOn !== marqueeOn ||
 				prevProps.marqueeDisabled !== marqueeDisabled ||
@@ -381,8 +384,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.validateTextDirection();
-			console.log('1. forceRestartMarquee : ', forceRestartMarquee);
-			console.log('2. this.props.marqueeOn : ', this.props.marqueeOn);
+			console.log('3. forceRestartMarquee : ', forceRestartMarquee);
+			console.log('4. this.props.marqueeOn : ', this.props.marqueeOn);
 			if (forceRestartMarquee || this.shouldStartMarquee()) {
 				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
@@ -748,8 +751,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		cancelAnimation = () => {
-			console.log('sync : ', this.sync);
 			if (this.sync) {
+				console.log('context cancel sync : ', this.sync);
 				this.context.cancel(this);
 				return;
 			}
