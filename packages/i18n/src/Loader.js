@@ -50,8 +50,10 @@ const iLibResources = typeof ILIB_RESOURCES_PATH === 'undefined' ? '/locale' : I
 const cachePrefix = 'ENACT-ILIB-';
 const cacheKey = cachePrefix + 'CACHE-ID';
 const cacheID = typeof ILIB_CACHE_ID === 'undefined' ? '$ILIB' : ILIB_CACHE_ID;
+const timeStampKey = 'l10n_timestamp';
 
 function EnyoLoader () {
+	console.log("EnyoLoader creator!!");
 	this.base = iLibBase;
 	// TODO: full enyo.platform implementation for improved accuracy
 	if (typeof window === 'object' && typeof window.PalmSystem === 'object') {
@@ -63,6 +65,7 @@ EnyoLoader.prototype = new Loader();
 EnyoLoader.prototype.constructor = EnyoLoader;
 
 EnyoLoader.prototype._createZoneFile = function (path) {
+	console.log("EnyoLoader.prototype._createZoneFile");
 	let zone = path.substring(path.indexOf('zoneinfo'));
 
 	// remove the .json suffix to get the name of the zone
@@ -109,6 +112,7 @@ EnyoLoader.prototype._pathjoin = function (_root, subpath) {
  * @returns {Promise}
  */
 EnyoLoader.prototype._loadFilesAsync = function (path, params, cache, rootPath) {
+	console.log("EnyoLoader.prototype._loadFeilsAsync");
 	let _root = iLibResources;
 	if (typeof rootPath !== 'undefined') {
 		_root = rootPath;
@@ -153,9 +157,13 @@ EnyoLoader.prototype._loadFilesAsync = function (path, params, cache, rootPath) 
 };
 
 EnyoLoader.prototype._loadFilesCache = function (_root, paths) {
+	console.log("EnyoLoader.prototype._loadFilesCache ", paths);
 	this._validateCache();
 	if (typeof window !== 'undefined' && window.localStorage && paths.length > 0) {
-		let stored = window.localStorage.getItem(cachePrefix + _root + '/' + paths[0]);
+		const a = cachePrefix + _root + '/' + paths[0];
+		console.log("Will find ", a);
+		let stored = window.localStorage.getItem(a);
+		console.log("STORED::::: ", stored);
 		if (stored) {
 			const target = JSON.stringify(paths);
 			const data = JSON.parse(stored);
@@ -170,6 +178,7 @@ EnyoLoader.prototype._loadFilesCache = function (_root, paths) {
 };
 
 EnyoLoader.prototype._storeFilesCache = function (_root, paths, data) {
+	console.log("EnyoLoader.prototype._storeFilesCache");
 	if (typeof window !== 'undefined' && window.localStorage && paths.length > 0) {
 		let target = JSON.stringify(paths);
 		window.localStorage.setItem(cachePrefix + _root + '/' + paths[0], JSON.stringify({target: target, value: data}));
@@ -177,6 +186,7 @@ EnyoLoader.prototype._storeFilesCache = function (_root, paths, data) {
 };
 
 EnyoLoader.prototype._validateCache = function () {
+	console.log("EnyoLoader.prototype._validateCache");
 	if (!this._cacheValidated && typeof window !== 'undefined' && window.localStorage) {
 		let activeID = window.localStorage.getItem(cacheKey);
 		if (activeID !== cacheID) {
@@ -194,14 +204,20 @@ EnyoLoader.prototype._validateCache = function () {
 };
 
 EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPath) {
+	console.log("EnyoLoader.prototype.loadFiles");
 	let _root = iLibResources;
 	if (typeof rootPath !== 'undefined') {
 		_root = rootPath;
 	} else if (params && typeof params.root !== 'undefined') {
 		_root = params.root; // Deprecated; to be removed in future
 	}
-	let cache = {data: this._loadFilesCache(_root, paths)};
+
 	if (sync) {
+		console.log("ROOOT: ", _root);
+		console.log("paths: ", paths);
+		this.loadManifestsSync(_root);
+		let cache = {data: this._loadFilesCache(_root, paths)};
+
 		let ret = [];
 		let locdata = this._pathjoin(this.base, 'locale');
 		// synchronous
@@ -220,8 +236,6 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 						found = true;
 					}
 				};
-
-				this.loadManifestsSync(_root);
 
 				if (this.isAvailable(_root, path)) {
 					getSync(this._pathjoin(_root, path), handler);
@@ -251,20 +265,23 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 			callback.call(this, ret);
 		}
 		return ret;
-	}
+	} else {
+		// asynchronous
+		let cache = {data: this._loadFilesCache(_root, paths)};
 
-	// asynchronous
-	Promise.all(paths.map(path => this._loadFilesAsync(path, params, cache))).then(results => {
-		if (cache.update) {
-			this._storeFilesCache(_root, paths, results);
-		}
-		if (typeof callback === 'function') {
-			callback.call(this, results);
-		}
-	});
+		Promise.all(paths.map(path => this._loadFilesAsync(path, params, cache))).then(results => {
+			if (cache.update) {
+				this._storeFilesCache(_root, paths, results);
+			}
+			if (typeof callback === 'function') {
+				callback.call(this, results);
+			}
+		});
+	}
 };
 
 EnyoLoader.prototype._handleManifest = function (dirpath, filepath, json) {
+	console.log("EnyoLoader.prototype._handleManifest");
 	// star indicates there was no ilibmanifest.json, so always try to load files from
 	// that dir
 	if (json != null) {
@@ -279,6 +296,50 @@ EnyoLoader.prototype._handleManifest = function (dirpath, filepath, json) {
 	return this.manifest[dirpath];
 };
 
+EnyoLoader.prototype._validateManifest = function (cachedManifest, filepath, dirpath, sync) {
+	/* isif (!this.webos) {
+		return cachedManifest;
+	}*/
+
+	if (cachedManifest) {
+		const cachedTimeStamp = JSON.parse(cachedManifest)[timeStampKey];
+		if (cachedTimeStamp) {
+			let newManifest;
+			if (sync) {
+				getSync(filepath, (json) => {
+					newManifest = json;
+				});
+			} else {
+				get(filepath).then(json => {
+					newManifest = json;
+				});
+			}
+			console.log("new manifest: " + JSON.stringify(newManifest));
+			if (newManifest[timeStampKey]) {
+				// If new manifest has timestamp, compare old one and see if it's the same
+				if (cachedTimeStamp === newManifest[timeStampKey]) {
+					return true;
+				} else if (typeof window !== 'undefined' && window.localStorage) {
+					//Remove cache related app resources
+					const a = cachePrefix + dirpath + '/strings.json';
+					console.log("The timestamp is not the same, remove strings!==================", a);
+					window.localStorage.removeItem(a);
+					console.log(window.localStorage);
+					return false;
+				}
+			} else {
+				console.log("There is no timestampkey!!! ");
+				return false;
+			}
+		} else {
+			// Use cachedManifest as usual
+			return true;
+		}
+	}
+
+	return false;
+};
+
 EnyoLoader.prototype._loadManifest = function (_root, subpath, sync) {
 	if (!this.manifest) {
 		this.manifest = {};
@@ -286,17 +347,18 @@ EnyoLoader.prototype._loadManifest = function (_root, subpath, sync) {
 
 	const dirpath = this._pathjoin(_root, subpath);
 	const filepath = this._pathjoin(dirpath, 'ilibmanifest.json');
-
-	if (this.manifest[dirpath]) {
+	console.log("EnyoLoader.prototype._loadManifest", filepath);
+	console.log("EnyoLoader.prototype._loadManifest", dirpath);
+	/* if (!this.webos && this.manifest[dirpath]) {
 		return;
-	}
+	}*/
 
 	let cachedManifest;
 	if (typeof window !== 'undefined' && window.localStorage) {
 		cachedManifest = window.localStorage.getItem(cachePrefix + filepath);
 	}
 
-	if (cachedManifest) {
+	if (this._validateManifest(cachedManifest, filepath, dirpath, sync)) {
 		this.manifest[dirpath] = JSON.parse(cachedManifest).files;
 
 		return sync ? this.manifest[dirpath] : Promise.resolve(this.manifest[dirpath]);
@@ -314,6 +376,7 @@ EnyoLoader.prototype._loadManifest = function (_root, subpath, sync) {
 };
 
 EnyoLoader.prototype.loadManifests = function (_root) {
+	console.log("EnyoLoader.prototype.loadManifests");
 	this._validateCache();
 	return Promise.all([
 		// standard ilib locale data
@@ -327,14 +390,17 @@ EnyoLoader.prototype.loadManifests = function (_root) {
 };
 
 EnyoLoader.prototype.loadManifestsSync = function (_root) {
+	console.log("EnyoLoader.prototype.loadManifestsSync", _root);
 	// load standard manifests
 	if (!this.manifest) {
+		console.log("!this.manifest");
 		this._validateCache();
 		this._loadManifest(this.base, 'locale', true); // standard ilib locale data
 		this._loadManifest('', iLibResources, true);     // the app's resources dir
 	}
 
 	if (!this.manifest[_root]) {
+		console.log("!this.manifest[_root]");
 		// maybe it's a custom root? If so, try to load
 		// the manifest file first in case it is there
 		this._loadManifest(_root, '', true);
@@ -342,6 +408,7 @@ EnyoLoader.prototype.loadManifestsSync = function (_root) {
 };
 
 EnyoLoader.prototype.isAvailable = function (_root, path) {
+	console.log("EnyoLoader.prototype.isAvailable");
 	// util.print('enyo loader: isAvailable ' + path + '? ');
 	// star means attempt to load everything because there was no manifest in that dir
 	if (this.manifest[_root] === '*' || this.manifest[_root].indexOf(path) !== -1) {

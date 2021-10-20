@@ -19,6 +19,8 @@
 
 import ilib from 'ilib';
 
+console.log("GLUE called!");
+
 import './dates';
 
 import Loader from './Loader';

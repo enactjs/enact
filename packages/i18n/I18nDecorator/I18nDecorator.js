@@ -102,6 +102,7 @@ const defaultConfig = {
  * @public
  */
 const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	console.log("i18nDecorator called");
 	// eslint-disable-next-line no-shadow
 	function I18nDecorator (props) {
 		const {locale, ...rest} = props;
