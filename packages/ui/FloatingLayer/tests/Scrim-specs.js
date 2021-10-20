@@ -1,28 +1,35 @@
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
 
 import Scrim from '../Scrim';
+
 import css from '../Scrim.module.less';
 
 describe('Scrim Specs', () => {
 	test('should be translucent by default', () => {
-		const wrapper = mount(<Scrim />);
+		render(<Scrim data-testid="scrim" />);
 
 		const expected = css.translucent;
-		const actual = wrapper.find('div').prop('className');
-		expect(actual).toContain(expected);
+		const scrimContainer = screen.getByTestId('scrim');
+
+		expect(scrimContainer).toHaveClass(expected);
 	});
 
 	test('should only render 1 translucent scrim at a time', () => {
-		const wrapper = mount(
-			<div>
+		render(
+			<div data-testid="parent">
 				<Scrim />
 				<Scrim />
 				<Scrim />
 			</div>
 		);
 
-		const expected = 1;
-		const actual = wrapper.find(`.${css.translucent}`).length;
-		expect(actual).toBe(expected);
+		const childrenElements = screen.getByTestId('parent').children;
+
+		const expectedLength = 1;
+		expect(childrenElements).toHaveLength(expectedLength);
+
+		const expectedClassname = css.translucent;
+		expect(childrenElements[0]).toHaveClass(expectedClassname);
 	});
 });
