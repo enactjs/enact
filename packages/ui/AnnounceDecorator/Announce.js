@@ -103,7 +103,7 @@ const Announce = class extends Component {
 	render () {
 		const props = Object.assign({}, this.props);
 		delete props.timeout;
-console.log(props)
+
 		return (
 			<span ref={this.setAlertRef} role="alert" {...props} />
 		);
