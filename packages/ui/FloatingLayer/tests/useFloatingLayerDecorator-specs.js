@@ -1,4 +1,5 @@
-import {mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+
 import {FloatingLayerBase} from '../FloatingLayer';
 import {useFloatingLayerDecorator} from '../FloatingLayerDecorator';
 
@@ -12,26 +13,28 @@ describe('FloatingLayer Specs', () => {
 	}
 
 	test('should not render if FloatingLayer is not open', () => {
-		const subject = mount(
-			<Root>
+		render(
+			<Root data-testid="rootElement">
 				<FloatingLayerBase><p>Hi</p></FloatingLayerBase>
 			</Root>
 		);
 
-		const expected = null;
-		const actual = subject.find('FloatingLayer').instance().node;
-		expect(actual).toBe(expected);
+		const expected = 0;
+		const floatingLayerContainer = screen.getByTestId('rootElement').nextElementSibling.children.length;
+
+		expect(floatingLayerContainer).toBe(expected);
 	});
 
 	test('should render if FloatingLayer is open', () => {
-		const subject = mount(
-			<Root>
+		render(
+			<Root data-testid="rootElement">
 				<FloatingLayerBase open><p>Hi</p></FloatingLayerBase>
 			</Root>
 		);
 
 		const expected = 1;
-		const actual = subject.find('FloatingLayer').instance().node.querySelectorAll('p').length;
-		expect(actual).toBe(expected);
+		const floatingLayerContainer = screen.getByTestId('rootElement').nextElementSibling.children.length;
+
+		expect(floatingLayerContainer).toBe(expected);
 	});
 });
