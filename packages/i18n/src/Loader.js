@@ -283,7 +283,7 @@ EnyoLoader.prototype._handleManifest = function (dirpath, filepath, json) {
 	return this.manifest[dirpath];
 };
 
-EnyoLoader.prototype._validateManifest = function (cachedManifest, filepath, dirpath, sync) {
+EnyoLoader.prototype._validateManifest = function (cachedManifest, filepath, sync) {
 	if (!this.webos) {
 		return cachedManifest;
 	}
@@ -307,7 +307,12 @@ EnyoLoader.prototype._validateManifest = function (cachedManifest, filepath, dir
 					return true;
 				} else if (typeof window !== 'undefined' && window.localStorage) {
 					// Remove cache of app's strings
-					window.localStorage.removeItem(cachePrefix + dirpath + '/strings.json');
+					for (let i = 0; i < window.localStorage.length; i++) {
+						const currentKey = window.localStorage.key(i);
+						if (currentKey.includes('strings.json')) {
+							window.localStorage.removeItem(currentKey);
+						}
+					}
 					return false;
 				}
 			} else {
@@ -339,7 +344,7 @@ EnyoLoader.prototype._loadManifest = function (_root, subpath, sync) {
 		cachedManifest = window.localStorage.getItem(cachePrefix + filepath);
 	}
 
-	if (this._validateManifest(cachedManifest, filepath, dirpath, sync)) {
+	if (this._validateManifest(cachedManifest, filepath, sync)) {
 		this.manifest[dirpath] = JSON.parse(cachedManifest).files;
 
 		return sync ? this.manifest[dirpath] : Promise.resolve(this.manifest[dirpath]);
