@@ -170,7 +170,9 @@ EnyoLoader.prototype._loadFilesCache = function (_root, paths) {
 			if (data.target === target) {
 				return data.value;
 			} else {
-				window.localStorage.removeItem(cachePrefix + _root + '/' + paths[0]);
+				console.log("Should remove from localstorage!!!!! item");
+				window.localStorage.removeItem(a);
+
 			}
 		}
 	}
@@ -320,10 +322,16 @@ EnyoLoader.prototype._validateManifest = function (cachedManifest, filepath, dir
 				if (cachedTimeStamp === newManifest[timeStampKey]) {
 					return true;
 				} else if (typeof window !== 'undefined' && window.localStorage) {
-					//Remove cache related app resources
-					const a = cachePrefix + dirpath + '/strings.json';
-					console.log("The timestamp is not the same, remove strings!==================", a);
-					window.localStorage.removeItem(a);
+					//Remove cache related strings.json
+					console.log("The timestamp is not the same, remove strings!==================");
+					for (let i = 0; i < window.localStorage.length; i++) {
+						const currentKey = window.localStorage.key(i);
+						console.log(i , ", ", currentKey);
+						if (currentKey.includes('strings.json')) {
+							console.log("Removing . . . . . . . . . . . . . . . . . . . . . . currentKey ", currentKey);
+							window.localStorage.removeItem(currentKey);
+						}
+					}
 					console.log(window.localStorage);
 					return false;
 				}

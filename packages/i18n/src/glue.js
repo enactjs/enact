@@ -27,6 +27,7 @@ import Loader from './Loader';
 import {updateLocale} from '../locale';
 
 ilib.setLoaderCallback(new Loader());
+ilib.setPaths('resources2');
 
 if (typeof window === 'object' && typeof window.UILocale !== 'undefined') {
 	// this is a hack until GF-1581 is fixed
