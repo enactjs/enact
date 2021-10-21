@@ -6,7 +6,6 @@ import {render, screen} from '@testing-library/react';
 import useSlots from '../useSlots';
 
 describe('useSlots', () => {
-
 	test('should distribute children with a \'slot\' property', () => {
 		function Component ({a, b, c, children}) {
 			const slots = useSlots({a, b, c, children});

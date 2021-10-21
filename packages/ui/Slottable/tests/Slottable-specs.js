@@ -263,9 +263,7 @@ describe('Slottable Specs', () => {
 
 		const Component = Slottable({slots: ['a']}, ComponentBase);
 
-		render(
-			<Component />
-		);
+		render(<Component />);
 
 		const actual = screen.getByTestId('slottable');
 

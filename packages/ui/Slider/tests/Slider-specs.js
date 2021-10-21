@@ -9,9 +9,7 @@ describe('Slider', () => {
 
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
-		render(
-			<Slider ref={ref} progressBarComponent={ProgressBar} />
-		);
+		render(<Slider progressBarComponent={ProgressBar} ref={ref} />);
 
 		const expected = 'DIV';
 		const actual = ref.mock.calls[0][0].nodeName;
