@@ -109,7 +109,7 @@ describe('Marquee', () => {
 	});
 
 	test('should convert percentage values of marqueeSpacing to absolute values', (done) => {
-		render(<Marquee data-testid="marquee" marqueeSpacing="60%" marqueeOn="render" marqueeOnRenderDelay={10} />);
+		render(<Marquee data-testid="marquee" marqueeOn="render" marqueeOnRenderDelay={10} marqueeSpacing="60%" />);
 
 		setTimeout(() => {
 			const expected = '60';
@@ -121,7 +121,7 @@ describe('Marquee', () => {
 	});
 
 	test('should pass absolute values of marqueeSpacing', (done) => {
-		render(<Marquee data-testid="marquee" marqueeSpacing={80} marqueeOn="render" marqueeOnRenderDelay={10} />);
+		render(<Marquee data-testid="marquee" marqueeOn="render" marqueeOnRenderDelay={10} marqueeSpacing={80} />);
 
 		setTimeout(() => {
 			const expected = '80';
@@ -147,7 +147,7 @@ describe('MarqueeBase', () => {
 	});
 
 	test('should include the animate class when animating is true', () => {
-		render(<MarqueeBase data-testid="marquee" animating />);
+		render(<MarqueeBase animating data-testid="marquee" />);
 		const marquee = screen.getByTestId('marquee').children.item(0);
 
 		const expected = css.animate;
@@ -247,7 +247,7 @@ describe('MarqueeBase', () => {
 	test('should add aria-label with content when promoted and a non-zero distance', () => {
 		const text = 'Text';
 		render(
-			<MarqueeBase distance={100} data-testid="marquee" willAnimate>
+			<MarqueeBase data-testid="marquee" distance={100} willAnimate>
 				{text}
 			</MarqueeBase>
 		);
@@ -274,7 +274,7 @@ describe('MarqueeBase', () => {
 
 	test('should concatenate string children when promoted and a non-zero distance', () => {
 		render(
-			<MarqueeBase distance={100} data-testid="marquee" willAnimate>
+			<MarqueeBase data-testid="marquee" distance={100} willAnimate>
 				This is {'A'} test
 			</MarqueeBase>
 		);
@@ -302,7 +302,7 @@ describe('MarqueeBase', () => {
 
 	test('should not throw exception for null children when promoted and a non-zero distance - ENYO-6362', () => {
 		const renderSubject = () => render(
-			<MarqueeBase willAnimate distance={100}>
+			<MarqueeBase distance={100} willAnimate>
 				{null}
 			</MarqueeBase>
 		);

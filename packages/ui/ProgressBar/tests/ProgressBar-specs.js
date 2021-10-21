@@ -4,7 +4,6 @@ import {render, screen} from '@testing-library/react';
 import ProgressBar from '../ProgressBar';
 
 describe('ProgressBar Specs', () => {
-
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
 		render(<ProgressBar ref={ref} />);
