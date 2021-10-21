@@ -1,12 +1,13 @@
-import {mount, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import '@testing-library/jest-dom';
+
 import {Marquee, MarqueeBase} from '../index.js';
 
 import css from '../Marquee.module.less';
 
 const
 	ltrText = 'This is some fine latin text.',
-	rtlText = 'العربية - العراق',
-	contentSelector = `.${css.text}`;
+	rtlText = 'العربية - العراق';
 
 describe('Marquee', () => {
 	beforeEach(() => {
@@ -22,361 +23,290 @@ describe('Marquee', () => {
 		});
 	});
 
-	test(
-		'should determine the correct directionality of latin text on initial render',
-		() => {
-			const subject = mount(
-				<Marquee>{ltrText}</Marquee>
-			);
+	test('should determine the correct directionality of latin text on initial render', () => {
+		render(<Marquee>{ltrText}</Marquee>);
+		const marquee = screen.getByText('This is some fine latin text.');
 
-			const expected = 'ltr';
-			const actual = subject.find(contentSelector).prop('style');
+		const expected = 'ltr';
 
-			expect(actual).toHaveProperty('direction', expected);
-		}
-	);
+		expect(marquee).toHaveStyle({'direction': expected});
+	});
 
-	test(
-		'should determine the correct directionality of non-latin text on initial render',
-		() => {
-			const subject = mount(
-				<Marquee>{rtlText}</Marquee>
-			);
+	test('should determine the correct directionality of non-latin text on initial render', () => {
+		render(<Marquee>{rtlText}</Marquee>);
+		const marquee = screen.getByText('العربية - العراق');
 
-			const expected = 'rtl';
-			const actual = subject.find(contentSelector).prop('style');
+		const expected = 'rtl';
 
-			expect(actual).toHaveProperty('direction', expected);
-		}
-	);
+		expect(marquee).toHaveStyle({'direction': expected});
+	});
 
-	test(
-		'should force the directionality text if forceDirection is specified',
-		() => {
-			const subject = mount(
-				<Marquee forceDirection="ltr">{rtlText}</Marquee>
-			);
+	test('should force the directionality text if forceDirection is specified', () => {
+		render(<Marquee forceDirection="ltr">{rtlText}</Marquee>);
+		const marquee = screen.getByText('العربية - العراق');
 
-			const expected = 'ltr';
-			const actual = subject.find(contentSelector).prop('style');
+		const expected = 'ltr';
 
-			expect(actual).toHaveProperty('direction', expected);
-		}
-	);
+		expect(marquee).toHaveStyle({'direction': expected});
+	});
 
-	test(
-		'should switch directionality when the text content changes after initial render',
-		() => {
-			const subject = mount(
-				<Marquee>{ltrText}</Marquee>
-			);
+	test('should switch directionality when the text content changes after initial render', () => {
+		const {rerender} = render(<Marquee>{ltrText}</Marquee>);
+		const marquee = screen.getByText('This is some fine latin text.');
 
-			subject.setProps({children: rtlText});
-			subject.update();
+		rerender(<Marquee>{rtlText}</Marquee>);
 
-			const expected = 'rtl';
-			const actual = subject.find(contentSelector).prop('style');
+		const expected = 'rtl';
 
-			expect(actual).toHaveProperty('direction', expected);
-		}
-	);
+		expect(marquee).toHaveStyle({'direction': expected});
+	});
 
-	test(
-		'should not switch directionality when the text content changes after initial render and the forceDirection property was already set',
-		() => {
-			const subject = mount(
-				<Marquee forceDirection="ltr">{ltrText}</Marquee>
-			);
+	test('should not switch directionality when the text content changes after initial render and the forceDirection property was already set', () => {
+		const {rerender} = render(<Marquee forceDirection="ltr">{ltrText}</Marquee>);
+		const marquee = screen.getByText('This is some fine latin text.');
 
-			subject.setProps({children: rtlText});
-			subject.update();
+		rerender(<Marquee forceDirection="ltr">{rtlText}</Marquee>);
 
-			const expected = 'ltr';
-			const actual = subject.find(contentSelector).prop('style');
+		const expected = 'ltr';
 
-			expect(actual).toHaveProperty('direction', expected);
-		}
-	);
+		expect(marquee).toHaveStyle({'direction': expected});
+	});
 
-	test(
-		'should override direction to RTL when forceDirection is set and locale is LTR',
-		() => {
-			const subject = mount(
-				<Marquee forceDirection="rtl" locale="ltr" />
-			);
+	test('should override direction to RTL when forceDirection is set and locale is LTR', () => {
+		render(<Marquee data-testid="marquee" forceDirection="rtl" locale="ltr" />);
+		const marquee = screen.getByTestId('marquee').children.item(0).children.item(0);
 
-			const expected = 'rtl';
-			const actual = subject.find(contentSelector).prop('style');
+		const expected = 'rtl';
 
-			expect(actual).toHaveProperty('direction', expected);
-		}
-	);
+		expect(marquee).toHaveStyle({'direction': expected});
+	});
 
-	test(
-		'should override direction to LTR when forceDirection is set and locale is RTL',
-		() => {
-			const subject = mount(
-				<Marquee forceDirection="ltr" locale="rtl" />
-			);
+	test('should override direction to LTR when forceDirection is set and locale is RTL', () => {
+		render(<Marquee data-testid="marquee" forceDirection="ltr" locale="rtl" />);
+		const marquee = screen.getByTestId('marquee').children.item(0).children.item(0);
 
-			const expected = 'ltr';
-			const actual = subject.find(contentSelector).prop('style');
+		const expected = 'ltr';
 
-			expect(actual).toHaveProperty('direction', expected);
-		}
-	);
+		expect(marquee).toHaveStyle({'direction': expected});
+	});
 
-	test(
-		'should have direction of RTL when forceDirection is RTL and locale is RTL',
-		() => {
-			const subject = mount(
-				<Marquee forceDirection="rtl" locale="rtl" />
-			);
+	test('should have direction of RTL when forceDirection is RTL and locale is RTL', () => {
+		render(<Marquee data-testid="marquee" forceDirection="rtl" locale="rtl" />);
+		const marquee = screen.getByTestId('marquee').children.item(0).children.item(0);
 
-			const expected = 'rtl';
-			const actual = subject.find(contentSelector).prop('style');
+		const expected = 'rtl';
 
-			expect(actual).toHaveProperty('direction', expected);
-		}
-	);
+		expect(marquee).toHaveStyle({'direction': expected});
+	});
 
-	test(
-		'should have direction of LTR when forceDirection is LTR and locale is LTR',
-		() => {
-			const subject = mount(
-				<Marquee forceDirection="ltr" locale="ltr" />
-			);
+	test('should have direction of LTR when forceDirection is LTR and locale is LTR', () => {
+		render(<Marquee data-testid="marquee" forceDirection="ltr" locale="ltr" />);
+		const marquee = screen.getByTestId('marquee').children.item(0).children.item(0);
 
-			const expected = 'ltr';
-			const actual = subject.find(contentSelector).prop('style');
+		const expected = 'ltr';
 
-			expect(actual).toHaveProperty('direction', expected);
-		}
-	);
+		expect(marquee).toHaveStyle({'direction': expected});
+	});
 
-	test(
-		'should convert percentage values of marqueeSpacing to absolute values',
-		(done) => {
-			const subject = mount(
-				<Marquee marqueeSpacing="60%" marqueeOn="render" marqueeOnRenderDelay={10} />
-			);
+	test('should convert percentage values of marqueeSpacing to absolute values', (done) => {
+		render(<Marquee data-testid="marquee" marqueeSpacing="60%" marqueeOn="render" marqueeOnRenderDelay={10} />);
 
-			setTimeout(() => {
-				subject.update();
+		setTimeout(() => {
+			const expected = '60';
+			const marquee = screen.getByTestId('marquee').children.item(0).children.item(0);
 
-				const expected = 60;
-				const actual = subject.find(MarqueeBase).prop('spacing');
+			expect(marquee).toHaveStyle({'--ui-marquee-spacing': expected});
+			done();
+		}, 100);
+	});
 
-				expect(actual).toBe(expected);
-				done();
-			}, 100);
-		}
-	);
+	test('should pass absolute values of marqueeSpacing', (done) => {
+		render(<Marquee data-testid="marquee" marqueeSpacing={80} marqueeOn="render" marqueeOnRenderDelay={10} />);
 
-	test(
-		'should pass absolute values of marqueeSpacing',
-		(done) => {
-			const subject = mount(
-				<Marquee marqueeSpacing={80} marqueeOn="render" marqueeOnRenderDelay={10} />
-			);
+		setTimeout(() => {
+			const expected = '80';
+			const marquee = screen.getByTestId('marquee').children.item(0).children.item(0);
 
-			setTimeout(() => {
-				subject.update();
-
-				const expected = 80;
-				const actual = subject.find(MarqueeBase).prop('spacing');
-
-				expect(actual).toBe(expected);
-				done();
-			}, 100);
-		}
-	);
+			expect(marquee).toHaveStyle({'--ui-marquee-spacing': expected});
+			done();
+		}, 100);
+	});
 });
 
 
 describe('MarqueeBase', () => {
-
 	// Computed Property Tests
 
-	test(
-		'should not include the animate class when animating is false',
-		() => {
-			const subject = shallow(
-				<MarqueeBase />
-			);
+	test('should not include the animate class when animating is false', () => {
+		render(<MarqueeBase data-testid="marquee" />);
+		const marquee = screen.getByTestId('marquee').children.item(0);
 
-			const expected = false;
-			const actual = subject.childAt(0).hasClass(css.animate);
-			expect(actual).toBe(expected);
-		}
-	);
+		const expected = css.animate;
+
+		expect(marquee).not.toHaveClass(expected);
+	});
 
 	test('should include the animate class when animating is true', () => {
-		const subject = shallow(
-			<MarqueeBase animating />
-		);
+		render(<MarqueeBase data-testid="marquee" animating />);
+		const marquee = screen.getByTestId('marquee').children.item(0);
 
-		const expected = true;
-		const actual = subject.childAt(0).hasClass(css.animate);
-		expect(actual).toBe(expected);
+		const expected = css.animate;
+
+		expect(marquee).toHaveClass(expected);
 	});
 
 	test('should not transition when animating is false', () => {
-		const subject = shallow(
-			<MarqueeBase />
-		);
+		render(<MarqueeBase data-testid="marquee" />);
+		const marquee = screen.getByTestId('marquee').children.item(0);
 
-		const actual = subject.childAt(0).prop('style');
-		expect(actual).not.toHaveProperty('transition');
+		expect(marquee).not.toHaveStyle({'transition-duration': 'NaNs'});
 	});
 
 	test('should transition when animating is true', () => {
-		const subject = shallow(
-			<MarqueeBase animating />
-		);
+		render(<MarqueeBase animating data-testid="marquee" />);
+		const marquee = screen.getByTestId('marquee').children.item(0);
 
-		const actual = subject.childAt(0).prop('style');
-		expect(actual).toHaveProperty('transitionDuration');
+		expect(marquee).toHaveStyle({'transition-duration': 'NaNs'});
 	});
 
-	test(
-		'should set RTL direction in LTR context when the text directionality is RTL',
-		() => {
-			const subject = shallow(
-				<MarqueeBase rtl />,
-				{context: {rtl: false}}
-			);
+	test('should set RTL direction in LTR context when the text directionality is RTL', () => {
+		render(
+			<MarqueeBase data-testid="marquee" rtl />,
+			{context: {rtl: false}}
+		);
+		const marquee = screen.getByTestId('marquee').children.item(0);
 
-			const expected = 'rtl';
-			const actual = subject.childAt(0).prop('style').direction;
-			expect(actual).toBe(expected);
-		}
-	);
+		const expected = 'rtl';
 
-	test(
-		'should set LTR direction in RTL when the text directionality is LTR',
-		() => {
-			const subject = shallow(
-				<MarqueeBase />,
-				{context: {rtl: true}}
-			);
+		expect(marquee).toHaveStyle({'direction': expected});
+	});
 
-			const expected = 'ltr';
-			const actual = subject.childAt(0).prop('style').direction;
-			expect(actual).toBe(expected);
-		}
-	);
+	test('should set LTR direction in RTL when the text directionality is LTR', () => {
+		render(
+			<MarqueeBase data-testid="marquee" />,
+			{context: {rtl: true}}
+		);
+		const marquee = screen.getByTestId('marquee').children.item(0);
+
+		const expected = 'ltr';
+
+		expect(marquee).toHaveStyle({'direction': expected});
+	});
 
 	test('should transition from the right with LTR text (a negative translate value)', () => {
-		const subject = shallow(
-			<MarqueeBase animating distance={100} />
-		);
+		render(<MarqueeBase animating data-testid="marquee" distance={100} />);
+		const marquee = screen.getByTestId('marquee').children.item(0);
 
-		const actual = subject.childAt(0).prop('style').transform;
-		expect(actual).toContain('-');
+		const expected = 'translateX(-100px)';
+
+		expect(marquee).toHaveStyle({'transform': expected});
 	});
 
 	test('should transition from the left with RTL text (a positive translate value)', () => {
-		const subject = shallow(
-			<MarqueeBase animating distance={100} rtl />
-		);
+		render(<MarqueeBase animating data-testid="marquee" distance={100} rtl />);
+		const marquee = screen.getByTestId('marquee').children.item(0);
 
-		const actual = subject.childAt(0).prop('style').transform;
-		expect(actual).not.toContain('-');
+		const expected = 'translateX(100px)';
+
+		expect(marquee).toHaveStyle({'transform': expected});
 	});
 
 	test('should duplicate from content when promoted and a non-zero distance', () => {
-		const subject = shallow(
-			<MarqueeBase willAnimate distance={100}>
+		render(
+			<MarqueeBase distance={100} willAnimate>
 				Text
 			</MarqueeBase>
 		);
+		const marquee = screen.getByText('TextText');
 
-		const actual = subject.text();
-		expect(actual).toBe('TextText');
+		expect(marquee).toBeInTheDocument();
 	});
 
 	test('should not duplicate from content when promoted and a zero distance', () => {
-		const subject = shallow(
-			<MarqueeBase willAnimate distance={0}>
+		render(
+			<MarqueeBase distance={0} willAnimate>
 				Text
 			</MarqueeBase>
 		);
+		const marquee = screen.getByText('Text');
 
-		const actual = subject.text();
-		expect(actual).toBe('Text');
+		expect(marquee).toBeInTheDocument();
 	});
 
 	test('should not duplicate from content when not promoted and a non-zero distance', () => {
-		const subject = shallow(
+		render(
 			<MarqueeBase distance={100}>
 				Text
 			</MarqueeBase>
 		);
+		const marquee = screen.getByText('Text');
 
-		const actual = subject.text();
-		expect(actual).toBe('Text');
+		expect(marquee).toBeInTheDocument();
 	});
 
 	test('should add aria-label with content when promoted and a non-zero distance', () => {
 		const text = 'Text';
-		const subject = mount(
-			<MarqueeBase willAnimate distance={100}>
+		render(
+			<MarqueeBase distance={100} data-testid="marquee" willAnimate>
 				{text}
 			</MarqueeBase>
 		);
+		const marquee = screen.getByTestId('marquee');
 
 		const expected = text;
-		const actual = subject.childAt(0).prop('aria-label');
-		expect(actual).toBe(expected);
+
+		expect(marquee).toHaveAttribute('aria-label', expected);
 	});
 
 	test('should not override aria-label with content when promoted and a non-zero distance', () => {
 		const aria = 'Custom';
-		const subject = mount(
-			<MarqueeBase willAnimate distance={100} aria-label={aria}>
+		render(
+			<MarqueeBase aria-label={aria} data-testid="marquee" distance={100} willAnimate >
 				Text
 			</MarqueeBase>
 		);
+		const marquee = screen.getByTestId('marquee');
 
 		const expected = aria;
-		const actual = subject.childAt(0).prop('aria-label');
-		expect(actual).toBe(expected);
+
+		expect(marquee).toHaveAttribute('aria-label', expected);
 	});
 
 	test('should concatenate string children when promoted and a non-zero distance', () => {
-		const subject = mount(
-			<MarqueeBase willAnimate distance={100}>
+		render(
+			<MarqueeBase distance={100} data-testid="marquee" willAnimate>
 				This is {'A'} test
 			</MarqueeBase>
 		);
+		const marquee = screen.getByTestId('marquee');
 
 		const expected = 'This is  A  test';
-		const actual = subject.childAt(0).prop('aria-label');
-		expect(actual).toBe(expected);
+
+		expect(marquee).toHaveAttribute('aria-label', expected);
 	});
 
 	test('should not concatenate non-string children when promoted and a non-zero distance', () => {
-		const subject = mount(
-			<MarqueeBase willAnimate distance={100}>
+		render(
+			<MarqueeBase data-testid="marquee" distance={100} willAnimate>
 				Test
 				<div>Hello</div>
 				World
 			</MarqueeBase>
 		);
+		const marquee = screen.getByTestId('marquee');
 
 		const expected = 'Test World';
-		const actual = subject.childAt(0).prop('aria-label');
-		expect(actual).toBe(expected);
+
+		expect(marquee).toHaveAttribute('aria-label', expected);
 	});
 
 	test('should not throw exception for null children when promoted and a non-zero distance - ENYO-6362', () => {
-		const mountSubject = () => mount(
+		const renderSubject = () => render(
 			<MarqueeBase willAnimate distance={100}>
 				{null}
 			</MarqueeBase>
 		);
 
-		expect(mountSubject).not.toThrow();
+		expect(renderSubject).not.toThrow();
 	});
 });
