@@ -365,6 +365,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 				this.invalidateMetrics();
 				this.cancelAnimation();
+				if (forceRestartMarquee && marqueeOn === 'focus') {
+					this.resetAnimation();
+				}
 			} else if (
 				prevProps.marqueeOn !== marqueeOn ||
 				prevProps.marqueeDisabled !== marqueeDisabled ||
