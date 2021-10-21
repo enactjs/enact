@@ -124,8 +124,8 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			document.removeEventListener('focusin', this.handleFocusInBeforeMount, {capture: true});
 
-			if (this.isFocusIn) {
-				this.isFocusIn = false;
+			if (this.hasFocusedIn) {
+				this.hasFocusedIn = false;
 				this.handleFocusIn();
 			}
 		}
@@ -151,7 +151,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		handleFocusInBeforeMount = () => {
-			this.isFocusIn = true;
+			this.hasFocusedIn = true;
 		};
 
 		handleFocusIn = () => {
