@@ -31,6 +31,5 @@ describe('AnnounceDecorator', () => {
 		const actual = typeof announceProps[prop];
 
 		expect(actual).toBe(expected);
-
 	});
 });
