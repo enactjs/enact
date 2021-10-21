@@ -8,26 +8,26 @@ describe('FloatingLayer Specs', () => {
 
 	test('should not render if FloatingLayer is not open', () => {
 		render(
-			<Root data-testid="rootElem">
+			<Root data-testid="rootElement">
 				<FloatingLayerBase><p>Hi</p></FloatingLayerBase>
 			</Root>
 		);
 
 		const expected = 0;
-		const floatingLayerContainer = screen.getByTestId('rootElem').nextElementSibling.children.length;
+		const floatingLayerContainer = screen.getByTestId('rootElement').nextElementSibling.children.length;
 
 		expect(floatingLayerContainer).toBe(expected);
 	});
 
 	test('should render if FloatingLayer is open', () => {
 		render(
-			<Root data-testid="rootElem">
+			<Root data-testid="rootElement">
 				<FloatingLayerBase open><p>Hi</p></FloatingLayerBase>
 			</Root>
 		);
 
 		const expected = 1;
-		const floatingLayerContainer = screen.getByTestId('rootElem').nextElementSibling.children.length;
+		const floatingLayerContainer = screen.getByTestId('rootElement').nextElementSibling.children.length;
 
 		expect(floatingLayerContainer).toBe(expected);
 	});

@@ -17,14 +17,14 @@ describe('Scrim Specs', () => {
 
 	test('should only render 1 translucent scrim at a time', () => {
 		render(
-			<div data-testid="parent">
+			<div data-testid="rootElement">
 				<Scrim />
 				<Scrim />
 				<Scrim />
 			</div>
 		);
 
-		const childrenElements = screen.getByTestId('parent').children;
+		const childrenElements = screen.getByTestId('rootElement').children;
 
 		const expectedLength = 1;
 		expect(childrenElements).toHaveLength(expectedLength);
