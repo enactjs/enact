@@ -128,7 +128,6 @@ describe('Changeable', () => {
 			// eslint-disable-next-line no-undefined
 			rerender(<Component defaultValue={1} value={undefined} />);
 
-			// eslint-disable-next-line no-undefined
 			const expected = '';
 			const actual = screen.getByTestId('changeable');
 
