@@ -78,16 +78,19 @@ describe('Cancelable', () => {
 
 	test('should stop propagation when handled', () => {
 		const handleCancel = jest.fn(stop);
+		const handleCancelParent = jest.fn(stop);
 		const keyEvent = makeKeyEvent(27);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
 			Component
 		);
 
-		render(<Comp />);
+		render(<div onKeyUp={handleCancelParent}><Comp /></div>);
 		const component = screen.getByTestId('cancelable');
 
 		fireEvent.keyUp(component, keyEvent);
+		console.log( handleCancel.mock.calls);
+		console.log( handleCancelParent.mock.calls);
 
 		const expected = 1;
 		const actual = keyEvent.nativeEvent.stopImmediatePropagation.mock.calls.length;
@@ -97,17 +100,19 @@ describe('Cancelable', () => {
 
 	test('should not stop propagation for not handled', () => {
 		const handleCancel = jest.fn(returnsTrue);
+		const handleCancelParent = jest.fn(returnsTrue);
 		const keyEvent = makeKeyEvent(42);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
 			Component
 		);
 
-		render(<Comp />);
+		render(<div onKeyUp={handleCancelParent}><Comp /></div>);
 		const component = screen.getByTestId('cancelable');
 
 		fireEvent.keyUp(component, keyEvent);
-
+		console.log( handleCancel.mock.calls);
+		console.log( handleCancelParent.mock.calls);
 		const expected = 0;
 		const actual = keyEvent.nativeEvent.stopImmediatePropagation.mock.calls.length;
 
@@ -175,7 +180,6 @@ describe('Cancelable', () => {
 
 		expect(actual).toBe(expected);
 	});
-
 
 	test('should not bubble up the component tree when config handler calls stopPropagation', () => {
 		const handleCancel = jest.fn(stop);
