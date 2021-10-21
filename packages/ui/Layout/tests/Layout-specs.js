@@ -1,5 +1,8 @@
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+
 import Layout, {Cell} from '../Layout';
+
 import css from '../Layout.module.less';
 
 describe('Layout Specs', () => {
@@ -11,30 +14,23 @@ describe('Layout Specs', () => {
 	];
 
 	layoutPropAlign.forEach(([value, resolved]) => {
-		test(
-			`should apply '${resolved}' style value given an align prop value of "${value}"`,
-			() => {
-				const wrapped = mount(
-					<Layout align={value}><Cell>Body</Cell></Layout>
-				);
+		test(`should apply '${resolved}' style value given an align prop value of "${value}"`, () => {
+			render(<Layout align={value}><Cell>Body</Cell></Layout>);
+			const layout = screen.getByText('Body').parentElement;
 
-				const expected = resolved;
-				const actual = wrapped.find(`.${css.layout}`).prop('style').alignItems;
+			const expected = resolved;
 
-				expect(actual).toContain(expected);
-			}
-		);
+			expect(layout).toHaveStyle({'align-items': expected});
+		});
 	});
 
 	test('should apply a class for inline', () => {
-		const wrapped = mount(
-			<Layout inline><Cell>Body</Cell></Layout>
-		);
+		render(<Layout inline><Cell>Body</Cell></Layout>);
+		const layout = screen.getByText('Body').parentElement;
 
-		const expected = true;
-		const actual = wrapped.find(`.${css.layout}`).hasClass(css.inline);
+		const expected = css.inline;
 
-		expect(actual).toBe(expected);
+		expect(layout).toHaveClass(expected);
 	});
 
 	// Tests for prop and className combinations
@@ -48,14 +44,12 @@ describe('Layout Specs', () => {
 				const propValue = {
 					[prop]: value
 				};
-				const wrapped = mount(
-					<Layout {...propValue}><Cell>Body</Cell></Layout>
-				);
+				render(<Layout {...propValue}><Cell>Body</Cell></Layout>);
+				const layout = screen.getByText('Body').parentElement;
 
-				const expected = true;
-				const actual = wrapped.find(`.${css.layout}`).hasClass(css[value]);
+				const expected = css[value];
 
-				expect(actual).toBe(expected);
+				expect(layout).toHaveClass(expected);
 			});
 		});
 	});
@@ -70,14 +64,12 @@ describe('Layout Specs', () => {
 			const props = {
 				[prop]: true
 			};
-			const wrapped = mount(
-				<Cell {...props}>Body</Cell>
-			);
+			render(<Cell {...props}>Body</Cell>);
+			const layout = screen.getByText('Body');
 
-			const expected = true;
-			const actual = wrapped.find(`.${css.cell}`).hasClass(css[prop]);
+			const expected = css[prop];
 
-			expect(actual).toBe(expected);
+			expect(layout).toHaveClass(expected);
 		});
 	});
 
@@ -87,28 +79,23 @@ describe('Layout Specs', () => {
 
 	cellPropSize.forEach(([prop, vals]) => {
 		vals.forEach((value) => {
-			test(
-				`should apply flexBasis styles the size prop value ${value}`,
-				() => {
-					const propValue = {
-						[prop]: value
-					};
-					const wrapped = mount(
-						<Layout><Cell {...propValue}>Body</Cell></Layout>
-					);
+			test(`should apply flexBasis styles the size prop value ${value}`, () => {
+				const propValue = {
+					[prop]: value
+				};
+				render(<Layout><Cell {...propValue}>Body</Cell></Layout>);
+				const layoutCell = screen.getByText('Body');
 
-					const expected = value;
-					const actual = wrapped.find(`.${css.cell}`).prop('style').flexBasis;
+				const expected = value;
 
-					expect(actual).toContain(expected);
-				}
-			);
+				expect(layoutCell).toHaveStyle({'flex-basis': expected});
+			});
 		});
 	});
 
 	test('should return a DOM node reference for `componentRef` on `Layout`', () => {
 		const ref = jest.fn();
-		mount(<Layout ref={ref} />);
+		render(<Layout ref={ref} />);
 
 		const expected = 'DIV';
 		const actual = ref.mock.calls[0][0].nodeName;
@@ -118,7 +105,7 @@ describe('Layout Specs', () => {
 
 	test('should return a DOM node reference for `componentRef` on `Cell`', () => {
 		const ref = jest.fn();
-		mount(<Cell ref={ref} />);
+		render(<Cell ref={ref} />);
 
 		const expected = 'DIV';
 		const actual = ref.mock.calls[0][0].nodeName;
