@@ -89,13 +89,8 @@ describe('Cancelable', () => {
 		const component = screen.getByTestId('cancelable');
 
 		fireEvent.keyUp(component, keyEvent);
-		console.log( handleCancel.mock.calls);
-		console.log( handleCancelParent.mock.calls);
 
-		const expected = 1;
-		const actual = keyEvent.nativeEvent.stopImmediatePropagation.mock.calls.length;
-
-		expect(actual).toBe(expected);
+		expect(handleCancelParent).not.toHaveBeenCalled();
 	});
 
 	test('should not stop propagation for not handled', () => {
@@ -111,12 +106,10 @@ describe('Cancelable', () => {
 		const component = screen.getByTestId('cancelable');
 
 		fireEvent.keyUp(component, keyEvent);
-		console.log( handleCancel.mock.calls);
-		console.log( handleCancelParent.mock.calls);
-		const expected = 0;
-		const actual = keyEvent.nativeEvent.stopImmediatePropagation.mock.calls.length;
 
-		expect(actual).toBe(expected);
+		const expected = 1;
+
+		expect(handleCancelParent).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should forward to onKeyUp handler for any key', () => {
