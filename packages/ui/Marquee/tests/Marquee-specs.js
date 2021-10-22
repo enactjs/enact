@@ -1,5 +1,5 @@
-import {render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
 
 import {Marquee, MarqueeBase} from '../index.js';
 
@@ -136,7 +136,6 @@ describe('Marquee', () => {
 
 describe('MarqueeBase', () => {
 	// Computed Property Tests
-
 	test('should not include the animate class when animating is false', () => {
 		render(<MarqueeBase data-testid="marquee" />);
 		const marquee = screen.getByTestId('marquee').children.item(0);
