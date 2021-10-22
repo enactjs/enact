@@ -48,8 +48,7 @@ describe('Spinner Specs', () => {
 		const spinner = screen.getByTestId('spinner');
 
 		const expected = true;
-		// FloatingLayer is wrapped by Cancelable so it's undiscoverable by name with shallow
-		// mounting
+		// FloatingLayer is wrapped by Cancelable so it's undiscoverable by name
 		const actual = spinner.find('Cancelable').exists();
 
 		expect(actual).toBe(expected);
