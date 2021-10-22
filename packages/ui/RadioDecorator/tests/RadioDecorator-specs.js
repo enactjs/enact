@@ -6,7 +6,7 @@ import {RadioControllerDecorator, RadioDecorator} from '../RadioDecorator';
 
 describe('RadioDecorator', () => {
 	const Item = ({onClick, active}) => (
-		<span onClick={onClick} data-testid="span-element">
+		<span data-testid="span-element" onClick={onClick}>
 			{active ? 'Active' : 'Inactive'}
 		</span>
 	);
