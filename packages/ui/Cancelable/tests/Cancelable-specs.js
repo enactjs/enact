@@ -35,9 +35,8 @@ describe('Cancelable', () => {
 		fireEvent.keyUp(component, makeKeyEvent(27));
 
 		const expected = 1;
-		const actual = handleCancel.mock.calls.length;
 
-		expect(actual).toBe(expected);
+		expect(handleCancel).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should only call onCancel for escape key by default', () => {
@@ -53,9 +52,8 @@ describe('Cancelable', () => {
 		fireEvent.keyUp(component, makeKeyEvent(27));
 
 		const expected = 1;
-		const actual = handleCancel.mock.calls.length;
 
-		expect(actual).toBe(expected);
+		expect(handleCancel).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should not call onCancel for non-escape key', () => {
@@ -70,10 +68,7 @@ describe('Cancelable', () => {
 
 		fireEvent.keyUp(component, makeKeyEvent(42));
 
-		const expected = 0;
-		const actual = handleCancel.mock.calls.length;
-
-		expect(actual).toBe(expected);
+		expect(handleCancel).not.toHaveBeenCalled();
 	});
 
 	test('should stop propagation when handled', () => {
@@ -126,9 +121,8 @@ describe('Cancelable', () => {
 		fireEvent.keyUp(component, keyEvent);
 
 		const expected = 1;
-		const actual = handleKeyUp.mock.calls.length;
 
-		expect(actual).toBe(expected);
+		expect(handleKeyUp).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should call onCancel when additional cancel handlers pass', () => {
@@ -147,9 +141,8 @@ describe('Cancelable', () => {
 		removeCancelHandler(customCancelHandler);
 
 		const expected = 1;
-		const actual = handleCancel.mock.calls.length;
 
-		expect(actual).toBe(expected);
+		expect(handleCancel).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should bubble up the component tree when config handler does not call stopPropagation', () => {
@@ -169,9 +162,8 @@ describe('Cancelable', () => {
 		fireEvent.keyUp(secondComponent, makeKeyEvent(27));
 
 		const expected = 2;
-		const actual = handleCancel.mock.calls.length;
 
-		expect(actual).toBe(expected);
+		expect(handleCancel).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should not bubble up the component tree when config handler calls stopPropagation', () => {
@@ -191,9 +183,8 @@ describe('Cancelable', () => {
 		fireEvent.keyUp(secondComponent, makeKeyEvent(27));
 
 		const expected = 1;
-		const actual = handleCancel.mock.calls.length;
 
-		expect(actual).toBe(expected);
+		expect(handleCancel).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should bubble up the component tree when prop handler does not call stopPropagation', () => {
@@ -213,9 +204,8 @@ describe('Cancelable', () => {
 		fireEvent.keyUp(secondComponent, makeKeyEvent(27));
 
 		const expected = 1;
-		const actual = handleCancel.mock.calls.length;
 
-		expect(actual).toBe(expected);
+		expect(handleCancel).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should not bubble up the component tree when prop handler calls stopPropagation', () => {
@@ -234,10 +224,7 @@ describe('Cancelable', () => {
 
 		fireEvent.keyUp(secondComponent, makeKeyEvent(27));
 
-		const expected = 0;
-		const actual = handleCancel.mock.calls.length;
-
-		expect(actual).toBe(expected);
+		expect(handleCancel).not.toHaveBeenCalled();
 	});
 
 	describe('modal instances', () => {
@@ -268,9 +255,8 @@ describe('Cancelable', () => {
 			document.dispatchEvent(makeKeyboardEvent(27));
 
 			const expected = 1;
-			const actual = handleCancel.mock.calls.length;
 
-			expect(actual).toBe(expected);
+			expect(handleCancel).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should invoke modal handlers in LIFO order', () => {
@@ -341,10 +327,7 @@ describe('Cancelable', () => {
 
 			document.dispatchEvent(makeKeyboardEvent(27));
 
-			const expected = 0;
-			const actual = handleCancel.mock.calls.length;
-
-			expect(actual).toBe(expected);
+			expect(handleCancel).not.toHaveBeenCalled();
 		});
 	});
 });
