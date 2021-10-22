@@ -22,7 +22,14 @@ const CustomIcon = (props) => <Icon {...props}>star</Icon>;
 describe('ToggleItem Specs', () => {
 	test('should call onToggle, onClick, or both when clicked', () => {
 		const handleToggle = jest.fn();
-		render(<ToggleItem component={SlottedItem} iconComponent={CustomIcon} onToggle={handleToggle}>ToggleItem</ToggleItem>);
+		render(
+			<ToggleItem
+				component={SlottedItem}
+				iconComponent={CustomIcon}
+				onToggle={handleToggle}
+			>
+				ToggleItem
+			</ToggleItem>);
 		const toggleItem = screen.getByText('star');
 
 		tap(toggleItem);
@@ -35,7 +42,11 @@ describe('ToggleItem Specs', () => {
 	test('should call onClick when clicked', () => {
 		const handleClick = jest.fn();
 		render(
-			<ToggleItemBase component={SlottedItem} iconComponent={CustomIcon} onClick={handleClick}>
+			<ToggleItemBase
+				component={SlottedItem}
+				iconComponent={CustomIcon}
+				onClick={handleClick}
+			>
 				Toggle Item
 			</ToggleItemBase>
 		);
@@ -51,7 +62,11 @@ describe('ToggleItem Specs', () => {
 	test('should call onTap when tapped', () => {
 		const handleTap = jest.fn();
 		render(
-			<ToggleItem component={SlottedItem} iconComponent={CustomIcon} onTap={handleTap}>
+			<ToggleItem
+				component={SlottedItem}
+				iconComponent={CustomIcon}
+				onTap={handleTap}
+			>
 				Toggle Item
 			</ToggleItem>
 		);
@@ -67,7 +82,12 @@ describe('ToggleItem Specs', () => {
 	test('should call both onToggle and onTap when tapped', () => {
 		const handleBoth = jest.fn();
 		render(
-			<ToggleItem component={SlottedItem} iconComponent={CustomIcon} onTap={handleBoth} onToggle={handleBoth}>
+			<ToggleItem
+				component={SlottedItem}
+				iconComponent={CustomIcon}
+				onTap={handleBoth}
+				onToggle={handleBoth}
+			>
 				Toggle Item
 			</ToggleItem>
 		);
@@ -84,7 +104,12 @@ describe('ToggleItem Specs', () => {
 		const handleToggle = jest.fn();
 		const value = 100;
 		render(
-			<ToggleItem component={SlottedItem} iconComponent={CustomIcon} onToggle={handleToggle} value={value}>
+			<ToggleItem
+				component={SlottedItem}
+				iconComponent={CustomIcon}
+				onToggle={handleToggle}
+				value={value}
+			>
 				Toggle Item
 			</ToggleItem>
 		);
@@ -101,7 +126,11 @@ describe('ToggleItem Specs', () => {
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
 		render(
-			<ToggleItem component={SlottedItem} iconComponent={CustomIcon} ref={ref}>
+			<ToggleItem
+				component={SlottedItem}
+				iconComponent={CustomIcon}
+				ref={ref}
+			>
 				Toggle Item
 			</ToggleItem>
 		);
