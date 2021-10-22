@@ -68,16 +68,16 @@ describe('RadioDecorator', () => {
 	// NOTE: Component doesn't update on click with react testing library
 	test.skip('should be activated when the activated event fires', () => {
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
-		const subject = mount(
+		const subject = render(
 			<Controller>
 				<Component />
 			</Controller>
 		);
 
-		subject.find('span').simulate('click');
+		const span = screen.getByTestId('span-element');
+		fireEvent.click(span);
 
-		const instance = subject.find('RadioDecorator');
-		expectToBeActive(subject, instance);
+		expect(span).toHaveTextContent('Active');
 	});
 
 	// NOTE: Component doesn't update on click with react testing library
@@ -89,9 +89,10 @@ describe('RadioDecorator', () => {
 			</Controller>
 		);
 
-		subject.find('span').simulate('click');
+		const span = screen.getByTestId('span-element');
+		userEvent.click(span);
 
-		expectToBeActive(subject, null);
+		expect(span).toHaveTextContent('Inactive');
 	});
 
 	// NOTE: Component doesn't update on click with react testing library
@@ -141,8 +142,7 @@ describe('RadioDecorator', () => {
 		expectToBeActive(subject, parentInstance);
 	});
 
-	// NOTE: Can't change props with react testing library
-	test.skip('should not call deactivate callback on inactive items', () => {
+	test('should not call deactivate callback on inactive items', () => {
 		const handleDeactivate = jest.fn();
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
 
@@ -156,14 +156,14 @@ describe('RadioDecorator', () => {
 		);
 
 		// create a controller with no active item
-		const subject = mount(
+		const {rerender} = render(
 			<Wrapper />
 		);
 
 		// activate the second item via prop change
-		subject.setProps({
-			active: true
-		});
+		rerender(
+			<Wrapper active />
+		);
 
 		// verify that the deactivate handler wasn't called
 		const expected = 0;
