@@ -1,14 +1,12 @@
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+
 import ProgressBar from '../ProgressBar';
-import css from '../ProgressBar.module.less';
 
 describe('ProgressBar Specs', () => {
-
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
-		mount(
-			<ProgressBar ref={ref} />
-		);
+		render(<ProgressBar ref={ref} />);
 
 		const expected = 'DIV';
 		const actual = ref.mock.calls[0][0].nodeName;
@@ -18,103 +16,61 @@ describe('ProgressBar Specs', () => {
 
 	describe('horizontal', () => {
 		test('should have width of 0.5', () => {
-			const progressBar = mount(
-				<ProgressBar
-					progress={0.5}
-				/>
-			);
+			render(<ProgressBar progress={0.5} />);
+			const progressBar = screen.getByRole('progressbar');
 
-			const style = progressBar.find(`.${css.progressBar}`).prop('style');
+			const expected = '0.5';
 
-			const expected = 0.5;
-			const actual = style['--ui-progressbar-proportion-end'];
-
-			expect(actual).toBe(expected);
+			expect(progressBar).toHaveStyle({'--ui-progressbar-proportion-end': expected});
 		});
 
 		test('should have background width of 0.75', () => {
-			const progressBar = mount(
-				<ProgressBar
-					backgroundProgress={0.75}
-				/>
-			);
+			render(<ProgressBar backgroundProgress={0.75} />);
+			const progressBar = screen.getByRole('progressbar');
 
-			const style = progressBar.find(`.${css.progressBar}`).prop('style');
+			const expected = '0.75';
 
-			const expected = 0.75;
-			const actual = style['--ui-progressbar-proportion-end-background'];
-
-			expect(actual).toBe(expected);
+			expect(progressBar).toHaveStyle({'--ui-progressbar-proportion-end-background': expected});
 		});
 	});
 
 	describe('vertical', () => {
 		test('should have height of 0.5', () => {
-			const progressBar = mount(
-				<ProgressBar
-					progress={0.5}
-					orientation="vertical"
-				/>
-			);
+			render(<ProgressBar progress={0.5} orientation="vertical" />);
+			const progressBar = screen.getByRole('progressbar');
 
-			const style = progressBar.find(`.${css.progressBar}`).prop('style');
+			const expected = '0.5';
 
-			const expected = 0.5;
-			const actual = style['--ui-progressbar-proportion-end'];
-
-			expect(actual).toBe(expected);
+			expect(progressBar).toHaveStyle({'--ui-progressbar-proportion-end': expected});
 		});
 
 		test('should have background height of 0.75', () => {
-			const progressBar = mount(
-				<ProgressBar
-					progress={0.5}
-					backgroundProgress={0.75}
-					orientation="vertical"
-				/>
-			);
+			render(<ProgressBar progress={0.5} backgroundProgress={0.75} orientation="vertical" />);
+			const progressBar = screen.getByRole('progressbar');
 
-			const style = progressBar.find(`.${css.progressBar}`).prop('style');
+			const expected = '0.75';
 
-			const expected = 0.75;
-			const actual = style['--ui-progressbar-proportion-end-background'];
-
-			expect(actual).toBe(expected);
+			expect(progressBar).toHaveStyle({'--ui-progressbar-proportion-end-background': expected});
 		});
 	});
 
 	describe('radial', () => {
 		test('should have a radius of 0.5', () => {
-			const progressBar = mount(
-				<ProgressBar
-					progress={0.5}
-					orientation="radial"
-				/>
-			);
+			render(<ProgressBar progress={0.5} orientation="radial" />);
+			const progressBar = screen.getByRole('progressbar');
 
-			const style = progressBar.find(`.${css.progressBar}`).prop('style');
+			const expected = '0.5';
 
-			const expected = 0.5;
-			const actual = style['--ui-progressbar-proportion-end'];
-
-			expect(actual).toBe(expected);
+			expect(progressBar).toHaveStyle({'--ui-progressbar-proportion-end': expected});
 		});
 
 		test('should have background radius of 0.75', () => {
-			const progressBar = mount(
-				<ProgressBar
-					progress={0.5}
-					backgroundProgress={0.75}
-					orientation="radial"
-				/>
-			);
+			render(<ProgressBar progress={0.5} backgroundProgress={0.75} orientation="radial" />);
+			const progressBar = screen.getByRole('progressbar');
 
-			const style = progressBar.find(`.${css.progressBar}`).prop('style');
+			const expected = '0.75';
 
-			const expected = 0.75;
-			const actual = style['--ui-progressbar-proportion-end-background'];
-
-			expect(actual).toBe(expected);
+			expect(progressBar).toHaveStyle({'--ui-progressbar-proportion-end-background': expected});
 		});
 	});
 });
