@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
-
-### Fixed
-
-`ui/MarqueeDecorator` to restart animation when text changed while focus retained
-
 ## [4.0.8] - 2021-10-21
 
 ### Fixed
