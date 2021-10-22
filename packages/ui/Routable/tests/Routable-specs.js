@@ -1,4 +1,6 @@
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {useState, useCallback} from 'react';
 
 import Link from '../Link';
@@ -6,21 +8,20 @@ import Routable from '../Routable';
 import Route from '../Route';
 
 describe('Routable', () => {
-
-	test('should render nothing for a partially valid path', function () {
-		function App () {
+	test('should render nothing for a partially valid path', () => {
+		const App = () => {
 			return (
 				<div>
 					<Link path="./page2">Page 2</Link>
 				</div>
 			);
-		}
+		};
 
-		function Page2 () {
+		const Page2 = () => {
 			return (
-				<div id="page2" />
+				<div data-testid="page2" />
 			);
-		}
+		};
 
 		const Views = Routable({navigate: 'onNavigate'}, ({children}) => <div>{children}</div>);
 
@@ -37,20 +38,19 @@ describe('Routable', () => {
 			);
 		}
 
-		const subject = mount(<Sample />);
-
-		const expected = 1;
+		render(<Sample />);
+		const linkToSecondPage = screen.getByText('Page 2');
 
 		// click once to navigate to new path
-		subject.find('a').simulate('click');
+		userEvent.click(linkToSecondPage);
 
-		let actual = subject.find('#page2').length;
-		expect(actual).toBe(expected);
+		let secondPage = screen.getByTestId('page2');
+		expect(secondPage).toBeInTheDocument();
 
 		// clicking again should use the same base path "/app" for the same result
-		subject.find('a').simulate('click');
+		userEvent.click(linkToSecondPage);
 
-		actual = subject.find('#page2').length;
-		expect(actual).toBe(expected);
+		secondPage = screen.getByTestId('page2');
+		expect(secondPage).toBeInTheDocument();
 	});
 });
