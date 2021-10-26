@@ -1,13 +1,17 @@
-import {mount} from 'enzyme';
-import Spotlight from '../../src/spotlight';
-import {updatePointerPosition} from '../../src/pointer';
-
-import SpotlightContainerDecorator from '../SpotlightContainerDecorator';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import closest from './Element.prototype.closest';
 
-describe('SpotlightContainerDecorator', () => {
+import SpotlightContainerDecorator from '../SpotlightContainerDecorator';
 
+import {updatePointerPosition} from '../../src/pointer';
+import Spotlight from '../../src/spotlight';
+
+const testId = 'test-spotlightContainerDecorator';
+
+describe('SpotlightContainerDecorator', () => {
 	const hoverPosition = {clientX: 0, clientY: 1};
 	const unhoverPosition = {clientX: 0, clientY: 0};
 
@@ -24,12 +28,10 @@ describe('SpotlightContainerDecorator', () => {
 
 	test('should set itself as the active container on mouse enter', () => {
 		const Component = SpotlightContainerDecorator(Div);
+		render(<Component data-testid={testId} spotlightId="test-container" />);
+		const component = screen.getByTestId(testId);
 
-		const subject = mount(
-			<Component spotlightId="test-container" />
-		);
-
-		subject.find(Div).prop('onMouseEnter')(hoverPosition);
+		userEvent.hover(component, hoverPosition);
 
 		const expected = 'test-container';
 		const actual = Spotlight.getActiveContainer();
@@ -37,173 +39,143 @@ describe('SpotlightContainerDecorator', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test(
-		'should set active container to parent container on mouse leave',
-		() => {
-			const Component = SpotlightContainerDecorator(Div);
+	test('should set active container to parent container on mouse leave', () => {
+		const Component = SpotlightContainerDecorator(Div);
+		const node = document.createElement('div');
+		render(
+			<Component spotlightId="outer-container">
+				<Component data-testid={testId} spotlightId="inner-container" />
+			</Component>,
+			{attachTo: node}
+		);
+		const component = screen.getByTestId(testId);
 
-			const node = document.createElement('div');
-			const subject = mount(
-				<Component spotlightId="outer-container">
-					<Component spotlightId="inner-container" />
-				</Component>,
-				{attachTo: node}
-			);
+		// set inner-container as active
+		userEvent.hover(component, hoverPosition);
+		updatePointerPosition(0, 1);
 
-			const selector = 'div[data-spotlight-id="inner-container"]';
-			const innerWrapper = subject.find(selector);
-			const innerNode = node.querySelector(selector);
+		// leave inner-container
+		userEvent.unhover(component, unhoverPosition);
 
-			// set inner-container as active
-			innerWrapper.prop('onMouseEnter')(hoverPosition);
-			updatePointerPosition(0, 1);
+		const expected = 'outer-container';
+		const actual = Spotlight.getActiveContainer();
 
-			// leave inner-container
-			innerWrapper.prop('onMouseLeave')({...unhoverPosition, currentTarget: innerNode});
+		expect(actual).toBe(expected);
+	});
 
-			const expected = 'outer-container';
-			const actual = Spotlight.getActiveContainer();
+	test('should not set active container on mouse leave if another container is active', () => {
+		const Component = SpotlightContainerDecorator(Div);
+		const node = document.createElement('div');
+		render(
+			<Component spotlightId="outer-container">
+				<Component data-testid={testId} spotlightId="inner-container" />
+				<Component spotlightId="self-only-container" />
+			</Component>,
+			{attachTo: node}
+		);
+		const component = screen.getByTestId(testId);
 
-			expect(actual).toBe(expected);
-		}
-	);
+		// set inner-container as active
+		userEvent.hover(component, hoverPosition);
+		updatePointerPosition(0, 1);
 
-	test(
-		'should not set active container on mouse leave if another container is active',
-		() => {
-			const Component = SpotlightContainerDecorator(Div);
+		// set another container to be active
+		Spotlight.setActiveContainer('self-only-container');
 
-			const node = document.createElement('div');
-			const subject = mount(
-				<Component spotlightId="outer-container">
-					<Component spotlightId="inner-container" />
-					<Component spotlightId="self-only-container" />
-				</Component>,
-				{attachTo: node}
-			);
+		// leave inner-container
+		userEvent.unhover(component, unhoverPosition);
 
-			const selector = 'div[data-spotlight-id="inner-container"]';
-			const innerWrapper = subject.find(selector);
-			const innerNode = node.querySelector(selector);
+		const expected = 'self-only-container';
+		const actual = Spotlight.getActiveContainer();
 
-			// set inner-container as active
-			innerWrapper.prop('onMouseEnter')(hoverPosition);
-			updatePointerPosition(0, 1);
+		expect(actual).toBe(expected);
+	});
 
-			// set another container to be active
-			Spotlight.setActiveContainer('self-only-container');
+	test('should forward onFocusCapture events', () => {
+		const spy = jest.fn();
+		let focus;
 
-			// leave inner-container
-			innerWrapper.prop('onMouseLeave')({...unhoverPosition, currentTarget: innerNode});
+		const Component = SpotlightContainerDecorator(({onFocusCapture}) => {
+			focus = onFocusCapture;
+			return <div />;
+		});
+		render(<Component onFocusCapture={spy} />);
 
-			const expected = 'self-only-container';
-			const actual = Spotlight.getActiveContainer();
+		focus({});
 
-			expect(actual).toBe(expected);
-		}
-	);
+		const expected = 1;
 
-	test(
-		'should forward onFocusCapture events',
-		() => {
-			const spy = jest.fn();
-			let focus;
+		expect(spy).toHaveBeenCalledTimes(expected);
+	});
 
-			const Component = SpotlightContainerDecorator(({onFocusCapture}) => {
-				focus = onFocusCapture;
-				return <div />;
-			});
-			mount(<Component onFocusCapture={spy} />);
+	test('should suppress onFocusCapture events when spotlightDisabled', () => {
+		const spy = jest.fn();
+		let focus;
 
-			focus({});
+		const Component = SpotlightContainerDecorator(({onFocusCapture}) => {
+			focus = onFocusCapture;
+			return <div />;
+		});
+		render(<Component onFocusCapture={spy} spotlightDisabled />);
 
-			const expected = 1;
-			const actual = spy.mock.calls.length;
-			expect(actual).toBe(expected);
-		}
-	);
+		// building out the api called on the event object + target
+		focus({
+			stopPropagation: () => true,
+			target: {
+				blur: () => true
+			}
+		});
 
-	test(
-		'should suppress onFocusCapture events when spotlightDisabled',
-		() => {
-			const spy = jest.fn();
-			let focus;
+		expect(spy).not.toHaveBeenCalled();
+	});
 
-			const Component = SpotlightContainerDecorator(({onFocusCapture}) => {
-				focus = onFocusCapture;
-				return <div />;
-			});
-			mount(<Component onFocusCapture={spy} spotlightDisabled />);
+	test('should forward onBlurCapture events', () => {
+		const spy = jest.fn();
+		let blur;
 
-			// building out the api called on the event object + target
-			focus({
-				stopPropagation: () => true,
-				target: {
-					blur: () => true
-				}
-			});
+		const Component = SpotlightContainerDecorator(({onBlurCapture}) => {
+			blur = onBlurCapture;
+			return <div />;
+		});
+		render(<Component onBlurCapture={spy} spotlightDisabled />);
 
-			const expected = 0;
-			const actual = spy.mock.calls.length;
-			expect(actual).toBe(expected);
-		}
-	);
+		// building out the api called on the event object + target
+		blur({
+			stopPropagation: () => true,
+			target: {
+				blur: () => blur({})
+			}
+		});
 
-	test(
-		'should forward onBlurCapture events',
-		() => {
-			const spy = jest.fn();
-			let blur;
+		const expected = 1;
 
-			const Component = SpotlightContainerDecorator(({onBlurCapture}) => {
-				blur = onBlurCapture;
-				return <div />;
-			});
-			mount(<Component onBlurCapture={spy} spotlightDisabled />);
+		expect(spy).toHaveBeenCalledTimes(expected);
+	});
 
-			// building out the api called on the event object + target
-			blur({
-				stopPropagation: () => true,
-				target: {
-					blur: () => blur({})
-				}
-			});
+	test('should suppress onBlurCapture events when focus was suppressed', () => {
+		const spy = jest.fn();
+		let blur;
+		let focus;
 
-			const expected = 1;
-			const actual = spy.mock.calls.length;
-			expect(actual).toBe(expected);
-		}
-	);
+		const Component = SpotlightContainerDecorator(({onBlurCapture, onFocusCapture}) => {
+			blur = onBlurCapture;
+			focus = onFocusCapture;
+			return <div />;
+		});
+		render(<Component onBlurCapture={spy} spotlightDisabled />);
 
-	test(
-		'should suppress onBlurCapture events when focus was suppressed',
-		() => {
-			const spy = jest.fn();
-			let focus;
-			let blur;
+		// building out the api called on the event object + target
+		focus({
+			stopPropagation: () => true,
+			target: {
+				// the focus handler calls blur() on the target so we're simulating that here by
+				// wiring our onBlurCapture handler directly to the invocation. This isn't a
+				// perfect modeling of the system but serves to validate the callback
+				// suppression logic.
+				blur: () => blur({})
+			}
+		});
 
-			const Component = SpotlightContainerDecorator(({onBlurCapture, onFocusCapture}) => {
-				blur = onBlurCapture;
-				focus = onFocusCapture;
-				return <div />;
-			});
-			mount(<Component onBlurCapture={spy} spotlightDisabled />);
-
-			// building out the api called on the event object + target
-			focus({
-				stopPropagation: () => true,
-				target: {
-					// the focus handler calls blur() on the target so we're simulating that here by
-					// wiring our onBlurCapture handler directly to the invocation. This isn't a
-					// perfect modeling of the system but serves to validate the callback
-					// suppression logic.
-					blur: () => blur({})
-				}
-			});
-
-			const expected = 0;
-			const actual = spy.mock.calls.length;
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(spy).not.toHaveBeenCalled();
+	});
 });

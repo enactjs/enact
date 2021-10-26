@@ -1,15 +1,18 @@
-import {shallow} from 'enzyme';
-import Spotlight from '../../src/spotlight';
-import {getContainerConfig} from '../../src/container';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
 
 import useSpotlightContainer from '../useSpotlightContainer';
+
+import {getContainerConfig} from '../../src/container';
+import Spotlight from '../../src/spotlight';
 
 function containerExists (id) {
 	return getContainerConfig(id) != null;
 }
 
-describe('useSpotlightContainer', () => {
+const testId = 'test-useSpotlightContainer';
 
+describe('useSpotlightContainer', () => {
 	// TODO: Test lifecycle (e.g unload, preserveId)
 
 	function Component (props) {
@@ -46,205 +49,162 @@ describe('useSpotlightContainer', () => {
 	afterEach(Spotlight.clear);
 
 	test('should support omitting the config object', () => {
-		function Comp (props) {
+		const Comp = (props) => {
 			const spotlightContainer = useSpotlightContainer();
 
-			return (
-				<div {...props} {...spotlightContainer.attributes} />
-			);
-		}
+			return (<div {...props} {...spotlightContainer.attributes} />);
+		};
 
-		const subject = shallow(
-			<Comp />
-		);
+		render(<Comp data-testid={testId} />);
+		const component = screen.getByTestId(testId);
 
-		const expected = true;
-		const actual = subject.prop('data-spotlight-container');
+		const expectedAttribute = 'data-spotlight-container';
+		const expectedValue = 'true';
 
-		expect(actual).toBe(expected);
+		expect(component).toHaveAttribute(expectedAttribute, expectedValue);
 	});
 
 	describe('attributes', () => {
-		test(
-			'should set `data-spotlight-container` attribute',
-			() => {
-				const subject = shallow(
-					<Component />
-				);
+		test('should set `data-spotlight-container` attribute', () => {
+			render(<Component data-testid={testId} />);
+			const component = screen.getByTestId(testId);
 
-				const expected = true;
-				const actual = subject.prop('data-spotlight-container');
+			const expectedAttribute = 'data-spotlight-container';
+			const expectedValue = 'true';
 
-				expect(actual).toBe(expected);
-			}
-		);
+			expect(component).toHaveAttribute(expectedAttribute, expectedValue);
+		});
 
-		test(
-			'should generate a `data-spotlight-id` attribute when `id` is unset',
-			() => {
-				const subject = shallow(
-					<Component />
-				);
+		test('should generate a `data-spotlight-id` attribute when `id` is unset', () => {
+			render(<Component data-testid={testId} />);
+			const component = screen.getByTestId(testId);
 
-				const expected = /container-\d+/;
-				const actual = subject.prop('data-spotlight-id');
+			const expectedAttribute = 'data-spotlight-id';
+			const expectedValue = 'container-3'; 	// 3 because this is the 3rd test, it increments automatically
 
-				expect(actual).toMatch(expected);
-			}
-		);
+			expect(component).toHaveAttribute(expectedAttribute, expectedValue);
+		});
 
-		test(
-			'should reuse the same generated `data-spotlight-id` attribute on re-render',
-			() => {
-				const subject = shallow(
-					<Component />
-				);
+		test('should reuse the same generated `data-spotlight-id` attribute on re-render', () => {
+			const {rerender} = render(<Component data-testid={testId} />);
 
-				const expected = subject.prop('data-spotlight-id');
+			const expected = screen.getByTestId(testId).getAttribute('data-spotlight-id');
 
-				subject.setProps({});
+			rerender(<Component data-testid={testId} />);
 
-				const actual = subject.prop('data-spotlight-id');
+			const actual = screen.getByTestId(testId).getAttribute('data-spotlight-id');
 
-				expect(actual).toMatch(expected);
-			}
-		);
+			expect(actual).toBe(expected);
+		});
 
-		test(
-			'should set a `data-spotlight-id` attribute when `id` is set',
-			() => {
-				const id = 'my-container';
-				const subject = shallow(
-					<Component spotlightId={id} />
-				);
+		test('should set a `data-spotlight-id` attribute when `id` is set', () => {
+			const id = 'my-container';
+			render(<Component data-testid={testId} spotlightId={id} />);
+			const component = screen.getByTestId(testId);
 
-				const expected = id;
-				const actual = subject.prop('data-spotlight-id');
+			const expectedAttribute = 'data-spotlight-id';
 
-				expect(actual).toBe(expected);
-			}
-		);
+			expect(component).toHaveAttribute(expectedAttribute, id);
+		});
 
-		test(
-			'should set `data-spotlight-container-disabled` attribute to be falsey when `disabled` is unset',
-			() => {
-				const subject = shallow(
-					<Component />
-				);
+		test('should set `data-spotlight-container-disabled` attribute to be falsey when `disabled` is unset', () => {
+			render(<Component data-testid={testId} />);
+			const component = screen.getByTestId(testId);
 
-				const actual = subject.prop('data-spotlight-container-disabled');
+			const expectedAttribute = 'data-spotlight-container-disabled';
 
-				expect(actual).toBeFalsy();
-			}
-		);
+			expect(component).not.toHaveAttribute(expectedAttribute);
+		});
 
-		test(
-			'should set `data-spotlight-container-disabled` attribute when `disabled` is set',
-			() => {
-				const subject = shallow(
-					<Component spotlightDisabled />
-				);
+		test('should set `data-spotlight-container-disabled` attribute when `disabled` is set', () => {
+			render(<Component data-testid={testId} spotlightDisabled />);
+			const component = screen.getByTestId(testId);
 
-				const expected = true;
-				const actual = subject.prop('data-spotlight-container-disabled');
+			const expectedAttribute = 'data-spotlight-container-disabled';
+			const expectedValue = 'true';
 
-				expect(actual).toBe(expected);
-			}
-		);
+			expect(component).toHaveAttribute(expectedAttribute, expectedValue);
+		});
 
-		test(
-			'should set `data-spotlight-container-muted` attribute to be falsey when `muted` is unset',
-			() => {
-				const subject = shallow(
-					<Component />
-				);
+		test('should set `data-spotlight-container-muted` attribute to be falsey when `muted` is unset', () => {
+			render(<Component data-testid={testId} />);
+			const component = screen.getByTestId(testId);
 
-				const actual = subject.prop('data-spotlight-container-muted');
+			const expectedAttribute = 'data-spotlight-container-muted';
 
-				expect(actual).toBeFalsy();
-			}
-		);
+			expect(component).not.toHaveAttribute(expectedAttribute);
+		});
 
-		test(
-			'should set `data-spotlight-container-muted` attribute when `muted` is set',
-			() => {
-				const subject = shallow(
-					<Component spotlightMuted />
-				);
+		test('should set `data-spotlight-container-muted` attribute when `muted` is set', () => {
+			render(<Component data-testid={testId} spotlightMuted />);
+			const component = screen.getByTestId(testId);
 
-				const expected = true;
-				const actual = subject.prop('data-spotlight-container-muted');
+			const expectedAttribute = 'data-spotlight-container-muted';
+			const expectedValue = 'true';
 
-				expect(actual).toBe(expected);
-			}
-		);
+			expect(component).toHaveAttribute(expectedAttribute, expectedValue);
+		});
 	});
 
 	describe('Spotlight configuration', () => {
-		test(
-			'should create a new container with the specified id',
-			() => {
-				const id = 'my-container';
+		test('should create a new container with the specified id', () => {
+			const id = 'my-container';
 
-				expect(containerExists(id)).toBeFalsy();
+			expect(containerExists(id)).toBeFalsy();
 
-				shallow(
-					<Component spotlightId={id} />
-				);
+			render(<Component spotlightId={id} />);
 
-				const expected = true;
-				const actual = containerExists(id);
+			const expected = true;
+			const actual = containerExists(id);
 
-				expect(actual).toBe(expected);
-			}
-		);
+			expect(actual).toBe(expected);
+		});
 
-		test(
-			'should configure a new container with the specified id',
-			() => {
-				const id = 'my-container';
+		test('should configure a new container with the specified id', () => {
+			const id = 'my-container';
 
-				expect(containerExists(id)).toBeFalsy();
+			expect(containerExists(id)).toBeFalsy();
 
-				const config = {
-					restrict: 'self-only',
-					defaultElement: 'my-element'
-				};
+			const config = {
+				restrict: 'self-only',
+				defaultElement: 'my-element'
+			};
 
-				shallow(
-					<Component
-						spotlightId={id}
-						spotlightRestrict={config.restrict}
-						containerConfig={{defaultElement: config.defaultElement}}
-					/>
-				);
+			render(
+				<Component
+					containerConfig={{defaultElement: config.defaultElement}}
+					spotlightId={id}
+					spotlightRestrict={config.restrict}
+				/>
+			);
 
-				const expected = config;
-				const actual = getContainerConfig(id);
+			const expected = config;
+			const actual = getContainerConfig(id);
 
-				expect(actual).toMatchObject(expected);
-			}
-		);
+			expect(actual).toMatchObject(expected);
+		});
 
-		test(
-			'should update restrict value',
-			() => {
-				const id = 'my-container';
-				const subject = shallow(
-					<Component
-						spotlightId={id}
-						spotlightRestrict="self-only"
-					/>
-				);
+		test('should update restrict value', () => {
+			const id = 'my-container';
+			const {rerender} = render(
+				<Component
+					spotlightId={id}
+					spotlightRestrict="self-only"
+				/>
+			);
 
-				subject.setProps({spotlightRestrict: 'self-first'});
+			rerender(
+				<Component
+					spotlightId={id}
+					spotlightRestrict="self-first"
+				/>
+			);
 
-				const expected = {restrict: 'self-first'};
-				const actual = getContainerConfig(id);
+			const expected = {restrict: 'self-first'};
+			const actual = getContainerConfig(id);
 
-				expect(actual).toMatchObject(expected);
-			}
-		);
+			expect(actual).toMatchObject(expected);
+		});
 	});
 });
 
