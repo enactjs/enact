@@ -1,10 +1,14 @@
-import {shallow, mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render} from '@testing-library/react';
 
 import useId from '../useId';
 
 describe('useId', () => {
-	function Base () {
-		return null;
+	let data = [];
+
+	function Base (props) {
+		data.push(props);
+		return <div id={data.id} generateid={data.generateId} />;
 	}
 
 	function Component ({key, prefix, onUnmount}) {
@@ -13,63 +17,58 @@ describe('useId', () => {
 		return <Base {...provider} id={provider.generateId(key, prefix, onUnmount)} />;
 	}
 
+	afterEach(() => data.splice(0, data.length));
+
 	test('should provide a generateId method', () => {
-		const subject = shallow(
-			<Component />
-		);
+		render(<Component />);
 
 		const expected = 'function';
-		const actual = typeof subject.find(Base).prop('generateId');
+		const actual = typeof data[0].generateId;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should generate different ids for different instances of the same component', () => {
-		const subject = mount(
+		render(
 			<div>
 				<Component />
 				<Component />
 			</div>
 		);
 
-		const first = subject.find(Base).first().prop('id');
-		const last = subject.find(Base).last().prop('id');
+		const firstID = data[0].id;
+		const lastID = data[1].id;
 
-		expect(first).not.toBe(last);
+		expect(firstID).not.toBe(lastID);
 	});
 
 	test('should maintain the same id across renders', () => {
-		const subject = shallow(
-			<Component />
-		);
+		const {rerender} = render(<Component />);
 
-		const expected = subject.find(Base).prop('id');
+		const expected = data[0].id;
 
-		subject.setProps({});
+		rerender(<Component />);
 
-		const actual = subject.find(Base).prop('id');
+		const actual = data[1].id;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should prefix the id with the provided value', () => {
-		const subject = shallow(
-			<Component prefix="my-id" />
-		);
+		render(<Component prefix="my-id" />);
+		const id = data[0].id;
 
 		const expected = 'my-id';
-		const actual = subject.find(Base).prop('id').substring(0, 5);
+		const actual = id.substring(0, 5);
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should call onUnmount callback', () => {
 		const spy = jest.fn();
-		const subject = mount(
-			<Component onUnmount={spy} />
-		);
+		const {unmount} = render(<Component onUnmount={spy} />);
 
-		subject.unmount();
+		unmount();
 
 		expect(spy).toHaveBeenCalledTimes(1);
 	});
