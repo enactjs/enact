@@ -284,10 +284,6 @@ EnyoLoader.prototype._handleManifest = function (dirpath, filepath, json) {
 };
 
 EnyoLoader.prototype._validateManifest = function (cachedManifest, filepath, sync) {
-	if (!this.webos) {
-		return cachedManifest;
-	}
-
 	if (cachedManifest) {
 		const cachedTimeStamp = JSON.parse(cachedManifest)[timeStampKey];
 		if (cachedTimeStamp) {
