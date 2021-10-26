@@ -271,11 +271,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * Determines what triggers the marquee to start its animation.
 			 *
-			 * @type {('focus'|'hover'|'render')}
+			 * @type {('focus'|'hover'|'render'|'off')}
 			 * @default 'focus'
 			 * @public
 			 */
-			marqueeOn: PropTypes.oneOf(['focus', 'hover', 'render']),
+			marqueeOn: PropTypes.oneOf(['focus', 'hover', 'render', 'off']),
 
 			/**
 			 * Number of milliseconds to wait before starting marquee the first time.
@@ -937,21 +937,23 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			return (
 				<Wrapped {...rest} onBlur={this.handleBlur} disabled={disabled}>
-					<MarqueeComponent
-						alignment={alignment}
-						animating={this.state.animating}
-						clientRef={this.cacheNode}
-						css={css}
-						distance={this.distance}
-						onMarqueeComplete={this.handleMarqueeComplete}
-						overflow={this.state.overflow}
-						spacing={this.spacing}
-						rtl={this.state.rtl}
-						speed={marqueeSpeed}
-						willAnimate={this.state.promoted}
-					>
-						{children}
-					</MarqueeComponent>
+					{marqueeOn === 'off' ? <div style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{children}</div> :
+						(<MarqueeComponent
+							alignment={alignment}
+							animating={this.state.animating}
+							clientRef={this.cacheNode}
+							css={css}
+							distance={this.distance}
+							onMarqueeComplete={this.handleMarqueeComplete}
+							overflow={this.state.overflow}
+							spacing={this.spacing}
+							rtl={this.state.rtl}
+							speed={marqueeSpeed}
+							willAnimate={this.state.promoted}
+						>
+							{children}
+						</MarqueeComponent>)
+					}
 				</Wrapped>
 			);
 		}
