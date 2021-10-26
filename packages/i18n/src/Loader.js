@@ -335,10 +335,6 @@ EnyoLoader.prototype._loadManifest = function (_root, subpath, sync) {
 	const dirpath = this._pathjoin(_root, subpath);
 	const filepath = this._pathjoin(dirpath, 'ilibmanifest.json');
 
-	if (this.manifest[dirpath]) {
-		return;
-	}
-
 	let cachedManifest;
 	if (typeof window !== 'undefined' && window.localStorage) {
 		cachedManifest = window.localStorage.getItem(cachePrefix + filepath);
