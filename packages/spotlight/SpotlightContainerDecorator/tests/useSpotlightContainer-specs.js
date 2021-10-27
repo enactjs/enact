@@ -2,7 +2,6 @@ import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 
 import useSpotlightContainer from '../useSpotlightContainer';
-
 import {getContainerConfig} from '../../src/container';
 import Spotlight from '../../src/spotlight';
 

@@ -2,12 +2,11 @@ import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import closest from './Element.prototype.closest';
-
 import SpotlightContainerDecorator from '../SpotlightContainerDecorator';
-
 import {updatePointerPosition} from '../../src/pointer';
 import Spotlight from '../../src/spotlight';
+
+import closest from './Element.prototype.closest';
 
 const testId = 'test-spotlightContainerDecorator';
 
