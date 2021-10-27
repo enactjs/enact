@@ -46,9 +46,7 @@ describe('Transition Specs', () => {
 
 
 	test('should apply \'shown\' class when visible', () => {
-		render(
-			<TransitionBase data-testid="transition" />
-		);
+		render(<TransitionBase data-testid="transition" />);
 
 		const expected = 'shown';
 		const actual = screen.getByTestId('transition');
@@ -57,9 +55,7 @@ describe('Transition Specs', () => {
 	});
 
 	test('should apply \'hidden\' class when not visible', () => {
-		render(
-			<TransitionBase data-testid="transition" visible={false} />
-		);
+		render(<TransitionBase data-testid="transition" visible={false} />);
 
 		const expected = 'hidden';
 		const actual = screen.getByTestId('transition');
@@ -68,9 +64,7 @@ describe('Transition Specs', () => {
 	});
 
 	test('should apply \'shown\' class when visible with noAnimation', () => {
-		render(
-			<TransitionBase data-testid="transition" noAnimation />
-		);
+		render(<TransitionBase data-testid="transition" noAnimation />);
 
 		const expected = 'shown';
 		const actual = screen.getByTestId('transition');
@@ -79,9 +73,7 @@ describe('Transition Specs', () => {
 	});
 
 	test('should apply \'hidden\' class when not visible with noAnimation', () => {
-		render(
-			<TransitionBase data-testid="transition" noAnimation visible={false} />
-		);
+		render(<TransitionBase data-testid="transition" noAnimation visible={false} />);
 
 		const expected = 'hidden';
 		const actual = screen.getByTestId('transition');
@@ -125,9 +117,7 @@ describe('Transition Specs', () => {
 				const propValue = {
 					[prop]: value
 				};
-				render(
-					<Transition {...propValue} data-testid="transition" visible>Body</Transition>
-				);
+				render(<Transition {...propValue} data-testid="transition" visible>Body</Transition>);
 
 				const expected = key;
 				const actual = screen.getByTestId('transition');
