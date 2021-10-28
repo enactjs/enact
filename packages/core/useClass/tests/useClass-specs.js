@@ -14,7 +14,7 @@ describe('useClass', () => {
 		const instance = useClass(Class, props.arg);
 
 		return (
-			<div data-testid='div' data-fromclass={instance.arg} data-fromprops={props.arg} />
+			<div data-testid="div" data-fromclass={instance.arg} data-fromprops={props.arg} />
 		);
 	}
 
@@ -22,7 +22,7 @@ describe('useClass', () => {
 		const arg = 'arg';
 		render(<Component arg={arg} />);
 
-		const div = screen.getByTestId('div')
+		const div = screen.getByTestId('div');
 
 		expect(div).toHaveAttribute('data-fromclass', arg);
 	});
@@ -31,11 +31,11 @@ describe('useClass', () => {
 		const arg = 'arg';
 		const {rerender} = render(<Component arg={arg} />);
 
-		const div = screen.getByTestId('div')
+		const div = screen.getByTestId('div');
 
 		expect(div).toHaveAttribute('data-fromprops', arg);
 
-		rerender(<Component arg='changed' />);
+		rerender(<Component arg="changed" />);
 
 		// verify that the children still reflects the class value set at construction but the prop
 		// value was updated when props were updated
