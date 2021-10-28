@@ -69,10 +69,9 @@ describe('handle', () => {
 		callback(makeEvent());
 
 		const expectedFirst = 1;
-		const expectedLast = 0;
 
 		expect(handler1).toHaveBeenCalledTimes(expectedFirst);
-		expect(handler2).toHaveBeenCalledTimes(expectedLast);
+		expect(handler2).not.toHaveBeenCalled();
 	});
 
 	test('should call stopPropagation on event', () => {
@@ -81,9 +80,9 @@ describe('handle', () => {
 		callback(ev);
 
 		const expected = 1;
-		const actual = ev.stopPropagation.mock.calls.length;
+		const actual = ev.stopPropagation
 
-		expect(actual).toBe(expected);
+		expect(actual).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should call preventDefault on event', () => {
