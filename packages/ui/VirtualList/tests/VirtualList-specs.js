@@ -237,112 +237,99 @@ describe('VirtualList', () => {
 				myScrollTo({position: {y: 100}, animate: false});
 			});
 		});
-
 	});
 
 	describe('Adding an item', () => {
-		test(
-			'should render an added item named \'Password 0\' as the first item',
-			(done) => {
-				const itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
-				const renderItemArray = ({index, ...rest}) => {
-					return (
-						<div {...rest} id={'item' + index}>
-							{itemArray[index].name}
-						</div>
-					);
-				};
-
-				const {rerender} = render(
-					<VirtualList
-						clientSize={clientSize}
-						dataSize={itemArray.length}
-						itemRenderer={renderItemArray}
-						itemSize={30}
-					/>
+		test('should render an added item named \'Password 0\' as the first item', (done) => {
+			const itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
+			const renderItemArray = ({index, ...rest}) => {
+				return (
+					<div {...rest} id={'item' + index}>
+						{itemArray[index].name}
+					</div>
 				);
+			};
 
-				itemArray.unshift({name: 'Password 0'});
-				rerender(
-					<VirtualList
-						clientSize={clientSize}
-						dataSize={itemArray.length}
-						itemRenderer={renderItemArray}
-						itemSize={30}
-					/>
-				);
+			const {rerender} = render(
+				<VirtualList
+					clientSize={clientSize}
+					dataSize={itemArray.length}
+					itemRenderer={renderItemArray}
+					itemSize={30}
+				/>
+			);
 
-				setTimeout(() => {
-					const expected = itemArray[0].name;
-					const actual = screen.getByRole('list').children.item(0).textContent;
+			itemArray.unshift({name: 'Password 0'});
+			rerender(
+				<VirtualList
+					clientSize={clientSize}
+					dataSize={itemArray.length}
+					itemRenderer={renderItemArray}
+					itemSize={30}
+				/>
+			);
 
-					expect(actual).toBe(expected);
-					done();
-				}, 0);
-			}
-		);
+			setTimeout(() => {
+				const expected = itemArray[0].name;
+				const actual = screen.getByRole('list').children.item(0).textContent;
+
+				expect(actual).toBe(expected);
+				done();
+			}, 0);
+		});
 	});
 
 	describe('Voice Control', () => {
-		test(
-			'should render "data-webos-voice-focused" to outermost node of VirtualList',
-			() => {
-				render(
-					<VirtualList
-						cbScrollTo={getScrollTo}
-						clientSize={clientSize}
-						dataSize={dataSize}
-						itemRenderer={renderItem}
-						itemSize={30}
-						data-webos-voice-focused
-					/>
-				);
+		test('should render "data-webos-voice-focused" to outermost node of VirtualList', () => {
+			render(
+				<VirtualList
+					cbScrollTo={getScrollTo}
+					clientSize={clientSize}
+					dataSize={dataSize}
+					itemRenderer={renderItem}
+					itemSize={30}
+					data-webos-voice-focused
+				/>
+			);
 
-				const actual = screen.getByRole('list').parentElement;
+			const actual = screen.getByRole('list').parentElement;
 
-				expect(actual).toHaveAttribute('data-webos-voice-focused', 'true');
-			}
-		);
+			expect(actual).toHaveAttribute('data-webos-voice-focused', 'true');
+		});
 
-		test(
-			'should render "data-webos-voice-group-label" to outermost node of VirtualList',
-			() => {
-				const label = 'group label';
-				render(
-					<VirtualList
-						cbScrollTo={getScrollTo}
-						clientSize={clientSize}
-						dataSize={dataSize}
-						itemRenderer={renderItem}
-						itemSize={30}
-						data-webos-voice-group-label={label}
-					/>
-				);
+		test('should render "data-webos-voice-group-label" to outermost node of VirtualList', () => {
+			const label = 'group label';
+			render(
+				<VirtualList
+					cbScrollTo={getScrollTo}
+					clientSize={clientSize}
+					dataSize={dataSize}
+					itemRenderer={renderItem}
+					itemSize={30}
+					data-webos-voice-group-label={label}
+				/>
+			);
 
-				const actual = screen.getByRole('list').parentElement;
+			const actual = screen.getByRole('list').parentElement;
 
-				expect(actual).toHaveAttribute('data-webos-voice-group-label', label);
-			}
-		);
+			expect(actual).toHaveAttribute('data-webos-voice-group-label', label);
+		});
 
-		test(
-			'should render "data-webos-voice-disabled" to outermost node of VirtualList',
-			() => {
-				render(
-					<VirtualList
-						cbScrollTo={getScrollTo}
-						clientSize={clientSize}
-						dataSize={dataSize}
-						itemRenderer={renderItem}
-						itemSize={30}
-						data-webos-voice-disabled
-					/>
-				);
+		test('should render "data-webos-voice-disabled" to outermost node of VirtualList', () => {
+			render(
+				<VirtualList
+					cbScrollTo={getScrollTo}
+					clientSize={clientSize}
+					dataSize={dataSize}
+					itemRenderer={renderItem}
+					itemSize={30}
+					data-webos-voice-disabled
+				/>
+			);
 
-				const actual = screen.getByRole('list').parentElement;
+			const actual = screen.getByRole('list').parentElement;
 
-				expect(actual).toHaveAttribute('data-webos-voice-disabled', 'true');
-			}
-		);
+			expect(actual).toHaveAttribute('data-webos-voice-disabled', 'true');
+		});
 	});
 });
