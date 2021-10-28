@@ -1,7 +1,8 @@
+import classNames from 'classnames';
 import handle, {forward} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
-import classNames from 'classnames';
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {fireEvent, render, screen} from '@testing-library/react';
 import {Component} from 'react';
 import ReactDOM from 'react-dom';
 
@@ -12,7 +13,8 @@ const
 	forwardMouseUp = forward('onMouseUp'),
 	forwardMouseDown = forward('onMouseDown'),
 	forwardKeyDown = forward('onKeyDown'),
-	forwardKeyUp = forward('onKeyUp');
+	forwardKeyUp = forward('onKeyUp'),
+	id = 'test-useSpot';
 
 const makeKeyEvent = (keyCode) => {
 	return {
@@ -45,7 +47,6 @@ const spotHandlers = {
 };
 
 describe('useSpottable', () => {
-
 	function SpottableBase (props) {
 		const {className, component, componentRef, disabled, emulateMouse, onSelectionCancel, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, selectionKeys, spotlightDisabled, spotlightId, ...rest} = props;
 		const spot = useSpottable({
@@ -108,131 +109,104 @@ describe('useSpottable', () => {
 	});
 
 	test('should add the spottable class', () => {
-		const subject = mount(
-			<SpottableComponent />
-		);
+		render(<SpottableComponent data-testid={id} />);
+		const div = screen.getByTestId(id);
 
 		const expected = 'spottable';
-		const actual = subject.find('div').prop('className');
 
-		expect(actual).toEqual(expected);
+		expect(div).toHaveClass(expected);
 	});
 
 	test('should add the spottable class to a {disabled} component', () => {
-		const subject = mount(
-			<SpottableComponent disabled />
-		);
+		render(<SpottableComponent data-testid={id} disabled />);
+		const div = screen.getByTestId(id);
 
 		const expected = 'spottable';
-		const actual = subject.find('div').prop('className');
 
-		expect(actual).toEqual(expected);
+		expect(div).toHaveClass(expected);
 	});
 
 	test('should not add the spottable class to a {spotlightDisabled} component', () => {
-		const subject = mount(
-			<SpottableComponent spotlightDisabled />
-		);
+		render(<SpottableComponent data-testid={id} spotlightDisabled />);
+		const div = screen.getByTestId(id);
 
 		const expected = 'spottable';
-		const actual = subject.find('div').prop('className');
 
-		expect(actual).not.toEqual(expected);
+		expect(div).not.toHaveClass(expected);
 	});
 
 	describe('should emit event properly', () => {
 		test('should emit {onSpotlightUp} when the the {keydown} is emitted with 38 keycode', () => {
 			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} onSpotlightUp={spy} />);
+			const div = screen.getByTestId(id);
 
-			const subject = mount(
-				<SpottableComponent onSpotlightUp={spy} />
-			);
-
-			subject.simulate('keydown', makeKeyEvent(38));
-
+			fireEvent.keyDown(div, makeKeyEvent(38));
 
 			const expected = 1;
-			const actual = spy.mock.calls.length;
 
-			expect(actual).toEqual(expected);
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should emit {onSpotlightDown} when the the {keydown} is emitted with 40 keycode', () => {
 			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} onSpotlightDown={spy} />);
+			const div = screen.getByTestId(id);
 
-			const subject = mount(
-				<SpottableComponent onSpotlightDown={spy} />
-			);
-
-			subject.simulate('keydown', makeKeyEvent(40));
-
+			fireEvent.keyDown(div, makeKeyEvent(40));
 
 			const expected = 1;
-			const actual = spy.mock.calls.length;
 
-			expect(actual).toEqual(expected);
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should emit {onSpotlightLeft} when the the {keydown} is emitted with 37 keycode', () => {
 			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} onSpotlightLeft={spy} />);
+			const div = screen.getByTestId(id);
 
-			const subject = mount(
-				<SpottableComponent onSpotlightLeft={spy} />
-			);
-
-			subject.simulate('keydown', makeKeyEvent(37));
-
+			fireEvent.keyDown(div, makeKeyEvent(37));
 
 			const expected = 1;
-			const actual = spy.mock.calls.length;
 
-			expect(actual).toEqual(expected);
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should emit {onSpotlightRight} when the the {keydown} is emitted with 39 keycode', () => {
 			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} onSpotlightRight={spy} />);
+			const div = screen.getByTestId(id);
 
-			const subject = mount(
-				<SpottableComponent onSpotlightRight={spy} />
-			);
-
-			subject.simulate('keydown', makeKeyEvent(39));
+			fireEvent.keyDown(div, makeKeyEvent(39));
 
 			const expected = 1;
-			const actual = spy.mock.calls.length;
 
-			expect(actual).toEqual(expected);
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should emulate {onMouseDown} when REMOTE_OK_KEY key is pressed', () => {
 			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} emulateMouse onMouseDown={spy} selectionKeys={[13]} />);
+			const div = screen.getByTestId(id);
 
-			const subject = mount(
-				<SpottableComponent emulateMouse onMouseDown={spy} selectionKeys={[13]} />
-			);
-
-			subject.simulate('keydown', makeKeyEvent(REMOTE_OK_KEY));
+			fireEvent.keyDown(div, makeKeyEvent(REMOTE_OK_KEY));
 
 			const expected = 1;
-			const actual = spy.mock.calls.length;
 
-			expect(actual).toEqual(expected);
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should emulate {onMouseUp} when {REMOTE_OK_KEY} key is pressed and released', () => {
 			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} emulateMouse onMouseUp={spy} selectionKeys={[13]} />);
+			const div = screen.getByTestId(id);
 
-			const subject = mount(
-				<SpottableComponent emulateMouse onMouseUp={spy} selectionKeys={[13]} />
-			);
-
-			subject.simulate('keydown', makeKeyEvent(REMOTE_OK_KEY));
-			subject.simulate('keyup', makeKeyEvent(REMOTE_OK_KEY));
+			fireEvent.keyDown(div, makeKeyEvent(REMOTE_OK_KEY));
+			fireEvent.keyUp(div, makeKeyEvent(REMOTE_OK_KEY));
 
 			const expected = 1;
-			const actual = spy.mock.calls.length;
 
-			expect(actual).toEqual(expected);
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should not emulate {onMouseUp} if the default behavior is prevented even though {REMOTE_OK_KEY} key is pressed', () => {
@@ -240,70 +214,63 @@ describe('useSpottable', () => {
 			function onKeyUp (ev) {
 				ev.preventDefault();
 			}
-
-			const subject = mount(
-				<SpottableComponent emulateMouse onKeyUp={onKeyUp} onMouseUp={spy} selectionKeys={[13]} />
+			render(
+				<SpottableComponent
+					data-testid={id}
+					emulateMouse
+					onKeyUp={onKeyUp}
+					onMouseUp={spy}
+					selectionKeys={[13]}
+				/>
 			);
+			const div = screen.getByTestId(id);
 
-			subject.simulate('keydown', makeKeyEvent(REMOTE_OK_KEY));
-			subject.simulate('keyup', makeKeyEvent(REMOTE_OK_KEY));
+			fireEvent.keyDown(div, makeKeyEvent(REMOTE_OK_KEY));
+			fireEvent.keyUp(div, makeKeyEvent(REMOTE_OK_KEY));
 
-			const expected = 0;
-			const actual = spy.mock.calls.length;
-
-			expect(actual).toEqual(expected);
+			expect(spy).not.toHaveBeenCalled();
 		});
-
 	});
 
 	describe('shouldComponentUpdate', () => {
 		test('should re-render when a non-Component prop changes', () => {
 			const spy = jest.fn((props) => <div {...props} />);
+			const {rerender} = render(<SpottableComponent component={spy} data-testid={id} />);
 
-			const subject = mount(
-				<SpottableComponent component={spy} />
-			);
-
-			subject.setProps({
-				'data-id': '123'
-			});
+			rerender(<SpottableComponent component={spy} data-id="123" data-testid={id} />);
 
 			const expected = 2;
-			const actual = spy.mock.calls.length;
 
-			expect(actual).toEqual(expected);
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should re-render when {selectionKeys} changes', () => {
 			const spy = jest.fn((props) => <div {...props} />);
-
-			const subject = mount(
-				<SpottableComponent component={spy} selectionKeys={[1, 2, 3]} />
+			const {rerender} = render(
+				<SpottableComponent
+					component={spy}
+					data-testid={id}
+					selectionKeys={[1, 2, 3]}
+				/>
 			);
 
-			subject.setProps({
-				selectionKeys: [2, 1, 3]
-			});
+			rerender(<SpottableComponent component={spy} data-testid={id} selectionKeys={[2, 1, 3]} />);
 
 			const expected = 2;
-			const actual = spy.mock.calls.length;
 
-			expect(actual).toEqual(expected);
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should not re-render when focused', () => {
 			const spy = jest.fn((props) => <div {...props} />);
+			render(<SpottableComponent component={spy} data-testid={id} />);
+			const div = screen.getByTestId(id);
 
-			const subject = mount(
-				<SpottableComponent component={spy} />
-			);
-
-			subject.simulate('focus');
+			div.focus();
 
 			const expected = 1;
-			const actual = spy.mock.calls.length;
 
-			expect(actual).toEqual(expected);
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 	});
 });
