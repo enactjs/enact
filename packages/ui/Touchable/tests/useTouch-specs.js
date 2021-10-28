@@ -212,7 +212,7 @@ describe('useTouch', () => {
 
 			fireEvent.mouseDown(component, ev);
 			fireEvent.mouseUp(component, ev);
-			fireEvent.click(component, ev);
+			fireEvent.click(component, {});
 
 			const expected = ['onTap', 'click'];
 			const actual = handler.mock.calls.map(call => call[0].type);
