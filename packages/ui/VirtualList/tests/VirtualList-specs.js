@@ -1,8 +1,7 @@
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
 
 import VirtualList from '../VirtualList';
-
-import css from '../VirtualList.module.less';
 
 describe('VirtualList', () => {
 	let
@@ -75,7 +74,7 @@ describe('VirtualList', () => {
 	});
 
 	test('should render a list of \'items\'', () => {
-		const subject = mount(
+		render(
 			<VirtualList
 				clientSize={clientSize}
 				dataSize={dataSize}
@@ -85,13 +84,13 @@ describe('VirtualList', () => {
 		);
 
 		const expected = 'Account 0';
-		const actual = subject.find('#item0').text();
+		const actual = screen.getByRole('list').children.item(0).textContent;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should render (clientHeight / itemHeight + overhang) items', () => {
-		const subject = mount(
+		render(
 			<VirtualList
 				clientSize={clientSize}
 				dataSize={dataSize}
@@ -101,7 +100,7 @@ describe('VirtualList', () => {
 		);
 
 		const expected = 27; // 720 / 30 + 3
-		const actual = subject.childAt(0).text().split('Account').length - 1;
+		const actual = screen.getByRole('list').children.length;
 
 		expect(actual).toBe(expected);
 	});
@@ -116,7 +115,7 @@ describe('VirtualList', () => {
 
 			});
 
-			mount(
+			render(
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
@@ -138,7 +137,7 @@ describe('VirtualList', () => {
 				expect(actual).toBe(expected);
 			});
 
-			mount(
+			render(
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
@@ -161,7 +160,7 @@ describe('VirtualList', () => {
 				expect(actual).toBe(expected);
 			});
 
-			mount(
+			render(
 				<VirtualList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
@@ -177,7 +176,7 @@ describe('VirtualList', () => {
 
 		describe('scroll events', () => {
 			test('should call onScrollStart once', () => {
-				mount(
+				render(
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
@@ -197,7 +196,7 @@ describe('VirtualList', () => {
 			});
 
 			test('should call onScroll once', () => {
-				mount(
+				render(
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
@@ -224,7 +223,7 @@ describe('VirtualList', () => {
 					expect(actual).toBe(expected);
 				});
 
-				mount(
+				render(
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
@@ -238,6 +237,7 @@ describe('VirtualList', () => {
 				myScrollTo({position: {y: 100}, animate: false});
 			});
 		});
+
 	});
 
 	describe('Adding an item', () => {
@@ -253,7 +253,7 @@ describe('VirtualList', () => {
 					);
 				};
 
-				const subject = mount(
+				const {rerender} = render(
 					<VirtualList
 						clientSize={clientSize}
 						dataSize={itemArray.length}
@@ -263,11 +263,18 @@ describe('VirtualList', () => {
 				);
 
 				itemArray.unshift({name: 'Password 0'});
-				subject.setProps({dataSize: itemArray.length});
+				rerender(
+					<VirtualList
+						clientSize={clientSize}
+						dataSize={itemArray.length}
+						itemRenderer={renderItemArray}
+						itemSize={30}
+					/>
+				);
 
 				setTimeout(() => {
 					const expected = itemArray[0].name;
-					const actual = subject.find('#item0').text();
+					const actual = screen.getByRole('list').children.item(0).textContent;
 
 					expect(actual).toBe(expected);
 					done();
@@ -280,7 +287,7 @@ describe('VirtualList', () => {
 		test(
 			'should render "data-webos-voice-focused" to outermost node of VirtualList',
 			() => {
-				const subject = mount(
+				render(
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
@@ -291,10 +298,9 @@ describe('VirtualList', () => {
 					/>
 				);
 
-				const expected = true;
-				const actual = subject.find(`.${css.virtualList}`).prop('data-webos-voice-focused');
+				const actual = screen.getByRole('list').parentElement;
 
-				expect(actual).toBe(expected);
+				expect(actual).toHaveAttribute('data-webos-voice-focused', 'true');
 			}
 		);
 
@@ -302,7 +308,7 @@ describe('VirtualList', () => {
 			'should render "data-webos-voice-group-label" to outermost node of VirtualList',
 			() => {
 				const label = 'group label';
-				const subject = mount(
+				render(
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
@@ -313,17 +319,16 @@ describe('VirtualList', () => {
 					/>
 				);
 
-				const expected = label;
-				const actual = subject.find(`.${css.virtualList}`).prop('data-webos-voice-group-label');
+				const actual = screen.getByRole('list').parentElement;
 
-				expect(actual).toBe(expected);
+				expect(actual).toHaveAttribute('data-webos-voice-group-label', label);
 			}
 		);
 
 		test(
 			'should render "data-webos-voice-disabled" to outermost node of VirtualList',
 			() => {
-				const subject = mount(
+				render(
 					<VirtualList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
@@ -334,10 +339,9 @@ describe('VirtualList', () => {
 					/>
 				);
 
-				const expected = true;
-				const actual = subject.find(`.${css.virtualList}`).prop('data-webos-voice-disabled');
+				const actual = screen.getByRole('list').parentElement;
 
-				expect(actual).toBe(expected);
+				expect(actual).toHaveAttribute('data-webos-voice-disabled', 'true');
 			}
 		);
 	});
