@@ -80,7 +80,7 @@ describe('handle', () => {
 		callback(ev);
 
 		const expected = 1;
-		const actual = ev.stopPropagation
+		const actual = ev.stopPropagation;
 
 		expect(actual).toHaveBeenCalledTimes(expected);
 	});
