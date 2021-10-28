@@ -1,10 +1,12 @@
-import {createContext, useState} from 'react';
 import PropTypes from 'prop-types';
-import {mount} from 'enzyme';
+import {createContext, useState} from 'react';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
 import kind from '../kind';
 
 describe('kind', () => {
-
 	const TestContext = createContext({
 		value: 'initial'
 	});
@@ -35,7 +37,7 @@ describe('kind', () => {
 		render: ({contextValue, label, value, ...rest}) => {
 			delete rest.prop;
 			return (
-				<div {...rest} title={label} data-context={contextValue}>
+				<div {...rest} data-context={contextValue} title={label}>
 					{value}
 				</div>
 			);
@@ -52,14 +54,14 @@ describe('kind', () => {
 	test('should support undefined handlers', () => {
 		const Minimal = kind({
 			name: 'Minimal',
-			render: () => <div />
+			render: () => <div data-testid="minimal" />
 		});
 
-		const subject = mount(<Minimal />);
+		render(<Minimal />);
 
-		const actual = subject.find('div');
+		const minimalDiv = screen.queryByTestId('minimal');
 
-		expect(actual).toBeDefined();
+		expect(minimalDiv).toBeInTheDocument();
 	});
 
 	test('should default {label} property', () => {
@@ -74,7 +76,7 @@ describe('kind', () => {
 	test('should default {label} property when explicitly undefined', () => {
 		// Explicitly testing for undefined
 		// eslint-disable-next-line no-undefined
-		const subject = <Kind prop={1} label={undefined} />;
+		const subject = <Kind label={undefined} prop={1} />;
 
 		const expected = 'Label';
 		const actual = subject.props.label;
@@ -83,34 +85,29 @@ describe('kind', () => {
 	});
 
 	test('should add className defined in styles', () => {
-		const subject = mount(
-			<Kind prop={1} />
-		);
+		render(<Kind prop={1} />);
 
 		const expected = 'kind';
-		const actual = subject.find('div').prop('className');
+		const kindDiv = screen.getByTitle('Label');
 
-		expect(actual).toBe(expected);
+		expect(kindDiv).toHaveClass(expected);
 	});
 
 	test('should compute {value} property', () => {
-		const subject = mount(
-			<Kind prop={1} />
-		);
+		render(<Kind prop={1} />);
 
-		const expected = 2;
-		const actual = subject.find('div').prop('children');
+		const expected = '2';
+		const kindDiv = screen.getByTitle('Label');
 
-		expect(actual).toBe(expected);
+		expect(kindDiv).toHaveTextContent(expected);
 	});
 
 	test('should support contextType in handlers', () => {
 		const onClick = jest.fn();
-		const subject = mount(
-			<Kind prop={1} onClick={onClick} />
-		);
+		render(<Kind onClick={onClick} prop={1} />);
 
-		subject.find('div').invoke('onClick')();
+		const kindDiv = screen.getByTitle('Label');
+		userEvent.click(kindDiv);
 
 		const expected = 'initial';
 		const actual = onClick.mock.calls[0][0];
@@ -119,14 +116,12 @@ describe('kind', () => {
 	});
 
 	test('should support contextType in computed', () => {
-		const subject = mount(
-			<Kind prop={1} />
-		);
+		render(<Kind prop={1} />);
 
 		const expected = 'contextinitial';
-		const actual = subject.find('div').prop('data-context');
+		const kindDiv = screen.getByTitle('Label');
 
-		expect(actual).toBe(expected);
+		expect(kindDiv).toHaveAttribute('data-context', expected);
 	});
 
 	test('support using hooks within kind instances', () => {
@@ -137,18 +132,18 @@ describe('kind', () => {
 				// eslint-disable-next-line react-hooks/rules-of-hooks
 				const [state, setState] = useState(0);
 
-				return <button onClick={() => setState(state + 1)}>{state}</button>;
+				return <button data-testid="button" onClick={() => setState(state + 1)}>{state}</button>;
 			}
 		});
 
-		const subject = mount(<Comp />);
+		render(<Comp />);
 
-		subject.find('button').invoke('onClick')();
+		const button = screen.getByTestId('button');
+		userEvent.click(button);
 
-		const expected = 1;
-		const actual = subject.find('button').prop('children');
+		const expected = '1';
 
-		expect(actual).toBe(expected);
+		expect(button).toHaveTextContent(expected);
 	});
 
 	describe('inline', () => {
@@ -209,5 +204,4 @@ describe('kind', () => {
 			expect(actual).toBe(expected);
 		});
 	});
-
 });
