@@ -9,7 +9,7 @@ describe('useTouch', () => {
 	const DivComponent = (props) => {
 		data = props;
 
-		return <div data-testid="component" />
+		return (<div data-testid="component" />);
 	};
 	const TouchableComponent = ({id, activeProp, ...rest}) => {
 		const hook = useTouch({getActive: !!activeProp, ...rest});
@@ -332,7 +332,7 @@ describe('useTouch', () => {
 
 				fireEvent.mouseDown(component, {});
 				const beforeUp = data.active;
-				fireEvent.mouseUp(component, {})
+				fireEvent.mouseUp(component, {});
 				const afterUp = data.active;
 
 				const expected = true;
