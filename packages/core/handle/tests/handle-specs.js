@@ -91,9 +91,9 @@ describe('handle', () => {
 		callback(ev);
 
 		const expected = 1;
-		const actual = ev.preventDefault.mock.calls.length;
+		const actual = ev.preventDefault;
 
-		expect(actual).toBe(expected);
+		expect(actual).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should call any method on event', () => {
@@ -104,9 +104,9 @@ describe('handle', () => {
 		callback(ev);
 
 		const expected = 1;
-		const actual = ev.customMethod.mock.calls.length;
+		const actual = ev.customMethod;
 
-		expect(actual).toBe(expected);
+		expect(actual).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should only call handler for specified keyCode', () => {
