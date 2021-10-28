@@ -1,8 +1,7 @@
-import '@testing-library/jest-dom';
 import {fireEvent, render, screen} from '@testing-library/react';
 
-import Touchable from '../Touchable';
 import {configure, getConfig, resetDefaultConfig} from '../config';
+import Touchable from '../Touchable';
 
 describe('Touchable', () => {
 	let data = [];
@@ -259,7 +258,7 @@ describe('Touchable', () => {
 			};
 			fireEvent.mouseDown(component, ev);
 			fireEvent.mouseUp(component, ev);
-			fireEvent.click(component, {});
+			fireEvent.click(component, ev);
 
 			const expected = ['onTap', 'click'];
 			const actual = handler.mock.calls.map(call => call[0].type);
@@ -407,6 +406,7 @@ describe('Touchable', () => {
 				changedTouches: [{clientX: 0, clientY: 0}],
 				targetTouches: [{clientX: 0, clientY: 0}]
 			};
+
 			fireEvent.touchStart(innerComponent, touchEvent);
 			fireEvent.touchEnd(innerComponent, touchEvent);
 			fireEvent.mouseDown(innerComponent, mouseEvent);
