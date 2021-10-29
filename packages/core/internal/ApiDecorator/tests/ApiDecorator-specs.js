@@ -1,8 +1,10 @@
+import {render} from '@testing-library/react';
 import {Component as ReactComponent} from 'react';
-import {mount} from 'enzyme';
+
 import ApiDecorator from '../ApiDecorator';
 
 describe('ApiDecorator', () => {
+	let data = [];
 
 	const ApiProvider = class extends ReactComponent {
 		static displayName = 'ApiProvider';
@@ -22,9 +24,13 @@ describe('ApiDecorator', () => {
 		instanceProperty = 'property';
 
 		render () {
-			return (
-				<div />
-			);
+			data = {
+				arrowFunction: this.arrowFunction,
+				instanceFunction: this.instanceFunction,
+				instanceProperty: this.instanceProperty
+			};
+
+			return (<div />);
 		}
 	};
 
@@ -34,12 +40,10 @@ describe('ApiDecorator', () => {
 			ApiProvider
 		);
 
-		const subject = mount(
-			<Component />
-		);
+		render(<Component />);
 
 		const expected = 'arrow';
-		const actual = subject.instance().arrowFunction();
+		const actual = data.arrowFunction();
 
 		expect(actual).toBe(expected);
 	});
@@ -50,12 +54,10 @@ describe('ApiDecorator', () => {
 			ApiProvider
 		);
 
-		const subject = mount(
-			<Component />
-		);
+		render(<Component />);
 
 		const expected = 'instance';
-		const actual = subject.instance().instanceFunction();
+		const actual = data.instanceFunction();
 
 		expect(actual).toBe(expected);
 	});
@@ -66,12 +68,10 @@ describe('ApiDecorator', () => {
 			ApiProvider
 		);
 
-		const subject = mount(
-			<Component />
-		);
+		render(<Component />);
 
 		const expected = 'property';
-		const actual = subject.instance().instanceProperty;
+		const actual = data.instanceProperty;
 
 		expect(actual).toBe(expected);
 	});
@@ -82,14 +82,12 @@ describe('ApiDecorator', () => {
 			ApiProvider
 		);
 
-		const subject = mount(
-			<Component />
-		);
+		render(<Component />);
 
-		subject.instance().instanceProperty = 'updated';
+		data.instanceProperty = 'updated';
 
 		const expected = 'updated';
-		const actual = subject.instance().instanceProperty;
+		const actual = data.instanceProperty;
 
 		expect(actual).toBe(expected);
 	});
