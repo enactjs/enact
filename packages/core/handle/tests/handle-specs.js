@@ -1,5 +1,4 @@
 import {
-	handle,
 	adaptEvent,
 	call,
 	callOnEvent,
@@ -9,13 +8,13 @@ import {
 	forward,
 	forwardCustom,
 	forwardWithPrevent,
+	handle,
 	oneOf,
 	preventDefault,
 	stop
 } from '../handle';
 
 describe('handle', () => {
-
 	const makeEvent = (payload) => ({
 		preventDefault: jest.fn(),
 		stopPropagation: jest.fn(),
@@ -32,9 +31,8 @@ describe('handle', () => {
 		callback(makeEvent());
 
 		const expected = 1;
-		const actual = handler.mock.calls.length;
 
-		expect(actual).toBe(expected);
+		expect(handler).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should call multiple handlers', () => {
@@ -45,11 +43,10 @@ describe('handle', () => {
 
 		callback(makeEvent());
 
-		const expected = true;
-		const actual = handler1.mock.calls.length === 1 &&
-				handler2.mock.calls.length === 1;
+		const expected = 1;
 
-		expect(actual).toBe(expected);
+		expect(handler1).toHaveBeenCalledTimes(expected);
+		expect(handler2).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should skip non-function handlers', () => {
@@ -59,9 +56,8 @@ describe('handle', () => {
 		callback(makeEvent());
 
 		const expected = 1;
-		const actual = handler.mock.calls.length;
 
-		expect(actual).toBe(expected);
+		expect(handler).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should not call handlers after one that returns false', () => {
@@ -72,10 +68,10 @@ describe('handle', () => {
 
 		callback(makeEvent());
 
-		const expected = 0;
-		const actual = handler2.mock.calls.length;
+		const expectedFirst = 1;
 
-		expect(actual).toBe(expected);
+		expect(handler1).toHaveBeenCalledTimes(expectedFirst);
+		expect(handler2).not.toHaveBeenCalled();
 	});
 
 	test('should call stopPropagation on event', () => {
@@ -84,9 +80,9 @@ describe('handle', () => {
 		callback(ev);
 
 		const expected = 1;
-		const actual = ev.stopPropagation.mock.calls.length;
+		const actual = ev.stopPropagation;
 
-		expect(actual).toBe(expected);
+		expect(actual).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should call preventDefault on event', () => {
@@ -95,9 +91,9 @@ describe('handle', () => {
 		callback(ev);
 
 		const expected = 1;
-		const actual = ev.preventDefault.mock.calls.length;
+		const actual = ev.preventDefault;
 
-		expect(actual).toBe(expected);
+		expect(actual).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should call any method on event', () => {
@@ -108,9 +104,9 @@ describe('handle', () => {
 		callback(ev);
 
 		const expected = 1;
-		const actual = ev.customMethod.mock.calls.length;
+		const actual = ev.customMethod;
 
-		expect(actual).toBe(expected);
+		expect(actual).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should only call handler for specified keyCode', () => {
@@ -126,9 +122,9 @@ describe('handle', () => {
 	});
 
 	test('should only call handler for specified event prop', () => {
+		const handler = jest.fn();
 		const prop = 'index';
 		const value = 0;
-		const handler = jest.fn();
 		const callback = handle(forEventProp(prop, value), handler);
 
 		// undefined shouldn't pass
@@ -165,29 +161,26 @@ describe('handle', () => {
 		expect(handler).toHaveBeenCalled();
 	});
 
-	test(
-		'should forward events to function specified in provided props',
-		() => {
-			const event = 'onMyClick';
-			const prop = 'index';
-			const propValue = 0;
-			const spy = jest.fn();
+	test('should forward events to function specified in provided props', () => {
+		const event = 'onMyClick';
+		const prop = 'index';
+		const propValue = 0;
+		const spy = jest.fn();
 
-			const props = {
-				[event]: spy
-			};
-			const payload = {
-				[prop]: propValue
-			};
+		const props = {
+			[event]: spy
+		};
+		const payload = {
+			[prop]: propValue
+		};
 
-			handle(forward(event))(payload, props);
+		handle(forward(event))(payload, props);
 
-			const expected = true;
-			const actual = spy.mock.calls[0][0][prop] === propValue;
+		const expected = true;
+		const actual = spy.mock.calls[0][0][prop] === propValue;
 
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(actual).toBe(expected);
+	});
 
 	test(
 		'should forwardWithPrevent events to function specified in provided props when preventDefault() hasn\'t been called',
@@ -262,46 +255,37 @@ describe('handle', () => {
 			callback(makeEvent());
 
 			const expected = 1;
-			const actual = finallyCallback.mock.calls.length;
 
-			expect(actual).toBe(expected);
+			expect(finallyCallback).toHaveBeenCalledTimes(expected);
 		});
 
-		test(
-			'should call the finally callback when handle returns false',
-			() => {
-				const finallyCallback = jest.fn();
-				const callback = handle(returnsFalse).finally(finallyCallback);
+		test('should call the finally callback when handle returns false', () => {
+			const finallyCallback = jest.fn();
+			const callback = handle(returnsFalse).finally(finallyCallback);
 
+			callback(makeEvent());
+
+			const expected = 1;
+
+			expect(finallyCallback).toHaveBeenCalledTimes(expected);
+		});
+
+		test('should call the finally callback when handle throws an error', () => {
+			const finallyCallback = jest.fn();
+			const callback = handle(() => {
+				throw new Error('Something has gone awry ...');
+			}).finally(finallyCallback);
+
+			try {
 				callback(makeEvent());
-
-				const expected = 1;
-				const actual = finallyCallback.mock.calls.length;
-
-				expect(actual).toBe(expected);
+			} catch (e) {
+				// we don't want the error to interrupt the test
 			}
-		);
 
-		test(
-			'should call the finally callback when handle throws an error',
-			() => {
-				const finallyCallback = jest.fn();
-				const callback = handle(() => {
-					throw new Error('Something has gone awry ...');
-				}).finally(finallyCallback);
+			const expected = 1;
 
-				try {
-					callback(makeEvent());
-				} catch (e) {
-					// we don't want the error to interrupt the test
-				}
-
-				const expected = 1;
-				const actual = finallyCallback.mock.calls.length;
-
-				expect(actual).toBe(expected);
-			}
-		);
+			expect(finallyCallback).toHaveBeenCalledTimes(expected);
+		});
 	});
 
 	describe('#oneOf', () => {
@@ -319,9 +303,8 @@ describe('handle', () => {
 			callback();
 
 			const expected = 1;
-			const actual = handler.mock.calls.length;
 
-			expect(actual).toBe(expected);
+			expect(handler).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should stop if the first handler passes', () => {
@@ -334,9 +317,8 @@ describe('handle', () => {
 			callback();
 
 			const expected = 1;
-			const actual = handler.mock.calls.length;
 
-			expect(actual).toBe(expected);
+			expect(handler).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should pass args to condition', () => {
@@ -367,33 +349,25 @@ describe('handle', () => {
 			expect(actual).toBe(expected);
 		});
 
-		test(
-			'should return true when the passed condition branch returns a truthy value',
-			() => {
-				const callback = oneOf(
-					[returnsTrue, () => 'ok']
-				);
+		test('should return true when the passed condition branch returns a truthy value', () => {
+			const callback = oneOf(
+				[returnsTrue, () => 'ok']
+			);
 
-				const expected = true;
-				const actual = callback();
+			const actual = callback();
 
-				expect(actual).toBe(expected);
-			}
-		);
+			expect(actual).not.toBeFalsy();
+		});
 
-		test(
-			'should return false when the passed condition branch returns a falsy value',
-			() => {
-				const callback = oneOf(
-					[returnsTrue, () => null]
-				);
+		test('should return false when the passed condition branch returns a falsy value', () => {
+			const callback = oneOf(
+				[returnsTrue, () => null]
+			);
 
-				const expected = false;
-				const actual = callback();
+			const actual = callback();
 
-				expect(actual).toBe(expected);
-			}
-		);
+			expect(actual).toBeFalsy();
+		});
 
 		test('should return false when no conditions pass', () => {
 			const callback = oneOf(
@@ -401,10 +375,9 @@ describe('handle', () => {
 				[returnsFalse, returnsTrue]
 			);
 
-			const expected = false;
 			const actual = callback();
 
-			expect(actual).toBe(expected);
+			expect(actual).toBeFalsy();
 		});
 
 		test('should support bound handlers', () => {
@@ -477,9 +450,8 @@ describe('handle', () => {
 			callback();
 
 			const expected = 1;
-			const actual = handler.mock.calls.length;
 
-			expect(actual).toBe(expected);
+			expect(handler).toHaveBeenCalledTimes(expected);
 		});
 	});
 

@@ -1,7 +1,6 @@
 import {off, on, once} from '../dispatcher';
 
 describe('dispatcher', () => {
-
 	test('should register handlers on target', () => {
 		const handler = jest.fn();
 		on('localechange', handler, window);
@@ -10,9 +9,8 @@ describe('dispatcher', () => {
 		window.dispatchEvent(ev);
 
 		const expected = 1;
-		const actual = handler.mock.calls.length;
 
-		expect(actual).toBe(expected);
+		expect(handler).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should not register duplicate handlers on target', () => {
@@ -24,9 +22,8 @@ describe('dispatcher', () => {
 		window.dispatchEvent(ev);
 
 		const expected = 1;
-		const actual = handler.mock.calls.length;
 
-		expect(actual).toBe(expected);
+		expect(handler).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should unregister handlers on target', () => {
@@ -40,9 +37,8 @@ describe('dispatcher', () => {
 		window.dispatchEvent(ev);
 
 		const expected = 1;
-		const actual = handler.mock.calls.length;
 
-		expect(actual).toBe(expected);
+		expect(handler).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should only call a "once" handler once', () => {
@@ -54,9 +50,8 @@ describe('dispatcher', () => {
 		window.dispatchEvent(ev);
 
 		const expected = 1;
-		const actual = handler.mock.calls.length;
 
-		expect(actual).toBe(expected);
+		expect(handler).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should allow unregistering a "once" before it is called', () => {
@@ -67,34 +62,27 @@ describe('dispatcher', () => {
 		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
 
-		const expected = 0;
-		const actual = handler.mock.calls.length;
-
-		expect(actual).toBe(expected);
+		expect(handler).not.toHaveBeenCalled();
 	});
 
-	test(
-		'should not block subsequent handlers when a handler throws',
-		() => {
-			// Modify the console spy to silence error output with
-			// an empty mock implementation
-			// eslint-disable-next-line no-console
-			console.error.mockImplementation();
+	test('should not block subsequent handlers when a handler throws', () => {
+		// Modify the console spy to silence error output with
+		// an empty mock implementation
+		// eslint-disable-next-line no-console
+		console.error.mockImplementation();
 
-			const throws = function () {
-				throw new Error('Thrown from handler');
-			};
-			const handler = jest.fn();
-			on('localechange', throws, window);
-			on('localechange', handler, window);
+		const throws = function () {
+			throw new Error('Thrown from handler');
+		};
+		const handler = jest.fn();
+		on('localechange', throws, window);
+		on('localechange', handler, window);
 
-			const ev = new window.CustomEvent('localechange', {});
-			window.dispatchEvent(ev);
+		const ev = new window.CustomEvent('localechange', {});
+		window.dispatchEvent(ev);
 
-			const expected = 1;
-			const actual = handler.mock.calls.length;
+		const expected = 1;
 
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(handler).toHaveBeenCalledTimes(expected);
+	});
 });
