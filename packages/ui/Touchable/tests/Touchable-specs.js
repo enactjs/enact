@@ -245,7 +245,7 @@ describe('Touchable', () => {
 			expect(actual).toEqual(expected);
 		});
 
-		// TODO: find a scenario so that this test don't fail at certain times
+		// This test is unstable. `fireEvent` does not recognize the timeSTamp property
 		test.skip('should be called before onClick on mouse up', () => {
 			const Component = Touchable({activeProp: 'active'}, DivComponent);
 			const handler = jest.fn();
