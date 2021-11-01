@@ -19,7 +19,7 @@ describe('useHandlers', () => {
 
 		data = {
 			handlers
-		}
+		};
 
 		return (
 			<div {...props} data-testid="divComponent" />
