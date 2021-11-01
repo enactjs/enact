@@ -30,7 +30,7 @@ describe('useI18n', () => {
 
 		const divProps = {...state, ...i18n};
 
-		return <div data-testid="i18nDiv" className={divProps.className}>{divProps.rtl ? 'rtl' : 'ltr'}</div>;
+		return <div className={divProps.className} data-testid="i18nDiv">{divProps.rtl ? 'rtl' : 'ltr'}</div>;
 	}
 
 	test('should return rtl=false by default', () => {
