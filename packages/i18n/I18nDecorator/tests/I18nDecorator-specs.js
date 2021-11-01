@@ -6,7 +6,6 @@ import userEvent from '@testing-library/user-event';
 import {I18nContextDecorator, I18nDecorator} from '../I18nDecorator';
 import {updateLocale} from '../../locale';
 
-
 describe('I18nDecorator', () => {
 	// Suite-wide setup
 	beforeEach(() => {
