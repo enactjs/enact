@@ -95,8 +95,7 @@ describe('useHandlers', () => {
 		// defined a "global" context to ease testability but this isn't representative of the
 		// expected use case of this feature.
 		const expected = 'ok';
-		const actual = returnValue;
 
-		expect(actual).toBe(expected);
+		expect(returnValue).toBe(expected);
 	});
 });
