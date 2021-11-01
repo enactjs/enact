@@ -3,7 +3,6 @@ import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 
 import {updateLocale} from '../../locale';
-
 import useI18n from '../useI18n';
 
 describe('useI18n', () => {

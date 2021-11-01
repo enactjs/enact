@@ -3,8 +3,9 @@ import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import {updateLocale} from '../../locale';
 import {I18nContextDecorator, I18nDecorator} from '../I18nDecorator';
+import {updateLocale} from '../../locale';
+
 
 describe('I18nDecorator', () => {
 	// Suite-wide setup
