@@ -36,10 +36,10 @@ describe('useI18n', () => {
 	test('should return rtl=false by default', () => {
 		render(<Component />);
 
-		const expected = 'rtl';
+		const expected = 'ltr';
 		const i18nDiv = screen.getByTestId('i18nDiv');
 
-		expect(i18nDiv).not.toHaveTextContent(expected);
+		expect(i18nDiv).toHaveTextContent(expected);
 	});
 
 	test('should return en-US classes', () => {
