@@ -1,14 +1,12 @@
-import {shallow} from 'enzyme';
 import {useState} from 'react';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
 
 import {updateLocale} from '../../locale';
-
 import useI18n from '../useI18n';
 
 describe('useI18n', () => {
-
 	// Suite-wide setup
-
 	beforeEach(() => {
 		updateLocale('en-US');
 	});
@@ -29,79 +27,72 @@ describe('useI18n', () => {
 			onLoadResources: setState
 		});
 
-		return <div {...state} {...i18n} />;
+		const divProps = {...state, ...i18n};
+
+		return <div className={divProps.className} data-testid="i18nDiv">{divProps.rtl ? 'rtl' : 'ltr'}</div>;
 	}
 
 	test('should return rtl=false by default', () => {
-		const subject = shallow(<Component />);
+		render(<Component />);
 
-		const expected = false;
-		const actual = subject.prop('rtl');
+		const expected = 'ltr';
+		const i18nDiv = screen.getByTestId('i18nDiv');
 
-		expect(actual).toBe(expected);
+		expect(i18nDiv).toHaveTextContent(expected);
 	});
 
 	test('should return en-US classes', () => {
-		const subject = shallow(<Component />);
-		subject.update();
+		render(<Component />);
 
-		const expected = ['enact-locale-en', 'enact-locale-en-US', 'enact-locale-US'].sort();
-		const actual = subject.prop('className').split(' ').sort();
+		const i18nDiv = screen.getByTestId('i18nDiv');
 
-		expect(actual).toEqual(expected);
+		expect(i18nDiv).toHaveClass('enact-locale-en');
+		expect(i18nDiv).toHaveClass('enact-locale-en-US');
+		expect(i18nDiv).toHaveClass('enact-locale-US');
 	});
 
 	test('should return rtl=true for RTL locales', () => {
-		const subject = shallow(<Component locale="ar-SA" />);
+		render(<Component locale="ar-SA" />);
 
-		const expected = true;
-		const actual = subject.prop('rtl');
+		const expected = 'rtl';
+		const i18nDiv = screen.getByTestId('i18nDiv');
 
-		expect(actual).toBe(expected);
+		expect(i18nDiv).toHaveTextContent(expected);
 	});
 
 	test('should return ar-SA classes', () => {
-		const subject = shallow(<Component locale="ar-SA" />);
+		render(<Component locale="ar-SA" />);
 
-		const expected = [
-			'enact-locale-ar',
-			'enact-locale-ar-SA',
-			'enact-locale-SA',
-			'enact-locale-non-italic',
-			'enact-locale-non-latin',
-			'enact-locale-right-to-left'
-		].sort();
-		const actual = subject.prop('className').split(' ').sort();
+		const i18nDiv = screen.getByTestId('i18nDiv');
 
-		expect(actual).toEqual(expected);
+		expect(i18nDiv).toHaveClass('enact-locale-ar');
+		expect(i18nDiv).toHaveClass('enact-locale-ar-SA');
+		expect(i18nDiv).toHaveClass('enact-locale-SA');
+		expect(i18nDiv).toHaveClass('enact-locale-non-italic');
+		expect(i18nDiv).toHaveClass('enact-locale-non-latin');
+		expect(i18nDiv).toHaveClass('enact-locale-right-to-left');
 	});
 
 	test('should return support overriding to latin locale', () => {
-		const subject = shallow(<Component locale="ar-SA" latinLanguageOverrides={['ar-SA']} />);
+		render(<Component locale="ar-SA" latinLanguageOverrides={['ar-SA']} />);
 
-		const expected = [
-			'enact-locale-ar',
-			'enact-locale-ar-SA',
-			'enact-locale-SA',
-			'enact-locale-non-italic',
-			'enact-locale-right-to-left'
-		].sort();
-		const actual = subject.prop('className').split(' ').sort();
+		const i18nDiv = screen.getByTestId('i18nDiv');
 
-		expect(actual).toEqual(expected);
+		expect(i18nDiv).toHaveClass('enact-locale-ar');
+		expect(i18nDiv).toHaveClass('enact-locale-ar-SA');
+		expect(i18nDiv).toHaveClass('enact-locale-SA');
+		expect(i18nDiv).toHaveClass('enact-locale-non-italic');
+		expect(i18nDiv).toHaveClass('enact-locale-right-to-left');
 	});
 
 	test('should return support overriding to non-latin locale', () => {
-		const subject = shallow(<Component locale="en-US" nonLatinLanguageOverrides={['en-US']} />);
+		render(<Component locale="en-US" nonLatinLanguageOverrides={['en-US']} />);
 
-		const expected = [
-			'enact-locale-en',
-			'enact-locale-en-US',
-			'enact-locale-US',
-			'enact-locale-non-latin'
-		].sort();
-		const actual = subject.prop('className').split(' ').sort();
+		const i18nDiv = screen.getByTestId('i18nDiv');
 
-		expect(actual).toEqual(expected);
+		expect(i18nDiv).toHaveClass('enact-locale-en');
+		expect(i18nDiv).toHaveClass('enact-locale-en-US');
+		expect(i18nDiv).toHaveClass('enact-locale-US');
+		expect(i18nDiv).toHaveClass('enact-locale-non-latin');
 	});
 });
