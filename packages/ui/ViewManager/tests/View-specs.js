@@ -1,64 +1,56 @@
 import {mount} from 'enzyme';
+
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
 import View from '../View';
 
 import {MockArranger} from './test-utils';
 
 describe('View', () => {
 
-	test(
-		'should render its child when neither enteringProp or childProps is specified',
-		() => {
-			const subject = mount(
+	test('should render its child when neither enteringProp or childProps is specified', () => {
+			render(
 				<View duration={1000}>
-					<span />
+					<span data-testid="span" />
 				</View>
 			);
 
-			const expected = 1;
-			const actual = subject.find('span').length;
+			const actual = screen.getByTestId('span');
 
-			expect(actual).toBe(expected);
+			expect(actual).toBeInTheDocument();
 		}
 	);
 
-	test(
-		'should pass the value of entering to its child in enteringProp',
-		() => {
-			const subject = mount(
+	test('should pass the value of entering to its child in enteringProp', () => {
+			render(
 				<View duration={1000} enteringProp="data-entering">
-					<span />
+					<span data-testid="span" />
 				</View>
 			);
 
-			const expected = true;
-			const actual = subject.find('span').prop('data-entering');
+			const actual = screen.getByTestId('span');
 
-			expect(actual).toBe(expected);
+			expect(actual).toHaveAttribute('data-entering', 'true');
 		}
 	);
 
-	test(
-		'should pass enteringProp as false for an appearing view',
-		() => {
+	test('should pass enteringProp as false for an appearing view', () => {
 			// Views visible on mount are "appearing" and shouldn't perform "entering" logic like
 			// deferring children rendering
-			const subject = mount(
+			render(
 				<View duration={1000} enteringProp="data-entering" appearing>
-					<span />
+					<span data-testid="span" />
 				</View>
 			);
 
-			const expected = false;
-			const actual = subject.find('span').prop('data-entering');
+			const actual = screen.getByTestId('span');
 
-			expect(actual).toBe(expected);
+			expect(actual).toHaveAttribute('data-entering', 'false');
 		}
 	);
 
 	describe('imperative API without arranger', () => {
-		test(
-			'should call callback immediately for "stay"',
-			() => {
+		test('should call callback immediately for "stay"', () => {
 				const spy = jest.fn();
 				const subject = mount(
 					<View duration={16}>

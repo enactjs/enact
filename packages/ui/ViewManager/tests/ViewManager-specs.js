@@ -1,5 +1,7 @@
 import {Component} from 'react';
 import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
 import ViewManager from '../';
 
 import {MockArranger} from './test-utils';
@@ -8,130 +10,146 @@ describe('ViewManager', () => {
 
 	// Suite-wide setup
 
-	test(
-		'should render {component} as its child - <div/> by default',
-		() => {
-			const subject = mount(
-				<ViewManager>
+	test('should render {component} as its child - <div/> by default', () => {
+			render(
+				<ViewManager data-testid="component">
 					<span />
 				</ViewManager>
 			);
 
-			const expected = 1;
-			const actual = subject.find('div').length;
+			const expected = 'DIV';
+			const actual = screen.getByTestId('component').tagName;
 
 			expect(actual).toBe(expected);
 		}
 	);
 
 	test('should render {component} as its child', () => {
-		const subject = mount(
-			<ViewManager component="span">
+		render(
+			<ViewManager component="span" data-testid="component">
 				<div />
 			</ViewManager>
 		);
 
-		const expected = 1;
-		const actual = subject.find('span').length;
+		const expected = 'SPAN';
+		const actual = screen.getByTestId('component').tagName;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should render only 1 child view', () => {
-		const subject = mount(
+		render(
 			<ViewManager>
-				<div className="view">View 1</div>
-				<div className="view">View 2</div>
-				<div className="view">View 3</div>
-				<div className="view">View 4</div>
-				<div className="view">View 5</div>
+				<div data-testid="view">View 1</div>
+				<div data-testid="view">View 2</div>
+				<div data-testid="view">View 3</div>
+				<div data-testid="view">View 4</div>
+				<div data-testid="view">View 5</div>
 			</ViewManager>
 		);
 
 		const expected = 1;
-		const actual = subject.find('.view').length;
+		const actual = screen.getAllByTestId('view').length;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should render the child at {index}', () => {
-		const subject = mount(
+		render(
 			<ViewManager index={3}>
-				<div className="view">View 1</div>
-				<div className="view">View 2</div>
-				<div className="view">View 3</div>
-				<div className="view">View 4</div>
-				<div className="view">View 5</div>
+				<div data-testid="view">View 1</div>
+				<div data-testid="view">View 2</div>
+				<div data-testid="view">View 3</div>
+				<div data-testid="view">View 4</div>
+				<div data-testid="view">View 5</div>
 			</ViewManager>
 		);
 
 		const expected = 'View 4';
-		const actual = subject.find('.view').text();
+		const actual = screen.getByTestId('view').textContent;
 
 		expect(actual).toBe(expected);
 	});
 
-	test(
-		'should have 1 child immediately after setting new {index} without an {arranger}',
-		() => {
-			const subject = mount(
+	test('should have 1 child immediately after setting new {index} without an {arranger}', () => {
+			const {rerender} = render(
 				<ViewManager index={3}>
-					<div className="view">View 1</div>
-					<div className="view">View 2</div>
-					<div className="view">View 3</div>
-					<div className="view">View 4</div>
-					<div className="view">View 5</div>
+					<div data-testid="view">View 1</div>
+					<div data-testid="view">View 2</div>
+					<div data-testid="view">View 3</div>
+					<div data-testid="view">View 4</div>
+					<div data-testid="view">View 5</div>
 				</ViewManager>
 			);
 
-			subject.setProps({index: 4});
+			rerender(
+				<ViewManager index={4}>
+					<div data-testid="view">View 1</div>
+					<div data-testid="view">View 2</div>
+					<div data-testid="view">View 3</div>
+					<div data-testid="view">View 4</div>
+					<div data-testid="view">View 5</div>
+				</ViewManager>
+			)
 
 			const expected = 1;
-			const actual = subject.find('.view').length;
+			const actual = screen.getAllByTestId('view').length;
 
 			expect(actual).toBe(expected);
 		}
 	);
 
-	test(
-		'should have 1 child immediately after setting new {index} with an {arranger} and {noAnimation} is false',
-		() => {
-			const subject = mount(
+	test('should have 1 child immediately after setting new {index} with an {arranger} and {noAnimation} is false', () => {
+			const {rerender} = render(
 				<ViewManager index={3} arranger={MockArranger} noAnimation>
-					<div className="view">View 1</div>
-					<div className="view">View 2</div>
-					<div className="view">View 3</div>
-					<div className="view">View 4</div>
-					<div className="view">View 5</div>
+					<div data-testid="view">View 1</div>
+					<div data-testid="view">View 2</div>
+					<div data-testid="view">View 3</div>
+					<div data-testid="view">View 4</div>
+					<div data-testid="view">View 5</div>
 				</ViewManager>
 			);
 
-			subject.setProps({index: 4});
+			rerender(
+				<ViewManager index={4} arranger={MockArranger} noAnimation>
+					<div data-testid="view">View 1</div>
+					<div data-testid="view">View 2</div>
+					<div data-testid="view">View 3</div>
+					<div data-testid="view">View 4</div>
+					<div data-testid="view">View 5</div>
+				</ViewManager>
+			)
 
 			const expected = 1;
-			const actual = subject.find('.view').length;
+			const actual = screen.getAllByTestId('view').length;
 
 			expect(actual).toBe(expected);
 		}
 	);
 
-	test(
-		'should have 2 children immediately after setting new {index} with an {arranger}',
-		() => {
-			const subject = mount(
+	test('should have 2 children immediately after setting new {index} with an {arranger}', () => {
+			const {rerender} = render(
 				<ViewManager index={3} arranger={MockArranger}>
-					<div className="view">View 1</div>
-					<div className="view">View 2</div>
-					<div className="view">View 3</div>
-					<div className="view">View 4</div>
-					<div className="view">View 5</div>
+					<div data-testid="view">View 1</div>
+					<div data-testid="view">View 2</div>
+					<div data-testid="view">View 3</div>
+					<div data-testid="view">View 4</div>
+					<div data-testid="view">View 5</div>
 				</ViewManager>
 			);
 
-			subject.setProps({index: 4});
+			rerender(
+				<ViewManager index={4} arranger={MockArranger}>
+					<div data-testid="view">View 1</div>
+					<div data-testid="view">View 2</div>
+					<div data-testid="view">View 3</div>
+					<div data-testid="view">View 4</div>
+					<div data-testid="view">View 5</div>
+				</ViewManager>
+			)
 
 			const expected = 2;
-			const actual = subject.find('.view').length;
+			const actual = screen.getAllByTestId('view').length;
 
 			expect(actual).toBe(expected);
 		}
@@ -143,20 +161,20 @@ describe('ViewManager', () => {
 			render () {
 				return (
 					<ViewManager>
-						<div className="view">{this.props.content}</div>
+						<div data-testid="view">{this.props.content}</div>
 					</ViewManager>
 				);
 			}
 		}
 
-		const subject = mount(
+		const {rerender} = render(
 			<ViewManagerTest content="original" />
 		);
 
-		subject.setProps({content});
+		rerender(<ViewManagerTest content={content} />)
 
 		const expected = content;
-		const actual = subject.find('.view').text();
+		const actual = screen.getByTestId('view').textContent;
 
 		expect(actual).toBe(expected);
 	});
