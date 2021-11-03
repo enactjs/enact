@@ -1,28 +1,26 @@
-import {Component} from 'react';
 import {mount} from 'enzyme';
+import {Component} from 'react';
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
+
 import ViewManager from '../';
 
 import {MockArranger} from './test-utils';
 
 describe('ViewManager', () => {
-
 	// Suite-wide setup
-
 	test('should render {component} as its child - <div/> by default', () => {
-			render(
-				<ViewManager data-testid="component">
-					<span />
-				</ViewManager>
-			);
+		render(
+			<ViewManager data-testid="component">
+				<span />
+			</ViewManager>
+		);
 
-			const expected = 'DIV';
-			const actual = screen.getByTestId('component').tagName;
+		const expected = 'DIV';
+		const actual = screen.getByTestId('component').tagName;
 
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(actual).toBe(expected);
+	});
 
 	test('should render {component} as its child', () => {
 		render(
@@ -72,87 +70,87 @@ describe('ViewManager', () => {
 	});
 
 	test('should have 1 child immediately after setting new {index} without an {arranger}', () => {
-			const {rerender} = render(
-				<ViewManager index={3}>
-					<div data-testid="view">View 1</div>
-					<div data-testid="view">View 2</div>
-					<div data-testid="view">View 3</div>
-					<div data-testid="view">View 4</div>
-					<div data-testid="view">View 5</div>
-				</ViewManager>
-			);
+		const {rerender} = render(
+			<ViewManager index={3}>
+				<div data-testid="view">View 1</div>
+				<div data-testid="view">View 2</div>
+				<div data-testid="view">View 3</div>
+				<div data-testid="view">View 4</div>
+				<div data-testid="view">View 5</div>
+			</ViewManager>
+		);
 
-			rerender(
-				<ViewManager index={4}>
-					<div data-testid="view">View 1</div>
-					<div data-testid="view">View 2</div>
-					<div data-testid="view">View 3</div>
-					<div data-testid="view">View 4</div>
-					<div data-testid="view">View 5</div>
-				</ViewManager>
-			)
+		rerender(
+			<ViewManager index={4}>
+				<div data-testid="view">View 1</div>
+				<div data-testid="view">View 2</div>
+				<div data-testid="view">View 3</div>
+				<div data-testid="view">View 4</div>
+				<div data-testid="view">View 5</div>
+			</ViewManager>
+		);
 
-			const expected = 1;
-			const actual = screen.getAllByTestId('view').length;
+		const expected = 1;
+		const actual = screen.getAllByTestId('view').length;
 
-			expect(actual).toBe(expected);
-		}
+		expect(actual).toBe(expected);
+	}
 	);
 
 	test('should have 1 child immediately after setting new {index} with an {arranger} and {noAnimation} is false', () => {
-			const {rerender} = render(
-				<ViewManager index={3} arranger={MockArranger} noAnimation>
-					<div data-testid="view">View 1</div>
-					<div data-testid="view">View 2</div>
-					<div data-testid="view">View 3</div>
-					<div data-testid="view">View 4</div>
-					<div data-testid="view">View 5</div>
-				</ViewManager>
-			);
+		const {rerender} = render(
+			<ViewManager index={3} arranger={MockArranger} noAnimation>
+				<div data-testid="view">View 1</div>
+				<div data-testid="view">View 2</div>
+				<div data-testid="view">View 3</div>
+				<div data-testid="view">View 4</div>
+				<div data-testid="view">View 5</div>
+			</ViewManager>
+		);
 
-			rerender(
-				<ViewManager index={4} arranger={MockArranger} noAnimation>
-					<div data-testid="view">View 1</div>
-					<div data-testid="view">View 2</div>
-					<div data-testid="view">View 3</div>
-					<div data-testid="view">View 4</div>
-					<div data-testid="view">View 5</div>
-				</ViewManager>
-			)
+		rerender(
+			<ViewManager index={4} arranger={MockArranger} noAnimation>
+				<div data-testid="view">View 1</div>
+				<div data-testid="view">View 2</div>
+				<div data-testid="view">View 3</div>
+				<div data-testid="view">View 4</div>
+				<div data-testid="view">View 5</div>
+			</ViewManager>
+		);
 
-			const expected = 1;
-			const actual = screen.getAllByTestId('view').length;
+		const expected = 1;
+		const actual = screen.getAllByTestId('view').length;
 
-			expect(actual).toBe(expected);
-		}
+		expect(actual).toBe(expected);
+	}
 	);
 
 	test('should have 2 children immediately after setting new {index} with an {arranger}', () => {
-			const {rerender} = render(
-				<ViewManager index={3} arranger={MockArranger}>
-					<div data-testid="view">View 1</div>
-					<div data-testid="view">View 2</div>
-					<div data-testid="view">View 3</div>
-					<div data-testid="view">View 4</div>
-					<div data-testid="view">View 5</div>
-				</ViewManager>
-			);
+		const {rerender} = render(
+			<ViewManager index={3} arranger={MockArranger}>
+				<div data-testid="view">View 1</div>
+				<div data-testid="view">View 2</div>
+				<div data-testid="view">View 3</div>
+				<div data-testid="view">View 4</div>
+				<div data-testid="view">View 5</div>
+			</ViewManager>
+		);
 
-			rerender(
-				<ViewManager index={4} arranger={MockArranger}>
-					<div data-testid="view">View 1</div>
-					<div data-testid="view">View 2</div>
-					<div data-testid="view">View 3</div>
-					<div data-testid="view">View 4</div>
-					<div data-testid="view">View 5</div>
-				</ViewManager>
-			)
+		rerender(
+			<ViewManager index={4} arranger={MockArranger}>
+				<div data-testid="view">View 1</div>
+				<div data-testid="view">View 2</div>
+				<div data-testid="view">View 3</div>
+				<div data-testid="view">View 4</div>
+				<div data-testid="view">View 5</div>
+			</ViewManager>
+		);
 
-			const expected = 2;
-			const actual = screen.getAllByTestId('view').length;
+		const expected = 2;
+		const actual = screen.getAllByTestId('view').length;
 
-			expect(actual).toBe(expected);
-		}
+		expect(actual).toBe(expected);
+	}
 	);
 
 	test('should allow child props to update', () => {
@@ -171,7 +169,7 @@ describe('ViewManager', () => {
 			<ViewManagerTest content="original" />
 		);
 
-		rerender(<ViewManagerTest content={content} />)
+		rerender(<ViewManagerTest content={content} />);
 
 		const expected = content;
 		const actual = screen.getByTestId('view').textContent;
@@ -324,85 +322,98 @@ describe('ViewManager', () => {
 	});
 
 	test('should update the active view when {start}, {end}, and {index} update', () => {
-		const subject = mount(
-			<ViewManager index={3} start={3} end={3}>
+		const {rerender} = render(
+			<ViewManager data-testid="viewManager" end={3} index={3} start={3}>
 				<div key="view1">View 1</div>
 				<div key="view2">View 2</div>
 				<div key="view3">View 3</div>
 				<div key="view4">View 4</div>
 			</ViewManager>
 		);
+		const children = screen.getByTestId('viewManager').children;
 
-		expect(subject.find('View')).toHaveLength(1);
-		expect(subject.find('View div').prop('children')).toBe('View 4');
+		expect(children).toHaveLength(1);
+		expect(screen.getByTestId('viewManager')).toHaveTextContent('View 4');
 
-		subject.setProps({start: 2, end: 2, index: 2});
+		rerender(
+			<ViewManager data-testid="viewManager" end={2} index={2} start={2}>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+				<div key="view3">View 3</div>
+				<div key="view4">View 4</div>
+			</ViewManager>
+		);
+		const newChildren = screen.getByTestId('viewManager').children;
 
-		expect(subject.find('View')).toHaveLength(1);
-		expect(subject.find('View div').prop('children')).toBe('View 3');
+		expect(newChildren).toHaveLength(1);
+		expect(screen.getByTestId('viewManager')).toHaveTextContent('View 3');
 	});
 
 	test('should extend the view range when {index} is less than {start}', () => {
-		const subject = mount(
-			<ViewManager index={1} start={2} end={3}>
+		render(
+			<ViewManager data-testid="viewManager" end={3} index={1} start={2}>
 				<div key="view1">View 1</div>
 				<div key="view2">View 2</div>
 				<div key="view3">View 3</div>
 				<div key="view4">View 4</div>
 			</ViewManager>
 		);
+		const children = screen.getByTestId('viewManager').children;
 
-		expect(subject.find('View')).toHaveLength(3);
+		expect(children).toHaveLength(3);
 	});
 
 	test('should extend the view range when {index} is greater than {end}', () => {
-		const subject = mount(
-			<ViewManager index={3} start={1} end={2}>
+		render(
+			<ViewManager data-testid="viewManager" end={2} index={3} start={1}>
 				<div key="view1">View 1</div>
 				<div key="view2">View 2</div>
 				<div key="view3">View 3</div>
 				<div key="view4">View 4</div>
 			</ViewManager>
 		);
+		const children = screen.getByTestId('viewManager').children;
 
-		expect(subject.find('View')).toHaveLength(3);
+		expect(children).toHaveLength(3);
 	});
 
 	test('should fire onTransition once per transition', () => {
 		const spy = jest.fn();
-		const subject = mount(
+		const {rerender} = render(
 			<ViewManager index={0} onTransition={spy} noAnimation>
-				<div key="view1">View 1</div>
-				<div key="view2">View 2</div>
+				<div data-testid="view" key="view1">View 1</div>
+				<div data-testid="view" key="view2">View 2</div>
 			</ViewManager>
 		);
 
 		spy.mockClear();
 
-		subject.setProps({index: 1});
+		rerender(
+			<ViewManager index={1} onTransition={spy} noAnimation>
+				<div data-testid="view" key="view1">View 1</div>
+				<div data-testid="view" key="view2">View 2</div>
+			</ViewManager>
+		);
 
 		expect(spy).toHaveBeenCalledTimes(1);
 	});
 
-	it('should not receive onTransition event on mount', () => {
+	test('should not receive onTransition event on mount', () => {
 		const spy = jest.fn();
 
-		mount(
+		render(
 			<ViewManager index={0} onTransition={spy} noAnimation>
 				<div key="view1">View 1</div>
 				<div key="view2">View 2</div>
 			</ViewManager>
 		);
 
-		const expected = 0;
-		const actual = spy.mock.calls.length;
-
-		expect(actual).toBe(expected);
+		expect(spy).toHaveBeenCalledTimes(0);
 	});
 
 	test('should include the current index and previous index in onTransition event payload', () => {
 		const spy = jest.fn();
-		const subject = mount(
+		const {rerender} = render(
 			<ViewManager index={0} onTransition={spy} noAnimation>
 				<div key="view1">View 1</div>
 				<div key="view2">View 2</div>
@@ -411,50 +422,75 @@ describe('ViewManager', () => {
 
 		spy.mockClear();
 
-		subject.setProps({index: 1});
+		rerender(
+			<ViewManager index={1} onTransition={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
 
 		expect(spy).toHaveBeenLastCalledWith({index: 1, previousIndex: 0});
 
-		subject.setProps({index: 0});
+		rerender(
+			<ViewManager index={0} onTransition={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
 
 		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1});
 	});
 
 	test('should fire onWillTransition once per transition', () => {
 		const spy = jest.fn();
-		const subject = mount(
+		const {rerender} = render(
 			<ViewManager index={0} onWillTransition={spy} noAnimation>
 				<div key="view1">View 1</div>
 				<div key="view2">View 2</div>
 			</ViewManager>
 		);
 
-		subject.setProps({index: 1});
+		rerender(
+			<ViewManager index={1} onWillTransition={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
 
 		expect(spy).toHaveBeenCalledTimes(1);
 	});
 
 	test('should include the current index and previous index in onWillTransition event payload', () => {
 		const spy = jest.fn();
-		const subject = mount(
+		const {rerender} = render(
 			<ViewManager index={0} onWillTransition={spy} noAnimation>
 				<div key="view1">View 1</div>
 				<div key="view2">View 2</div>
 			</ViewManager>
 		);
 
-		subject.setProps({index: 1});
+		rerender(
+			<ViewManager index={1} onWillTransition={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
 
 		expect(spy).toHaveBeenLastCalledWith({index: 1, previousIndex: 0});
 
-		subject.setProps({index: 0});
+		rerender(
+			<ViewManager index={0} onWillTransition={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
 
 		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1});
 	});
 
 	test('should pass `rtl` prop to arranger when `true`', () => {
 		const spy = jest.spyOn(MockArranger, 'stay');
-		mount(
+		render(
 			<ViewManager arranger={MockArranger} index={0} rtl>
 				<div key="view1">View 1</div>
 				<div key="view2">View 2</div>
@@ -471,7 +507,7 @@ describe('ViewManager', () => {
 
 	test('should pass `rtl` prop to arranger when unset', () => {
 		const spy = jest.spyOn(MockArranger, 'stay');
-		mount(
+		render(
 			<ViewManager arranger={MockArranger} index={0}>
 				<div key="view1">View 1</div>
 				<div key="view2">View 2</div>
