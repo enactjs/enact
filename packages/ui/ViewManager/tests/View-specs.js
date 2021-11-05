@@ -1,9 +1,8 @@
-import {createRef} from 'react';
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
+import {createRef} from 'react';
 
 import View from '../View';
-
 import {MockArranger} from './test-utils';
 
 describe('View', () => {
@@ -56,9 +55,10 @@ describe('View', () => {
 			);
 			ref.current.componentWillStay(spy);
 
-			expect(spy).toHaveBeenCalledTimes(1);
-		}
-		);
+			const expected = 1;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
+		});
 
 		test('should call callback immediately for "enter"', () => {
 			const spy = jest.fn();
@@ -71,7 +71,9 @@ describe('View', () => {
 
 			ref.current.componentWillEnter(spy);
 
-			expect(spy).toHaveBeenCalledTimes(1);
+			const expected = 1;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should call callback immediately for "leave"', () => {
@@ -85,7 +87,9 @@ describe('View', () => {
 
 			ref.current.componentWillLeave(spy);
 
-			expect(spy).toHaveBeenCalledTimes(1);
+			const expected = 1;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should reset entering if a rendered panel re-enters', () => {
@@ -121,7 +125,9 @@ describe('View', () => {
 			);
 
 			const spy = jest.fn(() => {
-				expect(spy).toHaveBeenCalledTimes(1);
+				const expected = 1;
+
+				expect(spy).toHaveBeenCalledTimes(expected);
 				done();
 			});
 

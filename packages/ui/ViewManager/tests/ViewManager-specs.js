@@ -3,7 +3,6 @@ import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 
 import ViewManager from '../';
-
 import {MockArranger} from './test-utils';
 
 describe('ViewManager', () => {
@@ -80,7 +79,7 @@ describe('ViewManager', () => {
 		);
 
 		rerender(
-			<ViewManager index={4} data-testid="viewManager">
+			<ViewManager data-testid="viewManager" index={4}>
 				<div className="view">View 1</div>
 				<div className="view">View 2</div>
 				<div className="view">View 3</div>
@@ -97,7 +96,7 @@ describe('ViewManager', () => {
 
 	test('should have 1 child immediately after setting new {index} with an {arranger} and {noAnimation} is false', () => {
 		const {rerender} = render(
-			<ViewManager index={3} arranger={MockArranger} noAnimation data-testid="viewManager">
+			<ViewManager arranger={MockArranger} data-testid="viewManager" index={3} noAnimation>
 				<div className="view">View 1</div>
 				<div className="view">View 2</div>
 				<div className="view">View 3</div>
@@ -134,7 +133,7 @@ describe('ViewManager', () => {
 		);
 
 		rerender(
-			<ViewManager index={4} arranger={MockArranger} data-testid="viewManager">
+			<ViewManager arranger={MockArranger} data-testid="viewManager" index={4}>
 				<div className="view">View 1</div>
 				<div className="view">View 2</div>
 				<div className="view">View 3</div>
@@ -186,7 +185,7 @@ describe('ViewManager', () => {
 		);
 
 		rerender(
-			<ViewManager index={4} duration={duration} data-testid="viewManager">
+			<ViewManager data-testid="viewManager" duration={duration} index={4}>
 				<div className="view">View 1</div>
 				<div className="view">View 2</div>
 				<div className="view">View 3</div>
@@ -207,7 +206,7 @@ describe('ViewManager', () => {
 	// TODO cannot read props of child components
 	test.skip('should have size of 1 on TransitionGroup', () => {
 		render(
-			<ViewManager noAnimation index={0} duration={0}>
+			<ViewManager duration={0} index={0} noAnimation>
 				<div className="view">View 1</div>
 				<div className="view">View 2</div>
 				<div className="view">View 3</div>
@@ -224,7 +223,7 @@ describe('ViewManager', () => {
 	// TODO cannot read props of child components
 	test.skip('should update the View reverseTransition prop.', () => {
 		const {rerender} = render(
-			<ViewManager noAnimation index={0} duration={0}>
+			<ViewManager duration={0} index={0} noAnimation>
 				<div className="view">View 1</div>
 				<div className="view">View 2</div>
 				<div className="view">View 3</div>
@@ -234,7 +233,7 @@ describe('ViewManager', () => {
 		);
 
 		rerender(
-			<ViewManager noAnimation index={0} duration={0} reverseTransition>
+			<ViewManager duration={0} index={0} noAnimation reverseTransition>
 				<div className="view">View 1</div>
 				<div className="view">View 2</div>
 				<div className="view">View 3</div>
@@ -250,7 +249,7 @@ describe('ViewManager', () => {
 	// TODO cannot read props of child components
 	test.skip('should update the View reverseTransition prop to true if it is updated with a smaller index prop.', () => {
 		const {rerender} = render(
-			<ViewManager index={2} duration={0} arranger={MockArranger}>
+			<ViewManager arranger={MockArranger} duration={0} index={2}>
 				<div>View 1</div>
 				<div>View 2</div>
 				<div>View 3</div>
@@ -260,7 +259,7 @@ describe('ViewManager', () => {
 		);
 
 		rerender(
-			<ViewManager index={1} duration={0} arranger={MockArranger}>
+			<ViewManager arranger={MockArranger} duration={0} index={1}>
 				<div>View 1</div>
 				<div>View 2</div>
 				<div>View 3</div>
@@ -297,7 +296,7 @@ describe('ViewManager', () => {
 
 	test('should update the view when children are reordered', () => {
 		const {rerender} = render(
-			<ViewManager index={1} data-testid="viewManager">
+			<ViewManager data-testid="viewManager" index={1}>
 				<div key="view1">View 1</div>
 				<div key="view2">View 2</div>
 			</ViewManager>
@@ -306,7 +305,7 @@ describe('ViewManager', () => {
 		expect(screen.getByTestId('viewManager')).toHaveTextContent('View 2');
 
 		rerender(
-			<ViewManager index={1} data-testid="viewManager">
+			<ViewManager data-testid="viewManager" index={1}>
 				<div key="view2">View 2</div>
 				<div key="view1">View 1</div>
 			</ViewManager>
@@ -325,7 +324,7 @@ describe('ViewManager', () => {
 		expect(screen.getByTestId('viewManager')).toHaveTextContent('View 1');
 
 		rerender(
-			<ViewManager index={0} data-testid="viewManager">
+			<ViewManager data-testid="viewManager" index={0}>
 				<div key="view2">View 2</div>
 			</ViewManager>
 		);
@@ -371,8 +370,9 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 		const children = screen.getByTestId('viewManager').children;
+		const expected = 1;
 
-		expect(children).toHaveLength(1);
+		expect(children).toHaveLength(expected);
 		expect(screen.getByTestId('viewManager')).toHaveTextContent('View 4');
 
 		rerender(
@@ -384,8 +384,9 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 		const newChildren = screen.getByTestId('viewManager').children;
+		const newExpected = 1;
 
-		expect(newChildren).toHaveLength(1);
+		expect(newChildren).toHaveLength(newExpected);
 		expect(screen.getByTestId('viewManager')).toHaveTextContent('View 3');
 	});
 
@@ -399,8 +400,9 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 		const children = screen.getByTestId('viewManager').children;
+		const expected = 3;
 
-		expect(children).toHaveLength(3);
+		expect(children).toHaveLength(expected);
 	});
 
 	test('should extend the view range when {index} is greater than {end}', () => {
@@ -413,8 +415,8 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 		const children = screen.getByTestId('viewManager').children;
-
-		expect(children).toHaveLength(3);
+		const expected = 3;
+		expect(children).toHaveLength(expected);
 	});
 
 	test('should fire onTransition once per transition', () => {
@@ -434,8 +436,9 @@ describe('ViewManager', () => {
 				<div data-testid="view" key="view2">View 2</div>
 			</ViewManager>
 		);
+		const expected = 1;
 
-		expect(spy).toHaveBeenCalledTimes(1);
+		expect(spy).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should not receive onTransition event on mount', () => {
@@ -447,8 +450,8 @@ describe('ViewManager', () => {
 				<div key="view2">View 2</div>
 			</ViewManager>
 		);
-
-		expect(spy).toHaveBeenCalledTimes(0);
+		const expected = 0;
+		expect(spy).toHaveBeenCalledTimes(expected);
 	});
 
 	test('should include the current index and previous index in onTransition event payload', () => {
