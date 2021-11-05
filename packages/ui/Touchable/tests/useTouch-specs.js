@@ -11,7 +11,7 @@ describe('useTouch', () => {
 
 		return (<div data-testid="component" />);
 	};
-	const TouchableComponent = ({id, activeProp, ...rest}) => {
+	const TouchableComponent = ({activeProp, id, ...rest}) => {
 		const hook = useTouch({getActive: !!activeProp, ...rest});
 		return (
 			<div
@@ -193,7 +193,7 @@ describe('useTouch', () => {
 			expect(actual).toEqual(expected);
 		});
 
-		// This test is unstable. `fireEvent` does not recognize the timeSTamp property
+		// This test is unstable. `fireEvent` does not recognize the timeStamp property
 		test.skip('should be called before onClick on mouse up', () => {
 			const handler = jest.fn();
 			render(

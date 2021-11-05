@@ -53,7 +53,7 @@ describe('Touchable', () => {
 
 			const ev = {};
 			fireEvent.mouseDown(component, ev);
-			rerender(<Component onHoldStart={() => {}} holdConfig={holdConfig} onHold={handler} />);
+			rerender(<Component holdConfig={holdConfig} onHold={handler} onHoldStart={() => {}} />);
 
 			setTimeout(() => {
 				expect(handler).toHaveBeenCalled();
@@ -71,12 +71,12 @@ describe('Touchable', () => {
 
 			const Component = Touchable(DivComponent);
 			const handler = jest.fn();
-			const {rerender} = render(<Component onHold={() => {}} holdConfig={holdConfig} />);
+			const {rerender} = render(<Component holdConfig={holdConfig} onHold={() => {}} />);
 			const component = screen.getByTestId('component');
 
 			const ev = {};
 			fireEvent.mouseDown(component, ev);
-			rerender(<Component onHold={() => {}} onHoldStart={handler} holdConfig={holdConfig} />);
+			rerender(<Component holdConfig={holdConfig} onHold={() => {}} onHoldStart={handler} />);
 
 			setTimeout(() => {
 				expect(handler).toHaveBeenCalled();
@@ -94,12 +94,12 @@ describe('Touchable', () => {
 
 			const Component = Touchable(DivComponent);
 			const handler = jest.fn();
-			const {rerender} = render(<Component onHold={() => {}} holdConfig={holdConfig} />);
+			const {rerender} = render(<Component holdConfig={holdConfig} onHold={() => {}} />);
 			const component = screen.getByTestId('component');
 
 			const ev = {currentTarget: {}};
 			fireEvent.mouseDown(component, ev);
-			rerender(<Component onHold={() => {}} onHoldEnd={handler} holdConfig={holdConfig} />);
+			rerender(<Component holdConfig={holdConfig} onHold={() => {}} onHoldEnd={handler} />);
 
 			setTimeout(() => {
 				fireEvent.mouseUp(component, ev);
@@ -234,7 +234,7 @@ describe('Touchable', () => {
 		test('should be called before onClick on click', () => {
 			const Component = Touchable({activeProp: 'active'}, DivComponent);
 			const handler = jest.fn();
-			render(<Component onTap={handler} onClick={handler} />);
+			render(<Component onClick={handler} onTap={handler} />);
 			const component = screen.getByTestId('component');
 
 			fireEvent.click(component, {});
@@ -245,11 +245,11 @@ describe('Touchable', () => {
 			expect(actual).toEqual(expected);
 		});
 
-		// This test is unstable. `fireEvent` does not recognize the timeSTamp property
+		// This test is unstable. `fireEvent` does not recognize the timeStamp property
 		test.skip('should be called before onClick on mouse up', () => {
 			const Component = Touchable({activeProp: 'active'}, DivComponent);
 			const handler = jest.fn();
-			render(<Component onTap={handler} onClick={handler} />);
+			render(<Component onClick={handler} onTap={handler} />);
 			const component = screen.getByTestId('component');
 
 			const ev = {
@@ -304,7 +304,7 @@ describe('Touchable', () => {
 			test('should not update active state on mouse down when disabled', () => {
 				const Component = Touchable({activeProp: 'active'}, DivComponent);
 				const handler = jest.fn();
-				render(<Component onDown={handler} disabled />);
+				render(<Component disabled onDown={handler} />);
 				const component = screen.getByTestId('component');
 
 				fireEvent.mouseDown(component, {});
@@ -353,7 +353,7 @@ describe('Touchable', () => {
 			test('should not update active state on mouse down when disabled', () => {
 				const Component = Touchable({activeProp: 'active'}, DivComponent);
 				const handler = jest.fn();
-				render(<Component onDown={handler} disabled />);
+				render(<Component disabled onDown={handler} />);
 				const component = screen.getByTestId('component');
 
 				const ev = {};
@@ -394,7 +394,7 @@ describe('Touchable', () => {
 			const Component = Touchable(DivComponent);
 			const handler = jest.fn();
 			render(
-				<Component onTap={handler} id="outer">
+				<Component id="outer" onTap={handler}>
 					<Component id="inner" />
 				</Component>
 			);
