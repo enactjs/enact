@@ -416,6 +416,7 @@ describe('ViewManager', () => {
 		);
 		const children = screen.getByTestId('viewManager').children;
 		const expected = 3;
+
 		expect(children).toHaveLength(expected);
 	});
 
@@ -450,7 +451,9 @@ describe('ViewManager', () => {
 				<div key="view2">View 2</div>
 			</ViewManager>
 		);
+
 		const expected = 0;
+
 		expect(spy).toHaveBeenCalledTimes(expected);
 	});
 

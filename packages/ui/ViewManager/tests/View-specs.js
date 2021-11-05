@@ -1,9 +1,9 @@
+import {createRef} from 'react';
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
-import {createRef} from 'react';
 
-import View from '../View';
 import {MockArranger} from './test-utils';
+import View from '../View';
 
 describe('View', () => {
 	test('should render its child when neither enteringProp or childProps is specified', () => {
@@ -143,7 +143,9 @@ describe('View', () => {
 			);
 
 			const spy = jest.fn(() => {
-				expect(spy).toHaveBeenCalledTimes(1);
+				const expected = 1;
+
+				expect(spy).toHaveBeenCalledTimes(expected);
 				done();
 			});
 
@@ -159,7 +161,9 @@ describe('View', () => {
 			);
 
 			const spy = jest.fn(() => {
-				expect(spy).toHaveBeenCalledTimes(1);
+				const expected = 1;
+
+				expect(spy).toHaveBeenCalledTimes(expected);
 				done();
 			});
 
@@ -177,7 +181,9 @@ describe('View', () => {
 
 			ref.current.componentWillEnter(spy);
 
-			expect(spy).toHaveBeenCalledTimes(1);
+			const expected = 1;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should call callback immediately for "appear"', () => {
@@ -191,7 +197,9 @@ describe('View', () => {
 
 			ref.current.componentWillAppear(spy);
 
-			expect(spy).toHaveBeenCalledTimes(1);
+			const expected = 1;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 	});
 
