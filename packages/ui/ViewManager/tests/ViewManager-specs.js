@@ -172,7 +172,7 @@ describe('ViewManager', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should have 1 child {duration}ms after setting new {index}', function (done) {
+	test('should have 1 child {duration}ms after setting new {index}', (done) => {
 		const duration = 50;
 		const {rerender} = render(
 			<ViewManager data-testid="viewManager" duration={duration} index={3}>

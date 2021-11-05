@@ -25,16 +25,17 @@ describe('View', () => {
 			</View>
 		);
 
+		const expected = 'true';
 		const actual = screen.getByTestId('span');
 
-		expect(actual).toHaveAttribute('data-entering', 'true');
+		expect(actual).toHaveAttribute('data-entering', expected);
 	});
 
 	test('should pass enteringProp as false for an appearing view', () => {
 		// Views visible on mount are "appearing" and shouldn't perform "entering" logic like
 		// deferring children rendering
 		render(
-			<View duration={1000} enteringProp="data-entering" appearing>
+			<View appearing duration={1000} enteringProp="data-entering">
 				<span data-testid="span" />
 			</View>
 		);
