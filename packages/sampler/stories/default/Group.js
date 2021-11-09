@@ -36,7 +36,7 @@ const SlotItem = kind({
 	)
 });
 
-// Set up some defaults for info and knobs
+// Set up some defaults for info and controls
 const prop = {
 	children: {
 		Button: Button,
