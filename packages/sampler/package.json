@@ -25,10 +25,10 @@
     "react-dom": "^17.0.1"
   },
   "devDependencies": {
-    "@enact/storybook-utils": "4.0.5",
-    "@storybook/addons": "6.2.9",
-    "@storybook/react": "6.2.9",
-    "@storybook/theming": "6.2.9",
+    "@enact/storybook-utils": "^4.1.0",
+    "@storybook/addons": "^6.3.12",
+    "@storybook/react": "^6.3.12",
+    "@storybook/theming": "^6.3.12",
     "babel-loader": "^8.2.2",
     "core-js": "^3.8.1"
   }
