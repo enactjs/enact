@@ -2,6 +2,19 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.1.0] - 2021-11-04
+
+### Fixed
+
+- `spotlight/SpotlightRootDecorator` to show focus effect after initial loading
+- `ui/MarqueeDecorator` to restart animation when text changed while focus retained
+
+## [4.0.8] - 2021-10-21
+
+### Fixed
+
+`ui/MarqueeDecorator` style to render text properly when starting animation
+
 ## [4.0.7] - 2021-09-28
 
 ### Fixed
