@@ -2,11 +2,17 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [4.1.0] - 2021-11-04
 
 ### Fixed
 
-`ui/MarqueeDecorator` style to render text properly when starting animation
+- `ui/MarqueeDecorator` to restart animation when text changed while focus retained
+
+## [4.0.8] - 2021-10-21
+
+### Fixed
+
+- `ui/MarqueeDecorator` style to render text properly when starting animation
 
 ## [4.0.7] - 2021-09-28
 

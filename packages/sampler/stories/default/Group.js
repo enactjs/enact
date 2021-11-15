@@ -1,6 +1,6 @@
 import kind from '@enact/core/kind';
 import {action} from '@enact/storybook-utils/addons/actions';
-import {boolean, select} from '@enact/storybook-utils/addons/knobs';
+import {boolean, select} from '@enact/storybook-utils/addons/controls';
 import Button from '@enact/ui/Button';
 import Item from '@enact/ui/Item';
 import Group from '@enact/ui/Group';
@@ -36,7 +36,7 @@ const SlotItem = kind({
 	)
 });
 
-// Set up some defaults for info and knobs
+// Set up some defaults for info and controls
 const prop = {
 	children: {
 		Button: Button,
@@ -53,15 +53,15 @@ export default {
 	component: 'Group'
 };
 
-export const _Group = () => (
+export const _Group = (args) => (
 	<Group
-		childComponent={getComponent(select('childComponent', Object.keys(prop.children), Group, 'Button'))}
+		childComponent={getComponent(args['childComponent'])}
 		className={css.group}
 		itemProps={{
 			css,
-			inline: boolean('ItemProps-Inline', Group)
+			inline: args['childComponent'] === 'SlotItem' ? args['ItemProps-Inline'] : null
 		}}
-		select={select('select', ['single', 'radio', 'multiple'], Group, 'radio')}
+		select={args['select']}
 		selectedProp="selected"
 		defaultSelected={0}
 		onSelect={action('onSelect')}
@@ -69,6 +69,10 @@ export const _Group = () => (
 		{['Item 1', 'Item 2', 'Item 3']}
 	</Group>
 );
+
+select('childComponent', _Group, Object.keys(prop.children), Group, 'Button');
+boolean('ItemProps-Inline', _Group, Group);
+select('select', _Group, ['single', 'radio', 'multiple'], Group, 'radio');
 
 _Group.parameters = {
 	info: {
