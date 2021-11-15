@@ -1,3 +1,4 @@
+/* global ILIB_MULTIPLE_RESOURCES_PATH */
 /*
  * glue.js - glue code to fit ilib into enyo
  *
@@ -26,7 +27,10 @@ import './dates';
 import Loader from './Loader';
 import {updateLocale} from '../locale';
 
+const ILIB_MULTIPLE_RESOURCES_PATH = 'resources2';
+
 ilib.setLoaderCallback(new Loader());
+ilib.getLoader().addPath(typeof ILIB_MULTIPLE_RESOURCES_PATH !== 'undefined' ? ILIB_MULTIPLE_RESOURCES_PATH : '');
 
 if (typeof window === 'object' && typeof window.UILocale !== 'undefined') {
 	// this is a hack until GF-1581 is fixed

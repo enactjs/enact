@@ -207,6 +207,7 @@ EnyoLoader.prototype._validateCache = function () {
 
 EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPath) {
 	console.log("EnyoLoader.prototype.loadFiles");
+	console.log("rootPaths: ", rootPath);
 	let _root = iLibResources;
 	if (typeof rootPath !== 'undefined') {
 		_root = rootPath;
@@ -218,6 +219,10 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 		console.log("ROOOT: ", _root);
 		console.log("paths: ", paths);
 		this.loadManifestsSync(_root);
+		for (let addedRoot of this.addPaths) {
+			this.loadManifestsSync(addedRoot);
+		}
+
 		let cache = {data: this._loadFilesCache(_root, paths)};
 
 		let ret = [];
@@ -239,7 +244,13 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 					}
 				};
 
-				if (this.isAvailable(_root, path)) {
+				for (let addedRoot of this.addPaths) {
+					if (this.isAvailable(addedRoot, path)) {
+						getSync(this._pathjoin(addedRoot, path), handler);
+					}
+				}
+
+				if (!found && this.isAvailable(_root, path)) {
 					getSync(this._pathjoin(_root, path), handler);
 				}
 
