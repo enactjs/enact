@@ -1,4 +1,4 @@
-/* global XMLHttpRequest, ILIB_BASE_PATH, ILIB_RESOURCES_PATH, ILIB_CACHE_ID */
+/* global XMLHttpRequest, ILIB_BASE_PATH, ILIB_RESOURCES_PATH, ILIB_ADDITIONAL_RESOURCES_PATH, ILIB_CACHE_ID */
 
 import {memoize} from '@enact/core/util';
 import Loader from 'ilib/lib/Loader';
@@ -51,6 +51,7 @@ const cachePrefix = 'ENACT-ILIB-';
 const cacheKey = cachePrefix + 'CACHE-ID';
 const cacheID = typeof ILIB_CACHE_ID === 'undefined' ? '$ILIB' : ILIB_CACHE_ID;
 const timeStampKey = 'l10n_timestamp';
+const ILIB_ADDITIONAL_RESOURCES_PATH = 'resources_0';
 
 function EnyoLoader () {
 	console.log("EnyoLoader creator!!");
@@ -187,6 +188,18 @@ EnyoLoader.prototype._storeFilesCache = function (_root, paths, data) {
 	}
 };
 
+EnyoLoader.prototype._clearStringsCache = function () {
+	for (let i = 0; i < window.localStorage.length; i++) {
+		const currentKey = window.localStorage.key(i);
+		console.log(i , ", ", currentKey);
+		if (currentKey.includes('strings.json')) {
+			console.log("Removing . . . . . . . . . . . . . . . . . . . . . . currentKey ", currentKey);
+			window.localStorage.removeItem(currentKey);
+		}
+	}
+	console.log(window.localStorage);
+};
+
 EnyoLoader.prototype._validateCache = function () {
 	console.log("EnyoLoader.prototype._validateCache");
 	if (!this._cacheValidated && typeof window !== 'undefined' && window.localStorage) {
@@ -295,13 +308,24 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 
 EnyoLoader.prototype._handleManifest = function (dirpath, filepath, json) {
 	console.log("EnyoLoader.prototype._handleManifest");
+	const isAdditionalPath = dirpath.includes(ILIB_ADDITIONAL_RESOURCES_PATH);
 	// star indicates there was no ilibmanifest.json, so always try to load files from
 	// that dir
 	if (json != null) {
 		if (typeof window !== 'undefined' && window.localStorage) {
 			window.localStorage.setItem(cachePrefix + filepath, JSON.stringify(json));
 		}
+		// Need to clear string cache
+		this._clearStringsCache();
+
 		this.manifest[dirpath] = json.files;
+	} else if (isAdditionalPath) {
+		// If the path is an ilib additional resources path and json is null then make it null
+		// so that we prevent loading everything.
+		this.manifest[dirpath] = [];
+		if (typeof window !== 'undefined' && window.localStorage) {
+			window.localStorage.setItem(cachePrefix + filepath, JSON.stringify({[timeStampKey]: new Date().getTime()}));
+		}
 	} else {
 		this.manifest[dirpath] = '*';
 	}
@@ -328,24 +352,15 @@ EnyoLoader.prototype._validateManifest = function (cachedManifest, filepath, syn
 				});
 			}
 			console.log("new manifest: " + JSON.stringify(newManifest));
-			if (newManifest[timeStampKey]) {
+			if (newManifest === null && filepath.includes(ILIB_ADDITIONAL_RESOURCES_PATH)) {
+				// If new manifest is null and the filepath has ILIB_ADDITIONAL_RESOURCES_PATH,
+				// meaning we need to clear string cache
+				this._clearStringsCache();
+
+				return false;
+			} else if (newManifest[timeStampKey]) {
 				// If new manifest has timestamp, compare old one and see if it's the same
-				if (cachedTimeStamp === newManifest[timeStampKey]) {
-					return true;
-				} else if (typeof window !== 'undefined' && window.localStorage) {
-					//Remove cache related strings.json
-					console.log("The timestamp is not the same, remove strings!==================");
-					for (let i = 0; i < window.localStorage.length; i++) {
-						const currentKey = window.localStorage.key(i);
-						console.log(i , ", ", currentKey);
-						if (currentKey.includes('strings.json')) {
-							console.log("Removing . . . . . . . . . . . . . . . . . . . . . . currentKey ", currentKey);
-							window.localStorage.removeItem(currentKey);
-						}
-					}
-					console.log(window.localStorage);
-					return false;
-				}
+				return (cachedTimeStamp === newManifest[timeStampKey]);
 			} else {
 				console.log("There is no timestampkey!!! ");
 				return false;
@@ -430,7 +445,7 @@ EnyoLoader.prototype.isAvailable = function (_root, path) {
 	console.log("EnyoLoader.prototype.isAvailable");
 	// util.print('enyo loader: isAvailable ' + path + '? ');
 	// star means attempt to load everything because there was no manifest in that dir
-	if (this.manifest[_root] === '*' || this.manifest[_root].indexOf(path) !== -1) {
+	if (this.manifest[_root] === '*' || (this.manifest[_root] && this.manifest[_root].indexOf(path) !== -1)) {
 		// util.print('true\n');
 		return true;
 	}
