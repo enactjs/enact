@@ -241,14 +241,21 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 					}
 				};
 
-				for (let addedRoot of this.addPaths) {
-					if (this.isAvailable(addedRoot, path)) {
-						getSync(this._pathjoin(addedRoot, path), handler);
+				const handleAdditionalResourcesPath = (json, err) => {
+					if (found && !err && typeof json === 'object') {
+						// Overwrite the _root/path result
+						Object.assign(ret[ret.length-1], json);
 					}
-				}
+				};
 
 				if (this.isAvailable(_root, path)) {
 					getSync(this._pathjoin(_root, path), handler);
+
+					for (let addedRoot of this.addPaths) {
+						if (this.isAvailable(addedRoot, path)) {
+							getSync(this._pathjoin(addedRoot, path), handleAdditionalResourcesPath);
+						}
+					}
 				}
 
 				if (!found && this.isAvailable(locdata, path)) {
@@ -424,4 +431,3 @@ EnyoLoader.prototype.isAvailable = function (_root, path) {
 
 export default EnyoLoader;
 export {EnyoLoader as Loader};
-
