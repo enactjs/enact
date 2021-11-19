@@ -51,7 +51,6 @@ const cachePrefix = 'ENACT-ILIB-';
 const cacheKey = cachePrefix + 'CACHE-ID';
 const cacheID = typeof ILIB_CACHE_ID === 'undefined' ? '$ILIB' : ILIB_CACHE_ID;
 const timeStampKey = 'l10n_timestamp';
-const ILIB_ADDITIONAL_RESOURCES_PATH = 'resources_0';
 
 function EnyoLoader () {
 	this.base = iLibBase;
@@ -298,7 +297,7 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 };
 
 EnyoLoader.prototype._handleManifest = function (dirpath, filepath, json) {
-	const isAdditionalPath = dirpath.includes(ILIB_ADDITIONAL_RESOURCES_PATH);
+	const isAdditionalPath = typeof ILIB_ADDITIONAL_RESOURCES_PATH !== 'undefined' ? dirpath.includes(ILIB_ADDITIONAL_RESOURCES_PATH) : false;
 	// star indicates there was no ilibmanifest.json, so always try to load files from
 	// that dir
 	if (json != null) {
@@ -338,13 +337,13 @@ EnyoLoader.prototype._validateManifest = function (cachedManifest, filepath, syn
 					newManifest = json;
 				});
 			}
-			if (newManifest === null && filepath.includes(ILIB_ADDITIONAL_RESOURCES_PATH)) {
+			if (newManifest === null && typeof ILIB_ADDITIONAL_RESOURCES_PATH !== 'undefined' && filepath.includes(ILIB_ADDITIONAL_RESOURCES_PATH)) {
 				// If new manifest is null and the filepath has ILIB_ADDITIONAL_RESOURCES_PATH,
 				// meaning we need to clear string cache
 				this._clearStringsCache();
 
 				return false;
-			} else if (newManifest[timeStampKey]) {
+			} else if (newManifest && newManifest[timeStampKey]) {
 				// If new manifest has timestamp, compare old one and see if it's the same
 				return (cachedTimeStamp === newManifest[timeStampKey]);
 			} else {

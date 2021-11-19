@@ -25,10 +25,10 @@ import './dates';
 import Loader from './Loader';
 import {updateLocale} from '../locale';
 
-const ILIB_ADDITIONAL_RESOURCES_PATH = 'resources_0';
-
 ilib.setLoaderCallback(new Loader());
-ilib.getLoader().addPath(typeof ILIB_ADDITIONAL_RESOURCES_PATH !== 'undefined' ? ILIB_ADDITIONAL_RESOURCES_PATH : '');
+if (typeof ILIB_ADDITIONAL_RESOURCES_PATH !== 'undefined') {
+	ilib.getLoader().addPath(ILIB_ADDITIONAL_RESOURCES_PATH);
+}
 
 if (typeof window === 'object' && typeof window.UILocale !== 'undefined') {
 	// this is a hack until GF-1581 is fixed
