@@ -216,8 +216,10 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 
 	if (sync) {
 		this.loadManifestsSync(_root);
-		for (let addedRoot of this.addPaths) {
-			this.loadManifestsSync(addedRoot);
+		if (this.addPaths && Array.isArray(this.addPaths)) {
+			for (let addedRoot of this.addPaths) {
+				this.loadManifestsSync(addedRoot);
+			}
 		}
 
 		let cache = {data: this._loadFilesCache(_root, paths)};
@@ -250,9 +252,11 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 				if (this.isAvailable(_root, path)) {
 					getSync(this._pathjoin(_root, path), handler);
 
-					for (let addedRoot of this.addPaths) {
-						if (this.isAvailable(addedRoot, path)) {
-							getSync(this._pathjoin(addedRoot, path), handleAdditionalResourcesPath);
+					if (this.addPaths && Array.isArray(this.addPaths)) {
+						for (let addedRoot of this.addPaths) {
+							if (this.isAvailable(addedRoot, path)) {
+								getSync(this._pathjoin(addedRoot, path), handleAdditionalResourcesPath);
+							}
 						}
 					}
 				}
