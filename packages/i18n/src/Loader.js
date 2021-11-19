@@ -243,7 +243,7 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 				const handleAdditionalResourcesPath = (json, err) => {
 					if (found && !err && typeof json === 'object') {
 						// Overwrite the _root/path result
-						Object.assign(ret[ret.length-1], json);
+						Object.assign(ret[ret.length - 1], json);
 					}
 				};
 
