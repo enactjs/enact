@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- Support for loading changed resources and additional ilib resources paths
+
 ## [4.1.0] - 2021-11-04
 
 No significant changes.
