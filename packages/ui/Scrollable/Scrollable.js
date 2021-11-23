@@ -626,6 +626,7 @@ class ScrollableBase extends Component {
 		this.lastInputType = 'drag';
 
 		forward('onDrag', ev, this.props);
+		this.setState({onDragTargetY: (direction === 'horizontal') ? 0 : this.dragStartY - ev.y})
 		this.start({
 			targetX: (direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
 			targetY: (direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
@@ -1314,7 +1315,7 @@ class ScrollableBase extends Component {
 		// Prevent scroll by focus.
 		// VirtualList and VirtualGridList DO NOT receive `onscroll` event.
 		// Only Scroller could get `onscroll` event.
-		if (!this.animator.isAnimating() && childRefCurrent && childRefCurrent.containerRef.current && childRefCurrent.getRtlPositionX) {
+		if (!this.animator.isAnimating() && childRefCurrent && childRefCurrent.containerRef.current && childRefCurrent.getRtlPositionX && !this.isDragging) {
 			// For Scroller
 			childRefCurrent.containerRef.current.scrollTop = this.scrollTop;
 			childRefCurrent.containerRef.current.scrollLeft = childRefCurrent.getRtlPositionX(this.scrollLeft);
@@ -1362,6 +1363,7 @@ class ScrollableBase extends Component {
 
 		return (
 			<ResizeContext.Provider value={this.resizeRegistry.register}>
+				{this.state.onDragTargetY}
 				{containerRenderer({
 					childComponentProps: rest,
 					childWrapper,
