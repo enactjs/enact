@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight/SpotlightRootDecorator` to show focus when last input type is `none`
+
 ## [3.4.9-experimental-6] - 2021-04-07
 
 ### Fixed

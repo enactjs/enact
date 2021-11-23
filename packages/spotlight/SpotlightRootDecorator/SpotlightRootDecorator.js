@@ -132,11 +132,8 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (inputType === 'touch') {
 				this.containerRef.current.classList.remove('non-touch-mode');
 				this.containerRef.current.classList.add('touch-mode');
-			} else if (inputType === 'mouse' || inputType === 'key') {
-				this.containerRef.current.classList.add('non-touch-mode');
-				this.containerRef.current.classList.remove('touch-mode');
 			} else {
-				this.containerRef.current.classList.remove('non-touch-mode');
+				this.containerRef.current.classList.add('non-touch-mode');
 				this.containerRef.current.classList.remove('touch-mode');
 			}
 			needChangeTouchMode = false;
