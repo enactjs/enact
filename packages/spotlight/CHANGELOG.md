@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [3.4.9-experimental-7] - 2021-11-24
+
+### Fixed
+
+- `spotlight/SpotlightRootDecorator` to show focus when last input type is `none`
+
 ## [3.4.9-experimental-6] - 2021-04-07
 
 ### Fixed
