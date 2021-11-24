@@ -51,6 +51,7 @@ const cachePrefix = 'ENACT-ILIB-';
 const cacheKey = cachePrefix + 'CACHE-ID';
 const cacheID = typeof ILIB_CACHE_ID === 'undefined' ? '$ILIB' : ILIB_CACHE_ID;
 const timeStampKey = 'l10n_timestamp';
+const ILIB_ADDITIONAL_RESOURCES_PATH = 'resources_0';
 
 function EnyoLoader () {
 	this.base = iLibBase;
