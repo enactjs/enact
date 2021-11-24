@@ -1,4 +1,4 @@
-/* global XMLHttpRequest, ILIB_BASE_PATH, ILIB_RESOURCES_PATH, ILIB_ADDITIONAL_RESOURCES_PATH, ILIB_CACHE_ID */
+/* global XMLHttpRequest, ILIB_BASE_PATH, ILIB_RESOURCES_PATH, ILIB_CACHE_ID */
 
 import {memoize} from '@enact/core/util';
 import Loader from 'ilib/lib/Loader';
@@ -51,7 +51,7 @@ const cachePrefix = 'ENACT-ILIB-';
 const cacheKey = cachePrefix + 'CACHE-ID';
 const cacheID = typeof ILIB_CACHE_ID === 'undefined' ? '$ILIB' : ILIB_CACHE_ID;
 const timeStampKey = 'l10n_timestamp';
-const ILIB_ADDITIONAL_RESOURCES_PATH = 'resources_0';
+const iLibAdditionalPath = process.env.ILIB_ADDITIONAL_RESOURCES_PATH;
 
 function EnyoLoader () {
 	this.base = iLibBase;
@@ -302,7 +302,7 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 };
 
 EnyoLoader.prototype._handleManifest = function (dirpath, filepath, json) {
-	const isAdditionalPath = typeof ILIB_ADDITIONAL_RESOURCES_PATH !== 'undefined' ? dirpath.includes(ILIB_ADDITIONAL_RESOURCES_PATH) : false;
+	const isAdditionalPath = typeof iLibAdditionalPath !== 'undefined' ? dirpath.includes(iLibAdditionalPath) : false;
 	// star indicates there was no ilibmanifest.json, so always try to load files from
 	// that dir
 	if (json != null) {
@@ -342,7 +342,7 @@ EnyoLoader.prototype._validateManifest = function (cachedManifest, filepath, syn
 					newManifest = json;
 				});
 			}
-			if (newManifest === null && typeof ILIB_ADDITIONAL_RESOURCES_PATH !== 'undefined' && filepath.includes(ILIB_ADDITIONAL_RESOURCES_PATH)) {
+			if (newManifest === null && typeof iLibAdditionalPath !== 'undefined' && filepath.includes(iLibAdditionalPath)) {
 				// If new manifest is null and the filepath has ILIB_ADDITIONAL_RESOURCES_PATH,
 				// meaning we need to clear string cache
 				this._clearStringsCache();
