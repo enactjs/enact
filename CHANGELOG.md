@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [3.4.9-experimental-7] - 2021-11-24
 
 ### Fixed
 
