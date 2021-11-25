@@ -421,7 +421,8 @@ class ScrollableBase extends Component {
 			remeasure: false,
 			isHorizontalScrollbarVisible: props.horizontalScrollbar === 'visible',
 			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible',
-			accumulator: 0
+			accumulator: 0,
+			componentUpdate: 0
 		};
 
 		this.containerRef = createRef();
@@ -454,6 +455,7 @@ class ScrollableBase extends Component {
 		this.resizeRegistry.parent = this.context;
 		this.addEventListeners();
 		this.updateScrollbars();
+		console.log(this.props.direction);
 	}
 
 	componentDidUpdate (prevProps, prevState) {
@@ -493,6 +495,7 @@ class ScrollableBase extends Component {
 		const horizontal = isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
 		const vertical = isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
 		if (horizontal || vertical) {
+
 			this.resizeRegistry.notify({});
 		}
 	}
@@ -611,9 +614,7 @@ class ScrollableBase extends Component {
 
 	onDragStart = (ev) => {
 		if (ev.type === 'dragstart') return;
-		this.setState((prevState) => ({
-			accumulator: 0
-		}));
+		this.setState({accumulator: 0});
 		forward('onDragStart', ev, this.props);
 		this.stop();
 		this.isDragging = true;
@@ -627,11 +628,11 @@ class ScrollableBase extends Component {
 		const {direction} = this.props;
 
 		this.lastInputType = 'drag';
-console.log("dragging");
+
 		this.setState((prevState) => ({
 			onDragTargetY: (direction === 'horizontal') ? 0 : this.dragStartY - ev.y,
-			accumulator: prevState.accumulator+1
-	}));
+			accumulator: prevState.accumulator + 1
+		}));
 
 		forward('onDrag', ev, this.props);
 
@@ -639,7 +640,7 @@ console.log("dragging");
 			targetX: (direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
 			targetY: (direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
 			animate: false,
-			//overscrollEffect: this.props.overscrollEffectOn.drag
+			overscrollEffect: this.props.overscrollEffectOn.drag
 		});
 	};
 
@@ -770,7 +771,10 @@ console.log("dragging");
 		} else {
 			this.accumulatedTargetX += delta;
 		}
-
+		// this.setState((prevState) => {
+		//
+		// })
+		console.log('accumulated');
 		this.start({targetX: this.accumulatedTargetX, targetY: this.accumulatedTargetY, overscrollEffect});
 	};
 
@@ -1058,8 +1062,14 @@ console.log("dragging");
 		if (top !== this.scrollTop) {
 			this.setScrollTop(top);
 		}
-
+		this.setState((prevState) => ({
+			componentUpdate: prevState.componentUpdate + 1
+		}));
+		// if (this.childRefCurrent && !this.childRefCurrent.containerRef.current && !this.isDragging) {
+		console.log('inside');
 		this.childRefCurrent.setScrollPosition(this.scrollLeft, this.scrollTop, this.props.rtl, ...rest);
+		// }
+
 		this.forwardScrollEvent('onScroll');
 	};
 
@@ -1182,11 +1192,17 @@ console.log("dragging");
 	}
 
 	updateThumb (scrollbarRef, bounds) {
-		scrollbarRef.current.update({
-			...bounds,
-			scrollLeft: this.scrollLeft,
-			scrollTop: this.scrollTop
-		});
+		if (!this.childRefCurrent.containerRef.current && !this.isDragging) {
+			// For Scroller
+			// childRefCurrent.containerRef.current.scrollTop = this.scrollTop;
+			// childRefCurrent.containerRef.current.scrollLeft = childRefCurrent.getRtlPositionX(this.scrollLeft);
+			scrollbarRef.current.update({
+				...bounds,
+				scrollLeft: this.scrollLeft,
+				scrollTop: this.scrollTop
+			});
+		}
+
 	}
 
 	startHidingThumb = () => {
@@ -1371,7 +1387,7 @@ console.log("dragging");
 
 		return (
 			<ResizeContext.Provider value={this.resizeRegistry.register}>
-				{this.state.accumulator} {this.state.onDragTargetY}
+				{this.state.componentUpdate} {this.state.accumulator} {this.state.onDragTargetY}
 				{containerRenderer({
 					childComponentProps: rest,
 					childWrapper,
