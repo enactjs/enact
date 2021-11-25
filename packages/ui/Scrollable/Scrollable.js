@@ -420,7 +420,8 @@ class ScrollableBase extends Component {
 		this.state = {
 			remeasure: false,
 			isHorizontalScrollbarVisible: props.horizontalScrollbar === 'visible',
-			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible'
+			isVerticalScrollbarVisible: props.verticalScrollbar === 'visible',
+			accumulator: 0
 		};
 
 		this.containerRef = createRef();
@@ -610,7 +611,9 @@ class ScrollableBase extends Component {
 
 	onDragStart = (ev) => {
 		if (ev.type === 'dragstart') return;
-
+		this.setState((prevState) => ({
+			accumulator: 0
+		}));
 		forward('onDragStart', ev, this.props);
 		this.stop();
 		this.isDragging = true;
@@ -624,14 +627,19 @@ class ScrollableBase extends Component {
 		const {direction} = this.props;
 
 		this.lastInputType = 'drag';
+console.log("dragging");
+		this.setState((prevState) => ({
+			onDragTargetY: (direction === 'horizontal') ? 0 : this.dragStartY - ev.y,
+			accumulator: prevState.accumulator+1
+	}));
 
 		forward('onDrag', ev, this.props);
-		this.setState({onDragTargetY: (direction === 'horizontal') ? 0 : this.dragStartY - ev.y})
+
 		this.start({
 			targetX: (direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
 			targetY: (direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
 			animate: false,
-			overscrollEffect: this.props.overscrollEffectOn.drag
+			//overscrollEffect: this.props.overscrollEffectOn.drag
 		});
 	};
 
@@ -1363,7 +1371,7 @@ class ScrollableBase extends Component {
 
 		return (
 			<ResizeContext.Provider value={this.resizeRegistry.register}>
-				{this.state.onDragTargetY}
+				{this.state.accumulator} {this.state.onDragTargetY}
 				{containerRenderer({
 					childComponentProps: rest,
 					childWrapper,
