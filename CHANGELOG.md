@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.1.1] - 2021-11-30
+
+- Replaced the deprecated plugin `addon-knobs` with `addon-controls`
+
+### Added
+
+- Support for loading changed resources and additional ilib resources paths
+
 ## [4.1.0] - 2021-11-04
 
 ### Fixed
