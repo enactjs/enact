@@ -492,7 +492,6 @@ class ScrollableBase extends Component {
 		const horizontal = isHorizontalScrollbarVisible !== prevState.isHorizontalScrollbarVisible;
 		const vertical = isVerticalScrollbarVisible !== prevState.isVerticalScrollbarVisible;
 		if (horizontal || vertical) {
-
 			this.resizeRegistry.notify({});
 		}
 	}
@@ -627,7 +626,6 @@ class ScrollableBase extends Component {
 		this.lastInputType = 'drag';
 
 		forward('onDrag', ev, this.props);
-
 		this.start({
 			targetX: (direction === 'vertical') ? 0 : this.dragStartX - this.getRtlX(ev.x), // 'horizontal' or 'both'
 			targetY: (direction === 'horizontal') ? 0 : this.dragStartY - ev.y, // 'vertical' or 'both'
@@ -1175,14 +1173,11 @@ class ScrollableBase extends Component {
 	}
 
 	updateThumb (scrollbarRef, bounds) {
-		if (!this.childRefCurrent.containerRef.current && !this.isDragging) {
-			scrollbarRef.current.update({
-				...bounds,
-				scrollLeft: this.scrollLeft,
-				scrollTop: this.scrollTop
-			});
-		}
-
+		scrollbarRef.current.update({
+			...bounds,
+			scrollLeft: this.scrollLeft,
+			scrollTop: this.scrollTop
+		});
 	}
 
 	startHidingThumb = () => {
