@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+`ui/Scrollable` and `ui/useScroll` to avoid stuttering of Scroller content on drag in mobile devices
+`ui/Scroller`, `ui/VirtualList`, and `ui/useScroll` to calculate correctly `scrollLeft` on `androidChrome` platform
+
 ## [4.1.1] - 2021-11-30
 
 - Replaced the deprecated plugin `addon-knobs` with `addon-controls`
