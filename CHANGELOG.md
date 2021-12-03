@@ -7,7 +7,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Fixed
 
 `ui/Scrollable` and `ui/useScroll` to avoid stuttering of Scroller content on drag in mobile devices
-`ui/Scroller`, `ui/VirtualList`, and `ui/useScroll` to calculate correctly `scrollLeft` on `androidChrome` platform
+`ui/Scroller`, `ui/VirtualList`, and `ui/useScroll` to calculate correctly `scrollLeft` on `androidChrome` platform for rtl locales
 
 ## [4.1.1] - 2021-11-30
 
