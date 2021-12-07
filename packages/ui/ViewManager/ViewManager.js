@@ -240,7 +240,7 @@ const ViewManagerBase = class extends Component {
 
 	makeTransitionEvent = () => {
 		return {index: this.props.index, previousIndex: this.state.prevIndex};
-	}
+	};
 
 	handleTransition = handle(
 		forwardCustom('onTransition', this.makeTransitionEvent)
