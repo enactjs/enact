@@ -1,4 +1,4 @@
-import {forward, handle, preventDefault, stop} from '@enact/core/handle';
+import {forwardCustom, handle, preventDefault, stop} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 
 import {getContainersForNode} from '../src/container';
@@ -71,7 +71,7 @@ class SpottableCore {
 
 	unload () {
 		if (this.isFocused) {
-			forward('onSpotlightDisappear', null, this.props);
+			forwardCustom('onSpotlightDisappear')(null, this.props);
 		}
 		if (lastSelectTarget === this) {
 			lastSelectTarget = null;
@@ -84,7 +84,7 @@ class SpottableCore {
 		// if the component is focused and became disabled
 		if (this.isFocused && this.props.disabled && lastSelectTarget === this && !selectCancelled) {
 			selectCancelled = true;
-			forward('onSelectionCancel', null, this.props);
+			forwardCustom('onSelectionCancel')(null, this.props);
 		}
 
 		// if the component became enabled, notify spotlight to enable restoring "lost" focus
