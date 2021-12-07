@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+`ui/Scrollable` and `ui/useScroll` to avoid stuttering of Scroller content on drag in mobile devices
+`ui/Scroller`, `ui/VirtualList`, and `ui/useScroll` to calculate correctly `scrollLeft` on `android` platform for rtl locales
+
 ## [4.1.1] - 2021-11-30
 
 No significant changes.
