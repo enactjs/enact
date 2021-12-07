@@ -395,11 +395,11 @@ describe('ViewManager', () => {
 
 		subject.setProps({index: 1});
 
-		expect(spy).toHaveBeenLastCalledWith({index: 1, previousIndex: 0});
+		expect(spy).toHaveBeenLastCalledWith({index: 1, previousIndex: 0, type: 'onTransition'});
 
 		subject.setProps({index: 0});
 
-		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1});
+		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1, type: 'onTransition'});
 	});
 
 	test('should fire onWillTransition once per transition', () => {
@@ -427,11 +427,11 @@ describe('ViewManager', () => {
 
 		subject.setProps({index: 1});
 
-		expect(spy).toHaveBeenLastCalledWith({index: 1, previousIndex: 0});
+		expect(spy).toHaveBeenLastCalledWith({index: 1, previousIndex: 0, type: 'onWillTransition'});
 
 		subject.setProps({index: 0});
 
-		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1});
+		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1, type: 'onWillTransition'});
 	});
 
 	test('should pass `rtl` prop to arranger when `true`', () => {

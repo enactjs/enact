@@ -1,4 +1,4 @@
-import {adaptEvent, forProp, forward, handle, not, returnsTrue} from '@enact/core/handle';
+import {forProp, forwardCustom, handle, not, returnsTrue} from '@enact/core/handle';
 
 const isEnabled = not(forProp('disabled', true));
 const makeEvent = (config, value) => ({
@@ -24,19 +24,19 @@ class Toggle {
 
 	handleActivate = handle(
 		isEnabled,
-		adaptEvent((ev, props) => makeEvent(props, true), forward('onToggle')),
+		forwardCustom('onToggle', (ev, props) => makeEvent(props, true)),
 		returnsTrue((ev, props, context) => context.onToggle(true))
 	).bindAs(this, 'handleActivate');
 
 	handleDeactivate = handle(
 		isEnabled,
-		adaptEvent((ev, props) => makeEvent(props, false), forward('onToggle')),
+		forwardCustom('onToggle', (ev, props) => makeEvent(props, false)),
 		returnsTrue((ev, props, context) => context.onToggle(false))
 	).bindAs(this, 'handleDeactivate');
 
 	handleToggle = handle(
 		isEnabled,
-		adaptEvent((ev, props, {value}) => makeEvent(props, !value), forward('onToggle')),
+		forwardCustom('onToggle', (ev, props, {value}) => makeEvent(props, !value)),
 		returnsTrue((ev, props, {onToggle, value}) => onToggle(!value))
 	).bindAs(this, 'handleToggle');
 }
