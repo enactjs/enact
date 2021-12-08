@@ -1,5 +1,5 @@
 import {action} from '@enact/storybook-utils/addons/actions';
-import {boolean, number, range, select} from '@enact/storybook-utils/addons/controls';
+import {boolean, number, range, select, text} from '@enact/storybook-utils/addons/controls';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import Group from '@enact/ui/Group';
 import Item from '@enact/ui/Item';
@@ -40,6 +40,15 @@ const views = new Array(itemSize).fill().map((i, index) => {
 	};
 });
 
+const ChildrenDiv = (props) => {
+	// eslint-disable-next-line enact/prop-types
+	if (props[props.enteringProp] === false) {
+		return <div {...props}>{props.children} (finished its transition)</div>;
+	} else {
+		return <div {...props}>{props.children}</div>;
+	}
+};
+
 const ViewManagerLayout = (props) => {
 	const [selected, setSelected] = useState(0);
 	const handleChangeView = useCallback((ev) => {
@@ -47,7 +56,7 @@ const ViewManagerLayout = (props) => {
 	}, [setSelected]);
 
 	// eslint-disable-next-line enact/prop-types
-	const {selectedEnd, selectedStart, enteringDelay, ...rest} = props;
+	const {selectedEnd, selectedStart, enteringDelay, enteringProp, ...rest} = props;
 	const endRange = [selected, selected + 1, selected + 2];
 	const startRange = [selected, selected - 1, selected - 2];
 	const end = Math.min(endRange[prop.end[selectedEnd]], itemSize - 1);
@@ -70,14 +79,15 @@ const ViewManagerLayout = (props) => {
 				end={end}
 				index={selected}
 				start={start}
+				enteringProp={enteringProp}
 				enteringDelay={enteringDelay}
 				style={{height: ri.scale(42 * (end - start + 1)), overflow: 'hidden'}}
 				{...rest}
 			>
 				{views.map((view, i) => (
-					<div className={css.box} key={i}>
+					<ChildrenDiv className={css.box} enteringProp={enteringProp} key={i} >
 						{view.content}
-					</div>
+					</ChildrenDiv>
 				))}
 			</Cell>
 		</Layout>
@@ -126,6 +136,7 @@ export const _ViewManager = (args) => {
 			arranger={arranger}
 			duration={args['duration']}
 			enteringDelay={args['enteringDelay']}
+			enteringProp={args['enteringProp']}
 			noAnimation={args['noAnimation']}
 			onAppear={action('onAppear')}
 			onEnter={action('onEnter')}
@@ -144,6 +155,7 @@ export const _ViewManager = (args) => {
 select('arranger', _ViewManager, Object.keys(prop.arranger), ViewManagerConfig, 'SlideBottomArranger');
 number('duration', _ViewManager, ViewManagerConfig);
 number('enteringDelay', _ViewManager, ViewManagerConfig);
+text('enteringProp', _ViewManager, ViewManagerConfig);
 boolean('noAnimation', _ViewManager, ViewManagerConfig);
 boolean('reverseTransition', _ViewManager, ViewManagerConfig);
 boolean('rtl', _ViewManager, ViewManagerConfig);
