@@ -5,7 +5,7 @@
 // Using string refs from the source code of ReactTransitionGroup
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import {forward} from '@enact/core/handle';
+import {forward, forwardCustom} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import eqBy from 'ramda/src/eqBy';
 import findIndex from 'ramda/src/findIndex';
@@ -58,8 +58,6 @@ const forwardOnAppear = forward('onAppear');
 const forwardOnEnter = forward('onEnter');
 const forwardOnLeave = forward('onLeave');
 const forwardOnStay = forward('onStay');
-const forwardOnTransition = forward('onTransition');
-const forwardOnWillTransition = forward('onWillTransition');
 
 /**
  * Manages the transition of added and removed child components. Children that are added are
@@ -273,7 +271,7 @@ class TransitionGroup extends Component {
 		});
 
 		if (this.keysToEnter.length || this.keysToLeave.length) {
-			forwardOnWillTransition(null, this.props);
+			forwardCustom('onWillTransition')(null, this.props);
 		}
 
 		// once the component has been updated, start the enter transition for new children,
@@ -297,7 +295,7 @@ class TransitionGroup extends Component {
 			delete this.currentlyTransitioningKeys[key];
 
 			if (!noForwarding && Object.keys(this.currentlyTransitioningKeys).length === 0) {
-				forwardOnTransition(null, this.props);
+				forwardCustom('onTransition')(null, this.props);
 			}
 		}
 	}
@@ -323,6 +321,7 @@ class TransitionGroup extends Component {
 		}
 
 		forwardOnAppear({
+			type: 'onAppear',
 			view: component
 		}, this.props);
 
@@ -357,6 +356,7 @@ class TransitionGroup extends Component {
 		}
 
 		forwardOnEnter({
+			type: 'onEnter',
 			view: component
 		}, this.props);
 
@@ -382,6 +382,7 @@ class TransitionGroup extends Component {
 		}
 
 		forwardOnStay({
+			type: 'onStay',
 			view: component
 		}, this.props);
 	};
@@ -408,6 +409,7 @@ class TransitionGroup extends Component {
 		}
 
 		forwardOnLeave({
+			type: 'onLeave',
 			view: component
 		}, this.props);
 

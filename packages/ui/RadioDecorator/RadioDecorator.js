@@ -6,7 +6,7 @@
  * @exports RadioControllerDecorator
  */
 
-import {forward} from '@enact/core/handle';
+import {forwardCustom} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Component} from 'react';
 
@@ -61,8 +61,6 @@ const defaultConfig = {
  */
 const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {activate, deactivate, prop} = config;
-	const forwardActivate = forward(activate);
-	const forwardDeactivate = forward(deactivate);
 
 	return class extends Component {
 		static displayName = 'RadioDecorator';
@@ -99,7 +97,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		deactivate = () => {
 			if (this.props[prop]) {
-				forwardDeactivate(null, this.props);
+				forwardCustom(deactivate)(null, this.props);
 			}
 		};
 
@@ -108,7 +106,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.controller.notify({action: 'activate'});
 			}
 
-			forwardActivate(null, this.props);
+			forwardCustom(activate)(null, this.props);
 		};
 
 		handleDeactivate = () => {
@@ -116,7 +114,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.controller.notify({action: 'deactivate'});
 			}
 
-			forwardDeactivate(null, this.props);
+			forwardCustom(deactivate)(null, this.props);
 		};
 
 		render () {
