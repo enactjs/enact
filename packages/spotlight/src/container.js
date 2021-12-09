@@ -723,7 +723,7 @@ function setContainerLastFocusedElement (node, containerIds) {
  * restricted, it will return an array of all possible navigable nodes.
  *
  * @param   {String}                             containerId        Container ID
- * @param   {('last-focused'|'default-element')} [preferredEnterTo] Prefer the given enterTo
+ * @param   {('last-focused'|'default-element'|'top-most')} [preferredEnterTo] Prefer the given enterTo
  *                                                                  configuration
  *
  * @returns {Node[]}             Navigable elements within container
@@ -769,6 +769,12 @@ function getContainerNavigableElements (containerId, preferredEnterTo) {
 
 				return contains(containerRect, getRect(element));
 			});
+
+			if (next && preferredEnterTo === 'top-most') {
+				next.sort(function(elem1, elem2) {
+					return getRect(elem1).top - getRect(elem2).top;
+				});
+			}
 		}
 
 		// otherwise, return all spottables within the container
