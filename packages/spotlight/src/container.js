@@ -722,9 +722,8 @@ function setContainerLastFocusedElement (node, containerIds) {
  * return that element as the only element in an array. If that fails or if navigation is not
  * restricted, it will return an array of all possible navigable nodes.
  *
- * @param   {String}                             containerId        			Container ID
- * @param   {('last-focused'|'default-element'|'top-most')} [preferredEnterTo]	Prefer the given enterTo configuration
-
+ * @param   {String}                                        containerId        Container ID
+ * @param   {('last-focused'|'default-element'|'top-most')} [preferredEnterTo] Prefer the given enterTo configuration
  *
  * @returns {Node[]}             Navigable elements within container
  * @memberof spotlight/container
@@ -771,9 +770,7 @@ function getContainerNavigableElements (containerId, preferredEnterTo) {
 			});
 
 			if (next && preferredEnterTo === 'top-most') {
-				next.sort(function(elem1, elem2) {
-					return getRect(elem1).top - getRect(elem2).top;
-				});
+				next.sort((a, b) => (getRect(a).top - getRect(b).top));
 			}
 		}
 
@@ -790,8 +787,8 @@ function getContainerNavigableElements (containerId, preferredEnterTo) {
  * Determines the preferred focus target, traversing any sub-containers as necessary, for the given
  * container.
  *
- * @param   {String}                             containerId        			ID of container
- * @param   {('last-focused'|'default-element'|'top-most')} [preferredEnterTo]	Prefer the given enterTo configuration
+ * @param   {String}                                        containerId        Container ID
+ * @param   {('last-focused'|'default-element'|'top-most')} [preferredEnterTo] Prefer the given enterTo configuration
  *
  * @returns {Node}                 Preferred target as either a DOM node or container-id
  * @memberof spotlight/container
