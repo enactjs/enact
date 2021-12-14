@@ -26,14 +26,14 @@
   },
   "dependencies": {
     "@enact/core": "^4.1.1",
-    "classnames": "^2.2.5",
-    "direction": "^1.0.1",
-    "invariant": "^2.2.2",
+    "classnames": "^2.3.1",
+    "direction": "^2.0.1",
+    "invariant": "^2.2.4",
     "prop-types": "^15.7.2",
-    "ramda": "^0.24.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-is": "^17.0.1",
-    "warning": "^3.0.0"
+    "ramda": "^0.27.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-is": "^17.0.2",
+    "warning": "^4.0.3"
   }
 }
