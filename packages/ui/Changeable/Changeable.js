@@ -7,7 +7,7 @@
  * @exports Changeable
  */
 
-import {forProp, forwardCustom, handle} from '@enact/core/handle';
+import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
@@ -171,7 +171,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleChange = this.handle(
 			forProp('disabled', false),
-			forwardCustom(change),
+			forward(change),
 			({[prop]: value}) => {
 				if (!this.state.controlled) {
 					this.setState(({value: oldValue}) => value !== oldValue ? {value} : null);
