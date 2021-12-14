@@ -623,9 +623,8 @@ const getAllContainerIds = () => {
 /**
  * Returns the default focus element for a container
  *
- * @param   {String}                             containerId        ID of container
- * @param   {('last-focused'|'default-element')} [preferredEnterTo] Prefer the given enterTo
- *                                                                  configuration
+ * @param   {String}                                       containerId        Container ID
+ * @param   {('last-focused'|'default-element'|'topmost')} [preferredEnterTo] Prefer the given enterTo configuration
  *
  * @returns {Node|null}                 Default focus element
  * @memberof spotlight/container
