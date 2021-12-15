@@ -489,9 +489,20 @@ class ScrollableBaseNative extends Component {
 			if (handleResizeWindow) {
 				handleResizeWindow();
 			}
+			if ( platform.platformName === 'androidChrome' || platform.platformName === 'ios' ) {
+				this.childRefCurrent.containerRef.current.style.overflow = 'hidden';
+
+			}
 			this.childRefCurrent.containerRef.current.style.scrollBehavior = null;
+
 			this.childRefCurrent.scrollToPosition(0, 0);
-			this.childRefCurrent.containerRef.current.style.scrollBehavior = 'smooth';
+
+			setTimeout(() => {
+				if ( platform.platformName === 'androidChrome' || platform.platformName === 'ios' ) {
+					this.childRefCurrent.containerRef.current.style.overflow = '';
+				}
+				this.childRefCurrent.containerRef.current.style.scrollBehavior = 'smooth';
+			}, 100);
 
 			this.enqueueForceUpdate();
 		});
