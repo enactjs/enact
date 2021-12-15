@@ -102,10 +102,10 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				Spotlight.set(rootContainerId, {
 					overflow: true
 				});
-			}
 
-			// Sometimes the focusin event is fired before componentDidMount.
-			document.addEventListener('focusin', this.handleFocusInBeforeMount, {capture: true});
+				// Sometimes the focusin event is fired before componentDidMount.
+				document.addEventListener('focusin', this.handleFocusInBeforeMount, {capture: true});
+			}
 		}
 
 		componentDidMount () {
@@ -120,9 +120,8 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				document.addEventListener('keydown', this.handleKeyDown, {capture: true});
 				document.addEventListener('pointermove', this.handlePointerMove, {capture: true});
 				document.addEventListener('pointerover', this.handlePointerOver, {capture: true});
+				document.removeEventListener('focusin', this.handleFocusInBeforeMount, {capture: true});
 			}
-
-			document.removeEventListener('focusin', this.handleFocusInBeforeMount, {capture: true});
 
 			if (this.hasFocusedIn) {
 				this.hasFocusedIn = false;

@@ -24,7 +24,12 @@ import './dates';
 import Loader from './Loader';
 import {updateLocale} from '../locale';
 
+const ilibAdditionalPath = process.env.REACT_APP_ILIB_ADDITIONAL_RESOURCES_PATH;
+
 ilib.setLoaderCallback(new Loader());
+if (typeof ilibAdditionalPath !== 'undefined') {
+	ilib.getLoader().addPath(ilibAdditionalPath);
+}
 
 if (typeof window === 'object' && typeof window.UILocale !== 'undefined') {
 	// this is a hack until GF-1581 is fixed
