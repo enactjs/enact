@@ -36,7 +36,7 @@ describe('ProgressBar Specs', () => {
 
 	describe('vertical', () => {
 		test('should have height of 0.5', () => {
-			render(<ProgressBar progress={0.5} orientation="vertical" />);
+			render(<ProgressBar orientation="vertical" progress={0.5} />);
 			const progressBar = screen.getByRole('progressbar');
 
 			const expected = '0.5';
@@ -45,7 +45,7 @@ describe('ProgressBar Specs', () => {
 		});
 
 		test('should have background height of 0.75', () => {
-			render(<ProgressBar progress={0.5} backgroundProgress={0.75} orientation="vertical" />);
+			render(<ProgressBar backgroundProgress={0.75} orientation="vertical" progress={0.5} />);
 			const progressBar = screen.getByRole('progressbar');
 
 			const expected = '0.75';
@@ -56,7 +56,7 @@ describe('ProgressBar Specs', () => {
 
 	describe('radial', () => {
 		test('should have a radius of 0.5', () => {
-			render(<ProgressBar progress={0.5} orientation="radial" />);
+			render(<ProgressBar orientation="radial" progress={0.5} />);
 			const progressBar = screen.getByRole('progressbar');
 
 			const expected = '0.5';
@@ -65,7 +65,7 @@ describe('ProgressBar Specs', () => {
 		});
 
 		test('should have background radius of 0.75', () => {
-			render(<ProgressBar progress={0.5} backgroundProgress={0.75} orientation="radial" />);
+			render(<ProgressBar backgroundProgress={0.75} orientation="radial" progress={0.5} />);
 			const progressBar = screen.getByRole('progressbar');
 
 			const expected = '0.75';

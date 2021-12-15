@@ -10,7 +10,6 @@ const tap = (node) => {
 };
 
 describe('Item', () => {
-
 	test('should render an item', () => {
 		render(<Item>I am an item</Item>);
 		const actual = screen.getByText('I am an item');

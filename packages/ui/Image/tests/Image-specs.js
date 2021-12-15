@@ -2,6 +2,7 @@ import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 
 import Image, {ImageBase} from '../Image';
+
 import css from '../Image.module.less';
 
 const src = {

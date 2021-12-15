@@ -52,7 +52,7 @@ describe('LabeledIcon Specs', () => {
 
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
-		render(<LabeledIcon ref={ref} iconComponent={iconComponent} icon={iconName} />);
+		render(<LabeledIcon icon={iconName} iconComponent={iconComponent} ref={ref} />);
 
 		const expected = 'DIV';
 		const actual = ref.mock.calls[0][0].nodeName;

@@ -7,7 +7,6 @@ import {render, screen} from '@testing-library/react';
 import Slottable from '../Slottable';
 
 describe('Slottable Specs', () => {
-
 	test('should distribute children with a \'slot\' property', () => {
 		const Component = Slottable({slots: ['a', 'b', 'c']}, ({a, b, c}) => (
 			<div data-testid="slottable">
