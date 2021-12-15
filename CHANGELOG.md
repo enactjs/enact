@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.0.9] - 2021-12-15
+
+No significant changes.
+
 ## [4.0.8] - 2021-10-21
 
 ### Fixed
