@@ -193,7 +193,7 @@ describe('useTouch', () => {
 			expect(actual).toEqual(expected);
 		});
 
-		// This test is unstable. `fireEvent` does not recognize the timeStamp property
+		// TODO This test is unstable. `fireEvent` does not recognize the timeStamp property
 		test.skip('should be called before onClick on mouse up', () => {
 			const handler = jest.fn();
 			render(

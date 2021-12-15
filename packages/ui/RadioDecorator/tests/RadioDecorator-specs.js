@@ -91,7 +91,7 @@ describe('RadioDecorator', () => {
 		expect(actual).toBe(expected);
 	});
 
-	// This test is skipped because Component doesn't update its content text on click with React Testing Library
+	// TODO This test is skipped because Component doesn't update its content text on click with React Testing Library
 	test.skip('should be activated when the activated event fires', () => {
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
 		render(
@@ -106,7 +106,7 @@ describe('RadioDecorator', () => {
 		expect(component).toHaveTextContent('Active');
 	});
 
-	// This test is skipped because Component doesn't update its content text on click with React Testing Library
+	// TODO This test is skipped because Component doesn't update its content text on click with React Testing Library
 	test.skip('should be deactivated when the deactivated event fires', () => {
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
 		render(
@@ -121,7 +121,7 @@ describe('RadioDecorator', () => {
 		expect(component).toHaveTextContent('Inactive');
 	});
 
-	// This test is skipped because Component doesn't update its content text on click with React Testing Library
+	// TODO This test is skipped because Component doesn't update its content text on click with React Testing Library
 	test.skip('should be deactivated when the activated event fires on another instance', () => {
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
 		render(
@@ -138,7 +138,7 @@ describe('RadioDecorator', () => {
 		expect(activeComponent).toHaveTextContent('Inactive');
 	});
 
-	// This test is skipped because we can't have access to component instance with React Testing Library
+	// TODO This test is skipped because we can't have access to component instance with React Testing Library
 	test.skip('should not deactivate items in a ancestor controller', () => {
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
 		render(

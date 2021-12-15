@@ -51,7 +51,7 @@ describe('BodyText Specs', () => {
 		expect(bodyText).toHaveClass(expected);
 	});
 
-	// Test is skipped because React Testing Library does not support checking if the component is changed to a different DOM node
+	// TODO Test is skipped because React Testing Library does not support checking if the component is changed to a different DOM node
 	test.skip('should support changing the component element to a different DOM node', () => {
 		const componentTag = 'address';
 		render(<BodyTextBase component={componentTag} data-testid="bodyText" />);

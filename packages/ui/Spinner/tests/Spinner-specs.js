@@ -42,7 +42,7 @@ describe('Spinner Specs', () => {
 		expect(spinnerContainer).toHaveClass(expected);
 	});
 
-	// This test is skipped because React Testing Library can't check if Spinner can have FloatingLayer
+	// TODO This test is skipped because React Testing Library can't check if Spinner can have FloatingLayer
 	test.skip('should have FloatingLayer when blockClickOn prop equals screen', () => {
 		render(<SpinnerBase blockClickOn="screen" component="div" data-testid="spinner" />);
 		const spinner = screen.getByTestId('spinner');
