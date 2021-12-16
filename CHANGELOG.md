@@ -14,8 +14,8 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Fixed
 
-- `ui/Scrollable/ScrollableNative` changed the behaviour of the resize method
-- `ui/useScroll/useScroll` changed the behaviour of the resize method
+- `ui/Scrollable/ScrollableNative` changed the behaviour of the window resize method
+- `ui/useScroll/useScroll` changed the behaviour of the window resize method
 - `spotlight/SpotlightRootDecorator` to show focus effect after initial loading
 - `ui/MarqueeDecorator` to restart animation when text changed while focus retained
 
