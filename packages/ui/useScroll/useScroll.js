@@ -370,7 +370,6 @@ const useScrollBase = (props) => {
 			} else {
 				if ( platform.platformName === 'androidChrome' || platform.platformName === 'ios' ) {
 					scrollContentRef.current.style.overflow = 'hidden';
-
 				}
 				scrollContentRef.current.style.scrollBehavior = null;
 

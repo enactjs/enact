@@ -491,7 +491,6 @@ class ScrollableBaseNative extends Component {
 			}
 			if ( platform.platformName === 'androidChrome' || platform.platformName === 'ios' ) {
 				this.childRefCurrent.containerRef.current.style.overflow = 'hidden';
-
 			}
 			this.childRefCurrent.containerRef.current.style.scrollBehavior = null;
 
