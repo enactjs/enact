@@ -40,12 +40,12 @@ const views = new Array(itemSize).fill().map((i, index) => {
 	};
 });
 
-const ChildrenDiv = (props) => {
+const ChildrenDiv = ({args, ...rest}) => {
 	// eslint-disable-next-line enact/prop-types
-	if (props[props.enteringProp] === false) {
-		return <div {...props}>{props.children} (finished its transition)</div>;
+	if (rest[args.enteringProp] === false) {
+		return <div {...rest}>{rest.children} (finished its transition)</div>;
 	} else {
-		return <div {...props}>{props.children}</div>;
+		return <div {...rest}>{rest.children}</div>;
 	}
 };
 
@@ -56,7 +56,7 @@ const ViewManagerLayout = (props) => {
 	}, [setSelected]);
 
 	// eslint-disable-next-line enact/prop-types
-	const {selectedEnd, selectedStart, enteringDelay, enteringProp, ...rest} = props;
+	const {args, selectedEnd, selectedStart, enteringDelay ...rest} = props;
 	const endRange = [selected, selected + 1, selected + 2];
 	const startRange = [selected, selected - 1, selected - 2];
 	const end = Math.min(endRange[prop.end[selectedEnd]], itemSize - 1);
@@ -77,15 +77,14 @@ const ViewManagerLayout = (props) => {
 			<Cell
 				component={ViewManager}
 				end={end}
+				enteringDelay={enteringDelay}
 				index={selected}
 				start={start}
-				enteringProp={enteringProp}
-				enteringDelay={enteringDelay}
 				style={{height: ri.scale(42 * (end - start + 1)), overflow: 'hidden'}}
 				{...rest}
 			>
 				{views.map((view, i) => (
-					<ChildrenDiv className={css.box} enteringProp={enteringProp} key={i} >
+					<ChildrenDiv args={args} className={css.box} key={i} >
 						{view.content}
 					</ChildrenDiv>
 				))}
@@ -133,6 +132,7 @@ export const _ViewManager = (args) => {
 
 	return (
 		<ViewManagerLayout
+			args={args}
 			arranger={arranger}
 			duration={args['duration']}
 			enteringDelay={args['enteringDelay']}
