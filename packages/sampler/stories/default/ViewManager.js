@@ -7,6 +7,7 @@ import Layout, {Cell} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
 import Scroller from '@enact/ui/Scroller';
 import {arrange, SlideArranger, SlideBottomArranger, SlideLeftArranger, SlideRightArranger, SlideTopArranger, ViewManager, ViewManagerBase} from '@enact/ui/ViewManager';
+import PropTypes from 'prop-types';
 import {useCallback, useState} from 'react';
 
 import css from './ViewManager.module.less';
@@ -41,12 +42,15 @@ const views = new Array(itemSize).fill().map((i, index) => {
 });
 
 const ChildrenDiv = ({args, ...rest}) => {
-	// eslint-disable-next-line enact/prop-types
 	if (rest[args.enteringProp] === false) {
 		return <div {...rest}>{rest.children} (finished its transition)</div>;
 	} else {
 		return <div {...rest}>{rest.children}</div>;
 	}
+};
+
+ChildrenDiv.propTypes = {
+	args: PropTypes.object
 };
 
 const ViewManagerLayout = (props) => {
