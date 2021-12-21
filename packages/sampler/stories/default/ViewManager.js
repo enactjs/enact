@@ -60,7 +60,7 @@ const ViewManagerLayout = (props) => {
 	}, [setSelected]);
 
 	// eslint-disable-next-line enact/prop-types
-	const {args, selectedEnd, selectedStart, enteringDelay, ...rest} = props;
+	const {args, selectedEnd, selectedStart, ...rest} = props;
 	const endRange = [selected, selected + 1, selected + 2];
 	const startRange = [selected, selected - 1, selected - 2];
 	const end = Math.min(endRange[prop.end[selectedEnd]], itemSize - 1);
@@ -81,7 +81,6 @@ const ViewManagerLayout = (props) => {
 			<Cell
 				component={ViewManager}
 				end={end}
-				enteringDelay={enteringDelay}
 				index={selected}
 				start={start}
 				style={{height: ri.scale(42 * (end - start + 1)), overflow: 'hidden'}}
