@@ -139,7 +139,7 @@ class ScrollerBasic extends Component {
 		}
 	}
 
-	// scrollMode 'translate'
+	// scrollMode 'native'
 	scrollToPosition (x, y) {
 		this.props.scrollContentRef.current.scrollTo(this.getRtlPositionX(x), y);
 	}
