@@ -87,7 +87,7 @@ const ViewManagerLayout = (props) => {
 				{...rest}
 			>
 				{views.map((view, i) => (
-					<ChildrenDiv args={args} className={css.box} key={i} >
+					<ChildrenDiv args={args} className={css.box} key={i}>
 						{view.content}
 					</ChildrenDiv>
 				))}
