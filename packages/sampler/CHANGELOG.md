@@ -2,11 +2,9 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [unreleased]
+## [4.1.2] - 2021-12-22
 
-### Added
-
-- `ui/ViewManager` sample
+No significant changes.
 
 ## [4.1.1] - 2021-11-30
 
