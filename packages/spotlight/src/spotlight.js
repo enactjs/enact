@@ -248,9 +248,11 @@ const Spotlight = (function () {
 			setLastContainer(containerId);
 		}
 
-		//if (__DEV__) {
+		if (__DEV__) {
 			assignFocusPreview(elem);
-		//}
+		}else {
+			console.log("not __DEV");
+		}
 	}
 
 	function restoreFocus () {
