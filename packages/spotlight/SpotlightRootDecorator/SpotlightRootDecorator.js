@@ -15,7 +15,7 @@ import {spottableClass} from '../Spottable';
 
 import {rootContainerId} from '../src/container';
 
-import '../styles/debug.less';
+import '../styles/debug.module.less';
 
 const input = {
 	activated: false,
