@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {createContext, useState} from 'react';
 import PropTypes from 'prop-types';
+import {createContext, useState} from 'react';
 
 import kind from '../kind';
 
