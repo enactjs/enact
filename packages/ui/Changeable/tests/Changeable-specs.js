@@ -4,7 +4,7 @@ import {render, screen} from '@testing-library/react';
 import Changeable from '../Changeable';
 
 describe('Changeable', () => {
-	let data = [];
+	let data;
 	const testValue = 3;
 
 	const DivComponent = (props) => {
@@ -173,6 +173,16 @@ describe('Changeable', () => {
 		const actual = handleChange.mock.calls.length;
 
 		expect(actual).toBe(expected);
+	});
+
+	test('should not invoke passed \'onChange\' handler when \'disabled\'', () => {
+		const handleChange = jest.fn();
+		const Component = Changeable(DivComponent);
+		render(<Component onChange={handleChange} disabled />);
+
+		data.onChange({value: '1'});
+
+		expect(handleChange).not.toHaveBeenCalled();
 	});
 
 	test('should update \'value\' when \'onChange\' invoked and is not controlled', () => {

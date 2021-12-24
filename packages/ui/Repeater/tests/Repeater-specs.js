@@ -13,8 +13,8 @@ describe('Repeater Specs', () => {
 	test('should have a root span element', () => {
 		render(<RepeaterBase childComponent="div" data-testid="repeater">{stringItems}</RepeaterBase>);
 
-		const expected = 'span';
-		const rootElementName = screen.getByTestId('repeater').nodeName.toLowerCase();
+		const expected = 'SPAN';
+		const rootElementName = screen.getByTestId('repeater').nodeName;
 
 		expect(rootElementName).toBe(expected);
 	});
@@ -22,8 +22,8 @@ describe('Repeater Specs', () => {
 	test('should accept a nodeName as root element', () => {
 		render(<RepeaterBase childComponent="div" component="div" data-testid="repeater">{stringItems}</RepeaterBase>);
 
-		const expected = 'div';
-		const rootElementName = screen.getByTestId('repeater').nodeName.toLowerCase();
+		const expected = 'DIV';
+		const rootElementName = screen.getByTestId('repeater').nodeName;
 
 		expect(rootElementName).toBe(expected);
 	});
@@ -31,8 +31,8 @@ describe('Repeater Specs', () => {
 	test('should accept a function as root element', () => {
 		render(<RepeaterBase childComponent="div" component={CustomRootType} data-testid="repeater">{stringItems}</RepeaterBase>);
 
-		const expected = 'div';
-		const rootElementName = screen.getByTestId('repeater').nodeName.toLowerCase();
+		const expected = 'DIV';
+		const rootElementName = screen.getByTestId('repeater').nodeName;
 
 		expect(rootElementName).toBe(expected);
 	});
@@ -129,7 +129,7 @@ describe('Repeater Specs', () => {
 
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
-		render(<Repeater childComponent="div" component="div" data-testid="repeater" ref={ref}>{stringItems}</Repeater>);
+		render(<Repeater childComponent="div" component="div" ref={ref}>{stringItems}</Repeater>);
 
 		const expected = 'DIV';
 		const actual = ref.mock.calls[0][0].nodeName;

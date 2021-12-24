@@ -6,7 +6,7 @@ import Skinnable from '../Skinnable';
 describe('Skinnable Specs', () => {
 	test('should do nothing when nothing is specified', () => {
 		const config = {};
-		let data = [];
+		let data;
 
 		const Component = (props) => {
 			data = props;
@@ -74,7 +74,7 @@ describe('Skinnable Specs', () => {
 				light: 'lightSkin'
 			}
 		};
-		let data = [];
+		let data;
 
 		const Component = (props) => {
 			data = props;
@@ -225,10 +225,10 @@ describe('Skinnable Specs', () => {
 
 		const SkinnableComponent = Skinnable(config, Component);
 
-		const {rerender} = render(<SkinnableComponent data-testid="skinnableComponent1" skinVariants="normal unicase" />);
+		render(<SkinnableComponent data-testid="skinnableComponent1" skinVariants="normal unicase" />);
 		const component1ClassNames = screen.getByTestId('skinnableComponent1').className;
 
-		rerender(<SkinnableComponent data-testid="skinnableComponent2" skinVariants={['normal', 'unicase']} />);
+		render(<SkinnableComponent data-testid="skinnableComponent2" skinVariants={['normal', 'unicase']} />);
 		const component2ClassNames = screen.getByTestId('skinnableComponent2').className;
 
 		expect(component1ClassNames).toEqual(component2ClassNames);
@@ -374,5 +374,45 @@ describe('Skinnable Specs', () => {
 		const component = screen.getByTestId('innerChild');
 
 		expect(component).toHaveClass(expected);
+	});
+
+	test.skip('should not force re-render of child if child unaffected', () => {
+		const config = {
+			defaultSkin: 'dark',
+			defaultVariants: 'normal',
+			skins: {
+				dark: 'darkSkin',
+				light: 'lightSkin'
+			},
+			allowedVariants: ['normal', 'smallCaps', 'unicase']
+		};
+		const wasRendered = jest.fn();
+
+		const Component = (props) => (
+			<div {...props} />
+		);
+
+		const ChildComponent = () => {
+			wasRendered();
+			return <div>Hello</div>;
+		};
+
+		const SkinnableParent = Skinnable(config, Component);
+		const SkinnableChild = Skinnable(config, ChildComponent);
+
+		// eslint-disable-next-line
+		const subject = mount(
+			<SkinnableParent>
+				<SkinnableChild />
+			</SkinnableParent>
+		);
+
+		// Sending props to force parent to re-render
+		subject.setProps({className: 'foo'});
+
+		const expected = 1;
+		const actual = wasRendered.mock.calls.length;
+
+		expect(actual).toEqual(expected);
 	});
 });

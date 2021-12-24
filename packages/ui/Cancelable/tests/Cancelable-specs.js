@@ -3,10 +3,9 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import {addCancelHandler, Cancelable, removeCancelHandler} from '../Cancelable';
 
 describe('Cancelable', () => {
-
 	// Suite-wide setup
-	const Component = ({children, className, onKeyUp}) => (
-		<div className={className} data-testid="cancelable" onKeyUp={onKeyUp}>
+	const Component = ({children, className, onKeyUp, ...rest}) => (
+		<div className={className} data-testid="cancelable" onKeyUp={onKeyUp} {...rest}>
 			{children}
 		</div>
 	);
@@ -154,10 +153,10 @@ describe('Cancelable', () => {
 
 		render(
 			<Comp>
-				<Comp className="second" />
+				<Comp data-testid="second" className="second" />
 			</Comp>
 		);
-		const secondComponent = screen.getAllByTestId('cancelable')[1];
+		const secondComponent = screen.getByTestId('second');
 
 		fireEvent.keyUp(secondComponent, makeKeyEvent(27));
 
@@ -175,10 +174,10 @@ describe('Cancelable', () => {
 
 		render(
 			<Comp>
-				<Comp className="second" />
+				<Comp data-testid="second" className="second" />
 			</Comp>
 		);
-		const secondComponent = screen.getAllByTestId('cancelable')[1];
+		const secondComponent = screen.getByTestId('second');
 
 		fireEvent.keyUp(secondComponent, makeKeyEvent(27));
 
@@ -196,10 +195,10 @@ describe('Cancelable', () => {
 
 		render(
 			<Comp onCustomEvent={handleCancel}>
-				<Comp className="second" onCustomEvent={returnsTrue} />
+				<Comp data-testid="second" className="second" onCustomEvent={returnsTrue} />
 			</Comp>
 		);
-		const secondComponent = screen.getAllByTestId('cancelable')[1];
+		const secondComponent = screen.getByTestId('second');
 
 		fireEvent.keyUp(secondComponent, makeKeyEvent(27));
 
@@ -217,10 +216,10 @@ describe('Cancelable', () => {
 
 		render(
 			<Comp onCustomEvent={handleCancel}>
-				<Comp className="second" onCustomEvent={stop} />
+				<Comp data-testid="second" className="second" onCustomEvent={stop} />
 			</Comp>
 		);
-		const secondComponent = screen.getAllByTestId('cancelable')[1];
+		const secondComponent = screen.getByTestId('second');
 
 		fireEvent.keyUp(secondComponent, makeKeyEvent(27));
 

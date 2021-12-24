@@ -1,8 +1,8 @@
-import classNames from 'classnames';
 import handle, {forward} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
 import '@testing-library/jest-dom';
 import {fireEvent, render, screen} from '@testing-library/react';
+import classNames from 'classnames';
 import {Component} from 'react';
 import ReactDOM from 'react-dom';
 

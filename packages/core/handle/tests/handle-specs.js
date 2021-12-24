@@ -182,34 +182,28 @@ describe('handle', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test(
-		'should forwardWithPrevent events to function specified in provided props when preventDefault() hasn\'t been called',
-		() => {
-			const event = 'onMyClick';
-			const handler = jest.fn();
+	test('should forwardWithPrevent events to function specified in provided props when preventDefault() hasn\'t been called', () => {
+		const event = 'onMyClick';
+		const handler = jest.fn();
 
-			const callback = handle(forwardWithPrevent(event), handler);
+		const callback = handle(forwardWithPrevent(event), handler);
 
-			callback();
-			expect(handler).toHaveBeenCalledTimes(1);
-		}
-	);
+		callback();
+		expect(handler).toHaveBeenCalledTimes(1);
+	});
 
-	test(
-		'should not forwardWithPrevent events to function specified in provided props when preventDefault() has been called',
-		() => {
-			const event = 'onMyClick';
-			const handler = jest.fn();
+	test('should not forwardWithPrevent events to function specified in provided props when preventDefault() has been called', () => {
+		const event = 'onMyClick';
+		const handler = jest.fn();
 
-			const callback = handle(forwardWithPrevent(event), handler);
+		const callback = handle(forwardWithPrevent(event), handler);
 
-			// should stop chain when `preventDefault()` has been called
-			callback({}, {
-				'onMyClick': (ev) => ev.preventDefault()
-			});
-			expect(handler).not.toHaveBeenCalled();
-		}
-	);
+		// should stop chain when `preventDefault()` has been called
+		callback({}, {
+			'onMyClick': (ev) => ev.preventDefault()
+		});
+		expect(handler).not.toHaveBeenCalled();
+	});
 
 	test('should include object props as second arg when bound', () => {
 		const componentInstance = {
@@ -354,9 +348,10 @@ describe('handle', () => {
 				[returnsTrue, () => 'ok']
 			);
 
+			const expected = true;
 			const actual = callback();
 
-			expect(actual).not.toBeFalsy();
+			expect(actual).toBe(expected);
 		});
 
 		test('should return false when the passed condition branch returns a falsy value', () => {
@@ -364,9 +359,10 @@ describe('handle', () => {
 				[returnsTrue, () => null]
 			);
 
+			const expected = false;
 			const actual = callback();
 
-			expect(actual).toBeFalsy();
+			expect(actual).toBe(expected);
 		});
 
 		test('should return false when no conditions pass', () => {
@@ -375,9 +371,10 @@ describe('handle', () => {
 				[returnsFalse, returnsTrue]
 			);
 
+			const expected = false;
 			const actual = callback();
 
-			expect(actual).toBeFalsy();
+			expect(actual).toBe(expected);
 		});
 
 		test('should support bound handlers', () => {

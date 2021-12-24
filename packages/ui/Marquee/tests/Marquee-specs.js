@@ -3,8 +3,6 @@ import {render, screen} from '@testing-library/react';
 
 import {Marquee, MarqueeBase} from '../index.js';
 
-import css from '../Marquee.module.less';
-
 const
 	ltrText = 'This is some fine latin text.',
 	rtlText = 'العربية - العراق';
@@ -25,7 +23,7 @@ describe('Marquee', () => {
 
 	test('should determine the correct directionality of latin text on initial render', () => {
 		render(<Marquee>{ltrText}</Marquee>);
-		const marquee = screen.getByText('This is some fine latin text.');
+		const marquee = screen.getByText(ltrText);
 
 		const expected = 'ltr';
 
@@ -34,7 +32,7 @@ describe('Marquee', () => {
 
 	test('should determine the correct directionality of non-latin text on initial render', () => {
 		render(<Marquee>{rtlText}</Marquee>);
-		const marquee = screen.getByText('العربية - العراق');
+		const marquee = screen.getByText(rtlText);
 
 		const expected = 'rtl';
 
@@ -43,7 +41,7 @@ describe('Marquee', () => {
 
 	test('should force the directionality text if forceDirection is specified', () => {
 		render(<Marquee forceDirection="ltr">{rtlText}</Marquee>);
-		const marquee = screen.getByText('العربية - العراق');
+		const marquee = screen.getByText(rtlText);
 
 		const expected = 'ltr';
 
@@ -52,7 +50,7 @@ describe('Marquee', () => {
 
 	test('should switch directionality when the text content changes after initial render', () => {
 		const {rerender} = render(<Marquee>{ltrText}</Marquee>);
-		const marquee = screen.getByText('This is some fine latin text.');
+		const marquee = screen.getByText(ltrText);
 
 		rerender(<Marquee>{rtlText}</Marquee>);
 
@@ -63,7 +61,7 @@ describe('Marquee', () => {
 
 	test('should not switch directionality when the text content changes after initial render and the forceDirection property was already set', () => {
 		const {rerender} = render(<Marquee forceDirection="ltr">{ltrText}</Marquee>);
-		const marquee = screen.getByText('This is some fine latin text.');
+		const marquee = screen.getByText(ltrText);
 
 		rerender(<Marquee forceDirection="ltr">{rtlText}</Marquee>);
 
@@ -140,7 +138,7 @@ describe('MarqueeBase', () => {
 		render(<MarqueeBase data-testid="marquee" />);
 		const marquee = screen.getByTestId('marquee').children.item(0);
 
-		const expected = css.animate;
+		const expected = 'animate';
 
 		expect(marquee).not.toHaveClass(expected);
 	});
@@ -149,7 +147,7 @@ describe('MarqueeBase', () => {
 		render(<MarqueeBase animating data-testid="marquee" />);
 		const marquee = screen.getByTestId('marquee').children.item(0);
 
-		const expected = css.animate;
+		const expected = 'animate';
 
 		expect(marquee).toHaveClass(expected);
 	});

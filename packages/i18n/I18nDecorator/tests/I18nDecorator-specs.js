@@ -1,7 +1,7 @@
-import ilib from 'ilib';
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import ilib from 'ilib';
 
 import {I18nContextDecorator, I18nDecorator} from '../I18nDecorator';
 import {updateLocale} from '../../locale';

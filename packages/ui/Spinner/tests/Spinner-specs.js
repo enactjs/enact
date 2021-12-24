@@ -2,15 +2,14 @@ import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 
 import {SpinnerBase} from '../Spinner';
-
-import css from '../Spinner.module.less';
+import {FloatingLayerDecorator} from '../../FloatingLayer';
 
 describe('Spinner Specs', () => {
 	test('should have centered class when centered prop equals true', () => {
 		render(<SpinnerBase centered component="div">Loading...</SpinnerBase>);
 		const spinner = screen.getByText('Loading...');
 
-		const expected = css.centered;
+		const expected = 'centered';
 
 		expect(spinner).toHaveClass(expected);
 	});
@@ -19,7 +18,7 @@ describe('Spinner Specs', () => {
 		render(<SpinnerBase component="div" data-testid="spinner" />);
 		const spinner = screen.getByTestId('spinner');
 
-		const expected = css.content;
+		const expected = 'content';
 
 		expect(spinner).not.toHaveClass(expected);
 	});
@@ -28,7 +27,7 @@ describe('Spinner Specs', () => {
 		render(<SpinnerBase blockClickOn="container" component="div" data-testid="spinner" />);
 		const spinnerContainer = screen.getByTestId('spinner').previousElementSibling;
 
-		const expected = css.scrim;
+		const expected = 'scrim';
 
 		expect(spinnerContainer).not.toHaveClass(expected);
 	});
@@ -37,20 +36,22 @@ describe('Spinner Specs', () => {
 		render(<SpinnerBase blockClickOn="container" component="div" data-testid="spinner" scrim />);
 		const spinnerContainer = screen.getByTestId('spinner').previousElementSibling;
 
-		const expected = css.scrim;
+		const expected = 'scrim';
 
 		expect(spinnerContainer).toHaveClass(expected);
 	});
 
-	// TODO This test is skipped because React Testing Library can't check if Spinner can have FloatingLayer
-	test.skip('should have FloatingLayer when blockClickOn prop equals screen', () => {
-		render(<SpinnerBase blockClickOn="screen" component="div" data-testid="spinner" />);
+	test('should have FloatingLayer when blockClickOn prop equals screen', () => {
+		const Root = FloatingLayerDecorator('div');
+		render(
+			<Root>
+				<SpinnerBase blockClickOn="screen" component="div" data-testid="spinner" />
+			</Root>
+		);
+
 		const spinner = screen.getByTestId('spinner');
 
-		const expected = true;
-		// FloatingLayer is wrapped by Cancelable so it's undiscoverable by name
-		const actual = spinner.find('Cancelable').exists();
-
-		expect(actual).toBe(expected);
+		expect(spinner).toBeInTheDocument();
+		expect(spinner.parentElement.parentElement.parentElement.id).toBe('floatLayer');
 	});
 });

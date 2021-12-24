@@ -3,8 +3,6 @@ import {render, screen} from '@testing-library/react';
 
 import Layout, {Cell} from '../Layout';
 
-import css from '../Layout.module.less';
-
 describe('Layout Specs', () => {
 	const layoutPropAlign = [
 		['baseline', 'baseline'],
@@ -28,7 +26,7 @@ describe('Layout Specs', () => {
 		render(<Layout inline><Cell>Body</Cell></Layout>);
 		const layout = screen.getByText('Body').parentElement;
 
-		const expected = css.inline;
+		const expected = 'inline';
 
 		expect(layout).toHaveClass(expected);
 	});
@@ -47,7 +45,7 @@ describe('Layout Specs', () => {
 				render(<Layout {...propValue}><Cell>Body</Cell></Layout>);
 				const layout = screen.getByText('Body').parentElement;
 
-				const expected = css[value];
+				const expected = value;
 
 				expect(layout).toHaveClass(expected);
 			});
@@ -67,7 +65,7 @@ describe('Layout Specs', () => {
 			render(<Cell {...props}>Body</Cell>);
 			const layout = screen.getByText('Body');
 
-			const expected = css[prop];
+			const expected = prop;
 
 			expect(layout).toHaveClass(expected);
 		});

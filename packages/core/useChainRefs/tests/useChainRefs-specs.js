@@ -1,6 +1,6 @@
-import {createRef} from 'react';
 import '@testing-library/jest-dom';
 import {render} from '@testing-library/react';
+import {createRef} from 'react';
 
 import useChainRefs from '../useChainRefs';
 

@@ -47,18 +47,17 @@ describe('RadioDecorator', () => {
 		);
 
 		const {rerender} = render(<Wrapper />);
-		const component = screen.getByTestId('span-element');
+		let component = screen.getByTestId('span-element');
 
 		const expected = 'Inactive';
 
 		expect(component).toHaveTextContent(expected);
 
 		rerender(<Wrapper active />);
-		const rerenderedComponent = screen.getByTestId('span-element');
 
 		const secondExpected = 'Active';
 
-		expect(rerenderedComponent).toHaveTextContent(secondExpected);
+		expect(component).toHaveTextContent(secondExpected);
 	});
 
 	test('should not call deactivate callback on inactive items', () => {

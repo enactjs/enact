@@ -90,7 +90,7 @@ describe('hoc', () => {
 	test('should allow construction without default or instance configs', () => {
 		const Component = NullHoC('input');
 		render(<Component />);
-		const component = screen.queryByTestId(testID);
+		const component = screen.getByTestId(testID);
 
 		const expected = 'INPUT';
 		const actual = component.nodeName;

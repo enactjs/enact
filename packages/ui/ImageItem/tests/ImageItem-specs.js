@@ -10,18 +10,16 @@ const src = {
 };
 
 describe('ImageItem', () => {
-	let data = [];
+	let data;
 
-	const Img =  (props) => {
+	const Img = (props) => {
 		data = props;
 		return null;
 	};
 
 	test('should support `children` prop', () => {
-		// eslint-disable-next-line
-		console.error = () => {};
 		const children = 'children';
-		render(<ImageItemBase data-testid="imageItem">{children}</ImageItemBase>);
+		render(<ImageItemBase data-testid="imageItem" src={src.hd}>{children}</ImageItemBase>);
 
 		const expected = children;
 		const imageItem = screen.getByTestId('imageItem');
@@ -30,9 +28,7 @@ describe('ImageItem', () => {
 	});
 
 	test('should omit caption node when `children` is unset', () => {
-		// eslint-disable-next-line
-		console.error = () => {};
-		render(<ImageItemBase data-testid="imageItem" />);
+		render(<ImageItemBase data-testid="imageItem" src={src.hd} />);
 
 		const expected = 1;
 		const imageItemChildren = screen.getByTestId('imageItem').children;
@@ -41,9 +37,7 @@ describe('ImageItem', () => {
 	});
 
 	test('should apply `.horizontal` when `orientation="horizontal"`', () => {
-		// eslint-disable-next-line
-		console.error = () => {};
-		render(<ImageItem data-testid="imageItem" orientation="horizontal" />);
+		render(<ImageItem data-testid="imageItem" orientation="horizontal" src={src.hd} />);
 
 		const expected = 'horizontal';
 		const imageItem = screen.getByTestId('imageItem');
@@ -52,9 +46,7 @@ describe('ImageItem', () => {
 	});
 
 	test('should apply `.vertical` when `orientation="vertical"`', () => {
-		// eslint-disable-next-line
-		console.error = () => {};
-		render(<ImageItemBase data-testid="imageItem" orientation="vertical" />);
+		render(<ImageItemBase data-testid="imageItem" orientation="vertical" src={src.hd} />);
 
 		const expected = 'vertical';
 		const imageItem = screen.getByTestId('imageItem');
@@ -63,9 +55,7 @@ describe('ImageItem', () => {
 	});
 
 	test('should apply `.selected` when `selected`', () => {
-		// eslint-disable-next-line
-		console.error = () => {};
-		render(<ImageItemBase data-testid="imageItem" selected />);
+		render(<ImageItemBase data-testid="imageItem" selected src={src.hd} />);
 
 		const expected = 'selected';
 		const imageItem = screen.getByTestId('imageItem');
@@ -81,8 +71,7 @@ describe('ImageItem', () => {
 
 		render(<ImageItemBase data-testid="imageItem" imageComponent={Img} {...props} />);
 
-		expect(data).toHaveProperty('src', props.src);
-		expect(data).toHaveProperty('placeholder', props.placeholder);
+		expect(data).toMatchObject(props);
 	});
 
 	test('should pass `src` and `placeholder` to `imageComponent` as element', () => {
@@ -93,8 +82,7 @@ describe('ImageItem', () => {
 
 		render(<ImageItemBase imageComponent={<Img />} {...props} />);
 
-		expect(data).toHaveProperty('src', props.src);
-		expect(data).toHaveProperty('placeholder', props.placeholder);
+		expect(data).toMatchObject(props);
 	});
 
 	test('should override `src` and `placeholder` when passing `imageComponent` as element', () => {
@@ -110,23 +98,22 @@ describe('ImageItem', () => {
 			/>
 		);
 
-		expect(data).toHaveProperty('src', props.src);
-		expect(data).toHaveProperty('placeholder', props.placeholder);
+		expect(data).toMatchObject(props);
 	});
 
 	test('should support string for `src` prop', () => {
-		render(<ImageItemBase data-testid="imageItem" src={src.hd} />);
+		render(<ImageItemBase src={src.hd} />);
 
 		const expected = src.hd;
-		const imgElement = screen.getByTestId('imageItem').children.item(0).children.item(0);
+		const imgElement = screen.getAllByRole('img')[1];
 
 		expect(imgElement).toHaveAttribute('src', expected);
 	});
 
 	test('should support object for `src` prop', () => {
-		render(<ImageItemBase data-testid="imageItem" src={src} />);
+		render(<ImageItemBase src={src} />);
 
-		const imgElementSrc = screen.getByTestId('imageItem').children.item(0).children.item(0).src;
+		const imgElementSrc = screen.getAllByRole('img')[1];
 
 		expect(imgElementSrc).not.toBeNull();
 	});

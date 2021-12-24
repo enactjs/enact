@@ -7,7 +7,7 @@ import Route from '../Route';
 import {Router, RouterBase} from '../Router';
 
 describe('Router', () => {
-	const View = () => <button data-testid="button" />;
+	const View = () => <button />;
 
 	// the internal representation of
 	// <Router>
@@ -38,14 +38,14 @@ describe('Router', () => {
 
 	test('should render a single component matching the {path}', () => {
 		render(<RouterBase routes={routes} path="/app" />);
-		const view = screen.getByTestId('button');
+		const view = screen.getByRole('button');
 
 		expect(view).toBeInTheDocument();
 	});
 
 	test('should render an array of components matching the {path}', () => {
 		render(<RouterBase routes={routes} path="/app/home" />);
-		const view = screen.getAllByTestId('button');
+		const view = screen.getAllByRole('button');
 
 		const expected = 2;
 
@@ -54,7 +54,7 @@ describe('Router', () => {
 
 	test('should render an array of components matching the {path} as an array', () => {
 		render(<RouterBase routes={routes} path={['app', 'home']} />);
-		const view = screen.getAllByTestId('button');
+		const view = screen.getAllByRole('button');
 
 		const expected = 2;
 
@@ -67,7 +67,7 @@ describe('Router', () => {
 		console.error.mockImplementation();
 
 		render(<RouterBase routes={routes} path="/help" />);
-		const view = screen.queryByTestId('button');
+		const view = screen.queryByRole('button');
 
 		expect(view).toBeNull();
 	});
@@ -100,7 +100,7 @@ describe('Router', () => {
 				<Route path="admin" component={View} />
 			</Router>
 		);
-		const view = screen.getAllByTestId('button');
+		const view = screen.getAllByRole('button');
 
 		const expected = 2;
 		const actual = view.length;
@@ -147,7 +147,7 @@ describe('Router', () => {
 				<Route path="admin" component={View} />
 			</Router>
 		);
-		const view = screen.queryByTestId('button');
+		const view = screen.queryByRole('button');
 
 		expect(view).toBeNull();
 	});
@@ -166,7 +166,7 @@ describe('Router', () => {
 				<Route path="admin" component={View} />
 			</Router>
 		);
-		const view = screen.queryByTestId('button');
+		const view = screen.queryByRole('button');
 
 		expect(view).toBeNull();
 	});

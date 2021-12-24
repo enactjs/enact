@@ -1,6 +1,6 @@
-import {useState} from 'react';
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
+import {useState} from 'react';
 
 import {updateLocale} from '../../locale';
 import useI18n from '../useI18n';
@@ -83,6 +83,7 @@ describe('useI18n', () => {
 		expect(i18nDiv).toHaveClass('enact-locale-SA');
 		expect(i18nDiv).toHaveClass('enact-locale-non-italic');
 		expect(i18nDiv).toHaveClass('enact-locale-right-to-left');
+		expect(i18nDiv).not.toHaveClass('enact-locale-non-latin');
 	});
 
 	test('should return support overriding to non-latin locale', () => {

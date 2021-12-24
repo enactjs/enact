@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 
 import {FloatingLayerBase} from '../FloatingLayer';
@@ -8,27 +9,25 @@ describe('FloatingLayer Specs', () => {
 
 	test('should not render if FloatingLayer is not open', () => {
 		render(
-			<Root data-testid="rootElement">
-				<FloatingLayerBase><p>Hi</p></FloatingLayerBase>
+			<Root>
+				<FloatingLayerBase data-testid="floatingLayer"><p>Hi</p></FloatingLayerBase>
 			</Root>
 		);
 
-		const expected = 0;
-		const floatingLayerContainer = screen.getByTestId('rootElement').nextElementSibling.children.length;
+		const floatingLayerContainer = screen.queryByTestId('floatingLayer');
 
-		expect(floatingLayerContainer).toBe(expected);
+		expect(floatingLayerContainer).not.toBeInTheDocument();
 	});
 
 	test('should render if FloatingLayer is open', () => {
 		render(
-			<Root data-testid="rootElement">
-				<FloatingLayerBase open><p>Hi</p></FloatingLayerBase>
+			<Root>
+				<FloatingLayerBase data-testid="floatingLayer" open><p>Hi</p></FloatingLayerBase>
 			</Root>
 		);
 
-		const expected = 1;
-		const floatingLayerContainer = screen.getByTestId('rootElement').nextElementSibling.children.length;
+		const floatingLayerContainer = screen.getByTestId('floatingLayer');
 
-		expect(floatingLayerContainer).toBe(expected);
+		expect(floatingLayerContainer).toBeInTheDocument();
 	});
 });

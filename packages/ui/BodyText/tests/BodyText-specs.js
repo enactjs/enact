@@ -4,15 +4,15 @@ import {render, screen} from '@testing-library/react';
 import BodyText, {BodyTextBase} from '../BodyText';
 import {Cell} from '../../Layout';
 
-import css from '../BodyText.module.less';
-
 describe('BodyText Specs', () => {
 	test('should render a single <p> tag', () => {
 		const msg = 'Hello BodyText!';
-		const {container} = render(<BodyText>{msg}</BodyText>);
-		const bodyText = container.querySelector('p');
+		render(<BodyText>{msg}</BodyText>);
 
-		expect(bodyText).toBeInTheDocument();
+		const expected = 'P';
+		const actual = screen.getByText(msg).nodeName;
+
+		expect(actual).toBe(expected);
 	});
 
 	test('should render BodyText with content', () => {
@@ -27,7 +27,7 @@ describe('BodyText Specs', () => {
 		render(<BodyTextBase data-testid="bodyText" />);
 		const bodyText = screen.getByTestId('bodyText');
 
-		const expected = css.centered;
+		const expected = 'centered';
 
 		expect(bodyText).not.toHaveClass(expected);
 	});
@@ -51,14 +51,13 @@ describe('BodyText Specs', () => {
 		expect(bodyText).toHaveClass(expected);
 	});
 
-	// TODO Test is skipped because React Testing Library does not support checking if the component is changed to a different DOM node
-	test.skip('should support changing the component element to a different DOM node', () => {
+	test('should support changing the component element to a different DOM node', () => {
 		const componentTag = 'address';
 		render(<BodyTextBase component={componentTag} data-testid="bodyText" />);
 		const bodyText = screen.getByTestId('bodyText');
 
-		const expected = componentTag;
-		const actual = bodyText.getElement().type;
+		const expected = 'ADDRESS';
+		const actual = bodyText.nodeName;
 
 		expect(actual).toBe(expected);
 	});

@@ -4,8 +4,6 @@ import userEvent from '@testing-library/user-event';
 
 import {Button, ButtonBase} from '../Button';
 
-import css from '../Button.module.less';
-
 describe('Button', () => {
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
@@ -24,11 +22,11 @@ describe('Button', () => {
 		expect(button).toHaveAttribute('disabled');
 	});
 
-	test('should have default minWidth class', function () {
+	test('should have default minWidth class', () => {
 		render(<ButtonBase />);
 		const button = screen.getByRole('button');
 
-		const expected = css.minWidth;
+		const expected = 'minWidth';
 
 		expect(button).toHaveClass(expected);
 	});
@@ -37,7 +35,7 @@ describe('Button', () => {
 		render(<ButtonBase selected />);
 		const button = screen.getByRole('button');
 
-		const expected = css.selected;
+		const expected = 'selected';
 
 		expect(button).toHaveClass(expected);
 	});
@@ -46,7 +44,7 @@ describe('Button', () => {
 		render(<ButtonBase pressed />);
 		const button = screen.getByRole('button');
 
-		const expected = css.pressed;
+		const expected = 'pressed';
 
 		expect(button).toHaveClass(expected);
 	});
@@ -55,7 +53,7 @@ describe('Button', () => {
 		render(<ButtonBase size="large" />);
 		const button = screen.getByRole('button');
 
-		const expected = css.large;
+		const expected = 'large';
 
 		expect(button).toHaveClass(expected);
 	});
@@ -64,7 +62,7 @@ describe('Button', () => {
 		render(<ButtonBase size="small" />);
 		const button = screen.getByRole('button');
 
-		const expected = css.small;
+		const expected = 'small';
 
 		expect(button).toHaveClass(expected);
 	});
@@ -73,7 +71,7 @@ describe('Button', () => {
 		render(<Button icon>Hello Button!</Button>);
 		const button = screen.getByRole('button');
 
-		const expected = css.hasIcon;
+		const expected = 'hasIcon';
 
 		expect(button).toHaveClass(expected);
 	});

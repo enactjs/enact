@@ -4,7 +4,7 @@ import {render, screen} from '@testing-library/react';
 import Toggleable from '../Toggleable';
 
 describe('Toggleable', () => {
-	let data = [];
+	let data;
 
 	const DivComponent = (props) => {
 		data = props;
@@ -22,14 +22,13 @@ describe('Toggleable', () => {
 			expect(toggleableDiv).toHaveTextContent(expected);
 		});
 
-		test('should pass configured "prop" "banana" as the toggled state\'s key to the wrapped component',
-			() => {
-				const prop = 'banana';
-				const Component = Toggleable({prop: prop}, DivComponent);
-				render(<Component defaultSelected />);
+		test('should pass configured "prop" "banana" as the toggled state\'s key to the wrapped component', () => {
+			const prop = 'banana';
+			const Component = Toggleable({prop: prop}, DivComponent);
+			render(<Component defaultSelected />);
 
-				expect(data).toHaveProperty(prop);
-			});
+			expect(data).toHaveProperty(prop);
+		});
 
 		test('should pass "onToggle" handler to the wrapped component', () => {
 			const Component = Toggleable(DivComponent);

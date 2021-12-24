@@ -27,11 +27,10 @@ describe('useSlots', () => {
 			</Component>
 		);
 
-		const actual = screen.getByTestId('useSlots').children;
+		const expected = 'CBA';
+		const actual = screen.getByTestId('useSlots');
 
-		expect(actual[0]).toHaveTextContent('C');
-		expect(actual[1]).toHaveTextContent('B');
-		expect(actual[2]).toHaveTextContent('A');
+		expect(actual.textContent).toBe(expected);
 	});
 
 	test('should have no children when all have been distributed', () => {
@@ -81,12 +80,10 @@ describe('useSlots', () => {
 			</Component>
 		);
 
+		const expected = 'CBAD';
 		const actual = screen.getByTestId('useSlots');
 
-		expect(actual.children[0]).toHaveTextContent('C');
-		expect(actual.children[1]).toHaveTextContent('B');
-		expect(actual.children[2]).toHaveTextContent('A');
-		expect(actual).toHaveTextContent('D');
+		expect(actual.textContent).toBe(expected);
 	});
 
 	test('should distribute children whose \'type\' has a \'defaultSlot\' property that matches a slot', () => {
@@ -115,11 +112,10 @@ describe('useSlots', () => {
 			</Component>
 		);
 
+		const expected = 'CBA';
 		const actual = screen.getByTestId('useSlots');
 
-		expect(actual).toHaveTextContent('C');
-		expect(actual.children[1]).toHaveTextContent('B');
-		expect(actual.children[2]).toHaveTextContent('A');
+		expect(actual.textContent).toBe(expected);
 	});
 
 	test('should distribute children with no \'slot\' property to Slottable\'s \'children\'', () => {
@@ -142,11 +138,10 @@ describe('useSlots', () => {
 			</Component>
 		);
 
-		const actual = screen.getByTestId('useSlots').children;
+		const expected = 'CBA';
+		const actual = screen.getByTestId('useSlots');
 
-		expect(actual[0]).toHaveTextContent('C');
-		expect(actual[1]).toHaveTextContent('B');
-		expect(actual[2]).toHaveTextContent('A');
+		expect(actual.textContent).toBe(expected);
 	});
 
 	test('should not distribute children with an invalid \'slot\' property', () => {
@@ -173,11 +168,11 @@ describe('useSlots', () => {
 			</Component>
 		);
 
-		const actual = screen.getByTestId('useSlots').children;
+		const expected = 'BA';
+		const actual = screen.getByTestId('useSlots');
 
-		expect(actual).toHaveLength(2);
-		expect(actual[0]).toHaveTextContent('B');
-		expect(actual[1]).toHaveTextContent('A');
+		expect(actual.textContent).toBe(expected);
+		expect(actual.textContent).toHaveLength(2);
 
 		// Check to make sure that we only get the one expected error
 		const actualErrorsLength = console.error.mock.calls.length;
@@ -213,11 +208,10 @@ describe('useSlots', () => {
 			</Component>
 		);
 
+		const expected = 'CBD';
 		const actual = screen.getByTestId('useSlots');
 
-		expect(actual.children[0]).toHaveTextContent('C');
-		expect(actual.children[1]).toHaveTextContent('B');
-		expect(actual).toHaveTextContent('D');
+		expect(actual.textContent).toBe(expected);
 
 		const expectedTitle = 'Div A';
 		const actualChild = screen.getByTestId('useSlots').children[2];
@@ -242,11 +236,10 @@ describe('useSlots', () => {
 			</Component>
 		);
 
-		const actual = screen.getByTestId('useSlots').children;
+		const expected = 'AAA';
+		const actual = screen.getByTestId('useSlots');
 
-		expect(actual[0]).toHaveTextContent('A');
-		expect(actual[1]).toHaveTextContent('A');
-		expect(actual[2]).toHaveTextContent('A');
+		expect(actual.textContent).toBe(expected);
 	});
 
 	test('should override prop with slot value', () => {
@@ -264,7 +257,7 @@ describe('useSlots', () => {
 			</Component>
 		);
 
-		const actual = screen.getByTestId('useSlots').children[0];
+		const actual = screen.getByTestId('useSlots');
 
 		expect(actual).toHaveTextContent('A');
 	});

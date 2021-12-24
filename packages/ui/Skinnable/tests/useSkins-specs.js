@@ -4,7 +4,7 @@ import {render} from '@testing-library/react';
 import useSkins from '../useSkins';
 
 describe('Skinnable Specs', () => {
-	let data = [];
+	let data;
 
 	const Base = (props) => {
 		data = props;
@@ -157,10 +157,10 @@ describe('Skinnable Specs', () => {
 			variants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const {rerender} = render(<Component config={{...config, skinVariants: 'normal unicase'}} />);
+		render(<Component config={{...config, skinVariants: 'normal unicase'}} />);
 		const component1Class = data.className;
 
-		rerender(<Component config={{...config, skinVariants: ['normal', 'unicase']}} />);
+		render(<Component config={{...config, skinVariants: ['normal', 'unicase']}} />);
 		const component2Class = data.className;
 
 		expect(component1Class).toBe(component2Class);
