@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased] 
+
+### Fixed
+
+- `spotlight/styles/debug.less` to show the debug box when each theme sampler's `debug spotlight`option is set to `true`
+
 ## [4.1.2] - 2021-12-22
 
 No significant changes.
