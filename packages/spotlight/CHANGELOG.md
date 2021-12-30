@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased] 
+
+### Fixed
+
+- Styles for `debug spotlight` option in samplers to work properly
+
 ## [4.1.2] - 2021-12-22
 
 No significant changes.
