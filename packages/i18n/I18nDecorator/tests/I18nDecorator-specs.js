@@ -3,8 +3,8 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ilib from 'ilib';
 
-import {I18nContextDecorator, I18nDecorator} from '../I18nDecorator';
 import {updateLocale} from '../../locale';
+import {I18nContextDecorator, I18nDecorator} from '../I18nDecorator';
 
 describe('I18nDecorator', () => {
 	// Suite-wide setup
@@ -61,7 +61,7 @@ describe('I18nDecorator', () => {
 			const handleClick = () => _updateLocale('ar-SA');
 
 			return (
-				<button data-testid="button" onClick={handleClick} />
+				<button onClick={handleClick} />
 			);
 		};
 
@@ -73,7 +73,8 @@ describe('I18nDecorator', () => {
 			)
 		);
 		render(<Wrapped />);
-		userEvent.click(screen.getByTestId('button'));
+
+		userEvent.click(screen.getByRole('button'));
 
 		const expected = 'ar-SA';
 		const actual = ilib.getLocale();
@@ -86,7 +87,7 @@ describe('I18nDecorator', () => {
 			const handleClick = () => _updateLocale('ar-SA');
 
 			return (
-				<button data-testid="button" onClick={handleClick}>{rtl ? 'rtl' : 'ltr'}</button>
+				<button onClick={handleClick}>{rtl ? 'rtl' : 'ltr'}</button>
 			);
 		};
 
@@ -98,7 +99,8 @@ describe('I18nDecorator', () => {
 			)
 		);
 		render(<Wrapped />);
-		const button = screen.getByTestId('button');
+
+		const button = screen.getByRole('button');
 		userEvent.click(button);
 
 		const expected = 'rtl';

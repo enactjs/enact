@@ -4,7 +4,7 @@ import {configure, getConfig, resetDefaultConfig} from '../config';
 import useTouch from '../useTouch';
 
 describe('useTouch', () => {
-	let data = [];
+	let data;
 
 	const DivComponent = (props) => {
 		data = props;

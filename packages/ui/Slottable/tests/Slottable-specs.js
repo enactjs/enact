@@ -130,8 +130,6 @@ describe('Slottable Specs', () => {
 		const actual = screen.getByTestId('slottable');
 
 		expect(actual.textContent).toBe(expected);
-		expect(actual.textContent).toHaveLength(2);
-
 
 		// Check to make sure that we only get the one expected error
 		const actualErrorsLength = console.error.mock.calls.length;

@@ -38,7 +38,7 @@ describe('RadioDecorator', () => {
 		expect(component).toHaveTextContent('Inactive');
 	});
 
-	test('should be activated when its prop is set to true after rerender', () => {
+	test('should be activated when its prop is set to true after mount', () => {
 		const Component = RadioDecorator({prop: 'active'}, Item);
 		const Wrapper = ({active}) => (
 			<Controller>
@@ -47,7 +47,7 @@ describe('RadioDecorator', () => {
 		);
 
 		const {rerender} = render(<Wrapper />);
-		let component = screen.getByTestId('span-element');
+		const component = screen.getByTestId('span-element');
 
 		const expected = 'Inactive';
 

@@ -2,7 +2,6 @@ import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 
 import Transition, {TransitionBase} from '../Transition';
-import css from '../Transition.module.less';
 
 describe('Transition Specs', () => {
 	// NOTE: Feature not yet implemented
@@ -83,26 +82,26 @@ describe('Transition Specs', () => {
 
 	// Tests for prop and className combinations
 	const directionCombination = [
-		[css.up, 'up'],
-		[css.right, 'right'],
-		[css.down, 'down'],
-		[css.left, 'left']
+		['up', 'up'],
+		['right', 'right'],
+		['down', 'down'],
+		['left', 'left']
 	];
 
 	const durationCombination = [
-		[css.short, 'short'],
-		[css.medium, 'medium'],
-		[css.long, 'long']
+		['short', 'short'],
+		['medium', 'medium'],
+		['long', 'long']
 	];
 
 	const timingFunctionCombination = [
-		[css.ease, 'ease'],
-		[css['ease-in'], 'ease-in'],
-		[css['ease-out'], 'ease-out'],
-		[css['ease-in-out'], 'ease-in-out'],
-		[css['ease-in-quart'], 'ease-in-quart'],
-		[css['ease-out-quart'], 'ease-out-quart'],
-		[css.linear, 'linear']
+		['ease', 'ease'],
+		['ease-in', 'ease-in'],
+		['ease-out', 'ease-out'],
+		['ease-in-out', 'ease-in-out'],
+		['ease-in-quart', 'ease-in-quart'],
+		['ease-out-quart', 'ease-out-quart'],
+		['linear', 'linear']
 	];
 
 	const propStyleCombination = [

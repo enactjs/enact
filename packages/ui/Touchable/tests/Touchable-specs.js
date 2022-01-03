@@ -4,7 +4,7 @@ import {configure, getConfig, resetDefaultConfig} from '../config';
 import Touchable from '../Touchable';
 
 describe('Touchable', () => {
-	let data = [];
+	let data;
 
 	const DivComponent = ({children = 'Toggle', id, onClick, onMouseDown, onMouseLeave, onMouseUp, onTouchStart, onTouchEnd, ...props}) => {
 		data = props;

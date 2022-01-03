@@ -1,6 +1,6 @@
-import {Component} from 'react';
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
+import {Component} from 'react';
 
 import ViewManager from '../';
 import {MockArranger} from './test-utils';
@@ -45,7 +45,7 @@ describe('ViewManager', () => {
 		);
 
 		const expected = 1;
-		const actual = screen.getAllByTestId('view').length;
+		const actual = screen.getAllByText(/View/).length;
 
 		expect(actual).toBe(expected);
 	});
@@ -61,10 +61,9 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 
-		const expected = 'View 4';
-		const actual = screen.getByTestId('viewManager').children.item(0).textContent;
+		const actual = screen.getByText('View 4');
 
-		expect(actual).toBe(expected);
+		expect(actual).toBeInTheDocument();
 	});
 
 	test('should have 1 child immediately after setting new {index} without an {arranger}', () => {
@@ -302,7 +301,7 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 
-		expect(screen.getByTestId('viewManager')).toHaveTextContent('View 2');
+		expect(screen.getByText('View 2')).toBeInTheDocument();
 
 		rerender(
 			<ViewManager data-testid="viewManager" index={1}>
@@ -311,7 +310,7 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 
-		expect(screen.getByTestId('viewManager')).toHaveTextContent('View 1');
+		expect(screen.getByText('View 1')).toBeInTheDocument();
 	});
 
 	test('should update the view when children are replaced', () => {
@@ -321,7 +320,7 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 
-		expect(screen.getByTestId('viewManager')).toHaveTextContent('View 1');
+		expect(screen.getByText('View 1')).toBeInTheDocument();
 
 		rerender(
 			<ViewManager data-testid="viewManager" index={0}>
@@ -329,7 +328,7 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 
-		expect(screen.getByTestId('viewManager')).toHaveTextContent('View 2');
+		expect(screen.getByText('View 2')).toBeInTheDocument();
 	});
 
 	test('should update the number of views when {start} updates', () => {
@@ -414,7 +413,7 @@ describe('ViewManager', () => {
 				<div key="view4">View 4</div>
 			</ViewManager>
 		);
-		const children = screen.getByTestId('viewManager').children;
+		const children = screen.getAllByText(/View/);
 		const expected = 3;
 
 		expect(children).toHaveLength(expected);
@@ -424,8 +423,8 @@ describe('ViewManager', () => {
 		const spy = jest.fn();
 		const {rerender} = render(
 			<ViewManager index={0} noAnimation onTransition={spy}>
-				<div data-testid="view" key="view1">View 1</div>
-				<div data-testid="view" key="view2">View 2</div>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
 			</ViewManager>
 		);
 
@@ -433,8 +432,8 @@ describe('ViewManager', () => {
 
 		rerender(
 			<ViewManager index={1} onTransition={spy} noAnimation>
-				<div data-testid="view" key="view1">View 1</div>
-				<div data-testid="view" key="view2">View 2</div>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
 			</ViewManager>
 		);
 		const expected = 1;

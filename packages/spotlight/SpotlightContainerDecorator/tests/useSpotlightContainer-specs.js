@@ -79,7 +79,7 @@ describe('useSpotlightContainer', () => {
 			const component = screen.getByTestId(testId);
 
 			const expectedAttribute = 'data-spotlight-id';
-			const expectedValue = expect.stringMatching(/container-\d+/); 	// 3 because this is the 3rd test, it increments automatically
+			const expectedValue = expect.stringMatching(/container-\d+/);
 
 			expect(component).toHaveAttribute(expectedAttribute, expectedValue);
 		});

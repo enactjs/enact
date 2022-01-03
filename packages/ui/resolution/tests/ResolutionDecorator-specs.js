@@ -8,10 +8,12 @@ describe('ResolutionDecorator Specs', () => {
 		const Component = ResolutionDecorator('div');
 		render(<Component data-testid="component" />);
 
-		const div = screen.getByTestId('component');
+		const div = screen.getByTestId('component').className;
+		const expected = true;
+		const actual = div.includes('enact-res-standard') &&
+			(div.includes('enact-orientation-landscape') || div.includes('enact-orientation-portrait'));
 
-		expect(div).toHaveClass('enact-res-standard');
-		expect(div).toHaveClass('enact-orientation-portrait');
+		expect(actual).toBe(expected);
 	});
 
 	test('should allow custom screen types', () => {

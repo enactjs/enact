@@ -28,7 +28,7 @@ describe('ImageItem', () => {
 	});
 
 	test('should omit caption node when `children` is unset', () => {
-		render(<ImageItemBase data-testid="imageItem" src={src.hd} />);
+		render(<ImageItemBase data-testid="imageItem" src={src} />);
 
 		const expected = 1;
 		const imageItemChildren = screen.getByTestId('imageItem').children;
@@ -37,7 +37,7 @@ describe('ImageItem', () => {
 	});
 
 	test('should apply `.horizontal` when `orientation="horizontal"`', () => {
-		render(<ImageItem data-testid="imageItem" orientation="horizontal" src={src.hd} />);
+		render(<ImageItem data-testid="imageItem" orientation="horizontal" src={src} />);
 
 		const expected = 'horizontal';
 		const imageItem = screen.getByTestId('imageItem');
@@ -46,7 +46,7 @@ describe('ImageItem', () => {
 	});
 
 	test('should apply `.vertical` when `orientation="vertical"`', () => {
-		render(<ImageItemBase data-testid="imageItem" orientation="vertical" src={src.hd} />);
+		render(<ImageItemBase data-testid="imageItem" orientation="vertical" src={src} />);
 
 		const expected = 'vertical';
 		const imageItem = screen.getByTestId('imageItem');
@@ -55,7 +55,7 @@ describe('ImageItem', () => {
 	});
 
 	test('should apply `.selected` when `selected`', () => {
-		render(<ImageItemBase data-testid="imageItem" selected src={src.hd} />);
+		render(<ImageItemBase data-testid="imageItem" selected src={src} />);
 
 		const expected = 'selected';
 		const imageItem = screen.getByTestId('imageItem');
@@ -69,7 +69,7 @@ describe('ImageItem', () => {
 			placeholder: 'place.png'
 		};
 
-		render(<ImageItemBase data-testid="imageItem" imageComponent={Img} {...props} />);
+		render(<ImageItemBase imageComponent={Img} {...props} />);
 
 		expect(data).toMatchObject(props);
 	});

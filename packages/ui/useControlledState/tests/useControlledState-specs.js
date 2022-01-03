@@ -11,7 +11,7 @@ describe('useControlledState', () => {
 		const handleChange = (ev) => setValue(ev.value);
 		data = setValue;
 
-		return <div data-testid="component" onChange={handleChange}>{value}</div>;
+		return <div onChange={handleChange}>{value}</div>;
 	}
 
 	test('should use the default value when the value is undefined', () => {
@@ -53,7 +53,7 @@ describe('useControlledState', () => {
 	});
 
 	test('should not change controlled setting', () => {
-		const {rerender} = render(<Component data-testid="component" value="abc" />);
+		const {rerender} = render(<Component value="abc" />);
 
 		rerender(<Component defaultValue="def" value="ghi" />);
 

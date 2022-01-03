@@ -6,7 +6,7 @@ import {render, screen} from '@testing-library/react';
 import hoc from '../hoc';
 
 describe('hoc', () => {
-	let data = [];
+	let data;
 	const testID = 'test-HoC';
 	const defaultConfig = {
 		color: 'blue'
