@@ -36,11 +36,11 @@ describe('ViewManager', () => {
 	test('should render only 1 child view', () => {
 		render(
 			<ViewManager>
-				<div data-testid="view">View 1</div>
-				<div data-testid="view">View 2</div>
-				<div data-testid="view">View 3</div>
-				<div data-testid="view">View 4</div>
-				<div data-testid="view">View 5</div>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+				<div>View 4</div>
+				<div>View 5</div>
 			</ViewManager>
 		);
 
@@ -52,12 +52,12 @@ describe('ViewManager', () => {
 
 	test('should render the child at {index}', () => {
 		render(
-			<ViewManager data-testid="viewManager" index={3}>
-				<div className="view">View 1</div>
-				<div className="view">View 2</div>
-				<div className="view">View 3</div>
-				<div className="view">View 4</div>
-				<div className="view">View 5</div>
+			<ViewManager index={3}>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+				<div>View 4</div>
+				<div>View 5</div>
 			</ViewManager>
 		);
 
@@ -69,21 +69,21 @@ describe('ViewManager', () => {
 	test('should have 1 child immediately after setting new {index} without an {arranger}', () => {
 		const {rerender} = render(
 			<ViewManager data-testid="viewManager" index={3}>
-				<div className="view">View 1</div>
-				<div className="view">View 2</div>
-				<div className="view">View 3</div>
-				<div className="view">View 4</div>
-				<div className="view">View 5</div>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+				<div>View 4</div>
+				<div>View 5</div>
 			</ViewManager>
 		);
 
 		rerender(
 			<ViewManager data-testid="viewManager" index={4}>
-				<div className="view">View 1</div>
-				<div className="view">View 2</div>
-				<div className="view">View 3</div>
-				<div className="view">View 4</div>
-				<div className="view">View 5</div>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+				<div>View 4</div>
+				<div>View 5</div>
 			</ViewManager>
 		);
 
@@ -96,21 +96,21 @@ describe('ViewManager', () => {
 	test('should have 1 child immediately after setting new {index} with an {arranger} and {noAnimation} is false', () => {
 		const {rerender} = render(
 			<ViewManager arranger={MockArranger} data-testid="viewManager" index={3} noAnimation>
-				<div className="view">View 1</div>
-				<div className="view">View 2</div>
-				<div className="view">View 3</div>
-				<div className="view">View 4</div>
-				<div className="view">View 5</div>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+				<div>View 4</div>
+				<div>View 5</div>
 			</ViewManager>
 		);
 
 		rerender(
 			<ViewManager arranger={MockArranger} data-testid="viewManager" index={4} noAnimation>
-				<div className="view">View 1</div>
-				<div className="view">View 2</div>
-				<div className="view">View 3</div>
-				<div className="view">View 4</div>
-				<div className="view">View 5</div>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+				<div>View 4</div>
+				<div>View 5</div>
 			</ViewManager>
 		);
 
@@ -123,21 +123,21 @@ describe('ViewManager', () => {
 	test('should have 2 children immediately after setting new {index} with an {arranger}', () => {
 		const {rerender} = render(
 			<ViewManager arranger={MockArranger} data-testid="viewManager" index={3}>
-				<div className="view">View 1</div>
-				<div className="view">View 2</div>
-				<div className="view">View 3</div>
-				<div className="view">View 4</div>
-				<div className="view">View 5</div>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+				<div>View 4</div>
+				<div>View 5</div>
 			</ViewManager>
 		);
 
 		rerender(
 			<ViewManager arranger={MockArranger} data-testid="viewManager" index={4}>
-				<div className="view">View 1</div>
-				<div className="view">View 2</div>
-				<div className="view">View 3</div>
-				<div className="view">View 4</div>
-				<div className="view">View 5</div>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+				<div>View 4</div>
+				<div>View 5</div>
 			</ViewManager>
 		);
 
@@ -175,21 +175,21 @@ describe('ViewManager', () => {
 		const duration = 50;
 		const {rerender} = render(
 			<ViewManager data-testid="viewManager" duration={duration} index={3}>
-				<div className="view">View 1</div>
-				<div className="view">View 2</div>
-				<div className="view">View 3</div>
-				<div className="view">View 4</div>
-				<div className="view">View 5</div>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+				<div>View 4</div>
+				<div>View 5</div>
 			</ViewManager>
 		);
 
 		rerender(
 			<ViewManager data-testid="viewManager" duration={duration} index={4}>
-				<div className="view">View 1</div>
-				<div className="view">View 2</div>
-				<div className="view">View 3</div>
-				<div className="view">View 4</div>
-				<div className="view">View 5</div>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+				<div>View 4</div>
+				<div>View 5</div>
 			</ViewManager>
 		);
 
@@ -295,7 +295,7 @@ describe('ViewManager', () => {
 
 	test('should update the view when children are reordered', () => {
 		const {rerender} = render(
-			<ViewManager data-testid="viewManager" index={1}>
+			<ViewManager index={1}>
 				<div key="view1">View 1</div>
 				<div key="view2">View 2</div>
 			</ViewManager>
@@ -304,7 +304,7 @@ describe('ViewManager', () => {
 		expect(screen.getByText('View 2')).toBeInTheDocument();
 
 		rerender(
-			<ViewManager data-testid="viewManager" index={1}>
+			<ViewManager index={1}>
 				<div key="view2">View 2</div>
 				<div key="view1">View 1</div>
 			</ViewManager>
@@ -315,7 +315,7 @@ describe('ViewManager', () => {
 
 	test('should update the view when children are replaced', () => {
 		const {rerender} = render(
-			<ViewManager data-testid="viewManager" index={0} >
+			<ViewManager index={0} >
 				<div key="view1">View 1</div>
 			</ViewManager>
 		);
@@ -323,7 +323,7 @@ describe('ViewManager', () => {
 		expect(screen.getByText('View 1')).toBeInTheDocument();
 
 		rerender(
-			<ViewManager data-testid="viewManager" index={0}>
+			<ViewManager index={0}>
 				<div key="view2">View 2</div>
 			</ViewManager>
 		);
@@ -406,7 +406,7 @@ describe('ViewManager', () => {
 
 	test('should extend the view range when {index} is greater than {end}', () => {
 		render(
-			<ViewManager data-testid="viewManager" end={2} index={3} start={1}>
+			<ViewManager end={2} index={3} start={1}>
 				<div key="view1">View 1</div>
 				<div key="view2">View 2</div>
 				<div key="view3">View 3</div>
