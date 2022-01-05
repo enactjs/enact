@@ -315,7 +315,7 @@ describe('ViewManager', () => {
 
 	test('should update the view when children are replaced', () => {
 		const {rerender} = render(
-			<ViewManager index={0} >
+			<ViewManager index={0}>
 				<div key="view1">View 1</div>
 			</ViewManager>
 		);
