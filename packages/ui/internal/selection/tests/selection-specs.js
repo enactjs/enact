@@ -1,9 +1,7 @@
 import {select, isSelected} from '../selection';
 
 describe('selection', () => {
-
 	// isSelected
-
 	test('should return true when item strictly equals selection', () => {
 		const expected = true;
 		const actual = isSelected(1, 1);
@@ -33,20 +31,16 @@ describe('selection', () => {
 	});
 
 	// Single mode
+	test('should select item when there is no selection in "single" mode', () => {
+		const item = 0;
+		const selection = null;
+		const mode = 'single';
 
-	test(
-		'should select item when there is no selection in "single" mode',
-		() => {
-			const item = 0;
-			const selection = null;
-			const mode = 'single';
+		const expected = item;
+		const actual = select(mode, item, selection);
 
-			const expected = item;
-			const actual = select(mode, item, selection);
-
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(actual).toBe(expected);
+	});
 
 	test('should deselect item when it is selected in "single" mode', () => {
 		const item = 0;
@@ -59,163 +53,128 @@ describe('selection', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test(
-		'should select only the new item when another is selected in "single" mode',
-		() => {
-			const newItem = 1;
-			const selection = 0;
-			const mode = 'single';
+	test('should select only the new item when another is selected in "single" mode', () => {
+		const newItem = 1;
+		const selection = 0;
+		const mode = 'single';
 
-			const expected = newItem;
-			const actual = select(mode, newItem, selection);
+		const expected = newItem;
+		const actual = select(mode, newItem, selection);
 
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(actual).toBe(expected);
+	});
 
-	test(
-		'should return a single item when an array is passed as selected in "single" mode',
-		() => {
-			const item = 0;
-			const selection = [1];
-			const mode = 'single';
+	test('should return a single item when an array is passed as selected in "single" mode', () => {
+		const item = 0;
+		const selection = [1];
+		const mode = 'single';
 
-			const expected = item;
-			const actual = select(mode, item, selection);
+		const expected = item;
+		const actual = select(mode, item, selection);
 
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(actual).toBe(expected);
+	});
 
-	test(
-		'should deselect the item when an array is passed as selected in "single" mode',
-		() => {
-			const item = 0;
-			const selection = [item];
-			const mode = 'single';
+	test('should deselect the item when an array is passed as selected in "single" mode', () => {
+		const item = 0;
+		const selection = [item];
+		const mode = 'single';
 
-			const expected = null;
-			const actual = select(mode, item, selection);
+		const expected = null;
+		const actual = select(mode, item, selection);
 
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(actual).toBe(expected);
+	});
 
 	// Radio Mode
+	test('should select item when there is no selection in "radio" mode', () => {
+		const item = 0;
+		const selection = null;
+		const mode = 'radio';
 
-	test(
-		'should select item when there is no selection in "radio" mode',
-		() => {
-			const item = 0;
-			const selection = null;
-			const mode = 'radio';
+		const expected = item;
+		const actual = select(mode, item, selection);
 
-			const expected = item;
-			const actual = select(mode, item, selection);
+		expect(actual).toBe(expected);
+	});
 
-			expect(actual).toBe(expected);
-		}
-	);
+	test('should not deselect item when selecting it again in "radio" mode', () => {
+		const item = 0;
+		const selection = item;
+		const mode = 'radio';
 
-	test(
-		'should not deselect item when selecting it again in "radio" mode',
-		() => {
-			const item = 0;
-			const selection = item;
-			const mode = 'radio';
+		const expected = item;
+		const actual = select(mode, item, selection);
 
-			const expected = item;
-			const actual = select(mode, item, selection);
+		expect(actual).toBe(expected);
+	});
 
-			expect(actual).toBe(expected);
-		}
-	);
+	test('should select only the new item when another is selected in "radio" mode', () => {
+		const item = 1;
+		const selection = 0;
+		const mode = 'radio';
 
-	test(
-		'should select only the new item when another is selected in "radio" mode',
-		() => {
-			const item = 1;
-			const selection = 0;
-			const mode = 'radio';
+		const expected = item;
+		const actual = select(mode, item, selection);
 
-			const expected = item;
-			const actual = select(mode, item, selection);
+		expect(actual).toBe(expected);
+	});
 
-			expect(actual).toBe(expected);
-		}
-	);
+	test('should return a single item when an array is passed as selected in "radio" mode', () => {
+		const item = 0;
+		const selection = [1];
+		const mode = 'radio';
 
-	test(
-		'should return a single item when an array is passed as selected in "radio" mode',
-		() => {
-			const item = 0;
-			const selection = [1];
-			const mode = 'radio';
+		const expected = item;
+		const actual = select(mode, item, selection);
 
-			const expected = item;
-			const actual = select(mode, item, selection);
+		expect(actual).toBe(expected);
+	});
 
-			expect(actual).toBe(expected);
-		}
-	);
+	test('should not deselect the item when an array is passed as selected in "radio" mode', () => {
+		const item = 0;
+		const selection = [item];
+		const mode = 'radio';
 
-	test(
-		'should not deselect the item when an array is passed as selected in "radio" mode',
-		() => {
-			const item = 0;
-			const selection = [item];
-			const mode = 'radio';
+		const expected = item;
+		const actual = select(mode, item, selection);
 
-			const expected = item;
-			const actual = select(mode, item, selection);
-
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(actual).toBe(expected);
+	});
 
 	// Multiple mode
+	test('should select item when there is no selection in "multiple" mode', () => {
+		const item = 0;
+		const selection = null;
+		const mode = 'multiple';
 
-	test(
-		'should select item when there is no selection in "multiple" mode',
-		() => {
-			const item = 0;
-			const selection = null;
-			const mode = 'multiple';
+		const expected = [item];
+		const actual = select(mode, item, selection);
 
-			const expected = [item];
-			const actual = select(mode, item, selection);
+		expect(actual).toEqual(expected);
+	});
 
-			expect(actual).toEqual(expected);
-		}
-	);
+	test('should return null when deselecting the only item in "multiple" mode', () => {
+		const item = 0;
+		const selection = item;
+		const mode = 'multiple';
 
-	test(
-		'should return null when deselecting the only item in "multiple" mode',
-		() => {
-			const item = 0;
-			const selection = item;
-			const mode = 'multiple';
+		const expected = null;
+		const actual = select(mode, item, selection);
 
-			const expected = null;
-			const actual = select(mode, item, selection);
+		expect(actual).toBe(expected);
+	});
 
-			expect(actual).toBe(expected);
-		}
-	);
+	test('should return null when deselecting the only item as an array in "multiple" mode', () => {
+		const item = 0;
+		const selection = [item];
+		const mode = 'multiple';
 
-	test(
-		'should return null when deselecting the only item as an array in "multiple" mode',
-		() => {
-			const item = 0;
-			const selection = [item];
-			const mode = 'multiple';
+		const expected = null;
+		const actual = select(mode, item, selection);
 
-			const expected = null;
-			const actual = select(mode, item, selection);
-
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(actual).toBe(expected);
+	});
 
 	test('should select new item when there is a selection', () => {
 		const item = 1;
@@ -249,5 +208,4 @@ describe('selection', () => {
 
 		expect(actual).toEqual(expected);
 	});
-
 });

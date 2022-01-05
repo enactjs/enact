@@ -1,11 +1,12 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }], react/jsx-no-bind: off */
 
-import {shallow, mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+
 import Route from '../Route';
 import {Router, RouterBase} from '../Router';
 
 describe('Router', () => {
-
 	const View = () => <button />;
 
 	// the internal representation of
@@ -36,133 +37,108 @@ describe('Router', () => {
 	};
 
 	test('should render a single component matching the {path}', () => {
-		const subject = shallow(
-			<RouterBase routes={routes} path="/app" />
-		);
+		render(<RouterBase routes={routes} path="/app" />);
+		const view = screen.getByRole('button');
 
-		const expected = 1;
-		const actual = subject.find(View).length;
-
-		expect(actual).toBe(expected);
+		expect(view).toBeInTheDocument();
 	});
 
 	test('should render an array of components matching the {path}', () => {
-		const subject = shallow(
-			<RouterBase routes={routes} path="/app/home" />
-		);
+		render(<RouterBase routes={routes} path="/app/home" />);
+		const view = screen.getAllByRole('button');
 
 		const expected = 2;
-		const actual = subject.find(View).length;
 
-		expect(actual).toBe(expected);
+		expect(view.length).toBe(expected);
 	});
 
-	test(
-		'should render an array of components matching the {path} as an array',
-		() => {
-			const subject = shallow(
-				<RouterBase routes={routes} path={['app', 'home']} />
-			);
+	test('should render an array of components matching the {path} as an array', () => {
+		render(<RouterBase routes={routes} path={['app', 'home']} />);
+		const view = screen.getAllByRole('button');
 
-			const expected = 2;
-			const actual = subject.find(View).length;
+		const expected = 2;
 
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(view.length).toBe(expected);
+	});
 
-	test(
-		'should render no children if {path} does not exist in {routes}',
-		() => {
-			// Modify the console spy to silence error output with
-			// an empty mock implementation
-			console.error.mockImplementation();
+	test('should render no children if {path} does not exist in {routes}', () => {
+		// Modify the console spy to silence error output with
+		// an empty mock implementation
+		console.error.mockImplementation();
 
-			const subject = shallow(
-				<RouterBase routes={routes} path="/help" />
-			);
+		render(<RouterBase routes={routes} path="/help" />);
+		const view = screen.queryByRole('button');
 
-			const expected = 0;
-			const actual = subject.children().length;
-
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(view).toBeNull();
+	});
 
 	test('should render children into {component}', () => {
 		const component = (props) => (
-			<div className="div1">
-				<div className="div2">
+			<div data-testid="div1">
+				<div data-testid="div2">
 					{props.children}
 				</div>
 			</div>
 		);
 
-		const subject = mount(
-			<Router routes={routes} path="/app/settings" component={component} />
-		);
+		render(<Router routes={routes} path="/app/settings" component={component} />);
+		const secondDiv = screen.getByTestId('div2');
 
 		const expected = 2;
-		const actual = subject.find('.div2').children().length;
+		const actual = secondDiv.childElementCount;
+
+		expect (actual).toBe(expected);
+	});
+
+	test('should render an array of components matching the {path} using JSX routes', () => {
+		render(
+			<Router path="/app/home">
+				<Route path="app" component={View}>
+					<Route path="home" component={View} />
+					<Route path="settings" component={View} />
+				</Route>
+				<Route path="admin" component={View} />
+			</Router>
+		);
+		const view = screen.getAllByRole('button');
+
+		const expected = 2;
+		const actual = view.length;
 
 		expect(actual).toBe(expected);
 	});
 
-	test(
-		'should render an array of components matching the {path} using JSX routes',
-		() => {
-			const subject = mount(
-				<Router path="/app/home">
-					<Route path="app" component={View}>
-						<Route path="home" component={View} />
-						<Route path="settings" component={View} />
-					</Route>
-					<Route path="admin" component={View} />
-				</Router>
-			);
+	test('should render a different component when the routes change for the same {path}', () => {
+		const {rerender} = render(
+			<Router path="/app">
+				<Route path="app" component={View}>
+					<Route path="home" component={View} />
+					<Route path="settings" component={View} />
+				</Route>
+				<Route path="admin" component={View} />
+			</Router>
+		);
 
-			const expected = 2;
-			const actual = subject.find(View).length;
+		const NewView = () => <span data-testid="span" />;
 
-			expect(actual).toBe(expected);
-		}
-	);
-
-	test(
-		'should render a different component when the routes change for the same {path}',
-		() => {
-			const subject = mount(
-				<Router path="/app">
-					<Route path="app" component={View}>
-						<Route path="home" component={View} />
-						<Route path="settings" component={View} />
-					</Route>
-					<Route path="admin" component={View} />
-				</Router>
-			);
-
-			const NewView = () => <span />;
-
-			subject.setProps({
-				path: '/app',
-				children: [
+		rerender(
+			<Router path="/app">
+				<Route path="app" component={NewView}>
 					<Route path="app" component={NewView} />
-				]
-			});
+				</Route>
+			</Router>
+		);
+		const view = screen.getByTestId('span');
 
-			const expected = 1;
-			const actual = subject.find(NewView).length;
-
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(view).toBeInTheDocument();
+	});
 
 	test('should render nothing for an invalid path', () => {
 		// Modify the console spy to silence error output with
 		// an empty mock implementation
 		console.error.mockImplementation();
 
-		const subject = mount(
+		render(
 			<Router path="/does/not/exist">
 				<Route path="app" component={View}>
 					<Route path="home" component={View} />
@@ -171,11 +147,9 @@ describe('Router', () => {
 				<Route path="admin" component={View} />
 			</Router>
 		);
+		const view = screen.queryByRole('button');
 
-		const expected = 0;
-		const actual = subject.find('div').children().length;
-
-		expect(actual).toBe(expected);
+		expect(view).toBeNull();
 	});
 
 	test('should render nothing for a partially valid path', () => {
@@ -183,7 +157,7 @@ describe('Router', () => {
 		// an empty mock implementation
 		console.error.mockImplementation();
 
-		const subject = mount(
+		render(
 			<Router path="/app/home/other">
 				<Route path="app" component={View}>
 					<Route path="home" component={View} />
@@ -192,10 +166,8 @@ describe('Router', () => {
 				<Route path="admin" component={View} />
 			</Router>
 		);
+		const view = screen.queryByRole('button');
 
-		const expected = 0;
-		const actual = subject.find('div').children().length;
-
-		expect(actual).toBe(expected);
+		expect(view).toBeNull();
 	});
 });

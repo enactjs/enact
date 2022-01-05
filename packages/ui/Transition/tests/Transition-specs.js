@@ -1,6 +1,7 @@
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+
 import Transition, {TransitionBase} from '../Transition';
-import css from '../Transition.module.less';
 
 describe('Transition Specs', () => {
 	// NOTE: Feature not yet implemented
@@ -9,16 +10,16 @@ describe('Transition Specs', () => {
 
 		const ChildNode = (props) => <div {...props}>Body</div>;
 
-		const wrapped = mount(
+		render(
 			<Transition className={className}>
 				<ChildNode />
 			</Transition>
 		);
 
 		const expected = className;
-		const actual = wrapped.find('ChildNode').prop('className');
+		const actual = screen.getByText('Body');
 
-		expect(actual).toContain(expected);
+		expect(actual).toHaveClass(expected);
 	});
 
 	// NOTE: Feature not yet implemented
@@ -30,85 +31,77 @@ describe('Transition Specs', () => {
 
 		const ChildNode = (props) => <div {...props}>Body</div>;
 
-		const wrapped = mount(
+		render(
 			<Transition style={styles}>
 				<ChildNode />
 			</Transition>
 		);
 
 		const expected = styles;
-		const actual = wrapped.find('ChildNode').prop('style');
+		const actual = screen.getByText('Body');
 
-		expect(actual).toBe(expected);
+		expect(actual).toHaveStyle(expected);
 	});
 
 
 	test('should apply \'shown\' class when visible', () => {
-		const subject = mount(
-			<TransitionBase />
-		);
+		render(<TransitionBase data-testid="transition" />);
 
 		const expected = 'shown';
-		const actual = subject.find('div').at(0).prop('className');
+		const actual = screen.getByTestId('transition');
 
-		expect(actual).toContain(expected);
+		expect(actual).toHaveClass(expected);
 	});
 
 	test('should apply \'hidden\' class when not visible', () => {
-		const subject = mount(
-			<TransitionBase visible={false} />
-		);
+		render(<TransitionBase data-testid="transition" visible={false} />);
 
 		const expected = 'hidden';
-		const actual = subject.find('div').at(0).prop('className');
+		const actual = screen.getByTestId('transition');
 
-		expect(actual).toContain(expected);
+		expect(actual).toHaveClass(expected);
 	});
 
 	test('should apply \'shown\' class when visible with noAnimation', () => {
-		const subject = mount(
-			<TransitionBase noAnimation />
-		);
+		render(<TransitionBase data-testid="transition" noAnimation />);
 
 		const expected = 'shown';
-		const actual = subject.find('div').at(0).prop('className');
+		const actual = screen.getByTestId('transition');
 
-		expect(actual).toContain(expected);
+		expect(actual).toHaveClass(expected);
 	});
 
 	test('should apply \'hidden\' class when not visible with noAnimation', () => {
-		const subject = mount(
-			<TransitionBase visible={false} noAnimation />
-		);
+		render(<TransitionBase data-testid="transition" noAnimation visible={false} />);
 
 		const expected = 'hidden';
-		const actual = subject.find('div').at(0).prop('className');
+		const actual = screen.getByTestId('transition');
 
-		expect(actual).toContain(expected);
+		expect(actual).toHaveClass(expected);
 	});
 
 	// Tests for prop and className combinations
 	const directionCombination = [
-		[css.up, 'up'],
-		[css.right, 'right'],
-		[css.down, 'down'],
-		[css.left, 'left']
+		['up', 'up'],
+		['right', 'right'],
+		['down', 'down'],
+		['left', 'left']
 	];
 
 	const durationCombination = [
-		[css.short, 'short'],
-		[css.medium, 'medium'],
-		[css.long, 'long']
+		['short', 'short'],
+		['medium', 'medium'],
+		['long', 'long']
 	];
 
 	const timingFunctionCombination = [
-		[css.ease, 'ease'],
-		[css['ease-in'], 'ease-in'],
-		[css['ease-out'], 'ease-out'],
-		[css['ease-in-out'], 'ease-in-out'],
-		[css['ease-in-quart'], 'ease-in-quart'],
-		[css['ease-out-quart'], 'ease-out-quart'],
-		[css.linear, 'linear']
+		['ease', 'ease'],
+		['ease-in', 'ease-in'],
+		['ease-out', 'ease-out'],
+		['ease-in-out', 'ease-in-out'],
+		['ease-in-quart', 'ease-in-quart'],
+		['ease-out-quart', 'ease-out-quart'],
+		['linear', 'linear']
 	];
 
 	const propStyleCombination = [
@@ -123,14 +116,12 @@ describe('Transition Specs', () => {
 				const propValue = {
 					[prop]: value
 				};
-				const wrapped = mount(
-					<Transition {...propValue} visible>Body</Transition>
-				);
+				render(<Transition {...propValue} data-testid="transition" visible>Body</Transition>);
 
 				const expected = key;
-				const actual = wrapped.find('div').at(0).prop('className');
+				const actual = screen.getByTestId('transition');
 
-				expect(actual).toContain(expected);
+				expect(actual).toHaveClass(expected);
 			});
 		});
 	});

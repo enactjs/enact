@@ -1,4 +1,6 @@
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+
 import {FloatingLayerBase} from '../FloatingLayer';
 import FloatingLayerDecorator from '../FloatingLayerDecorator';
 
@@ -6,26 +8,26 @@ describe('FloatingLayer Specs', () => {
 	const Root = FloatingLayerDecorator('div');
 
 	test('should not render if FloatingLayer is not open', () => {
-		const subject = mount(
+		render(
 			<Root>
-				<FloatingLayerBase><p>Hi</p></FloatingLayerBase>
+				<FloatingLayerBase data-testid="floatingLayer"><p>Hi</p></FloatingLayerBase>
 			</Root>
 		);
 
-		const expected = null;
-		const actual = subject.find('FloatingLayer').instance().node;
-		expect(actual).toBe(expected);
+		const floatingLayerContainer = screen.queryByTestId('floatingLayer');
+
+		expect(floatingLayerContainer).not.toBeInTheDocument();
 	});
 
 	test('should render if FloatingLayer is open', () => {
-		const subject = mount(
+		render(
 			<Root>
-				<FloatingLayerBase open><p>Hi</p></FloatingLayerBase>
+				<FloatingLayerBase data-testid="floatingLayer" open><p>Hi</p></FloatingLayerBase>
 			</Root>
 		);
 
-		const expected = 1;
-		const actual = subject.find('FloatingLayer').instance().node.querySelectorAll('p').length;
-		expect(actual).toBe(expected);
+		const floatingLayerContainer = screen.getByTestId('floatingLayer');
+
+		expect(floatingLayerContainer).toBeInTheDocument();
 	});
 });
