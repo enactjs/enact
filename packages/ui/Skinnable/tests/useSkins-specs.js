@@ -1,12 +1,15 @@
-import {mount, shallow} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render} from '@testing-library/react';
 
 import useSkins from '../useSkins';
 
 describe('Skinnable Specs', () => {
+	let data;
 
-	function Base () {
+	const Base = (props) => {
+		data = props;
 		return null;
-	}
+	};
 	function Component ({config}) {
 		const skins = useSkins(config);
 		return (
@@ -29,12 +32,11 @@ describe('Skinnable Specs', () => {
 			}
 		};
 
-		const subject = shallow(<Component config={config} />);
+		render(<Component config={config} />);
 
 		const expected = 'darkSkin';
-		const actual = subject.find(Base).prop('className');
 
-		expect(actual).toBe(expected);
+		expect(data).toHaveProperty('className', expected);
 	});
 
 	test('should add the preferred skin class when the skin prop is specified', () => {
@@ -47,12 +49,11 @@ describe('Skinnable Specs', () => {
 			}
 		};
 
-		const subject = shallow(<Component config={config} />);
+		render(<Component config={config} />);
 
 		const expected = 'lightSkin';
-		const actual = subject.find(Base).prop('className');
 
-		expect(actual).toBe(expected);
+		expect(data).toHaveProperty('className', expected);
 	});
 
 	test('should ignore the preferred skin prop if it\'s not one of the available skins', () => {
@@ -65,12 +66,11 @@ describe('Skinnable Specs', () => {
 			}
 		};
 
-		const subject = shallow(<Component config={config} />);
+		render(<Component config={config} />);
 
 		const expected = '';
-		const actual = subject.find(Base).prop('className');
 
-		expect(actual).toBe(expected);
+		expect(data).toHaveProperty('className', expected);
 	});
 
 	test('should ignore the skinVariants prop if there are no defined allowedVariants', () => {
@@ -83,12 +83,11 @@ describe('Skinnable Specs', () => {
 			}
 		};
 
-		const subject = shallow(<Component config={config} />);
+		render(<Component config={config} />);
 
 		const expected = 'darkSkin';
-		const actual = subject.find(Base).prop('className');
 
-		expect(actual).toBe(expected);
+		expect(data).toHaveProperty('className', expected);
 	});
 
 	test('should only apply allowed variants assigned by the skinVariants prop', () => {
@@ -102,12 +101,11 @@ describe('Skinnable Specs', () => {
 			variants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const subject = shallow(<Component config={config} />);
+		render(<Component config={config} />);
 
 		const expected = 'darkSkin normal unicase';
-		const actual = subject.find(Base).prop('className');
 
-		expect(actual).toBe(expected);
+		expect(data).toHaveProperty('className', expected);
 	});
 
 	test('should apply default variants even if the skinVariants prop is explicitly empty', () => {
@@ -122,12 +120,11 @@ describe('Skinnable Specs', () => {
 			variants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const subject = shallow(<Component config={config} />);
+		render(<Component config={config} />);
 
 		const expected = 'darkSkin normal';
-		const actual = subject.find(Base).prop('className');
 
-		expect(actual).toBe(expected);
+		expect(data).toHaveProperty('className', expected);
 	});
 
 	test('should apply default variants and the skinVariants if both are defined', () => {
@@ -142,12 +139,11 @@ describe('Skinnable Specs', () => {
 			variants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const subject = shallow(<Component config={config} />);
+		render(<Component config={config} />);
 
 		const expected = 'darkSkin normal unicase';
-		const actual = subject.find(Base).prop('className');
 
-		expect(actual).toBe(expected);
+		expect(data).toHaveProperty('className', expected);
 	});
 
 	test('should apply variants supplied via an array or a string in the same way', () => {
@@ -161,10 +157,13 @@ describe('Skinnable Specs', () => {
 			variants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const subjectA = shallow(<Component config={{...config, skinVariants: 'normal unicase'}} />);
-		const subjectB = shallow(<Component config={{...config, skinVariants: ['normal', 'unicase']}} />);
+		render(<Component config={{...config, skinVariants: 'normal unicase'}} />);
+		const component1Class = data.className;
 
-		expect(subjectA.find(Base).prop('className')).toBe(subjectB.find(Base).prop('className'));
+		render(<Component config={{...config, skinVariants: ['normal', 'unicase']}} />);
+		const component2Class = data.className;
+
+		expect(component1Class).toBe(component2Class);
 	});
 
 	test('should allow opting out of the default variants if an object is supplied to skinVariants with false as variant-key values', () => {
@@ -179,12 +178,11 @@ describe('Skinnable Specs', () => {
 			variants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const subject = shallow(<Component config={config} />);
+		render(<Component config={config} />);
 
 		const expected = 'darkSkin unicase';
-		const actual = subject.find(Base).prop('className');
 
-		expect(actual).toBe(expected);
+		expect(data).toHaveProperty('className', expected);
 	});
 
 	test('should ignore variants, sent by an object, equaling null, undefined, or empty string', () => {
@@ -199,12 +197,11 @@ describe('Skinnable Specs', () => {
 			variants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const subject = shallow(<Component config={config} />);
+		render(<Component config={config} />);
 
 		const expected = 'darkSkin normal';
-		const actual = subject.find(Base).prop('className');
 
-		expect(actual).toBe(expected);
+		expect(data).toHaveProperty('className', expected);
 	});
 
 	test('should apply parent variants', () => {
@@ -218,16 +215,15 @@ describe('Skinnable Specs', () => {
 			variants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const subject = mount(
+		render(
 			<Parent config={{...config, skinVariants: 'unicase'}}>
 				<Component config={{...config, skinVariants: 'smallCaps'}} />
 			</Parent>
 		);
 
 		const expected = 'darkSkin normal unicase smallCaps';
-		const actual = subject.find(Base).prop('className');
 
-		expect(actual).toBe(expected);
+		expect(data).toHaveProperty('className', expected);
 	});
 
 	test('should be able to override a parent\'s variants by assigning a false skinVariant', () => {
@@ -241,16 +237,15 @@ describe('Skinnable Specs', () => {
 			variants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const subject = mount(
+		render(
 			<Parent config={{...config, skinVariants: 'smallCaps unicase'}}>
 				<Component config={{...config, skinVariants: {unicase: false}}} />
 			</Parent>
 		);
 
 		const expected = 'darkSkin normal smallCaps';
-		const actual = subject.find(Base).prop('className');
 
-		expect(actual).toBe(expected);
+		expect(data).toHaveProperty('className', expected);
 	});
 
 	test('should inherit an overridden default variant', () => {
@@ -264,7 +259,7 @@ describe('Skinnable Specs', () => {
 			variants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const subject = mount(
+		render(
 			<Parent config={config}>
 				<Parent config={{...config, skinVariants: {normal: false}}}>
 					<Component config={config} />
@@ -273,8 +268,7 @@ describe('Skinnable Specs', () => {
 		);
 
 		const expected = 'darkSkin';
-		const actual = subject.find(Base).prop('className');
 
-		expect(actual).toBe(expected);
+		expect(data).toHaveProperty('className', expected);
 	});
 });

@@ -1,64 +1,58 @@
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+
 import LabeledIcon from '../LabeledIcon';
 import CustomIcon from '../../Icon';
-import css from '../LabeledIcon.module.less';
 
-const iconName = 'anIconName';
+const iconName = <div data-testid="iconName">anIconName</div>;
 const iconLabel = 'A real label';
 const iconComponent = ({children}) => <div>{children}</div>;
 
 describe('LabeledIcon Specs', () => {
-	test(
-		'should insert the icon source into the icon when using the prop approach',
-		() => {
+	test('should insert the icon source into the icon when using the prop approach', () => {
+		render(
+			<LabeledIcon icon={iconName} iconComponent={iconComponent}>
+				{iconLabel}
+			</LabeledIcon>
+		);
+		const icon = screen.getByTestId('iconName');
 
-			const labeledIcon = mount(
-				<LabeledIcon icon={iconName} iconComponent={iconComponent}>
-					{iconLabel}
-				</LabeledIcon>
-			);
+		const expected = 'anIconName';
 
-			const expected = iconName;
-			const actual = labeledIcon.find(`.${css.icon}`).first().text();
-
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(icon).toHaveClass('icon');
+		expect(icon.textContent).toBe(expected);
+	});
 
 	test('should insert the icon source into the icon slot element', () => {
-
-		const labeledIcon = mount(
+		render(
 			<LabeledIcon iconComponent={iconComponent}>
 				<icon>{iconName}</icon>
 				{iconLabel}
 			</LabeledIcon>
 		);
+		const icon = screen.getByTestId('iconName');
 
-		const expected = iconName;
-		const actual = labeledIcon.find(`.${css.icon}`).first().text();
+		const expected = 'anIconName';
 
-		expect(actual).toBe(expected);
+		expect(icon).toHaveClass('icon');
+		expect(icon.textContent).toBe(expected);
 	});
 
 	test('should insert custom icon components into the icon slot', () => {
-		const labeledIcon = mount(
+		render(
 			<LabeledIcon iconComponent={iconComponent}>
-				<icon><CustomIcon>{iconName}</CustomIcon></icon>
+				<icon><CustomIcon data-testid="customIcon">{iconName}</CustomIcon></icon>
 				{iconLabel}
 			</LabeledIcon>
 		);
+		const customIcon = screen.getByTestId('customIcon');
 
-		const expected = 1;
-		const actual = labeledIcon.find(CustomIcon);
-
-		expect(actual).toHaveLength(expected);
+		expect(customIcon).toBeInTheDocument();
 	});
 
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
-		mount(
-			<LabeledIcon ref={ref} iconComponent={iconComponent} icon={iconName} />
-		);
+		render(<LabeledIcon icon={iconName} iconComponent={iconComponent} ref={ref} />);
 
 		const expected = 'DIV';
 		const actual = ref.mock.calls[0][0].nodeName;

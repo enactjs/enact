@@ -1,76 +1,57 @@
-import {shallow} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+
 import {SpinnerBase} from '../Spinner';
-import css from '../Spinner.module.less';
+import {FloatingLayerDecorator} from '../../FloatingLayer';
 
 describe('Spinner Specs', () => {
 	test('should have centered class when centered prop equals true', () => {
-		const spinner = shallow(
-			<SpinnerBase component="div" centered>
-				Loading...
-			</SpinnerBase>
-		);
+		render(<SpinnerBase centered component="div">Loading...</SpinnerBase>);
+		const spinner = screen.getByText('Loading...');
 
-		const expected = true;
-		const actual = spinner.find(`.${css.spinner}`).hasClass(css.centered);
+		const expected = 'centered';
 
-		expect(actual).toBe(expected);
+		expect(spinner).toHaveClass(expected);
 	});
 
-	test(
-		'should not have content class when Spinner has no children',
-		() => {
-			const spinner = shallow(
-				<SpinnerBase component="div" />
-			);
+	test('should not have content class when Spinner has no children', () => {
+		render(<SpinnerBase component="div" data-testid="spinner" />);
+		const spinner = screen.getByTestId('spinner');
 
-			const expected = false;
-			const actual = spinner.find(`.${css.spinner}`).hasClass(css.content);
+		const expected = 'content';
 
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(spinner).not.toHaveClass(expected);
+	});
 
-	test(
-		'should have no scrim class when blockClickOn prop equals container',
-		() => {
-			const spinner = shallow(
-				<SpinnerBase component="div" blockClickOn="container" />
-			);
+	test('should have no scrim class when blockClickOn prop equals container', () => {
+		render(<SpinnerBase blockClickOn="container" component="div" data-testid="spinner" />);
+		const spinnerContainer = screen.getByTestId('spinner').previousElementSibling;
 
-			const expected = false;
-			const actual = spinner.find(`.${css.scrim}`).exists();
+		const expected = 'scrim';
 
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(spinnerContainer).not.toHaveClass(expected);
+	});
 
-	test(
-		'should have scrim class when blockClickOn prop equals container and when scrim prop equals true',
-		() => {
-			const spinner = shallow(
-				<SpinnerBase component="div" blockClickOn="container" scrim />
-			);
+	test('should have scrim class when blockClickOn prop equals container and when scrim prop equals true', () => {
+		render(<SpinnerBase blockClickOn="container" component="div" data-testid="spinner" scrim />);
+		const spinnerContainer = screen.getByTestId('spinner').previousElementSibling;
 
-			const expected = true;
-			const actual = spinner.find(`.${css.scrim}`).exists();
+		const expected = 'scrim';
 
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(spinnerContainer).toHaveClass(expected);
+	});
 
-	test(
-		'should have FloatingLayer when blockClickOn prop equals screen',
-		() => {
-			const spinner = shallow(
-				<SpinnerBase component="div" blockClickOn="screen" />
-			);
+	test('should have FloatingLayer when blockClickOn prop equals screen', () => {
+		const Root = FloatingLayerDecorator('div');
+		render(
+			<Root>
+				<SpinnerBase blockClickOn="screen" component="div" data-testid="spinner" />
+			</Root>
+		);
 
-			const expected = true;
-			// FloatingLayer is wrapped by Cancelable so it's undiscoverable by name with shallow
-			// mounting
-			const actual = spinner.find('Cancelable').exists();
+		const spinner = screen.getByTestId('spinner');
 
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(spinner).toBeInTheDocument();
+		expect(spinner.parentElement.parentElement.parentElement.id).toBe('floatLayer');
+	});
 });

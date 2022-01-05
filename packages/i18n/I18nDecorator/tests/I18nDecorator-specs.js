@@ -1,13 +1,13 @@
-import {shallow, mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ilib from 'ilib';
 
 import {updateLocale} from '../../locale';
 import {I18nContextDecorator, I18nDecorator} from '../I18nDecorator';
 
 describe('I18nDecorator', () => {
-
 	// Suite-wide setup
-
 	beforeEach(() => {
 		updateLocale('en-US');
 	});
@@ -18,7 +18,7 @@ describe('I18nDecorator', () => {
 
 	test('should add rtl context parameter', () => {
 		const Component = (props) => (
-			<div>{'rtl' in props ? 'has rtl prop' : 'does not have rtl prop'}</div>
+			<div data-testid="i18n">{'rtl' in props ? 'has rtl prop' : 'does not have rtl prop'}</div>
 		);
 
 		const Wrapped = I18nDecorator(
@@ -28,17 +28,17 @@ describe('I18nDecorator', () => {
 				Component
 			)
 		);
-		const subject = mount(<Wrapped />);
+		render(<Wrapped />);
 
 		const expected = 'has rtl prop';
-		const actual = subject.text();
+		const i18nDiv = screen.getByTestId('i18n');
 
-		expect(actual).toBe(expected);
+		expect(i18nDiv).toHaveTextContent(expected);
 	});
 
 	test('should add updateLocale context parameter', () => {
 		const Component = ({updateLocale: update}) => (
-			<div>{typeof update}</div>
+			<div data-testid="i18n">{typeof update}</div>
 		);
 
 		const Wrapped = I18nDecorator(
@@ -48,41 +48,39 @@ describe('I18nDecorator', () => {
 				Component
 			)
 		);
-		const subject = mount(<Wrapped />);
+		render(<Wrapped />);
 
 		const expected = 'function';
-		const actual = subject.text();
+		const i18nDiv = screen.getByTestId('i18n');
+
+		expect(i18nDiv).toHaveTextContent(expected);
+	});
+
+	test('should update the current locale when updateLocale is called', () => {
+		const Component = ({_updateLocale}) => {
+			const handleClick = () => _updateLocale('ar-SA');
+
+			return (
+				<button onClick={handleClick} />
+			);
+		};
+
+		const Wrapped = I18nDecorator(
+			{sync: true},
+			I18nContextDecorator(
+				{updateLocaleProp: '_updateLocale'},
+				Component
+			)
+		);
+		render(<Wrapped />);
+
+		userEvent.click(screen.getByRole('button'));
+
+		const expected = 'ar-SA';
+		const actual = ilib.getLocale();
 
 		expect(actual).toBe(expected);
 	});
-
-	test(
-		'should update the current locale when updateLocale is called',
-		() => {
-			const Component = ({_updateLocale}) => {
-				const handleClick = () => _updateLocale('ar-SA');
-
-				return (
-					<button onClick={handleClick} />
-				);
-			};
-
-			const Wrapped = I18nDecorator(
-				{sync: true},
-				I18nContextDecorator(
-					{updateLocaleProp: '_updateLocale'},
-					Component
-				)
-			);
-			const subject = mount(<Wrapped />);
-			subject.find('button').simulate('click');
-
-			const expected = 'ar-SA';
-			const actual = ilib.getLocale();
-
-			expect(actual).toBe(expected);
-		}
-	);
 
 	test('should update the rtl context parameter when RTL changes', () => {
 		const Component = ({rtl, _updateLocale}) => {
@@ -100,16 +98,14 @@ describe('I18nDecorator', () => {
 				Component
 			)
 		);
-		const subject = mount(<Wrapped />);
-		const button = subject.find('button');
+		render(<Wrapped />);
 
-		button.simulate('click');
-		subject.update();
+		const button = screen.getByRole('button');
+		userEvent.click(button);
 
 		const expected = 'rtl';
-		const actual = button.text();
 
-		expect(actual).toBe(expected);
+		expect(button).toHaveTextContent(expected);
 	});
 
 	test('should set locale via props', () => {
@@ -118,7 +114,7 @@ describe('I18nDecorator', () => {
 		);
 
 		const Wrapped = I18nDecorator({sync: true}, Component);
-		shallow(<Wrapped locale="ar-SA" />);
+		render(<Wrapped locale="ar-SA" />);
 
 		const expected = 'ar-SA';
 		const actual = ilib.getLocale();
@@ -128,49 +124,44 @@ describe('I18nDecorator', () => {
 
 	test('should add locale classes to Wrapped', () => {
 		const Component = (props) => (
-			<div className={props.className} />
+			<div className={props.className} data-testid="i18nDiv" />
 		);
 
 		const Wrapped = I18nDecorator({sync: true}, Component);
 		// explicitly setting locale so we get a known class list regardless of runtime locale
-		const subject = shallow(<Wrapped locale="en-US" />).find(Component);
+		render(<Wrapped locale="en-US" />);
+		const i18nDiv = screen.getByTestId('i18nDiv');
 
-		const expected = true;
-		const actual =	subject.hasClass('enact-locale-en') &&
-						subject.hasClass('enact-locale-en-US') &&
-						subject.hasClass('enact-locale-US');
-
-		expect(actual).toBe(expected);
+		expect(i18nDiv).toHaveClass('enact-locale-en');
+		expect(i18nDiv).toHaveClass('enact-locale-en-US');
+		expect(i18nDiv).toHaveClass('enact-locale-US');
 	});
 
 	test('should treat "en-US" as latin locale', () => {
 		const Component = (props) => (
-			<div className={props.className} />
+			<div className={props.className} data-testid="i18nDiv" />
 		);
 
 		const Wrapped = I18nDecorator({sync: true}, Component);
 		// explicitly setting locale so we get a known class list regardless of runtime locale
-		const subject = shallow(<Wrapped locale="en-US" />).find(Component);
+		render(<Wrapped locale="en-US" />);
 
-		const expected = false;
-		const actual =	subject.hasClass('enact-locale-non-latin');
+		const i18nDiv = screen.getByTestId('i18nDiv');
 
-		expect(actual).toBe(expected);
+		expect(i18nDiv).not.toHaveClass('enact-locale-non-latin');
 	});
-
 
 	test('should treat "ja-JP" as non-latin locale', () => {
 		const Component = (props) => (
-			<div className={props.className} />
+			<div className={props.className} data-testid="i18nDiv" />
 		);
 
 		const Wrapped = I18nDecorator({sync: true}, Component);
 		// explicitly setting locale so we get a known class list regardless of runtime locale
-		const subject = shallow(<Wrapped locale="ja-JP" />).find(Component);
+		render(<Wrapped locale="ja-JP" />);
 
-		const expected = true;
-		const actual =	subject.hasClass('enact-locale-non-latin');
+		const i18nDiv = screen.getByTestId('i18nDiv');
 
-		expect(actual).toBe(expected);
+		expect(i18nDiv).toHaveClass('enact-locale-non-latin');
 	});
 });

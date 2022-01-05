@@ -155,7 +155,7 @@ const parseUserAgent = (userAgent) => {
  * @property {Boolean} node - `true` only if `window` is `undefined`
  * @property {String} [platformName] - The name of the platform, if detected
  * @property {Boolean} touch - `true` if the platform has native single-finger events
- * @property {Boolean} touchsreen - `true` if the platform has a touch screen
+ * @property {Boolean} touchscreen - `true` if the platform has a touch screen
  * @property {Boolean} unknown - `true` for any unknown system
  *
  * @memberof core/platform

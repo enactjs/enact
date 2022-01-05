@@ -1,10 +1,9 @@
 import {forwardRef} from 'react';
-import {mount} from 'enzyme';
+import {render} from '@testing-library/react';
 
 import IconButton from '../IconButton';
 
 describe('IconButton', () => {
-
 	const Button = forwardRef((props, fn) => <div ref={fn} />);
 	function Icon () {
 		return <div />;
@@ -12,7 +11,7 @@ describe('IconButton', () => {
 
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
-		mount(
+		render(
 			<IconButton ref={ref} buttonComponent={Button} iconComponent={Icon}>
 				star
 			</IconButton>
@@ -23,5 +22,4 @@ describe('IconButton', () => {
 
 		expect(actual).toBe(expected);
 	});
-
 });

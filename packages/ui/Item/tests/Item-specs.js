@@ -1,93 +1,81 @@
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {fireEvent, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
 import Item from '../Item';
 
 const tap = (node) => {
-	node.simulate('mousedown');
-	node.simulate('mouseup');
+	fireEvent.mouseDown(node);
+	fireEvent.mouseUp(node);
 };
 
 describe('Item', () => {
+	test('should render an item', () => {
+		render(<Item>I am an item</Item>);
+		const actual = screen.getByText('I am an item');
 
-	test('should create an Item that is enabled by default', () => {
-		const item = mount(
-			<Item>I am an Item</Item>
-		);
-
-		const expected = 0;
-		const actual = item.find({disabled: true}).length;
-
-		expect(actual).toBe(expected);
+		expect(actual).toBeInTheDocument();
 	});
 
-	test(
-		'should have \'disabled\' HTML attribute when \'disabled=true\'',
-		() => {
-			const item = mount(
-				<Item disabled>I am a disabled Item</Item>
-			);
+	test('should render a disabled item', () => {
+		render(<Item disabled>I am a disabled item</Item>);
+		const actual = screen.getByText('I am a disabled item');
 
-			const expected = 1;
-			const actual = item.find('div[disabled=true]').length;
+		expect(actual).toHaveAttribute('disabled');
+	});
 
-			expect(actual).toBe(expected);
-		}
-	);
+	test('should render an inline item', () => {
+		render(<Item inline>I am an inline item</Item>);
+		const actual = screen.getByText('I am an inline item');
+
+		const expected = 'inline';
+
+		expect(actual).toHaveClass(expected);
+	});
 
 	describe('events', () => {
 		test('should call onTap when tapped', () => {
 			const handleClick = jest.fn();
-			const item = mount(
-				<Item onTap={handleClick}>I am a normal Item</Item>
-			);
+			render(<Item onTap={handleClick}>I am a normal item</Item>);
+			const item = screen.getByText('I am a normal item');
 
 			tap(item);
 
 			const expected = 1;
-			const actual = handleClick.mock.calls.length;
 
-			expect(actual).toBe(expected);
+			expect(handleClick).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should not call onTap when tapped and disabled', () => {
 			const handleClick = jest.fn();
-			const item = mount(
-				<Item disabled onTap={handleClick}>I am a disabled Item</Item>
-			);
+			render(<Item disabled onTap={handleClick}>I am a disabled item</Item>);
+			const item = screen.getByText('I am a disabled item');
 
 			tap(item);
 
-			const expected = 0;
-			const actual = handleClick.mock.calls.length;
-
-			expect(actual).toBe(expected);
+			expect(handleClick).not.toHaveBeenCalled();
 		});
 
 		test('should call onClick when clicked', () => {
 			const handleClick = jest.fn();
-			const item = mount(
-				<Item onClick={handleClick}>I am a normal Item</Item>
-			);
+			render(<Item onClick={handleClick}>I am a normal Item</Item>);
+			const item = screen.getByText('I am a normal Item');
 
-			item.simulate('click');
+			userEvent.click(item);
 
 			const expected = 1;
-			const actual = handleClick.mock.calls.length;
 
-			expect(actual).toBe(expected);
+			expect(handleClick).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should not call onClick when clicked and disabled', () => {
 			const handleClick = jest.fn();
-			const item = mount(
-				<Item disabled onClick={handleClick}>I am a disabled Item</Item>
-			);
+			render(<Item disabled onClick={handleClick}>I am a disabled Item</Item>);
+			const item = screen.getByText('I am a disabled Item');
 
-			item.simulate('click');
+			userEvent.click(item);
 
-			const expected = 0;
-			const actual = handleClick.mock.calls.length;
-
-			expect(actual).toBe(expected);
+			expect(handleClick).not.toHaveBeenCalled();
 		});
 	});
 });

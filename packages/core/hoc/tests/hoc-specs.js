@@ -1,82 +1,76 @@
 /* eslint-disable enact/display-name */
 
-import {shallow, mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+
 import hoc from '../hoc';
 
 describe('hoc', () => {
-
+	let data;
+	const testID = 'test-HoC';
 	const defaultConfig = {
 		color: 'blue'
 	};
 
 	const HoC = hoc(defaultConfig, (config, Wrapped) => {
-		return (props) => <Wrapped {...props} {...config} />;
+		data = Wrapped;
+		return (props) => <Wrapped {...props} {...config} data-testid={testID} />;
 	});
 
 	const NullHoC = hoc(null, (config, Wrapped) => {
-		return () => <Wrapped {...config} />;
+		return () => <Wrapped {...config} data-testid={testID} />;
 	});
 
-	test(
-		'should support HoC factory function as first argument to hoc()',
-		() => {
-			const ImplicitNullHoC = hoc((config, Wrapped) => {
-				return () => <Wrapped {...config} />;
-			});
-			const Component = ImplicitNullHoC('span');
+	test('should support HoC factory function as first argument to hoc()', () => {
+		const ImplicitNullHoC = hoc((config, Wrapped) => {
+			return () => <Wrapped {...config} data-testid={testID} />;
+		});
+		const Component = ImplicitNullHoC('span');
+		render(<Component />);
+		const component = screen.getByTestId(testID);
 
-			const subject = shallow(
-				<Component />
-			);
+		const expected = 'SPAN';
+		const actual = component.nodeName;
 
-			const expected = 'span';
-			const actual = subject.name();
-
-			expect(actual).toBe(expected);
-		}
-	);
-
+		expect(actual).toBe(expected);
+	});
 
 	test('should support DOM node name as first argument to HoC', () => {
 		const Component = HoC('span');
+		render(<Component />);
+		const component = screen.getByTestId(testID);
 
-		const subject = shallow(
-			<Component />
-		);
-
-		const expected = 'span';
-		const actual = subject.name();
+		const expected = 'SPAN';
+		const actual = component.nodeName;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should support React component as first argument to HoC', () => {
 		function Thing () {
-			return <div />;
+			return <div data-testid={testID} />;
 		}
 		const Component = HoC(Thing);
+		render(<Component />);
+		const component = screen.getByTestId(testID);
 
-		const subject = shallow(
-			<Component />
-		);
-
-		const expected = 'Thing';
-		const actual = subject.name();
+		const expected = 'DIV';
+		const actual = component.nodeName;
+		const actualWrapped = data;
 
 		expect(actual).toBe(expected);
+		expect(actualWrapped).toBe(Thing);
 	});
 
 	test('should use default config when instance config is omitted', () => {
 		const Component = HoC('span');
+		render(<Component />);
+		const component = screen.getByTestId(testID);
 
-		const subject = mount(
-			<Component />
-		);
+		const expectedAttribute = 'color';
+		const expectedValue = defaultConfig.color;
 
-		const expected = defaultConfig.color;
-		const actual = subject.find('span').prop('color');
-
-		expect(actual).toBe(expected);
+		expect(component).toHaveAttribute(expectedAttribute, expectedValue);
 	});
 
 	test('should overwrite default config with instance config', () => {
@@ -84,47 +78,38 @@ describe('hoc', () => {
 			color: 'green'
 		};
 		const Component = HoC(instanceConfig, 'div');
+		render(<Component />);
+		const component = screen.getByTestId(testID);
 
-		const subject = mount(
-			<Component />
-		);
+		const expectedAttribute = 'color';
+		const expectedValue = instanceConfig.color;
 
-		const expected = instanceConfig.color;
-		const actual = subject.find('div').prop('color');
-
-		expect(actual).toBe(expected);
+		expect(component).toHaveAttribute(expectedAttribute, expectedValue);
 	});
 
-	test(
-		'should allow construction without default or instance configs',
-		() => {
-			const Component = NullHoC('div');
+	test('should allow construction without default or instance configs', () => {
+		const Component = NullHoC('input');
+		render(<Component />);
+		const component = screen.getByTestId(testID);
 
-			const subject = mount(
-				<Component />
-			);
+		const expected = 'INPUT';
+		const actual = component.nodeName;
 
-			const expected = 1;
-			const actual = subject.find('div').length;
-
-			expect(actual).toBe(expected);
-		}
-	);
+		expect(actual).toBe(expected);
+		expect(component).toBeInTheDocument();
+	});
 
 	test('should allow construction without default config', () => {
 		const instanceConfig = {
 			color: 'green'
 		};
 		const Component = NullHoC(instanceConfig, 'div');
+		render(<Component />);
+		const component = screen.getByTestId(testID);
 
-		const subject = mount(
-			<Component />
-		);
+		const expectedAttribute = 'color';
+		const expectedValue = instanceConfig.color;
 
-		const expected = instanceConfig.color;
-		const actual = subject.find('div').prop('color');
-
-		expect(actual).toBe(expected);
+		expect(component).toHaveAttribute(expectedAttribute, expectedValue);
 	});
-
 });
