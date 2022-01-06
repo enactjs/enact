@@ -356,6 +356,19 @@
 		@rules();
 	}
 }
+
+// `length()` below refers to specifying font-weight ranges: `600 900`.
+// Ex: 
+//   .buildFontFace("fontName"; local("name"); 400 600); 
+//   -> .buildFontFace("fontName"; local("name"); 400); .buildFontFace("fontName"; local("name"); 600);
+//   .buildFontFace("fontName"; local("name"); 400 600; normal);
+//   -> .buildFontFace("fontName"; local("name"); 400; normal); .buildFontFace("fontName"; local("name"); 600; normal);
+.buildFontFace(@name; @src; @weight: normal; @style: "") when (length(@weight) > 1) {
+	each(@weight, {
+		.buildFontFace(@name; @src; @value; @style);
+	});
+}
+
 // The default version of this mixin (below) is the shorthand version, which rearranges its arguments into the format the above mixin expects.
 .buildFontFace(@name; @src; @weight: normal; @style: "") when (default()) {
 	.buildFontFace(@name; @src; {
@@ -366,16 +379,6 @@
 		& when (iskeyword(@style)) {
 			font-style: @style;
 		}
-	});
-}
-
-// `length()` below refers to specifying font-weight ranges: `600 900`.
-// Ex: 
-//   .buildFontFace("fontName"; local("name"); 400 600); 
-//   -> .buildFontFace("fontName"; local("name"); 400); .buildFontFace("fontName"; local("name"); 600);
-.buildFontFace(@name; @src; @weight: normal) when (length(@weight) > 1) {
-	each(@weight, {
-		.buildFontFace(@name; @src; @value);
 	});
 }
 
