@@ -519,13 +519,13 @@ class Transition extends Component {
 	};
 
 	handleTransitionEnd = (ev) => {
-		forwardCustom('onTransitionEnd')(ev, this.props);
+		forwardCustom('onTransitionEnd')(null, this.props);
 
 		if (ev.target === this.childNode) {
 			if (!this.props.visible) {
-				forwardCustom('onHide')(ev, this.props);
+				forwardCustom('onHide')(null, this.props);
 			} else if (this.props.visible) {
-				forwardCustom('onShow')(ev, this.props);
+				forwardCustom('onShow')(null, this.props);
 			}
 		}
 	};

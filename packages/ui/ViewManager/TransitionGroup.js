@@ -445,7 +445,6 @@ class TransitionGroup extends Component {
 		delete props.componentRef;
 		delete props.currentIndex;
 		delete props.onAppear;
-		delete props.onAppear;
 		delete props.onEnter;
 		delete props.onLeave;
 		delete props.onStay;

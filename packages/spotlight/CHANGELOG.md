@@ -7,7 +7,6 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Changed
 
 - `spotlight/Spottable` to forward `onSelectionCancel` and `onSpotlightDisappear` with event type
-## [unreleased] 
 
 ### Fixed
 

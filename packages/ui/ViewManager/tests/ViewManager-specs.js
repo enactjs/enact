@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import {render, screen} from '@testing-library/react';
+import {render, screen, waitFor} from '@testing-library/react';
 import {Component} from 'react';
 
 import ViewManager from '../';
@@ -417,6 +417,57 @@ describe('ViewManager', () => {
 		const expected = 3;
 
 		expect(children).toHaveLength(expected);
+	});
+
+	test('should fire onEnter with type once a view has entered', () => {
+		const spy = jest.fn();
+		const {rerender} = render(
+			<ViewManager index={0} noAnimation onEnter={spy}>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		spy.mockClear();
+
+		rerender(
+			<ViewManager index={1} onEnter={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+		const expected = 1;
+		const expectedType = {type: 'onEnter'};
+		const actual = spy.mock.calls.length && spy.mock.calls[0][0];
+
+		expect(spy).toHaveBeenCalledTimes(expected);
+		expect(actual).toMatchObject(expectedType);
+	});
+
+	test('should fire onAppear with type once a view has appeared', async () => {
+		const spy = jest.fn();
+		const {rerender} = render(
+			<ViewManager index={0} noAnimation onAppear={spy}>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		rerender(
+			<ViewManager index={1} onAppear={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		await waitFor(() => {
+			const expected = 1;
+			const expectedType = {type: 'onAppear'};
+			const actual = spy.mock.calls.length && spy.mock.calls[0][0];
+
+			expect(spy).toHaveBeenCalledTimes(expected);
+			expect(actual).toMatchObject(expectedType);
+		});
 	});
 
 	test('should fire onTransition once per transition', () => {
