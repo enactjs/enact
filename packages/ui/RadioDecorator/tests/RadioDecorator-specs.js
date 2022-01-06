@@ -65,7 +65,7 @@ describe('RadioDecorator', () => {
 		const handleActivate = jest.fn();
 		const Wrapper = () => (
 			<Controller>
-				<Component onClick={handleActivate}/>
+				<Component onClick={handleActivate} />
 			</Controller>
 		);
 
@@ -89,7 +89,7 @@ describe('RadioDecorator', () => {
 		const handleDeactivate = jest.fn();
 		const Wrapper = () => (
 			<Controller>
-				<Component onClick={handleDeactivate}/>
+				<Component onClick={handleDeactivate} />
 			</Controller>
 		);
 

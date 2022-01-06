@@ -91,7 +91,7 @@ describe('Transition Specs', () => {
 		);
 
 		rerender(
-			<Transition noAnimation onShow={handleShow} visible={true}>
+			<Transition noAnimation onShow={handleShow} visible>
 				<ChildNode />
 			</Transition>
 		);
@@ -109,7 +109,7 @@ describe('Transition Specs', () => {
 		const ChildNode = (props) => <div {...props}>Body</div>;
 
 		const {rerender} = render(
-			<Transition noAnimation onHide={handleHide} visible={true}>
+			<Transition noAnimation onHide={handleHide} visible>
 				<ChildNode />
 			</Transition>
 		);
