@@ -202,6 +202,15 @@ const Panel = SharedStateDecorator(
 			continue5WayHold: true,
 			defaultElement: [`.${spotlightDefaultClass}`, `.${css.body} *`],
 			enterTo: 'last-focused',
+			lastFocusedPersist: (lastFocusNode, all) => {
+				all = all.filter(element => !element.dataset.spotlightIgnoreRestore);
+				const container = typeof lastFocusNode === 'string';
+				return {
+					container,
+					element: !container,
+					key: container ? lastFocusNode : all.indexOf(lastFocusNode)
+				};
+			},
 			preserveId: true
 		},
 		Slottable(

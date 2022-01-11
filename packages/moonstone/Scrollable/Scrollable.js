@@ -1025,6 +1025,7 @@ class ScrollableBase extends Component {
 								<Scrollbar
 									{...verticalScrollbarProps}
 									{...this.scrollbarProps}
+									ignoreRestoreSpotlight={rest.verticalScrollbar !== 'visible'}
 									disabled={!isVerticalScrollbarVisible}
 									focusableScrollButtons={focusableScrollbar}
 									nextButtonAriaLabel={downButtonAriaLabel}
@@ -1040,6 +1041,7 @@ class ScrollableBase extends Component {
 							<Scrollbar
 								{...horizontalScrollbarProps}
 								{...this.scrollbarProps}
+								ignoreRestoreSpotlight={rest.horizontalScrollbar !== 'visible'}
 								corner={isVerticalScrollbarVisible}
 								disabled={!isHorizontalScrollbarVisible}
 								focusableScrollButtons={focusableScrollbar}
