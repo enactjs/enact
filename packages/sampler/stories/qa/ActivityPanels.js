@@ -81,6 +81,5 @@ storiesOf('ActivityPanels', module)
 			return (
 				<ActivityPanelsWithScroller />
 			);
-		},
-		{noPanel: true}
+		}
 	);
