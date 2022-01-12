@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/Panels.Panel` to restore focus properly when panel has `moonstone/Scroller` with `focusableScrollbar`
+
 ## [3.2.6] - 2020-03-26
 
 No significant changes.
