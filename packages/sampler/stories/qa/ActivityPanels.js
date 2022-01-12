@@ -55,7 +55,7 @@ class ActivityPanelsWithScroller extends React.Component {
 							horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, ScrollerConfig)}
 							verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, ScrollerConfig)}
 						>
-							{this.items.map((index)=>(<Item onClick={this.nextPanel} key={index}>{'Item' + index}</Item>))}
+							{this.items.map((index) => (<Item onClick={this.nextPanel} key={index}>{'Item' + index}</Item>))}
 						</Scroller>
 					</div>
 					<div>
