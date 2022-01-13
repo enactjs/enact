@@ -76,10 +76,17 @@ class ScrollButtons extends Component {
 		 * This value is set by `Scrollable`.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @private
 		 */
 		focusableScrollButtons: PropTypes.bool,
+
+		/**
+		 * When it is `true`, spotlight ignore the scrollbar button on persisting last focused element
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		ignoreSpotlightRestore: PropTypes.bool,
 
 		/**
 		* Sets the hint string read when focusing the next button in the scroll bar.
@@ -355,7 +362,7 @@ class ScrollButtons extends Component {
 
 	render () {
 		const
-			{disabled, nextButtonAriaLabel, previousButtonAriaLabel, rtl, thumbRenderer, vertical} = this.props,
+			{disabled, ignoreSpotlightRestore, nextButtonAriaLabel, previousButtonAriaLabel, rtl, thumbRenderer, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			prevIcon = preparePrevButton(vertical),
 			nextIcon = prepareNextButton(vertical);
@@ -363,6 +370,7 @@ class ScrollButtons extends Component {
 		return [
 			<ScrollButton
 				aria-label={rtl && !vertical ? nextButtonAriaLabel : previousButtonAriaLabel}
+				{...ignoreSpotlightRestore ? {'data-spotlight-ignore-restore': true} : {}}
 				data-spotlight-overflow="ignore"
 				disabled={disabled || prevButtonDisabled}
 				key="prevButton"
@@ -376,6 +384,7 @@ class ScrollButtons extends Component {
 			thumbRenderer(),
 			<ScrollButton
 				aria-label={rtl && !vertical ? previousButtonAriaLabel : nextButtonAriaLabel}
+				{...ignoreSpotlightRestore ? {'data-spotlight-ignore-restore': true} : {}}
 				data-spotlight-overflow="ignore"
 				disabled={disabled || nextButtonDisabled}
 				key="nextButton"
