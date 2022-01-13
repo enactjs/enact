@@ -1027,7 +1027,7 @@ class ScrollableBase extends Component {
 									{...this.scrollbarProps}
 									disabled={!isVerticalScrollbarVisible}
 									focusableScrollButtons={focusableScrollbar}
-									ignoreRestoreSpotlight={rest.verticalScrollbar !== 'visible'}
+									ignoreSpotlightRestore={rest.verticalScrollbar !== 'visible'}
 									nextButtonAriaLabel={downButtonAriaLabel}
 									onKeyDownButton={this.onKeyDown}
 									preventBubblingOnKeyDown={preventBubblingOnKeyDown}
@@ -1044,7 +1044,7 @@ class ScrollableBase extends Component {
 								corner={isVerticalScrollbarVisible}
 								disabled={!isHorizontalScrollbarVisible}
 								focusableScrollButtons={focusableScrollbar}
-								ignoreRestoreSpotlight={rest.horizontalScrollbar !== 'visible'}
+								ignoreSpotlightRestore={rest.horizontalScrollbar !== 'visible'}
 								nextButtonAriaLabel={rightButtonAriaLabel}
 								onKeyDownButton={this.onKeyDown}
 								preventBubblingOnKeyDown={preventBubblingOnKeyDown}
