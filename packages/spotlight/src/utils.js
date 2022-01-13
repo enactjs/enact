@@ -46,6 +46,7 @@ function parseSelector (selector) {
 }
 
 const testIntersection = (type, containerRect, elementRect) => {
+	const epsilon = 1;
 	const {
 		left: L,
 		right: R,
@@ -60,10 +61,10 @@ const testIntersection = (type, containerRect, elementRect) => {
 		bottom: b
 	} = elementRect;
 
-	const right = r >= L && r <= R;
-	const left = l >= L && l <= R;
-	const top = t >= T && t <= B;
-	const bottom = b >= T && b <= B;
+	const right = r > L - epsilon && r < R + epsilon;
+	const left = l > L - epsilon && l < R + epsilon;
+	const top = t > T - epsilon && t < B + epsilon;
+	const bottom = b > T - epsilon && b < B + epsilon;
 
 	if (type === 'intersects') {
 		const aroundV = t < T && b > B;
