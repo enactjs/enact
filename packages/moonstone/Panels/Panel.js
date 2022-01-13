@@ -203,12 +203,13 @@ const Panel = SharedStateDecorator(
 			defaultElement: [`.${spotlightDefaultClass}`, `.${css.body} *`],
 			enterTo: 'last-focused',
 			lastFocusedPersist: (lastFocusNode, all) => {
-				all = all.filter(element => !element.dataset.spotlightIgnoreRestore);
+				const filtered = all.filter(element => !element.dataset.spotlightIgnoreRestore);
 				const container = typeof lastFocusNode === 'string';
+
 				return {
 					container,
 					element: !container,
-					key: container ? lastFocusNode : all.indexOf(lastFocusNode)
+					key: container ? lastFocusNode : filtered.indexOf(lastFocusNode)
 				};
 			},
 			preserveId: true

@@ -1,5 +1,6 @@
 import React from 'react';
 import {storiesOf} from '@storybook/react';
+import ri from '@enact/ui/resolution';
 
 import Button from '@enact/moonstone/Button';
 import Item from '@enact/moonstone/Item';
@@ -50,7 +51,7 @@ class ActivityPanelsWithScroller extends React.Component {
 					<Header title={'panel 1'} />
 					<div>
 						<Scroller
-							style={{height: 400}}
+							style={{height: ri.scaleToRem(400)}}
 							focusableScrollbar={boolean('focusableScrollbar', ScrollerConfig)}
 							horizontalScrollbar={select('horizontalScrollbar', prop.scrollbarOption, ScrollerConfig)}
 							verticalScrollbar={select('verticalScrollbar', prop.scrollbarOption, ScrollerConfig)}

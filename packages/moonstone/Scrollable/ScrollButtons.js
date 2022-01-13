@@ -76,7 +76,6 @@ class ScrollButtons extends Component {
 		 * This value is set by `Scrollable`.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @private
 		 */
 		focusableScrollButtons: PropTypes.bool,
@@ -85,7 +84,6 @@ class ScrollButtons extends Component {
 		 * When it is `true`, spotlight ignore the scrollbar button on persist last focused element
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @private
 		 */
 		ignoreRestoreSpotlight: PropTypes.bool,
