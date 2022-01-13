@@ -81,7 +81,7 @@ class ScrollButtons extends Component {
 		focusableScrollButtons: PropTypes.bool,
 
 		/**
-		 * When it is `true`, spotlight ignore the scrollbar button on persist last focused element
+		 * When it is `true`, spotlight ignore the scrollbar button on persisting last focused element
 		 *
 		 * @type {Boolean}
 		 * @private
