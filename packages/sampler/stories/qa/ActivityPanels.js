@@ -59,6 +59,7 @@ class ActivityPanelsWithScroller extends React.Component {
 							{this.items.map((index) => (<Item onClick={this.nextPanel} key={index}>{'Item' + index}</Item>))}
 						</Scroller>
 					</div>
+					<br />
 					<div>
 						<Button onClick={this.nextPanel}>A</Button>
 						<Button onClick={this.nextPanel}>B</Button>
