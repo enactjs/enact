@@ -124,28 +124,12 @@ class VirtualListBasic extends Component {
 		}),
 
 		/**
-		 * Disable voice control feature of component.
+		 * TBD
 		 *
-		 * @type {Boolean}
-		 * @public
+		 * @type {Object}
+		 * @private
 		 */
-		'data-webos-voice-disabled': PropTypes.bool,
-
-		/**
-		 * Activates the component for voice control.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		'data-webos-voice-focused': PropTypes.bool,
-
-		/**
-		 * The voice control group label.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		'data-webos-voice-group-label': PropTypes.string,
+		containerProps: PropTypes.object,
 
 		/**
 		 * The number of items of data the list contains.
@@ -1222,7 +1206,7 @@ class VirtualListBasic extends Component {
 
 	render () {
 		const
-			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, placeholderRenderer, role, style, scrollMode, ...rest} = this.props,
+			{className, containerProps, placeholderRenderer, role, style, scrollMode, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, primary} = this,
 			scrollModeNative = scrollMode === 'native',
 			containerClasses = classNames(
@@ -1263,7 +1247,7 @@ class VirtualListBasic extends Component {
 		}
 
 		return (
-			<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.scrollContentRef} style={style}>
+			<div className={containerClasses} {...containerProps} ref={this.props.scrollContentRef} style={style}>
 				<div {...rest} className={contentClasses} ref={this.contentRef} role={role}>
 					{[...cc, placeholderRenderer && placeholderRenderer(primary)]}
 				</div>

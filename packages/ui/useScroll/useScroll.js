@@ -87,9 +87,6 @@ const useScrollBase = (props) => {
 			children,
 			className,
 			clientSize,
-			'data-webos-voice-disabled': voiceDisabled,
-			'data-webos-voice-focused': voiceFocused,
-			'data-webos-voice-group-label': voiceGroupLabel,
 			assignProperties,
 			dataSize,
 			direction,
@@ -1517,12 +1514,6 @@ const useScrollBase = (props) => {
 		})
 	});
 
-	const voiceProps = {
-		'data-webos-voice-disabled': voiceDisabled,
-		'data-webos-voice-focused': voiceFocused,
-		'data-webos-voice-group-label': voiceGroupLabel
-	};
-
 	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
 		{
 			childProps,
@@ -1540,7 +1531,6 @@ const useScrollBase = (props) => {
 
 	assignProperties('scrollContentProps', {
 		...scrollContentProps,
-		...voiceProps,
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
 		direction,
