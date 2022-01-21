@@ -172,6 +172,30 @@ function getContainerRect (containerId) {
 	return getRect(containerNode);
 }
 
+function isStandardFocusable (element) {
+	if ((element.tabIndex < 0) || isAtagWithoutHref(element) || isActuallyDisabled(element) || isExpresslyInert(element) ) {
+		return false;
+	} else if ((!element.parentElement) || (element.tabIndex >= 0)) {
+		return true;
+	}
+}
+
+function isAtagWithoutHref (element) {
+	return (element.tagName === 'A' && element.getAttribute('href') === null && element.getAttribute('tabIndex') === null);
+}
+
+function isActuallyDisabled (element) {
+	if (['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'OPTGROUP', 'OPTION', 'FIELDSET'].includes(element.tagName)) {
+		return (element.disabled);
+	} else {
+		return false;
+	}
+}
+
+function isExpresslyInert (element) {
+	return ((element.inert) && (!element.ownerDocument.documentElement.inert));
+}
+
 export {
 	contains,
 	getContainerRect,
@@ -179,6 +203,7 @@ export {
 	getRect,
 	getRects,
 	intersects,
+	isStandardFocusable,
 	matchSelector,
 	parseSelector
 };

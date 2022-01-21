@@ -949,7 +949,20 @@ const Spotlight = (function () {
 		 */
 		focusNextFromPoint: spotNextFromPoint
 	};
+	window.addEventListener('load', () => {
+		if (typeof window === 'object' && !_initialized) {
+			Spotlight.initialize({
+				selector: '.' + spottableClass,
+				restrict: 'none'
+			});
 
+			Spotlight.set(rootContainerId, {
+				overflow: true
+			});
+
+			Spotlight.focus();
+		}
+	});
 	return exports;
 
 })();
