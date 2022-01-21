@@ -12,7 +12,7 @@ import {coerceArray} from '@enact/core/util';
 import intersection from 'ramda/src/intersection';
 import last from 'ramda/src/last';
 
-import {contains, matchSelector, getContainerRect, getRect, intersects} from './utils';
+import {contains, matchSelector, getContainerRect, getRect, intersects, isStandardFocusable} from './utils';
 
 const containerAttribute = 'data-spotlight-id';
 const containerConfigs   = new Map();
@@ -89,7 +89,10 @@ let GlobalConfig = {
  * @private
  */
 const querySelector = (node, includeSelector, excludeSelector) => {
-	const include = new Set(node.querySelectorAll(includeSelector));
+	let include = new Set(node.querySelectorAll(includeSelector));
+	const focusables = Array.prototype.filter.call(node.getElementsByTagName('*'), isStandardFocusable);
+	include = new Set([...include, ...focusables]);
+
 	const exclude = node.querySelectorAll(excludeSelector);
 
 	for (let i = 0; i < exclude.length; i++) {
@@ -595,7 +598,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const config = getContainerConfig(containerId);
-	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
+	if (verify && config && config.selector && !isContainer(node) && !(matchSelector(config.selector, node) || isStandardFocusable(node))) {
 		return false;
 	}
 
