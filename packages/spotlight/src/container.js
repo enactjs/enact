@@ -294,6 +294,36 @@ const getOwnedNodes = (node, selector) => {
 	return [];
 };
 
+function isFocusable (element) {
+	if ((element.tabIndex < 0) || isAtagWithoutHref(element) || isActuallyDisabled(element) || isExpresslyInert(element) ) {
+		return false;
+	} else if ((!element.parentElement) || (element.tabIndex >= 0)) {
+		return true;
+	}
+}
+
+function isAtagWithoutHref (element) {
+	return (element.tagName === 'A' && element.getAttribute('href') === null && element.getAttribute('tabIndex') === null);
+}
+
+function isActuallyDisabled (element) {
+	if (['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'OPTGROUP', 'OPTION', 'FIELDSET'].includes(element.tagName)) {
+		return (element.disabled);
+	} else {
+		return false;
+	}
+}
+
+function isExpresslyInert (element) {
+	return ((element.inert) && (!element.ownerDocument.documentElement.inert));
+}
+
+const getFocusableDescendants = (containerId) => {
+	const node = getContainerNode(containerId);
+	const focusables = Array.prototype.filter.call(node.getElementsByTagName('*'), isFocusable);
+	return focusables;
+};
+
 /**
  * Determines all spottable elements and containers that are directly contained by the container
  * identified by `containerId` and no other subcontainers.
@@ -343,7 +373,7 @@ const getSpottableDescendants = (containerId) => {
  * @private
  */
 const getDeepSpottableDescendants = (containerId, excludedContainers) => {
-	return getSpottableDescendants(containerId)
+	return getFocusableDescendants(containerId)
 		.map(n => {
 			if (isContainer(n)) {
 				const id = getContainerId(n);
@@ -577,25 +607,26 @@ const configureDefaults = (config) => {
  * @public
  */
 const isNavigable = (node, containerId, verify) => {
-	if (!node || (
-		// jsdom reports all nodes as having no size so we must skip this condition in our tests
-		process.env.NODE_ENV !== 'test' &&
-		node.offsetWidth <= 0 && node.offsetHeight <= 0
-	)) {
-		return false;
-	}
+	return true;
+	// if (!node || (
+	// 	// jsdom reports all nodes as having no size so we must skip this condition in our tests
+	// 	process.env.NODE_ENV !== 'test' &&
+	// 	node.offsetWidth <= 0 && node.offsetHeight <= 0
+	// )) {
+	// 	return false;
+	// }
 
-	const containerNode = getContainerNode(containerId);
-	if (containerNode !== document && containerNode.dataset[disabledKey] === 'true') {
-		return false;
-	}
+	// const containerNode = getContainerNode(containerId);
+	// if (containerNode !== document && containerNode.dataset[disabledKey] === 'true') {
+	// 	return false;
+	// }
 
-	const config = getContainerConfig(containerId);
-	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
-		return false;
-	}
+	// const config = getContainerConfig(containerId);
+	// if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
+	// 	return false;
+	// }
 
-	return navigableFilter(node, containerId);
+	// return navigableFilter(node, containerId);
 };
 
 /**
