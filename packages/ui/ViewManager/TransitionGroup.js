@@ -15,7 +15,7 @@ import propEq from 'ramda/src/propEq';
 import remove from 'ramda/src/remove';
 import unionWith from 'ramda/src/unionWith';
 import useWith from 'ramda/src/useWith';
-import {Children, cloneElement, createElement, Component} from 'react';
+import {Children, cloneElement, createElement, Component, startTransition} from 'react';
 
 /**
  * Returns the index of a child in an array found by `key` matching
@@ -213,8 +213,10 @@ class TransitionGroup extends Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		this.reconcileUnmountedChildren(prevState.children, this.state.children);
-		this.reconcileChildren(prevState.activeChildren, this.state.activeChildren);
+		startTransition(() => {
+			this.reconcileUnmountedChildren(prevState.children, this.state.children);
+			this.reconcileChildren(prevState.activeChildren, this.state.activeChildren);
+		})
 	}
 
 	reconcileUnmountedChildren (prevChildMapping, nextChildMapping) {

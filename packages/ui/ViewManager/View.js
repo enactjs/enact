@@ -3,7 +3,7 @@
  */
 
 import {Job} from '@enact/core/util';
-import {cloneElement, Children, Component} from 'react';
+import {cloneElement, Children, Component, startTransition} from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 
@@ -184,7 +184,9 @@ class View extends Component {
 	componentWillAppear (callback) {
 		const {arranger} = this.props;
 		if (arranger && arranger.stay) {
-			this.prepareTransition(arranger.stay, callback, true);
+			startTransition(()=> {
+				this.prepareTransition(arranger.stay, callback, true);
+			})
 		} else {
 			callback();
 		}
@@ -205,7 +207,10 @@ class View extends Component {
 			this.setState({entering: true});
 		}
 		if (arranger) {
-			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
+			startTransition(()=> {
+				console.log("inside startTransition");
+				this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
+			})
 		} else {
 			callback();
 		}
@@ -226,7 +231,9 @@ class View extends Component {
 	componentWillStay (callback) {
 		const {arranger} = this.props;
 		if (arranger && arranger.stay) {
-			this.prepareTransition(arranger.stay, callback);
+			startTransition(()=> {
+				this.prepareTransition(arranger.stay, callback);
+			})
 		} else {
 			callback();
 		}
@@ -239,7 +246,9 @@ class View extends Component {
 		const {arranger, reverseTransition} = this.props;
 		this.enteringJob.stop();
 		if (arranger) {
-			this.prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback);
+			startTransition(()=> {
+				this.prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback);
+			})
 		} else {
 			callback();
 		}
