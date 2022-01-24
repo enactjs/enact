@@ -2,10 +2,11 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased] 
+## [unreleased]
 
 ### Fixed
 
+- `spotlight` to correctly control focus when boundaries of an element are not integers
 - Styles for `debug spotlight` option in samplers to work properly
 
 ## [4.1.2] - 2021-12-22

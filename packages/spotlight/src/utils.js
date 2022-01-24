@@ -60,18 +60,19 @@ const testIntersection = (type, containerRect, elementRect) => {
 		bottom: b
 	} = elementRect;
 
-	const right = r >= L && r <= R;
-	const left = l >= L && l <= R;
-	const top = t >= T && t <= B;
-	const bottom = b >= T && b <= B;
-
 	if (type === 'intersects') {
-		const aroundV = t < T && b > B;
-		const aroundH = l < L && r > R;
-
-		return (top || bottom || aroundV) && (left || right || aroundH);
+		// Test intersection by eliminating the area of the element that is outside of the container
+		return !(b < T || t > B || r < L || l > R);
 	} else if (type === 'contains') {
-		return top && bottom && left && right;
+		const epsilon = 1;
+
+		// Test whether all bounds are within the container
+		return (
+			r > L - epsilon && r < R + epsilon && // right
+			l > L - epsilon && l < R + epsilon && // left
+			t > T - epsilon && t < B + epsilon && // top
+			b > T - epsilon && b < B + epsilon    // bottom
+		);
 	}
 
 	return true;
