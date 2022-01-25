@@ -935,7 +935,6 @@ const Spotlight = (function () {
 		focusNextFromPoint: spotNextFromPoint
 	};
 	window.addEventListener('load', () => {
-		console.log('load');
 		if (typeof window === 'object' && !_initialized) {
 			Spotlight.initialize({
 				selector: '.' + spottableClass,
