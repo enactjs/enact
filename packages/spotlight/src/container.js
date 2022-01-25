@@ -294,7 +294,6 @@ const getOwnedNodes = (node, selector) => {
 	return [];
 };
 
-
 /**
  * Determines all spottable elements and containers that are directly contained by the container
  * identified by `containerId` and no other subcontainers.
