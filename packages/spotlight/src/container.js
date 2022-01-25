@@ -11,7 +11,7 @@ import {coerceArray} from '@enact/core/util';
 import intersection from 'ramda/src/intersection';
 import last from 'ramda/src/last';
 
-import {contains, matchSelector, getContainerRect, getRect, intersects} from './utils';
+import {contains, matchSelector, getContainerRect, getRect, intersects, isStandardFocusable} from './utils';
 
 const containerAttribute = 'data-spotlight-id';
 const containerConfigs   = new Map();
@@ -88,17 +88,17 @@ let GlobalConfig = {
  * @private
  */
 const querySelector = (node, includeSelector, excludeSelector) => {
-	const include = Array.prototype.slice.call(node.querySelectorAll(includeSelector));
+	let include = new Set(node.querySelectorAll(includeSelector));
+	const focusables = Array.prototype.filter.call(node.getElementsByTagName('*'), isStandardFocusable);
+	include = new Set([...include, ...focusables]);
+
 	const exclude = node.querySelectorAll(excludeSelector);
 
 	for (let i = 0; i < exclude.length; i++) {
-		const index = include.indexOf(exclude.item(i));
-		if (index >= 0) {
-			include.splice(index, 1);
-		}
+		include.delete(exclude[i]);
 	}
 
-	return include;
+	return Array.from(include);
 };
 
 /**
@@ -294,35 +294,6 @@ const getOwnedNodes = (node, selector) => {
 	return [];
 };
 
-function isFocusable (element) {
-	if ((element.tabIndex < 0) || isAtagWithoutHref(element) || isActuallyDisabled(element) || isExpresslyInert(element) ) {
-		return false;
-	} else if ((!element.parentElement) || (element.tabIndex >= 0)) {
-		return true;
-	}
-}
-
-function isAtagWithoutHref (element) {
-	return (element.tagName === 'A' && element.getAttribute('href') === null && element.getAttribute('tabIndex') === null);
-}
-
-function isActuallyDisabled (element) {
-	if (['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'OPTGROUP', 'OPTION', 'FIELDSET'].includes(element.tagName)) {
-		return (element.disabled);
-	} else {
-		return false;
-	}
-}
-
-function isExpresslyInert (element) {
-	return ((element.inert) && (!element.ownerDocument.documentElement.inert));
-}
-
-const getFocusableDescendants = (containerId) => {
-	const node = getContainerNode(containerId);
-	const focusables = Array.prototype.filter.call(node.getElementsByTagName('*'), isFocusable);
-	return focusables;
-};
 
 /**
  * Determines all spottable elements and containers that are directly contained by the container
@@ -373,7 +344,7 @@ const getSpottableDescendants = (containerId) => {
  * @private
  */
 const getDeepSpottableDescendants = (containerId, excludedContainers) => {
-	return getFocusableDescendants(containerId)
+	return getSpottableDescendants(containerId)
 		.map(n => {
 			if (isContainer(n)) {
 				const id = getContainerId(n);
@@ -607,26 +578,25 @@ const configureDefaults = (config) => {
  * @public
  */
 const isNavigable = (node, containerId, verify) => {
-	return true;
-	// if (!node || (
-	// 	// jsdom reports all nodes as having no size so we must skip this condition in our tests
-	// 	process.env.NODE_ENV !== 'test' &&
-	// 	node.offsetWidth <= 0 && node.offsetHeight <= 0
-	// )) {
-	// 	return false;
-	// }
+	if (!node || (
+		// jsdom reports all nodes as having no size so we must skip this condition in our tests
+		process.env.NODE_ENV !== 'test' &&
+		node.offsetWidth <= 0 && node.offsetHeight <= 0
+	)) {
+		return false;
+	}
 
-	// const containerNode = getContainerNode(containerId);
-	// if (containerNode !== document && containerNode.dataset[disabledKey] === 'true') {
-	// 	return false;
-	// }
+	const containerNode = getContainerNode(containerId);
+	if (containerNode !== document && containerNode.dataset[disabledKey] === 'true') {
+		return false;
+	}
 
-	// const config = getContainerConfig(containerId);
-	// if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
-	// 	return false;
-	// }
+	const config = getContainerConfig(containerId);
+	if (verify && config && config.selector && !isContainer(node) && !(matchSelector(config.selector, node) || isStandardFocusable(node))) {
+		return false;
+	}
 
-	// return navigableFilter(node, containerId);
+	return navigableFilter(node, containerId);
 };
 
 /**
