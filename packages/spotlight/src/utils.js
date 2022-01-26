@@ -171,9 +171,6 @@ function getContainerRect (containerId) {
 	return getRect(containerNode);
 }
 
-/**
- * Determines all focusable elements
- */
 function isStandardFocusable (element) {
 	if ((element.tabIndex < 0) || isAtagWithoutHref(element) || isActuallyDisabled(element) || isExpresslyInert(element) ) {
 		return false;
