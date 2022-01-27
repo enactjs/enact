@@ -1,4 +1,4 @@
-import {addAll, removeAll} from '@enact/core/keymap';
+import {addAll, removeAll} from '../core/keymap';
 
 import {
 	getLastPointerPosition,

@@ -18,13 +18,12 @@
  * @exports getDirection
  */
 
-import {is} from '@enact/core/keymap';
-import {isWindowReady} from '@enact/core/snapshot';
-import platform from '@enact/core/platform';
+import {is} from './core/keymap';
+import {isWindowReady} from './core/snapshot';
+import platform from './core/platform';
 import last from 'ramda/src/last';
 
 import Accelerator from '../Accelerator';
-import {spottableClass} from '../Spottable';
 import {isPaused, pause, resume} from '../Pause';
 import {contains} from './utils';
 
@@ -82,6 +81,8 @@ import {
 	matchSelector,
 	parseSelector
 } from './utils';
+
+const spottableClass = 'spottable';
 
 const isDown = is('down');
 const isEnter = is('enter');
