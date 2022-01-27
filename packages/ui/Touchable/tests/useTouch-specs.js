@@ -204,13 +204,13 @@ describe('useTouch', () => {
 			);
 			const component = screen.getByTestId('component');
 
-			const clickEv1 = createEvent.mouseDown(component, {ev:{timeStamp: 1}});
-			const clickEv2 = createEvent.mouseUp(component, {ev:{timeStamp: 1}});
-			const clickEv3 = createEvent.click(component, {ev:{timeStamp: 1}});
+			const mouseDownEvent = createEvent.mouseDown(component, {ev:{timeStamp: 1}});
+			const mouseUpEvent = createEvent.mouseUp(component, {ev:{timeStamp: 1}});
+			const clickEvent = createEvent.click(component, {ev:{timeStamp: 1}});
 
-			fireEvent(component, clickEv1);
-			fireEvent(component, clickEv2);
-			fireEvent(component, clickEv3);
+			fireEvent(component, mouseDownEvent);
+			fireEvent(component, mouseUpEvent);
+			fireEvent(component, clickEvent);
 
 			const expected = ['onTap', 'click'];
 			const actual = handler.mock.calls.map(call => call[0].type);
