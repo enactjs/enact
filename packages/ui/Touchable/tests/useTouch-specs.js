@@ -212,7 +212,6 @@ describe('useTouch', () => {
 			fireEvent(component, clickEv2);
 			fireEvent(component, clickEv3);
 
-
 			const expected = ['onTap', 'click'];
 			const actual = handler.mock.calls.map(call => call[0].type);
 
