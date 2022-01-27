@@ -5,8 +5,8 @@
  * @private
  */
 
-import {is} from '@enact/core/keymap';
-import {Job} from '@enact/core/util';
+import {is} from './core/keymap';
+import {Job} from './core/util';
 
 /*
  * Whether Spotlight is in pointer mode (as opposed to 5-way mode).

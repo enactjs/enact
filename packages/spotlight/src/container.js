@@ -7,7 +7,7 @@
 
 import and from 'ramda/src/and';
 import concat from 'ramda/src/concat';
-import {coerceArray} from '@enact/core/util';
+import {coerceArray} from './core/util';
 import intersection from 'ramda/src/intersection';
 import last from 'ramda/src/last';
 
