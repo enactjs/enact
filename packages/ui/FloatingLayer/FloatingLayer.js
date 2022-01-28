@@ -179,6 +179,10 @@ class FloatingLayerBase extends Component {
 		}
 	}
 
+	generateId = () => {
+		return Math.random().toString(36).substr(2, 8);
+	};
+
 	handleNotify = oneOf(
 		[forEventProp('action', 'close'), call('handleClose')],
 		[forEventProp('action', 'mount'), call('setFloatingLayer')]
@@ -243,6 +247,7 @@ class FloatingLayerBase extends Component {
 
 	render () {
 		const {children, open, scrimType, ...rest} = this.props;
+		const id = this.generateId();
 
 		delete rest.floatLayerClassName;
 		delete rest.floatLayerId;
@@ -252,13 +257,15 @@ class FloatingLayerBase extends Component {
 		delete rest.onOpen;
 
 		if (open && this.state.nodeRendered) {
-			return ReactDOM.createPortal(
-				<div {...rest}>
+			const portal = ReactDOM.createPortal(
+				<div {...rest} id={id}>
 					{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
 					{cloneElement(children, {onClick: this.stopPropagation})}
 				</div>,
 				this.node
 			);
+
+			return <div aria-owns={id}>{portal}</div>;
 		}
 
 		return null;
