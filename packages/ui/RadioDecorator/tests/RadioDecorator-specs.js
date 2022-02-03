@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {createRef} from 'react';
 
 import {RadioControllerDecorator, RadioDecorator} from '../RadioDecorator';
-import {createRef} from "react";
 
 const expectToBeActive = (controller, decorator) => {
 	expect(controller.active).toBe(decorator && decorator.handleDeactivate);
@@ -155,7 +155,7 @@ describe('RadioDecorator', () => {
 				<Component active ref={parentDecoratorRef} />
 				<Component />
 				<Controller data-child-controller ref={childControllerRef}>
-					<Component active  />
+					<Component active />
 					<Component ref={childDecoratorRef} data-testid="childInactiveDecorator" />
 				</Controller>
 			</Controller>
