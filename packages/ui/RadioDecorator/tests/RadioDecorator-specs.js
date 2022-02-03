@@ -156,7 +156,7 @@ describe('RadioDecorator', () => {
 				<Component />
 				<Controller data-child-controller ref={childControllerRef}>
 					<Component active />
-					<Component ref={childDecoratorRef} data-testid="childInactiveDecorator" />
+					<Component ref={childDecoratorRef} />
 				</Controller>
 			</Controller>
 		);
