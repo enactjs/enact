@@ -18,6 +18,121 @@ import Touchable from '../Touchable';
 
 import componentCss from './Button.module.less';
 
+/* This is a sample for a new custom element
+Reference: https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements
+
+customElements.define('element-name-here', // a name should be kebab-case and cannot be a single word
+	class extends HTMLElement {
+		constructor () {
+			// For the prototype chain
+			super();
+
+			// Set the shadow root
+			const shadowRoot = this.attachShadow({mode: 'open'});
+		}
+
+		static get observedAttributes () { // if we don't have this getter, attributeChangedCallback will be called for any attribute
+			return ['attribute-name-here'];
+		}
+
+		connectedCallback () { // when an element is added to DOM tree
+			console.log('Custom square element added to page.');
+			updateStyle(this);
+		}
+
+		disconnectedCallback () { // when an element is removed from DOM tree
+			console.log('Custom square element removed from page.');
+		}
+
+		adoptedCallback () { // when an element is moved to another DOM tree
+			console.log('Custom square element moved to new page.');
+		}
+
+		attributeChangedCallback (name, oldValue, newValue) { // when an element's attribute is changed
+			console.log('Custom square element attributes changed.');
+			updateStyle(this);
+		}
+	}
+);
+*/
+
+
+/* Define Web Component */
+customElements.define('button-base',
+	class extends HTMLElement {
+		constructor () {
+			// For the prototype chain
+			super();
+
+			// Set the shadow root
+			this.root = this.attachShadow({mode: 'open'});
+
+			this.ref = this.getAttribute('ref');
+			this.removeAttribute('ref')
+
+			/*
+			this.root.applyAuthorStyles = true;
+			this.root.resetStyleInheritance = true;
+			*/
+		}
+
+		/*
+		static get observedAttributes () { // if we don't have this getter, attributeChangedCallback will be called for any attribute
+			return ['attribute-name-here'];
+		}
+		*/
+
+		connectedCallback () { // when an element is added to DOM tree
+			console.log('Custom square element added to page.');
+			this.render();
+			if (typeof this.ref === 'function') {
+				this.ref(this);
+			}
+		}
+
+		/*
+		disconnectedCallback () { // when an element is removed from DOM tree
+			console.log('Custom square element removed from page.');
+		}
+
+		adoptedCallback () { // when an element is moved to another DOM tree
+			console.log('Custom square element moved to new page.');
+		}
+
+		attributeChangedCallback (name, oldValue, newValue) { // when an element's attribute is changed
+			console.log('Custom square element attributes changed.');
+			this.render();
+		}
+		*/
+
+		render () {
+			const cssBg = this.getAttribute('css-bg');
+			const cssClient = this.getAttribute('css-client');
+			const cssDecoration = this.getAttribute('css-decoration');
+			this.removeAttribute('css-bg');
+			this.removeAttribute('css-client');
+			this.removeAttribute('css-decoration');
+
+			const disabled = this.getAttribute('disabled');
+
+			const decoration = this.getAttribute('decoration');
+			this.removeAttribute('decoration');
+
+			if (disabled) {
+				this.setAttribute('aria-disabled', '');
+			}
+			this.root.innerHTML = `
+				${decoration ? (
+					`<div class="${cssDecoration}">${decoration}</div>`
+				) : ''}
+				<div class="${cssBg}"></div>
+				<div class="${cssClient}"><slot name="icon"></slot><slot></slot></div>
+			`;
+		}
+	}
+);
+
+
 /**
  * A basic button component structure without any behaviors applied to it.
  *
@@ -224,7 +339,7 @@ const ButtonBase = kind({
 		}
 	},
 
-	render: ({children, componentRef, css, decoration, disabled, icon, ...rest}) => {
+	render: ({children, className, componentRef, css, decoration, disabled, icon, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconFlip;
 		delete rest.minWidth;
@@ -233,13 +348,29 @@ const ButtonBase = kind({
 		delete rest.size;
 
 		return (
-			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled} ref={componentRef}>
-				{decoration ? (
-					<div className={css.decoration}>{decoration}</div>
-				) : null}
-				<div className={css.bg} />
-				<div className={css.client}>{icon}{children}</div>
-			</div>
+			<>
+				{/*
+				<div role="button" {...rest} aria-disabled={disabled} className={className} disabled={disabled} ref={componentRef}>
+					{decoration ? (
+						<div className={css.decoration}>{decoration}</div>
+					) : null}
+					<div className={css.bg} />
+					<div className={css.client}>{icon}{children}</div>
+				</div>
+				*/}
+				<button-base
+					ref={componentRef} decoration={decoration} disabled={disabled}
+					role="button"
+					css-bg={css.bg}
+					css-client={css.client}
+					css-decoration={css.decoration}
+					class={className}
+					{...rest}
+				>
+					<slot name="icon">{icon}</slot>
+					{children}
+				</button-base>
+			</>
 		);
 	}
 });
