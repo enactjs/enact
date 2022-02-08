@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/ViewManager/View` condition in componentWillUnmount method for fixing skipped unit test
+
 ## [4.1.2] - 2021-12-22
 
 ### Fixed
