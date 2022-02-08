@@ -4,6 +4,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+- Updated to use `forwardCustom` and add `type` when forwarding custom events
+
 ### Fixed
 
 - `spotlight` to correctly control focus when boundaries of an element are not integers

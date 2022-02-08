@@ -25,7 +25,6 @@ describe('RadioDecorator', () => {
 		expect(component).toHaveTextContent('Active');
 	});
 
-
 	test('should not be activated when its prop is false on mount', () => {
 		const Component = RadioDecorator({prop: 'active'}, Item);
 		render(
@@ -58,6 +57,52 @@ describe('RadioDecorator', () => {
 		const secondExpected = 'Active';
 
 		expect(component).toHaveTextContent(secondExpected);
+	});
+
+	test('should fire `activate` event with type when become activated', () => {
+		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
+		const handleActivate = jest.fn();
+		const Wrapper = () => (
+			<Controller>
+				<Component onClick={handleActivate} />
+			</Controller>
+		);
+
+		render(<Wrapper />);
+
+		const component = screen.getByTestId('span-element');
+
+		userEvent.click(component);
+
+		const expected = 1;
+		const expectedType = {type: 'onClick'};
+		const actual = handleActivate.mock.calls.length && handleActivate.mock.calls[0][0];
+
+		expect(handleActivate).toBeCalledTimes(expected);
+		expect(actual).toMatchObject(expectedType);
+	});
+
+	test('should fire `deactivate` event with type when become deactivated', () => {
+		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
+		const handleDeactivate = jest.fn();
+		const Wrapper = () => (
+			<Controller>
+				<Component onClick={handleDeactivate} />
+			</Controller>
+		);
+
+		render(<Wrapper />);
+
+		const component = screen.getByTestId('span-element');
+
+		userEvent.click(component);
+
+		const expected = 1;
+		const expectedType = {type: 'onClick'};
+		const actual = handleDeactivate.mock.calls.length && handleDeactivate.mock.calls[0][0];
+
+		expect(handleDeactivate).toBeCalledTimes(expected);
+		expect(actual).toMatchObject(expectedType);
 	});
 
 	test('should not call deactivate callback on inactive items', () => {

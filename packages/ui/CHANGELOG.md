@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Changed
 
 - `ui/ViewManager/View` condition in componentWillUnmount method for fixing skipped unit test
+- Updated to use `forwardCustom` and add `type` when forwarding custom events
 
 ## [4.1.2] - 2021-12-22
 

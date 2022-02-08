@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 
 import Transition, {TransitionBase} from '../Transition';
 
@@ -78,6 +78,74 @@ describe('Transition Specs', () => {
 		const actual = screen.getByTestId('transition');
 
 		expect(actual).toHaveClass(expected);
+	});
+
+	test('should fire \'onShow\' event with type when \'visible\' prop bacomes true ', () => {
+		const handleShow = jest.fn();
+		const ChildNode = (props) => <div {...props}>Body</div>;
+
+		const {rerender} = render(
+			<Transition noAnimation onShow={handleShow} visible={false}>
+				<ChildNode />
+			</Transition>
+		);
+
+		rerender(
+			<Transition noAnimation onShow={handleShow} visible>
+				<ChildNode />
+			</Transition>
+		);
+
+		const expected = 1;
+		const expectedType = {type: 'onShow'};
+		const actual = handleShow.mock.calls.length && handleShow.mock.calls[0][0];
+
+		expect(handleShow).toBeCalledTimes(expected);
+		expect(actual).toMatchObject(expectedType);
+	});
+
+	test('should fire \'onHide\' event with type when \'visible\' prop bacomes false ', () => {
+		const handleHide = jest.fn();
+		const ChildNode = (props) => <div {...props}>Body</div>;
+
+		const {rerender} = render(
+			<Transition noAnimation onHide={handleHide} visible>
+				<ChildNode />
+			</Transition>
+		);
+
+		rerender(
+			<Transition noAnimation onHide={handleHide} visible={false}>
+				<ChildNode />
+			</Transition>
+		);
+
+		const expected = 1;
+		const expectedType = {type: 'onHide'};
+		const actual = handleHide.mock.calls.length && handleHide.mock.calls[0][0];
+
+		expect(handleHide).toBeCalledTimes(expected);
+		expect(actual).toMatchObject(expectedType);
+	});
+
+	test('should fire \'onTransitionEnd\' event with type', () => {
+		const handleTransitionEnd = jest.fn();
+		const ChildNode = (props) => <div {...props}>Body</div>;
+
+		render(
+			<Transition onTransitionEnd={handleTransitionEnd}>
+				<ChildNode />
+			</Transition>
+		);
+
+		fireEvent.transitionEnd(screen.getByText('Body'));
+
+		const expected = 1;
+		const expectedType = {type: 'onTransitionEnd'};
+		const actual = handleTransitionEnd.mock.calls.length && handleTransitionEnd.mock.calls[0][0];
+
+		expect(handleTransitionEnd).toBeCalledTimes(expected);
+		expect(actual).toMatchObject(expectedType);
 	});
 
 	// Tests for prop and className combinations
