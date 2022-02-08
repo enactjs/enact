@@ -14,7 +14,7 @@
  */
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import handle, {adaptEvent, call, forward} from '@enact/core/handle';
+import handle, {forwardCustom} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import {Children, Component} from 'react';
 
@@ -238,22 +238,16 @@ const ViewManagerBase = class extends Component {
 		return null;
 	}
 
-	makeTransitionEvent () {
+	makeTransitionEvent = () => {
 		return {index: this.props.index, previousIndex: this.state.prevIndex};
-	}
+	};
 
 	handleTransition = handle(
-		adaptEvent(
-			call('makeTransitionEvent'),
-			forward('onTransition')
-		)
+		forwardCustom('onTransition', this.makeTransitionEvent)
 	).bindAs(this, 'handleTransition');
 
 	handleWillTransition = handle(
-		adaptEvent(
-			call('makeTransitionEvent'),
-			forward('onWillTransition')
-		)
+		forwardCustom('onWillTransition', this.makeTransitionEvent)
 	).bindAs(this, 'handleWillTransition');
 
 	render () {
