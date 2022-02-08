@@ -26,14 +26,16 @@ const DrawingBase = kind({
 
     propTypes: {
         brushSize: PropTypes.number,
-        color: PropTypes.string,
+        brushColor: PropTypes.string,
+		canvasColor: PropTypes.string,
         points: PropTypes.array,
         setIsDrawing: PropTypes.func,
     },
 
     defaultProps: {
         brushSize: 5,
-        color: 'green',
+        brushColor: 'green',
+		canvasColor: 'black',
         points: [],
     },
 
@@ -50,7 +52,8 @@ const DrawingBase = kind({
         },
 
         draw: (event, { points }) => {
-            const { beginPointRef, contextRef, ev, isDrawing } = event;
+            const { beginPointRef, contextRef, ev, isDrawing, setIsDrawing } =
+                event;
             const nativeEvent = ev.nativeEvent;
 
             if (!isDrawing) return;
@@ -61,6 +64,15 @@ const DrawingBase = kind({
             } else {
                 offsetX = nativeEvent.targetTouches[0].pageX;
                 offsetY = nativeEvent.targetTouches[0].pageY;
+            }
+            if (
+                offsetY > window.innerHeight / 2 ||
+                offsetX > window.innerWidth / 2 ||
+                offsetX < 0 ||
+                offsetY < 0
+            ) {
+                setIsDrawing(false);
+                return;
             }
             points.push({ x: offsetX, y: offsetY });
 
@@ -101,7 +113,7 @@ const DrawingBase = kind({
         },
     },
 
-    render: ({ startDrawing, finisDrawing, draw, color, brushSize }) => {
+    render: ({ startDrawing, finisDrawing, draw, brushColor, brushSize, canvasColor }) => {
         const [isDrawing, setIsDrawing] = useState(false);
 
         const beginPointRef = useRef(null);
@@ -117,7 +129,7 @@ const DrawingBase = kind({
             const context = canvas.getContext('2d');
             context.lineCap = 'round';
             context.lineWidth = brushSize;
-            context.strokeStyle = color;
+            context.strokeStyle = brushColor;
 
             contextRef.current = context;
         }, []);
@@ -127,12 +139,18 @@ const DrawingBase = kind({
 
             const context = canvas.getContext('2d');
             context.lineWidth = brushSize;
-            context.strokeStyle = color;
-        }, [brushSize]);
+            context.strokeStyle = brushColor;
+        }, [brushSize, brushColor]);
 
         return (
             <canvas
-                style={{ margin: '0 auto', width: '70vw', height: '70vh', border: '2px solid black' }}
+                style={{
+                    margin: '0 auto',
+                    width: '70vw',
+                    height: '70vh',
+                    border: '2px solid black',
+					backgroundColor: `${canvasColor}`
+                }}
                 className={'drawing-board__canvas'}
                 ref={canvasRef}
                 onMouseDown={(ev) =>
@@ -144,7 +162,13 @@ const DrawingBase = kind({
                     })
                 }
                 onMouseMove={(ev) =>
-                    draw({ isDrawing, contextRef, beginPointRef, ev })
+                    draw({
+                        isDrawing,
+                        contextRef,
+                        beginPointRef,
+                        ev,
+                        setIsDrawing,
+                    })
                 }
                 onMouseUp={() => finisDrawing({ contextRef, setIsDrawing })}
                 onTouchStart={(ev) =>
@@ -156,7 +180,13 @@ const DrawingBase = kind({
                     })
                 }
                 onTouchMove={(ev) =>
-                    draw({ isDrawing, contextRef, beginPointRef, ev })
+                    draw({
+                        isDrawing,
+                        contextRef,
+                        beginPointRef,
+                        ev,
+                        setIsDrawing,
+                    })
                 }
                 onTouchEnd={() => finisDrawing({ contextRef })}
             />
@@ -164,9 +194,7 @@ const DrawingBase = kind({
     },
 });
 
-const DrawingDecorator = compose(
-    ForwardRef({ prop: 'canvasRef' })
-);
+const DrawingDecorator = compose(ForwardRef({ prop: 'canvasRef' }));
 
 const Drawing = DrawingDecorator(DrawingBase);
 
