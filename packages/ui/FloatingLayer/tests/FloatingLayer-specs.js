@@ -48,7 +48,7 @@ describe('FloatingLayer Specs', () => {
 		expect(actual).toMatchObject(expectedType);
 	});
 
-	test('should fire onClose event with type when FloatingLayer is open', () => {
+	test('should fire onClose event with type when FloatingLayer is closed', () => {
 		const handleClose = jest.fn();
 
 		const {rerender} = render(
@@ -69,7 +69,7 @@ describe('FloatingLayer Specs', () => {
 		expect(actual).toMatchObject(expectedType);
 	});
 
-	test('should fire onDimiss event with type when FloatingLayer is open', () => {
+	test('should fire onDimiss event with type when FloatingLayer is closed', () => {
 		const handleDismiss = jest.fn();
 
 		render(

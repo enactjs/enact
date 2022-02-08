@@ -25,7 +25,6 @@ describe('RadioDecorator', () => {
 		expect(component).toHaveTextContent('Active');
 	});
 
-
 	test('should not be activated when its prop is false on mount', () => {
 		const Component = RadioDecorator({prop: 'active'}, Item);
 		render(
@@ -81,7 +80,6 @@ describe('RadioDecorator', () => {
 
 		expect(handleActivate).toBeCalledTimes(expected);
 		expect(actual).toMatchObject(expectedType);
-
 	});
 
 	test('should fire `deactivate` event with type when become deactivated', () => {
@@ -105,7 +103,6 @@ describe('RadioDecorator', () => {
 
 		expect(handleDeactivate).toBeCalledTimes(expected);
 		expect(actual).toMatchObject(expectedType);
-
 	});
 
 	test('should not call deactivate callback on inactive items', () => {

@@ -159,6 +159,22 @@ describe('Toggleable', () => {
 			expect(actual).toMatchObject(expectedType);
 		});
 
+		test('should invoke passed custom "onJiggle" handler with type', () => {
+			// eslint-disable-next-line
+			console.error = () => {};
+			const handleJiggle = jest.fn();
+			const Component = Toggleable({toggleProp: 'onJiggle'}, DivComponent);
+			render(<Component onJiggle={handleJiggle} />);
+			data.onJiggle();
+
+			const expected = 1;
+			const expectedType = {type: 'onJiggle'};
+			const actual = handleJiggle.mock.calls.length && handleJiggle.mock.calls[0][0];
+
+			expect(handleJiggle).toHaveBeenCalledTimes(expected);
+			expect(actual).toMatchObject(expectedType);
+		});
+
 		test('should invoke passed "onActivate" handler with type', () => {
 			// eslint-disable-next-line
 			console.error = () => {};
