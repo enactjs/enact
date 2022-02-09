@@ -27,7 +27,7 @@ const DrawingBase = kind({
     propTypes: {
         brushSize: PropTypes.number,
         brushColor: PropTypes.string,
-		canvasColor: PropTypes.string,
+        canvasColor: PropTypes.string,
         points: PropTypes.array,
         setIsDrawing: PropTypes.func,
     },
@@ -35,7 +35,7 @@ const DrawingBase = kind({
     defaultProps: {
         brushSize: 5,
         brushColor: 'green',
-		canvasColor: 'black',
+        canvasColor: 'black',
         points: [],
     },
 
@@ -52,8 +52,14 @@ const DrawingBase = kind({
         },
 
         draw: (event, { points }) => {
-            const { beginPointRef, contextRef, ev, isDrawing, setIsDrawing } =
-                event;
+            const {
+                beginPointRef,
+                contextRef,
+                ev,
+                isDrawing,
+                setIsDrawing,
+                offset,
+            } = event;
             const nativeEvent = ev.nativeEvent;
 
             if (!isDrawing) return;
@@ -62,8 +68,8 @@ const DrawingBase = kind({
                 offsetX = nativeEvent.offsetX;
                 offsetY = nativeEvent.offsetY;
             } else {
-                offsetX = nativeEvent.targetTouches[0].pageX;
-                offsetY = nativeEvent.targetTouches[0].pageY;
+                offsetX = nativeEvent.targetTouches[0].pageX - offset.x;
+                offsetY = nativeEvent.targetTouches[0].pageY - offset.y;
             }
             if (
                 offsetY > window.innerHeight / 2 ||
@@ -113,25 +119,36 @@ const DrawingBase = kind({
         },
     },
 
-    render: ({ startDrawing, finisDrawing, draw, brushColor, brushSize, canvasColor }) => {
+    render: ({
+        startDrawing,
+        finisDrawing,
+        draw,
+        brushColor,
+        brushSize,
+        canvasColor,
+    }) => {
         const [isDrawing, setIsDrawing] = useState(false);
 
         const beginPointRef = useRef(null);
         const canvasRef = useRef(null);
         const contextRef = useRef(null);
+        const [offset, setOffset] = useState();
         useEffect(() => {
             const canvas = canvasRef.current;
             canvas.height = window.innerHeight / 2;
             canvas.width = window.innerWidth / 2;
             canvas.style.height = `${window.innerHeight / 2}px`;
             canvas.style.width = `${window.innerWidth / 2}px`;
-
             const context = canvas.getContext('2d');
             context.lineCap = 'round';
             context.lineWidth = brushSize;
             context.strokeStyle = brushColor;
-
             contextRef.current = context;
+			
+            setOffset({
+                x: canvas.getBoundingClientRect().left,
+                y: canvas.getBoundingClientRect().top,
+            });
         }, []);
 
         useEffect(() => {
@@ -148,8 +165,8 @@ const DrawingBase = kind({
                     margin: '0 auto',
                     width: '70vw',
                     height: '70vh',
-                    border: '2px solid black',
-					backgroundColor: `${canvasColor}`
+                    border: '2px solid pink',
+                    backgroundColor: `${canvasColor}`,
                 }}
                 className={'drawing-board__canvas'}
                 ref={canvasRef}
@@ -168,6 +185,7 @@ const DrawingBase = kind({
                         beginPointRef,
                         ev,
                         setIsDrawing,
+                        offset,
                     })
                 }
                 onMouseUp={() => finisDrawing({ contextRef, setIsDrawing })}
@@ -186,9 +204,10 @@ const DrawingBase = kind({
                         beginPointRef,
                         ev,
                         setIsDrawing,
+						offset
                     })
                 }
-                onTouchEnd={() => finisDrawing({ contextRef })}
+                onTouchEnd={() => finisDrawing({ contextRef, setIsDrawing })}
             />
         );
     },
