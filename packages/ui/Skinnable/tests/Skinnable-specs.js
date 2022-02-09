@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
+import {memo} from "react";
 
 import Skinnable from '../Skinnable';
 
@@ -376,7 +377,7 @@ describe('Skinnable Specs', () => {
 		expect(component).toHaveClass(expected);
 	});
 
-	test.skip('should not force re-render of child if child unaffected', () => {
+	test('should not force re-render of child if child unaffected', () => {
 		const config = {
 			defaultSkin: 'dark',
 			defaultVariants: 'normal',
@@ -392,23 +393,26 @@ describe('Skinnable Specs', () => {
 			<div {...props} />
 		);
 
-		const ChildComponent = () => {
+		const ChildComponent = memo(() => {
 			wasRendered();
 			return <div>Hello</div>;
-		};
+		});
 
 		const SkinnableParent = Skinnable(config, Component);
 		const SkinnableChild = Skinnable(config, ChildComponent);
 
 		// eslint-disable-next-line
-		const subject = mount(
+		const {rerender} = render(
 			<SkinnableParent>
 				<SkinnableChild />
 			</SkinnableParent>
 		);
 
-		// Sending props to force parent to re-render
-		subject.setProps({className: 'foo'});
+		rerender(
+			<SkinnableParent className='foo'>
+				<SkinnableChild />
+			</SkinnableParent>
+		);
 
 		const expected = 1;
 		const actual = wasRendered.mock.calls.length;
