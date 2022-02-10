@@ -401,7 +401,6 @@ describe('Skinnable Specs', () => {
 		const SkinnableParent = Skinnable(config, Component);
 		const SkinnableChild = Skinnable(config, ChildComponent);
 
-		// eslint-disable-next-line
 		const {rerender} = render(
 			<SkinnableParent>
 				<SkinnableChild />
