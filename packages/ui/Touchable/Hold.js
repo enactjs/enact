@@ -27,11 +27,12 @@ class Hold {
 		this.holdConfig = {
 			...defaultConfig,
 			...holdConfig,
-			onHoldStart,
-			onHoldEnd,
-			onHold,
 			resume: !noResume
 		};
+
+		this.onHold = onHold;
+		this.onHoldStart = onHoldStart;
+		this.onHoldEnd = onHoldEnd;
 
 		// copy the events array since it is mutated for each hold
 		this.holdConfig.events = this.holdConfig.events.slice();
@@ -49,15 +50,15 @@ class Hold {
 		}
 	};
 
-	// This method will get the `onHoldStart`, `onHoldEnd`, `onHold` props and update in the existing `holdConfig`.
+	// This method will get the `onHoldStart`, `onHoldEnd`, `onHold` props.
 	updateProps = ({onHoldStart, onHoldEnd, onHold}) => {
 		// check `isHolding` gesture is not in progress. Check if gesture exists before updating the references to the `holdConfig`
 		if (!this.isHolding()) return;
 
 		// Update the original values with new values of the gestures
-		this.holdConfig.onHold = onHold;
-		this.holdConfig.onHoldStart = onHoldStart;
-		this.holdConfig.onHoldEnd = onHoldEnd;
+		this.onHold = onHold;
+		this.onHoldStart = onHoldStart;
+		this.onHoldEnd = onHoldEnd;
 	};
 
 	move = (coords) => {
@@ -91,10 +92,9 @@ class Hold {
 	end = () => {
 		if (!this.isHolding()) return;
 
-		const {onHoldEnd} = this.holdConfig;
-		if (this.pulsing && onHoldEnd) {
+		if (this.pulsing && this.onHoldEnd) {
 			const time = window.performance.now() - this.holdStart;
-			onHoldEnd({
+			this.onHoldEnd({
 				type: 'onHoldEnd',
 				time
 			});
@@ -154,10 +154,10 @@ class Hold {
 
 		let n = this.next;
 		while (n && n.time <= holdTime) {
-			const {events, onHoldStart} = this.holdConfig;
+			const {events} = this.holdConfig;
 			this.pulsing = true;
-			if (onHoldStart) {
-				onHoldStart({
+			if (this.onHoldStart) {
+				this.onHoldStart({
 					type: 'onHoldStart',
 					...n
 				});
@@ -174,10 +174,8 @@ class Hold {
 		}
 
 		if (this.pulsing) {
-			const {onHold} = this.holdConfig;
-
-			if (onHold) {
-				onHold({
+			if (this.onHold) {
+				this.onHold({
 					type: 'onHold',
 					time: holdTime
 				});
