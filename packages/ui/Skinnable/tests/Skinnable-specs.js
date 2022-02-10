@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
-import {memo} from "react";
+import {memo} from 'react';
 
 import Skinnable from '../Skinnable';
 
@@ -409,7 +409,7 @@ describe('Skinnable Specs', () => {
 		);
 
 		rerender(
-			<SkinnableParent className='foo'>
+			<SkinnableParent className="foo">
 				<SkinnableChild />
 			</SkinnableParent>
 		);
