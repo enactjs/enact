@@ -8,11 +8,11 @@ import css from './Drawing.module.less';
 
 const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing) => {
     contextRef.current.beginPath();
-    if(isErasing) {
-		contextRef.current.globalCompositeOperation = "destination-out";
-	} else {
-		contextRef.current.globalCompositeOperation = "source-over";
-	}
+    if (isErasing) {
+        contextRef.current.globalCompositeOperation = 'destination-out';
+    } else {
+        contextRef.current.globalCompositeOperation = 'source-over';
+    }
     contextRef.current.moveTo(beginPoint.x, beginPoint.y);
     contextRef.current.quadraticCurveTo(
         controlPoint.x,
@@ -35,15 +35,15 @@ const DrawingBase = kind({
         canvasColor: PropTypes.string,
         points: PropTypes.array,
         setIsDrawing: PropTypes.func,
-		isErasing: PropTypes.bool
+        isErasing: PropTypes.bool,
     },
 
     defaultProps: {
         brushSize: 5,
         brushColor: 'green',
         canvasColor: 'black',
-		isErasing: false,
-		points: [],
+        isErasing: false,
+        points: [],
     },
 
     styles: {
@@ -51,11 +51,14 @@ const DrawingBase = kind({
     },
 
     handlers: {
-        clearCanvas: () => {
+        clearCanvas: (event) => {
+            const { canvasRef } = event;
             const canvas = canvasRef.current;
             const context = canvas.getContext('2d');
-            context.fillStyle = 'white';
+
+            contextRef.current.globalCompositeOperation = 'destination-out';
             context.fillRect(0, 0, canvas.width, canvas.height);
+            contextRef.current.globalCompositeOperation = 'source-over';
         },
 
         draw: (event, { points }) => {
@@ -64,7 +67,7 @@ const DrawingBase = kind({
                 contextRef,
                 ev,
                 isDrawing,
-				isErasing,
+                isErasing,
                 setIsDrawing,
                 offset,
             } = event;
@@ -80,8 +83,8 @@ const DrawingBase = kind({
                 offsetY = nativeEvent.targetTouches[0].pageY - offset.y;
             }
             if (
-                offsetY > window.innerHeight / 2 ||
-                offsetX > window.innerWidth / 2 ||
+                offsetY > window.innerHeight / 1.5 ||
+                offsetX > window.innerWidth / 1.5 ||
                 offsetX < 0 ||
                 offsetY < 0
             ) {
@@ -102,7 +105,7 @@ const DrawingBase = kind({
                     controlPoint,
                     endPoint,
                     contextRef,
-					isErasing
+                    isErasing
                 );
                 beginPointRef.current = endPoint;
             }
@@ -132,7 +135,7 @@ const DrawingBase = kind({
         startDrawing,
         finisDrawing,
         draw,
-		isErasing,
+        isErasing,
         brushColor,
         brushSize,
         canvasColor,
@@ -145,10 +148,10 @@ const DrawingBase = kind({
         const [offset, setOffset] = useState();
         useEffect(() => {
             const canvas = canvasRef.current;
-            canvas.height = window.innerHeight / 2;
-            canvas.width = window.innerWidth / 2;
-            canvas.style.height = `${window.innerHeight / 2}px`;
-            canvas.style.width = `${window.innerWidth / 2}px`;
+            canvas.height = window.innerHeight / 1.5;
+            canvas.width = window.innerWidth / 1.5;
+            canvas.style.height = `${window.innerHeight / 1.5}px`;
+            canvas.style.width = `${window.innerWidth / 1.5}px`;
             const context = canvas.getContext('2d');
             context.lineCap = 'round';
             context.lineWidth = brushSize;
@@ -160,7 +163,6 @@ const DrawingBase = kind({
                 y: canvas.getBoundingClientRect().top,
             });
         }, []);
-
         useEffect(() => {
             const canvas = canvasRef.current;
 
@@ -191,7 +193,7 @@ const DrawingBase = kind({
                 onMouseMove={(ev) =>
                     draw({
                         isDrawing,
-						isErasing,
+                        isErasing,
                         contextRef,
                         beginPointRef,
                         ev,
@@ -211,12 +213,12 @@ const DrawingBase = kind({
                 onTouchMove={(ev) =>
                     draw({
                         isDrawing,
-						isErasing,
+                        isErasing,
                         contextRef,
                         beginPointRef,
                         ev,
                         setIsDrawing,
-						offset
+                        offset,
                     })
                 }
                 onTouchEnd={() => finisDrawing({ contextRef, setIsDrawing })}
