@@ -3,7 +3,7 @@
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {useRef, useEffect, useState, useImperativeHandle} from 'react';
+import {useImperativeHandle, useEffect, useRef, useState} from 'react';
 
 import EnactPropTypes from '../../core/internal/prop-types';
 import ForwardRef from '../ForwardRef';
@@ -66,8 +66,8 @@ const DrawingBase = kind({
 				ev,
 				isDrawing,
 				isErasing,
-				setIsDrawing,
-				offset
+				offset,
+				setIsDrawing
 			} = event;
 			const nativeEvent = ev.nativeEvent;
 
@@ -131,15 +131,15 @@ const DrawingBase = kind({
 	},
 
 	render: ({
-		startDrawing,
-		finisDrawing,
-		draw,
-		drawingRef,
-		disabled,
-		isErasing,
 		brushColor,
 		brushSize,
 		canvasColor,
+		disabled,
+		draw,
+		drawingRef,
+		isErasing,
+		finisDrawing,
+		startDrawing,
 		...rest
 	}) => {
 
@@ -173,7 +173,7 @@ const DrawingBase = kind({
 			const context = canvas.getContext('2d');
 			context.lineWidth = brushSize;
 			context.strokeStyle = brushColor;
-		}, [brushSize, brushColor]);
+		}, [brushColor, brushSize]);
 
 		useImperativeHandle(drawingRef, () => ({
 			clearCanvas: () => {
