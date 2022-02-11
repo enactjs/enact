@@ -4,10 +4,11 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import {useRef, useEffect, useState, useImperativeHandle} from 'react';
+
+import EnactPropTypes from '../../core/internal/prop-types';
 import ForwardRef from '../ForwardRef';
 
 import css from './Drawing.module.less';
-import EnactPropTypes from '../../core/internal/prop-types';
 
 const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing) => {
 	contextRef.current.beginPath();
@@ -36,6 +37,7 @@ const DrawingBase = kind({
 		brushColor: PropTypes.string,
 		brushSize: PropTypes.number,
 		canvasColor: PropTypes.string,
+		disabled: PropTypes.bool,
 		drawingRef: EnactPropTypes.ref,
 		isErasing: PropTypes.bool,
 		points: PropTypes.array,
@@ -117,8 +119,7 @@ const DrawingBase = kind({
 		startDrawing: (event, {points}) => {
 			const {beginPointRef, contextRef, disabled, ev, setIsDrawing} = event;
 			const nativeEvent = ev.nativeEvent;
-			
-			if(disabled) return;
+			if (disabled) return;
 
 			const {offsetX, offsetY} = nativeEvent;
 			contextRef.current.beginPath(); // start a canvas path
@@ -176,7 +177,7 @@ const DrawingBase = kind({
 
 		useImperativeHandle(drawingRef, () => ({
 			clearCanvas: () => {
-				if(disabled) return;
+				if (disabled) return;
 
 				const canvas = canvasRef.current;
 				const context = canvas.getContext('2d');
