@@ -115,8 +115,10 @@ const DrawingBase = kind({
 		},
 
 		startDrawing: (event, {points}) => {
-			const {beginPointRef, contextRef, ev, setIsDrawing} = event;
+			const {beginPointRef, contextRef, disabled, ev, setIsDrawing} = event;
 			const nativeEvent = ev.nativeEvent;
+			
+			if(disabled) return;
 
 			const {offsetX, offsetY} = nativeEvent;
 			contextRef.current.beginPath(); // start a canvas path
@@ -132,6 +134,7 @@ const DrawingBase = kind({
 		finisDrawing,
 		draw,
 		drawingRef,
+		disabled,
 		isErasing,
 		brushColor,
 		brushSize,
@@ -173,6 +176,8 @@ const DrawingBase = kind({
 
 		useImperativeHandle(drawingRef, () => ({
 			clearCanvas: () => {
+				if(disabled) return;
+
 				const canvas = canvasRef.current;
 				const context = canvas.getContext('2d');
 
@@ -189,13 +194,13 @@ const DrawingBase = kind({
 				style={{
 					backgroundColor: `${canvasColor}`
 				}}
-				className={'drawing-board__canvas'}
 				ref={canvasRef}
 				onMouseDown={(ev) =>
 					startDrawing({
 						setIsDrawing,
 						ev,
 						contextRef,
+						disabled,
 						beginPointRef
 					})
 				}
@@ -214,6 +219,7 @@ const DrawingBase = kind({
 				onTouchStart={(ev) =>
 					startDrawing({
 						setIsDrawing,
+						disabled,
 						ev,
 						contextRef,
 						beginPointRef
