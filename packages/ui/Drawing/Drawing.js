@@ -248,3 +248,8 @@ const DrawingDecorator = compose(ForwardRef({prop: 'drawingRef'}));
 const Drawing = DrawingDecorator(DrawingBase);
 
 export default Drawing;
+export {
+	Drawing,
+	DrawingBase,
+	DrawingDecorator
+};
