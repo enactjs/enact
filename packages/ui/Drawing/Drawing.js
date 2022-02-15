@@ -105,9 +105,9 @@ const DrawingBase = kind({
 		drawingRef: EnactPropTypes.ref,
 
 		/**
-		 * Indicates if the drawing mode is erasing.
+		 * Indicates if the drawing is in erasing mode.
 		 *
-		 * When `true`, the canvas` globalCompositeOperation property will be 'destination-out'.
+		 * When `true`, the canvas' globalCompositeOperation property will be 'destination-out'.
 		 *
 		 * @type {Boolean}
 		 * @default false
