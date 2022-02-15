@@ -20,7 +20,8 @@ import ForwardRef from '../ForwardRef';
 import css from './Drawing.module.less';
 
 /*
-*/
+ * Executes the drawing on the canvas.
+ */
 const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing) => {
 	contextRef.current.beginPath();
 	if (isErasing) {
