@@ -8,7 +8,7 @@ const DrawingConfig = mergeComponentMetadata('Drawing', Drawing);
 export default {
 	title: 'UI/Drawing',
 	component: 'Drawing'
-}
+};
 
 export const _Drawing = (args) => (
 	<Drawing
@@ -22,7 +22,7 @@ export const _Drawing = (args) => (
 select('brushColor', _Drawing, ['red', 'green', 'blue']);
 select('canvasColor', _Drawing, ['black', 'white']);
 range('brushSize', _Drawing, DrawingConfig, {min: 1, max: 50}, 4);
-boolean('isErasing', _Drawing)
+boolean('isErasing', _Drawing);
 
 _Drawing.parameters = {
 	info: {
