@@ -34,6 +34,7 @@ const DrawingBase = kind({
 	functional: true,
 
 	propTypes: {
+		backgroundImage: PropTypes.string,
 		brushColor: PropTypes.string,
 		brushSize: PropTypes.number,
 		canvasColor: PropTypes.string,
@@ -45,6 +46,7 @@ const DrawingBase = kind({
 	},
 
 	defaultProps: {
+		backgroundImage: '',
 		brushColor: 'green',
 		brushSize: 5,
 		canvasColor: 'black',
@@ -130,10 +132,24 @@ const DrawingBase = kind({
 		}
 	},
 
+	computed: {
+		backgroundStyle: ({canvasColor, backgroundImage}) => {
+
+			if (!backgroundImage) return {backgroundColor: `${canvasColor}`};
+
+			return {
+				backgroundImage: `url(${backgroundImage})`,
+				backgroundPosition: 'center',
+				backgroundRepeat: 'no-repeat',
+				backgroundSize: 'cover'
+			};
+		}
+	},
+
 	render: ({
+		backgroundStyle,
 		brushColor,
 		brushSize,
-		canvasColor,
 		disabled,
 		draw,
 		drawingRef,
@@ -148,6 +164,8 @@ const DrawingBase = kind({
 		const canvasRef = useRef(null);
 		const contextRef = useRef(null);
 		const [offset, setOffset] = useState();
+
+		delete rest.backgroundImage;
 
 		useEffect(() => {
 			const canvas = canvasRef.current;
@@ -192,9 +210,7 @@ const DrawingBase = kind({
 		return (
 			<canvas
 				{...rest}
-				style={{
-					backgroundColor: `${canvasColor}`
-				}}
+				style={backgroundStyle}
 				ref={canvasRef}
 				onMouseDown={(ev) =>
 					startDrawing({
