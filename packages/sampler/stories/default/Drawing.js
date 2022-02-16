@@ -1,7 +1,6 @@
+import Drawing from '@enact/ui/Drawing';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import {boolean, range, select} from '@enact/storybook-utils/addons/controls';
-
-import Drawing from '../../../ui/Drawing';
 
 const DrawingConfig = mergeComponentMetadata('Drawing', Drawing);
 
