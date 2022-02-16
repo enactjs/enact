@@ -554,7 +554,7 @@ const Spotlight = (function () {
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
 
-				if (platform.touch) {
+				if (platform.touchscreen) {
 					window.addEventListener('touchend', onTouchEnd);
 				}
 
@@ -586,7 +586,7 @@ const Spotlight = (function () {
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
 
-			if (platform.touch) {
+			if (platform.touchscreen) {
 				window.removeEventListener('touchend', onTouchEnd);
 			}
 
