@@ -202,10 +202,9 @@ describe('ViewManager', () => {
 		}, duration + 10);
 	});
 
-	// TODO cannot read props of child components
-	test.skip('should have size of 1 on TransitionGroup', () => {
+	test('should have 1 child when noAnimation is true', () => {
 		render(
-			<ViewManager duration={0} index={0} noAnimation>
+			<ViewManager data-testid="viewManager" duration={0} index={0} noAnimation>
 				<div className="view">View 1</div>
 				<div className="view">View 2</div>
 				<div className="view">View 3</div>
@@ -214,9 +213,9 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 
-		// const expected = 1;
-		// const actual = subject.find('TransitionGroup').prop('size');
-		// expect(actual).toBe(expected);
+		const expected = 1;
+		const actual = screen.getByTestId('viewManager').children.length;
+		expect(actual).toBe(expected);
 	});
 
 	// TODO cannot read props of child components
