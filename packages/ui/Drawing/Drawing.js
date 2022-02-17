@@ -19,10 +19,44 @@ import ForwardRef from '../ForwardRef';
 
 import css from './Drawing.module.less';
 
-const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing, event, drawingTool) => {
-	console.log(drawingTool);
-	if(drawingTool === 'fill') {
-		fillDrawing(event, contextRef)
+const fillDrawing = (event, contextRef) => {
+	const startPos = relativePos(event, contextRef.current.canvas);
+
+	const canvas = contextRef.current.canvas;
+
+	const data = contextRef.current.getImageData(0, 0, canvas.width, canvas.height);
+	console.log(data);
+	// An array with one place for each pixel in the image.
+	const alreadyFilled = new Array(data.width * data.height);
+
+	// This is a list of same-colored pixel coordinates that we have
+	// not handled yet.
+	const workList = [startPos];
+	while (workList.length) {
+		const pos = workList.pop();
+		const offset = pos.x + data.width * pos.y;
+		if (alreadyFilled[offset]) continue;
+
+		contextRef.current.fillRect(pos.x, pos.y, 1, 1);
+		alreadyFilled[offset] = true;
+
+		forAllNeighbors(pos, function (neighbor) {
+			if (neighbor.x >= 0 && neighbor.x < data.width &&
+				neighbor.y >= 0 && neighbor.y < data.height &&
+				isSameColor(data, startPos, neighbor)) {
+				workList.push(neighbor);
+			}
+		});
+	}
+};
+
+/*
+ * Executes the drawing on the canvas.
+ */
+const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing, event, drawingTool, fillColor) => {
+	console.log(fillColor);
+	if (drawingTool === 'fill') {
+		fillDrawing(event, contextRef);
 	} else {
 		contextRef.current.beginPath();
 		if (isErasing) {
@@ -44,7 +78,7 @@ const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing, even
 
 // Call a given function for all horizontal and vertical neighbors
 // of the given point.
-function forAllNeighbors(point, fn) {
+function forAllNeighbors (point, fn) {
 	fn({x: point.x, y: point.y + 1});
 	fn({x: point.x, y: point.y - 1});
 	fn({x: point.x + 1, y: point.y});
@@ -52,71 +86,34 @@ function forAllNeighbors(point, fn) {
 }
 
 // Given two positions, returns true when they hold the same color.
-function isSameColor(data, pos1, pos2) {
+function isSameColor (data, pos1, pos2) {
 	const offset1 = (pos1.x + pos1.y * data.width) * 4;
 	const offset2 = (pos2.x + pos2.y * data.width) * 4;
-	for (let i = 0; i < 4; i++) {
-		if (data.data[offset1 + i] != data.data[offset2 + i])
+
+	// const dr = pos1[0] - pos2[0];
+	// const dg = pos1[1] - pos2[1];
+	// const db = pos1[2] - pos2[2];
+	// const da = pos1[3] - pos2[3];
+	// return dr * dr + dg * dg + db * db + da * da < 128*128;
+	for (let i = 0; i < 4; i += 4) {
+		const dr = data.data[offset1 + i] - data.data[offset2 + i];
+		const dg = data.data[offset1 + i+1] - data.data[offset2 + i+1];
+		const db = data.data[offset1 + i+2] - data.data[offset2 + i+2];
+		const da = data.data[offset1 + i+3] - data.data[offset2 + i+3];
+		if (dr * dr + dg * dg + db * db + da * da > 128*128) {
+		//if (data.data[offset1 + i] !== data.data[offset2 + i] && (Math.abs(data.data[offset1 + i] - data.data[offset2 + i]) > 150)) {
+			//console.log(data.data[offset1 + i],data.data[offset2 + i]);
 			return false;
+		}
 	}
 	return true;
 }
 
-function relativePos(event, element) {
+function relativePos (event, element) {
 	const rect = element.getBoundingClientRect();
 	return {x: Math.floor(event.clientX - rect.left),
 		y: Math.floor(event.clientY - rect.top)};
 }
-
-const fillDrawing = (event, contextRef) => {
-	console.log(event)
-	const startPos = relativePos(event, contextRef.current.canvas);
-	const canvas = contextRef.current.canvas;
-
-	const data = contextRef.current.getImageData(0, 0, canvas.width, canvas.height);
-	// An array with one place for each pixel in the image.
-	const alreadyFilled = new Array(data.width * data.height);
-
-	// This is a list of same-colored pixel coordinates that we have
-	// not handled yet.
-	const workList = [startPos];
-	while (workList.length) {
-		const pos = workList.pop();
-		const offset = pos.x + data.width * pos.y;
-		if (alreadyFilled[offset]) continue;
-
-		contextRef.current.fillRect(pos.x, pos.y, 1, 1);
-		alreadyFilled[offset] = true;
-
-		forAllNeighbors(pos, function(neighbor) {
-			if (neighbor.x >= 0 && neighbor.x < data.width &&
-				neighbor.y >= 0 && neighbor.y < data.height &&
-				isSameColor(data, startPos, neighbor))
-				workList.push(neighbor);
-		});
-	}
-};
-
-/*
- * Executes the drawing on the canvas.
- */
-const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing) => {
-	contextRef.current.beginPath();
-	if (isErasing) {
-		contextRef.current.globalCompositeOperation = 'destination-out';
-	} else {
-		contextRef.current.globalCompositeOperation = 'source-over';
-	}
-	contextRef.current.moveTo(beginPoint.x, beginPoint.y);
-	contextRef.current.quadraticCurveTo(
-		controlPoint.x,
-		controlPoint.y,
-		endPoint.x,
-		endPoint.y
-	);
-	contextRef.current.stroke();
-	contextRef.current.closePath();
-};
 
 /**
  * A basic drawing canvas component.
@@ -183,15 +180,26 @@ const DrawingBase = kind({
 		drawingRef: EnactPropTypes.ref,
 
 		/**
-		 * Indicates if the drawing is in erasing mode.
+		 * Indicates the tool used for drawing.
 		 *
-		 * When `true`, the canvas' globalCompositeOperation property will be 'destination-out'.
+		 * Allowed values include:
+		 * `'brush'` - a curved line will be drawn
+		 * `'fill'` - an entire area of the canvas will be filled with the color indicated by `fillColor`
 		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
+		 * @type {String}
+		 * @default 'brush'
+		 * @public
 		 */
 		drawingTool: PropTypes.oneOf(['brush', 'fill']),
+
+		/**
+		 * Indicates the color used for filling a canvas area when `drawingTool` is set to `'fill'`.
+		 *
+		 * @type {String}
+		 * @default 'red'
+		 * @public
+		 */
+		fillColor: PropTypes.string,
 
 		/**
 		 * Indicates if the drawing is in erasing mode.
@@ -227,6 +235,7 @@ const DrawingBase = kind({
 		brushSize: 5,
 		canvasColor: 'black',
 		drawingTool: 'brush',
+		fillColor: 'red',
 		isErasing: false,
 		points: []
 	},
@@ -238,7 +247,7 @@ const DrawingBase = kind({
 	},
 
 	handlers: {
-		draw: (event, {drawingTool, points}) => {
+		draw: (event, {drawingTool, points, fillColor}) => {
 			const {
 				beginPointRef,
 				contextRef,
@@ -284,7 +293,8 @@ const DrawingBase = kind({
 					contextRef,
 					isErasing,
 					ev,
-					drawingTool
+					drawingTool,
+					fillColor
 				);
 				beginPointRef.current = endPoint;
 			}
@@ -318,7 +328,6 @@ const DrawingBase = kind({
 		disabled,
 		draw,
 		drawingRef,
-		drawingTool,
 		fillColor,
 		finisDrawing,
 		isErasing,
@@ -373,6 +382,7 @@ const DrawingBase = kind({
 			}
 		}));
 
+		delete rest.drawingTool;
 
 		return (
 			<canvas
