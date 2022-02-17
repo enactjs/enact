@@ -10,6 +10,9 @@ import ForwardRef from '../ForwardRef';
 
 import css from './Drawing.module.less';
 
+import eraserCursor from './images/eraser.png'
+import penCursor from './images/pen.png'
+
 const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing) => {
 	contextRef.current.beginPath();
 	if (isErasing) {
@@ -148,6 +151,7 @@ const DrawingBase = kind({
 		const canvasRef = useRef(null);
 		const contextRef = useRef(null);
 		const [offset, setOffset] = useState();
+		let cursor = isErasing ? eraserCursor : penCursor;
 
 		useEffect(() => {
 			const canvas = canvasRef.current;
@@ -188,12 +192,12 @@ const DrawingBase = kind({
 			}
 		}));
 
-
 		return (
 			<canvas
 				{...rest}
 				style={{
-					backgroundColor: `${canvasColor}`
+					backgroundColor: `${canvasColor}`,
+					cursor: `url(${cursor}) 3 27, auto`
 				}}
 				ref={canvasRef}
 				onMouseDown={(ev) =>
