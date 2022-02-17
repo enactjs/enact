@@ -53,8 +53,7 @@ const fillDrawing = (event, contextRef) => {
 /*
  * Executes the drawing on the canvas.
  */
-const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing, event, drawingTool, fillColor) => {
-	console.log(fillColor);
+const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing, event, drawingTool) => {
 	if (drawingTool === 'fill') {
 		fillDrawing(event, contextRef);
 	} else {
@@ -247,7 +246,7 @@ const DrawingBase = kind({
 	},
 
 	handlers: {
-		draw: (event, {drawingTool, points, fillColor}) => {
+		draw: (event, {drawingTool, points}) => {
 			const {
 				beginPointRef,
 				contextRef,
@@ -293,8 +292,7 @@ const DrawingBase = kind({
 					contextRef,
 					isErasing,
 					ev,
-					drawingTool,
-					fillColor
+					drawingTool
 				);
 				beginPointRef.current = endPoint;
 			}
