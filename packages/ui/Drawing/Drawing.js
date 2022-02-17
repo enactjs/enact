@@ -67,7 +67,7 @@ const DrawingBase = kind({
 		/**
 		 * Indicates the size of the brush.
 		 *
-		 * @type {String}
+		 * @type {Number}
 		 * @default 5
 		 * @public
 		 */
