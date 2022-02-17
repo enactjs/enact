@@ -166,7 +166,8 @@ const DrawingBase = kind({
 		const [offset, setOffset] = useState();
 
 		delete rest.backgroundImage;
-
+		delete rest.canvasColor;
+		
 		useEffect(() => {
 			const canvas = canvasRef.current;
 			canvas.height = window.innerHeight / 1.5;
