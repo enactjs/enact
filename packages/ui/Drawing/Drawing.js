@@ -255,7 +255,7 @@ const DrawingBase = kind({
 			} = event;
 			const nativeEvent = ev.nativeEvent;
 
-			if (!isDrawing) return;
+			if (!isDrawing || drawingTool === 'fill') return;
 			let offsetX, offsetY;
 			if (nativeEvent.type === 'mousemove') {
 				offsetX = nativeEvent.offsetX;
