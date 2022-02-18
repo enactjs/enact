@@ -10,9 +10,6 @@ import ForwardRef from '../ForwardRef';
 
 import css from './Drawing.module.less';
 
-import eraserCursor from './images/eraser.png'
-import penCursor from './images/pen.png'
-
 const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing) => {
 	contextRef.current.beginPath();
 	if (isErasing) {
@@ -42,6 +39,7 @@ const DrawingBase = kind({
 		canvasColor: PropTypes.string,
 		disabled: PropTypes.bool,
 		drawingRef: EnactPropTypes.ref,
+		fillMode: PropTypes.bool,
 		isErasing: PropTypes.bool,
 		points: PropTypes.array,
 		setIsDrawing: PropTypes.func
@@ -51,6 +49,7 @@ const DrawingBase = kind({
 		brushColor: 'green',
 		brushSize: 5,
 		canvasColor: 'black',
+		fillMode: false,
 		isErasing: false,
 		points: []
 	},
@@ -112,7 +111,7 @@ const DrawingBase = kind({
 			}
 		},
 
-		finisDrawing: (event) => {
+		finishDrawing: (event) => {
 			const {contextRef, setIsDrawing} = event;
 
 			contextRef.current.closePath();
@@ -140,8 +139,9 @@ const DrawingBase = kind({
 		disabled,
 		draw,
 		drawingRef,
+		fillMode,
 		isErasing,
-		finisDrawing,
+		finishDrawing,
 		startDrawing,
 		...rest
 	}) => {
@@ -151,7 +151,12 @@ const DrawingBase = kind({
 		const canvasRef = useRef(null);
 		const contextRef = useRef(null);
 		const [offset, setOffset] = useState();
-		let cursor = isErasing ? eraserCursor : penCursor;
+		let cursors = {
+			bucket: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAghJREFUeNrslj1uwjAUx5OKA+QIESeIxMgSRhaUhRE1YmDODSgzAxIbEyMSDDlCOABScoPmBuEGrv9pDK+O43yQTu2THoqesX9+X7YN46+J+eoCjDHrcrl4+J7P52lhTk3TTH9159vtNgSfqm3bbDqdfq5WqyPfmNM308LCMlRWy7LYYrEIERmjj/COx+NYhvi+zyBxHLPdbsccx3mM4f8vwWXo8XjMQfCMwoWEYfgY++DSG1SIDs55uR15bw09n8/+crlUQuvgURTlNtd1WStgsVOmg1K453l5jrMsy21BEOTzZrNZ3ATo8L6M5ALSQVUiwgzd7/eBFsr/7A+Hw0wHRfjgnUowBi/Rz2Ju4YQeKvJUBaVeIG9CVfOEwhFEsTMUUhRJ5YGBcWwOEaEFBzifbpdyWhdeuTeh+EZooaKYdNVenHZPURUS8tSXwIFSS/HduqoQw1ZVQG1F7uU3/JxOp/f7/V7KOWyTycRIkuTl8z1Nv2/JwWDwBBWN/cNbUal9eF6ZY1qlKDDR6LTgusIpdDQaZT9uKOrZ4XDwqqq9LVxupVIfC3DVWdoFXgulYN192QbeCErBt9vNq7s46uCNofTwwGnY5NaicPRnJyhEPNqagFXHK95W9H3VCCoue0xs8xjDwqr+h60J1CTvKYc/wpMO7zB3s9nkkVqv11e+xtX4F4V8CTAA/Hx+caeSjdgAAAAASUVORK5CYII=',
+			eraser: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAIAAABLixI0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAE1JREFUeNpiZGXnYKASYAFiAQF+fT19Sky5eOnihw8fGYDucnF1+08ZAJoANIeJgXpg1KxRs0bNGjVr1KzBaxYjsMynVj3ESMX6ESDAANA2TPNF19FGAAAAAElFTkSuQmCC',
+			pen: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAATFJREFUeNrs19FthDAMBuB0A0bICIyQERiB2yAjsEFGyAiMABuEDa5MEDZwceWc0oq6J52dp7MU8YL4sCOiH2N0qzeNazoX0MqtXiAiGEKAZVlgGIaCj5poKGhd4ziW7p0G6unBue97yDlf4eJjj9RR4nAa+10M7boOYoyAVw7HPacXlOkUO8FKKbE47j2N+/VO8cGI4x5yOKFAn9prKCLYzTM4oVEELfUkHkRRDp+mqYzXq6BXuHMOVMbL4dbatigWfs9v9I3+efa2Ri2lhMcB0AI1VTz5F5dEbRXOWFwSxRoKxOHS6HdIw7P1VzD7gWugWIv3/ioVPnANFAvmeb4KZjUeJMEPipvpHKXZ992s62q2bTPHcZR71nPdzvWpkYehiqeROlT/7XBaCZ+rLwEGAPhaImYfzD7mAAAAAElFTkSuQmCC'
+		}
+		let cursor = isErasing ? cursors.eraser : fillMode ? cursors.bucket : cursors.pen;
 
 		useEffect(() => {
 			const canvas = canvasRef.current;
@@ -220,7 +225,7 @@ const DrawingBase = kind({
 						offset
 					})
 				}
-				onMouseUp={() => finisDrawing({contextRef, setIsDrawing})}
+				onMouseUp={() => finishDrawing({contextRef, setIsDrawing})}
 				onTouchStart={(ev) =>
 					startDrawing({
 						setIsDrawing,
@@ -241,7 +246,7 @@ const DrawingBase = kind({
 						offset
 					})
 				}
-				onTouchEnd={() => finisDrawing({contextRef, setIsDrawing})}
+				onTouchEnd={() => finishDrawing({contextRef, setIsDrawing})}
 			/>
 		);
 	}
