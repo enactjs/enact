@@ -20,12 +20,10 @@ import ForwardRef from '../ForwardRef';
 import css from './Drawing.module.less';
 
 const fillDrawing = (event, contextRef) => {
-	const startPos = relativePos(event, contextRef.current.canvas);
-
 	const canvas = contextRef.current.canvas;
+	const startPos = relativePos(event, canvas);
 
 	const data = contextRef.current.getImageData(0, 0, canvas.width, canvas.height);
-	console.log(data);
 	// An array with one place for each pixel in the image.
 	const alreadyFilled = new Array(data.width * data.height);
 
@@ -54,9 +52,6 @@ const fillDrawing = (event, contextRef) => {
  * Executes the drawing on the canvas.
  */
 const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing, event, drawingTool) => {
-	if (drawingTool === 'fill') {
-		fillDrawing(event, contextRef);
-	} else {
 		contextRef.current.beginPath();
 		if (isErasing) {
 			contextRef.current.globalCompositeOperation = 'destination-out';
@@ -72,7 +67,7 @@ const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing, even
 		);
 		contextRef.current.stroke();
 		contextRef.current.closePath();
-	}
+
 };
 
 // Call a given function for all horizontal and vertical neighbors
@@ -89,21 +84,14 @@ function isSameColor (data, pos1, pos2) {
 	const offset1 = (pos1.x + pos1.y * data.width) * 4;
 	const offset2 = (pos2.x + pos2.y * data.width) * 4;
 
-	// const dr = pos1[0] - pos2[0];
-	// const dg = pos1[1] - pos2[1];
-	// const db = pos1[2] - pos2[2];
-	// const da = pos1[3] - pos2[3];
-	// return dr * dr + dg * dg + db * db + da * da < 128*128;
-	for (let i = 0; i < 4; i += 4) {
-		const dr = data.data[offset1 + i] - data.data[offset2 + i];
-		const dg = data.data[offset1 + i+1] - data.data[offset2 + i+1];
-		const db = data.data[offset1 + i+2] - data.data[offset2 + i+2];
-		const da = data.data[offset1 + i+3] - data.data[offset2 + i+3];
-		if (dr * dr + dg * dg + db * db + da * da > 128*128) {
-		//if (data.data[offset1 + i] !== data.data[offset2 + i] && (Math.abs(data.data[offset1 + i] - data.data[offset2 + i]) > 150)) {
-			//console.log(data.data[offset1 + i],data.data[offset2 + i]);
-			return false;
-		}
+	const dr = data.data[offset1] - data.data[offset2];
+	//console.log(dr);
+	const dg = data.data[offset1+1] - data.data[offset2+1];
+	const db = data.data[offset1+2] - data.data[offset2+2];
+	const da = data.data[offset1+3] - data.data[offset2+3];
+	if (dr * dr + dg * dg + db * db + da * da > 128*128) {
+		//console.log("test")
+		return false;
 	}
 	return true;
 }
@@ -305,7 +293,7 @@ const DrawingBase = kind({
 			setIsDrawing(false);
 		},
 
-		startDrawing: (event, {points}) => {
+		startDrawing: (event, {points, drawingTool}) => {
 			const {beginPointRef, contextRef, disabled, ev, setIsDrawing} = event;
 			const nativeEvent = ev.nativeEvent;
 			if (disabled) return;
@@ -314,6 +302,14 @@ const DrawingBase = kind({
 			contextRef.current.beginPath(); // start a canvas path
 			contextRef.current.moveTo(offsetX, offsetY); // move the starting point to initial position
 			points.push({x: offsetX, y: offsetY});
+
+			if(drawingTool === 'brush') {
+				contextRef.current.lineTo(offsetX, offsetY); // draw a single point
+				contextRef.current.stroke();
+			} else {
+				fillDrawing(ev, contextRef);
+			}
+
 			beginPointRef.current = {x: offsetX, y: offsetY};
 			setIsDrawing(true);
 		}
