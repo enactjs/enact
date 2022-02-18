@@ -10,8 +10,13 @@ import ForwardRef from '../ForwardRef';
 
 import css from './Drawing.module.less';
 
-const drawing = (beginPoint, controlPoint, endPoint, contextRef) => {
+const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing) => {
 	contextRef.current.beginPath();
+	if (isErasing) {
+		contextRef.current.globalCompositeOperation = 'destination-out';
+	} else {
+		contextRef.current.globalCompositeOperation = 'source-over';
+	}
 	contextRef.current.moveTo(beginPoint.x, beginPoint.y);
 	contextRef.current.quadraticCurveTo(
 		controlPoint.x,
@@ -62,6 +67,7 @@ const DrawingBase = kind({
 				contextRef,
 				ev,
 				isDrawing,
+				isErasing,
 				offset,
 				setIsDrawing
 			} = event;
@@ -98,7 +104,8 @@ const DrawingBase = kind({
 					beginPointRef.current,
 					controlPoint,
 					endPoint,
-					contextRef
+					contextRef,
+					isErasing
 				);
 				beginPointRef.current = endPoint;
 			}
@@ -189,14 +196,6 @@ const DrawingBase = kind({
 			context.strokeStyle = brushColor;
 		}, [brushColor, brushSize]);
 
-		useEffect(() => {
-			contextRef.current.globalCompositeOperation = 'source-over';
-
-			if (isErasing) {
-				contextRef.current.globalCompositeOperation = 'destination-out';
-			}
-		}, [isErasing]);
-
 		useImperativeHandle(drawingRef, () => ({
 			clearCanvas: () => {
 				if (disabled) return;
@@ -228,6 +227,7 @@ const DrawingBase = kind({
 				onMouseMove={(ev) =>
 					draw({
 						isDrawing,
+						isErasing,
 						contextRef,
 						beginPointRef,
 						ev,
@@ -248,6 +248,7 @@ const DrawingBase = kind({
 				onTouchMove={(ev) =>
 					draw({
 						isDrawing,
+						isErasing,
 						contextRef,
 						beginPointRef,
 						ev,
