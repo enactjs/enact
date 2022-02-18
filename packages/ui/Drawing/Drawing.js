@@ -24,7 +24,6 @@ import css from './Drawing.module.less';
  */
 const drawing = (beginPoint, controlPoint, endPoint, contextRef) => {
 	contextRef.current.beginPath();
-
 	contextRef.current.moveTo(beginPoint.x, beginPoint.y);
 	contextRef.current.quadraticCurveTo(
 		controlPoint.x,
