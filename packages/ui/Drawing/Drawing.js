@@ -127,8 +127,6 @@ const DrawingBase = kind({
 			contextRef.current.beginPath(); // start a canvas path
 			contextRef.current.moveTo(offsetX, offsetY); // move the starting point to initial position
 			points.push({x: offsetX, y: offsetY});
-			contextRef.current.lineTo(offsetX, offsetY); // draw single point
-			contextRef.current.stroke();
 			beginPointRef.current = {x: offsetX, y: offsetY};
 			setIsDrawing(true);
 		}
