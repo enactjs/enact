@@ -185,7 +185,7 @@ const DrawingBase = kind({
 					beginPointRef.current,
 					controlPoint,
 					endPoint,
-					contextRef,
+					contextRef
 				);
 				beginPointRef.current = endPoint;
 			}
@@ -268,11 +268,10 @@ const DrawingBase = kind({
 
 				contextRef.current.globalCompositeOperation = 'destination-out';
 				context.fillRect(0, 0, canvas.width, canvas.height);
-				
-				if(isErasing) {
+
+				if (isErasing) {
 					contextRef.current.globalCompositeOperation = 'destination-out';
-				}
-				else {
+				} else {
 					contextRef.current.globalCompositeOperation = 'source-over';
 				}
 			}
@@ -281,11 +280,10 @@ const DrawingBase = kind({
 		useEffect(() => {
 			if (isErasing) {
 				contextRef.current.globalCompositeOperation = 'destination-out';
-			}
-			else {
+			} else {
 				contextRef.current.globalCompositeOperation = 'source-over';
 			}
-		}, [isErasing])
+		}, [isErasing]);
 
 		return (
 			<canvas
