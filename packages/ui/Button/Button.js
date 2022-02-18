@@ -218,7 +218,7 @@ const ButtonBase = kind({
 
 			return (
 				<ComponentOverride {...props}>
-					{icon}
+					{icon === true ? null : icon}
 				</ComponentOverride>
 			);
 		}
