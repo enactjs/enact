@@ -268,15 +268,22 @@ const DrawingBase = kind({
 
 				contextRef.current.globalCompositeOperation = 'destination-out';
 				context.fillRect(0, 0, canvas.width, canvas.height);
-				contextRef.current.globalCompositeOperation = 'source-over';
+				
+				if(isErasing) {
+					contextRef.current.globalCompositeOperation = 'destination-out';
+				}
+				else {
+					contextRef.current.globalCompositeOperation = 'source-over';
+				}
 			}
 		}));
 
 		useEffect(() => {
-			contextRef.current.globalCompositeOperation = 'source-over';
-
 			if (isErasing) {
 				contextRef.current.globalCompositeOperation = 'destination-out';
+			}
+			else {
+				contextRef.current.globalCompositeOperation = 'source-over';
 			}
 		}, [isErasing])
 
