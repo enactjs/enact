@@ -10,13 +10,8 @@ import ForwardRef from '../ForwardRef';
 
 import css from './Drawing.module.less';
 
-const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing) => {
+const drawing = (beginPoint, controlPoint, endPoint, contextRef) => {
 	contextRef.current.beginPath();
-	if (isErasing) {
-		contextRef.current.globalCompositeOperation = 'destination-out';
-	} else {
-		contextRef.current.globalCompositeOperation = 'source-over';
-	}
 	contextRef.current.moveTo(beginPoint.x, beginPoint.y);
 	contextRef.current.quadraticCurveTo(
 		controlPoint.x,
@@ -67,7 +62,6 @@ const DrawingBase = kind({
 				contextRef,
 				ev,
 				isDrawing,
-				isErasing,
 				offset,
 				setIsDrawing
 			} = event;
@@ -104,8 +98,7 @@ const DrawingBase = kind({
 					beginPointRef.current,
 					controlPoint,
 					endPoint,
-					contextRef,
-					isErasing
+					contextRef
 				);
 				beginPointRef.current = endPoint;
 			}
@@ -127,6 +120,8 @@ const DrawingBase = kind({
 			contextRef.current.beginPath(); // start a canvas path
 			contextRef.current.moveTo(offsetX, offsetY); // move the starting point to initial position
 			points.push({x: offsetX, y: offsetY});
+			contextRef.current.lineTo(offsetX, offsetY); // draw single point
+			contextRef.current.stroke();
 			beginPointRef.current = {x: offsetX, y: offsetY};
 			setIsDrawing(true);
 		}
@@ -167,7 +162,7 @@ const DrawingBase = kind({
 
 		delete rest.backgroundImage;
 		delete rest.canvasColor;
-		
+
 		useEffect(() => {
 			const canvas = canvasRef.current;
 			canvas.height = window.innerHeight / 1.5;
@@ -193,6 +188,14 @@ const DrawingBase = kind({
 			context.lineWidth = brushSize;
 			context.strokeStyle = brushColor;
 		}, [brushColor, brushSize]);
+
+		useEffect(() => {
+			contextRef.current.globalCompositeOperation = 'source-over';
+
+			if (isErasing) {
+				contextRef.current.globalCompositeOperation = 'destination-out';
+			}
+		}, [isErasing]);
 
 		useImperativeHandle(drawingRef, () => ({
 			clearCanvas: () => {
@@ -225,7 +228,6 @@ const DrawingBase = kind({
 				onMouseMove={(ev) =>
 					draw({
 						isDrawing,
-						isErasing,
 						contextRef,
 						beginPointRef,
 						ev,
@@ -246,7 +248,6 @@ const DrawingBase = kind({
 				onTouchMove={(ev) =>
 					draw({
 						isDrawing,
-						isErasing,
 						contextRef,
 						beginPointRef,
 						ev,
