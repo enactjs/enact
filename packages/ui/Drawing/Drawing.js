@@ -22,13 +22,8 @@ import css from './Drawing.module.less';
 /*
  * Executes the drawing on the canvas.
  */
-const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing) => {
+const drawing = (beginPoint, controlPoint, endPoint, contextRef) => {
 	contextRef.current.beginPath();
-	if (isErasing) {
-		contextRef.current.globalCompositeOperation = 'destination-out';
-	} else {
-		contextRef.current.globalCompositeOperation = 'source-over';
-	}
 	contextRef.current.moveTo(beginPoint.x, beginPoint.y);
 	contextRef.current.quadraticCurveTo(
 		controlPoint.x,
@@ -154,7 +149,6 @@ const DrawingBase = kind({
 				contextRef,
 				ev,
 				isDrawing,
-				isErasing,
 				offset,
 				setIsDrawing
 			} = event;
@@ -191,8 +185,7 @@ const DrawingBase = kind({
 					beginPointRef.current,
 					controlPoint,
 					endPoint,
-					contextRef,
-					isErasing
+					contextRef
 				);
 				beginPointRef.current = endPoint;
 			}
@@ -275,10 +268,22 @@ const DrawingBase = kind({
 
 				contextRef.current.globalCompositeOperation = 'destination-out';
 				context.fillRect(0, 0, canvas.width, canvas.height);
-				contextRef.current.globalCompositeOperation = 'source-over';
+
+				if (isErasing) {
+					contextRef.current.globalCompositeOperation = 'destination-out';
+				} else {
+					contextRef.current.globalCompositeOperation = 'source-over';
+				}
 			}
 		}));
 
+		useEffect(() => {
+			if (isErasing) {
+				contextRef.current.globalCompositeOperation = 'destination-out';
+			} else {
+				contextRef.current.globalCompositeOperation = 'source-over';
+			}
+		}, [isErasing]);
 
 		return (
 			<canvas
@@ -299,7 +304,6 @@ const DrawingBase = kind({
 				onMouseMove={(ev) =>
 					draw({
 						isDrawing,
-						isErasing,
 						contextRef,
 						beginPointRef,
 						ev,
@@ -320,7 +324,6 @@ const DrawingBase = kind({
 				onTouchMove={(ev) =>
 					draw({
 						isDrawing,
-						isErasing,
 						contextRef,
 						beginPointRef,
 						ev,
