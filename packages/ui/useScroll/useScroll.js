@@ -91,6 +91,7 @@ const useScrollBase = (props) => {
 			'data-webos-voice-focused': voiceFocused,
 			'data-webos-voice-group-label': voiceGroupLabel,
 			assignProperties,
+			cbMoveItem,
 			dataSize,
 			direction,
 			horizontalScrollbar,
@@ -1541,6 +1542,7 @@ const useScrollBase = (props) => {
 	assignProperties('scrollContentProps', {
 		...scrollContentProps,
 		...voiceProps,
+		cbMoveItem,
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
 		direction,

@@ -93,6 +93,8 @@ class VirtualListBasic extends Component {
 			gridListItemSizeShape
 		]).isRequired,
 
+		cbMoveItem: PropTypes.func,
+
 		/**
 		 * Callback method of scrollTo.
 		 * Normally, useScroll should set this value.
@@ -297,6 +299,7 @@ class VirtualListBasic extends Component {
 	};
 
 	static defaultProps = {
+		cbMoveItem: nop,
 		cbScrollTo: nop,
 		dataSize: 0,
 		direction: 'vertical',
@@ -329,6 +332,9 @@ class VirtualListBasic extends Component {
 			updateTo: 0,
 			...nextState
 		};
+
+		props.cbMoveItem(this.moveItem);
+		window.moveItem = this.moveItem; // FIXME: for testing only
 	}
 
 	static getDerivedStateFromProps (props, state) {
@@ -1218,6 +1224,10 @@ class VirtualListBasic extends Component {
 		return false;
 	};
 
+	moveItem = (from, to) => {
+		console.log('moveItem', from, to);
+	}
+
 	// render
 
 	render () {
@@ -1233,6 +1243,7 @@ class VirtualListBasic extends Component {
 			),
 			contentClasses = scrollModeNative ? null : css.content;
 
+		delete rest.cbMoveItem;
 		delete rest.cbScrollTo;
 		delete rest.childProps;
 		delete rest.clientSize;

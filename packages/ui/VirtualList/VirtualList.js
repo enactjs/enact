@@ -71,6 +71,8 @@ const VirtualList = (props) => {
 VirtualList.displayName = 'ui:VirtualList';
 
 VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
+	cbMoveItem: PropTypes.func,
+
 	/**
 	 * A callback function that receives a reference to the `scrollTo` feature.
 	 *
@@ -277,6 +279,7 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 };
 
 VirtualList.defaultProps = {
+	cbMoveItem: nop,
 	cbScrollTo: nop,
 	direction: 'vertical',
 	horizontalScrollbar: 'auto',
@@ -341,6 +344,8 @@ const VirtualGridList = (props) => {
 VirtualGridList.displayName = 'ui:VirtualGridList';
 
 VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype */ {
+	cbMoveItem: PropTypes.func,
+
 	/**
 	 * A callback function that receives a reference to the `scrollTo` feature.
 	 *
@@ -547,6 +552,7 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 };
 
 VirtualGridList.defaultProps = {
+	cbMoveItem: nop,
 	cbScrollTo: nop,
 	direction: 'vertical',
 	horizontalScrollbar: 'auto',
