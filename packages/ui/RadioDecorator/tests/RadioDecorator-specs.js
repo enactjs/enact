@@ -19,48 +19,49 @@ describe('RadioDecorator', () => {
 	};
 
 	test('should be activated when its prop is true on mount', () => {
-		const controllerRef = createRef();
-		const decoratorRef = createRef();
 		const Component = RadioDecorator({prop: 'active'}, Item);
 		render(
-			<Controller ref={controllerRef}>
-				<Component active ref={decoratorRef} />
+			<Controller>
+				<Component active />
 			</Controller>
 		);
+		const component = screen.getByTestId('span-element');
 
-		expectToBeActive(controllerRef.current, decoratorRef.current);
+		expect(component).toHaveTextContent('Active');
 	});
 
 	test('should not be activated when its prop is false on mount', () => {
-		const controllerRef = createRef();
-		const decoratorRef = createRef();
 		const Component = RadioDecorator({prop: 'active'}, Item);
 		render(
-			<Controller ref={controllerRef}>
-				<Component ref={decoratorRef} />
+			<Controller>
+				<Component />
 			</Controller>
 		);
+		const component = screen.getByTestId('span-element');
 
-		expectToBeActive(controllerRef.current, null);
+		expect(component).toHaveTextContent('Inactive');
 	});
 
 	test('should be activated when its prop is set to true after mount', () => {
-		const controllerRef = createRef();
-		const decoratorRef = createRef();
 		const Component = RadioDecorator({prop: 'active'}, Item);
 		const Wrapper = ({active}) => (
-			<Controller ref={controllerRef}>
-				<Component active={active} ref={decoratorRef} />
+			<Controller>
+				<Component active={active} />
 			</Controller>
 		);
 
 		const {rerender} = render(<Wrapper />);
+		const component = screen.getByTestId('span-element');
 
-		expectToBeActive(controllerRef.current, null);
+		const expected = 'Inactive';
+
+		expect(component).toHaveTextContent(expected);
 
 		rerender(<Wrapper active />);
 
-		expectToBeActive(controllerRef.current, decoratorRef.current);
+		const secondExpected = 'Active';
+
+		expect(component).toHaveTextContent(secondExpected);
 	});
 
 	test('should not call deactivate callback on inactive items', () => {
