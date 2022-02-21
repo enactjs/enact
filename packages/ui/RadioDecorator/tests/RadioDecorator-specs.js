@@ -5,10 +5,6 @@ import {createRef} from 'react';
 
 import {RadioControllerDecorator, RadioDecorator} from '../RadioDecorator';
 
-const expectToBeActive = (controller, decorator) => {
-	expect(controller.active).toBe(decorator && decorator.handleDeactivate);
-};
-
 describe('RadioDecorator', () => {
 	const Item = ({onClick, active}) => (
 		<span data-testid="span-element" onClick={onClick}>
@@ -18,50 +14,53 @@ describe('RadioDecorator', () => {
 
 	const Controller = RadioControllerDecorator('main');
 
+	const expectToBeActive = (controller, decorator) => {
+		expect(controller.active).toBe(decorator && decorator.handleDeactivate);
+	};
+
 	test('should be activated when its prop is true on mount', () => {
+		const controllerRef = createRef();
+		const decoratorRef = createRef();
 		const Component = RadioDecorator({prop: 'active'}, Item);
 		render(
-			<Controller>
-				<Component active />
+			<Controller ref={controllerRef}>
+				<Component active ref={decoratorRef} />
 			</Controller>
 		);
-		const component = screen.getByTestId('span-element');
 
-		expect(component).toHaveTextContent('Active');
+		expectToBeActive(controllerRef.current, decoratorRef.current);
 	});
 
 	test('should not be activated when its prop is false on mount', () => {
+		const controllerRef = createRef();
+		const decoratorRef = createRef();
 		const Component = RadioDecorator({prop: 'active'}, Item);
 		render(
-			<Controller>
-				<Component />
+			<Controller ref={controllerRef}>
+				<Component ref={decoratorRef} />
 			</Controller>
 		);
-		const component = screen.getByTestId('span-element');
 
-		expect(component).toHaveTextContent('Inactive');
+		expectToBeActive(controllerRef.current, null);
 	});
 
 	test('should be activated when its prop is set to true after mount', () => {
+		const controllerRef = createRef();
+		const decoratorRef = createRef();
 		const Component = RadioDecorator({prop: 'active'}, Item);
 		const Wrapper = ({active}) => (
-			<Controller>
-				<Component active={active} />
+			<Controller ref={controllerRef}>
+				<Component active={active} ref={decoratorRef} />
 			</Controller>
 		);
 
 		const {rerender} = render(<Wrapper />);
-		const component = screen.getByTestId('span-element');
 
-		const expected = 'Inactive';
-
-		expect(component).toHaveTextContent(expected);
+		expectToBeActive(controllerRef.current, null);
 
 		rerender(<Wrapper active />);
 
-		const secondExpected = 'Active';
-
-		expect(component).toHaveTextContent(secondExpected);
+		expectToBeActive(controllerRef.current, decoratorRef.current);
 	});
 
 	test('should not call deactivate callback on inactive items', () => {
