@@ -22,13 +22,8 @@ import css from './Drawing.module.less';
 /*
  * Executes the drawing on the canvas.
  */
-const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing) => {
+const drawing = (beginPoint, controlPoint, endPoint, contextRef) => {
 	contextRef.current.beginPath();
-	if (isErasing) {
-		contextRef.current.globalCompositeOperation = 'destination-out';
-	} else {
-		contextRef.current.globalCompositeOperation = 'source-over';
-	}
 	contextRef.current.moveTo(beginPoint.x, beginPoint.y);
 	contextRef.current.quadraticCurveTo(
 		controlPoint.x,
@@ -54,6 +49,15 @@ const DrawingBase = kind({
 	functional: true,
 
 	propTypes: /** @lends ui/Drawing.DrawingBase.prototype */ {
+
+		/**
+		 * Indicates the image used for the background of the canvas.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		backgroundImage: PropTypes.string,
 
 		/**
 		 * Indicates the color of the brush.
@@ -134,6 +138,7 @@ const DrawingBase = kind({
 	},
 
 	defaultProps: {
+		backgroundImage: '',
 		brushColor: 'green',
 		brushSize: 5,
 		canvasColor: 'black',
@@ -154,7 +159,6 @@ const DrawingBase = kind({
 				contextRef,
 				ev,
 				isDrawing,
-				isErasing,
 				offset,
 				setIsDrawing
 			} = event;
@@ -162,6 +166,7 @@ const DrawingBase = kind({
 
 			if (!isDrawing) return;
 			let offsetX, offsetY;
+
 			if (nativeEvent.type === 'mousemove') {
 				offsetX = nativeEvent.offsetX;
 				offsetY = nativeEvent.offsetY;
@@ -169,6 +174,7 @@ const DrawingBase = kind({
 				offsetX = nativeEvent.targetTouches[0].pageX - offset.x;
 				offsetY = nativeEvent.targetTouches[0].pageY - offset.y;
 			}
+
 			if (
 				offsetY > window.innerHeight / 1.5 ||
                 offsetX > window.innerWidth / 1.5 ||
@@ -191,8 +197,7 @@ const DrawingBase = kind({
 					beginPointRef.current,
 					controlPoint,
 					endPoint,
-					contextRef,
-					isErasing
+					contextRef
 				);
 				beginPointRef.current = endPoint;
 			}
@@ -221,7 +226,23 @@ const DrawingBase = kind({
 		}
 	},
 
+	computed: {
+		backgroundStyle: ({backgroundImage, canvasColor}) => {
+
+			if (!backgroundImage) return {backgroundColor: `${canvasColor}`};
+
+			return {
+				backgroundImage: `url(${backgroundImage})`,
+				backgroundPosition: 'center',
+				backgroundRepeat: 'no-repeat',
+				backgroundSize: 'cover'
+			};
+		}
+	},
+
 	render: ({
+		backgroundImage,
+		backgroundStyle,
 		brushColor,
 		brushSize,
 		canvasColor,
@@ -275,7 +296,12 @@ const DrawingBase = kind({
 
 				contextRef.current.globalCompositeOperation = 'destination-out';
 				context.fillRect(0, 0, canvas.width, canvas.height);
-				contextRef.current.globalCompositeOperation = 'source-over';
+
+				if (isErasing) {
+					contextRef.current.globalCompositeOperation = 'destination-out';
+				} else {
+					contextRef.current.globalCompositeOperation = 'source-over';
+				}
 			},
 
 			saveCanvas: () => {
@@ -301,13 +327,18 @@ const DrawingBase = kind({
 			}
 		}));
 
+		useEffect(() => {
+			if (isErasing) {
+				contextRef.current.globalCompositeOperation = 'destination-out';
+			} else {
+				contextRef.current.globalCompositeOperation = 'source-over';
+			}
+		}, [isErasing]);
 
 		return (
 			<canvas
 				{...rest}
-				style={{
-					backgroundColor: `${canvasColor}`
-				}}
+				style={backgroundStyle}
 				ref={canvasRef}
 				onMouseDown={(ev) =>
 					startDrawing({
@@ -321,7 +352,6 @@ const DrawingBase = kind({
 				onMouseMove={(ev) =>
 					draw({
 						isDrawing,
-						isErasing,
 						contextRef,
 						beginPointRef,
 						ev,
@@ -342,7 +372,6 @@ const DrawingBase = kind({
 				onTouchMove={(ev) =>
 					draw({
 						isDrawing,
-						isErasing,
 						contextRef,
 						beginPointRef,
 						ev,
