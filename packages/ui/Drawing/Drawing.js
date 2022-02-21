@@ -54,7 +54,7 @@ const DrawingBase = kind({
 		 * Indicates the image used for the background of the canvas.
 		 *
 		 * @type {String}
-		 * @default 'green'
+		 * @default ''
 		 * @public
 		 */
 		backgroundImage: PropTypes.string,
