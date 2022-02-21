@@ -6,7 +6,7 @@ import Announce from '../Announce';
 describe('Announce', () => {
 	test('should have an announce method on the component', () => {
 		const ref = createRef();
-		render(<Announce data-testid="announce" ref={ref} />);
+		render(<Announce ref={ref} />);
 
 		const node = ref.current;
 
@@ -20,7 +20,7 @@ describe('Announce', () => {
 		const ref = createRef();
 		const message = 'message';
 
-		render(<Announce data-testid="announce" ref={ref} />);
+		render(<Announce ref={ref} />);
 
 		const node = ref.current;
 		node.announce(message);
