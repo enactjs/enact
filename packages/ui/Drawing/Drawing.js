@@ -128,6 +128,15 @@ const DrawingBase = kind({
 		isErasing: PropTypes.bool,
 
 		/**
+		 * Called when the drawingTool value is changed.
+		 *
+		 * @type {Function}
+		 * @param {String} value
+		 * @public
+		 */
+		onChangeDrawingTool: PropTypes.func,
+
+		/**
 		 * Contains the coordinates of the points that will be drawn on the canvas.
 		 *
 		 * @type {Array}
@@ -174,7 +183,7 @@ const DrawingBase = kind({
 			} = event;
 			const nativeEvent = ev.nativeEvent;
 
-			//TODO check condition for future drawing tools
+			// TODO check condition for future drawing tools
 			if (!isDrawing || drawingTool === 'fill') return;
 			let offsetX, offsetY;
 
@@ -267,6 +276,7 @@ const DrawingBase = kind({
 		fillColor,
 		finisDrawing,
 		isErasing,
+		onChangeDrawingTool,
 		startDrawing,
 		...rest
 	}) => {
@@ -328,11 +338,12 @@ const DrawingBase = kind({
 
 		useEffect(() => {
 			if (isErasing) {
+				onChangeDrawingTool('brush');
 				contextRef.current.globalCompositeOperation = 'destination-out';
 			} else {
 				contextRef.current.globalCompositeOperation = 'source-over';
 			}
-		}, [isErasing]);
+		}, [isErasing]); // eslint-disable-line react-hooks/exhaustive-deps
 
 		delete rest.drawingTool;
 
