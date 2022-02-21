@@ -276,6 +276,28 @@ const DrawingBase = kind({
 				contextRef.current.globalCompositeOperation = 'destination-out';
 				context.fillRect(0, 0, canvas.width, canvas.height);
 				contextRef.current.globalCompositeOperation = 'source-over';
+			},
+
+			saveCanvas: () => {
+				const canvas = canvasRef.current;
+				const newCanvas = document.createElement('canvas');
+
+				newCanvas.height = canvas.height;
+				newCanvas.width = canvas.width;
+
+				const newContext = newCanvas.getContext('2d');
+
+				newContext.drawImage(canvas, 0, 0);
+				newContext.globalCompositeOperation = 'destination-over';
+				newContext.fillStyle = canvasColor;
+				newContext.fillRect(0, 0, canvas.width, canvas.height);
+
+				const link = document.createElement('a');
+				link.download = 'image.png';
+				newCanvas.toBlob(function (blob) {
+					link.href = URL.createObjectURL(blob);
+					link.click();
+				}, 'image/png');
 			}
 		}));
 
