@@ -121,6 +121,15 @@ const DrawingBase = kind({
 	propTypes: /** @lends ui/Drawing.DrawingBase.prototype */ {
 
 		/**
+		 * Indicates the image used for the background of the canvas.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		backgroundImage: PropTypes.string,
+
+		/**
 		 * Indicates the color of the brush.
 		 *
 		 * @type {String}
@@ -221,6 +230,7 @@ const DrawingBase = kind({
 	},
 
 	defaultProps: {
+		backgroundImage: '',
 		brushColor: 'green',
 		brushSize: 5,
 		canvasColor: 'black',
@@ -250,6 +260,7 @@ const DrawingBase = kind({
 
 			if (!isDrawing || drawingTool === 'fill') return;
 			let offsetX, offsetY;
+
 			if (nativeEvent.type === 'mousemove') {
 				offsetX = nativeEvent.offsetX;
 				offsetY = nativeEvent.offsetY;
@@ -257,6 +268,7 @@ const DrawingBase = kind({
 				offsetX = nativeEvent.targetTouches[0].pageX - offset.x;
 				offsetY = nativeEvent.targetTouches[0].pageY - offset.y;
 			}
+
 			if (
 				offsetY > window.innerHeight / 1.5 ||
                 offsetX > window.innerWidth / 1.5 ||
@@ -314,10 +326,24 @@ const DrawingBase = kind({
 		}
 	},
 
+	computed: {
+		backgroundStyle: ({backgroundImage, canvasColor}) => {
+
+			if (!backgroundImage) return {backgroundColor: `${canvasColor}`};
+
+			return {
+				backgroundImage: `url(${backgroundImage})`,
+				backgroundPosition: 'center',
+				backgroundRepeat: 'no-repeat',
+				backgroundSize: 'cover'
+			};
+		}
+	},
+
 	render: ({
+		backgroundStyle,
 		brushColor,
 		brushSize,
-		canvasColor,
 		disabled,
 		draw,
 		drawingRef,
@@ -333,6 +359,9 @@ const DrawingBase = kind({
 		const canvasRef = useRef(null);
 		const contextRef = useRef(null);
 		const [offset, setOffset] = useState();
+
+		delete rest.backgroundImage;
+		delete rest.canvasColor;
 
 		useEffect(() => {
 			const canvas = canvasRef.current;
@@ -393,9 +422,7 @@ const DrawingBase = kind({
 		return (
 			<canvas
 				{...rest}
-				style={{
-					backgroundColor: `${canvasColor}`
-				}}
+				style={backgroundStyle}
 				ref={canvasRef}
 				onMouseDown={(ev) =>
 					startDrawing({
