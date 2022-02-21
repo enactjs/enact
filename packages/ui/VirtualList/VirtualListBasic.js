@@ -3,6 +3,7 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import {clamp} from '@enact/core/util';
+import {utilDOM} from '@enact/ui/useScroll/utilDOM';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import {createRef, Component} from 'react';
@@ -93,8 +94,6 @@ class VirtualListBasic extends Component {
 			gridListItemSizeShape
 		]).isRequired,
 
-		cbMoveItem: PropTypes.func,
-
 		/**
 		 * Callback method of scrollTo.
 		 * Normally, useScroll should set this value.
@@ -171,6 +170,8 @@ class VirtualListBasic extends Component {
 		 */
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
+		editMode: PropTypes.bool,
+
 		/**
 		 * Called to get the scroll affordance from themed component.
 		 *
@@ -202,6 +203,8 @@ class VirtualListBasic extends Component {
 		 * @private
 		 */
 		itemSizes: PropTypes.arrayOf(PropTypes.number),
+
+		onUpdateItemsOrder: PropTypes.func,
 
 		/**
 		 * Called when the range of items has updated.
@@ -299,10 +302,10 @@ class VirtualListBasic extends Component {
 	};
 
 	static defaultProps = {
-		cbMoveItem: nop,
 		cbScrollTo: nop,
 		dataSize: 0,
 		direction: 'vertical',
+		editMode: false,
 		getAffordance: () => (0),
 		overhang: 3,
 		pageScroll: false,
@@ -330,10 +333,11 @@ class VirtualListBasic extends Component {
 			prevFirstIndex: 0,
 			updateFrom: 0,
 			updateTo: 0,
+			editMode: props.editMode,
 			...nextState
 		};
 
-		props.cbMoveItem(this.moveItem);
+		this.emitUpdateItemsOrder = props.onUpdateItemsOrder;
 		window.moveItem = this.moveItem; // FIXME: for testing only
 	}
 
@@ -369,6 +373,13 @@ class VirtualListBasic extends Component {
 			this.adjustItemPositionWithItemSize();
 		} else {
 			this.setContainerSize();
+		}
+
+		if (this.props.scrollContentRef.current) {
+			const node = this.props.scrollContentRef.current;
+			node.addEventListener('mousedown', this.itemMovingBegin);
+			node.addEventListener('mousemove', this.itemMoving);
+			node.addEventListener('mouseup', this.itemMovingEnd);
 		}
 	}
 
@@ -511,6 +522,9 @@ class VirtualListBasic extends Component {
 	itemPositions = [];
 	indexToScrollIntoView = -1;
 
+	// Edit mode
+	editingIndex = null;
+
 	updateScrollPosition = ({x, y}, rtl = this.props.rtl) => {
 		if (this.props.scrollMode === 'native') {
 			this.scrollToPosition(x, y, rtl);
@@ -530,7 +544,7 @@ class VirtualListBasic extends Component {
 
 	getCenterItemIndexFromScrollPosition = (scrollPosition) => Math.floor((scrollPosition + (this.primary.clientSize / 2)) / this.primary.gridSize) * this.dimensionToExtent + Math.floor(this.dimensionToExtent / 2);
 
-	getGridPosition (index) {
+	getGridPosition (index) { // TBD
 		const
 			{dataSize, itemSizes} = this.props,
 			{dimensionToExtent, itemPositions, primary, secondary} = this,
@@ -561,7 +575,7 @@ class VirtualListBasic extends Component {
 	}
 
 	// For individually sized item
-	getItemBottomPosition = (index) => {
+	getItemBottomPosition = (index) => { // TBD
 		const
 			itemPosition = this.itemPositions[index],
 			itemSize = this.props.itemSizes[index];
@@ -574,11 +588,11 @@ class VirtualListBasic extends Component {
 	};
 
 	// For individually sized item
-	getItemTopPositionFromPreviousItemBottomPosition = (index, spacing) => {
+	getItemTopPositionFromPreviousItemBottomPosition = (index, spacing) => { // TBD
 		return index === 0 ? 0 : this.getItemBottomPosition(index - 1) + spacing;
 	};
 
-	getItemPosition = (index, stickTo = 'start', optionalOffset = 0) => {
+	getItemPosition = (index, stickTo = 'start', optionalOffset = 0) => { // TBD
 		const {isPrimaryDirectionVertical, primary, scrollBounds} = this;
 		const maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 		const position = this.getGridPosition(index);
@@ -688,7 +702,7 @@ class VirtualListBasic extends Component {
 		}
 	}
 
-	getStatesAndUpdateBounds = (props, firstIndex = 0) => {
+	getStatesAndUpdateBounds = (props, firstIndex = 0) => { // TBD
 		const
 			{dataSize, overhang, updateStatesAndBounds} = props,
 			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
@@ -727,7 +741,7 @@ class VirtualListBasic extends Component {
 		};
 	};
 
-	calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff, firstIndex) {
+	calculateFirstIndex (props, wasFirstIndexMax, dataSizeDiff, firstIndex) { // TBD
 		const
 			{overhang} = props,
 			{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
@@ -981,7 +995,7 @@ class VirtualListBasic extends Component {
 	}
 
 	// For individually sized item
-	calculateAndCacheItemPosition (index) {
+	calculateAndCacheItemPosition (index) { // TBD
 		const {itemSizes} = this.props;
 
 		if (!this.itemPositions[index] && itemSizes[index]) {
@@ -994,7 +1008,7 @@ class VirtualListBasic extends Component {
 	}
 
 	// For individually sized item
-	applyItemPositionToDOMElement (index) {
+	applyItemPositionToDOMElement (index) { // TBD
 		const
 			{direction, rtl} = this.props,
 			{numOfItems} = this.state,
@@ -1096,39 +1110,40 @@ class VirtualListBasic extends Component {
 		return style;
 	}
 
-	applyStyleToNewNode = (index, ...rest) => {
+	applyStyleToNewNode = (index, ...rest) => { // TBD
+		const dataIndex = index;
 		const
 			{childProps, itemRefs, itemRenderer, getComponentProps} = this.props,
 			key = index % this.state.numOfItems,
-			componentProps = getComponentProps && getComponentProps(index) || {},
+			componentProps = getComponentProps && getComponentProps(dataIndex) || {},
 			itemContainerRef = (ref) => {
 				if (ref === null) {
 					itemRefs.current[key] = ref;
 				} else {
 					const itemNode = ref.children[0];
 
-					itemRefs.current[key] = (parseInt(itemNode.dataset.index) === index) ?
+					itemRefs.current[key] = (parseInt(itemNode.dataset.index) === dataIndex) ?
 						itemNode :
-						ref.querySelector(`[data-index="${index}"]`);
+						ref.querySelector(`[data-index="${dataIndex}"]`); // TBD
 
 					this.itemContainerRefs[key] = ref;
 				}
 			};
 
-		this.cc[key] = (
+		this.cc[key] = ( // TBD
 			<div className={css.listItem} key={key} ref={itemContainerRef} style={this.composeStyle(...rest)}>
-				{itemRenderer({...childProps, ...componentProps, index})}
+				{itemRenderer({...childProps, ...componentProps, index: dataIndex})}
 			</div>
 		);
 	};
 
-	applyStyleToHideNode = (index) => {
+	applyStyleToHideNode = (index) => { // TBD
 		const
 			{itemRefs} = this.props,
 			key = index % this.state.numOfItems,
 			itemContainerRef = () => (itemRefs.current[key] = null);
 
-		this.cc[key] = <div key={key} ref={itemContainerRef} style={{display: 'none'}} />;
+		this.cc[key] = <div key={key} ref={itemContainerRef} style={{display: 'none'}} />; // TBD
 	};
 
 	positionItems () {
@@ -1224,8 +1239,54 @@ class VirtualListBasic extends Component {
 		return false;
 	};
 
+	getCCNodeFromPosition = (x, y) => {
+		if (typeof window !== 'undefined') {
+			const contentNode = this.contentRef.current;
+			let node = document.elementFromPoint(x, y);
+			if (utilDOM.containsDangerously(contentNode, node)) {
+				while (node.parentNode !== contentNode) {
+					if (node === document) {
+						return null;
+					}
+					node = node.parentNode;
+				}
+
+				return node;
+			}
+		}
+
+		return null;
+	}
+
+	getIndexFromCCNode = (node) => (node ? parseInt(node.querySelector(`[data-index]`).dataset.index) : null)
+
+	itemMovingBegin = ({clientX, clientY}) => {
+		console.log('mousedown');
+		const node = this.getCCNodeFromPosition(clientX, clientY);
+		this.editingIndex = this.getIndexFromCCNode(node);
+	}
+
+	itemMoving = ({clientX, clientY}) => {
+		console.log('mousemove');
+		if (this.editingIndex !== null) {
+			const node = this.getCCNodeFromPosition(clientX, clientY);
+			const index = this.getIndexFromCCNode(node);
+			if (index !== null) {
+				this.moveItem(this.editingIndex, index);
+				this.editingIndex = index;
+			}
+		}
+	}
+
+	itemMovingEnd = () => {
+		console.log('mouseup');
+		this.editingIndex = null;
+	}
+
 	moveItem = (from, to) => {
-		console.log('moveItem', from, to);
+		const newItemsOrder = [...Array(this.props.dataSize).keys()];
+		newItemsOrder.splice(to, 0, newItemsOrder.splice(from, 1)[0]);
+		this.emitUpdateItemsOrder(newItemsOrder);
 	}
 
 	// render
@@ -1243,12 +1304,12 @@ class VirtualListBasic extends Component {
 			),
 			contentClasses = scrollModeNative ? null : css.content;
 
-		delete rest.cbMoveItem;
 		delete rest.cbScrollTo;
 		delete rest.childProps;
 		delete rest.clientSize;
 		delete rest.dataSize;
 		delete rest.direction;
+		delete rest.editMode;
 		delete rest.getAffordance;
 		delete rest.getComponentProps;
 		delete rest.isHorizontalScrollbarVisible;
@@ -1259,6 +1320,7 @@ class VirtualListBasic extends Component {
 		delete rest.itemSizes;
 		delete rest.onUpdate;
 		delete rest.onUpdateItems;
+		delete rest.onUpdateItemsOrder;
 		delete rest.overhang;
 		delete rest.pageScroll;
 		delete rest.rtl;

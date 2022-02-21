@@ -71,8 +71,6 @@ const VirtualList = (props) => {
 VirtualList.displayName = 'ui:VirtualList';
 
 VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
-	cbMoveItem: PropTypes.func,
-
 	/**
 	 * A callback function that receives a reference to the `scrollTo` feature.
 	 *
@@ -117,6 +115,8 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 	 * @public
 	 */
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	editMode: PropTypes.bool,
 
 	/**
 	 * Specifies how to show horizontal scrollbar.
@@ -228,6 +228,8 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 	 */
 	onScrollStop: PropTypes.func,
 
+	onUpdateItemsOrder: PropTypes.func,
+
 	/**
 	 * Specifies overscroll effects shows on which type of inputs.
 	 *
@@ -279,15 +281,16 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 };
 
 VirtualList.defaultProps = {
-	cbMoveItem: nop,
 	cbScrollTo: nop,
 	direction: 'vertical',
+	editMode: false,
 	horizontalScrollbar: 'auto',
 	noScrollByDrag: false,
 	noScrollByWheel: false,
 	onScroll: nop,
 	onScrollStart: nop,
 	onScrollStop: nop,
+	onUpdateItemsOrder: nop,
 	overscrollEffectOn: {
 		drag: false,
 		pageKey: false,
@@ -344,8 +347,6 @@ const VirtualGridList = (props) => {
 VirtualGridList.displayName = 'ui:VirtualGridList';
 
 VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype */ {
-	cbMoveItem: PropTypes.func,
-
 	/**
 	 * A callback function that receives a reference to the `scrollTo` feature.
 	 *
@@ -390,6 +391,8 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 	 * @public
 	 */
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	editMode: PropTypes.bool,
 
 	/**
 	 * Specifies how to show horizontal scrollbar.
@@ -501,6 +504,8 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 	 */
 	onScrollStop: PropTypes.func,
 
+	onUpdateItemsOrder: PropTypes.func,
+
 	/**
 	 * Specifies overscroll effects shows on which type of inputs.
 	 *
@@ -552,15 +557,16 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 };
 
 VirtualGridList.defaultProps = {
-	cbMoveItem: nop,
 	cbScrollTo: nop,
 	direction: 'vertical',
+	editMode: false,
 	horizontalScrollbar: 'auto',
 	noScrollByDrag: false,
 	noScrollByWheel: false,
 	onScroll: nop,
 	onScrollStart: nop,
 	onScrollStop: nop,
+	onUpdateItemsOrder: nop,
 	overscrollEffectOn: {
 		drag: false,
 		pageKey: false,

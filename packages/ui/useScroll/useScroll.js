@@ -91,9 +91,9 @@ const useScrollBase = (props) => {
 			'data-webos-voice-focused': voiceFocused,
 			'data-webos-voice-group-label': voiceGroupLabel,
 			assignProperties,
-			cbMoveItem,
 			dataSize,
 			direction,
+			editMode,
 			horizontalScrollbar,
 			horizontalScrollbarHandle,
 			itemRenderer,
@@ -101,6 +101,7 @@ const useScrollBase = (props) => {
 			itemSizes,
 			noScrollByDrag,
 			noScrollByWheel,
+			onUpdateItemsOrder,
 			overhang,
 			overscrollEffectOn,
 			pageScroll,
@@ -1542,10 +1543,10 @@ const useScrollBase = (props) => {
 	assignProperties('scrollContentProps', {
 		...scrollContentProps,
 		...voiceProps,
-		cbMoveItem,
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
 		direction,
+		editMode,
 		get isHorizontalScrollbarVisible () {
 			return isHorizontalScrollbarVisible;
 		},
@@ -1553,6 +1554,7 @@ const useScrollBase = (props) => {
 			return isVerticalScrollbarVisible;
 		},
 		onScroll: scrollMode === 'translate' ? handleScroll : null,
+		onUpdateItemsOrder,
 		role,
 		rtl,
 		scrollContainerContainsDangerously,
