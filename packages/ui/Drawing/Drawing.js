@@ -17,23 +17,9 @@ import {useImperativeHandle, useEffect, useRef, useState} from 'react';
 
 import ForwardRef from '../ForwardRef';
 
-import css from './Drawing.module.less';
+import {drawing, fillDrawing} from './utils';
 
-/*
- * Executes the drawing on the canvas.
- */
-const drawing = (beginPoint, controlPoint, endPoint, contextRef) => {
-	contextRef.current.beginPath();
-	contextRef.current.moveTo(beginPoint.x, beginPoint.y);
-	contextRef.current.quadraticCurveTo(
-		controlPoint.x,
-		controlPoint.y,
-		endPoint.x,
-		endPoint.y
-	);
-	contextRef.current.stroke();
-	contextRef.current.closePath();
-};
+import css from './Drawing.module.less';
 
 /**
  * A basic drawing canvas component.
@@ -109,6 +95,28 @@ const DrawingBase = kind({
 		drawingRef: EnactPropTypes.ref,
 
 		/**
+		 * Indicates the tool used for drawing.
+		 *
+		 * Allowed values include:
+		 * `'brush'` - a curved line will be drawn
+		 * `'fill'` - an entire area of the canvas will be filled with the color indicated by `fillColor`
+		 *
+		 * @type {String}
+		 * @default 'brush'
+		 * @public
+		 */
+		drawingTool: PropTypes.oneOf(['brush', 'fill']),
+
+		/**
+		 * Indicates the color used for filling a canvas area when `drawingTool` is set to `'fill'`.
+		 *
+		 * @type {String}
+		 * @default 'red'
+		 * @public
+		 */
+		fillColor: PropTypes.string,
+
+		/**
 		 * Indicates if the drawing is in erasing mode.
 		 *
 		 * When `true`, the canvas' globalCompositeOperation property will be 'destination-out'.
@@ -118,6 +126,15 @@ const DrawingBase = kind({
 		 * @private
 		 */
 		isErasing: PropTypes.bool,
+
+		/**
+		 * Called when the drawingTool value is changed.
+		 *
+		 * @type {Function}
+		 * @param {String} value
+		 * @public
+		 */
+		onChangeDrawingTool: PropTypes.func,
 
 		/**
 		 * Contains the coordinates of the points that will be drawn on the canvas.
@@ -142,6 +159,8 @@ const DrawingBase = kind({
 		brushColor: 'green',
 		brushSize: 5,
 		canvasColor: 'black',
+		drawingTool: 'brush',
+		fillColor: 'red',
 		isErasing: false,
 		points: []
 	},
@@ -153,7 +172,7 @@ const DrawingBase = kind({
 	},
 
 	handlers: {
-		draw: (event, {points}) => {
+		draw: (event, {drawingTool, points}) => {
 			const {
 				beginPointRef,
 				contextRef,
@@ -164,7 +183,8 @@ const DrawingBase = kind({
 			} = event;
 			const nativeEvent = ev.nativeEvent;
 
-			if (!isDrawing) return;
+			// TODO check condition for future drawing tools
+			if (!isDrawing || drawingTool === 'fill') return;
 			let offsetX, offsetY;
 
 			if (nativeEvent.type === 'mousemove') {
@@ -210,7 +230,7 @@ const DrawingBase = kind({
 			setIsDrawing(false);
 		},
 
-		startDrawing: (event, {points}) => {
+		startDrawing: (event, {points, drawingTool}) => {
 			const {beginPointRef, contextRef, disabled, ev, setIsDrawing} = event;
 			const nativeEvent = ev.nativeEvent;
 			if (disabled) return;
@@ -219,8 +239,14 @@ const DrawingBase = kind({
 			contextRef.current.beginPath(); // start a canvas path
 			contextRef.current.moveTo(offsetX, offsetY); // move the starting point to initial position
 			points.push({x: offsetX, y: offsetY});
-			contextRef.current.lineTo(offsetX, offsetY); // draw a single point
-			contextRef.current.stroke();
+
+			if (drawingTool === 'brush') {
+				contextRef.current.lineTo(offsetX, offsetY); // draw a single point
+				contextRef.current.stroke();
+			} else if (drawingTool === 'fill') {
+				fillDrawing(ev, contextRef);
+			}
+
 			beginPointRef.current = {x: offsetX, y: offsetY};
 			setIsDrawing(true);
 		}
@@ -247,8 +273,10 @@ const DrawingBase = kind({
 		disabled,
 		draw,
 		drawingRef,
-		isErasing,
+		fillColor,
 		finisDrawing,
+		isErasing,
+		onChangeDrawingTool,
 		startDrawing,
 		...rest
 	}) => {
@@ -272,6 +300,7 @@ const DrawingBase = kind({
 			context.lineCap = 'round';
 			context.lineWidth = brushSize;
 			context.strokeStyle = brushColor;
+			context.fillStyle = fillColor;
 			contextRef.current = context;
 
 			setOffset({
@@ -286,7 +315,8 @@ const DrawingBase = kind({
 			const context = canvas.getContext('2d');
 			context.lineWidth = brushSize;
 			context.strokeStyle = brushColor;
-		}, [brushColor, brushSize]);
+			context.fillStyle = fillColor;
+		}, [brushColor, brushSize, fillColor]);
 
 		useImperativeHandle(drawingRef, () => ({
 			clearCanvas: () => {
@@ -308,11 +338,14 @@ const DrawingBase = kind({
 
 		useEffect(() => {
 			if (isErasing) {
+				onChangeDrawingTool('brush');
 				contextRef.current.globalCompositeOperation = 'destination-out';
 			} else {
 				contextRef.current.globalCompositeOperation = 'source-over';
 			}
-		}, [isErasing]);
+		}, [isErasing]); // eslint-disable-line react-hooks/exhaustive-deps
+
+		delete rest.drawingTool;
 
 		return (
 			<canvas
