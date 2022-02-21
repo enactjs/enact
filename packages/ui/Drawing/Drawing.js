@@ -313,10 +313,26 @@ const DrawingBase = kind({
 
 				const newContext = newCanvas.getContext('2d');
 
-				newContext.drawImage(canvas, 0, 0);
-				newContext.globalCompositeOperation = 'destination-over';
-				newContext.fillStyle = canvasColor;
-				newContext.fillRect(0, 0, canvas.width, canvas.height);
+				if (!backgroundImage) {
+					newContext.drawImage(canvas, 0, 0);
+					newContext.globalCompositeOperation = 'destination-over';
+					newContext.fillStyle = canvasColor;
+					newContext.fillRect(0, 0, canvas.width, canvas.height);
+				} else {
+					const img = document.createElement('img');
+					img.src = backgroundImage;
+
+					// get the scale
+					let scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+
+					// get the top left position of the image
+					let x = (canvas.width / 2) - (img.width / 2) * scale;
+					let y = (canvas.height / 2) - (img.height / 2) * scale;
+					newContext.drawImage(img, x, y, img.width * scale, img.height * scale);
+
+					newContext.globalCompositeOperation = 'source-over';
+					newContext.drawImage(canvas, 0, 0);
+				}
 
 				const link = document.createElement('a');
 				link.download = 'image.png';
