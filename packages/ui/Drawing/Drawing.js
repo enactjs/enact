@@ -19,6 +19,12 @@ import ForwardRef from '../ForwardRef';
 
 import css from './Drawing.module.less';
 
+let cursors = {
+	bucket: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAghJREFUeNrslj1uwjAUx5OKA+QIESeIxMgSRhaUhRE1YmDODSgzAxIbEyMSDDlCOABScoPmBuEGrv9pDK+O43yQTu2THoqesX9+X7YN46+J+eoCjDHrcrl4+J7P52lhTk3TTH9159vtNgSfqm3bbDqdfq5WqyPfmNM308LCMlRWy7LYYrEIERmjj/COx+NYhvi+zyBxHLPdbsccx3mM4f8vwWXo8XjMQfCMwoWEYfgY++DSG1SIDs55uR15bw09n8/+crlUQuvgURTlNtd1WStgsVOmg1K453l5jrMsy21BEOTzZrNZ3ATo8L6M5ALSQVUiwgzd7/eBFsr/7A+Hw0wHRfjgnUowBi/Rz2Ju4YQeKvJUBaVeIG9CVfOEwhFEsTMUUhRJ5YGBcWwOEaEFBzifbpdyWhdeuTeh+EZooaKYdNVenHZPURUS8tSXwIFSS/HduqoQw1ZVQG1F7uU3/JxOp/f7/V7KOWyTycRIkuTl8z1Nv2/JwWDwBBWN/cNbUal9eF6ZY1qlKDDR6LTgusIpdDQaZT9uKOrZ4XDwqqq9LVxupVIfC3DVWdoFXgulYN192QbeCErBt9vNq7s46uCNofTwwGnY5NaicPRnJyhEPNqagFXHK95W9H3VCCoue0xs8xjDwqr+h60J1CTvKYc/wpMO7zB3s9nkkVqv11e+xtX4F4V8CTAA/Hx+caeSjdgAAAAASUVORK5CYII=',
+	eraser: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAIAAABLixI0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAE1JREFUeNpiZGXnYKASYAFiAQF+fT19Sky5eOnihw8fGYDucnF1+08ZAJoANIeJgXpg1KxRs0bNGjVr1KzBaxYjsMynVj3ESMX6ESDAANA2TPNF19FGAAAAAElFTkSuQmCC',
+	pen: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAATFJREFUeNrs19FthDAMBuB0A0bICIyQERiB2yAjsEFGyAiMABuEDa5MEDZwceWc0oq6J52dp7MU8YL4sCOiH2N0qzeNazoX0MqtXiAiGEKAZVlgGIaCj5poKGhd4ziW7p0G6unBue97yDlf4eJjj9RR4nAa+10M7boOYoyAVw7HPacXlOkUO8FKKbE47j2N+/VO8cGI4x5yOKFAn9prKCLYzTM4oVEELfUkHkRRDp+mqYzXq6BXuHMOVMbL4dbatigWfs9v9I3+efa2Ri2lhMcB0AI1VTz5F5dEbRXOWFwSxRoKxOHS6HdIw7P1VzD7gWugWIv3/ioVPnANFAvmeb4KZjUeJMEPipvpHKXZ992s62q2bTPHcZR71nPdzvWpkYehiqeROlT/7XBaCZ+rLwEGAPhaImYfzD7mAAAAAElFTkSuQmCC'
+};
+
 /*
  * Executes the drawing on the canvas.
  */
@@ -49,6 +55,15 @@ const DrawingBase = kind({
 	functional: true,
 
 	propTypes: /** @lends ui/Drawing.DrawingBase.prototype */ {
+
+		/**
+		 * Indicates the image used for the background of the canvas.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		backgroundImage: PropTypes.string,
 
 		/**
 		 * Indicates the color of the brush.
@@ -138,6 +153,7 @@ const DrawingBase = kind({
 	},
 
 	defaultProps: {
+		backgroundImage: '',
 		brushColor: 'green',
 		brushSize: 5,
 		canvasColor: 'black',
@@ -165,7 +181,9 @@ const DrawingBase = kind({
 			const nativeEvent = ev.nativeEvent;
 
 			if (!isDrawing) return;
+
 			let offsetX, offsetY;
+
 			if (nativeEvent.type === 'mousemove') {
 				offsetX = nativeEvent.offsetX;
 				offsetY = nativeEvent.offsetY;
@@ -173,6 +191,7 @@ const DrawingBase = kind({
 				offsetX = nativeEvent.targetTouches[0].pageX - offset.x;
 				offsetY = nativeEvent.targetTouches[0].pageY - offset.y;
 			}
+
 			if (
 				offsetY > window.innerHeight / 1.5 ||
                 offsetX > window.innerWidth / 1.5 ||
@@ -224,10 +243,32 @@ const DrawingBase = kind({
 		}
 	},
 
+	computed: {
+		canvasStyle: ({backgroundImage, canvasColor, fillMode, isErasing}) => {
+
+			let cursor;
+			if (isErasing) {
+				cursor = cursors.eraser;
+			} else {
+				cursor = fillMode ? cursors.bucket : cursors.pen;
+			}
+
+			if (!backgroundImage) return {backgroundColor: `${canvasColor}`, cursor: `url(${cursor}) 3 27, auto`};
+
+			return {
+				backgroundImage: `url(${backgroundImage})`,
+				backgroundPosition: 'center',
+				backgroundRepeat: 'no-repeat',
+				backgroundSize: 'cover',
+				cursor: `url(${cursor}) 3 27, auto`
+			};
+		}
+	},
+
 	render: ({
 		brushColor,
 		brushSize,
-		canvasColor,
+		canvasStyle,
 		disabled,
 		draw,
 		drawingRef,
@@ -243,17 +284,9 @@ const DrawingBase = kind({
 		const canvasRef = useRef(null);
 		const contextRef = useRef(null);
 		const [offset, setOffset] = useState();
-		let cursors = {
-			bucket: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAghJREFUeNrslj1uwjAUx5OKA+QIESeIxMgSRhaUhRE1YmDODSgzAxIbEyMSDDlCOABScoPmBuEGrv9pDK+O43yQTu2THoqesX9+X7YN46+J+eoCjDHrcrl4+J7P52lhTk3TTH9159vtNgSfqm3bbDqdfq5WqyPfmNM308LCMlRWy7LYYrEIERmjj/COx+NYhvi+zyBxHLPdbsccx3mM4f8vwWXo8XjMQfCMwoWEYfgY++DSG1SIDs55uR15bw09n8/+crlUQuvgURTlNtd1WStgsVOmg1K453l5jrMsy21BEOTzZrNZ3ATo8L6M5ALSQVUiwgzd7/eBFsr/7A+Hw0wHRfjgnUowBi/Rz2Ju4YQeKvJUBaVeIG9CVfOEwhFEsTMUUhRJ5YGBcWwOEaEFBzifbpdyWhdeuTeh+EZooaKYdNVenHZPURUS8tSXwIFSS/HduqoQw1ZVQG1F7uU3/JxOp/f7/V7KOWyTycRIkuTl8z1Nv2/JwWDwBBWN/cNbUal9eF6ZY1qlKDDR6LTgusIpdDQaZT9uKOrZ4XDwqqq9LVxupVIfC3DVWdoFXgulYN192QbeCErBt9vNq7s46uCNofTwwGnY5NaicPRnJyhEPNqagFXHK95W9H3VCCoue0xs8xjDwqr+h60J1CTvKYc/wpMO7zB3s9nkkVqv11e+xtX4F4V8CTAA/Hx+caeSjdgAAAAASUVORK5CYII=',
-			eraser: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAIAAABLixI0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAE1JREFUeNpiZGXnYKASYAFiAQF+fT19Sky5eOnihw8fGYDucnF1+08ZAJoANIeJgXpg1KxRs0bNGjVr1KzBaxYjsMynVj3ESMX6ESDAANA2TPNF19FGAAAAAElFTkSuQmCC',
-			pen: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAATFJREFUeNrs19FthDAMBuB0A0bICIyQERiB2yAjsEFGyAiMABuEDa5MEDZwceWc0oq6J52dp7MU8YL4sCOiH2N0qzeNazoX0MqtXiAiGEKAZVlgGIaCj5poKGhd4ziW7p0G6unBue97yDlf4eJjj9RR4nAa+10M7boOYoyAVw7HPacXlOkUO8FKKbE47j2N+/VO8cGI4x5yOKFAn9prKCLYzTM4oVEELfUkHkRRDp+mqYzXq6BXuHMOVMbL4dbatigWfs9v9I3+efa2Ri2lhMcB0AI1VTz5F5dEbRXOWFwSxRoKxOHS6HdIw7P1VzD7gWugWIv3/ioVPnANFAvmeb4KZjUeJMEPipvpHKXZ992s62q2bTPHcZR71nPdzvWpkYehiqeROlT/7XBaCZ+rLwEGAPhaImYfzD7mAAAAAElFTkSuQmCC'
-		};
-		let cursor;
-		if (isErasing) {
-			cursor = cursors.eraser;
-		} else {
-			cursor = fillMode ? cursors.bucket : cursors.pen;
-		}
+
+		delete rest.backgroundImage;
+		delete rest.canvasColor;
 
 		useEffect(() => {
 			const canvas = canvasRef.current;
@@ -310,10 +343,7 @@ const DrawingBase = kind({
 		return (
 			<canvas
 				{...rest}
-				style={{
-					backgroundColor: `${canvasColor}`,
-					cursor: `url(${cursor}) 3 27, auto`
-				}}
+				style={canvasStyle}
 				ref={canvasRef}
 				onMouseDown={(ev) =>
 					startDrawing({
