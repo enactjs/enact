@@ -272,7 +272,6 @@ const DrawingBase = kind({
 		disabled,
 		draw,
 		drawingRef,
-		fillMode,
 		isErasing,
 		finishDrawing,
 		startDrawing,
