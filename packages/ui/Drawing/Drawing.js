@@ -1,22 +1,29 @@
 /* eslint-disable react-hooks/rules-of-hooks, react/jsx-no-bind */
 
+/**
+ * Unstyled drawing canvas components and behaviors to be customized by a theme or application.
+ *
+ * @module ui/Drawing
+ * @exports Drawing
+ * @exports DrawingBase
+ * @exports DrawingDecorator
+ */
+
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import {useImperativeHandle, useEffect, useRef, useState} from 'react';
 
-import EnactPropTypes from '../../core/internal/prop-types';
 import ForwardRef from '../ForwardRef';
 
 import css from './Drawing.module.less';
 
-const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing) => {
+/*
+ * Executes the drawing on the canvas.
+ */
+const drawing = (beginPoint, controlPoint, endPoint, contextRef) => {
 	contextRef.current.beginPath();
-	if (isErasing) {
-		contextRef.current.globalCompositeOperation = 'destination-out';
-	} else {
-		contextRef.current.globalCompositeOperation = 'source-over';
-	}
 	contextRef.current.moveTo(beginPoint.x, beginPoint.y);
 	contextRef.current.quadraticCurveTo(
 		controlPoint.x,
@@ -28,20 +35,105 @@ const drawing = (beginPoint, controlPoint, endPoint, contextRef, isErasing) => {
 	contextRef.current.closePath();
 };
 
+/**
+ * A basic drawing canvas component.
+ *
+ * @class DrawingBase
+ * @memberof ui/Drawing
+ * @ui
+ * @public
+ */
 const DrawingBase = kind({
-	name: 'Drawing',
+	name: 'ui:Drawing',
 
 	functional: true,
 
-	propTypes: {
+	propTypes: /** @lends ui/Drawing.DrawingBase.prototype */ {
+
+		/**
+		 * Indicates the image used for the background of the canvas.
+		 *
+		 * @type {String}
+		 * @default 'green'
+		 * @public
+		 */
 		backgroundImage: PropTypes.string,
+
+		/**
+		 * Indicates the color of the brush.
+		 *
+		 * @type {String}
+		 * @default 'green'
+		 * @public
+		 */
 		brushColor: PropTypes.string,
+
+		/**
+		 * Indicates the size of the brush.
+		 *
+		 * @type {Number}
+		 * @default 5
+		 * @public
+		 */
 		brushSize: PropTypes.number,
+
+		/**
+		 * Indicates the background color of the canvas.
+		 *
+		 * @type {String}
+		 * @default 'black'
+		 * @public
+		 */
 		canvasColor: PropTypes.string,
+
+		/**
+		 * Applies the `disabled` class.
+		 *
+		 * When `true`, the canvas is shown as disabled.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Drawing.Drawing}, the `ref` prop is forwarded to this
+		 * component as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
 		drawingRef: EnactPropTypes.ref,
+
+		/**
+		 * Indicates if the drawing is in erasing mode.
+		 *
+		 * When `true`, the canvas' globalCompositeOperation property will be 'destination-out'.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
 		isErasing: PropTypes.bool,
+
+		/**
+		 * Contains the coordinates of the points that will be drawn on the canvas.
+		 *
+		 * @type {Array}
+		 * @private
+		 */
 		points: PropTypes.array,
+
+		/**
+		 * Called when canvas is currently being drawn.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @private
+		 */
 		setIsDrawing: PropTypes.func
 	},
 
@@ -67,7 +159,6 @@ const DrawingBase = kind({
 				contextRef,
 				ev,
 				isDrawing,
-				isErasing,
 				offset,
 				setIsDrawing
 			} = event;
@@ -104,8 +195,7 @@ const DrawingBase = kind({
 					beginPointRef.current,
 					controlPoint,
 					endPoint,
-					contextRef,
-					isErasing
+					contextRef
 				);
 				beginPointRef.current = endPoint;
 			}
@@ -127,6 +217,8 @@ const DrawingBase = kind({
 			contextRef.current.beginPath(); // start a canvas path
 			contextRef.current.moveTo(offsetX, offsetY); // move the starting point to initial position
 			points.push({x: offsetX, y: offsetY});
+			contextRef.current.lineTo(offsetX, offsetY); // draw a single point
+			contextRef.current.stroke();
 			beginPointRef.current = {x: offsetX, y: offsetY};
 			setIsDrawing(true);
 		}
@@ -203,10 +295,22 @@ const DrawingBase = kind({
 
 				contextRef.current.globalCompositeOperation = 'destination-out';
 				context.fillRect(0, 0, canvas.width, canvas.height);
-				contextRef.current.globalCompositeOperation = 'source-over';
+
+				if (isErasing) {
+					contextRef.current.globalCompositeOperation = 'destination-out';
+				} else {
+					contextRef.current.globalCompositeOperation = 'source-over';
+				}
 			}
 		}));
 
+		useEffect(() => {
+			if (isErasing) {
+				contextRef.current.globalCompositeOperation = 'destination-out';
+			} else {
+				contextRef.current.globalCompositeOperation = 'source-over';
+			}
+		}, [isErasing]);
 
 		return (
 			<canvas
@@ -225,7 +329,6 @@ const DrawingBase = kind({
 				onMouseMove={(ev) =>
 					draw({
 						isDrawing,
-						isErasing,
 						contextRef,
 						beginPointRef,
 						ev,
@@ -246,7 +349,6 @@ const DrawingBase = kind({
 				onTouchMove={(ev) =>
 					draw({
 						isDrawing,
-						isErasing,
 						contextRef,
 						beginPointRef,
 						ev,
@@ -260,8 +362,27 @@ const DrawingBase = kind({
 	}
 });
 
+/**
+ * Applies Drawing behaviors.
+ *
+ * @hoc
+ * @memberof ui/Drawing
+ * @mixes ui/ForwardRef.ForwardRef
+ * @public
+ */
 const DrawingDecorator = compose(ForwardRef({prop: 'drawingRef'}));
 
+/**
+ * A simple, unstyled drawing canvas component.
+ *
+ * @class Drawing
+ * @memberof ui/Drawing
+ * @extends ui/Drawing.DrawingBase
+ * @mixes ui/Drawing.DrawingDecorator
+ * @omit drawingRef
+ * @ui
+ * @public
+ */
 const Drawing = DrawingDecorator(DrawingBase);
 
 export default Drawing;
