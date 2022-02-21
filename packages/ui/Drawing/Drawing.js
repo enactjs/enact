@@ -166,6 +166,7 @@ const DrawingBase = kind({
 
 			if (!isDrawing) return;
 			let offsetX, offsetY;
+
 			if (nativeEvent.type === 'mousemove') {
 				offsetX = nativeEvent.offsetX;
 				offsetY = nativeEvent.offsetY;
@@ -173,6 +174,7 @@ const DrawingBase = kind({
 				offsetX = nativeEvent.targetTouches[0].pageX - offset.x;
 				offsetY = nativeEvent.targetTouches[0].pageY - offset.y;
 			}
+
 			if (
 				offsetY > window.innerHeight / 1.5 ||
                 offsetX > window.innerWidth / 1.5 ||
@@ -225,7 +227,7 @@ const DrawingBase = kind({
 	},
 
 	computed: {
-		backgroundStyle: ({canvasColor, backgroundImage}) => {
+		backgroundStyle: ({backgroundImage, canvasColor}) => {
 
 			if (!backgroundImage) return {backgroundColor: `${canvasColor}`};
 
