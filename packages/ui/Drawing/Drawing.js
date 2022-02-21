@@ -174,6 +174,7 @@ const DrawingBase = kind({
 			} = event;
 			const nativeEvent = ev.nativeEvent;
 
+			//TODO check condition for future drawing tools
 			if (!isDrawing || drawingTool === 'fill') return;
 			let offsetX, offsetY;
 
@@ -233,7 +234,7 @@ const DrawingBase = kind({
 			if (drawingTool === 'brush') {
 				contextRef.current.lineTo(offsetX, offsetY); // draw a single point
 				contextRef.current.stroke();
-			} else {
+			} else if (drawingTool === 'fill') {
 				fillDrawing(ev, contextRef);
 			}
 
