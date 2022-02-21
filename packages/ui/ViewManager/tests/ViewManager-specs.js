@@ -205,11 +205,11 @@ describe('ViewManager', () => {
 	test('should have 1 child when noAnimation is true', () => {
 		render(
 			<ViewManager data-testid="viewManager" duration={0} index={0} noAnimation>
-				<div className="view">View 1</div>
-				<div className="view">View 2</div>
-				<div className="view">View 3</div>
-				<div className="view">View 4</div>
-				<div className="view">View 5</div>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+				<div>View 4</div>
+				<div>View 5</div>
 			</ViewManager>
 		);
 
