@@ -17,28 +17,14 @@ import {useImperativeHandle, useEffect, useRef, useState} from 'react';
 
 import ForwardRef from '../ForwardRef';
 
+import {drawing, fillDrawing} from './utils';
+
 import css from './Drawing.module.less';
 
 let cursors = {
 	bucket: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAghJREFUeNrslj1uwjAUx5OKA+QIESeIxMgSRhaUhRE1YmDODSgzAxIbEyMSDDlCOABScoPmBuEGrv9pDK+O43yQTu2THoqesX9+X7YN46+J+eoCjDHrcrl4+J7P52lhTk3TTH9159vtNgSfqm3bbDqdfq5WqyPfmNM308LCMlRWy7LYYrEIERmjj/COx+NYhvi+zyBxHLPdbsccx3mM4f8vwWXo8XjMQfCMwoWEYfgY++DSG1SIDs55uR15bw09n8/+crlUQuvgURTlNtd1WStgsVOmg1K453l5jrMsy21BEOTzZrNZ3ATo8L6M5ALSQVUiwgzd7/eBFsr/7A+Hw0wHRfjgnUowBi/Rz2Ju4YQeKvJUBaVeIG9CVfOEwhFEsTMUUhRJ5YGBcWwOEaEFBzifbpdyWhdeuTeh+EZooaKYdNVenHZPURUS8tSXwIFSS/HduqoQw1ZVQG1F7uU3/JxOp/f7/V7KOWyTycRIkuTl8z1Nv2/JwWDwBBWN/cNbUal9eF6ZY1qlKDDR6LTgusIpdDQaZT9uKOrZ4XDwqqq9LVxupVIfC3DVWdoFXgulYN192QbeCErBt9vNq7s46uCNofTwwGnY5NaicPRnJyhEPNqagFXHK95W9H3VCCoue0xs8xjDwqr+h60J1CTvKYc/wpMO7zB3s9nkkVqv11e+xtX4F4V8CTAA/Hx+caeSjdgAAAAASUVORK5CYII=',
 	eraser: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAIAAABLixI0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAE1JREFUeNpiZGXnYKASYAFiAQF+fT19Sky5eOnihw8fGYDucnF1+08ZAJoANIeJgXpg1KxRs0bNGjVr1KzBaxYjsMynVj3ESMX6ESDAANA2TPNF19FGAAAAAElFTkSuQmCC',
 	pen: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAATFJREFUeNrs19FthDAMBuB0A0bICIyQERiB2yAjsEFGyAiMABuEDa5MEDZwceWc0oq6J52dp7MU8YL4sCOiH2N0qzeNazoX0MqtXiAiGEKAZVlgGIaCj5poKGhd4ziW7p0G6unBue97yDlf4eJjj9RR4nAa+10M7boOYoyAVw7HPacXlOkUO8FKKbE47j2N+/VO8cGI4x5yOKFAn9prKCLYzTM4oVEELfUkHkRRDp+mqYzXq6BXuHMOVMbL4dbatigWfs9v9I3+efa2Ri2lhMcB0AI1VTz5F5dEbRXOWFwSxRoKxOHS6HdIw7P1VzD7gWugWIv3/ioVPnANFAvmeb4KZjUeJMEPipvpHKXZ992s62q2bTPHcZR71nPdzvWpkYehiqeROlT/7XBaCZ+rLwEGAPhaImYfzD7mAAAAAElFTkSuQmCC'
-};
-
-/*
- * Executes the drawing on the canvas.
- */
-const drawing = (beginPoint, controlPoint, endPoint, contextRef) => {
-	contextRef.current.beginPath();
-	contextRef.current.moveTo(beginPoint.x, beginPoint.y);
-	contextRef.current.quadraticCurveTo(
-		controlPoint.x,
-		controlPoint.y,
-		endPoint.x,
-		endPoint.y
-	);
-	contextRef.current.stroke();
-	contextRef.current.closePath();
 };
 
 /**
@@ -115,13 +101,26 @@ const DrawingBase = kind({
 		drawingRef: EnactPropTypes.ref,
 
 		/**
-		 * Indicates if the drawing is in fill mode.
+		 * Indicates the tool used for drawing.
 		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
+		 * Allowed values include:
+		 * `'brush'` - a curved line will be drawn
+		 * `'fill'` - an entire area of the canvas will be filled with the color indicated by `fillColor`
+		 *
+		 * @type {String}
+		 * @default 'brush'
+		 * @public
 		 */
-		fillMode: PropTypes.bool,
+		drawingTool: PropTypes.oneOf(['brush', 'fill']),
+
+		/**
+		 * Indicates the color used for filling a canvas area when `drawingTool` is set to `'fill'`.
+		 *
+		 * @type {String}
+		 * @default 'red'
+		 * @public
+		 */
+		fillColor: PropTypes.string,
 
 		/**
 		 * Indicates if the drawing is in erasing mode.
@@ -133,6 +132,15 @@ const DrawingBase = kind({
 		 * @private
 		 */
 		isErasing: PropTypes.bool,
+
+		/**
+		 * Called when the drawingTool value is changed.
+		 *
+		 * @type {Function}
+		 * @param {String} value
+		 * @public
+		 */
+		onChangeDrawingTool: PropTypes.func,
 
 		/**
 		 * Contains the coordinates of the points that will be drawn on the canvas.
@@ -157,7 +165,8 @@ const DrawingBase = kind({
 		brushColor: 'green',
 		brushSize: 5,
 		canvasColor: 'black',
-		fillMode: false,
+		drawingTool: 'brush',
+		fillColor: 'red',
 		isErasing: false,
 		points: []
 	},
@@ -169,7 +178,7 @@ const DrawingBase = kind({
 	},
 
 	handlers: {
-		draw: (event, {points}) => {
+		draw: (event, {drawingTool, points}) => {
 			const {
 				beginPointRef,
 				contextRef,
@@ -180,8 +189,8 @@ const DrawingBase = kind({
 			} = event;
 			const nativeEvent = ev.nativeEvent;
 
-			if (!isDrawing) return;
-
+			// TODO check condition for future drawing tools
+			if (!isDrawing || drawingTool === 'fill') return;
 			let offsetX, offsetY;
 
 			if (nativeEvent.type === 'mousemove') {
@@ -227,7 +236,7 @@ const DrawingBase = kind({
 			setIsDrawing(false);
 		},
 
-		startDrawing: (event, {points}) => {
+		startDrawing: (event, {points, drawingTool}) => {
 			const {beginPointRef, contextRef, disabled, ev, setIsDrawing} = event;
 			const nativeEvent = ev.nativeEvent;
 			if (disabled) return;
@@ -236,21 +245,27 @@ const DrawingBase = kind({
 			contextRef.current.beginPath(); // start a canvas path
 			contextRef.current.moveTo(offsetX, offsetY); // move the starting point to initial position
 			points.push({x: offsetX, y: offsetY});
-			contextRef.current.lineTo(offsetX, offsetY); // draw a single point
-			contextRef.current.stroke();
+
+			if (drawingTool === 'brush') {
+				contextRef.current.lineTo(offsetX, offsetY); // draw a single point
+				contextRef.current.stroke();
+			} else if (drawingTool === 'fill') {
+				fillDrawing(ev, contextRef);
+			}
+
 			beginPointRef.current = {x: offsetX, y: offsetY};
 			setIsDrawing(true);
 		}
 	},
 
 	computed: {
-		canvasStyle: ({backgroundImage, canvasColor, fillMode, isErasing}) => {
+		canvasStyle: ({backgroundImage, canvasColor, drawingTool, isErasing}) => {
 
 			let cursor;
 			if (isErasing) {
 				cursor = cursors.eraser;
 			} else {
-				cursor = fillMode ? cursors.bucket : cursors.pen;
+				cursor = (drawingTool === 'fill') ? cursors.bucket : cursors.pen;
 			}
 
 			if (!backgroundImage) return {backgroundColor: `${canvasColor}`, cursor: `url(${cursor}) 3 27, auto`};
@@ -266,14 +281,18 @@ const DrawingBase = kind({
 	},
 
 	render: ({
+		backgroundImage,
 		brushColor,
 		brushSize,
+		canvasColor,
 		canvasStyle,
 		disabled,
 		draw,
 		drawingRef,
-		isErasing,
+		fillColor,
 		finishDrawing,
+		isErasing,
+		onChangeDrawingTool,
 		startDrawing,
 		...rest
 	}) => {
@@ -283,9 +302,6 @@ const DrawingBase = kind({
 		const canvasRef = useRef(null);
 		const contextRef = useRef(null);
 		const [offset, setOffset] = useState();
-
-		delete rest.backgroundImage;
-		delete rest.canvasColor;
 
 		useEffect(() => {
 			const canvas = canvasRef.current;
@@ -297,6 +313,7 @@ const DrawingBase = kind({
 			context.lineCap = 'round';
 			context.lineWidth = brushSize;
 			context.strokeStyle = brushColor;
+			context.fillStyle = fillColor;
 			contextRef.current = context;
 
 			setOffset({
@@ -311,7 +328,8 @@ const DrawingBase = kind({
 			const context = canvas.getContext('2d');
 			context.lineWidth = brushSize;
 			context.strokeStyle = brushColor;
-		}, [brushColor, brushSize]);
+			context.fillStyle = fillColor;
+		}, [brushColor, brushSize, fillColor]);
 
 		useImperativeHandle(drawingRef, () => ({
 			clearCanvas: () => {
@@ -328,16 +346,57 @@ const DrawingBase = kind({
 				} else {
 					contextRef.current.globalCompositeOperation = 'source-over';
 				}
+			},
+
+			saveCanvas: () => {
+				const canvas = canvasRef.current;
+				const newCanvas = document.createElement('canvas');
+
+				newCanvas.height = canvas.height;
+				newCanvas.width = canvas.width;
+
+				const newContext = newCanvas.getContext('2d');
+
+				if (!backgroundImage) {
+					newContext.drawImage(canvas, 0, 0);
+					newContext.globalCompositeOperation = 'destination-over';
+					newContext.fillStyle = canvasColor;
+					newContext.fillRect(0, 0, canvas.width, canvas.height);
+				} else {
+					const img = document.createElement('img');
+					img.src = backgroundImage;
+
+					// get the scale
+					let scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+
+					// get the top left position of the image
+					let x = (canvas.width / 2) - (img.width / 2) * scale;
+					let y = (canvas.height / 2) - (img.height / 2) * scale;
+					newContext.drawImage(img, x, y, img.width * scale, img.height * scale);
+
+					newContext.globalCompositeOperation = 'source-over';
+					newContext.drawImage(canvas, 0, 0);
+				}
+
+				const link = document.createElement('a');
+				link.download = 'image.png';
+				newCanvas.toBlob(function (blob) {
+					link.href = URL.createObjectURL(blob);
+					link.click();
+				}, 'image/png');
 			}
 		}));
 
 		useEffect(() => {
 			if (isErasing) {
+				onChangeDrawingTool('brush');
 				contextRef.current.globalCompositeOperation = 'destination-out';
 			} else {
 				contextRef.current.globalCompositeOperation = 'source-over';
 			}
-		}, [isErasing]);
+		}, [isErasing]); // eslint-disable-line react-hooks/exhaustive-deps
+
+		delete rest.drawingTool;
 
 		return (
 			<canvas
