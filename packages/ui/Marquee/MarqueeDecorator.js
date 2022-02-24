@@ -147,12 +147,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardEnter = forward(enter);
 	const forwardLeave = forward(leave);
 
-	const determineTextDirection = (node, rtl, forceDirection) => {
+	const determineTextDirection = (node, rtl, forceDirection, noRtlOverride) => {
 		// Text directionality is a function of locale direction (rtl), content (node.textContent),
 		// and props (forceDirection) in increasing order of significance.
 		if (forceDirection) {
 			rtl = forceDirection === 'rtl';
-		} else if (node) {
+		} else if (!noRtlOverride && node) {
 			rtl = marqueeDirection(node.textContent) === 'rtl';
 		}
 
@@ -286,6 +286,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeSpeed: PropTypes.number,
 
 			/**
+			 * If true, the rtl value is not overridden by the result of the
+			 * marqueeDirection function.
+			 * In other words, the rtl value is not determined by the content.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			noRtlOverride: PropTypes.bool,
+
+			/**
 			 * Used to signal for a remeasurement inside of marquee.
 			 *
 			 * The value must change for the remeasurement to take place. The value
@@ -321,7 +331,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				animating: false,
 				overflow: 'ellipsis',
 				promoted: false,
-				rtl: determineTextDirection(null, props.rtl, props.forceDirection)
+				rtl: determineTextDirection(null, props.rtl, props.forceDirection, props.noRtlOverride)
 			};
 			this.sync = false;
 			this.timerState = TimerState.CLEAR;
@@ -347,7 +357,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeSpeed, rtl} = this.props;
+			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeSpeed, noRtlOverride, rtl} = this.props;
 
 			let forceRestartMarquee = false;
 
@@ -372,6 +382,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				prevProps.marqueeOn !== marqueeOn ||
 				prevProps.marqueeDisabled !== marqueeDisabled ||
 				prevProps.marqueeSpeed !== marqueeSpeed ||
+				prevProps.noRtlOverride !== noRtlOverride ||
 				prevProps.forceDirection !== forceDirection
 			) {
 				this.cancelAnimation();
@@ -820,7 +831,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		validateTextDirection () {
 			this.setState((state, props) => {
-				const rtl = determineTextDirection(this.node, props.rtl, props.forceDirection);
+				const rtl = determineTextDirection(this.node, props.rtl, props.forceDirection, props.noRtlOverride);
 				return state.rtl === rtl ? null : {rtl};
 			});
 		}
@@ -862,6 +873,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.marqueeSpacing;
 			delete rest.marqueeResetDelay;
 			delete rest.marqueeSpeed;
+			delete rest.noRtlOverride;
 			delete rest.remeasure;
 			delete rest.rtl;
 
@@ -900,6 +912,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.marqueeSpacing;
 			delete props.marqueeResetDelay;
 			delete props.marqueeSpeed;
+			delete props.noRtlOverride;
 			delete props.remeasure;
 			delete props.rtl;
 
