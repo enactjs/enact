@@ -90,6 +90,8 @@ const isLeft = is('left');
 const isRight = is('right');
 const isUp = is('up');
 
+let focusEffect = document.createElement('div');
+
 /**
  * Translates keyCodes into 5-way direction descriptions (e.g. `'down'`)
  *
@@ -230,7 +232,14 @@ const Spotlight = (function () {
 			_duringFocusChange = false;
 			return true;
 		}
+		const elemRect = elem.getBoundingClientRect();
 
+		focusEffect.style.left = `${elemRect.x + window.scrollX}px`;
+		focusEffect.style.top = `${elemRect.y + window.scrollY}px`;
+		focusEffect.style.width = `${elemRect.width}px`;
+		focusEffect.style.height = `${elemRect.height}px`;
+
+		// elem.style.outline = 'none';
 		elem.focus(focusOptions);
 
 		_duringFocusChange = false;
@@ -937,6 +946,15 @@ const Spotlight = (function () {
 	};
 	window.addEventListener('load', () => {
 		if (typeof window === 'object' && !_initialized) {
+			document.body.appendChild(focusEffect);
+
+			focusEffect.style.position = 'absolute';
+			focusEffect.style.boxShadow = '0 0 0 1px rgba(29, 155, 209, 0.5), 0 0 3px 5px rgba(74, 182, 237, 0.4)';
+			focusEffect.style.borderRadius = '4px';
+			focusEffect.style.transition = 'top 0.2s ease-in-out, left 0.2s ease-in-out';
+			focusEffect.style.willChange = 'top, left';
+			focusEffect.style.zIndex = 10001;
+
 			Spotlight.initialize({
 				selector: '.' + spottableClass,
 				restrict: 'none'
