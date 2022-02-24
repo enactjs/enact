@@ -333,12 +333,12 @@ class VirtualListBasic extends Component {
 			prevFirstIndex: 0,
 			updateFrom: 0,
 			updateTo: 0,
-			editMode: props.editMode,
 			...nextState
 		};
 
 		this.emitUpdateItemsOrder = props.onUpdateItemsOrder;
 		window.moveItem = this.moveItem; // FIXME: for testing only
+		window.setEditMode = this.setEditMode; // FIXME: for testing only
 	}
 
 	static getDerivedStateFromProps (props, state) {
@@ -375,12 +375,7 @@ class VirtualListBasic extends Component {
 			this.setContainerSize();
 		}
 
-		if (this.props.scrollContentRef.current) {
-			const node = this.props.scrollContentRef.current;
-			node.addEventListener('mousedown', this.itemMovingBegin);
-			node.addEventListener('mousemove', this.itemMoving);
-			node.addEventListener('mouseup', this.itemMovingEnd);
-		}
+		this.setEditMode(this.props.editMode);
 	}
 
 	componentDidUpdate (prevProps, prevState) {
@@ -484,6 +479,10 @@ class VirtualListBasic extends Component {
 			this.props.cbScrollTo({position: (this.isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 			this.scrollToPositionTarget = -1;
 		}
+
+		if (prevProps.editMode !== this.props.editMode) {
+			this.setEditMode(this.props.editMode);
+		}
 	}
 
 	scrollBounds = {
@@ -523,7 +522,15 @@ class VirtualListBasic extends Component {
 	indexToScrollIntoView = -1;
 
 	// Edit mode
-	editingIndex = null;
+	editModeInfo = {
+		editingIndex: null,
+		editingNode: null,
+		editingDataOrder: null,
+		itemSize: {width: null, height: null},
+		lastPointer: {clientX: null, clientY: null},
+		lastVisualIndex: null,
+		scrollContentBounds: {clientWidth: null, x: null, y: null}
+	}
 
 	updateScrollPosition = ({x, y}, rtl = this.props.rtl) => {
 		if (this.props.scrollMode === 'native') {
@@ -700,6 +707,8 @@ class VirtualListBasic extends Component {
 			this.updateScrollPosition(this.getXY(this.scrollPosition, 0));
 			node.style.scrollBehavior = 'smooth';
 		}
+
+		this.calculateMetricsForEditMode(node);
 	}
 
 	getStatesAndUpdateBounds = (props, firstIndex = 0) => { // TBD
@@ -908,7 +917,7 @@ class VirtualListBasic extends Component {
 
 	didScroll (x, y) {
 		const
-			{dataSize, spacing, itemSizes} = this.props,
+			{dataSize, spacing, itemSizes, editMode} = this.props,
 			{firstIndex} = this.state,
 			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds, itemPositions} = this,
 			{clientSize, gridSize} = this.primary,
@@ -991,6 +1000,10 @@ class VirtualListBasic extends Component {
 
 		if (this.shouldUpdateBounds || firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
+		}
+
+		if (editMode && this.editModeInfo.editingNode) {
+			this.updateMovingItem();
 		}
 	}
 
@@ -1110,11 +1123,12 @@ class VirtualListBasic extends Component {
 		return style;
 	}
 
-	applyStyleToNewNode = (index, ...rest) => { // TBD
-		const dataIndex = index;
+	applyStyleToNewNode = (visualIndex, ...rest) => { // TBD
+		//const dataIndex = this.props.editMode ? this.editModeInfo.editingDataOrder[visualIndex] : visualIndex;
+		const dataIndex = visualIndex;
 		const
 			{childProps, itemRefs, itemRenderer, getComponentProps} = this.props,
-			key = index % this.state.numOfItems,
+			key = dataIndex % this.state.numOfItems,
 			componentProps = getComponentProps && getComponentProps(dataIndex) || {},
 			itemContainerRef = (ref) => {
 				if (ref === null) {
@@ -1137,14 +1151,85 @@ class VirtualListBasic extends Component {
 		);
 	};
 
-	applyStyleToHideNode = (index) => { // TBD
+	applyStyleToHideNode = (visualIndex) => { // TBD
 		const
 			{itemRefs} = this.props,
-			key = index % this.state.numOfItems,
+			key = visualIndex % this.state.numOfItems,
 			itemContainerRef = () => (itemRefs.current[key] = null);
 
 		this.cc[key] = <div key={key} ref={itemContainerRef} style={{display: 'none'}} />; // TBD
 	};
+
+	getPrevPosition (position, indexInExtent) {
+		const {dimensionToExtent, itemPositions, primary, secondary} = this;
+
+		if (indexInExtent === 0) {
+			if (this.props.itemSizes) {
+				if (itemPositions[i - 1] || itemPositions[i - 1] === 0) {
+					position.primaryPosition = itemPositions[i - 1].position;
+				} else if (itemSizes[i]) {
+					position.primaryPosition -= itemSizes[i] + this.props.spacing;
+				} else {
+					position.primaryPosition -= primary.gridSize;
+				}
+			} else {
+				position.primaryPosition -= primary.gridSize;
+			}
+			position.secondaryPosition = 0;
+			return dimensionToExtent - 1;
+		} else {
+			position.secondaryPosition += secondary.gridSize;
+			return indexInExtent - 1;
+		}
+	}
+
+	getNextPosition (position, indexInExtent) {
+		const {dimensionToExtent, itemPositions, primary, secondary} = this;
+
+		if (indexInExtent + 1 >= dimensionToExtent) {
+			if (this.props.itemSizes) {
+				if (itemPositions[i + 1] || itemPositions[i + 1] === 0) {
+					position.primaryPosition = itemPositions[i + 1].position;
+				} else if (itemSizes[i]) {
+					position.primaryPosition += itemSizes[i] + this.props.spacing;
+				} else {
+					position.primaryPosition += primary.gridSize;
+				}
+			} else {
+				position.primaryPosition += primary.gridSize;
+			}
+			position.secondaryPosition = 0;
+			return 0;
+		} else {
+			position.secondaryPosition += secondary.gridSize;
+			return indexInExtent + 1;
+		}
+	}
+
+	setCCNodeStyle (node, {action, position}) {
+		if (node) {
+			const style = node.style;
+			switch (action) {
+				case 'hide':
+					style.opacity = 0;
+					style.transition = null;
+					break;
+				case 'animate':
+					style.opacity = null;
+					style.transition = 'transform 1000ms';
+					break;
+				case 'reset':
+				default:
+					style.opacity = null;
+					style.transition = null;
+					break;
+			}
+			if (position) {
+				const {x, y} = this.getXY(position.primaryPosition, position.secondaryPosition);
+				style.transform = `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`;
+			}
+		}
+	}
 
 	positionItems () {
 		const
@@ -1163,40 +1248,62 @@ class VirtualListBasic extends Component {
 			updateTo = dataSize;
 		}
 
-		let
-			width, height,
-			{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom);
-
-		width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
-		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
-
+		let width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
+		let height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
+		let position = this.getGridPosition(updateFrom);
+		let indexInExtent = updateFrom % dimensionToExtent;
+		if (updateFrom > this.editModeInfo.editingIndex) {
+			indexInExtent = this.getPrevPosition(position, indexInExtent);
+		}
 		// positioning items
-		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
-			this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
+		for (let index = updateFrom; index < updateTo; index++) {
+			const itemRef = this.props.itemRefs.current[index % this.state.numOfItems];
+			const CCNode = itemRef ? itemRef.parentNode : null;
+			if (this.props.editMode && this.editModeInfo.editingIndex !== null) {
+				const {editingIndex, lastVisualIndex} = this.editModeInfo;
 
-			if (++j === dimensionToExtent) {
-				secondaryPosition = 0;
-
-				if (this.props.itemSizes) {
-					if (itemPositions[i + 1] || itemPositions[i + 1] === 0) {
-						primaryPosition = itemPositions[i + 1].position;
-					} else if (itemSizes[i]) {
-						primaryPosition += itemSizes[i] + this.props.spacing;
-					} else {
-						primaryPosition += primary.gridSize;
-					}
-				} else {
-					primaryPosition += primary.gridSize;
+				if (index === editingIndex) {
+					this.setCCNodeStyle(CCNode, {action: 'hide'});
+					continue;
 				}
 
-				j = 0;
+				if (lastVisualIndex >= editingIndex && index === lastVisualIndex + 1 ||
+					lastVisualIndex < editingIndex && index === lastVisualIndex) {
+					indexInExtent = this.getNextPosition(position, indexInExtent);
+				}
+
+				this.setCCNodeStyle(CCNode, {action: 'animate', position});
+				indexInExtent = this.getNextPosition(position, indexInExtent);
 			} else {
-				secondaryPosition += secondary.gridSize;
+				this.setCCNodeStyle(CCNode, {action: 'reset', position});
+				this.applyStyleToNewNode(index, width, height, position.primaryPosition, position.secondaryPosition);
+				indexInExtent = this.getNextPosition(position, indexInExtent);
 			}
+			/*
+			if (++indexInExtent === dimensionToExtent) {
+				position.secondaryPosition = 0;
+
+				if (this.props.itemSizes) {
+					if (itemPositions[index + 1] || itemPositions[index + 1] === 0) {
+						position.primaryPosition = itemPositions[index + 1].position;
+					} else if (itemSizes[index]) {
+						position.primaryPosition += itemSizes[index] + this.props.spacing;
+					} else {
+						position.primaryPosition += primary.gridSize;
+					}
+				} else {
+					position.primaryPosition += primary.gridSize;
+				}
+
+				indexInExtent = 0;
+			} else {
+				position.secondaryPosition += secondary.gridSize;
+			}
+			*/
 		}
 
-		for (let i = updateTo; i < hideTo; i++) {
-			this.applyStyleToHideNode(i);
+		for (let index = updateTo; index < hideTo; index++) {
+			this.applyStyleToHideNode(index);
 		}
 	}
 
@@ -1239,10 +1346,140 @@ class VirtualListBasic extends Component {
 		return false;
 	};
 
-	getCCNodeFromPosition = (x, y) => {
+	setEditMode = (on) => {
+		if (on) {
+			if (this.props.scrollContentRef.current) {
+				const node = this.props.scrollContentRef.current;
+				node.addEventListener('mousedown', this.itemMovingBegin);
+				node.addEventListener('mousemove', this.itemMoving);
+				node.addEventListener('mouseup', this.itemMovingEnd);
+			}
+			this.initializeEditingDataOrder();
+		} else {
+			if (this.props.scrollContentRef.current) {
+				const node = this.props.scrollContentRef.current;
+				node.removeEventListener('mousedown', this.itemMovingBegin);
+				node.removeEventListener('mousemove', this.itemMoving);
+				node.removeEventListener('mouseup', this.itemMovingEnd);
+			}
+			this.editModeInfo.editingDataOrder = null;
+		}
+	};
+
+	moveItem = (dataIndex, toVisualIndex) => {
+		if (this.props.editMode) {
+			const order = this.editModeInfo.editingDataOrder;
+			const fromVisualIndex = order.indexOf(dataIndex);
+			if (fromVisualIndex !== toVisualIndex) {
+				order.splice(
+					toVisualIndex,
+					0,
+					order.splice(
+						fromVisualIndex,
+						1
+					)[0]
+				);
+				this.editModeInfo.lastVisualIndex = toVisualIndex;
+
+				this.forceUpdate();
+			}
+		} else {
+			// In this case, visual index is the same as data index
+			if (dataIndex !== toVisualIndex) {
+				const newItemsOrder = [...Array(this.props.dataSize).keys()];
+				newItemsOrder.splice(toVisualIndex, 0, newItemsOrder.splice(dataIndex, 1)[0]);
+				this.emitUpdateItemsOrder(newItemsOrder);
+			}
+		}
+	};
+
+	calculateMetricsForEditMode = (node) => {
+		if (node) {
+			const {primary, secondary, isPrimaryDirectionVertical} = this;
+			const {itemSize, scrollContentBounds} = this.editModeInfo;
+			const {clientWidth} = node;
+			const {x, y} = node.getBoundingClientRect();
+			let [xAxis, yAxis] = [primary, secondary];
+			if (isPrimaryDirectionVertical) {
+				[xAxis, yAxis] = [yAxis, xAxis];
+			}
+
+			scrollContentBounds.clientWidth = clientWidth;
+			scrollContentBounds.x = x;
+			scrollContentBounds.y = y;
+			itemSize.width = xAxis.itemSize;
+			itemSize.height = yAxis.itemSize;
+		}
+	};
+
+	updateMovingPosition = (clientX, clientY) => {
+		this.editModeInfo.lastPointer.clientX = clientX;
+		this.editModeInfo.lastPointer.clientY = clientY;
+	};
+
+	initializeEditingDataOrder = () => {
+		this.editModeInfo.editingDataOrder = [...Array(this.props.dataSize).keys()];
+	};
+
+	getXYPositionFromClientXY = (clientX, clientY) => {
+		const {scrollContentBounds: {clientWidth, x, y}} = this.editModeInfo;
+		const relativeX = this.props.rtl ? clientWidth - (clientX - x) : clientX - x;
+		const relativeY = clientY - y;
+		if (this.isPrimaryDirectionVertical) {
+			return {
+				x: relativeX,
+				y: relativeY + this.scrollPosition
+			};
+		} else {
+			return {
+				x: relativeX + this.scrollPosition,
+				y: relativeY
+			};
+		}
+	};
+
+	getPositionFromClientXY = () => {
+		const {clientX, clientY} = this.editModeInfo.lastPointer;
+		const {x, y} = this.getXYPositionFromClientXY(clientX, clientY);
+		if (this.isPrimaryDirectionVertical) {
+			return {
+				primaryPosition: y,
+				secondaryPosition: x
+			};
+		} else {
+			return {
+				primaryPosition: x,
+				secondaryPosition: y
+			};
+		}
+	};
+
+	getVisualIndexFromPosition = () => {
+		const {dataSize, itemSizes} = this.props;
+		const {dimensionToExtent, itemPositions, primary, secondary} = this;
+		const {primaryPosition, secondaryPosition} = this.getPositionFromClientXY();
+
+		if (itemSizes && typeof itemSizes[index] !== 'undefined') {
+			// TBD: refer getGridPosition() to fill this
+			return null;
+		} else {
+			const primaryIndex = Math.floor(primaryPosition / primary.gridSize);
+			const secondaryIndex = Math.floor(secondaryPosition / secondary.gridSize);
+
+			// return null if the coordinate points to space between items
+			if ((primaryIndex * primary.gridSize + primary.itemSize < primaryPosition) ||
+				(secondaryIndex * secondary.gridSize + secondary.itemSize < secondaryPosition)) {
+				return null;
+			}
+
+			return primaryIndex * dimensionToExtent + secondaryIndex;
+		}
+	};
+
+	getDataIndexFromPosition = (clientX, clientY) => {
 		if (typeof window !== 'undefined') {
 			const contentNode = this.contentRef.current;
-			let node = document.elementFromPoint(x, y);
+			let node = document.elementFromPoint(clientX, clientY);
 			if (utilDOM.containsDangerously(contentNode, node)) {
 				while (node.parentNode !== contentNode) {
 					if (node === document) {
@@ -1251,43 +1488,94 @@ class VirtualListBasic extends Component {
 					node = node.parentNode;
 				}
 
-				return node;
+				if (node) {
+					return parseInt(node.querySelector(`[data-index]`).dataset.index);
+				}
 			}
 		}
 
 		return null;
-	}
+	};
 
-	getIndexFromCCNode = (node) => (node ? parseInt(node.querySelector(`[data-index]`).dataset.index) : null)
+	// getDataIndexFromItemNode = (node) => (node ? parseInt(node.querySelector(`[data-index]`).dataset.index) : null);
+
+	calculateMovingItemPosition = () => {
+		const {itemSize: {width, height}, lastPointer: {clientX, clientY}} = this.editModeInfo;
+		const {x, y} = this.getXYPositionFromClientXY(
+			clientX - (this.props.rtl ? -1 : 1) * width / 2,
+			clientY - height / 2
+		);
+		return {x, y, width, height};
+	};
+
+	addMovingItem = () => {
+		/* TBD: using this.itemContainerRefs[key] ? */
+		const {childProps, itemRenderer, getComponentProps} = this.props;
+		const {x, y, width, height} = this.calculateMovingItemPosition();
+		const componentProps = getComponentProps && getComponentProps(this.editModeInfo.editingIndex) || {};
+		const itemContainerRef = (ref) => {
+			this.editModeInfo.editingNode = ref;
+		}
+		const style = {
+			width: width + 'px',
+			height: height + 'px',
+			/* FIXME: RTL / this calculation only works for Chrome */
+			transform: `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`,
+			zIndex: 10
+		};
+
+		this.cc[this.state.numOfItems] = (
+			<div className={css.listItem} key={-1} style={style} ref={itemContainerRef}>
+				{itemRenderer({...childProps, ...componentProps, index: this.editModeInfo.editingIndex})}
+			</div>
+		);
+
+		this.forceUpdate();
+	};
+
+	updateMovingItem = () => {
+		const {x, y} = this.calculateMovingItemPosition();
+		this.editModeInfo.editingNode.style.transform = `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`;
+	};
+
+	removeMovingItem = () => {
+		if (this.cc.length > this.state.numOfItems) {
+			this.cc.pop();
+		}
+
+		// do not call this.forceUpdate() here since this.emitUpdateItemsOrder() will be called in itemMovingEnd.
+	};
 
 	itemMovingBegin = ({clientX, clientY}) => {
-		console.log('mousedown');
-		const node = this.getCCNodeFromPosition(clientX, clientY);
-		this.editingIndex = this.getIndexFromCCNode(node);
-	}
+		const {x, y} = this.props.scrollContentRef.current.getBoundingClientRect();
+
+		this.initializeEditingDataOrder();
+		this.editModeInfo.editingIndex = this.getDataIndexFromPosition(clientX, clientY);
+		this.editModeInfo.lastVisualIndex = this.editModeInfo.editingIndex;
+		this.updateMovingPosition(clientX, clientY);
+
+		this.addMovingItem();
+	};
 
 	itemMoving = ({clientX, clientY}) => {
-		console.log('mousemove');
-		if (this.editingIndex !== null) {
-			const node = this.getCCNodeFromPosition(clientX, clientY);
-			const index = this.getIndexFromCCNode(node);
+		if (this.editModeInfo.editingIndex !== null) {
+			this.updateMovingPosition(clientX, clientY);
+
+			const index = this.getVisualIndexFromPosition();
 			if (index !== null) {
-				this.moveItem(this.editingIndex, index);
-				this.editingIndex = index;
+				this.moveItem(this.editModeInfo.editingIndex, index);
 			}
+
+			this.updateMovingItem();
 		}
 	}
 
 	itemMovingEnd = () => {
-		console.log('mouseup');
-		this.editingIndex = null;
-	}
-
-	moveItem = (from, to) => {
-		const newItemsOrder = [...Array(this.props.dataSize).keys()];
-		newItemsOrder.splice(to, 0, newItemsOrder.splice(from, 1)[0]);
-		this.emitUpdateItemsOrder(newItemsOrder);
-	}
+		this.editModeInfo.editingIndex = null;
+		this.removeMovingItem();
+		this.emitUpdateItemsOrder(this.editModeInfo.editingDataOrder);
+		this.editModeInfo.editingDataOrder = null;
+	};
 
 	// render
 
