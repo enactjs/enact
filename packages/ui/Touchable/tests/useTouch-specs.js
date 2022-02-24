@@ -204,9 +204,13 @@ describe('useTouch', () => {
 			);
 			const component = screen.getByTestId('component');
 
-			const mouseDownEvent = createEvent.mouseDown(component, {ev:{timeStamp: 1}});
-			const mouseUpEvent = createEvent.mouseUp(component, {ev:{timeStamp: 1}});
-			const clickEvent = createEvent.click(component, {ev:{timeStamp: 1}});
+			const mouseDownEvent = createEvent.mouseDown(component, {});
+			const mouseUpEvent = createEvent.mouseUp(component, {});
+			const clickEvent = createEvent.click(component, {});
+
+			Object.defineProperty(mouseDownEvent, 'timeStamp', {value: 1});
+			Object.defineProperty(mouseUpEvent, 'timeStamp', {value: 1});
+			Object.defineProperty(clickEvent, 'timeStamp', {value: 1});
 
 			fireEvent(component, mouseDownEvent);
 			fireEvent(component, mouseUpEvent);
