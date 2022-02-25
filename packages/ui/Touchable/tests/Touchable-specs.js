@@ -256,7 +256,6 @@ describe('Touchable', () => {
 			const clickEvent = createEvent.click(component, {});
 
 			// a matching timeStamp is used by Touchable to prevent multiple onTaps on "true"
-
 			// click (mouseup + click)
 			Object.defineProperty(mouseDownEvent, 'timeStamp', {value: 1});
 			Object.defineProperty(mouseUpEvent, 'timeStamp', {value: 1});
