@@ -93,6 +93,7 @@ const useScrollBase = (props) => {
 			assignProperties,
 			dataSize,
 			direction,
+			editMode,
 			horizontalScrollbar,
 			horizontalScrollbarHandle,
 			itemRenderer,
@@ -100,6 +101,7 @@ const useScrollBase = (props) => {
 			itemSizes,
 			noScrollByDrag,
 			noScrollByWheel,
+			onUpdateItemsOrder,
 			overhang,
 			overscrollEffectOn,
 			pageScroll,
@@ -1544,6 +1546,7 @@ const useScrollBase = (props) => {
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
 		direction,
+		editMode,
 		get isHorizontalScrollbarVisible () {
 			return isHorizontalScrollbarVisible;
 		},
@@ -1551,6 +1554,7 @@ const useScrollBase = (props) => {
 			return isVerticalScrollbarVisible;
 		},
 		onScroll: scrollMode === 'translate' ? handleScroll : null,
+		onUpdateItemsOrder,
 		role,
 		rtl,
 		scrollContainerContainsDangerously,

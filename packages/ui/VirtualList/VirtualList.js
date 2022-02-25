@@ -116,6 +116,8 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 	 */
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
+	editMode: PropTypes.bool,
+
 	/**
 	 * Specifies how to show horizontal scrollbar.
 	 *
@@ -226,6 +228,8 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 	 */
 	onScrollStop: PropTypes.func,
 
+	onUpdateItemsOrder: PropTypes.func,
+
 	/**
 	 * Specifies overscroll effects shows on which type of inputs.
 	 *
@@ -279,12 +283,14 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 VirtualList.defaultProps = {
 	cbScrollTo: nop,
 	direction: 'vertical',
+	editMode: false,
 	horizontalScrollbar: 'auto',
 	noScrollByDrag: false,
 	noScrollByWheel: false,
 	onScroll: nop,
 	onScrollStart: nop,
 	onScrollStop: nop,
+	onUpdateItemsOrder: nop,
 	overscrollEffectOn: {
 		drag: false,
 		pageKey: false,
@@ -385,6 +391,8 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 	 * @public
 	 */
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	editMode: PropTypes.bool,
 
 	/**
 	 * Specifies how to show horizontal scrollbar.
@@ -496,6 +504,8 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 	 */
 	onScrollStop: PropTypes.func,
 
+	onUpdateItemsOrder: PropTypes.func,
+
 	/**
 	 * Specifies overscroll effects shows on which type of inputs.
 	 *
@@ -549,12 +559,14 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 VirtualGridList.defaultProps = {
 	cbScrollTo: nop,
 	direction: 'vertical',
+	editMode: false,
 	horizontalScrollbar: 'auto',
 	noScrollByDrag: false,
 	noScrollByWheel: false,
 	onScroll: nop,
 	onScrollStart: nop,
 	onScrollStop: nop,
+	onUpdateItemsOrder: nop,
 	overscrollEffectOn: {
 		drag: false,
 		pageKey: false,
