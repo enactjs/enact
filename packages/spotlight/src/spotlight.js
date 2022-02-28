@@ -954,7 +954,7 @@ const Spotlight = (function () {
 			focusEffect.style.transition = 'top 0.2s ease-in-out, left 0.2s ease-in-out';
 			focusEffect.style.willChange = 'top, left';
 			focusEffect.style.zIndex = 10001;
-
+			focusEffect.style.pointerEvents = 'none';
 			Spotlight.initialize({
 				selector: '.' + spottableClass,
 				restrict: 'none'
