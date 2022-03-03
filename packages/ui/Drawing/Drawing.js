@@ -252,14 +252,17 @@ const DrawingBase = kind({
 			} else if (drawingTool === 'fill') {
 				fillDrawing(ev, contextRef);
 			} else if (drawingTool === 'triangle') {
-				contextRef.current.moveTo(offsetX, offsetY);
-				contextRef.current.lineTo(offsetX - 100, offsetY);
-				contextRef.current.lineTo(offsetX - 50, offsetY - 100);
-				contextRef.current.lineTo(offsetX, offsetY);
+				const newOffsetY = offsetY - (100 * Math.sqrt(3) / 3);
+				contextRef.current.moveTo(offsetX, newOffsetY);
+				contextRef.current.lineTo(offsetX - 50, newOffsetY + 100);
+				contextRef.current.lineTo(offsetX + 50, newOffsetY + 100);
+				contextRef.current.lineTo(offsetX, newOffsetY);
 				contextRef.current.stroke();
 				return;
 			} else if (drawingTool === 'rectangle') {
-				contextRef.current.rect(offsetX, offsetY, 200, 150);
+				const height = 75;
+				const width = 100;
+				contextRef.current.rect(offsetX - (width / 2), offsetY - (height / 2), width, height);
 				contextRef.current.stroke();
 				return;
 			} else if (drawingTool === 'circle') {
