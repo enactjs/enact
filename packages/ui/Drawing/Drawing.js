@@ -111,7 +111,7 @@ const DrawingBase = kind({
 		 * @default 'brush'
 		 * @public
 		 */
-		drawingTool: PropTypes.oneOf(['brush', 'fill', 'line', 'rectangle', 'circle']),
+		drawingTool: PropTypes.oneOf(['brush', 'fill', 'line', 'rectangle', 'circle', 'erase']),
 
 		/**
 		 * Indicates the color used for filling a canvas area when `drawingTool` is set to `'fill'`.
