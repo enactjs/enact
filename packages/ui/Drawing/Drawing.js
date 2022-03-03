@@ -111,7 +111,7 @@ const DrawingBase = kind({
 		 * @default 'brush'
 		 * @public
 		 */
-		drawingTool: PropTypes.oneOf(['brush', 'fill']),
+		drawingTool: PropTypes.oneOf(['brush', 'fill', 'line', 'rectangle', 'circle']),
 
 		/**
 		 * Indicates the color used for filling a canvas area when `drawingTool` is set to `'fill'`.
@@ -202,8 +202,8 @@ const DrawingBase = kind({
 			}
 
 			if (
-				offsetY > window.innerHeight / 1.5 ||
-                offsetX > window.innerWidth / 1.5 ||
+				offsetY > window.innerHeight / 2 ||
+                offsetX > window.innerWidth / 2 ||
                 offsetX < 0 ||
                 offsetY < 0
 			) {
@@ -305,10 +305,10 @@ const DrawingBase = kind({
 
 		useEffect(() => {
 			const canvas = canvasRef.current;
-			canvas.height = window.innerHeight / 1.5;
-			canvas.width = window.innerWidth / 1.5;
-			canvas.style.height = `${window.innerHeight / 1.5}px`;
-			canvas.style.width = `${window.innerWidth / 1.5}px`;
+			canvas.height = window.innerHeight / 2;
+			canvas.width = window.innerWidth / 2;
+			canvas.style.height = `${window.innerHeight / 2}px`;
+			canvas.style.width = `${window.innerWidth / 2}px`;
 			const context = canvas.getContext('2d');
 			context.lineCap = 'round';
 			context.lineWidth = brushSize;
