@@ -198,7 +198,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * The default behavior, if this prop is unset, is to evaluate the text content for
 			 * directionality using {@link i18n/util.isRtlText}.
 			 *
-			 * If `'locale'`, the `direction` is determined by the locale, same as {@link ui/Marquee.MarqueeDecorator.rtl}
+			 * If `'locale'`, the `direction` is determined by the locale, same as {@link ui/Marquee.MarqueeDecorator.rtl}.
 			 * In other words, it will not consider the text content for determining the direction.
 			 *
 			 * @type {String}
