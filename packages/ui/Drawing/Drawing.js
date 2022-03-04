@@ -124,15 +124,6 @@ const DrawingBase = kind({
 		fillColor: PropTypes.string,
 
 		/**
-		 * Called when the drawingTool value is changed.
-		 *
-		 * @type {Function}
-		 * @param {String} value
-		 * @public
-		 */
-		onChangeDrawingTool: PropTypes.func,
-
-		/**
 		 * Contains the coordinates of the points that will be drawn on the canvas.
 		 *
 		 * @type {Array}
@@ -300,7 +291,6 @@ const DrawingBase = kind({
 		drawingTool,
 		fillColor,
 		finishDrawing,
-		onChangeDrawingTool,
 		startDrawing,
 		...rest
 	}) => {
@@ -397,7 +387,6 @@ const DrawingBase = kind({
 
 		useEffect(() => {
 			if (drawingTool === 'erase') {
-				onChangeDrawingTool('erase');
 				contextRef.current.globalCompositeOperation = 'destination-out';
 			} else {
 				contextRef.current.globalCompositeOperation = 'source-over';
