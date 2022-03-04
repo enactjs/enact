@@ -391,7 +391,7 @@ const DrawingBase = kind({
 			} else {
 				contextRef.current.globalCompositeOperation = 'source-over';
 			}
-		}, [drawingTool]); // eslint-disable-line react-hooks/exhaustive-deps
+		}, [drawingTool]);
 
 		delete rest.drawingTool;
 
