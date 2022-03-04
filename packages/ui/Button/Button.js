@@ -216,17 +216,13 @@ const ButtonBase = kind({
 				props.flip = iconFlip;
 			}
 
-			if (icon === true) {
-				return (
-					<ComponentOverride {...props} />
-				);
-			} else {
-				return (
-					<ComponentOverride {...props}>
-						{icon}
-					</ComponentOverride>
-				);
+			if (icon !== true) {
+				props.children = icon;
 			}
+
+			return (
+				<ComponentOverride {...props} />
+			);
 		}
 	},
 
