@@ -526,10 +526,12 @@ class VirtualListBasic extends Component {
 		editingIndex: null,
 		editingNode: null,
 		editingDataOrder: null,
+		guessPosition: false,
 		itemSize: {width: null, height: null},
 		lastPointer: {clientX: null, clientY: null},
 		lastVisualIndex: null,
-		scrollContentBounds: {clientWidth: null, x: null, y: null}
+		scrollContentBounds: {clientWidth: null, x: null, y: null},
+		transitionTime: '100ms'
 	}
 
 	updateScrollPosition = ({x, y}, rtl = this.props.rtl) => {
@@ -1160,15 +1162,15 @@ class VirtualListBasic extends Component {
 		this.cc[key] = <div key={key} ref={itemContainerRef} style={{display: 'none'}} />; // TBD
 	};
 
-	getPrevPosition (position, indexInExtent) {
+	getPrevPosition (index, position, indexInExtent) {
 		const {dimensionToExtent, itemPositions, primary, secondary} = this;
 
 		if (indexInExtent === 0) {
 			if (this.props.itemSizes) {
-				if (itemPositions[i - 1] || itemPositions[i - 1] === 0) {
-					position.primaryPosition = itemPositions[i - 1].position;
-				} else if (itemSizes[i]) {
-					position.primaryPosition -= itemSizes[i] + this.props.spacing;
+				if (itemPositions[index - 1] || itemPositions[index - 1] === 0) {
+					position.primaryPosition = itemPositions[index - 1].position;
+				} else if (itemSizes[index]) {
+					position.primaryPosition -= itemSizes[index] + this.props.spacing;
 				} else {
 					position.primaryPosition -= primary.gridSize;
 				}
@@ -1183,15 +1185,15 @@ class VirtualListBasic extends Component {
 		}
 	}
 
-	getNextPosition (position, indexInExtent) {
+	getNextPosition (index, position, indexInExtent) {
 		const {dimensionToExtent, itemPositions, primary, secondary} = this;
 
 		if (indexInExtent + 1 >= dimensionToExtent) {
 			if (this.props.itemSizes) {
-				if (itemPositions[i + 1] || itemPositions[i + 1] === 0) {
-					position.primaryPosition = itemPositions[i + 1].position;
-				} else if (itemSizes[i]) {
-					position.primaryPosition += itemSizes[i] + this.props.spacing;
+				if (itemPositions[index + 1] || itemPositions[index + 1] === 0) {
+					position.primaryPosition = itemPositions[index + 1].position;
+				} else if (itemSizes[index]) {
+					position.primaryPosition += itemSizes[index] + this.props.spacing;
 				} else {
 					position.primaryPosition += primary.gridSize;
 				}
@@ -1216,7 +1218,7 @@ class VirtualListBasic extends Component {
 					break;
 				case 'animate':
 					style.opacity = null;
-					style.transition = 'transform 1000ms';
+					style.transition = `transform ${this.editModeInfo.transitionTime}`;
 					break;
 				case 'reset':
 				default:
@@ -1252,9 +1254,14 @@ class VirtualListBasic extends Component {
 		let height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
 		let position = this.getGridPosition(updateFrom);
 		let indexInExtent = updateFrom % dimensionToExtent;
-		if (updateFrom > this.editModeInfo.editingIndex) {
-			indexInExtent = this.getPrevPosition(position, indexInExtent);
+
+		if (this.editModeInfo.guessPosition) {
+			this.itemMoving(this.editModeInfo.lastPointer);
 		}
+		if (this.editModeInfo.editingIndex !== null && updateFrom > this.editModeInfo.editingIndex) {
+			indexInExtent = this.getPrevPosition(updateFrom, position, indexInExtent);
+		}
+
 		// positioning items
 		for (let index = updateFrom; index < updateTo; index++) {
 			const itemRef = this.props.itemRefs.current[index % this.state.numOfItems];
@@ -1269,15 +1276,20 @@ class VirtualListBasic extends Component {
 
 				if (lastVisualIndex >= editingIndex && index === lastVisualIndex + 1 ||
 					lastVisualIndex < editingIndex && index === lastVisualIndex) {
-					indexInExtent = this.getNextPosition(position, indexInExtent);
+					indexInExtent = this.getNextPosition(index, position, indexInExtent);
 				}
 
-				this.setCCNodeStyle(CCNode, {action: 'animate', position});
-				indexInExtent = this.getNextPosition(position, indexInExtent);
+				if (index !== parseInt(CCNode.querySelector(`[data-index]`).dataset.index)) {
+					this.setCCNodeStyle(CCNode, {action: 'reset'});
+					this.applyStyleToNewNode(index, width, height, position.primaryPosition, position.secondaryPosition);
+				} else {
+					this.setCCNodeStyle(CCNode, {action: 'animate', position});
+				}
+				indexInExtent = this.getNextPosition(index, position, indexInExtent);
 			} else {
 				this.setCCNodeStyle(CCNode, {action: 'reset', position});
 				this.applyStyleToNewNode(index, width, height, position.primaryPosition, position.secondaryPosition);
-				indexInExtent = this.getNextPosition(position, indexInExtent);
+				indexInExtent = this.getNextPosition(index, position, indexInExtent);
 			}
 			/*
 			if (++indexInExtent === dimensionToExtent) {
@@ -1353,6 +1365,8 @@ class VirtualListBasic extends Component {
 				node.addEventListener('mousedown', this.itemMovingBegin);
 				node.addEventListener('mousemove', this.itemMoving);
 				node.addEventListener('mouseup', this.itemMovingEnd);
+				node.addEventListener('mouseenter', this.itemMovingEnter);
+				node.addEventListener('mouseleave', this.itemMovingLeave);
 			}
 			this.initializeEditingDataOrder();
 		} else {
@@ -1361,6 +1375,8 @@ class VirtualListBasic extends Component {
 				node.removeEventListener('mousedown', this.itemMovingBegin);
 				node.removeEventListener('mousemove', this.itemMoving);
 				node.removeEventListener('mouseup', this.itemMovingEnd);
+				node.removeEventListener('mouseenter', this.itemMovingEnter);
+				node.removeEventListener('mouseleave', this.itemMovingLeave);
 			}
 			this.editModeInfo.editingDataOrder = null;
 		}
@@ -1575,6 +1591,16 @@ class VirtualListBasic extends Component {
 		this.removeMovingItem();
 		this.emitUpdateItemsOrder(this.editModeInfo.editingDataOrder);
 		this.editModeInfo.editingDataOrder = null;
+	};
+
+	itemMovingEnter = () => {
+		this.editModeInfo.guessPosition = false;
+	};
+
+	itemMovingLeave = () => {
+		if (this.editModeInfo.editingIndex !== null) {
+			this.editModeInfo.guessPosition = true;
+		}
 	};
 
 	// render
