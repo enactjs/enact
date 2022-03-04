@@ -368,9 +368,19 @@ const useScrollBase = (props) => {
 			if (scrollMode === 'translate') {
 				scrollTo({position: {x: 0, y: 0}, animate: false});
 			} else {
+				if ( platform.platformName === 'androidChrome' || platform.platformName === 'ios' ) {
+					scrollContentRef.current.style.overflow = 'hidden';
+				}
 				scrollContentRef.current.style.scrollBehavior = null;
+
 				scrollContentHandle.current.scrollToPosition(0, 0);
-				scrollContentRef.current.style.scrollBehavior = 'smooth';
+
+				setTimeout(() => {
+					if ( platform.platformName === 'androidChrome' || platform.platformName === 'ios' ) {
+						scrollContentRef.current.style.overflow = '';
+					}
+					scrollContentRef.current.style.scrollBehavior = 'smooth';
+				}, 100);
 			}
 
 			enqueueForceUpdate();

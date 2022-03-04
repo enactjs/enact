@@ -21,6 +21,8 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Fixed
 
+- `ui/Scrollable/ScrollableNative` to stop scroller momentum when the window resizes
+- `ui/useScroll/useScroll` to stop scroller momentum when the window resizes
 - `spotlight/SpotlightRootDecorator` to show focus effect after initial loading
 - `ui/MarqueeDecorator` to restart animation when text changed while focus retained
 
