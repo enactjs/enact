@@ -8,7 +8,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/MarqueeDecorator` prop `noRtlOverride ` to not override the RTL direction depending on the content
+- `ui/MarqueeDecorator` `locale` type for `forceDirection` prop not to override the direction depending on contents
 
 ## [4.1.2] - 2021-12-22
 
