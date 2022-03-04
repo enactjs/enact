@@ -16,6 +16,7 @@ import compose from 'ramda/src/compose';
 import {useImperativeHandle, useEffect, useRef, useState} from 'react';
 
 import ForwardRef from '../ForwardRef';
+import ri from '../resolution';
 
 import {drawing, fillDrawing} from './utils';
 
@@ -111,7 +112,7 @@ const DrawingBase = kind({
 		 * @default 'brush'
 		 * @public
 		 */
-		drawingTool: PropTypes.oneOf(['brush', 'fill']),
+		drawingTool: PropTypes.oneOf(['brush', 'fill', 'line', 'rectangle', 'circle', 'erase']),
 
 		/**
 		 * Indicates the color used for filling a canvas area when `drawingTool` is set to `'fill'`.
@@ -121,17 +122,6 @@ const DrawingBase = kind({
 		 * @public
 		 */
 		fillColor: PropTypes.string,
-
-		/**
-		 * Indicates if the drawing is in erasing mode.
-		 *
-		 * When `true`, the canvas' globalCompositeOperation property will be 'destination-out'.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		isErasing: PropTypes.bool,
 
 		/**
 		 * Called when the drawingTool value is changed.
@@ -167,7 +157,6 @@ const DrawingBase = kind({
 		canvasColor: 'black',
 		drawingTool: 'brush',
 		fillColor: 'red',
-		isErasing: false,
 		points: []
 	},
 
@@ -202,10 +191,10 @@ const DrawingBase = kind({
 			}
 
 			if (
-				offsetY > window.innerHeight / 1.5 ||
-                offsetX > window.innerWidth / 1.5 ||
-                offsetX < 0 ||
-                offsetY < 0
+				offsetY > ri.scale(1000) ||
+				offsetX > ri.scale(2000) ||
+				offsetX < 0 ||
+				offsetY < 0
 			) {
 				setIsDrawing(false);
 				return;
@@ -259,10 +248,10 @@ const DrawingBase = kind({
 	},
 
 	computed: {
-		canvasStyle: ({backgroundImage, canvasColor, drawingTool, isErasing}) => {
+		canvasStyle: ({backgroundImage, canvasColor, drawingTool}) => {
 
 			let cursor;
-			if (isErasing) {
+			if (drawingTool === 'erase') {
 				cursor = cursors.eraser;
 			} else {
 				cursor = (drawingTool === 'fill') ? cursors.bucket : cursors.pen;
@@ -289,9 +278,9 @@ const DrawingBase = kind({
 		disabled,
 		draw,
 		drawingRef,
+		drawingTool,
 		fillColor,
 		finishDrawing,
-		isErasing,
 		onChangeDrawingTool,
 		startDrawing,
 		...rest
@@ -305,10 +294,10 @@ const DrawingBase = kind({
 
 		useEffect(() => {
 			const canvas = canvasRef.current;
-			canvas.height = window.innerHeight / 1.5;
-			canvas.width = window.innerWidth / 1.5;
-			canvas.style.height = `${window.innerHeight / 1.5}px`;
-			canvas.style.width = `${window.innerWidth / 1.5}px`;
+			canvas.height = ri.scale(1000);
+			canvas.width = ri.scale(2000);
+			canvas.style.height = `${ri.scale(1000)}px`;
+			canvas.style.width = `${ri.scale(2000)}px`;
 			const context = canvas.getContext('2d');
 			context.lineCap = 'round';
 			context.lineWidth = brushSize;
@@ -341,7 +330,7 @@ const DrawingBase = kind({
 				contextRef.current.globalCompositeOperation = 'destination-out';
 				context.fillRect(0, 0, canvas.width, canvas.height);
 
-				if (isErasing) {
+				if (drawingTool === 'erase') {
 					contextRef.current.globalCompositeOperation = 'destination-out';
 				} else {
 					contextRef.current.globalCompositeOperation = 'source-over';
@@ -388,13 +377,13 @@ const DrawingBase = kind({
 		}));
 
 		useEffect(() => {
-			if (isErasing) {
-				onChangeDrawingTool('brush');
+			if (drawingTool === 'erase') {
+				onChangeDrawingTool('erase');
 				contextRef.current.globalCompositeOperation = 'destination-out';
 			} else {
 				contextRef.current.globalCompositeOperation = 'source-over';
 			}
-		}, [isErasing]); // eslint-disable-line react-hooks/exhaustive-deps
+		}, [drawingTool]); // eslint-disable-line react-hooks/exhaustive-deps
 
 		delete rest.drawingTool;
 
