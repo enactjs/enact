@@ -192,9 +192,9 @@ const DrawingBase = kind({
 
 			if (
 				offsetY > ri.scale(1000) ||
-                offsetX > ri.scale(2000) ||
-                offsetX < 0 ||
-                offsetY < 0
+				offsetX > ri.scale(2000) ||
+				offsetX < 0 ||
+				offsetY < 0
 			) {
 				setIsDrawing(false);
 				return;
