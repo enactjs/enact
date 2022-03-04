@@ -112,7 +112,7 @@ const DrawingBase = kind({
 		 * @default 'brush'
 		 * @public
 		 */
-		drawingTool: PropTypes.oneOf(['brush', 'fill', 'line', 'rectangle', 'circle', 'erase']),
+		drawingTool: PropTypes.oneOf(['brush', 'fill', 'triangle', 'rectangle', 'circle', 'erase']),
 
 		/**
 		 * Indicates the color used for filling a canvas area when `drawingTool` is set to `'fill'`.
@@ -240,6 +240,25 @@ const DrawingBase = kind({
 				contextRef.current.stroke();
 			} else if (drawingTool === 'fill') {
 				fillDrawing(ev, contextRef);
+			} else if (drawingTool === 'triangle') {
+				const newOffsetY = offsetY - (100 * Math.sqrt(3) / 3);
+				contextRef.current.moveTo(offsetX, newOffsetY);
+				contextRef.current.lineTo(offsetX - 50, newOffsetY + 100);
+				contextRef.current.lineTo(offsetX + 50, newOffsetY + 100);
+				contextRef.current.lineTo(offsetX, newOffsetY);
+				contextRef.current.stroke();
+				return;
+			} else if (drawingTool === 'rectangle') {
+				const height = 75;
+				const width = 100;
+				contextRef.current.rect(offsetX - (width / 2), offsetY - (height / 2), width, height);
+				contextRef.current.stroke();
+				return;
+			} else if (drawingTool === 'circle') {
+				contextRef.current.beginPath();
+				contextRef.current.arc(offsetX, offsetY, 50, 0, 2 * Math.PI);
+				contextRef.current.stroke();
+				return;
 			}
 
 			beginPointRef.current = {x: offsetX, y: offsetY};
