@@ -432,6 +432,8 @@ class VirtualListBasic extends Component {
 
 				this.indexToScrollIntoView = -1;
 			}
+
+			this.resetEditModeInfo();
 		}
 
 		if (
@@ -457,6 +459,8 @@ class VirtualListBasic extends Component {
 			});
 
 			deferScrollTo = true;
+
+			this.resetEditModeInfo();
 		} else if (this.hasDataSizeChanged) {
 			const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
 			// eslint-disable-next-line react/no-did-update-set-state
@@ -1241,8 +1245,8 @@ class VirtualListBasic extends Component {
 		const {editingIndex, guessPosition} = this.editModeInfo;
 		let
 			hideTo = 0,
-			updateFrom = cc.length ? this.state.updateFrom : firstIndex,
-			updateTo = cc.length ? this.state.updateTo : firstIndex + numOfItems;
+			updateFrom = cc.length && !guessPosition ? this.state.updateFrom : firstIndex,
+			updateTo = cc.length && !guessPosition ? this.state.updateTo : firstIndex + numOfItems;
 
 		if (updateFrom >= updateTo) {
 			return;
@@ -1258,7 +1262,7 @@ class VirtualListBasic extends Component {
 
 		if (editingIndex !== null) {
 			if (guessPosition) {
-				this.itemMoving(this.editModeInfo.lastPointer);
+				this.itemMoving(this.editModeInfo.lastPointer, true);
 			}
 			if (updateFrom > editingIndex) {
 				indexInExtent = this.getPrevPosition(updateFrom, position, indexInExtent);
@@ -1268,6 +1272,7 @@ class VirtualListBasic extends Component {
 		// positioning items
 		for (let index = updateFrom; index < updateTo; index++) {
 			const itemContainer = this.itemContainerRefs[index % this.state.numOfItems];
+
 			if (this.props.editMode && editingIndex !== null) {
 				const {lastVisualIndex} = this.editModeInfo;
 
@@ -1281,7 +1286,7 @@ class VirtualListBasic extends Component {
 					indexInExtent = this.getNextPosition(index, position, indexInExtent);
 				}
 
-				if (index !== parseInt(itemContainer.querySelector('[data-index]').dataset.index)) {
+				if (index !== this.getDataIndexFromNode(itemContainer)) {
 					this.setItemContainerStyle(itemContainer, {action: 'reset'});
 					this.applyStyleToNewNode(index, width, height, position.primaryPosition, position.secondaryPosition);
 				} else {
@@ -1363,7 +1368,7 @@ class VirtualListBasic extends Component {
 		}
 	};
 
-	moveItem = (dataIndex, toVisualIndex) => {
+	moveItem = (dataIndex, toVisualIndex, skipRendering = false) => {
 		if (this.props.editMode) {
 			const order = this.editModeInfo.editingDataOrder;
 			const fromVisualIndex = order.indexOf(dataIndex);
@@ -1378,7 +1383,9 @@ class VirtualListBasic extends Component {
 				);
 				this.editModeInfo.lastVisualIndex = toVisualIndex;
 
-				this.forceUpdate();
+				if (!skipRendering) {
+					this.forceUpdate();
+				}
 			}
 		} else if (dataIndex !== toVisualIndex) { // In this case, visual index is the same as data index
 			const newItemsOrder = [...Array(this.props.dataSize).keys()];
@@ -1470,6 +1477,17 @@ class VirtualListBasic extends Component {
 		}
 	};
 
+	getDataIndexFromNode = (node) => {
+		const targetNode = node && node.querySelector('[data-index]');
+		if (targetNode) {
+			const index = parseInt(targetNode.dataset.index);
+			if (!isNaN(index)) {
+				return index;
+			}
+		}
+		return null;
+	};
+
 	getDataIndexFromPosition = (clientX, clientY) => {
 		if (typeof window !== 'undefined') {
 			const contentNode = this.contentRef.current;
@@ -1483,7 +1501,7 @@ class VirtualListBasic extends Component {
 				}
 
 				if (node) {
-					return parseInt(node.querySelector('[data-index]').dataset.index);
+					return this.getDataIndexFromNode(node);
 				}
 			}
 		}
@@ -1504,7 +1522,8 @@ class VirtualListBasic extends Component {
 		/* TBD: using this.itemContainerRefs[key] ? */
 		const {childProps, itemRenderer, getComponentProps} = this.props;
 		const {x, y, width, height} = this.calculateMovingItemPosition();
-		const componentProps = getComponentProps && getComponentProps(this.editModeInfo.editingIndex) || {};
+		const index = this.editModeInfo.editingIndex;
+		const componentProps = getComponentProps && getComponentProps(index) || {};
 		const itemContainerRef = (ref) => {
 			this.editModeInfo.editingNode = ref;
 		};
@@ -1518,7 +1537,7 @@ class VirtualListBasic extends Component {
 
 		this.cc[this.state.numOfItems] = (
 			<div className={css.listItem} key={-1} style={style} ref={itemContainerRef}>
-				{itemRenderer({...childProps, ...componentProps, index: this.editModeInfo.editingIndex})}
+				{itemRenderer({...childProps, ...componentProps, index, ['data-index']: index})}
 			</div>
 		);
 
@@ -1534,6 +1553,7 @@ class VirtualListBasic extends Component {
 		if (this.cc.length > this.state.numOfItems) {
 			this.cc.pop();
 		}
+		this.editModeInfo.editingNode = null;
 
 		// do not call this.forceUpdate() here since this.emitUpdateItemsOrder() will be called in itemMovingEnd.
 	};
@@ -1547,16 +1567,18 @@ class VirtualListBasic extends Component {
 		this.addMovingItem();
 	};
 
-	itemMoving = ({clientX, clientY}) => {
+	itemMoving = ({clientX, clientY}, skipRendering = false) => {
 		if (this.editModeInfo.editingIndex !== null) {
 			this.updateMovingPosition(clientX, clientY);
 
 			const index = this.getVisualIndexFromPosition();
 			if (index !== null) {
-				this.moveItem(this.editModeInfo.editingIndex, index);
+				this.moveItem(this.editModeInfo.editingIndex, index, skipRendering);
 			}
 
-			this.updateMovingItem();
+			if (this.editModeInfo.editingNode) {
+				this.updateMovingItem();
+			}
 		}
 	};
 
@@ -1575,6 +1597,15 @@ class VirtualListBasic extends Component {
 		if (this.editModeInfo.editingIndex !== null) {
 			this.editModeInfo.guessPosition = true;
 		}
+	};
+
+	resetEditModeInfo = () => {
+		this.editModeInfo.editingIndex = null;
+		this.editModeInfo.editingNode = null;
+		this.editModeInfo.editingDataOrder = null;
+		this.editModeInfo.guessPosition = false;
+		this.editModeInfo.lastVisualIndex = null;
+		this.removeMovingItem();
 	};
 
 	// render
