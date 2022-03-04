@@ -16,6 +16,7 @@ import compose from 'ramda/src/compose';
 import {useImperativeHandle, useEffect, useRef, useState} from 'react';
 
 import ForwardRef from '../ForwardRef';
+import ri from '../resolution';
 
 import {drawing, fillDrawing} from './utils';
 
@@ -202,8 +203,8 @@ const DrawingBase = kind({
 			}
 
 			if (
-				offsetY > window.innerHeight / 2 ||
-                offsetX > window.innerWidth / 2 ||
+				offsetY > ri.scale(1000) ||
+                offsetX > ri.scale(2000) ||
                 offsetX < 0 ||
                 offsetY < 0
 			) {
@@ -305,10 +306,10 @@ const DrawingBase = kind({
 
 		useEffect(() => {
 			const canvas = canvasRef.current;
-			canvas.height = window.innerHeight / 2;
-			canvas.width = window.innerWidth / 2;
-			canvas.style.height = `${window.innerHeight / 2}px`;
-			canvas.style.width = `${window.innerWidth / 2}px`;
+			canvas.height = ri.scale(1000);
+			canvas.width = ri.scale(2000);
+			canvas.style.height = `${ri.scale(1000)}px`;
+			canvas.style.width = `${ri.scale(2000)}px`;
 			const context = canvas.getContext('2d');
 			context.lineCap = 'round';
 			context.lineWidth = brushSize;
