@@ -173,12 +173,12 @@ const DrawingBase = kind({
 			if (!isDrawing || drawingTool === 'fill') return;
 			let offsetX, offsetY;
 
-			if (nativeEvent.type === 'mousemove') {
+			if (nativeEvent.pointerType === 'mouse') {
 				offsetX = nativeEvent.offsetX;
 				offsetY = nativeEvent.offsetY;
 			} else {
-				offsetX = nativeEvent.targetTouches[0].pageX - offset.x;
-				offsetY = nativeEvent.targetTouches[0].pageY - offset.y;
+				offsetX = nativeEvent.pageX - offset.x;
+				offsetY = nativeEvent.pageY - offset.y;
 			}
 
 			if (
@@ -400,7 +400,7 @@ const DrawingBase = kind({
 				{...rest}
 				style={canvasStyle}
 				ref={canvasRef}
-				onMouseDown={(ev) =>
+				onPointerDown={(ev) =>
 					startDrawing({
 						setIsDrawing,
 						ev,
@@ -409,7 +409,7 @@ const DrawingBase = kind({
 						beginPointRef
 					})
 				}
-				onMouseMove={(ev) =>
+				onPointerMove={(ev) =>
 					draw({
 						isDrawing,
 						contextRef,
@@ -419,27 +419,7 @@ const DrawingBase = kind({
 						offset
 					})
 				}
-				onMouseUp={() => finishDrawing({contextRef, setIsDrawing})}
-				onTouchStart={(ev) =>
-					startDrawing({
-						setIsDrawing,
-						disabled,
-						ev,
-						contextRef,
-						beginPointRef
-					})
-				}
-				onTouchMove={(ev) =>
-					draw({
-						isDrawing,
-						contextRef,
-						beginPointRef,
-						ev,
-						setIsDrawing,
-						offset
-					})
-				}
-				onTouchEnd={() => finishDrawing({contextRef, setIsDrawing})}
+				onPointerUp={() => finishDrawing({contextRef, setIsDrawing})}
 			/>
 		);
 	}
