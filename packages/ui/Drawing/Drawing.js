@@ -124,17 +124,6 @@ const DrawingBase = kind({
 		fillColor: PropTypes.string,
 
 		/**
-		 * Indicates if the drawing is in erasing mode.
-		 *
-		 * When `true`, the canvas' globalCompositeOperation property will be 'destination-out'.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @private
-		 */
-		isErasing: PropTypes.bool,
-
-		/**
 		 * Called when the drawingTool value is changed.
 		 *
 		 * @type {Function}
@@ -168,7 +157,6 @@ const DrawingBase = kind({
 		canvasColor: 'black',
 		drawingTool: 'brush',
 		fillColor: 'red',
-		isErasing: false,
 		points: []
 	},
 
@@ -260,10 +248,10 @@ const DrawingBase = kind({
 	},
 
 	computed: {
-		canvasStyle: ({backgroundImage, canvasColor, drawingTool, isErasing}) => {
+		canvasStyle: ({backgroundImage, canvasColor, drawingTool}) => {
 
 			let cursor;
-			if (isErasing) {
+			if (drawingTool === 'erase') {
 				cursor = cursors.eraser;
 			} else {
 				cursor = (drawingTool === 'fill') ? cursors.bucket : cursors.pen;
@@ -290,9 +278,9 @@ const DrawingBase = kind({
 		disabled,
 		draw,
 		drawingRef,
+		drawingTool,
 		fillColor,
 		finishDrawing,
-		isErasing,
 		onChangeDrawingTool,
 		startDrawing,
 		...rest
@@ -342,7 +330,7 @@ const DrawingBase = kind({
 				contextRef.current.globalCompositeOperation = 'destination-out';
 				context.fillRect(0, 0, canvas.width, canvas.height);
 
-				if (isErasing) {
+				if (drawingTool === 'erase') {
 					contextRef.current.globalCompositeOperation = 'destination-out';
 				} else {
 					contextRef.current.globalCompositeOperation = 'source-over';
@@ -389,13 +377,13 @@ const DrawingBase = kind({
 		}));
 
 		useEffect(() => {
-			if (isErasing) {
-				onChangeDrawingTool('brush');
+			if (drawingTool === 'erase') {
+				onChangeDrawingTool('erase');
 				contextRef.current.globalCompositeOperation = 'destination-out';
 			} else {
 				contextRef.current.globalCompositeOperation = 'source-over';
 			}
-		}, [isErasing]); // eslint-disable-line react-hooks/exhaustive-deps
+		}, [drawingTool]); // eslint-disable-line react-hooks/exhaustive-deps
 
 		delete rest.drawingTool;
 
