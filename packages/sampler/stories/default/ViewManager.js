@@ -1,5 +1,5 @@
 import {action} from '@enact/storybook-utils/addons/actions';
-import {boolean, number, range, select} from '@enact/storybook-utils/addons/controls';
+import {boolean, number, range, select, text} from '@enact/storybook-utils/addons/controls';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
 import Group from '@enact/ui/Group';
 import Item from '@enact/ui/Item';
@@ -7,6 +7,7 @@ import Layout, {Cell} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
 import Scroller from '@enact/ui/Scroller';
 import {arrange, SlideArranger, SlideBottomArranger, SlideLeftArranger, SlideRightArranger, SlideTopArranger, ViewManager, ViewManagerBase} from '@enact/ui/ViewManager';
+import PropTypes from 'prop-types';
 import {useCallback, useState} from 'react';
 
 import css from './ViewManager.module.less';
@@ -40,6 +41,18 @@ const views = new Array(itemSize).fill().map((i, index) => {
 	};
 });
 
+const ChildrenDiv = ({args, ...rest}) => {
+	if (rest[args.enteringProp] === false) {
+		return <div {...rest}>{rest.children} (finished its transition)</div>;
+	} else {
+		return <div {...rest}>{rest.children}</div>;
+	}
+};
+
+ChildrenDiv.propTypes = {
+	args: PropTypes.object
+};
+
 const ViewManagerLayout = (props) => {
 	const [selected, setSelected] = useState(0);
 	const handleChangeView = useCallback((ev) => {
@@ -47,7 +60,7 @@ const ViewManagerLayout = (props) => {
 	}, [setSelected]);
 
 	// eslint-disable-next-line enact/prop-types
-	const {selectedEnd, selectedStart, ...rest} = props;
+	const {args, selectedEnd, selectedStart, ...rest} = props;
 	const endRange = [selected, selected + 1, selected + 2];
 	const startRange = [selected, selected - 1, selected - 2];
 	const end = Math.min(endRange[prop.end[selectedEnd]], itemSize - 1);
@@ -74,9 +87,9 @@ const ViewManagerLayout = (props) => {
 				{...rest}
 			>
 				{views.map((view, i) => (
-					<div className={css.box} key={i}>
+					<ChildrenDiv args={args} className={css.box} key={i}>
 						{view.content}
-					</div>
+					</ChildrenDiv>
 				))}
 			</Cell>
 		</Layout>
@@ -122,9 +135,11 @@ export const _ViewManager = (args) => {
 
 	return (
 		<ViewManagerLayout
+			args={args}
 			arranger={arranger}
 			duration={args['duration']}
 			enteringDelay={args['enteringDelay']}
+			enteringProp={args['enteringProp']}
 			noAnimation={args['noAnimation']}
 			onAppear={action('onAppear')}
 			onEnter={action('onEnter')}
@@ -143,6 +158,7 @@ export const _ViewManager = (args) => {
 select('arranger', _ViewManager, Object.keys(prop.arranger), ViewManagerConfig, 'SlideBottomArranger');
 number('duration', _ViewManager, ViewManagerConfig);
 number('enteringDelay', _ViewManager, ViewManagerConfig);
+text('enteringProp', _ViewManager, ViewManagerConfig);
 boolean('noAnimation', _ViewManager, ViewManagerConfig);
 boolean('reverseTransition', _ViewManager, ViewManagerConfig);
 boolean('rtl', _ViewManager, ViewManagerConfig);

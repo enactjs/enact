@@ -1,13 +1,14 @@
-import {shallow, mount} from 'enzyme';
+import {render} from '@testing-library/react';
+import {createRef} from 'react';
+
 import Announce from '../Announce';
 
 describe('Announce', () => {
-
 	test('should have an announce method on the component', () => {
-		const subject = shallow(
-			<Announce />
-		);
-		const node = subject.instance();
+		const ref = createRef();
+		render(<Announce ref={ref} />);
+
+		const node = ref.current;
 
 		const expected = 'function';
 		const actual = typeof node.announce;
@@ -16,12 +17,12 @@ describe('Announce', () => {
 	});
 
 	test('should update the aria-label with the provided message', () => {
+		const ref = createRef();
 		const message = 'message';
-		const subject = mount(
-			<Announce />
-		);
 
-		const node = subject.instance();
+		render(<Announce ref={ref} />);
+
+		const node = ref.current;
 		node.announce(message);
 
 		const expected = message;
@@ -30,5 +31,4 @@ describe('Announce', () => {
 
 		expect(actual).toBe(expected);
 	});
-
 });

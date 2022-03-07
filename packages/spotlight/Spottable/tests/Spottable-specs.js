@@ -1,116 +1,92 @@
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
 
 import Spottable from '../Spottable';
 
-describe('Spottable', () => {
+const id = 'test-spottable';
 
+describe('Spottable', () => {
 	test('should add the spottable class', () => {
 		const Component = Spottable('div');
+		render(<Component data-testid={id} />);
+		const div = screen.getByTestId(id);
 
-		const subject = mount(
-			<Component />
-		);
+		const expectedClass = 'spottable';
 
-		const expected = 'spottable';
-		const actual = subject.find('div').prop('className');
-
-		expect(actual).toEqual(expected);
+		expect(div).toHaveClass(expectedClass);
 	});
 
 	test('should add the spottable class to a {disabled} component', () => {
 		const Component = Spottable('div');
+		render(<Component data-testid={id} disabled />);
+		const div = screen.getByTestId(id);
 
-		const subject = mount(
-			<Component disabled />
-		);
+		const expectedClass = 'spottable';
 
-		const expected = 'spottable';
-		const actual = subject.find('div').prop('className');
-
-		expect(actual).toEqual(expected);
+		expect(div).toHaveClass(expectedClass);
 	});
 
 	test('should not add the spottable class to a {spotlightDisabled} component', () => {
 		const Component = Spottable('div');
+		render(<Component data-testid={id} spotlightDisabled />);
+		const div = screen.getByTestId(id);
 
-		const subject = mount(
-			<Component spotlightDisabled />
-		);
+		const expectedClass = 'spottable';
 
-		const expected = 'spottable';
-		const actual = subject.find('div').prop('className');
-
-		expect(actual).not.toEqual(expected);
+		expect(div).not.toHaveClass(expectedClass);
 	});
 
 	test('should emit {onSpotlightDisappear} when unmounted while focused', () => {
 		const spy = jest.fn();
 		const Component = Spottable('div');
+		const {unmount} = render(<Component data-testid={id} onSpotlightDisappear={spy} />);
+		const div = screen.getByTestId(id);
 
-		const subject = mount(
-			<Component onSpotlightDisappear={spy} />
-		);
-
-		subject.simulate('focus');
-		subject.unmount();
+		div.focus();
+		unmount();
 
 		const expected = 1;
-		const actual = spy.mock.calls.length;
 
-		expect(actual).toEqual(expected);
+		expect(spy).toHaveBeenCalledTimes(expected);
+		expect(spy).toBeCalledWith({type: 'onSpotlightDisappear'});
 	});
 
 	describe('shouldComponentUpdate', () => {
 		test('should re-render when a non-Spottable prop changes', () => {
 			const spy = jest.fn((props) => <div {...props} />);
 			const Component = Spottable(spy);
+			const {rerender} = render(<Component />);
 
-			const subject = mount(
-				<Component />
-			);
-
-			subject.setProps({
-				'data-id': '123'
-			});
+			rerender(<Component data-id="123" />);
 
 			const expected = 3;
-			const actual = spy.mock.calls.length;
 
-			expect(actual).toEqual(expected);
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should re-render when {selectionKeys} changes', () => {
 			const spy = jest.fn((props) => <div {...props} />);
 			const Component = Spottable(spy);
+			const {rerender} = render(<Component selectionKeys={[1, 2, 3]} />);
 
-			const subject = mount(
-				<Component selectionKeys={[1, 2, 3]} />
-			);
-
-			subject.setProps({
-				selectionKeys: [2, 1, 3]
-			});
+			rerender(<Component selectionKeys={[2, 1, 3]} />);
 
 			const expected = 3;
-			const actual = spy.mock.calls.length;
 
-			expect(actual).toEqual(expected);
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 
 		test('should not re-render when focused', () => {
 			const spy = jest.fn((props) => <div {...props} />);
 			const Component = Spottable(spy);
+			render(<Component data-testid={id} />);
+			const div = screen.getByTestId(id);
 
-			const subject = mount(
-				<Component />
-			);
-
-			subject.simulate('focus');
+			div.focus();
 
 			const expected = 2;
-			const actual = spy.mock.calls.length;
 
-			expect(actual).toEqual(expected);
+			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 	});
 });

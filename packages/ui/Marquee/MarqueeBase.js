@@ -1,5 +1,5 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import {forProp, forward, handle, stop} from '@enact/core/handle';
+import {forProp, forwardCustom, handle, stop} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import {Children, Fragment} from 'react';
@@ -187,7 +187,7 @@ const MarqueeBase = kind({
 			forProp('animating', true),
 			isEventSource,
 			stop,
-			(ev, props) => forward('onMarqueeComplete', {type: 'onMarqueeComplete'}, props)
+			forwardCustom('onMarqueeComplete')
 		)
 	},
 

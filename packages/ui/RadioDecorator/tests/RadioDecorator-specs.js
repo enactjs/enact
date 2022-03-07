@@ -1,10 +1,13 @@
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import {createRef} from 'react';
+
 import {RadioControllerDecorator, RadioDecorator} from '../RadioDecorator';
 
 describe('RadioDecorator', () => {
-
 	const Item = ({onClick, active}) => (
-		<span onClick={onClick}>
+		<span data-testid="span-element" onClick={onClick}>
 			{active ? 'Active' : 'Inactive'}
 		</span>
 	);
@@ -12,124 +15,99 @@ describe('RadioDecorator', () => {
 	const Controller = RadioControllerDecorator('main');
 
 	const expectToBeActive = (controller, decorator) => {
-		expect(controller.instance().active).toBe(decorator && decorator.instance().handleDeactivate);
+		expect(controller.active).toBe(decorator && decorator.handleDeactivate);
 	};
 
 	test('should be activated when its prop is true on mount', () => {
 		const Component = RadioDecorator({prop: 'active'}, Item);
-		const subject = mount(
+		render(
 			<Controller>
 				<Component active />
 			</Controller>
 		);
+		const component = screen.getByTestId('span-element');
 
-		const instance = subject.find('RadioDecorator');
-		expectToBeActive(subject, instance);
+		expect(component).toHaveTextContent('Active');
 	});
 
 	test('should not be activated when its prop is false on mount', () => {
 		const Component = RadioDecorator({prop: 'active'}, Item);
-		const subject = mount(
+		render(
 			<Controller>
 				<Component />
 			</Controller>
 		);
+		const component = screen.getByTestId('span-element');
 
-		expectToBeActive(subject, null);
+		expect(component).toHaveTextContent('Inactive');
 	});
 
-	test(
-		'should be activated when its prop is set to true after mount',
-		() => {
-			const Component = RadioDecorator({prop: 'active'}, Item);
-			const Wrapper = ({active}) => (
-				<Controller>
-					<Component active={active} />
-				</Controller>
-			);
-			const subject = mount(
-				<Wrapper />
-			);
+	test('should be activated when its prop is set to true after mount', () => {
+		const Component = RadioDecorator({prop: 'active'}, Item);
+		const Wrapper = ({active}) => (
+			<Controller>
+				<Component active={active} />
+			</Controller>
+		);
 
-			subject.setProps({
-				active: true
-			});
+		const {rerender} = render(<Wrapper />);
+		const component = screen.getByTestId('span-element');
 
-			const instance = subject.find('RadioDecorator');
-			expectToBeActive(subject.find('RadioControllerDecorator'), instance);
-		}
-	);
+		const expected = 'Inactive';
 
-	test('should be activated when the activated event fires', () => {
+		expect(component).toHaveTextContent(expected);
+
+		rerender(<Wrapper active />);
+
+		const secondExpected = 'Active';
+
+		expect(component).toHaveTextContent(secondExpected);
+	});
+
+	test('should fire `activate` event with type when become activated', () => {
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
-		const subject = mount(
+		const handleActivate = jest.fn();
+		const Wrapper = () => (
 			<Controller>
-				<Component />
+				<Component onClick={handleActivate} />
 			</Controller>
 		);
 
-		subject.find('span').simulate('click');
+		render(<Wrapper />);
 
-		const instance = subject.find('RadioDecorator');
-		expectToBeActive(subject, instance);
+		const component = screen.getByTestId('span-element');
+
+		userEvent.click(component);
+
+		const expected = 1;
+		const expectedType = {type: 'onClick'};
+		const actual = handleActivate.mock.calls.length && handleActivate.mock.calls[0][0];
+
+		expect(handleActivate).toBeCalledTimes(expected);
+		expect(actual).toMatchObject(expectedType);
 	});
 
-	test('should be deactivated when the deactivated event fires', () => {
+	test('should fire `deactivate` event with type when become deactivated', () => {
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
-		const subject = mount(
+		const handleDeactivate = jest.fn();
+		const Wrapper = () => (
 			<Controller>
-				<Component active />
+				<Component onClick={handleDeactivate} />
 			</Controller>
 		);
 
-		subject.find('span').simulate('click');
+		render(<Wrapper />);
 
-		expectToBeActive(subject, null);
-	});
+		const component = screen.getByTestId('span-element');
 
-	test(
-		'should be deactivated when the activated event fires on another instance',
-		() => {
-			const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
-			const subject = mount(
-				<Controller>
-					<Component active />
-					<Component />
-				</Controller>
-			);
+		userEvent.click(component);
 
-			subject.find('span').at(1).simulate('click');
+		const expected = 1;
+		const expectedType = {type: 'onClick'};
+		const actual = handleDeactivate.mock.calls.length && handleDeactivate.mock.calls[0][0];
 
-			const instance = subject.find('RadioDecorator').at(1);
-			expectToBeActive(subject, instance);
-		}
-	);
-
-	test('should not deactivate items in a ancestor controller', () => {
-		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
-		const subject = mount(
-			<Controller>
-				<Component active />
-				<Component />
-				<Controller data-child-controller>
-					<Component active />
-					<Component />
-				</Controller>
-			</Controller>
-		);
-
-		const childController = subject.find('RadioControllerDecorator').at(1);
-		childController.find('span').at(1).simulate('click');
-
-		// Breaking the pattern of 1 expect per test in order to verify the expect change happened
-		// (activating second component in child controller) and no unexpected change happened in
-		// the parent controller (active component should remain the first component)
-
-		const childInstance = childController.find('RadioDecorator').at(1);
-		expectToBeActive(childController, childInstance);
-
-		const parentInstance = subject.find('RadioDecorator').at(0);
-		expectToBeActive(subject, parentInstance);
+		expect(handleDeactivate).toBeCalledTimes(expected);
+		expect(actual).toMatchObject(expectedType);
 	});
 
 	test('should not call deactivate callback on inactive items', () => {
@@ -146,19 +124,97 @@ describe('RadioDecorator', () => {
 		);
 
 		// create a controller with no active item
-		const subject = mount(
+		const {rerender} = render(
 			<Wrapper />
 		);
 
 		// activate the second item via prop change
-		subject.setProps({
-			active: true
-		});
+		rerender(
+			<Wrapper active />
+		);
 
 		// verify that the deactivate handler wasn't called
 		const expected = 0;
 		const actual = handleDeactivate.mock.calls.length;
 
 		expect(actual).toBe(expected);
+	});
+
+	test('should be activated when the activated event fires', () => {
+		const controllerRef = createRef();
+		const decoratorRef = createRef();
+		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
+		render(
+			<Controller ref={controllerRef}>
+				<Component ref={decoratorRef} />
+			</Controller>
+		);
+		const component = screen.getByTestId('span-element');
+
+		userEvent.click(component);
+
+		expectToBeActive(controllerRef.current, decoratorRef.current);
+	});
+
+	test('should be deactivated when the deactivated event fires', () => {
+		const controllerRef = createRef();
+		const decoratorRef = createRef();
+		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
+		render(
+			<Controller ref={controllerRef}>
+				<Component active ref={decoratorRef} />
+			</Controller>
+		);
+		const component = screen.getByTestId('span-element');
+
+		userEvent.click(component);
+
+		expectToBeActive(controllerRef.current, null);
+	});
+
+	test('should be deactivated when the activated event fires on another instance', () => {
+		const controllerRef = createRef();
+		const decoratorRef = createRef();
+		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
+		render(
+			<Controller ref={controllerRef} >
+				<Component active />
+				<Component ref={decoratorRef} />
+			</Controller>
+		);
+
+		const inactiveComponent = screen.getByText('Inactive');
+
+		userEvent.click(inactiveComponent);
+
+		expectToBeActive(controllerRef.current, decoratorRef.current);
+	});
+
+	test('should not deactivate items in a ancestor controller', () => {
+		const parentControllerRef = createRef();
+		const parentDecoratorRef = createRef();
+		const childControllerRef = createRef();
+		const childDecoratorRef = createRef();
+		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
+		render(
+			<Controller ref={parentControllerRef}>
+				<Component active ref={parentDecoratorRef} />
+				<Component />
+				<Controller data-child-controller ref={childControllerRef}>
+					<Component active />
+					<Component ref={childDecoratorRef} />
+				</Controller>
+			</Controller>
+		);
+
+		const inactiveComponents = screen.getAllByText('Inactive');
+
+		userEvent.click(inactiveComponents[1]);
+
+		// Breaking the pattern of 1 expect per test in order to verify the expect change happened
+		// (activating second component in child controller) and no unexpected change happened in
+		// the parent controller (active component should remain the first component)
+		expectToBeActive(parentControllerRef, parentDecoratorRef);
+		expectToBeActive(childControllerRef, childDecoratorRef);
 	});
 });

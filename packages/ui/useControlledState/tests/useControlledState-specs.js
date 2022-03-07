@@ -1,74 +1,75 @@
-import {shallow} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+
 import useControlledState from '../useControlledState';
 
 describe('useControlledState', () => {
+	let data;
+
 	function Component (props) {
 		const [value, setValue] = useControlledState(props.defaultValue, props.value, 'value' in props);
-		return <div setValue={setValue}>{value}</div>;
+		const handleChange = (ev) => setValue(ev.value);
+		data = setValue;
+
+		return <div onChange={handleChange}>{value}</div>;
 	}
 
 	test('should use the default value when the value is undefined', () => {
-		const subject = shallow(<Component defaultValue="abc" />);
+		render(<Component defaultValue="abc" />);
 
-		const expected = 'abc';
-		const actual = subject.find('div').prop('children');
+		const actual = screen.queryByText('abc');
 
-		expect(actual).toBe(expected);
+		expect(actual).toBeInTheDocument();
 	});
 
 	test('should not change default value', () => {
-		const subject = shallow(<Component defaultValue="abc" />);
+		const {rerender} = render(<Component defaultValue="abc" />);
 
-		subject.setProps({defaultValue: 'def'});
+		rerender(<Component defaultValue="def" />);
 
-		const expected = 'abc';
-		const actual = subject.find('div').prop('children');
+		const actual = screen.queryByText('abc');
 
-		expect(actual).toBe(expected);
+		expect(actual).toBeInTheDocument();
 	});
 
 	test('should not change uncontrolled setting', () => {
-		const subject = shallow(<Component defaultValue="abc" />);
+		const {rerender} = render(<Component defaultValue="abc" />);
 
-		subject.setProps({defaultValue: null, value: 'def'});
+		rerender(<Component defaultValue={null} value="def" />);
 
-		const expected = 'abc';
-		const actual = subject.find('div').prop('children');
+		const actual = screen.queryByText('abc');
 
-		expect(actual).toBe(expected);
+		expect(actual).toBeInTheDocument();
 	});
 
 	test('should update controlled value', () => {
-		const subject = shallow(<Component value="abc" />);
+		const {rerender} = render(<Component value="abc" />);
 
-		subject.setProps({value: 'def'});
+		rerender(<Component value="def" />);
 
-		const expected = 'def';
-		const actual = subject.find('div').prop('children');
+		const actual = screen.queryByText('def');
 
-		expect(actual).toBe(expected);
+		expect(actual).toBeInTheDocument();
 	});
 
 	test('should not change controlled setting', () => {
-		const subject = shallow(<Component value="abc" />);
+		const {rerender} = render(<Component value="abc" />);
 
-		subject.setProps({defaultValue: 'def', value: 'ghi'});
+		rerender(<Component defaultValue="def" value="ghi" />);
 
-		const expected = 'ghi';
-		const actual = subject.find('div').prop('children');
+		const actual = screen.queryByText('ghi');
 
-		expect(actual).toBe(expected);
+		expect(actual).toBeInTheDocument();
 	});
 
 	test('should not allow setting a value when controlled', () => {
-		const subject = shallow(<Component value="abc" />);
+		const handleChange = jest.fn();
+		const value = 'ghi';
+		render(<Component onChange={handleChange} value="abc" />);
+		const component = screen.queryByText('abc');
 
-		subject.invoke('setValue')('ghi');
-		subject.update();
+		data(value);
 
-		const expected = 'abc';
-		const actual = subject.find('div').prop('children');
-
-		expect(actual).toBe(expected);
+		expect(component).toBeInTheDocument();
 	});
 });

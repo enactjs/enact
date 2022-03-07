@@ -1,5 +1,8 @@
 import {createContext, Component} from 'react';
-import {mount} from 'enzyme';
+import '@testing-library/jest-dom';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
 import Registry from '../Registry';
 
 const SomeContext = createContext();
@@ -63,81 +66,83 @@ describe('Registry', () => {
 	}
 
 	test('should increment child on click', () => {
-		const RegistryApp = mount(
-			<NotifiesTree id="a-btn">
-				<HandlesNotification id="a" />
+		render(
+			<NotifiesTree data-testid="a-btn">
+				<HandlesNotification data-testid="a" />
 			</NotifiesTree>
 		);
 
-		RegistryApp.find('button#a-btn').simulate('click');
+		userEvent.click(screen.getByTestId('a-btn'));
 
 		const expected = '1';
-		const actual = RegistryApp.find('div#a').text();
+		const child = screen.getByTestId('a');
 
-		expect(expected).toBe(actual);
+		expect(child).toHaveTextContent(expected);
 	});
 
 	test('should increment both children on top click', () => {
-		const RegistryApp = mount(
-			<NotifiesTree id="a-btn">
-				<HandlesNotification id="a" />
-				<NotifiesTree id="b-btn">
-					<HandlesNotification id="b" />
+		render(
+			<NotifiesTree data-testid="a-btn">
+				<HandlesNotification data-testid="a" />
+				<NotifiesTree data-testid="b-btn">
+					<HandlesNotification data-testid="b" />
 				</NotifiesTree>
 			</NotifiesTree>
 		);
 
-		RegistryApp.find('button#a-btn').simulate('click');
+		userEvent.click(screen.getByTestId('a-btn'));
 
 		const expected = '1';
-		const actualA = RegistryApp.find('div#a').text();
-		const actualB = RegistryApp.find('div#b').text();
+		const childA = screen.getByTestId('a');
+		const childB = screen.getByTestId('b');
 
-		expect(expected).toBe(actualA);
-		expect(expected).toBe(actualB);
+		expect(childA).toHaveTextContent(expected);
+		expect(childB).toHaveTextContent(expected);
 	});
 
 	test('should increment the deepest child when we click child button', () => {
-		const RegistryApp = mount(
-			<NotifiesTree id="a-btn">
-				<HandlesNotification id="a" />
-				<NotifiesTree id="b-btn">
-					<HandlesNotification id="b" />
+		render(
+			<NotifiesTree data-testid="a-btn">
+				<HandlesNotification data-testid="a" />
+				<NotifiesTree data-testid="b-btn">
+					<HandlesNotification data-testid="b" />
 				</NotifiesTree>
 			</NotifiesTree>
 		);
 
-		RegistryApp.find('button#b-btn').simulate('click');
+		userEvent.click(screen.getByTestId('b-btn'));
 
 		const expectedA = '0';
 		const expectedB = '1';
-		const actualA = RegistryApp.find('div#a').text();
-		const actualB = RegistryApp.find('div#b').text();
+		const childA = screen.getByTestId('a');
+		const childB = screen.getByTestId('b');
 
-		expect(expectedA).toBe(actualA);
-		expect(expectedB).toBe(actualB);
+		expect(childA).toHaveTextContent(expectedA);
+		expect(childB).toHaveTextContent(expectedB);
 	});
 
 	test('should support removing children without error', () => {
-		const RegistryApp = mount(
-			<NotifiesTree id="a-btn">
-				<HandlesNotification id="a" />
-				<HandlesNotification id="b" />
+		const {rerender} = render(
+			<NotifiesTree data-testid="a-btn">
+				<HandlesNotification data-testid="a" />
+				<HandlesNotification data-testid="b" />
 			</NotifiesTree>
 		);
 
-		RegistryApp.find('button#a-btn').simulate('click');
+		userEvent.click(screen.getByTestId('a-btn'));
 
 		// changing children should be safe and not throw errors when notifying instances
-		RegistryApp.setProps({
-			children: <HandlesNotification id="c" />
-		});
+		rerender(
+			<NotifiesTree data-testid="a-btn">
+				<HandlesNotification data-testid="c" />
+			</NotifiesTree>
+		);
 
-		RegistryApp.find('button#a-btn').simulate('click');
+		userEvent.click(screen.getByTestId('a-btn'));
 
 		const expectedC = '1';
-		const actualC = RegistryApp.find('div#c').text();
+		const childC = screen.getByTestId('c');
 
-		expect(expectedC).toBe(actualC);
+		expect(childC).toHaveTextContent(expectedC);
 	});
 });

@@ -11,13 +11,15 @@ class Flick {
 		return this.tracking;
 	}
 
-	begin = ({maxDuration, maxMoves, minVelocity}, {onFlick}, coords) => {
-		this.minVelocity = minVelocity;
-		this.maxMoves = maxMoves;
+	begin = (config, {onFlick}, coords) => {
+		this.flickConfig = {
+			...config
+		};
 
-		if (maxDuration !== null) {
-			this.cancelJob.startAfter(maxDuration);
+		if (this.flickConfig.maxDuration !== null) {
+			this.cancelJob.startAfter(this.flickConfig.maxDuration);
 		}
+
 		this.tracking = !!onFlick;
 		this.moves.length = 0;
 		this.onFlick = onFlick;
@@ -37,6 +39,8 @@ class Flick {
 	move = ({x, y}) => {
 		if (!this.tracking) return;
 
+		const {maxMoves} = this.flickConfig;
+
 		this.moves.push({
 			x,
 			y,
@@ -44,7 +48,7 @@ class Flick {
 		});
 
 		// track specified # of points
-		if (this.moves.length > this.maxMoves) {
+		if (this.moves.length > maxMoves) {
 			this.moves.shift();
 		}
 	};
@@ -61,6 +65,8 @@ class Flick {
 
 	end = () => {
 		if (!this.tracking) return;
+
+		const {minVelocity} = this.flickConfig;
 
 		this.cancelJob.stop();
 
@@ -88,7 +94,7 @@ class Flick {
 			}
 
 			const v = Math.sqrt(x * x + y * y);
-			if (v > this.minVelocity) {
+			if (v > minVelocity) {
 				const vertical = Math.abs(y) > Math.abs(x);
 				// generate the flick using the start event so it has those coordinates
 				// this.sendFlick(ti.startEvent, x, y, v);
