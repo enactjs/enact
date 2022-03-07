@@ -8,7 +8,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Button` not to assign `icon` value to children when `icon` is true 
+- `ui/Button` not to pass `icon` prop as children when `icon` is true 
 
 ## [4.1.2] - 2021-12-22
 
