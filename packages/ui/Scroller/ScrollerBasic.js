@@ -126,6 +126,7 @@ class ScrollerBasic extends Component {
 		return x;
 	};
 
+	// scrollMode 'translate'
 	setScrollPosition (x, y) {
 		const node = this.props.scrollContentRef.current;
 
@@ -139,9 +140,9 @@ class ScrollerBasic extends Component {
 		}
 	}
 
-	// scrollMode 'translate'
-	scrollToPosition (x, y) {
-		this.props.scrollContentRef.current.scrollTo(this.getRtlPositionX(x), y);
+	// scrollMode 'native'
+	scrollToPosition (left, top, behavior) {
+		this.props.scrollContentRef.current.scrollTo({left: this.getRtlPositionX(left), top, behavior});
 	}
 
 	// scrollMode 'native'
