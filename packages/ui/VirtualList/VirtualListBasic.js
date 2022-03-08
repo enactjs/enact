@@ -853,7 +853,7 @@ class VirtualListBasic extends Component {
 	};
 
 	// scrollMode 'native' only
-	scrollToPosition (left, top, behavior) { // TARGET FUNCTION
+	scrollToPosition (left, top, behavior) {
 		if (this.props.scrollContentRef.current && this.props.scrollContentRef.current.scrollTo) {
 			this.props.scrollContentRef.current.scrollTo({left: this.getRtlPositionX(left), top, behavior});
 		}
