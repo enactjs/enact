@@ -79,7 +79,7 @@ describe('Marquee', () => {
 		expect(marquee).toHaveStyle({'direction': expected});
 	});
 
-	test('should not switch directionality when forceDirection is "locale" and locale is LTR', () => {
+	test('should not override direction to RTL when forceDirection is "locale" and locale is LTR', () => {
 		const {rerender} = render(<Marquee forceDirection="locale">{ltrText}</Marquee>);
 		const marquee = screen.getByText(ltrText);
 
