@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/MarqueeDecorator` `locale` type for `forceDirection` prop not to override the direction depending on contents
+
 ## [4.1.3] - 2022-03-07
 
 - Updated to use `forwardCustom` and add `type` when forwarding custom events
