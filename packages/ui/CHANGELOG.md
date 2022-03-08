@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/MarqueeDecorator` `locale` type for `forceDirection` prop not to override the direction depending on contents
+
 ### Fixed
 
 - `ui/Button` not to pass `icon` prop as children when `icon` is true 
