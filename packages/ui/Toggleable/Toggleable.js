@@ -5,7 +5,7 @@
  * @exports Toggleable
  */
 
-import handle, {adaptEvent, forward} from '@enact/core/handle';
+import handle, {forwardCustom} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import useHandlers from '@enact/core/useHandlers';
 import {cap} from '@enact/core/util';
@@ -135,28 +135,20 @@ const defaultConfig = {
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const {activate, deactivate, eventProps, prop, toggle, toggleProp} = config;
 	const defaultPropKey = 'default' + cap(prop);
-
-	const forwardWithEventProps = eventName => adaptEvent(
-		(ev, props) => ({...pick(eventProps, props), ...ev}),
-		forward(eventName)
-	);
-	const forwardActivate = forwardWithEventProps(activate);
-	const forwardDeactivate = forwardWithEventProps(deactivate);
-	const forwardToggle = forwardWithEventProps(toggle);
-	const forwardToggleProp = forwardWithEventProps(toggleProp);
+	const adapter = (ev, props) => ({...pick(eventProps, props), ...ev});
 
 	const toggleHandlers = {
 		onToggle: handle(
 			(ev, props, context) => (context.toggle()),
-			forwardToggleProp
+			forwardCustom(toggleProp, adapter)
 		),
 		onActivate: handle(
 			(ev, props, context) => (context.activate()),
-			forwardActivate
+			forwardCustom(activate, adapter)
 		),
 		onDeactivate: handle(
 			(ev, props, context) => (context.deactivate()),
-			forwardDeactivate
+			forwardCustom(deactivate, adapter)
 		)
 	};
 
@@ -167,7 +159,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		const hook = useToggle({
 			defaultSelected: props[defaultPropKey],
 			disabled: props.disabled,
-			onToggle: (ev) => forwardToggle(ev, props),
+			onToggle: (ev) => forwardCustom(toggle, adapter)(ev, props),
 			prop,
 
 			// FIXME: Current behavior for Toggleable treats `null` as undefined so we coerce it

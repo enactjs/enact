@@ -168,7 +168,7 @@ class View extends Component {
 	componentWillUnmount () {
 		this.enteringJob.stop();
 		this.node = null;
-		if (this.animation) {
+		if (this.animation && typeof this.animation.cancel === 'function') {
 			this.animation.cancel();
 		}
 	}

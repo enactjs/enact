@@ -1,5 +1,5 @@
 import {on, off} from '@enact/core/dispatcher';
-import {adaptEvent, forward, forProp, handle, oneOf, stop, forEventProp, call} from '@enact/core/handle';
+import {forwardCustom, forProp, handle, oneOf, stop, forEventProp, call} from '@enact/core/handle';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
 import {cloneElement, Component} from 'react';
@@ -9,15 +9,6 @@ import Cancelable from '../Cancelable';
 
 import {FloatingLayerContext} from './FloatingLayerDecorator';
 import Scrim from './Scrim';
-
-const forwardWithType = type => adaptEvent(
-	() => ({type}),
-	forward(type)
-);
-
-const forwardDismiss = forwardWithType('onDismiss');
-const forwardClose = forwardWithType('onClose');
-const forwardOpen = forwardWithType('onOpen');
 
 /**
  * A component that creates an entry point to the new render tree.
@@ -144,7 +135,7 @@ class FloatingLayerBase extends Component {
 
 		if (prevProps.open && !open) {
 			// when open changes to false, forward close
-			forwardClose(null, this.props);
+			forwardCustom('onClose')(null, this.props);
 		} else if (!prevProps.open && open && !this.state.nodeRendered) {
 			// when open changes to true and node hasn't rendered, render it
 			this.renderNode();
@@ -153,7 +144,7 @@ class FloatingLayerBase extends Component {
 		) {
 			// when node has been rendered and either it was just rendered in this update cycle or
 			// the open prop changed in this cycle, forward open
-			forwardOpen(null, this.props);
+			forwardCustom('onOpen')(null, this.props);
 		}
 
 		if (scrimType === 'none') {
@@ -197,13 +188,13 @@ class FloatingLayerBase extends Component {
 
 	handleClose = handle(
 		forProp('open', true),
-		forwardDismiss
+		forwardCustom('onDismiss')
 	).bind(this);
 
 	handleClick = handle(
 		forProp('noAutoDismiss', false),
 		forProp('open', true),
-		forward('onDismiss')
+		forwardCustom('onDismiss')
 	).bind(this);
 
 	handleScroll = (ev) => {
@@ -268,7 +259,7 @@ class FloatingLayerBase extends Component {
 const handleCancel = handle(
 	// can't use forProp safely since either could be undefined ~= false
 	(ev, {open, noAutoDismiss, onDismiss}) => open && !noAutoDismiss && onDismiss,
-	forwardDismiss,
+	forwardCustom('onDismiss'),
 	stop
 );
 

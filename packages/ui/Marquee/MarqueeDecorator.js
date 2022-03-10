@@ -151,7 +151,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		// Text directionality is a function of locale direction (rtl), content (node.textContent),
 		// and props (forceDirection) in increasing order of significance.
 		if (forceDirection) {
-			rtl = forceDirection === 'rtl';
+			rtl = forceDirection === 'locale' ? rtl : forceDirection === 'rtl';
 		} else if (node) {
 			rtl = marqueeDirection(node.textContent) === 'rtl';
 		}
@@ -194,14 +194,17 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * Forces the `direction` of the marquee.
 			 *
-			 * Valid values are `'rtl'` and `'ltr'`. This includes non-text elements as well.
+			 * Valid values are `'rtl'`, `'ltr'`, and `'locale'`. This includes non-text elements as well.
 			 * The default behavior, if this prop is unset, is to evaluate the text content for
 			 * directionality using {@link i18n/util.isRtlText}.
+			 *
+			 * If `'locale'`, the `direction` is determined by the locale, same as {@link ui/Marquee.MarqueeDecorator.rtl}.
+			 * In other words, it will not consider the text content for determining the direction.
 			 *
 			 * @type {String}
 			 * @public
 			 */
-			forceDirection: PropTypes.oneOf(['rtl', 'ltr']),
+			forceDirection: PropTypes.oneOf(['rtl', 'ltr', 'locale']),
 
 			/**
 			 * The current locale as a
