@@ -124,7 +124,7 @@ class VirtualListBasic extends Component {
 		}),
 
 		/**
-		 * TBD
+		 * An object with properties to be passed to the container DOM.
 		 *
 		 * @type {Object}
 		 * @private
