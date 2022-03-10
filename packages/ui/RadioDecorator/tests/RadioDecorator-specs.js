@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {createRef} from 'react';
 
 import {RadioControllerDecorator, RadioDecorator} from '../RadioDecorator';
 
@@ -12,6 +13,10 @@ describe('RadioDecorator', () => {
 	);
 
 	const Controller = RadioControllerDecorator('main');
+
+	const expectToBeActive = (controller, decorator) => {
+		expect(controller.active).toBe(decorator && decorator.handleDeactivate);
+	};
 
 	test('should be activated when its prop is true on mount', () => {
 		const Component = RadioDecorator({prop: 'active'}, Item);
@@ -135,75 +140,81 @@ describe('RadioDecorator', () => {
 		expect(actual).toBe(expected);
 	});
 
-	// TODO This test is skipped because Component doesn't update its content text on click with React Testing Library
-	test.skip('should be activated when the activated event fires', () => {
+	test('should be activated when the activated event fires', () => {
+		const controllerRef = createRef();
+		const decoratorRef = createRef();
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
 		render(
-			<Controller>
-				<Component />
+			<Controller ref={controllerRef}>
+				<Component ref={decoratorRef} />
 			</Controller>
 		);
 		const component = screen.getByTestId('span-element');
 
 		userEvent.click(component);
 
-		expect(component).toHaveTextContent('Active');
+		expectToBeActive(controllerRef.current, decoratorRef.current);
 	});
 
-	// TODO This test is skipped because Component doesn't update its content text on click with React Testing Library
-	test.skip('should be deactivated when the deactivated event fires', () => {
+	test('should be deactivated when the deactivated event fires', () => {
+		const controllerRef = createRef();
+		const decoratorRef = createRef();
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
 		render(
-			<Controller>
-				<Component active />
+			<Controller ref={controllerRef}>
+				<Component active ref={decoratorRef} />
 			</Controller>
 		);
 		const component = screen.getByTestId('span-element');
 
 		userEvent.click(component);
 
-		expect(component).toHaveTextContent('Inactive');
+		expectToBeActive(controllerRef.current, null);
 	});
 
-	// TODO This test is skipped because Component doesn't update its content text on click with React Testing Library
-	test.skip('should be deactivated when the activated event fires on another instance', () => {
+	test('should be deactivated when the activated event fires on another instance', () => {
+		const controllerRef = createRef();
+		const decoratorRef = createRef();
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
 		render(
-			<Controller>
+			<Controller ref={controllerRef} >
 				<Component active />
-				<Component  />
+				<Component ref={decoratorRef} />
 			</Controller>
 		);
-		const activeComponent = screen.getByText('Active');
+
 		const inactiveComponent = screen.getByText('Inactive');
 
 		userEvent.click(inactiveComponent);
 
-		expect(activeComponent).toHaveTextContent('Inactive');
+		expectToBeActive(controllerRef.current, decoratorRef.current);
 	});
 
-	// TODO This test is skipped because we can't have access to component instance with React Testing Library
-	test.skip('should not deactivate items in a ancestor controller', () => {
+	test('should not deactivate items in a ancestor controller', () => {
+		const parentControllerRef = createRef();
+		const parentDecoratorRef = createRef();
+		const childControllerRef = createRef();
+		const childDecoratorRef = createRef();
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
 		render(
-			<Controller>
-				<Component active />
+			<Controller ref={parentControllerRef}>
+				<Component active ref={parentDecoratorRef} />
 				<Component />
-				<Controller data-child-controller>
+				<Controller data-child-controller ref={childControllerRef}>
 					<Component active />
-					<Component />
+					<Component ref={childDecoratorRef} />
 				</Controller>
 			</Controller>
 		);
-		const activeComponent = screen.getAllByText('Active');
 
-		userEvent.click(activeComponent[0]);
+		const inactiveComponents = screen.getAllByText('Inactive');
+
+		userEvent.click(inactiveComponents[1]);
 
 		// Breaking the pattern of 1 expect per test in order to verify the expect change happened
 		// (activating second component in child controller) and no unexpected change happened in
 		// the parent controller (active component should remain the first component)
-
-		expect(activeComponent[1]).toHaveTextContent('Active');
-		expect(activeComponent[0]).toHaveTextContent('Active');
+		expectToBeActive(parentControllerRef, parentDecoratorRef);
+		expectToBeActive(childControllerRef, childDecoratorRef);
 	});
 });

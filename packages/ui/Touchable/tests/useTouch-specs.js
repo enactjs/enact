@@ -1,4 +1,4 @@
-import {fireEvent, render, screen} from '@testing-library/react';
+import {createEvent, fireEvent, render, screen} from '@testing-library/react';
 
 import {configure, getConfig, resetDefaultConfig} from '../config';
 import useTouch from '../useTouch';
@@ -193,8 +193,7 @@ describe('useTouch', () => {
 			expect(actual).toEqual(expected);
 		});
 
-		// TODO This test is unstable. `fireEvent` does not recognize the timeStamp property
-		test.skip('should be called before onClick on mouse up', () => {
+		test('should be called before onClick on mouse up', () => {
 			const handler = jest.fn();
 			render(
 				<TouchableComponent
@@ -205,15 +204,19 @@ describe('useTouch', () => {
 			);
 			const component = screen.getByTestId('component');
 
-			const ev = {
-				// a matching timeStamp is used by Touchable to prevent multiple onTaps on "true"
-				// click (mouseup + click)
-				timeStamp: 1
-			};
+			const mouseDownEvent = createEvent.mouseDown(component, {});
+			const mouseUpEvent = createEvent.mouseUp(component, {});
+			const clickEvent = createEvent.click(component, {});
 
-			fireEvent.mouseDown(component, ev);
-			fireEvent.mouseUp(component, ev);
-			fireEvent.click(component, {});
+			// a matching timeStamp is used by Touchable to prevent multiple onTaps on "true"
+			// click (mouseup + click)
+			Object.defineProperty(mouseDownEvent, 'timeStamp', {value: 1});
+			Object.defineProperty(mouseUpEvent, 'timeStamp', {value: 1});
+			Object.defineProperty(clickEvent, 'timeStamp', {value: 1});
+
+			fireEvent(component, mouseDownEvent);
+			fireEvent(component, mouseUpEvent);
+			fireEvent(component, clickEvent);
 
 			const expected = ['onTap', 'click'];
 			const actual = handler.mock.calls.map(call => call[0].type);
