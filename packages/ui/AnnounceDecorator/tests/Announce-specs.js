@@ -1,13 +1,14 @@
 import {render} from '@testing-library/react';
+import {createRef} from 'react';
 
 import Announce from '../Announce';
 
 describe('Announce', () => {
-	// TODO: add a new scenario that can work with testing library
-	test.skip('should have an announce method on the component', () => {
-		const {container} = render(<Announce data-testid="announce" />);
+	test('should have an announce method on the component', () => {
+		const ref = createRef();
+		render(<Announce ref={ref} />);
 
-		const node = container.instance();
+		const node = ref.current;
 
 		const expected = 'function';
 		const actual = typeof node.announce;
@@ -15,13 +16,13 @@ describe('Announce', () => {
 		expect(actual).toBe(expected);
 	});
 
-	// TODO: add a new scenario that can work with testing library
-	test.skip('should update the aria-label with the provided message', () => {
+	test('should update the aria-label with the provided message', () => {
+		const ref = createRef();
 		const message = 'message';
 
-		const {container} = render(<Announce data-testid="announce" />);
+		render(<Announce ref={ref} />);
 
-		const node = container.instance();
+		const node = ref.current;
 		node.announce(message);
 
 		const expected = message;
