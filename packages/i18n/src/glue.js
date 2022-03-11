@@ -24,11 +24,9 @@ import './dates';
 import Loader from './Loader';
 import {updateLocale} from '../locale';
 
-const ilibAdditionalPath = process.env.REACT_APP_ILIB_ADDITIONAL_RESOURCES_PATH;
-
 ilib.setLoaderCallback(new Loader());
-if (typeof ilibAdditionalPath !== 'undefined') {
-	ilib.getLoader().addPath(ilibAdditionalPath);
+if (typeof ILIB_ADDITIONAL_RESOURCES_PATH !== 'undefined') {
+	ilib.getLoader().addPath(ILIB_ADDITIONAL_RESOURCES_PATH);
 }
 
 if (typeof window === 'object' && typeof window.UILocale !== 'undefined') {
