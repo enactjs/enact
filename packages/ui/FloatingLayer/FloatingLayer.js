@@ -1,5 +1,6 @@
 import {on, off} from '@enact/core/dispatcher';
 import {forwardCustom, forProp, handle, oneOf, stop, forEventProp, call} from '@enact/core/handle';
+import classNames from 'classnames';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
 import {cloneElement, Component} from 'react';
@@ -221,21 +222,21 @@ class FloatingLayerBase extends Component {
 			'FloatingLayer cannot be used outside the subtree of a FloatingLayerDecorator'
 		);
 
-		this.node = document.createElement('div');
-		this.node.className = floatLayerClassName;
-		this.node.style.zIndex = 100;
+		// this.node = document.createElement('div');
+		// this.node.className = floatLayerClassName;
+		// this.node.style.zIndex = 100;
 
-		this.floatingLayer.appendChild(this.node);
-		on('scroll', this.handleScroll, this.node);
+		// this.floatingLayer.appendChild(this.node);
+		// on('scroll', this.handleScroll, this.node);
 
 		// render children when this.node is inserted in the DOM tree.
 		this.setState({nodeRendered: true});
 	}
 
 	render () {
-		const {children, open, scrimType, ...rest} = this.props;
+		const {children, className, floatLayerClassName, open, scrimType, ...rest} = this.props;
 
-		delete rest.floatLayerClassName;
+		const mergedClassName = classNames(floatLayerClassName, className);
 		delete rest.floatLayerId;
 		delete rest.noAutoDismiss;
 		delete rest.onClose;
@@ -244,13 +245,19 @@ class FloatingLayerBase extends Component {
 
 		if (open && this.state.nodeRendered) {
 			return ReactDOM.createPortal(
-				<div {...rest}>
+				<div className={mergedClassName} style={{zIndex: 100}} {...rest}>
 					{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
 					{cloneElement(children, {onClick: this.stopPropagation})}
 				</div>,
-				this.node
+				this.floatingLayer
 			);
 		}
+
+
+		// this.node = document.createElement('div');
+		// this.node.className = floatLayerClassName;
+		// this.node.style.zIndex = 100;
+
 
 		return null;
 	}
