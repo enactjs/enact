@@ -429,11 +429,11 @@ const DrawingBase = kind({
 				context.strokeStyle = brushColor;
 				context.fillStyle = fillColor;
 				contextRef.current = context;
-			}
+			};
 
 			canvas.addEventListener('resize', handleResize);
 			handleResize();
-		}, [canvasHeight, canvasWidth]);
+		}, [canvasHeight, canvasWidth]); // eslint-disable-line react-hooks/exhaustive-deps
 
 		delete rest.drawingTool;
 
