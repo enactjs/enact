@@ -422,8 +422,8 @@ const DrawingBase = kind({
 			const handleResize = () => {
 				canvas.height = ri.scale(canvasHeight);
 				canvas.width = ri.scale(canvasWidth);
-				canvas.style.height = `${canvasHeight}px`;
-				canvas.style.width = `${canvasWidth}px`;
+				canvas.style.height = `${ri.scale(canvasHeight)}px`;
+				canvas.style.width = `${ri.scale(canvasWidth)}px`;
 				context.lineCap = 'round';
 				context.lineWidth = brushSize;
 				context.strokeStyle = brushColor;
