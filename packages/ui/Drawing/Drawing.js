@@ -29,14 +29,17 @@ let cursors = {
 
 const generateEraseCursor = (brushSize) => {
 	let canvas = document.createElement('canvas');
-	canvas.width = canvas.height = brushSize*2;
+	canvas.width = canvas.height = brushSize;
 
 	let ctx = canvas.getContext('2d');
 	ctx.fillStyle = 'white';
+	ctx.strokeStyle = 'black';
+	ctx.lineWidth = 3;
 	ctx.fillRect(0, 0, brushSize, brushSize);
+	ctx.strokeRect(0, 0, brushSize, brushSize);
 
 	return canvas.toDataURL();
-}
+};
 
 /**
  * A basic drawing canvas component.
@@ -273,21 +276,23 @@ const DrawingBase = kind({
 	computed: {
 		canvasStyle: ({backgroundImage, brushSize, canvasColor, drawingTool}) => {
 
-			let cursor;
+			let cursor, cursorHotspot;
 			if (drawingTool === 'erase') {
 				cursor = generateEraseCursor(brushSize);
+				cursorHotspot = `${brushSize / 2} ${brushSize / 2}`;
 			} else {
 				cursor = (drawingTool === 'fill') ? cursors.bucket : cursors.pen;
+				cursorHotspot = '3 27';
 			}
 
-			if (!backgroundImage) return {backgroundColor: `${canvasColor}`, cursor: `url(${cursor}) 3 27, auto`};
+			if (!backgroundImage) return {backgroundColor: `${canvasColor}`, cursor: `url(${cursor}) ${cursorHotspot}, auto`};
 
 			return {
 				backgroundImage: `url(${backgroundImage})`,
 				backgroundPosition: 'center',
 				backgroundRepeat: 'no-repeat',
 				backgroundSize: 'cover',
-				cursor: `url(${cursor}) -${brushSize*3} ${brushSize*3}, auto`
+				cursor: `url(${cursor}) ${cursorHotspot}, auto`
 			};
 		}
 	},
