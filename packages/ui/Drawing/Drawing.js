@@ -80,6 +80,24 @@ const DrawingBase = kind({
 		canvasColor: PropTypes.string,
 
 		/**
+		 * Sets the height of canvas.
+		 *
+		 * @type {Number}
+		 * @default 500
+		 * @public
+		 */
+		canvasHeight: PropTypes.number,
+
+		/**
+		 * Sets the width of canvas.
+		 *
+		 * @type {Number}
+		 * @default 800
+		 * @public
+		 */
+		canvasWidth: PropTypes.number,
+
+		/**
 		 * Applies the `disabled` class.
 		 *
 		 * When `true`, the canvas is shown as disabled.
@@ -146,6 +164,8 @@ const DrawingBase = kind({
 		brushColor: 'green',
 		brushSize: 5,
 		canvasColor: 'black',
+		canvasHeight: 500,
+		canvasWidth: 800,
 		drawingTool: 'brush',
 		fillColor: 'red',
 		points: []
@@ -158,7 +178,7 @@ const DrawingBase = kind({
 	},
 
 	handlers: {
-		draw: (event, {drawingTool, points}) => {
+		draw: (event, {canvasHeight, canvasWidth, drawingTool, points}) => {
 			const {
 				beginPointRef,
 				contextRef,
@@ -182,8 +202,8 @@ const DrawingBase = kind({
 			}
 
 			if (
-				offsetY > ri.scale(1000) ||
-				offsetX > ri.scale(2000) ||
+				offsetY > ri.scale(canvasHeight) ||
+				offsetX > ri.scale(canvasWidth) ||
 				offsetX < 0 ||
 				offsetY < 0
 			) {
@@ -284,7 +304,9 @@ const DrawingBase = kind({
 		brushColor,
 		brushSize,
 		canvasColor,
+		canvasHeight,
 		canvasStyle,
+		canvasWidth,
 		disabled,
 		draw,
 		drawingRef,
@@ -303,10 +325,10 @@ const DrawingBase = kind({
 
 		useEffect(() => {
 			const canvas = canvasRef.current;
-			canvas.height = ri.scale(1000);
-			canvas.width = ri.scale(2000);
-			canvas.style.height = `${ri.scale(1000)}px`;
-			canvas.style.width = `${ri.scale(2000)}px`;
+			canvas.height = ri.scale(canvasHeight);
+			canvas.width = ri.scale(canvasWidth);
+			canvas.style.height = `${ri.scale(canvasHeight)}px`;
+			canvas.style.width = `${ri.scale(canvasWidth)}px`;
 			const context = canvas.getContext('2d');
 			context.lineCap = 'round';
 			context.lineWidth = brushSize;
@@ -392,6 +414,26 @@ const DrawingBase = kind({
 				contextRef.current.globalCompositeOperation = 'source-over';
 			}
 		}, [drawingTool]);
+
+		// Handle width and height of canvas dynamically
+		useEffect(() => {
+			const canvas = canvasRef.current;
+			const context = canvas.getContext('2d');
+			const handleResize = () => {
+				canvas.height = ri.scale(canvasHeight);
+				canvas.width = ri.scale(canvasWidth);
+				canvas.style.height = `${canvasHeight}px`;
+				canvas.style.width = `${canvasWidth}px`;
+				context.lineCap = 'round';
+				context.lineWidth = brushSize;
+				context.strokeStyle = brushColor;
+				context.fillStyle = fillColor;
+				contextRef.current = context;
+			}
+
+			canvas.addEventListener('resize', handleResize);
+			handleResize();
+		}, [canvasHeight, canvasWidth]);
 
 		delete rest.drawingTool;
 
