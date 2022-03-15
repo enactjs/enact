@@ -27,10 +27,6 @@ import {ResizeContext} from '../Resizable';
 
 import componentCss from './Transition.module.less';
 
-const forwardTransitionEnd = forward('onTransitionEnd');
-const forwardOnShow = forward('onShow');
-const forwardOnHide = forward('onHide');
-
 const formatter = (duration) => (typeof duration === 'number' ? duration + 'ms' : duration);
 /**
  * The stateless structure of the component.
@@ -494,9 +490,9 @@ class Transition extends Component {
 
 		if (noAnimation) {
 			if (!prevProps.visible && visible) {
-				forwardOnShow({}, this.props);
+				forward('onShow', {type: 'onShow'}, this.props);
 			} else if (prevProps.visible && !visible) {
-				forwardOnHide({}, this.props);
+				forward('onHide', {type: 'onHide'}, this.props);
 			}
 		}
 	}
@@ -523,13 +519,13 @@ class Transition extends Component {
 	};
 
 	handleTransitionEnd = (ev) => {
-		forwardTransitionEnd(ev, this.props);
+		forward('onTransitionEnd', {type: 'onTransitionEnd'}, this.props);
 
 		if (ev.target === this.childNode) {
 			if (!this.props.visible) {
-				forwardOnHide(ev, this.props);
+				forward('onHide', {type: 'onHide'}, this.props);
 			} else if (this.props.visible) {
-				forwardOnShow(ev, this.props);
+				forward('onShow', {type: 'onShow'}, this.props);
 			}
 		}
 	};
@@ -585,4 +581,3 @@ class Transition extends Component {
 
 export default Transition;
 export {Transition, TransitionBase};
-
