@@ -16,7 +16,7 @@
  * @exports TransitionBase
  */
 
-import {forwardCustom} from '@enact/core/handle';
+import {forward} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
@@ -26,6 +26,10 @@ import PropTypes from 'prop-types';
 import {ResizeContext} from '../Resizable';
 
 import componentCss from './Transition.module.less';
+
+const forwardTransitionEnd = forward('onTransitionEnd');
+const forwardOnShow = forward('onShow');
+const forwardOnHide = forward('onHide');
 
 const formatter = (duration) => (typeof duration === 'number' ? duration + 'ms' : duration);
 /**
@@ -490,9 +494,9 @@ class Transition extends Component {
 
 		if (noAnimation) {
 			if (!prevProps.visible && visible) {
-				forwardCustom('onShow')({}, this.props);
+				forwardOnShow({}, this.props);
 			} else if (prevProps.visible && !visible) {
-				forwardCustom('onHide')({}, this.props);
+				forwardOnHide({}, this.props);
 			}
 		}
 	}
@@ -519,13 +523,13 @@ class Transition extends Component {
 	};
 
 	handleTransitionEnd = (ev) => {
-		forwardCustom('onTransitionEnd')(ev, this.props);
+		forwardTransitionEnd(ev, this.props);
 
 		if (ev.target === this.childNode) {
 			if (!this.props.visible) {
-				forwardCustom('onHide')(ev, this.props);
+				forwardOnHide(ev, this.props);
 			} else if (this.props.visible) {
-				forwardCustom('onShow')(ev, this.props);
+				forwardOnShow(ev, this.props);
 			}
 		}
 	};
@@ -581,3 +585,4 @@ class Transition extends Component {
 
 export default Transition;
 export {Transition, TransitionBase};
+
