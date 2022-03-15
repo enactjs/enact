@@ -253,10 +253,12 @@ const DrawingBase = kind({
 				fillDrawing(ev, contextRef);
 			} else if (drawingTool === 'triangle') {
 				const newOffsetY = offsetY - (100 * Math.sqrt(3) / 3);
+				contextRef.current.beginPath();
 				contextRef.current.moveTo(offsetX, newOffsetY);
 				contextRef.current.lineTo(offsetX - 50, newOffsetY + 100);
 				contextRef.current.lineTo(offsetX + 50, newOffsetY + 100);
 				contextRef.current.lineTo(offsetX, newOffsetY);
+				contextRef.current.closePath();
 				contextRef.current.stroke();
 				return;
 			} else if (drawingTool === 'rectangle') {
