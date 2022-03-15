@@ -184,22 +184,14 @@ const DrawingBase = kind({
 				contextRef,
 				ev,
 				isDrawing,
-				offset,
 				setIsDrawing
 			} = event;
 			const nativeEvent = ev.nativeEvent;
 
 			// TODO check condition for future drawing tools
 			if (!isDrawing || drawingTool === 'fill') return;
-			let offsetX, offsetY;
-
-			if (nativeEvent.pointerType === 'mouse') {
-				offsetX = nativeEvent.offsetX;
+			const offsetX = nativeEvent.offsetX,
 				offsetY = nativeEvent.offsetY;
-			} else {
-				offsetX = nativeEvent.pageX - offset.x;
-				offsetY = nativeEvent.pageY - offset.y;
-			}
 
 			if (
 				offsetY > ri.scale(canvasHeight) ||
@@ -321,7 +313,6 @@ const DrawingBase = kind({
 		const beginPointRef = useRef(null);
 		const canvasRef = useRef(null);
 		const contextRef = useRef(null);
-		const [offset, setOffset] = useState();
 
 		useEffect(() => {
 			const canvas = canvasRef.current;
@@ -335,11 +326,6 @@ const DrawingBase = kind({
 			context.strokeStyle = brushColor;
 			context.fillStyle = fillColor;
 			contextRef.current = context;
-
-			setOffset({
-				x: canvas.getBoundingClientRect().left,
-				y: canvas.getBoundingClientRect().top
-			});
 		}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 		useEffect(() => {
@@ -457,8 +443,7 @@ const DrawingBase = kind({
 						contextRef,
 						beginPointRef,
 						ev,
-						setIsDrawing,
-						offset
+						setIsDrawing
 					})
 				}
 				onPointerUp={() => finishDrawing({contextRef, setIsDrawing})}
