@@ -99,7 +99,10 @@ const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions
 
 	contextRef.current.globalCompositeOperation = 'source-over';
 
-	currentObjectLines.forEach(line => {
+	// currentObjectLines.forEach(line => {
+	for(let index = 0; index <= actions; index++){
+		const line = currentObjectLines[index];
+		console.log(line)
 		context.lineWidth = line.brushSize;
 		context.strokeStyle = line.brushColor;
 		context.fillStyle = line.fillColor;
@@ -126,21 +129,21 @@ const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions
 				contextRef.current.lineTo(offsetX, newOffsetY);
 				contextRef.current.stroke();
 				contextRef.current.closePath();
-				return;
+				// return;
 			} else if (line.drawingTool === 'rectangle') {
 				const height = 75;
 				const width = 100;
 				contextRef.current.rect(offsetX - (width / 2), offsetY - (height / 2), width, height);
 				contextRef.current.stroke();
 				contextRef.current.closePath();
-				return;
+				// return;
 
 			} else if (line.drawingTool === 'circle') {
 				contextRef.current.beginPath();
 				contextRef.current.arc(offsetX, offsetY, 50, 0, 2 * Math.PI);
 				contextRef.current.stroke();
 				contextRef.current.closePath();
-				return;
+				// return;
 
 			}
 			else {
@@ -180,7 +183,8 @@ const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions
 		context.lineWidth = brushSize;
 		context.strokeStyle = brushColor;
 		context.fillStyle = fillColor;
-	})
+	}
+	// })
 }
 
 export {

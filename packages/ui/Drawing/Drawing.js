@@ -35,7 +35,7 @@ let currentObjectLine = {
 	brushColor: '',
 	brushSize: '',
 	ev: null
-}, currentObjectLines = [];
+}, currentObjectLines = [], redoIndex = 0, redoList = [], lastAction = '';
 /**
  * A basic drawing canvas component.
  *
@@ -257,7 +257,14 @@ const DrawingBase = kind({
 			// console.log(ev)
 			const nativeEvent = ev.nativeEvent;
 			if (disabled) return;
-
+			if (lastAction === 'undo' || lastAction === 'redo') {
+				console.log([...currentObjectLines.slice(0, actions)]);
+				console.log(currentObjectLines[currentObjectLines.length - 1])
+				lastAction = 'draw'
+				currentObjectLines = [...currentObjectLines.slice(0, actions + 1)]
+			}
+			redoIndex = 0;
+			redoList = [];
 			const { offsetX, offsetY } = nativeEvent;
 			contextRef.current.beginPath(); // start a canvas path
 			contextRef.current.moveTo(offsetX, offsetY); // move the starting point to initial position
@@ -295,20 +302,13 @@ const DrawingBase = kind({
 				contextRef.current.stroke();
 				return;
 			}
-			// currentObjectLine['drawingTool'] = drawingTool;
-			// currentObjectLine['fillColor'] = fillColor;
-			// currentObjectLine['brushColor'] = brushColor;
-			// currentObjectLine['brushSize'] = brushSize;
-			// currentObjectLine['ev'] = ev;
 			beginPointRef.current = { x: offsetX, y: offsetY };
 			setIsDrawing(true);
-			// console.log('points from startDrawing')
-			// console.log(points)
 		}
 	},
 
 	computed: {
-		canvasStyle: ({backgroundImage, canvasColor, drawingTool}) => {
+		canvasStyle: ({ backgroundImage, canvasColor, drawingTool }) => {
 
 			let cursor;
 			if (drawingTool === 'erase') {
@@ -365,7 +365,7 @@ const DrawingBase = kind({
 		// console.log(currentObjectLine)
 		console.log('current object lines')
 		console.log(currentObjectLines)
-
+		console.log(actions)
 		// console.log('current line')
 		// console.log(currentLine)
 		// console.log('actions')
@@ -403,7 +403,8 @@ const DrawingBase = kind({
 		useImperativeHandle(drawingRef, () => ({
 			clearCanvas: () => {
 				if (disabled) return;
-
+				currentObjectLines = [];
+				actions = -1;
 				const canvas = canvasRef.current;
 				const context = canvas.getContext('2d');
 
@@ -418,10 +419,12 @@ const DrawingBase = kind({
 			},
 
 			undo: () => {
+				lastAction = 'undo'
 				if (currentObjectLines.length == 0) return;
 
 				console.log('*************UNDO************');
 				console.log(currentObjectLines);
+				console.log(actions)
 				// const canvas = canvasRef.current;
 				// const context = canvas.getContext('2d');
 
@@ -430,11 +433,21 @@ const DrawingBase = kind({
 
 				// contextRef.current.globalCompositeOperation = 'source-over';
 
-				lastLine = { ...currentObjectLines[currentObjectLines.length - 1] };
+				// lastLine = { ...currentObjectLines[currentObjectLines.length - 1] };
+				// redoList.push(currentObjectLines[currentObjectLines.length - 1]);
 
-				currentObjectLines.pop();
+				// currentObjectLines.pop();
+				if (actions < 0) {
+					// currentObjectLines = [];
+					// actions = 0;
+					return;
+				}
+				actions--;
 
 				paint(canvasRef, contextRef, beginPointRef, currentObjectLines, actions, drawingTool, brushSize, brushColor, fillColor);
+
+				
+
 				// for(let objIndex = 0; objIndex < actions; objIndex++){
 				// 	const line = currentObjectLines[objIndex];
 				// 	context.lineWidth = line.brushSize;
@@ -628,7 +641,7 @@ const DrawingBase = kind({
 				// })
 
 
-				actions--;
+				// actions--;
 				if (drawingTool === 'erase') {
 					// console.log('am radiera in tool')
 					contextRef.current.globalCompositeOperation = 'destination-out';
@@ -645,17 +658,24 @@ const DrawingBase = kind({
 			},
 
 			redo: () => {
+				lastAction = 'redo'
+
 				console.log('redo');
-				currentObjectLines.push(lastLine);
+				console.log(redoIndex)
+				console.log(redoList)
+				if (actions >= currentObjectLines.length - 1) return;
+				// currentObjectLines.push(redoList[redoIndex]);
+				// redoIndex++;
+				actions++;
 				console.log(currentObjectLines)
-				lastLine = {
-					points: [],
-					drawingTool: '',
-					fillColor: '',
-					brushColor: '',
-					brushSize: '',
-					ev: null
-				}
+				// lastLine = {
+				// 	points: [],
+				// 	drawingTool: '',
+				// 	fillColor: '',
+				// 	brushColor: '',
+				// 	brushSize: '',
+				// 	ev: null
+				// }
 				paint(canvasRef, contextRef, beginPointRef, currentObjectLines, actions, drawingTool, brushSize, brushColor, fillColor);
 
 			},
