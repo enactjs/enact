@@ -66,7 +66,6 @@ const fillDrawing = (event, contextRef) => {
 			}
 		});
 	}
-
 };
 
 /*
@@ -205,8 +204,6 @@ const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions
 		context.fillStyle = fillColor;
 	}
 };
-
-
 
 export {
 	drawing,

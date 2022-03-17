@@ -27,12 +27,12 @@ let cursors = {
 	pen: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAATFJREFUeNrs19FthDAMBuB0A0bICIyQERiB2yAjsEFGyAiMABuEDa5MEDZwceWc0oq6J52dp7MU8YL4sCOiH2N0qzeNazoX0MqtXiAiGEKAZVlgGIaCj5poKGhd4ziW7p0G6unBue97yDlf4eJjj9RR4nAa+10M7boOYoyAVw7HPacXlOkUO8FKKbE47j2N+/VO8cGI4x5yOKFAn9prKCLYzTM4oVEELfUkHkRRDp+mqYzXq6BXuHMOVMbL4dbatigWfs9v9I3+efa2Ri2lhMcB0AI1VTz5F5dEbRXOWFwSxRoKxOHS6HdIw7P1VzD7gWugWIv3/ioVPnANFAvmeb4KZjUeJMEPipvpHKXZ992s62q2bTPHcZR71nPdzvWpkYehiqeROlT/7XBaCZ+rLwEGAPhaImYfzD7mAAAAAElFTkSuQmCC'
 };
 let currentLine = {
-		points: [],
-		drawingTool: '',
-		fillColor: '',
 		brushColor: '',
 		brushSize: '',
-		ev: null
+		drawingTool: '',
+		fillColor: '',
+		ev: null,
+		points: []
 	}, currentLinesArray = [], actionsIndex = -1, lastAction = '';
 
 const generateEraseCursor = (brushSize) => {
@@ -202,13 +202,13 @@ const DrawingBase = kind({
 		draw: (event, {canvasHeight, canvasWidth, drawingTool, points}) => {
 			const {
 				beginPointRef,
-				contextRef,
-				ev,
-				isDrawing,
-				setIsDrawing,
 				brushColor,
 				brushSize,
-				fillColor
+				contextRef,
+				ev,
+				fillColor,
+				isDrawing,
+				setIsDrawing
 			} = event;
 			const nativeEvent = ev.nativeEvent;
 
@@ -259,18 +259,19 @@ const DrawingBase = kind({
 			currentLinesArray.push(currentLine);
 
 			currentLine = {
-				points: [],
-				drawingTool: '',
-				fillColor: '',
 				brushColor: '',
-				brushSize: ''
+				brushSize: '',
+				drawingTool: '',
+				ev: null,
+				fillColor: '',
+				points: []
 			};
 
 			actionsIndex++;
 		},
 
 		startDrawing: (event, {points, drawingTool}) => {
-			const {beginPointRef, contextRef, disabled, ev, setIsDrawing, fillColor, brushSize, brushColor} = event;
+			const {beginPointRef, brushColor, brushSize, contextRef, disabled, ev, fillColor, setIsDrawing} = event;
 			const nativeEvent = ev.nativeEvent;
 			if (disabled) return;
 			if (lastAction === 'undo' || lastAction === 'redo') {
