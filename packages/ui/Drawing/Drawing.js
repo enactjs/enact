@@ -13,12 +13,12 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import { useImperativeHandle, useEffect, useRef, useState } from 'react';
+import {useImperativeHandle, useEffect, useRef, useState} from 'react';
 
 import ForwardRef from '../ForwardRef';
 import ri from '../resolution';
 
-import { drawing, fillDrawing, paint } from './utils';
+import {drawing, drawCircle, drawRectangle, drawTriangle, fillDrawing, paint} from './utils';
 
 import css from './Drawing.module.less';
 
@@ -27,15 +27,14 @@ let cursors = {
 	eraser: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAIAAABLixI0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAE1JREFUeNpiZGXnYKASYAFiAQF+fT19Sky5eOnihw8fGYDucnF1+08ZAJoANIeJgXpg1KxRs0bNGjVr1KzBaxYjsMynVj3ESMX6ESDAANA2TPNF19FGAAAAAElFTkSuQmCC',
 	pen: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAATFJREFUeNrs19FthDAMBuB0A0bICIyQERiB2yAjsEFGyAiMABuEDa5MEDZwceWc0oq6J52dp7MU8YL4sCOiH2N0qzeNazoX0MqtXiAiGEKAZVlgGIaCj5poKGhd4ziW7p0G6unBue97yDlf4eJjj9RR4nAa+10M7boOYoyAVw7HPacXlOkUO8FKKbE47j2N+/VO8cGI4x5yOKFAn9prKCLYzTM4oVEELfUkHkRRDp+mqYzXq6BXuHMOVMbL4dbatigWfs9v9I3+efa2Ri2lhMcB0AI1VTz5F5dEbRXOWFwSxRoKxOHS6HdIw7P1VzD7gWugWIv3/ioVPnANFAvmeb4KZjUeJMEPipvpHKXZ992s62q2bTPHcZR71nPdzvWpkYehiqeROlT/7XBaCZ+rLwEGAPhaImYfzD7mAAAAAElFTkSuQmCC'
 };
-let currentLine = [], lines = [], actions = -1, lastLine = null;;
-let currentObjectLine = {
-	points: [],
-	drawingTool: '',
-	fillColor: '',
-	brushColor: '',
-	brushSize: '',
-	ev: null
-}, currentObjectLines = [], redoIndex = 0, redoList = [], lastAction = '';
+let currentLine = {
+		points: [],
+		drawingTool: '',
+		fillColor: '',
+		brushColor: '',
+		brushSize: '',
+		ev: null
+	}, currentLinesArray = [], actionsIndex = -1, lastAction = '';
 /**
  * A basic drawing canvas component.
  *
@@ -166,7 +165,7 @@ const DrawingBase = kind({
 	},
 
 	handlers: {
-		draw: (event, { drawingTool, points }) => {
+		draw: (event, {drawingTool, points}) => {
 			const {
 				beginPointRef,
 				contextRef,
@@ -201,17 +200,14 @@ const DrawingBase = kind({
 				setIsDrawing(false);
 				return;
 			}
-			points.push({ x: offsetX, y: offsetY });
-			currentLine.push({ x: offsetX, y: offsetY });
-			currentObjectLine['points'].push({ x: offsetX, y: offsetY });
-			currentObjectLine['drawingTool'] = drawingTool;
-			currentObjectLine['fillColor'] = fillColor;
-			currentObjectLine['brushColor'] = brushColor;
-			currentObjectLine['brushSize'] = brushSize;
-			currentObjectLine['ev'] = ev;
+			points.push({x: offsetX, y: offsetY});
+			currentLine['points'].push({x: offsetX, y: offsetY});
+			currentLine['drawingTool'] = drawingTool;
+			currentLine['fillColor'] = fillColor;
+			currentLine['brushColor'] = brushColor;
+			currentLine['brushSize'] = brushSize;
+			currentLine['ev'] = ev;
 
-			// console.log('points from drawing')
-			// console.log(points)
 			if (points.length > 3) {
 				const lastTwoPoints = points.slice(-2);
 				const controlPoint = lastTwoPoints[0];
@@ -229,16 +225,14 @@ const DrawingBase = kind({
 			}
 		},
 
-		finishDrawing: (event, { points }) => {
-			const { contextRef, setIsDrawing } = event;
+		finishDrawing: (event) => {
+			const {contextRef, setIsDrawing} = event;
 
 			contextRef.current.closePath();
 			setIsDrawing(false);
-			console.log('from finisHDrawing');
-			console.log(currentObjectLines);
-			currentObjectLines.push(currentObjectLine);
+			currentLinesArray.push(currentLine);
 
-			currentObjectLine = {
+			currentLine = {
 				points: [],
 				drawingTool: '',
 				fillColor: '',
@@ -246,69 +240,51 @@ const DrawingBase = kind({
 				brushSize: ''
 			};
 
-			lines.push(currentLine)
-			currentLine = [];
-			actions++;
+			actionsIndex++;
 		},
 
-		startDrawing: (event, { points, drawingTool }) => {
-			const { beginPointRef, contextRef, disabled, ev, setIsDrawing, fillColor, brushSize, brushColor } = event;
-			// console.log('ev from startDrawing')
-			// console.log(ev)
+		startDrawing: (event, {points, drawingTool}) => {
+			const {beginPointRef, contextRef, disabled, ev, setIsDrawing, fillColor, brushSize, brushColor} = event;
 			const nativeEvent = ev.nativeEvent;
 			if (disabled) return;
 			if (lastAction === 'undo' || lastAction === 'redo') {
-				console.log([...currentObjectLines.slice(0, actions)]);
-				console.log(currentObjectLines[currentObjectLines.length - 1])
-				lastAction = 'draw'
-				currentObjectLines = [...currentObjectLines.slice(0, actions + 1)]
+				lastAction = 'draw';
+				currentLinesArray = [...currentLinesArray.slice(0, actionsIndex + 1)];
 			}
-			redoIndex = 0;
-			redoList = [];
-			const { offsetX, offsetY } = nativeEvent;
+			const {offsetX, offsetY} = nativeEvent;
 			contextRef.current.beginPath(); // start a canvas path
 			contextRef.current.moveTo(offsetX, offsetY); // move the starting point to initial position
-			points.push({ x: offsetX, y: offsetY });
+			points.push({x: offsetX, y: offsetY});
 
-			currentLine.push({ x: offsetX, y: offsetY });
-			currentObjectLine['points'].push({ x: offsetX, y: offsetY });
-			currentObjectLine['drawingTool'] = drawingTool;
-			currentObjectLine['fillColor'] = fillColor;
-			currentObjectLine['brushColor'] = brushColor;
-			currentObjectLine['brushSize'] = brushSize;
-			currentObjectLine['ev'] = ev;
+			currentLine['points'].push({x: offsetX, y: offsetY});
+			currentLine['drawingTool'] = drawingTool;
+			currentLine['fillColor'] = fillColor;
+			currentLine['brushColor'] = brushColor;
+			currentLine['brushSize'] = brushSize;
+			currentLine['ev'] = ev;
+
 			if (drawingTool === 'brush') {
 				contextRef.current.lineTo(offsetX, offsetY); // draw a single point
 				contextRef.current.stroke();
 			} else if (drawingTool === 'fill') {
 				fillDrawing(ev, contextRef);
 			} else if (drawingTool === 'triangle') {
-				const newOffsetY = offsetY - (100 * Math.sqrt(3) / 3);
-				contextRef.current.moveTo(offsetX, newOffsetY);
-				contextRef.current.lineTo(offsetX - 50, newOffsetY + 100);
-				contextRef.current.lineTo(offsetX + 50, newOffsetY + 100);
-				contextRef.current.lineTo(offsetX, newOffsetY);
-				contextRef.current.stroke();
+				drawTriangle(contextRef, offsetX, offsetY);
 				return;
 			} else if (drawingTool === 'rectangle') {
-				const height = 75;
-				const width = 100;
-				contextRef.current.rect(offsetX - (width / 2), offsetY - (height / 2), width, height);
-				contextRef.current.stroke();
+				drawRectangle(contextRef, offsetX, offsetY);
 				return;
 			} else if (drawingTool === 'circle') {
-				contextRef.current.beginPath();
-				contextRef.current.arc(offsetX, offsetY, 50, 0, 2 * Math.PI);
-				contextRef.current.stroke();
+				drawCircle(contextRef, offsetX, offsetY);
 				return;
 			}
-			beginPointRef.current = { x: offsetX, y: offsetY };
+			beginPointRef.current = {x: offsetX, y: offsetY};
 			setIsDrawing(true);
 		}
 	},
 
 	computed: {
-		canvasStyle: ({ backgroundImage, canvasColor, drawingTool }) => {
+		canvasStyle: ({backgroundImage, canvasColor, drawingTool}) => {
 
 			let cursor;
 			if (drawingTool === 'erase') {
@@ -317,7 +293,7 @@ const DrawingBase = kind({
 				cursor = (drawingTool === 'fill') ? cursors.bucket : cursors.pen;
 			}
 
-			if (!backgroundImage) return { backgroundColor: `${canvasColor}`, cursor: `url(${cursor}) 3 27, auto` };
+			if (!backgroundImage) return {backgroundColor: `${canvasColor}`, cursor: `url(${cursor}) 3 27, auto`};
 
 			return {
 				backgroundImage: `url(${backgroundImage})`,
@@ -342,35 +318,14 @@ const DrawingBase = kind({
 		fillColor,
 		finishDrawing,
 		startDrawing,
-		points,
 		...rest
 	}) => {
-		console.log("\n**************************************\n");
-		console.log(drawingTool)
 		const [isDrawing, setIsDrawing] = useState(false);
 		const beginPointRef = useRef(null);
 		const canvasRef = useRef(null);
 		const contextRef = useRef(null);
 		const [offset, setOffset] = useState();
-		// console.log(points)
-		// console.log('beginPointRef.current')
-		// console.log(beginPointRef.current)
-		// console.log(lines)
-		// const [lines, setLines] = useState([])
-		// const [currentLine, setCurrentLine] = useState([]);
-		// console.log('from render')
-		// console.log('lines')
-		// console.log(lines)
-		// console.log('currentObjectLine')
-		// console.log(currentObjectLine)
-		console.log('current object lines')
-		console.log(currentObjectLines)
-		console.log(actions)
-		// console.log('current line')
-		// console.log(currentLine)
-		// console.log('actions')
-		// console.log(actions)
-		// console.log('**********************')
+
 		useEffect(() => {
 			const canvas = canvasRef.current;
 			canvas.height = ri.scale(1000);
@@ -391,7 +346,6 @@ const DrawingBase = kind({
 		}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 		useEffect(() => {
-			console.log('changing brush size: ', brushSize)
 			const canvas = canvasRef.current;
 
 			const context = canvas.getContext('2d');
@@ -403,8 +357,8 @@ const DrawingBase = kind({
 		useImperativeHandle(drawingRef, () => ({
 			clearCanvas: () => {
 				if (disabled) return;
-				currentObjectLines = [];
-				actions = -1;
+				currentLinesArray = [];
+				actionsIndex = -1;
 				const canvas = canvasRef.current;
 				const context = canvas.getContext('2d');
 
@@ -419,265 +373,25 @@ const DrawingBase = kind({
 			},
 
 			undo: () => {
-				lastAction = 'undo'
-				if (currentObjectLines.length == 0) return;
+				lastAction = 'undo';
+				if (currentLinesArray.length === 0 || actionsIndex < 0) return;
 
-				console.log('*************UNDO************');
-				console.log(currentObjectLines);
-				console.log(actions)
-				// const canvas = canvasRef.current;
-				// const context = canvas.getContext('2d');
+				actionsIndex--;
 
-				// contextRef.current.globalCompositeOperation = 'destination-out';
-				// context.fillRect(0, 0, canvas.width, canvas.height);
+				paint(canvasRef, contextRef, beginPointRef, currentLinesArray, actionsIndex, drawingTool, brushSize, brushColor, fillColor);
 
-				// contextRef.current.globalCompositeOperation = 'source-over';
-
-				// lastLine = { ...currentObjectLines[currentObjectLines.length - 1] };
-				// redoList.push(currentObjectLines[currentObjectLines.length - 1]);
-
-				// currentObjectLines.pop();
-				if (actions < 0) {
-					// currentObjectLines = [];
-					// actions = 0;
-					return;
-				}
-				actions--;
-
-				paint(canvasRef, contextRef, beginPointRef, currentObjectLines, actions, drawingTool, brushSize, brushColor, fillColor);
-
-				
-
-				// for(let objIndex = 0; objIndex < actions; objIndex++){
-				// 	const line = currentObjectLines[objIndex];
-				// 	context.lineWidth = line.brushSize;
-				// 	context.strokeStyle = line.brushColor;
-				// 	context.fillStyle = line.fillColor;
-				// 	beginPointRef.current = line.points[0];
-				// 	console.log('line')
-				// 	console.log(line.drawingTool)
-				// 	console.log(drawingTool)
-				// 	if (line.drawingTool === 'erase') {
-				// 		// console.log('avem radiera')
-				// 		contextRef.current.globalCompositeOperation = 'destination-out';
-				// 	} else {
-				// 		// console.log('n-avem radiera')
-				// 		contextRef.current.globalCompositeOperation = 'source-over';
-				// 	}
-				// 	if (line.points.length === 1) {
-				// 		const nativeEvent = line.ev.nativeEvent;
-				// 		const { offsetX, offsetY } = nativeEvent;
-
-				// 		// if (line.drawingTool === 'fill') {
-				// 		// 	fillDrawing(line.ev, contextRef);
-				// 		// }
-				// 		contextRef.current.beginPath(); // start a canvas path
-				// 		contextRef.current.moveTo(line.points[0].x, line.points[0].y); // move the starting point to initial position
-				// 		if (line.drawingTool === 'fill') {
-				// 			fillDrawing(line.ev, contextRef);
-				// 		} else if (line.drawingTool === 'triangle') {
-				// 			console.log('facem triunglu')
-				// 			const newOffsetY = offsetY - (100 * Math.sqrt(3) / 3);
-				// 			contextRef.current.moveTo(offsetX, newOffsetY);
-				// 			contextRef.current.lineTo(offsetX - 50, newOffsetY + 100);
-				// 			contextRef.current.lineTo(offsetX + 50, newOffsetY + 100);
-				// 			contextRef.current.lineTo(offsetX, newOffsetY);
-				// 			contextRef.current.stroke();
-				// 			contextRef.current.closePath();
-				// 			return;
-				// 		} else if (line.drawingTool === 'rectangle') {
-				// 			const height = 75;
-				// 			const width = 100;
-				// 			contextRef.current.rect(offsetX - (width / 2), offsetY - (height / 2), width, height);
-				// 			contextRef.current.stroke();
-				// 			contextRef.current.closePath();
-				// 			return;
-
-				// 		} else if (line.drawingTool === 'circle') {
-				// 			contextRef.current.beginPath();
-				// 			contextRef.current.arc(offsetX, offsetY, 50, 0, 2 * Math.PI);
-				// 			contextRef.current.stroke();
-				// 			contextRef.current.closePath();
-				// 			return;
-
-				// 		}
-				// 		else {
-				// 			line.points.forEach(point => {
-				// 				// console.log('point')
-				// 				// console.log(point)
-				// 				contextRef.current.beginPath(); // start a canvas path
-				// 				contextRef.current.moveTo(point.x, point.y); // move the starting point to initial position
-				// 				contextRef.current.lineTo(point.x, point.y);
-				// 				contextRef.current.stroke();
-				// 				contextRef.current.closePath();
-				// 			})
-				// 		}
-
-				// 	} else {
-				// 		for (let index = 2; index <= line.points.length; index++) {
-
-				// 			const lastTwoPoints = [line.points[index - 2], line.points[index - 1]];
-				// 			const controlPoint = lastTwoPoints[0];
-				// 			const endPoint = {
-				// 				x: (lastTwoPoints[0].x + lastTwoPoints[1].x) / 2,
-				// 				y: (lastTwoPoints[0].y + lastTwoPoints[1].y) / 2
-				// 			};
-				// 			drawing(
-				// 				beginPointRef.current,
-				// 				controlPoint,
-				// 				endPoint,
-				// 				contextRef
-				// 			);
-				// 			beginPointRef.current = endPoint;
-				// 		}
-				// 	}
-				// 	if (drawingTool === 'erase') {
-				// 		// console.log('am radiera in tool')
-				// 		contextRef.current.globalCompositeOperation = 'destination-out';
-				// 	} else {
-				// 		// console.log('n-am radiera in tool')
-				// 		contextRef.current.globalCompositeOperation = 'source-over';
-				// 	}
-				// 	contextRef.current.closePath();
-				// 	context.lineWidth = brushSize;
-				// 	context.strokeStyle = brushColor;
-				// 	context.fillStyle = fillColor;
-				// }
-
-
-				// currentObjectLines.forEach(line => {
-				// 	context.lineWidth = line.brushSize;
-				// 	context.strokeStyle = line.brushColor;
-				// 	context.fillStyle = line.fillColor;
-				// 	beginPointRef.current = line.points[0];
-				// 	console.log('line')
-				// 	console.log(line.drawingTool)
-				// 	console.log(drawingTool)
-				// 	if (line.drawingTool === 'erase') {
-				// 		// console.log('avem radiera')
-				// 		contextRef.current.globalCompositeOperation = 'destination-out';
-				// 	} else {
-				// 		// console.log('n-avem radiera')
-				// 		contextRef.current.globalCompositeOperation = 'source-over';
-				// 	}
-				// 	if (line.points.length === 1) {
-				// 		const nativeEvent = line.ev.nativeEvent;
-				// 		const { offsetX, offsetY } = nativeEvent;
-
-				// 		// if (line.drawingTool === 'fill') {
-				// 		// 	fillDrawing(line.ev, contextRef);
-				// 		// }
-				// 		contextRef.current.beginPath(); // start a canvas path
-				// 		contextRef.current.moveTo(line.points[0].x, line.points[0].y); // move the starting point to initial position
-				// 		if (line.drawingTool === 'fill') {
-				// 			fillDrawing(line.ev, contextRef);
-				// 		} else if (line.drawingTool === 'triangle') {
-				// 			console.log('facem triunglu')
-				// 			const newOffsetY = offsetY - (100 * Math.sqrt(3) / 3);
-				// 			contextRef.current.moveTo(offsetX, newOffsetY);
-				// 			contextRef.current.lineTo(offsetX - 50, newOffsetY + 100);
-				// 			contextRef.current.lineTo(offsetX + 50, newOffsetY + 100);
-				// 			contextRef.current.lineTo(offsetX, newOffsetY);
-				// 			contextRef.current.stroke();
-				// 			contextRef.current.closePath();
-				// 			return;
-				// 		} else if (line.drawingTool === 'rectangle') {
-				// 			const height = 75;
-				// 			const width = 100;
-				// 			contextRef.current.rect(offsetX - (width / 2), offsetY - (height / 2), width, height);
-				// 			contextRef.current.stroke();
-				// 			contextRef.current.closePath();
-				// 			return;
-
-				// 		} else if (line.drawingTool === 'circle') {
-				// 			contextRef.current.beginPath();
-				// 			contextRef.current.arc(offsetX, offsetY, 50, 0, 2 * Math.PI);
-				// 			contextRef.current.stroke();
-				// 			contextRef.current.closePath();
-				// 			return;
-
-				// 		}
-				// 		else {
-				// 			line.points.forEach(point => {
-				// 				// console.log('point')
-				// 				// console.log(point)
-				// 				contextRef.current.beginPath(); // start a canvas path
-				// 				contextRef.current.moveTo(point.x, point.y); // move the starting point to initial position
-				// 				contextRef.current.lineTo(point.x, point.y);
-				// 				contextRef.current.stroke();
-				// 				contextRef.current.closePath();
-				// 			})
-				// 		}
-
-				// 	} else {
-				// 		for (let index = 2; index <= line.points.length; index++) {
-
-				// 			const lastTwoPoints = [line.points[index - 2], line.points[index - 1]];
-				// 			const controlPoint = lastTwoPoints[0];
-				// 			const endPoint = {
-				// 				x: (lastTwoPoints[0].x + lastTwoPoints[1].x) / 2,
-				// 				y: (lastTwoPoints[0].y + lastTwoPoints[1].y) / 2
-				// 			};
-				// 			drawing(
-				// 				beginPointRef.current,
-				// 				controlPoint,
-				// 				endPoint,
-				// 				contextRef
-				// 			);
-				// 			beginPointRef.current = endPoint;
-				// 		}
-				// 	}
-				// 	if (drawingTool === 'erase') {
-				// 		console.log('am radiera in tool')
-				// 		contextRef.current.globalCompositeOperation = 'destination-out';
-				// 	} else {
-				// 		console.log('n-am radiera in tool')
-				// 		contextRef.current.globalCompositeOperation = 'source-over';
-				// 	}
-				// 	contextRef.current.closePath();
-				// 	context.lineWidth = brushSize;
-				// 	context.strokeStyle = brushColor;
-				// 	context.fillStyle = fillColor;
-				// })
-
-
-				// actions--;
 				if (drawingTool === 'erase') {
-					// console.log('am radiera in tool')
 					contextRef.current.globalCompositeOperation = 'destination-out';
 				} else {
-					// console.log('n-am radiera in tool')
 					contextRef.current.globalCompositeOperation = 'source-over';
 				}
-				// if (currentObjectLines.length === 0) {
-				// 	context.lineWidth = brushSize;
-				// 	context.strokeStyle = brushColor;
-				// 	context.fillStyle = fillColor;
-				// }
-
 			},
 
 			redo: () => {
-				lastAction = 'redo'
-
-				console.log('redo');
-				console.log(redoIndex)
-				console.log(redoList)
-				if (actions >= currentObjectLines.length - 1) return;
-				// currentObjectLines.push(redoList[redoIndex]);
-				// redoIndex++;
-				actions++;
-				console.log(currentObjectLines)
-				// lastLine = {
-				// 	points: [],
-				// 	drawingTool: '',
-				// 	fillColor: '',
-				// 	brushColor: '',
-				// 	brushSize: '',
-				// 	ev: null
-				// }
-				paint(canvasRef, contextRef, beginPointRef, currentObjectLines, actions, drawingTool, brushSize, brushColor, fillColor);
-
+				lastAction = 'redo';
+				if (actionsIndex >= currentLinesArray.length - 1) return;
+				actionsIndex++;
+				paint(canvasRef, contextRef, beginPointRef, currentLinesArray, actionsIndex, drawingTool, brushSize, brushColor, fillColor);
 			},
 
 			saveCanvas: () => {
@@ -728,8 +442,6 @@ const DrawingBase = kind({
 		}, [drawingTool]);
 
 		delete rest.drawingTool;
-		delete rest.currentLine;
-		delete rest.line;
 
 		return (
 			<canvas
@@ -761,7 +473,7 @@ const DrawingBase = kind({
 						fillColor
 					})
 				}
-				onPointerUp={(ev) => finishDrawing({ ev, contextRef, setIsDrawing })}
+				onPointerUp={(ev) => finishDrawing({ev, contextRef, setIsDrawing})}
 			/>
 		);
 	}
@@ -775,7 +487,7 @@ const DrawingBase = kind({
  * @mixes ui/ForwardRef.ForwardRef
  * @public
  */
-const DrawingDecorator = compose(ForwardRef({ prop: 'drawingRef' }));
+const DrawingDecorator = compose(ForwardRef({prop: 'drawingRef'}));
 
 /**
  * A simple, unstyled drawing canvas component.

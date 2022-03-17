@@ -66,18 +66,13 @@ const fillDrawing = (event, contextRef) => {
 			}
 		});
 	}
-	
+
 };
 
 /*
  * Executes the drawing on the canvas.
  */
 const drawing = (beginPoint, controlPoint, endPoint, contextRef) => {
-	// console.log('drawing');
-	// console.log(beginPoint)
-	// console.log(controlPoint)
-	// console.log(endPoint)
-	// console.log(beginPoint)
 	contextRef.current.beginPath();
 	contextRef.current.moveTo(beginPoint.x, beginPoint.y);
 	contextRef.current.quadraticCurveTo(
@@ -90,6 +85,55 @@ const drawing = (beginPoint, controlPoint, endPoint, contextRef) => {
 	contextRef.current.closePath();
 };
 
+/*
+ * Function used to draw a triangle on the canvas
+ */
+const drawTriangle = (contextRef, offsetX, offsetY) => {
+	const newOffsetY = offsetY - (100 * Math.sqrt(3) / 3);
+	contextRef.current.beginPath();
+	contextRef.current.moveTo(offsetX, newOffsetY);
+	contextRef.current.lineTo(offsetX - 50, newOffsetY + 100);
+	contextRef.current.lineTo(offsetX + 50, newOffsetY + 100);
+	contextRef.current.lineTo(offsetX, newOffsetY);
+	contextRef.current.closePath();
+	contextRef.current.stroke();
+};
+
+/*
+ * Function used to draw a rectangle on the canvas
+ */
+const drawRectangle = (contextRef, offsetX, offsetY) => {
+	const height = 75;
+	const width = 100;
+	contextRef.current.rect(offsetX - (width / 2), offsetY - (height / 2), width, height);
+	contextRef.current.stroke();
+	contextRef.current.closePath();
+};
+
+/*
+ * Function used to draw a circle on the canvas
+ */
+const drawCircle = (contextRef, offsetX, offsetY) => {
+	contextRef.current.beginPath();
+	contextRef.current.arc(offsetX, offsetY, 50, 0, 2 * Math.PI);
+	contextRef.current.stroke();
+	contextRef.current.closePath();
+};
+
+/*
+ * Function used to draw a line on the canvas
+ */
+const drawLine = (contextRef, offsetX, offsetY) => {
+	contextRef.current.beginPath(); // start a canvas path
+	contextRef.current.moveTo(offsetX, offsetY); // move the starting point to initial position
+	contextRef.current.lineTo(offsetX, offsetY);
+	contextRef.current.stroke();
+	contextRef.current.closePath();
+};
+
+/*
+ * Paints a single point, line or shape for the undo/redo functionality
+ */
 const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions, drawingTool, brushSize, brushColor, fillColor) => {
 	const canvas = canvasRef.current;
 	const context = canvas.getContext('2d');
@@ -99,63 +143,39 @@ const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions
 
 	contextRef.current.globalCompositeOperation = 'source-over';
 
-	// currentObjectLines.forEach(line => {
-	for(let index = 0; index <= actions; index++){
-		const line = currentObjectLines[index];
-		console.log(line)
+	for (let lineIndex = 0; lineIndex <= actions; lineIndex++) {
+		const line = currentObjectLines[lineIndex];
 		context.lineWidth = line.brushSize;
 		context.strokeStyle = line.brushColor;
 		context.fillStyle = line.fillColor;
 		beginPointRef.current = line.points[0];
+
 		if (line.drawingTool === 'erase') {
 			contextRef.current.globalCompositeOperation = 'destination-out';
 		} else {
 			contextRef.current.globalCompositeOperation = 'source-over';
 		}
+
 		if (line.points.length === 1) {
 			const nativeEvent = line.ev.nativeEvent;
-			const { offsetX, offsetY } = nativeEvent;
+			const {offsetX, offsetY} = nativeEvent;
 
-			
 			contextRef.current.beginPath(); // start a canvas path
 			contextRef.current.moveTo(line.points[0].x, line.points[0].y); // move the starting point to initial position
+
 			if (line.drawingTool === 'fill') {
 				fillDrawing(line.ev, contextRef);
 			} else if (line.drawingTool === 'triangle') {
-				const newOffsetY = offsetY - (100 * Math.sqrt(3) / 3);
-				contextRef.current.moveTo(offsetX, newOffsetY);
-				contextRef.current.lineTo(offsetX - 50, newOffsetY + 100);
-				contextRef.current.lineTo(offsetX + 50, newOffsetY + 100);
-				contextRef.current.lineTo(offsetX, newOffsetY);
-				contextRef.current.stroke();
-				contextRef.current.closePath();
-				// return;
+				drawTriangle(contextRef, offsetX, offsetY);
 			} else if (line.drawingTool === 'rectangle') {
-				const height = 75;
-				const width = 100;
-				contextRef.current.rect(offsetX - (width / 2), offsetY - (height / 2), width, height);
-				contextRef.current.stroke();
-				contextRef.current.closePath();
-				// return;
-
+				drawRectangle(contextRef, offsetX, offsetY);
 			} else if (line.drawingTool === 'circle') {
-				contextRef.current.beginPath();
-				contextRef.current.arc(offsetX, offsetY, 50, 0, 2 * Math.PI);
-				contextRef.current.stroke();
-				contextRef.current.closePath();
-				// return;
-
-			}
-			else {
+				drawCircle(contextRef, offsetX, offsetY);
+			} else {
 				line.points.forEach(point => {
-					contextRef.current.beginPath(); // start a canvas path
-					contextRef.current.moveTo(point.x, point.y); // move the starting point to initial position
-					contextRef.current.lineTo(point.x, point.y);
-					contextRef.current.stroke();
-					contextRef.current.closePath();
-				})
+					drawLine(contextRef, point.x, point.y);
+				});
 			}
-
 		} else {
 			for (let index = 2; index <= line.points.length; index++) {
 
@@ -184,11 +204,15 @@ const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions
 		context.strokeStyle = brushColor;
 		context.fillStyle = fillColor;
 	}
-	// })
-}
+};
+
+
 
 export {
 	drawing,
+	drawCircle,
+	drawRectangle,
+	drawTriangle,
 	fillDrawing,
 	paint
 };
