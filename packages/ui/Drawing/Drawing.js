@@ -24,7 +24,6 @@ import css from './Drawing.module.less';
 
 let cursors = {
 	bucket: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAghJREFUeNrslj1uwjAUx5OKA+QIESeIxMgSRhaUhRE1YmDODSgzAxIbEyMSDDlCOABScoPmBuEGrv9pDK+O43yQTu2THoqesX9+X7YN46+J+eoCjDHrcrl4+J7P52lhTk3TTH9159vtNgSfqm3bbDqdfq5WqyPfmNM308LCMlRWy7LYYrEIERmjj/COx+NYhvi+zyBxHLPdbsccx3mM4f8vwWXo8XjMQfCMwoWEYfgY++DSG1SIDs55uR15bw09n8/+crlUQuvgURTlNtd1WStgsVOmg1K453l5jrMsy21BEOTzZrNZ3ATo8L6M5ALSQVUiwgzd7/eBFsr/7A+Hw0wHRfjgnUowBi/Rz2Ju4YQeKvJUBaVeIG9CVfOEwhFEsTMUUhRJ5YGBcWwOEaEFBzifbpdyWhdeuTeh+EZooaKYdNVenHZPURUS8tSXwIFSS/HduqoQw1ZVQG1F7uU3/JxOp/f7/V7KOWyTycRIkuTl8z1Nv2/JwWDwBBWN/cNbUal9eF6ZY1qlKDDR6LTgusIpdDQaZT9uKOrZ4XDwqqq9LVxupVIfC3DVWdoFXgulYN192QbeCErBt9vNq7s46uCNofTwwGnY5NaicPRnJyhEPNqagFXHK95W9H3VCCoue0xs8xjDwqr+h60J1CTvKYc/wpMO7zB3s9nkkVqv11e+xtX4F4V8CTAA/Hx+caeSjdgAAAAASUVORK5CYII=',
-	eraser: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAIAAABLixI0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAE1JREFUeNpiZGXnYKASYAFiAQF+fT19Sky5eOnihw8fGYDucnF1+08ZAJoANIeJgXpg1KxRs0bNGjVr1KzBaxYjsMynVj3ESMX6ESDAANA2TPNF19FGAAAAAElFTkSuQmCC',
 	pen: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAATFJREFUeNrs19FthDAMBuB0A0bICIyQERiB2yAjsEFGyAiMABuEDa5MEDZwceWc0oq6J52dp7MU8YL4sCOiH2N0qzeNazoX0MqtXiAiGEKAZVlgGIaCj5poKGhd4ziW7p0G6unBue97yDlf4eJjj9RR4nAa+10M7boOYoyAVw7HPacXlOkUO8FKKbE47j2N+/VO8cGI4x5yOKFAn9prKCLYzTM4oVEELfUkHkRRDp+mqYzXq6BXuHMOVMbL4dbatigWfs9v9I3+efa2Ri2lhMcB0AI1VTz5F5dEbRXOWFwSxRoKxOHS6HdIw7P1VzD7gWugWIv3/ioVPnANFAvmeb4KZjUeJMEPipvpHKXZ992s62q2bTPHcZR71nPdzvWpkYehiqeROlT/7XBaCZ+rLwEGAPhaImYfzD7mAAAAAElFTkSuQmCC'
 };
 let currentLine = {
@@ -35,6 +34,21 @@ let currentLine = {
 		brushSize: '',
 		ev: null
 	}, currentLinesArray = [], actionsIndex = -1, lastAction = '';
+
+const generateEraseCursor = (brushSize) => {
+	let canvas = document.createElement('canvas');
+	canvas.width = canvas.height = brushSize;
+
+	let ctx = canvas.getContext('2d');
+	ctx.fillStyle = 'white';
+	ctx.strokeStyle = 'black';
+	ctx.lineWidth = 3;
+	ctx.fillRect(0, 0, brushSize, brushSize);
+	ctx.strokeRect(0, 0, brushSize, brushSize);
+
+	return canvas.toDataURL();
+};
+
 /**
  * A basic drawing canvas component.
  *
@@ -85,6 +99,24 @@ const DrawingBase = kind({
 		 * @public
 		 */
 		canvasColor: PropTypes.string,
+
+		/**
+		 * Sets the height of canvas.
+		 *
+		 * @type {Number}
+		 * @default 500
+		 * @public
+		 */
+		canvasHeight: PropTypes.number,
+
+		/**
+		 * Sets the width of canvas.
+		 *
+		 * @type {Number}
+		 * @default 800
+		 * @public
+		 */
+		canvasWidth: PropTypes.number,
 
 		/**
 		 * Applies the `disabled` class.
@@ -153,6 +185,8 @@ const DrawingBase = kind({
 		brushColor: 'green',
 		brushSize: 5,
 		canvasColor: 'black',
+		canvasHeight: 500,
+		canvasWidth: 800,
 		drawingTool: 'brush',
 		fillColor: 'red',
 		points: []
@@ -165,13 +199,12 @@ const DrawingBase = kind({
 	},
 
 	handlers: {
-		draw: (event, {drawingTool, points}) => {
+		draw: (event, {canvasHeight, canvasWidth, drawingTool, points}) => {
 			const {
 				beginPointRef,
 				contextRef,
 				ev,
 				isDrawing,
-				offset,
 				setIsDrawing,
 				brushColor,
 				brushSize,
@@ -181,19 +214,12 @@ const DrawingBase = kind({
 
 			// TODO check condition for future drawing tools
 			if (!isDrawing || drawingTool === 'fill') return;
-			let offsetX, offsetY;
-
-			if (nativeEvent.pointerType === 'mouse') {
-				offsetX = nativeEvent.offsetX;
+			const offsetX = nativeEvent.offsetX,
 				offsetY = nativeEvent.offsetY;
-			} else {
-				offsetX = nativeEvent.pageX - offset.x;
-				offsetY = nativeEvent.pageY - offset.y;
-			}
 
 			if (
-				offsetY > ri.scale(1000) ||
-				offsetX > ri.scale(2000) ||
+				offsetY > ri.scale(canvasHeight) ||
+				offsetX > ri.scale(canvasWidth) ||
 				offsetX < 0 ||
 				offsetY < 0
 			) {
@@ -284,23 +310,25 @@ const DrawingBase = kind({
 	},
 
 	computed: {
-		canvasStyle: ({backgroundImage, canvasColor, drawingTool}) => {
+		canvasStyle: ({backgroundImage, brushSize, canvasColor, drawingTool}) => {
 
-			let cursor;
+			let cursor, cursorHotspot;
 			if (drawingTool === 'erase') {
-				cursor = cursors.eraser;
+				cursor = generateEraseCursor(brushSize);
+				cursorHotspot = `${brushSize / 2} ${brushSize / 2}`;
 			} else {
 				cursor = (drawingTool === 'fill') ? cursors.bucket : cursors.pen;
+				cursorHotspot = '3 27';
 			}
 
-			if (!backgroundImage) return {backgroundColor: `${canvasColor}`, cursor: `url(${cursor}) 3 27, auto`};
+			if (!backgroundImage) return {backgroundColor: `${canvasColor}`, cursor: `url(${cursor}) ${cursorHotspot}, auto`};
 
 			return {
 				backgroundImage: `url(${backgroundImage})`,
 				backgroundPosition: 'center',
 				backgroundRepeat: 'no-repeat',
 				backgroundSize: 'cover',
-				cursor: `url(${cursor}) 3 27, auto`
+				cursor: `url(${cursor}) ${cursorHotspot}, auto`
 			};
 		}
 	},
@@ -310,7 +338,9 @@ const DrawingBase = kind({
 		brushColor,
 		brushSize,
 		canvasColor,
+		canvasHeight,
 		canvasStyle,
+		canvasWidth,
 		disabled,
 		draw,
 		drawingRef,
@@ -324,25 +354,19 @@ const DrawingBase = kind({
 		const beginPointRef = useRef(null);
 		const canvasRef = useRef(null);
 		const contextRef = useRef(null);
-		const [offset, setOffset] = useState();
 
 		useEffect(() => {
 			const canvas = canvasRef.current;
-			canvas.height = ri.scale(1000);
-			canvas.width = ri.scale(2000);
-			canvas.style.height = `${ri.scale(1000)}px`;
-			canvas.style.width = `${ri.scale(2000)}px`;
+			canvas.height = ri.scale(canvasHeight);
+			canvas.width = ri.scale(canvasWidth);
+			canvas.style.height = `${ri.scale(canvasHeight)}px`;
+			canvas.style.width = `${ri.scale(canvasWidth)}px`;
 			const context = canvas.getContext('2d');
 			context.lineCap = 'round';
 			context.lineWidth = brushSize;
 			context.strokeStyle = brushColor;
 			context.fillStyle = fillColor;
 			contextRef.current = context;
-
-			setOffset({
-				x: canvas.getBoundingClientRect().left,
-				y: canvas.getBoundingClientRect().top
-			});
 		}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 		useEffect(() => {
@@ -441,6 +465,26 @@ const DrawingBase = kind({
 			}
 		}, [drawingTool]);
 
+		// Handle width and height of canvas dynamically
+		useEffect(() => {
+			const canvas = canvasRef.current;
+			const context = canvas.getContext('2d');
+			const handleResize = () => {
+				canvas.height = ri.scale(canvasHeight);
+				canvas.width = ri.scale(canvasWidth);
+				canvas.style.height = `${ri.scale(canvasHeight)}px`;
+				canvas.style.width = `${ri.scale(canvasWidth)}px`;
+				context.lineCap = 'round';
+				context.lineWidth = brushSize;
+				context.strokeStyle = brushColor;
+				context.fillStyle = fillColor;
+				contextRef.current = context;
+			};
+
+			canvas.addEventListener('resize', handleResize);
+			handleResize();
+		}, [canvasHeight, canvasWidth]); // eslint-disable-line react-hooks/exhaustive-deps
+
 		delete rest.drawingTool;
 
 		return (
@@ -467,7 +511,6 @@ const DrawingBase = kind({
 						beginPointRef,
 						ev,
 						setIsDrawing,
-						offset,
 						brushColor,
 						brushSize,
 						fillColor
