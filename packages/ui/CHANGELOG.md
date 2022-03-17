@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Button` not to pass `icon` prop as children when `icon` is true 
+- `ui/Transition` to pass the event when handling transition event  
 
 ## [4.1.3] - 2022-03-07
 

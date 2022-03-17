@@ -128,26 +128,6 @@ describe('Transition Specs', () => {
 		expect(actual).toMatchObject(expectedType);
 	});
 
-	test('should fire \'onTransitionEnd\' event with type', () => {
-		const handleTransitionEnd = jest.fn();
-		const ChildNode = (props) => <div {...props}>Body</div>;
-
-		render(
-			<Transition onTransitionEnd={handleTransitionEnd}>
-				<ChildNode />
-			</Transition>
-		);
-
-		fireEvent.transitionEnd(screen.getByText('Body'));
-
-		const expected = 1;
-		const expectedType = {type: 'onTransitionEnd'};
-		const actual = handleTransitionEnd.mock.calls.length && handleTransitionEnd.mock.calls[0][0];
-
-		expect(handleTransitionEnd).toBeCalledTimes(expected);
-		expect(actual).toMatchObject(expectedType);
-	});
-
 	// Tests for prop and className combinations
 	const directionCombination = [
 		['up', 'up'],
