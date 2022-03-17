@@ -332,13 +332,14 @@ const DrawingBase = kind({
 		const contextRef = useRef(null);
 
 		useEffect(() => {
+			const ratio = window.devicePixelRatio;
 			const canvas = canvasRef.current;
-			canvas.height = ri.scale(canvasHeight * 2);
-			canvas.width = ri.scale(canvasWidth * 2);
+			canvas.height = ri.scale(canvasHeight * ratio);
+			canvas.width = ri.scale(canvasWidth * ratio);
 			canvas.style.height = `${ri.scale(canvasHeight)}px`;
 			canvas.style.width = `${ri.scale(canvasWidth)}px`;
 			const context = canvas.getContext('2d');
-			context.scale(2, 2);
+			context.scale(ratio, ratio);
 			context.translate(0.5, 0.5);
 			context.lineCap = 'round';
 			context.lineWidth = brushSize;
