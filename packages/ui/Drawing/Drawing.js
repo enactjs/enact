@@ -333,11 +333,13 @@ const DrawingBase = kind({
 
 		useEffect(() => {
 			const canvas = canvasRef.current;
-			canvas.height = ri.scale(canvasHeight);
-			canvas.width = ri.scale(canvasWidth);
+			canvas.height = ri.scale(canvasHeight * 2);
+			canvas.width = ri.scale(canvasWidth * 2);
 			canvas.style.height = `${ri.scale(canvasHeight)}px`;
 			canvas.style.width = `${ri.scale(canvasWidth)}px`;
 			const context = canvas.getContext('2d');
+			context.scale(2, 2);
+			context.translate(0.5, 0.5);
 			context.lineCap = 'round';
 			context.lineWidth = brushSize;
 			context.strokeStyle = brushColor;
