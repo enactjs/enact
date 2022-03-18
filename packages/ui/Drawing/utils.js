@@ -206,8 +206,8 @@ const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions
 };
 
 export {
-	drawing,
 	drawCircle,
+	drawing,
 	drawRectangle,
 	drawTriangle,
 	fillDrawing,
