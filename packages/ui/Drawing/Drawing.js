@@ -18,7 +18,7 @@ import {useImperativeHandle, useEffect, useRef, useState} from 'react';
 import ForwardRef from '../ForwardRef';
 import ri from '../resolution';
 
-import {drawing, drawCircle, drawRectangle, drawTriangle, fillDrawing, paint} from './utils';
+import {drawCircle, drawing, drawRectangle, drawTriangle, fillDrawing, paint, setLineOptions} from './utils';
 
 import css from './Drawing.module.less';
 
@@ -33,7 +33,10 @@ let currentLine = {
 		fillColor: '',
 		ev: null,
 		points: []
-	}, currentLinesArray = [], actionsIndex = -1, lastAction = '';
+	}, 
+	currentLinesArray = [], 
+	actionsIndex = -1, 
+	lastAction = '';
 
 const generateEraseCursor = (brushSize) => {
 	let canvas = document.createElement('canvas');
@@ -227,12 +230,7 @@ const DrawingBase = kind({
 				return;
 			}
 			points.push({x: offsetX, y: offsetY});
-			currentLine['points'].push({x: offsetX, y: offsetY});
-			currentLine['drawingTool'] = drawingTool;
-			currentLine['fillColor'] = fillColor;
-			currentLine['brushColor'] = brushColor;
-			currentLine['brushSize'] = brushSize;
-			currentLine['ev'] = ev;
+			setLineOptions(brushColor, brushSize, currentLine, drawingTool, ev, fillColor, offsetX, offsetY)
 
 			if (points.length > 3) {
 				const lastTwoPoints = points.slice(-2);
@@ -282,13 +280,7 @@ const DrawingBase = kind({
 			contextRef.current.beginPath(); // start a canvas path
 			contextRef.current.moveTo(offsetX, offsetY); // move the starting point to initial position
 			points.push({x: offsetX, y: offsetY});
-
-			currentLine['points'].push({x: offsetX, y: offsetY});
-			currentLine['drawingTool'] = drawingTool;
-			currentLine['fillColor'] = fillColor;
-			currentLine['brushColor'] = brushColor;
-			currentLine['brushSize'] = brushSize;
-			currentLine['ev'] = ev;
+			setLineOptions(brushColor, brushSize, currentLine, drawingTool, ev, fillColor, offsetX, offsetY)
 
 			if (drawingTool === 'brush') {
 				contextRef.current.lineTo(offsetX, offsetY); // draw a single point

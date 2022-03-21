@@ -205,11 +205,21 @@ const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions
 	}
 };
 
+const setLineOptions = (brushColor, brushSize, currentLine, drawingTool, ev, fillColor, offsetX, offsetY) => {
+	currentLine['points'].push({x: offsetX, y: offsetY});
+	currentLine['drawingTool'] = drawingTool;
+	currentLine['fillColor'] = fillColor;
+	currentLine['brushColor'] = brushColor;
+	currentLine['brushSize'] = brushSize;
+	currentLine['ev'] = ev;
+}
+
 export {
 	drawCircle,
 	drawing,
 	drawRectangle,
 	drawTriangle,
 	fillDrawing,
-	paint
+	paint,
+	setLineOptions
 };
