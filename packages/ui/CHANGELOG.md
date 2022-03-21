@@ -4,6 +4,9 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Removed
+- `ui/Scroller` and `ui/VirtualList` prop `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label`
+
 ### Added
 
 - `ui/MarqueeDecorator` `locale` type for `forceDirection` prop not to override the direction depending on contents
