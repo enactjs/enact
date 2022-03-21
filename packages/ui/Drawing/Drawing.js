@@ -217,6 +217,7 @@ const DrawingBase = kind({
 
 			// TODO check condition for future drawing tools
 			if (!isDrawing || drawingTool === 'fill') return;
+
 			const offsetX = nativeEvent.offsetX,
 				offsetY = nativeEvent.offsetY;
 
@@ -229,6 +230,7 @@ const DrawingBase = kind({
 				setIsDrawing(false);
 				return;
 			}
+
 			points.push({x: offsetX, y: offsetY});
 			setLineOptions(brushColor, brushSize, currentLine, drawingTool, ev, fillColor, offsetX, offsetY);
 
@@ -239,6 +241,7 @@ const DrawingBase = kind({
 					x: (lastTwoPoints[0].x + lastTwoPoints[1].x) / 2,
 					y: (lastTwoPoints[0].y + lastTwoPoints[1].y) / 2
 				};
+
 				drawing(
 					beginPointRef.current,
 					controlPoint,
@@ -271,11 +274,14 @@ const DrawingBase = kind({
 		startDrawing: (event, {points, drawingTool}) => {
 			const {beginPointRef, brushColor, brushSize, contextRef, disabled, ev, fillColor, setIsDrawing} = event;
 			const nativeEvent = ev.nativeEvent;
+
 			if (disabled) return;
+
 			if (lastAction === 'undo' || lastAction === 'redo') {
 				lastAction = 'draw';
 				currentLinesArray = [...currentLinesArray.slice(0, actionsIndex + 1)];
 			}
+
 			const {offsetX, offsetY} = nativeEvent;
 			contextRef.current.beginPath(); // start a canvas path
 			contextRef.current.moveTo(offsetX, offsetY); // move the starting point to initial position
@@ -297,6 +303,7 @@ const DrawingBase = kind({
 				drawCircle(contextRef, offsetX, offsetY);
 				return;
 			}
+
 			beginPointRef.current = {x: offsetX, y: offsetY};
 			setIsDrawing(true);
 		}
@@ -304,8 +311,8 @@ const DrawingBase = kind({
 
 	computed: {
 		canvasStyle: ({backgroundImage, brushSize, canvasColor, drawingTool}) => {
-
 			let cursor, cursorHotspot;
+
 			if (drawingTool === 'erase') {
 				cursor = generateEraseCursor(brushSize);
 				cursorHotspot = `${brushSize / 2} ${brushSize / 2}`;
@@ -364,8 +371,8 @@ const DrawingBase = kind({
 
 		useEffect(() => {
 			const canvas = canvasRef.current;
-
 			const context = canvas.getContext('2d');
+
 			context.lineWidth = brushSize;
 			context.strokeStyle = brushColor;
 			context.fillStyle = fillColor;
@@ -374,8 +381,10 @@ const DrawingBase = kind({
 		useImperativeHandle(drawingRef, () => ({
 			clearCanvas: () => {
 				if (disabled) return;
+
 				currentLinesArray = [];
 				actionsIndex = -1;
+
 				const canvas = canvasRef.current;
 				const context = canvas.getContext('2d');
 
@@ -391,10 +400,10 @@ const DrawingBase = kind({
 
 			undo: () => {
 				lastAction = 'undo';
+
 				if (currentLinesArray.length === 0 || actionsIndex < 0) return;
 
 				actionsIndex--;
-
 				paint(canvasRef, contextRef, beginPointRef, currentLinesArray, actionsIndex, drawingTool, brushSize, brushColor, fillColor);
 
 				if (drawingTool === 'erase') {
@@ -406,7 +415,9 @@ const DrawingBase = kind({
 
 			redo: () => {
 				lastAction = 'redo';
+
 				if (actionsIndex >= currentLinesArray.length - 1) return;
+
 				actionsIndex++;
 				paint(canvasRef, contextRef, beginPointRef, currentLinesArray, actionsIndex, drawingTool, brushSize, brushColor, fillColor);
 			},
@@ -436,7 +447,6 @@ const DrawingBase = kind({
 					let x = (canvas.width / 2) - (img.width / 2) * scale;
 					let y = (canvas.height / 2) - (img.height / 2) * scale;
 					newContext.drawImage(img, x, y, img.width * scale, img.height * scale);
-
 					newContext.globalCompositeOperation = 'source-over';
 					newContext.drawImage(canvas, 0, 0);
 				}
