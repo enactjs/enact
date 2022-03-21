@@ -1,3 +1,5 @@
+/* global ILIB_ADDITIONAL_RESOURCES_PATH */
+
 /*
  * glue.js - glue code to fit ilib into enyo
  *

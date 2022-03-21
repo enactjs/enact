@@ -341,7 +341,7 @@ EnyoLoader.prototype._validateManifest = function (cachedManifest, filepath, syn
 					newManifest = json;
 				});
 			}
-			if (newManifest === null && typeof iLibAdditionalPath !== 'undefined' && filepath.includes(iLibAdditionalPath)) {
+			if (newManifest === null && typeof ILIB_ADDITIONAL_RESOURCES_PATH !== 'undefined' && filepath.includes(ILIB_ADDITIONAL_RESOURCES_PATH)) {
 				// If new manifest is null and the filepath has ILIB_ADDITIONAL_RESOURCES_PATH,
 				// meaning we need to clear string cache
 				this._clearStringsCache();
