@@ -33,9 +33,9 @@ let currentLine = {
 		fillColor: '',
 		ev: null,
 		points: []
-	}, 
-	currentLinesArray = [], 
-	actionsIndex = -1, 
+	},
+	currentLinesArray = [],
+	actionsIndex = -1,
 	lastAction = '';
 
 const generateEraseCursor = (brushSize) => {
@@ -230,7 +230,7 @@ const DrawingBase = kind({
 				return;
 			}
 			points.push({x: offsetX, y: offsetY});
-			setLineOptions(brushColor, brushSize, currentLine, drawingTool, ev, fillColor, offsetX, offsetY)
+			setLineOptions(brushColor, brushSize, currentLine, drawingTool, ev, fillColor, offsetX, offsetY);
 
 			if (points.length > 3) {
 				const lastTwoPoints = points.slice(-2);
@@ -280,7 +280,7 @@ const DrawingBase = kind({
 			contextRef.current.beginPath(); // start a canvas path
 			contextRef.current.moveTo(offsetX, offsetY); // move the starting point to initial position
 			points.push({x: offsetX, y: offsetY});
-			setLineOptions(brushColor, brushSize, currentLine, drawingTool, ev, fillColor, offsetX, offsetY)
+			setLineOptions(brushColor, brushSize, currentLine, drawingTool, ev, fillColor, offsetX, offsetY);
 
 			if (drawingTool === 'brush') {
 				contextRef.current.lineTo(offsetX, offsetY); // draw a single point

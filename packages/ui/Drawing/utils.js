@@ -212,7 +212,7 @@ const setLineOptions = (brushColor, brushSize, currentLine, drawingTool, ev, fil
 	currentLine['brushColor'] = brushColor;
 	currentLine['brushSize'] = brushSize;
 	currentLine['ev'] = ev;
-}
+};
 
 export {
 	drawCircle,
