@@ -44,8 +44,8 @@
     "@enact/core": "^4.1.2",
     "prop-types": "^15.8.0",
     "ramda": "^0.27.1",
-    "react": "^18.0.0-rc.0",
-    "react-dom": "^18.0.0-rc.0",
+    "react": "^18.0.0-rc.3",
+    "react-dom": "^18.0.0-rc.3",
     "xhr": "^2.6.0"
   },
   "peerDependencies": {
