@@ -16,7 +16,7 @@
  * @exports TransitionBase
  */
 
-import {forward} from '@enact/core/handle';
+import {forward, forwardCustom} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
@@ -490,9 +490,9 @@ class Transition extends Component {
 
 		if (noAnimation) {
 			if (!prevProps.visible && visible) {
-				forward('onShow', {type: 'onShow'}, this.props);
+				forwardCustom('onShow')({}, this.props);
 			} else if (prevProps.visible && !visible) {
-				forward('onHide', {type: 'onHide'}, this.props);
+				forwardCustom('onHide')({}, this.props);
 			}
 		}
 	}
@@ -523,9 +523,9 @@ class Transition extends Component {
 
 		if (ev.target === this.childNode) {
 			if (!this.props.visible) {
-				forward('onHide', {type: 'onHide', currentTarget:ev.currentTarget}, this.props);
+				forward('onHide', {type: 'onHide', currentTarget: ev.currentTarget}, this.props);
 			} else if (this.props.visible) {
-				forward('onShow', {type: 'onShow', currentTarget:ev.currentTarget}, this.props);
+				forward('onShow', {type: 'onShow', currentTarget: ev.currentTarget}, this.props);
 			}
 		}
 	};
