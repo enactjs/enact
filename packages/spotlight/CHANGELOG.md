@@ -2,7 +2,11 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
+## [4.1.4] - 2022-03-24
+
+No significant changes.
+
+## [4.1.3] - 2022-03-07
 
 - Updated to use `forwardCustom` and add `type` when forwarding custom events
 
