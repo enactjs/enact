@@ -111,20 +111,12 @@ const VirtualListBaseFactory = (type) => {
 			}),
 
 			/**
-			 * Activates the component for voice control.
+			 * An object with properties to be passed to the container DOM.
 			 *
-			 * @type {Boolean}
-			 * @public
+			 * @type {Object}
+			 * @private
 			 */
-			'data-webos-voice-focused': PropTypes.bool,
-
-			/**
-			 * The voice control group label.
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			'data-webos-voice-group-label': PropTypes.string,
+			containerProps: PropTypes.object,
 
 			/**
 			 * The number of items of data the list contains.
@@ -1132,7 +1124,7 @@ const VirtualListBaseFactory = (type) => {
 
 		render () {
 			const
-				{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, itemsRenderer, style, ...rest} = this.props,
+				{className, containerProps, itemsRenderer, style, ...rest} = this.props,
 				{cc, itemContainerRef, primary} = this,
 				containerClasses = this.getContainerClasses(className),
 				contentClasses = this.getContentClasses();
@@ -1161,7 +1153,7 @@ const VirtualListBaseFactory = (type) => {
 			}
 
 			return (
-				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.containerRef} style={style}>
+				<div className={containerClasses} {...containerProps} ref={this.containerRef} style={style}>
 					<div {...rest} className={contentClasses} ref={this.contentRef}>
 						{itemsRenderer({cc, itemContainerRef, primary})}
 					</div>
