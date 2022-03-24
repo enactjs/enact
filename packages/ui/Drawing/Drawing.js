@@ -476,10 +476,13 @@ const DrawingBase = kind({
 			const canvas = canvasRef.current;
 			const context = canvas.getContext('2d');
 			const handleResize = () => {
-				canvas.height = ri.scale(canvasHeight);
-				canvas.width = ri.scale(canvasWidth);
+				const ratio = window.devicePixelRatio;
+				canvas.height = ri.scale(canvasHeight * ratio);
+				canvas.width = ri.scale(canvasWidth * ratio);
 				canvas.style.height = `${ri.scale(canvasHeight)}px`;
 				canvas.style.width = `${ri.scale(canvasWidth)}px`;
+				context.scale(ratio, ratio);
+				context.translate(0.5, 0.5);
 				context.lineCap = 'round';
 				context.lineWidth = brushSize;
 				context.strokeStyle = brushColor;
