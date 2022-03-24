@@ -42,9 +42,10 @@ const relativePosition = (event, element) => {
  */
 const fillDrawing = (event, contextRef) => {
 	const canvas = contextRef.current.canvas;
+	const ratio = window.devicePixelRatio;
 	const startPos = relativePosition(event, canvas);
 
-	const data = contextRef.current.getImageData(0, 0, canvas.width, canvas.height);
+	const data = contextRef.current.getImageData(0, 0, Math.floor(canvas.width / ratio), Math.floor(canvas.height / ratio));
 	// An array with one place for each pixel in the image.
 	const alreadyFilled = new Array(data.width * data.height);
 

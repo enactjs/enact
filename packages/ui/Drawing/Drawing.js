@@ -358,13 +358,12 @@ const DrawingBase = kind({
 		useEffect(() => {
 			const ratio = window.devicePixelRatio;
 			const canvas = canvasRef.current;
-			canvas.height = ri.scale(canvasHeight * ratio);
-			canvas.width = ri.scale(canvasWidth * ratio);
+			canvas.height = Math.floor(ri.scale(canvasHeight * ratio));
+			canvas.width = Math.floor(ri.scale(canvasWidth * ratio));
 			canvas.style.height = `${ri.scale(canvasHeight)}px`;
 			canvas.style.width = `${ri.scale(canvasWidth)}px`;
 			const context = canvas.getContext('2d');
 			context.scale(ratio, ratio);
-			context.translate(0.5, 0.5);
 			context.lineCap = 'round';
 			context.lineWidth = brushSize;
 			context.strokeStyle = brushColor;
@@ -477,12 +476,11 @@ const DrawingBase = kind({
 			const context = canvas.getContext('2d');
 			const handleResize = () => {
 				const ratio = window.devicePixelRatio;
-				canvas.height = ri.scale(canvasHeight * ratio);
-				canvas.width = ri.scale(canvasWidth * ratio);
+				canvas.height = Math.floor(ri.scale(canvasHeight * ratio));
+				canvas.width = Math.floor(ri.scale(canvasWidth * ratio));
 				canvas.style.height = `${ri.scale(canvasHeight)}px`;
 				canvas.style.width = `${ri.scale(canvasWidth)}px`;
 				context.scale(ratio, ratio);
-				context.translate(0.5, 0.5);
 				context.lineCap = 'round';
 				context.lineWidth = brushSize;
 				context.strokeStyle = brushColor;
