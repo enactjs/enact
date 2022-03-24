@@ -2,9 +2,10 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [4.1.4] - 2022-03-24
 
 ### Removed
+
 - `ui/Scroller` and `ui/VirtualList` prop `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label`
 
 ### Added
