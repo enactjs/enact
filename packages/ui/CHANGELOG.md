@@ -2,7 +2,11 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [4.1.4] - 2022-03-24
+## [unreleased]
+
+### Fixed
+
+- `ui/FloatingLayer` to display popup that open later always shown on top of previous popups
 
 ### Removed
 
