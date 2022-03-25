@@ -391,7 +391,8 @@ const DrawingBase = kind({
 				const context = canvas.getContext('2d');
 
 				contextRef.current.globalCompositeOperation = 'destination-out';
-				context.fillRect(0, 0, canvas.width, canvas.height);
+				const ratio = window.devicePixelRatio;
+				context.fillRect(0, 0, Math.round(canvas.width / ratio), Math.round(canvas.height / ratio));
 
 				if (drawingTool === 'erase') {
 					contextRef.current.globalCompositeOperation = 'destination-out';

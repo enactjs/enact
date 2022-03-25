@@ -58,7 +58,7 @@ const fillDrawing = (event, contextRef) => {
 		const offset = pos.x / ratio + data.width * pos.y / ratio;
 		if (alreadyFilled[offset]) continue;
 
-		contextRef.current.fillRect(pos.x / ratio, pos.y / ratio, 1 / ratio, 1 / ratio);
+		contextRef.current.fillRect(pos.x / ratio, pos.y / ratio, 1, 1 );
 		alreadyFilled[offset] = true;
 
 		forAllNeighbors(pos, function (neighbor) {
@@ -142,7 +142,7 @@ const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions
 	const ratio = window.devicePixelRatio;
 
 	contextRef.current.globalCompositeOperation = 'destination-out';
-	context.fillRect(0, 0, canvas.width / ratio, canvas.height / ratio);
+	context.fillRect(0, 0, Math.round(canvas.width / ratio), Math.round(canvas.height / ratio));
 
 	contextRef.current.globalCompositeOperation = 'source-over';
 
