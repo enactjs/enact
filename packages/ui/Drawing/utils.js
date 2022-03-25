@@ -33,8 +33,10 @@ const isSimilarColor = (data, pos1, pos2) => {
  */
 const relativePosition = (event, element) => {
 	const rect = element.getBoundingClientRect();
-	return {x: Math.floor(event.clientX - rect.left),
-		y: Math.floor(event.clientY - rect.top)};
+	const ratio = window.devicePixelRatio;
+
+	return {x: Math.floor((event.clientX - rect.left) * ratio),
+		y: Math.floor((event.clientY - rect.top) * ratio)};
 };
 
 /*
@@ -42,6 +44,7 @@ const relativePosition = (event, element) => {
  */
 const fillDrawing = (event, contextRef) => {
 	const canvas = contextRef.current.canvas;
+	const ratio = window.devicePixelRatio;
 	const startPos = relativePosition(event, canvas);
 
 	const data = contextRef.current.getImageData(0, 0, canvas.width, canvas.height);
@@ -52,10 +55,10 @@ const fillDrawing = (event, contextRef) => {
 	const pixelList = [startPos];
 	while (pixelList.length) {
 		const pos = pixelList.pop();
-		const offset = pos.x + data.width * pos.y;
+		const offset = pos.x / ratio + data.width * pos.y / ratio;
 		if (alreadyFilled[offset]) continue;
 
-		contextRef.current.fillRect(pos.x, pos.y, 1, 1);
+		contextRef.current.fillRect(pos.x / ratio, pos.y / ratio, 1, 1 );
 		alreadyFilled[offset] = true;
 
 		forAllNeighbors(pos, function (neighbor) {
@@ -136,9 +139,10 @@ const drawLine = (contextRef, offsetX, offsetY) => {
 const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions, drawingTool, brushSize, brushColor, fillColor) => {
 	const canvas = canvasRef.current;
 	const context = canvas.getContext('2d');
+	const ratio = window.devicePixelRatio;
 
 	contextRef.current.globalCompositeOperation = 'destination-out';
-	context.fillRect(0, 0, canvas.width, canvas.height);
+	context.fillRect(0, 0, Math.round(canvas.width / ratio), Math.round(canvas.height / ratio));
 
 	contextRef.current.globalCompositeOperation = 'source-over';
 

@@ -356,12 +356,14 @@ const DrawingBase = kind({
 		const contextRef = useRef(null);
 
 		useEffect(() => {
+			const ratio = window.devicePixelRatio;
 			const canvas = canvasRef.current;
-			canvas.height = ri.scale(canvasHeight);
-			canvas.width = ri.scale(canvasWidth);
+			canvas.height = Math.floor(ri.scale(canvasHeight * ratio));
+			canvas.width = Math.floor(ri.scale(canvasWidth * ratio));
 			canvas.style.height = `${ri.scale(canvasHeight)}px`;
 			canvas.style.width = `${ri.scale(canvasWidth)}px`;
 			const context = canvas.getContext('2d');
+			context.scale(ratio, ratio);
 			context.lineCap = 'round';
 			context.lineWidth = brushSize;
 			context.strokeStyle = brushColor;
@@ -389,7 +391,8 @@ const DrawingBase = kind({
 				const context = canvas.getContext('2d');
 
 				contextRef.current.globalCompositeOperation = 'destination-out';
-				context.fillRect(0, 0, canvas.width, canvas.height);
+				const ratio = window.devicePixelRatio;
+				context.fillRect(0, 0, Math.round(canvas.width / ratio), Math.round(canvas.height / ratio));
 
 				if (drawingTool === 'erase') {
 					contextRef.current.globalCompositeOperation = 'destination-out';
@@ -473,10 +476,12 @@ const DrawingBase = kind({
 			const canvas = canvasRef.current;
 			const context = canvas.getContext('2d');
 			const handleResize = () => {
-				canvas.height = ri.scale(canvasHeight);
-				canvas.width = ri.scale(canvasWidth);
+				const ratio = window.devicePixelRatio;
+				canvas.height = Math.floor(ri.scale(canvasHeight * ratio));
+				canvas.width = Math.floor(ri.scale(canvasWidth * ratio));
 				canvas.style.height = `${ri.scale(canvasHeight)}px`;
 				canvas.style.width = `${ri.scale(canvasWidth)}px`;
+				context.scale(ratio, ratio);
 				context.lineCap = 'round';
 				context.lineWidth = brushSize;
 				context.strokeStyle = brushColor;
