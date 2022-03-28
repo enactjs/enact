@@ -292,7 +292,7 @@ const DrawingBase = kind({
 				contextRef.current.lineTo(offsetX, offsetY); // draw a single point
 				contextRef.current.stroke();
 			} else if (drawingTool === 'fill') {
-				fillDrawing(ev, contextRef);
+				fillDrawing(contextRef, ev, fillColor)
 			} else if (drawingTool === 'triangle') {
 				drawTriangle(contextRef, offsetX, offsetY);
 				return;

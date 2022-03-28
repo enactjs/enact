@@ -1,14 +1,4 @@
 /*
- * Calls a given function for all horizontal and vertical neighbors of the given point.
- */
-const forAllNeighbors = (point, fn) => {
-	fn({x: point.x, y: point.y + 1});
-	fn({x: point.x, y: point.y - 1});
-	fn({x: point.x + 1, y: point.y});
-	fn({x: point.x - 1, y: point.y});
-};
-
-/*
  * Given two positions, returns true when they have a similar same color.
  */
 const isSimilarColor = (data, pos1, pos2) => {
@@ -40,36 +30,57 @@ const relativePosition = (event, element) => {
 };
 
 /*
+ * Returns the pixel value for the selected position.
+ */
+function getPixelValue(pixelData, x, y) {
+	if (x < 0 || y < 0 || x >= pixelData.width || y >= pixelData.height) {
+		return -1;  // impossible color
+	} else {
+		return pixelData.data[y * pixelData.width + x];
+	}
+}
+
+/*
  * Executes the fill drawing on the canvas.
  */
-const fillDrawing = (event, contextRef) => {
-	const canvas = contextRef.current.canvas;
-	const ratio = window.devicePixelRatio;
+function fillDrawing(ctx, event, fillColor) {
+	const canvas = ctx.current.canvas;
 	const startPos = relativePosition(event, canvas);
+	// read the pixels in the canvas
+	const imageData = ctx.current.getImageData(0, 0, canvas.width, canvas.height);
 
-	const data = contextRef.current.getImageData(0, 0, canvas.width, canvas.height);
-	// An array with one place for each pixel in the image.
-	const alreadyFilled = new Array(data.width * data.height);
+	// make a Uint32Array view on the pixels so we can manipulate pixels
+	// one 32bit value at a time instead of as 4 bytes per pixel
+	const pixelData = {
+		width: imageData.width,
+		height: imageData.height,
+		data: new Uint32Array(imageData.data.buffer),
+	};
 
-	// This is the list of same-colored pixel coordinates as the starting point that were not handled yet.
-	const pixelList = [startPos];
-	while (pixelList.length) {
-		const pos = pixelList.pop();
-		const offset = pos.x / ratio + data.width * pos.y / ratio;
-		if (alreadyFilled[offset]) continue;
+	const fillColorHexNumber = Number('0xFF' + fillColor.substring(5) + fillColor.substring(3,5) + fillColor.substring(1,3));
 
-		contextRef.current.fillRect(pos.x / ratio, pos.y / ratio, 1, 1 );
-		alreadyFilled[offset] = true;
+	const targetColor = getPixelValue(pixelData, startPos.x, startPos.y);
 
-		forAllNeighbors(pos, function (neighbor) {
-			if (neighbor.x >= 0 && neighbor.x < data.width &&
-				neighbor.y >= 0 && neighbor.y < data.height &&
-				isSimilarColor(data, startPos, neighbor)) {
-				pixelList.push(neighbor);
+	if (targetColor !== fillColorHexNumber) {
+		const pixelsToCheck = [startPos.x, startPos.y];
+		while (pixelsToCheck.length > 0) {
+			const y = pixelsToCheck.pop();
+			const x = pixelsToCheck.pop();
+
+			const currentColor = getPixelValue(pixelData, x, y);
+			if (currentColor === targetColor) {
+				pixelData.data[y * pixelData.width + x] = fillColorHexNumber;
+				pixelsToCheck.push(x + 1, y);
+				pixelsToCheck.push(x - 1, y);
+				pixelsToCheck.push(x, y + 1);
+				pixelsToCheck.push(x, y - 1);
 			}
-		});
+		}
+
+		// put the data back
+		ctx.current.putImageData(imageData, 0, 0);
 	}
-};
+}
 
 /*
  * Executes the drawing on the canvas.
@@ -167,7 +178,7 @@ const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions
 			contextRef.current.moveTo(line.points[0].x, line.points[0].y); // move the starting point to initial position
 
 			if (line.drawingTool === 'fill') {
-				fillDrawing(line.ev, contextRef);
+				fillDrawing(contextRef, line.ev, fillColor)
 			} else if (line.drawingTool === 'triangle') {
 				drawTriangle(contextRef, offsetX, offsetY);
 			} else if (line.drawingTool === 'rectangle') {
