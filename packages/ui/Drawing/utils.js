@@ -1,21 +1,57 @@
 /*
- * Given two positions, returns true when they have a similar same color.
+ * Calls a given function for all horizontal and vertical neighbors of the given point.
  */
-const isSimilarColor = (data, pos1, pos2) => {
-	// each 4 elements in the data array contains the RGBA information of a pixel
-	const offset1 = (pos1.x + pos1.y * data.width) * 4;
-	const offset2 = (pos2.x + pos2.y * data.width) * 4;
+const forAllNeighbors = (point, fn) => {
+	fn({x: point.x, y: point.y + 1});
+	fn({x: point.x, y: point.y - 1});
+	fn({x: point.x + 1, y: point.y});
+	fn({x: point.x - 1, y: point.y});
+};
 
-	const dr = data.data[offset1] - data.data[offset2];
-	const dg = data.data[offset1 + 1] - data.data[offset2 + 1];
-	const db = data.data[offset1 + 2] - data.data[offset2 + 2];
-	const da = data.data[offset1 + 3] - data.data[offset2 + 3];
+/*
+ * Given two color, returns true when they are similar.
+ */
+const isSimilarColor = (color1, color2) => {
+	if (color1 === 0) {
+		color1 = 0xFF000000;
+	}
+	if (color2 === 0) {
+		color2 = 0xFF000000;
+	}
+//console.log(color1, color2)
+	const color1HexString = parseInt(color1, 10).toString(16);
+	const color2HexString = parseInt(color2, 10).toString(16);
+
+	const dr = parseInt(color1HexString.substring(6), 16) - parseInt(color2HexString.substring(6), 16);
+	const dg = parseInt(color1HexString.substring(4,6), 16) - parseInt(color2HexString.substring(4,6), 16);
+	const db = parseInt(color1HexString.substring(2,4), 16) - parseInt(color2HexString.substring(2,4), 16);
+	const da = parseInt(color1HexString.substring(0,2), 16) - parseInt(color2HexString.substring(0,2), 16);
 
 	// check if the analyzed pixel has a similar color as the starting point in order to handle the anti-aliasing of the drawn border
 	if (dr * dr + dg * dg + db * db + da * da > 128 * 128) {
 		return false;
 	}
 	return true;
+
+// 		// get red/green/blue int values of hex1
+// 		let r1 = parseInt(color1HexString.substring(6), 16);
+// 		let g1 = parseInt(color1HexString.substring(4, 6), 16);
+// 		let b1 = parseInt(color1HexString.substring(2, 4), 16);
+// 		// get red/green/blue int values of hex2
+// 		let r2 = parseInt(color2HexString.substring(6), 16);
+// 		let g2 = parseInt(color2HexString.substring(4, 6), 16);
+// 		let b2 = parseInt(color2HexString.substring(2, 4), 16);
+// 		// calculate differences betweeimageDatan reds, greens and blues
+// 	let r = 255 - Math.abs(r1 - r2);
+// 	let g = 255 - Math.abs(g1 - g2);
+// 	let b = 255 - Math.abs(b1 - b2);
+// 		// limit differences between 0 and 1
+// 		r /= 255;
+// 		g /= 255;
+// 		b /= 255;
+// 		// 0 means opposite colors, 1 means same colors
+// //console.log(((r + g + b) / 3 ) > 0.99)
+// 		return (((r + g + b) / 3 ) === 1);
 };
 
 /*
@@ -32,9 +68,9 @@ const relativePosition = (event, element) => {
 /*
  * Returns the pixel value for the selected position.
  */
-function getPixelValue(pixelData, x, y) {
+const getPixelValue = (pixelData, x, y) => {
 	if (x < 0 || y < 0 || x >= pixelData.width || y >= pixelData.height) {
-		return -1;  // impossible color
+		return -1;
 	} else {
 		return pixelData.data[y * pixelData.width + x];
 	}
@@ -43,14 +79,13 @@ function getPixelValue(pixelData, x, y) {
 /*
  * Executes the fill drawing on the canvas.
  */
-function fillDrawing(ctx, event, fillColor) {
-	const canvas = ctx.current.canvas;
+const fillDrawing = (contextRef, event, fillColor) => {
+	const canvas = contextRef.current.canvas;
 	const startPos = relativePosition(event, canvas);
-	// read the pixels in the canvas
-	const imageData = ctx.current.getImageData(0, 0, canvas.width, canvas.height);
 
-	// make a Uint32Array view on the pixels so we can manipulate pixels
-	// one 32bit value at a time instead of as 4 bytes per pixel
+	const imageData = contextRef.current.getImageData(0, 0, canvas.width, canvas.height);
+
+	// make a Uint32Array view on the pixels so one 32bit value is handled at a time instead of 4 bytes per pixel
 	const pixelData = {
 		width: imageData.width,
 		height: imageData.height,
@@ -62,23 +97,29 @@ function fillDrawing(ctx, event, fillColor) {
 	const targetColor = getPixelValue(pixelData, startPos.x, startPos.y);
 
 	if (targetColor !== fillColorHexNumber) {
-		const pixelsToCheck = [startPos.x, startPos.y];
-		while (pixelsToCheck.length > 0) {
-			const y = pixelsToCheck.pop();
-			const x = pixelsToCheck.pop();
+		const pixelList = [startPos];
+		while (pixelList.length) {
+			const pos = pixelList.pop();
 
-			const currentColor = getPixelValue(pixelData, x, y);
-			if (currentColor === targetColor) {
-				pixelData.data[y * pixelData.width + x] = fillColorHexNumber;
-				pixelsToCheck.push(x + 1, y);
-				pixelsToCheck.push(x - 1, y);
-				pixelsToCheck.push(x, y + 1);
-				pixelsToCheck.push(x, y - 1);
+			const currentColor = getPixelValue(pixelData, pos.x, pos.y);
+			if (isSimilarColor(currentColor, targetColor) && currentColor !== -1) {
+				pixelData.data[pos.y * pixelData.width + pos.x] = fillColorHexNumber;
+				// pixelsToCheck.push(x + 1, y);
+				// pixelsToCheck.push(x - 1, y);
+				// pixelsToCheck.push(x, y + 1);
+				// pixelsToCheck.push(x, y - 1);
+				forAllNeighbors(pos, function (neighbor) {
+					if (neighbor.x >= 0 && neighbor.x < imageData.width &&
+						neighbor.y >= 0 && neighbor.y < imageData.height &&
+						isSimilarColor(getPixelValue(pixelData, neighbor.x, neighbor.y), targetColor))
+						{
+							pixelList.push(neighbor);
+					}
+				});
 			}
 		}
 
-		// put the data back
-		ctx.current.putImageData(imageData, 0, 0);
+		contextRef.current.putImageData(imageData, 0, 0);
 	}
 }
 
