@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import {render, screen} from '@testing-library/react';
+import {act, render, screen} from '@testing-library/react';
 
 import Changeable from '../Changeable';
 
@@ -167,7 +167,9 @@ describe('Changeable', () => {
 		const Component = Changeable(DivComponent);
 		render(<Component onChange={handleChange} />);
 
-		data.onChange({});
+		act(() => {
+			data.onChange({});
+		});
 
 		const expected = 1;
 		const actual = handleChange.mock.calls.length;
@@ -180,7 +182,9 @@ describe('Changeable', () => {
 		const Component = Changeable(DivComponent);
 		render(<Component onChange={handleChange} disabled />);
 
-		data.onChange({value: '1'});
+		act(() => {
+			data.onChange({value: '1'});
+		});
 
 		expect(handleChange).not.toHaveBeenCalled();
 	});
@@ -190,7 +194,9 @@ describe('Changeable', () => {
 		const Component = Changeable(DivComponent);
 		render(<Component defaultValue={0} onChange={handleChange} />);
 
-		data.onChange({value: '1'});
+		act(() => {
+			data.onChange({value: '1'});
+		});
 
 		const expected = '1';
 		const actual = screen.getByTestId('changeable');
@@ -202,7 +208,9 @@ describe('Changeable', () => {
 		const Component = Changeable(DivComponent);
 		render(<Component defaultValue={0} disabled />);
 
-		data.onChange({value: '1'});
+		act(() => {
+			data.onChange({value: '1'});
+		});
 
 		const expected = '0';
 		const actual = screen.getByTestId('changeable');
@@ -214,7 +222,9 @@ describe('Changeable', () => {
 		const Component = Changeable(DivComponent);
 		render(<Component value={0} />);
 
-		data.onChange({value: '1'});
+		act(() => {
+			data.onChange({value: '1'});
+		});
 
 		const expected = '0';
 		const actual = screen.getByTestId('changeable');

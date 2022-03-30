@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import {render, screen} from '@testing-library/react';
+import {act, render, screen} from '@testing-library/react';
 import {Component} from 'react';
 
 import ViewManager from '../';
@@ -172,6 +172,7 @@ describe('ViewManager', () => {
 	});
 
 	test('should have 1 child {duration}ms after setting new {index}', (done) => {
+		jest.useFakeTimers();
 		const duration = 50;
 		const {rerender} = render(
 			<ViewManager data-testid="viewManager" duration={duration} index={3}>
@@ -193,13 +194,17 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 
-		window.setTimeout(function () {
-			const expected = 1;
-			const actual = screen.getByTestId('viewManager').children.length;
+		act(() => {
+			jest.advanceTimersByTime(duration + 10);
+		});
 
-			expect(actual).toBe(expected);
-			done();
-		}, duration + 10);
+
+		const expected = 1;
+		const actual = screen.getByTestId('viewManager').children.length;
+
+		expect(actual).toBe(expected);
+		done();
+		jest.clearAllTimers();
 	});
 
 	// TODO cannot read props of child components

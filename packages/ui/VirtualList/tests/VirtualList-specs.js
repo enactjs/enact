@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import {render, screen} from '@testing-library/react';
+import {act, render, screen} from '@testing-library/react';
 
 import VirtualList from '../VirtualList';
 
@@ -126,7 +126,9 @@ describe('VirtualList', () => {
 				/>
 			);
 
-			myScrollTo({index: 10, animate: false});
+			act(() => {
+				myScrollTo({index: 10, animate: false});
+			});
 		});
 
 		test('should scroll to the given \'x\' position with scrollTo', (done) => {
@@ -149,7 +151,9 @@ describe('VirtualList', () => {
 				/>
 			);
 
-			myScrollTo({position: {x: 100}, animate: false});
+			act(() => {
+				myScrollTo({position: {x: 100}, animate: false});
+			});
 		});
 
 		test('should scroll to the given \'y\' position with scrollTo', (done) => {
@@ -171,7 +175,9 @@ describe('VirtualList', () => {
 				/>
 			);
 
-			myScrollTo({position: {y: 100}, animate: false});
+			act(() => {
+				myScrollTo({position: {y: 100}, animate: false});
+			});
 		});
 
 		describe('scroll events', () => {
@@ -187,7 +193,9 @@ describe('VirtualList', () => {
 					/>
 				);
 
-				myScrollTo({position: {y: 100}, animate: false});
+				act(() => {
+					myScrollTo({position: {y: 100}, animate: false});
+				});
 
 				const expected = 1;
 				const actual = onScrollStartCount;
@@ -207,7 +215,9 @@ describe('VirtualList', () => {
 					/>
 				);
 
-				myScrollTo({position: {y: 100}, animate: false});
+				act(() => {
+					myScrollTo({position: {y: 100}, animate: false});
+				});
 
 				const expected = 1;
 				const actual = onScrollCount;
@@ -234,7 +244,9 @@ describe('VirtualList', () => {
 					/>
 				);
 
-				myScrollTo({position: {y: 100}, animate: false});
+				act(() => {
+					myScrollTo({position: {y: 100}, animate: false});
+				});
 			});
 		});
 	});

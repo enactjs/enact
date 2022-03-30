@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import {render, screen} from '@testing-library/react';
+import {act, render, screen} from '@testing-library/react';
 import {createRef} from 'react';
 
 import {MockArranger} from './test-utils';
@@ -102,13 +102,18 @@ describe('View', () => {
 				</View>
 			);
 
-			ref.current.componentDidAppear(spy);
+			act(() => {
+				ref.current.componentDidAppear(spy);
+			});
+
 			const firstExpected = 'false';
 			const firstSpan = screen.getByTestId('span');
 
 			expect(firstSpan).toHaveAttribute('data-entering', firstExpected);
 
-			ref.current.componentWillEnter(spy);
+			act(() => {
+				ref.current.componentWillEnter(spy);
+			});
 			const secondExpected = 'true';
 			const secondSpan = screen.getByTestId('span');
 
