@@ -18,12 +18,12 @@ const getPixelValue = (pixelData, x, y) => {
 	} else {
 		return pixelData.data[y * pixelData.width + x];
 	}
-}
+};
 
 /*
  * Executes the fill drawing on the canvas.
  */
-const fillDrawing = (contextRef, event, fillColor) => {
+const fillDrawing = (event, contextRef, fillColor) => {
 	const canvas = contextRef.current.canvas;
 	const startPos = relativePosition(event, canvas);
 
@@ -33,10 +33,10 @@ const fillDrawing = (contextRef, event, fillColor) => {
 	const pixelData = {
 		width: imageData.width,
 		height: imageData.height,
-		data: new Uint32Array(imageData.data.buffer),
+		data: new Uint32Array(imageData.data.buffer)
 	};
 
-	const fillColorHexNumber = Number('0xFF' + fillColor.substring(5) + fillColor.substring(3,5) + fillColor.substring(1,3));
+	const fillColorHexNumber = Number('0xFF' + fillColor.substring(5) + fillColor.substring(3, 5) + fillColor.substring(1, 3));
 
 	const targetColor = getPixelValue(pixelData, startPos.x, startPos.y);
 
@@ -47,7 +47,7 @@ const fillDrawing = (contextRef, event, fillColor) => {
 			const x = pixelList.pop();
 
 			const currentColor = getPixelValue(pixelData, x, y);
-			if(currentColor !== -1 && targetColor !== -1) {
+			if (currentColor !== -1 && targetColor !== -1) {
 				if (targetColor === currentColor) {
 					pixelData.data[y * pixelData.width + x] = fillColorHexNumber;
 					pixelList.push(x + 1, y);
@@ -60,7 +60,7 @@ const fillDrawing = (contextRef, event, fillColor) => {
 
 		contextRef.current.putImageData(imageData, 0, 0);
 	}
-}
+};
 
 /*
  * Executes the drawing on the canvas.
@@ -158,7 +158,7 @@ const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions
 			contextRef.current.moveTo(line.points[0].x, line.points[0].y); // move the starting point to initial position
 
 			if (line.drawingTool === 'fill') {
-				fillDrawing(contextRef, line.ev, fillColor)
+				fillDrawing(line.ev, contextRef, fillColor);
 			} else if (line.drawingTool === 'triangle') {
 				drawTriangle(contextRef, offsetX, offsetY);
 			} else if (line.drawingTool === 'rectangle') {
