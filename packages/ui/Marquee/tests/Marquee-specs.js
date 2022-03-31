@@ -115,13 +115,11 @@ describe('Marquee', () => {
 	test('should convert percentage values of marqueeSpacing to absolute values', (done) => {
 		render(<Marquee data-testid="marquee" marqueeOn="render" marqueeOnRenderDelay={10} marqueeSpacing="60%" />);
 
-		act(() => {
-			jest.advanceTimersByTime(100);
-		});
+		act(() => jest.advanceTimersByTime(100));
 
 		const expected = '60';
-
 		const marquee = screen.getByTestId('marquee').children.item(0).children.item(0);
+
 		expect(marquee).toHaveStyle({'--ui-marquee-spacing': expected});
 		done();
 	});
@@ -129,9 +127,7 @@ describe('Marquee', () => {
 	test('should pass absolute values of marqueeSpacing', (done) => {
 		render(<Marquee data-testid="marquee" marqueeOn="render" marqueeOnRenderDelay={10} marqueeSpacing={80} />);
 
-		act(() => {
-			jest.advanceTimersByTime(100);
-		});
+		act(() => jest.advanceTimersByTime(100));
 
 		const expected = '80';
 		const marquee = screen.getByTestId('marquee').children.item(0).children.item(0);

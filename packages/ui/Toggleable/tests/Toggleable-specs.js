@@ -149,9 +149,7 @@ describe('Toggleable', () => {
 			const handleToggle = jest.fn();
 			const Component = Toggleable(DivComponent);
 			render(<Component onToggle={handleToggle} />);
-			act(() => {
-				data.onToggle();
-			});
+			act(() => data.onToggle());
 
 			const expected = 1;
 
@@ -164,9 +162,7 @@ describe('Toggleable', () => {
 			const handleActivate = jest.fn();
 			const Component = Toggleable({activate: 'onActivate'}, DivComponent);
 			render(<Component onActivate={handleActivate} />);
-			act(() => {
-				data.onActivate();
-			});
+			act(() => data.onActivate());
 
 			const expected = 1;
 
@@ -179,9 +175,7 @@ describe('Toggleable', () => {
 			const handleDeactivate = jest.fn();
 			const Component = Toggleable({deactivate: 'onDeactivate'}, DivComponent);
 			render(<Component onDeactivate={handleDeactivate} />);
-			act(() => {
-				data.onDeactivate();
-			});
+			act(() => data.onDeactivate());
 
 			const expected = 1;
 
@@ -192,9 +186,7 @@ describe('Toggleable', () => {
 			const handleToggle = jest.fn();
 			const Component = Toggleable(DivComponent);
 			render(<Component onToggle={handleToggle} disabled />);
-			act(() => {
-				data.onToggle();
-			});
+			act(() => data.onToggle());
 
 			expect(handleToggle).not.toHaveBeenCalled();
 		});
@@ -207,9 +199,7 @@ describe('Toggleable', () => {
 			const {rerender} = render(<Component onToggle={handleToggle} disabled />);
 
 			rerender(<Component onToggle={handleToggle} disabled={false} />);
-			act(() => {
-				data.onToggle();
-			});
+			act(() => data.onToggle());
 
 			const expected = 1;
 
@@ -224,9 +214,7 @@ describe('Toggleable', () => {
 			const {rerender} = render(<Component />);
 
 			rerender(<Component onToggle={handleToggle} />);
-			act(() => {
-				data.onToggle();
-			});
+			act(() => data.onToggle());
 
 			const expected = 1;
 
@@ -237,10 +225,7 @@ describe('Toggleable', () => {
 			const handleActivate = jest.fn();
 			const Component = Toggleable({activate: 'onActivate'}, DivComponent);
 			render(<Component onActivate={handleActivate} disabled />);
-			act(() => {
-				data.onActivate();
-			});
-
+			act(() => data.onActivate());
 			expect(handleActivate).not.toHaveBeenCalled();
 		});
 
@@ -248,9 +233,7 @@ describe('Toggleable', () => {
 			const handleDeactivate = jest.fn();
 			const Component = Toggleable({deactivate: 'onDeactivate'}, DivComponent);
 			render(<Component onDeactivate={handleDeactivate} disabled />);
-			act(() => {
-				data.onDeactivate();
-			});
+			act(() => data.onDeactivate());
 
 			expect(handleDeactivate).not.toHaveBeenCalled();
 		});
@@ -262,9 +245,7 @@ describe('Toggleable', () => {
 			console.error = () => {};
 			const Component = Toggleable(DivComponent);
 			render(<Component defaultSelected />);
-			act(() => {
-				data.onToggle();
-			});
+			act(() => data.onToggle());
 			const toggleableDiv = screen.getByTestId('selected-state');
 
 			const expected = 'false';
@@ -277,9 +258,7 @@ describe('Toggleable', () => {
 			console.error = () => {};
 			const Component = Toggleable({toggleProp: 'onJiggle'}, DivComponent);
 			render(<Component defaultSelected />);
-			act(() => {
-				data.onJiggle();
-			});
+			act(() => data.onJiggle());
 			const toggleableDiv = screen.getByTestId('selected-state');
 
 			const expected = 'false';
@@ -291,9 +270,7 @@ describe('Toggleable', () => {
 			() => {
 				const Component = Toggleable(DivComponent);
 				render(<Component defaultSelected disabled />);
-				act(() => {
-					data.onToggle();
-				});
+				act(() => data.onToggle());
 				const toggleableDiv = screen.getByTestId('selected-state');
 
 				const expected = 'true';
@@ -305,9 +282,7 @@ describe('Toggleable', () => {
 			() => {
 				const Component = Toggleable({activate: 'onActivate'}, DivComponent);
 				render(<Component defaultSelected={false} disabled />);
-				act(() => {
-					data.onActivate();
-				});
+				act(() => data.onActivate());
 				const toggleableDiv = screen.getByTestId('selected-state');
 
 				const expected = 'false';
@@ -320,9 +295,7 @@ describe('Toggleable', () => {
 			() => {
 				const Component = Toggleable({deactivate: 'onDeactivate'}, DivComponent);
 				render(<Component defaultSelected disabled />);
-				act(() => {
-					data.onDeactivate();
-				});
+				act(() => data.onDeactivate());
 				const toggleableDiv = screen.getByTestId('selected-state');
 
 				const expected = 'true';
@@ -333,9 +306,7 @@ describe('Toggleable', () => {
 		test('should not update "selected" when "onToggle" invoked and is controlled', () => {
 			const Component = Toggleable(DivComponent);
 			render(<Component selected />);
-			act(() => {
-				data.onToggle();
-			});
+			act(() => data.onToggle());
 			const toggleableDiv = screen.getByTestId('selected-state');
 
 			const expected = 'true';
@@ -346,9 +317,7 @@ describe('Toggleable', () => {
 		test('should not update "selected" when "onJiggle" invoked and is controlled', () => {
 			const Component = Toggleable({toggleProp: 'onJiggle'}, DivComponent);
 			render(<Component selected />);
-			act(() => {
-				data.onJiggle();
-			});
+			act(() => data.onJiggle());
 			const toggleableDiv = screen.getByTestId('selected-state');
 
 			const expected = 'true';
@@ -359,9 +328,7 @@ describe('Toggleable', () => {
 		test('should not update "selected" when "onActivate" invoked and is controlled', () => {
 			const Component = Toggleable({activate: 'onActivate'}, DivComponent);
 			render(<Component selected={false} />);
-			act(() => {
-				data.onActivate();
-			});
+			act(() => data.onActivate());
 			const toggleableDiv = screen.getByTestId('selected-state');
 
 			const expected = 'false';
@@ -372,9 +339,7 @@ describe('Toggleable', () => {
 		test('should not update "selected" when "onDeactivate" invoked and is controlled', () => {
 			const Component = Toggleable({deactivate: 'onDeactivate'}, DivComponent);
 			render(<Component selected />);
-			act(() => {
-				data.onDeactivate();
-			});
+			act(() => data.onDeactivate());
 			const toggleableDiv = screen.getByTestId('selected-state');
 
 			const expected = 'true';
@@ -429,9 +394,7 @@ describe('Toggleable', () => {
 	test('should not update instance value when prop did not change', () => {
 		const Component = Toggleable(DivComponent);
 		const {rerender} = render(<Component />);
-		act(() => {
-			data.onToggle();
-		});
+		act(() => data.onToggle());
 
 		rerender(<Component />);
 		const toggleableDiv = screen.getByTestId('selected-state');

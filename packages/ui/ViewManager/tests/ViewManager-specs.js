@@ -194,10 +194,7 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 
-		act(() => {
-			jest.advanceTimersByTime(duration + 10);
-		});
-
+		act(() => jest.advanceTimersByTime(duration + 10));
 
 		const expected = 1;
 		const actual = screen.getByTestId('viewManager').children.length;

@@ -102,17 +102,13 @@ describe('View', () => {
 				</View>
 			);
 
-			act(() => {
-				ref.current.componentDidAppear(spy);
-			});
+			act(() => ref.current.componentDidAppear(spy));
 			const firstExpected = 'false';
 			const firstSpan = screen.getByTestId('span');
 
 			expect(firstSpan).toHaveAttribute('data-entering', firstExpected);
 
-			act(() => {
-				ref.current.componentWillEnter(spy);
-			});
+			act(() => ref.current.componentWillEnter(spy));
 			const secondExpected = 'true';
 			const secondSpan = screen.getByTestId('span');
 

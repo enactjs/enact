@@ -167,9 +167,7 @@ describe('Changeable', () => {
 		const Component = Changeable(DivComponent);
 		render(<Component onChange={handleChange} />);
 
-		act(() => {
-			data.onChange({});
-		});
+		act(() => data.onChange({}));
 
 		const expected = 1;
 		const actual = handleChange.mock.calls.length;
@@ -182,9 +180,7 @@ describe('Changeable', () => {
 		const Component = Changeable(DivComponent);
 		render(<Component onChange={handleChange} disabled />);
 
-		act(() => {
-			data.onChange({value: '1'});
-		});
+		act(() => data.onChange({value: '1'}));
 
 		expect(handleChange).not.toHaveBeenCalled();
 	});
@@ -194,9 +190,7 @@ describe('Changeable', () => {
 		const Component = Changeable(DivComponent);
 		render(<Component defaultValue={0} onChange={handleChange} />);
 
-		act(() => {
-			data.onChange({value: '1'});
-		});
+		act(() => data.onChange({value: '1'}));
 
 		const expected = '1';
 		const actual = screen.getByTestId('changeable');
@@ -208,9 +202,7 @@ describe('Changeable', () => {
 		const Component = Changeable(DivComponent);
 		render(<Component defaultValue={0} disabled />);
 
-		act(() => {
-			data.onChange({value: '1'});
-		});
+		act(() => data.onChange({value: '1'}));
 
 		const expected = '0';
 		const actual = screen.getByTestId('changeable');
@@ -222,9 +214,7 @@ describe('Changeable', () => {
 		const Component = Changeable(DivComponent);
 		render(<Component value={0} />);
 
-		act(() => {
-			data.onChange({value: '1'});
-		});
+		act(() => data.onChange({value: '1'}));
 
 		const expected = '0';
 		const actual = screen.getByTestId('changeable');
