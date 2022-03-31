@@ -21,6 +21,7 @@ describe('Marquee', () => {
 			};
 		});
 	});
+
 	afterEach(() => {
 		jest.runOnlyPendingTimers();
 		jest.useRealTimers();

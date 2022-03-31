@@ -105,7 +105,6 @@ describe('View', () => {
 			act(() => {
 				ref.current.componentDidAppear(spy);
 			});
-
 			const firstExpected = 'false';
 			const firstSpan = screen.getByTestId('span');
 

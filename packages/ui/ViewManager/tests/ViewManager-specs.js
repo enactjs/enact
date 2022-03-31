@@ -204,7 +204,9 @@ describe('ViewManager', () => {
 
 		expect(actual).toBe(expected);
 		done();
-		jest.clearAllTimers();
+
+		jest.runOnlyPendingTimers();
+		jest.useRealTimers();
 	});
 
 	// TODO cannot read props of child components
