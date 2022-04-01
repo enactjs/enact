@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import {act, render, screen, waitFor} from '@testing-library/react';
+import {act, render, screen} from '@testing-library/react';
 import {createRef} from 'react';
 
 import {MockArranger} from './test-utils';
@@ -137,7 +137,7 @@ describe('View', () => {
 			const spy = jest.fn(async () => {
 				const expected = 1;
 
-				await waitFor(() => expect(spy).toHaveBeenCalledTimes(expected));
+				expect(spy).toHaveBeenCalledTimes(expected);
 				done();
 				jest.useRealTimers();
 
