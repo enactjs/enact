@@ -269,13 +269,15 @@ describe('VirtualList', () => {
 				/>
 			);
 
-			setTimeout(() => {
-				const expected = itemArray[0].name;
-				const actual = screen.getByRole('list').children.item(0).textContent;
+			jest.useFakeTimers();
 
-				expect(actual).toBe(expected);
-				done();
-			}, 0);
+			act(() => jest.advanceTimersByTime(0));
+			const expected = itemArray[0].name;
+			const actual = screen.getByRole('list').children.item(0).textContent;
+
+			expect(actual).toBe(expected);
+			done();
+			jest.useRealTimers();
 		});
 	});
 
