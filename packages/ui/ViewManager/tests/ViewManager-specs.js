@@ -7,6 +7,14 @@ import {MockArranger} from './test-utils';
 
 describe('ViewManager', () => {
 	// Suite-wide setup
+	beforeEach(() => {
+		jest.useFakeTimers();
+	});
+
+	afterEach(() => {
+		jest.useRealTimers();
+	});
+
 	test('should render {component} as its child - <div/> by default', () => {
 		render(
 			<ViewManager data-testid="component">
@@ -93,7 +101,7 @@ describe('ViewManager', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should have 1 child immediately after setting new {index} with an {arranger} and {noAnimation} is false', () => {
+	test('should have 1 child immediately after setting new {index} with an {arranger} and {noAnimation} is true', () => {
 		const {rerender} = render(
 			<ViewManager arranger={MockArranger} data-testid="viewManager" index={3} noAnimation>
 				<div>View 1</div>
@@ -115,6 +123,7 @@ describe('ViewManager', () => {
 		);
 
 		const expected = 1;
+
 		const actual = screen.getByTestId('viewManager').children.length;
 
 		expect(actual).toBe(expected);
@@ -172,7 +181,6 @@ describe('ViewManager', () => {
 	});
 
 	test('should have 1 child {duration}ms after setting new {index}', (done) => {
-		jest.useFakeTimers();
 		const duration = 50;
 		const {rerender} = render(
 			<ViewManager data-testid="viewManager" duration={duration} index={3}>
@@ -201,9 +209,6 @@ describe('ViewManager', () => {
 
 		expect(actual).toBe(expected);
 		done();
-
-		jest.runOnlyPendingTimers();
-		jest.useRealTimers();
 	});
 
 	// TODO cannot read props of child components
