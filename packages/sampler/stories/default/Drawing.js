@@ -1,6 +1,6 @@
 import Drawing, {DrawingBase} from '@enact/ui/Drawing';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
-import {number, range, select} from '@enact/storybook-utils/addons/controls';
+import {color, number, range, select} from '@enact/storybook-utils/addons/controls';
 
 const DrawingConfig = mergeComponentMetadata('Drawing', Drawing, DrawingBase);
 
@@ -21,13 +21,13 @@ export const _Drawing = (args) => (
 	/>
 );
 
-select('brushColor', _Drawing, ['red', 'green', 'blue'], DrawingConfig);
+color('brushColor', _Drawing, DrawingConfig, '#FFFFFF');
 range('brushSize', _Drawing, DrawingConfig, {min: 1, max: 50}, 4);
-select('canvasColor', _Drawing, ['black', 'white'], DrawingConfig);
+color('canvasColor', _Drawing, DrawingConfig, '#000000');
 number('canvasHeight', _Drawing, DrawingConfig, 500);
 number('canvasWidth', _Drawing, DrawingConfig, 800);
 select('drawingTool', _Drawing, ['brush', 'fill', 'triangle', 'rectangle', 'circle', 'erase'], DrawingConfig);
-select('fillColor', _Drawing, ['red', 'green', 'blue'], DrawingConfig);
+color('fillColor', _Drawing, DrawingConfig, '#FF0000');
 
 _Drawing.parameters = {
 	info: {
