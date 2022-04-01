@@ -134,7 +134,7 @@ describe('View', () => {
 				</View>
 			);
 
-			const spy = jest.fn(async () => {
+			const spy = jest.fn(() => {
 				const expected = 1;
 
 				expect(spy).toHaveBeenCalledTimes(expected);
