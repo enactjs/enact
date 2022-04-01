@@ -27,7 +27,7 @@
   "dependencies": {
     "@enact/core": "^4.1.2",
     "prop-types": "^15.8.0",
-    "react": "^18.0.0-rc.3",
-    "react-dom": "^18.0.0-rc.3"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   }
 }
