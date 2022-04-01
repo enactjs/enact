@@ -139,8 +139,6 @@ describe('View', () => {
 
 				expect(spy).toHaveBeenCalledTimes(expected);
 				done();
-				jest.useRealTimers();
-
 			});
 
 			act(() => ref.current.componentWillStay(spy));
