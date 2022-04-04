@@ -104,7 +104,7 @@ class FloatingLayerBase extends Component {
 	static contextType = FloatingLayerContext;
 
 	static defaultProps = {
-		floatLayerClassName: 'enact-fit enact-clip enact-untouchable',
+		floatLayerClassName: 'enact-fit enact-clip enact-untouchable enact-z-index',
 		floatLayerId: 'floatLayer',
 		noAutoDismiss: false,
 		open: false,
@@ -227,10 +227,8 @@ class FloatingLayerBase extends Component {
 
 	render () {
 		const {children, className, floatLayerClassName, open, scrimType, ...rest} = this.props;
-
 		const mergedClassName = classNames(floatLayerClassName, className);
 
-		delete rest.floatLayerClassName;
 		delete rest.floatLayerId;
 		delete rest.noAutoDismiss;
 		delete rest.onClose;
@@ -239,7 +237,7 @@ class FloatingLayerBase extends Component {
 
 		if (open && this.state.readyToRender) {
 			return ReactDOM.createPortal(
-				<div className={mergedClassName} style={{zIndex: 100}} {...rest}>
+				<div className={mergedClassName} {...rest}>
 					{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
 					{cloneElement(children, {onClick: this.stopPropagation})}
 				</div>,
