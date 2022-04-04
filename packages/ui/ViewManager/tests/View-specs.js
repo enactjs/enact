@@ -226,8 +226,7 @@ describe('View', () => {
 			node: expect.any(Object)
 		};
 
-		// TODO calling componentWillEnter throws error in View component "this.animation.cancel is not a function"
-		test.skip('should pass the expected object to the arranger', () => {
+		test('should pass the expected object to the arranger', () => {
 			const arranger = {
 				enter: jest.fn(() => ({}))
 			};

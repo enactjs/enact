@@ -143,7 +143,7 @@ describe('Toggleable', () => {
 	});
 
 	describe('#forwarding events', () => {
-		test('should invoke passed "onToggle" handler', () => {
+		test('should invoke passed "onToggle" handler with type', () => {
 			// eslint-disable-next-line
 			console.error = () => {};
 			const handleToggle = jest.fn();
@@ -152,11 +152,30 @@ describe('Toggleable', () => {
 			act(() => data.onToggle());
 
 			const expected = 1;
+			const expectedType = {type: 'onToggle'};
+			const actual = handleToggle.mock.calls.length && handleToggle.mock.calls[0][0];
 
 			expect(handleToggle).toHaveBeenCalledTimes(expected);
+			expect(actual).toMatchObject(expectedType);
 		});
 
-		test('should invoke passed "onActivate" handler', () => {
+		test('should invoke passed custom "onJiggle" handler with type', () => {
+			// eslint-disable-next-line
+			console.error = () => {};
+			const handleJiggle = jest.fn();
+			const Component = Toggleable({toggleProp: 'onJiggle'}, DivComponent);
+			render(<Component onJiggle={handleJiggle} />);
+			data.onJiggle();
+
+			const expected = 1;
+			const expectedType = {type: 'onJiggle'};
+			const actual = handleJiggle.mock.calls.length && handleJiggle.mock.calls[0][0];
+
+			expect(handleJiggle).toHaveBeenCalledTimes(expected);
+			expect(actual).toMatchObject(expectedType);
+		});
+
+		test('should invoke passed "onActivate" handler with type', () => {
 			// eslint-disable-next-line
 			console.error = () => {};
 			const handleActivate = jest.fn();
@@ -165,11 +184,14 @@ describe('Toggleable', () => {
 			act(() => data.onActivate());
 
 			const expected = 1;
+			const expectedType = {type: 'onActivate'};
+			const actual = handleActivate.mock.calls.length && handleActivate.mock.calls[0][0];
 
 			expect(handleActivate).toHaveBeenCalledTimes(expected);
+			expect(actual).toMatchObject(expectedType);
 		});
 
-		test('should invoke passed "onDeactivate" handler', () => {
+		test('should invoke passed "onDeactivate" handler with type', () => {
 			// eslint-disable-next-line
 			console.error = () => {};
 			const handleDeactivate = jest.fn();
@@ -178,8 +200,11 @@ describe('Toggleable', () => {
 			act(() => data.onDeactivate());
 
 			const expected = 1;
+			const expectedType = {type: 'onDeactivate'};
+			const actual = handleDeactivate.mock.calls.length && handleDeactivate.mock.calls[0][0];
 
 			expect(handleDeactivate).toHaveBeenCalledTimes(expected);
+			expect(actual).toMatchObject(expectedType);
 		});
 
 		test('should not invoke passed "onToggle" handler when disabled', () => {

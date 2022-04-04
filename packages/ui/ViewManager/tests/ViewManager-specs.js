@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import {act, render, screen} from '@testing-library/react';
+import {act, render, screen, waitFor} from '@testing-library/react';
 import {Component} from 'react';
 
 import ViewManager from '../';
@@ -211,21 +211,20 @@ describe('ViewManager', () => {
 		done();
 	});
 
-	// TODO cannot read props of child components
-	test.skip('should have size of 1 on TransitionGroup', () => {
+	test('should have 1 child when noAnimation is true', () => {
 		render(
-			<ViewManager duration={0} index={0} noAnimation>
-				<div className="view">View 1</div>
-				<div className="view">View 2</div>
-				<div className="view">View 3</div>
-				<div className="view">View 4</div>
-				<div className="view">View 5</div>
+			<ViewManager data-testid="viewManager" duration={0} index={0} noAnimation>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+				<div>View 4</div>
+				<div>View 5</div>
 			</ViewManager>
 		);
 
-		// const expected = 1;
-		// const actual = subject.find('TransitionGroup').prop('size');
-		// expect(actual).toBe(expected);
+		const expected = 1;
+		const actual = screen.getByTestId('viewManager').children.length;
+		expect(actual).toBe(expected);
 	});
 
 	// TODO cannot read props of child components
@@ -428,6 +427,57 @@ describe('ViewManager', () => {
 		expect(children).toHaveLength(expected);
 	});
 
+	test('should fire onEnter with type once a view has entered', () => {
+		const spy = jest.fn();
+		const {rerender} = render(
+			<ViewManager index={0} noAnimation onEnter={spy}>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		spy.mockClear();
+
+		rerender(
+			<ViewManager index={1} onEnter={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+		const expected = 1;
+		const expectedType = {type: 'onEnter'};
+		const actual = spy.mock.calls.length && spy.mock.calls[0][0];
+
+		expect(spy).toHaveBeenCalledTimes(expected);
+		expect(actual).toMatchObject(expectedType);
+	});
+
+	test('should fire onAppear with type once a view has appeared', async () => {
+		const spy = jest.fn();
+		const {rerender} = render(
+			<ViewManager index={0} noAnimation onAppear={spy}>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		rerender(
+			<ViewManager index={1} onAppear={spy} noAnimation>
+				<div key="view1">View 1</div>
+				<div key="view2">View 2</div>
+			</ViewManager>
+		);
+
+		await waitFor(() => {
+			const expected = 1;
+			const expectedType = {type: 'onAppear'};
+			const actual = spy.mock.calls.length && spy.mock.calls[0][0];
+
+			expect(spy).toHaveBeenCalledTimes(expected);
+			expect(actual).toMatchObject(expectedType);
+		});
+	});
+
 	test('should fire onTransition once per transition', () => {
 		const spy = jest.fn();
 		const {rerender} = render(
@@ -483,7 +533,7 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 
-		expect(spy).toHaveBeenLastCalledWith({index: 1, previousIndex: 0});
+		expect(spy).toHaveBeenLastCalledWith({index: 1, previousIndex: 0, type: 'onTransition'});
 
 		rerender(
 			<ViewManager index={0} onTransition={spy} noAnimation>
@@ -492,7 +542,7 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 
-		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1});
+		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1, type: 'onTransition'});
 	});
 
 	test('should fire onWillTransition once per transition', () => {
@@ -530,7 +580,7 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 
-		expect(spy).toHaveBeenLastCalledWith({index: 1, previousIndex: 0});
+		expect(spy).toHaveBeenLastCalledWith({index: 1, previousIndex: 0, type: 'onWillTransition'});
 
 		rerender(
 			<ViewManager index={0} onWillTransition={spy} noAnimation>
@@ -539,7 +589,7 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 
-		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1});
+		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1, type: 'onWillTransition'});
 	});
 
 	test('should pass `rtl` prop to arranger when `true`', () => {
