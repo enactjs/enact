@@ -124,28 +124,12 @@ class VirtualListBasic extends Component {
 		}),
 
 		/**
-		 * Disable voice control feature of component.
+		 * An object with properties to be passed to the container DOM.
 		 *
-		 * @type {Boolean}
-		 * @public
+		 * @type {Object}
+		 * @private
 		 */
-		'data-webos-voice-disabled': PropTypes.bool,
-
-		/**
-		 * Activates the component for voice control.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		'data-webos-voice-focused': PropTypes.bool,
-
-		/**
-		 * The voice control group label.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		'data-webos-voice-group-label': PropTypes.string,
+		containerProps: PropTypes.object,
 
 		/**
 		 * The number of items of data the list contains.
@@ -442,7 +426,7 @@ class VirtualListBasic extends Component {
 			this.updateScrollPosition({
 				x: xMax > x ? x : xMax,
 				y: yMax > y ? y : yMax
-			});
+			}, 'instant');
 
 			deferScrollTo = true;
 		} else if (this.hasDataSizeChanged) {
@@ -453,7 +437,7 @@ class VirtualListBasic extends Component {
 
 			deferScrollTo = true;
 		} else if (prevProps.rtl !== this.props.rtl) {
-			this.updateScrollPosition(this.getXY(this.scrollPosition, 0));
+			this.updateScrollPosition(this.getXY(this.scrollPosition, 0), 'instant');
 		}
 
 		const maxPos = this.isPrimaryDirectionVertical ? this.scrollBounds.maxTop : this.scrollBounds.maxLeft;
@@ -505,12 +489,12 @@ class VirtualListBasic extends Component {
 	itemPositions = [];
 	indexToScrollIntoView = -1;
 
-	updateScrollPosition = ({x, y}, rtl = this.props.rtl) => {
+	updateScrollPosition = ({x, y}, behavior) => {
 		if (this.props.scrollMode === 'native') {
-			this.scrollToPosition(x, y, rtl);
+			this.scrollToPosition(x, y, behavior);
 		} else {
 			this.setScrollPositionTarget (x, y);
-			this.setScrollPosition(x, y, rtl);
+			this.setScrollPosition(x, y);
 		}
 	};
 
@@ -676,9 +660,7 @@ class VirtualListBasic extends Component {
 		if (scrollMode === 'translate' && this.contentRef.current) {
 			this.contentRef.current.style.transform = null;
 		} else if (scrollMode === 'native' && node) {
-			node.style.scrollBehavior = null;
-			this.updateScrollPosition(this.getXY(this.scrollPosition, 0));
-			node.style.scrollBehavior = 'smooth';
+			this.updateScrollPosition(this.getXY(this.scrollPosition, 0), 'instant');
 		}
 	}
 
@@ -847,13 +829,17 @@ class VirtualListBasic extends Component {
 	}
 
 	// scrollMode 'native' only
-	scrollToPosition (x, y, rtl = this.props.rtl) {
-		if (this.props.scrollContentRef.current && this.props.scrollContentRef.current.scrollTo) {
-			if (rtl) {
-				x = (platform.ios || platform.safari || platform.chrome >= 85 || platform.androidChrome >= 85 ) ? -x : this.scrollBounds.maxLeft - x;
-			}
+	getRtlPositionX = (x) => {
+		if (this.props.rtl) {
+			return (platform.ios || platform.safari || platform.chrome >= 85 || platform.androidChrome >= 85) ? -x : this.scrollBounds.maxLeft - x;
+		}
+		return x;
+	};
 
-			this.props.scrollContentRef.current.scrollTo(x, y);
+	// scrollMode 'native' only
+	scrollToPosition (left, top, behavior) {
+		if (this.props.scrollContentRef.current && this.props.scrollContentRef.current.scrollTo) {
+			this.props.scrollContentRef.current.scrollTo({left: this.getRtlPositionX(left), top, behavior});
 		}
 	}
 
@@ -868,7 +854,7 @@ class VirtualListBasic extends Component {
 
 	// scrollMode 'translate' only
 	setScrollPositionTarget (x, y) {
-		// The `x`, `y` as parameters in scrollToPosition() are the position when stopping scrolling.
+		// The `left`, `top` as parameters in scrollToPosition() are the position when stopping scrolling.
 		// But the `x`, `y` as parameters in setScrollPosition() are the position between current position and the position stopping scrolling.
 		// To know the position when stopping scrolling properly, `x` and `y` are passed and cached in `this.scrollPositionTarget`.
 		if (this.isPrimaryDirectionVertical) {
@@ -879,7 +865,8 @@ class VirtualListBasic extends Component {
 	}
 
 	// scrollMode 'translate' only
-	setScrollPosition (x, y, rtl = this.props.rtl) {
+	setScrollPosition (x, y) {
+		const rtl = this.props.rtl;
 		if (this.contentRef.current) {
 			this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
 			this.didScroll(x, y);
@@ -1222,7 +1209,7 @@ class VirtualListBasic extends Component {
 
 	render () {
 		const
-			{className, 'data-webos-voice-focused': voiceFocused, 'data-webos-voice-group-label': voiceGroupLabel, 'data-webos-voice-disabled': voiceDisabled, placeholderRenderer, role, style, scrollMode, ...rest} = this.props,
+			{className, containerProps, placeholderRenderer, role, style, scrollMode, ...rest} = this.props,
 			{cc, isPrimaryDirectionVertical, primary} = this,
 			scrollModeNative = scrollMode === 'native',
 			containerClasses = classNames(
@@ -1263,7 +1250,7 @@ class VirtualListBasic extends Component {
 		}
 
 		return (
-			<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} data-webos-voice-disabled={voiceDisabled} ref={this.props.scrollContentRef} style={style}>
+			<div className={containerClasses} {...containerProps} ref={this.props.scrollContentRef} style={style}>
 				<div {...rest} className={contentClasses} ref={this.contentRef} role={role}>
 					{[...cc, placeholderRenderer && placeholderRenderer(primary)]}
 				</div>

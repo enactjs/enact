@@ -2,6 +2,25 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [4.1.4] - 2022-03-24
+
+### Removed
+
+- `ui/Scroller` and `ui/VirtualList` prop `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label`
+
+### Added
+
+- `ui/MarqueeDecorator` `locale` type for `forceDirection` prop not to override the direction depending on contents
+
+### Fixed
+
+- `ui/Button` not to pass `icon` prop as children when `icon` is true
+- `ui/Transition` to pass the event when handling transition event
+
+## [4.1.3] - 2022-03-07
+
+- Updated to use `forwardCustom` and add `type` when forwarding custom events
+
 ## [4.1.2] - 2021-12-22
 
 ### Fixed

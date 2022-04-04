@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 
-import {FloatingLayerBase} from '../FloatingLayer';
+import {FloatingLayer, FloatingLayerBase} from '../FloatingLayer';
 import FloatingLayerDecorator from '../FloatingLayerDecorator';
 
 describe('FloatingLayer Specs', () => {
@@ -29,5 +29,60 @@ describe('FloatingLayer Specs', () => {
 		const floatingLayerContainer = screen.getByTestId('floatingLayer');
 
 		expect(floatingLayerContainer).toBeInTheDocument();
+	});
+
+	test('should fire onOpen event with type when FloatingLayer is open', () => {
+		const handleOpen = jest.fn();
+
+		render(
+			<Root>
+				<FloatingLayerBase onOpen={handleOpen} open><p>Hi</p></FloatingLayerBase>
+			</Root>
+		);
+
+		const expected = 1;
+		const expectedType = {type: 'onOpen'};
+		const actual = handleOpen.mock.calls.length && handleOpen.mock.calls[0][0];
+
+		expect(handleOpen).toBeCalledTimes(expected);
+		expect(actual).toMatchObject(expectedType);
+	});
+
+	test('should fire onClose event with type when FloatingLayer is closed', () => {
+		const handleClose = jest.fn();
+
+		const {rerender} = render(
+			<Root>
+				<FloatingLayerBase onClose={handleClose} open><p>Hi</p></FloatingLayerBase>
+			</Root>
+		);
+
+		rerender(
+			<Root>
+				<FloatingLayerBase onClose={handleClose}><p>Hi</p></FloatingLayerBase>
+			</Root>
+		);
+
+		const expectedType = {type: 'onClose'};
+		const actual = handleClose.mock.calls.length && handleClose.mock.calls[0][0];
+
+		expect(actual).toMatchObject(expectedType);
+	});
+
+	test('should fire onDimiss event with type when FloatingLayer is closed', () => {
+		const handleDismiss = jest.fn();
+
+		render(
+			<Root>
+				<FloatingLayer onDismiss={handleDismiss} open><p>Hi</p></FloatingLayer>
+			</Root>
+		);
+
+		fireEvent.keyUp(screen.getByText('Hi'), {keyCode: 27});
+
+		const expectedType = {type: 'onDismiss'};
+		const actual = handleDismiss.mock.calls.length && handleDismiss.mock.calls[0][0];
+
+		expect(actual).toMatchObject(expectedType);
 	});
 });

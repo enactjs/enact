@@ -7,7 +7,7 @@
  * @exports removeCancelHandle
  */
 
-import {forward, handle, stop, stopImmediate} from '@enact/core/handle';
+import {forward, forwardCustom, handle, stop, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import invariant from 'invariant';
@@ -184,7 +184,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleCancel = this.handle(
 			forCancel,
-			forward('onCancel'),
+			forwardCustom('onCancel'),
 			dispatchCancelToConfig,
 			stop,
 			stopImmediate

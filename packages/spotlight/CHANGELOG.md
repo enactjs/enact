@@ -2,10 +2,17 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased] 
+## [4.1.4] - 2022-03-24
+
+No significant changes.
+
+## [4.1.3] - 2022-03-07
+
+- Updated to use `forwardCustom` and add `type` when forwarding custom events
 
 ### Fixed
 
+- `spotlight` to correctly control focus when boundaries of an element are not integers
 - Styles for `debug spotlight` option in samplers to work properly
 
 ## [4.1.2] - 2021-12-22

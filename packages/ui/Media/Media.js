@@ -9,7 +9,7 @@
  */
 
 import {on, off} from '@enact/core/dispatcher';
-import {forward} from '@enact/core/handle';
+import {forward, forwardCustom} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import {Children, isValidElement, Component as ReactComponent} from 'react';
@@ -230,7 +230,7 @@ class Media extends ReactComponent {
 	};
 
 	handleEvent = (ev) => {
-		forward('onUpdate', {type: 'onUpdate'}, this.props);
+		forwardCustom('onUpdate')(null, this.props);
 
 		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
 		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];

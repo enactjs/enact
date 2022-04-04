@@ -22,7 +22,7 @@ describe('Cancelable', () => {
 	const returnsTrue = () => true;
 	const stop = (ev) => ev.stopPropagation();
 
-	test('should call onCancel from prop for escape key', () => {
+	test('should call onCancel with type from prop for escape key', () => {
 		const handleCancel = jest.fn(returnsTrue);
 		const Comp = Cancelable(
 			{onCancel: 'onCustomEvent'},
@@ -34,11 +34,14 @@ describe('Cancelable', () => {
 		fireEvent.keyUp(component, makeKeyEvent(27));
 
 		const expected = 1;
+		const expectedType = {type: 'onCustomEvent'};
+		const actual = handleCancel.mock.calls.length && handleCancel.mock.calls[0][0];
 
 		expect(handleCancel).toHaveBeenCalledTimes(expected);
+		expect(actual).toMatchObject(expectedType);
 	});
 
-	test('should only call onCancel for escape key by default', () => {
+	test('should only call onCancel with type for escape key by default', () => {
 		const handleCancel = jest.fn(returnsTrue);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
@@ -51,8 +54,11 @@ describe('Cancelable', () => {
 		fireEvent.keyUp(component, makeKeyEvent(27));
 
 		const expected = 1;
+		const expectedType = {type: 'onCancel'};
+		const actual = handleCancel.mock.calls.length && handleCancel.mock.calls[0][0];
 
 		expect(handleCancel).toHaveBeenCalledTimes(expected);
+		expect(actual).toMatchObject(expectedType);
 	});
 
 	test('should not call onCancel for non-escape key', () => {

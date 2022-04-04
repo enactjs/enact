@@ -875,7 +875,7 @@ class ScrollableBase extends Component {
 	// call scroll callbacks
 
 	forwardScrollEvent (type, reachedEdgeInfo) {
-		forward(type, {scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo(), reachedEdgeInfo}, this.props);
+		forward(type, {type, scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo(), reachedEdgeInfo}, this.props);
 	}
 
 	// update scroll position

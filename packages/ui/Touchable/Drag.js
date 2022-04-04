@@ -71,31 +71,32 @@ class Drag {
 		this.dragConfig = {
 			...config,
 			node,
-			onDragStart,
-			onDragEnd,
-			onDrag,
 			resume: !noResume
 		};
+
+		this.onDrag = onDrag;
+		this.onDragStart = onDragStart;
+		this.onDragEnd = onDragEnd;
 
 		this.setContainerBounds(node);
 		this.move(coords);
 	};
 
-	// This method will get the `onDrag`, `onDragEnd`, `onDragStart` props in the existing `dragConfig`.
+	// This method will get the `onDrag`, `onDragEnd`, `onDragStart` props.
 	updateProps = ({onDrag, onDragEnd, onDragStart}) => {
 		// Check `isDragging` gesture is not in progress. Check if gesture exists before updating the references to the `dragConfig`
 		if (!this.isDragging()) return;
 
 		// This will update the `dragConfig` with the new value
-		this.dragConfig.onDragStart = onDragStart;
-		this.dragConfig.onDrag = onDrag;
-		this.dragConfig.onDragEnd = onDragEnd;
+		this.onDrag = onDrag;
+		this.onDragStart = onDragStart;
+		this.onDragEnd = onDragEnd;
 	};
 
 	move = (coords) => {
 		if (!this.isDragging()) return;
 
-		const {moveTolerance, onDrag, onDragStart} = this.dragConfig;
+		const {moveTolerance} = this.dragConfig;
 
 		if (this.tracking === Tracking.Untracked) {
 			const dx = coords.x - this.startX;
@@ -104,15 +105,15 @@ class Drag {
 			if (Math.sqrt(dx * dx + dy * dy) >= moveTolerance) {
 				this.tracking = Tracking.Active;
 
-				if (onDragStart) {
-					onDragStart({
+				if (this.onDragStart) {
+					this.onDragStart({
 						type: 'onDragStart',
 						...coords
 					});
 				}
 			}
-		} else if (onDrag && this.tracking === Tracking.Active && this.updatePosition(coords)) {
-			onDrag({
+		} else if (this.onDrag && this.tracking === Tracking.Active && this.updatePosition(coords)) {
+			this.onDrag({
 				type: 'onDrag',
 				...coords
 			});
@@ -130,9 +131,8 @@ class Drag {
 	end = () => {
 		if (!this.isDragging()) return;
 
-		const {onDragEnd} = this.dragConfig;
-		if (onDragEnd && this.tracking !== Tracking.Untracked) {
-			onDragEnd({type: 'onDragEnd'});
+		if (this.onDragEnd && this.tracking !== Tracking.Untracked) {
+			this.onDragEnd({type: 'onDragEnd'});
 		}
 
 		this.tracking = Tracking.Untracked;
