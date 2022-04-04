@@ -11,6 +11,8 @@ import Cancelable from '../Cancelable';
 import {FloatingLayerContext} from './FloatingLayerDecorator';
 import Scrim from './Scrim';
 
+import css from './FloatingLayer.module.less';
+
 /**
  * A component that creates an entry point to the new render tree.
  *
@@ -29,7 +31,7 @@ class FloatingLayerBase extends Component {
 		 * CSS classes for FloatingLayer.
 		 *
 		 * @type {String}
-		 * @default 'enact-fit enact-clip enact-untouchable enact-z-index'
+		 * @default 'enact-fit enact-clip enact-untouchable'
 		 * @public
 		 */
 		floatLayerClassName: PropTypes.string,
@@ -104,7 +106,7 @@ class FloatingLayerBase extends Component {
 	static contextType = FloatingLayerContext;
 
 	static defaultProps = {
-		floatLayerClassName: 'enact-fit enact-clip enact-untouchable enact-z-index',
+		floatLayerClassName: 'enact-fit enact-clip enact-untouchable',
 		floatLayerId: 'floatLayer',
 		noAutoDismiss: false,
 		open: false,
@@ -227,7 +229,7 @@ class FloatingLayerBase extends Component {
 
 	render () {
 		const {children, className, floatLayerClassName, open, scrimType, ...rest} = this.props;
-		const mergedClassName = classNames(floatLayerClassName, className);
+		const mergedClassName = classNames(floatLayerClassName, css.floatingLayer, className);
 
 		delete rest.floatLayerId;
 		delete rest.noAutoDismiss;
