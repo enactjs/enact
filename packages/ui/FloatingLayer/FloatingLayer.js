@@ -29,7 +29,7 @@ class FloatingLayerBase extends Component {
 		 * CSS classes for FloatingLayer.
 		 *
 		 * @type {String}
-		 * @default 'enact-fit enact-clip enact-untouchable'
+		 * @default 'enact-fit enact-clip enact-untouchable enact-z-index'
 		 * @public
 		 */
 		floatLayerClassName: PropTypes.string,
