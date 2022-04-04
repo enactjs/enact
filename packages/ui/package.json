@@ -31,8 +31,8 @@
     "invariant": "^2.2.4",
     "prop-types": "^15.8.0",
     "ramda": "^0.27.1",
-    "react": "^18.0.0-rc.3",
-    "react-dom": "^18.0.0-rc.3",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "react-is": "^17.0.2",
     "warning": "^4.0.3"
   }
