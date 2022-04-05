@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/FloatingLayer` to stack popups always in the order in which they were opened
+
 ## [4.1.4] - 2022-03-24
 
 ### Removed
