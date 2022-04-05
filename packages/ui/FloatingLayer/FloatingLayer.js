@@ -223,7 +223,6 @@ class FloatingLayerBase extends Component {
 
 		on('scroll', this.handleScroll, this.floatingLayer);
 
-		// render children when this.node is inserted in the DOM tree.
 		this.setState({readyToRender: true});
 	}
 
