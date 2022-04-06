@@ -39,6 +39,7 @@ let currentLine = {
 	actionsIndex = -1,
 	lastAction = '';
 
+// "1" for webos since using actual ratio will slow the drawing process after calling getImageData() in the fill function
 const ratio = platform.platformName === 'webos' ? 1 : window.devicePixelRatio;
 
 const generateEraseCursor = (brushSize) => {

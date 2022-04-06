@@ -1,5 +1,6 @@
 import {platform} from '@enact/core/platform';
 
+// "1" for webos since using actual ratio will slow the drawing process after calling getImageData() in the fill function
 const ratio = platform.platformName === 'webos' ? 1 : window.devicePixelRatio;
 
 /*
