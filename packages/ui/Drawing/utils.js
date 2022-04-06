@@ -161,7 +161,7 @@ const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions
 			contextRef.current.moveTo(line.points[0].x, line.points[0].y); // move the starting point to initial position
 
 			if (line.drawingTool === 'fill') {
-				fillDrawing(line.ev, contextRef, fillColor);
+				fillDrawing(line.ev, contextRef, line.fillColor);
 			} else if (line.drawingTool === 'triangle') {
 				drawTriangle(contextRef, offsetX, offsetY);
 			} else if (line.drawingTool === 'rectangle') {
