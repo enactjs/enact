@@ -1,9 +1,12 @@
+import {platform} from '@enact/core/platform';
+
+const ratio = platform.platformName === 'webos' ? 1 : window.devicePixelRatio;
+
 /*
  * Returns the relative position on the viewport of the given element.
  */
 const relativePosition = (event, element) => {
 	const rect = element.getBoundingClientRect();
-	const ratio = window.devicePixelRatio;
 
 	return {x: Math.floor((event.clientX - rect.left) * ratio),
 		y: Math.floor((event.clientY - rect.top) * ratio)};
@@ -130,7 +133,6 @@ const drawLine = (contextRef, offsetX, offsetY) => {
 const paint = (canvasRef, contextRef, beginPointRef, currentObjectLines, actions, drawingTool, brushSize, brushColor, fillColor) => {
 	const canvas = canvasRef.current;
 	const context = canvas.getContext('2d');
-	const ratio = window.devicePixelRatio;
 
 	contextRef.current.globalCompositeOperation = 'destination-out';
 	context.fillRect(0, 0, Math.round(canvas.width / ratio), Math.round(canvas.height / ratio));
