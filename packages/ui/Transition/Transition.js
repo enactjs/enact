@@ -16,7 +16,7 @@
  * @exports TransitionBase
  */
 
-import {forwardCustom} from '@enact/core/handle';
+import {forward, forwardCustom} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
@@ -519,13 +519,13 @@ class Transition extends Component {
 	};
 
 	handleTransitionEnd = (ev) => {
-		forwardCustom('onTransitionEnd')(null, this.props);
+		forward('onTransitionEnd', ev, this.props);
 
 		if (ev.target === this.childNode) {
 			if (!this.props.visible) {
-				forwardCustom('onHide')(null, this.props);
+				forward('onHide', {type: 'onHide', currentTarget: ev.currentTarget}, this.props);
 			} else if (this.props.visible) {
-				forwardCustom('onShow')(null, this.props);
+				forward('onShow', {type: 'onShow', currentTarget: ev.currentTarget}, this.props);
 			}
 		}
 	};
