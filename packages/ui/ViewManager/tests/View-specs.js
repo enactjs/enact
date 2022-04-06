@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import {render, screen} from '@testing-library/react';
+import {act, render, screen} from '@testing-library/react';
 import {createRef} from 'react';
 
 import {MockArranger} from './test-utils';
@@ -54,7 +54,7 @@ describe('View', () => {
 					<span />
 				</View>
 			);
-			ref.current.componentWillStay(spy);
+			act(() => ref.current.componentWillStay(spy));
 
 			const expected = 1;
 
@@ -70,7 +70,7 @@ describe('View', () => {
 				</View>
 			);
 
-			ref.current.componentWillEnter(spy);
+			act(() => ref.current.componentWillEnter(spy));
 
 			const expected = 1;
 
@@ -86,7 +86,7 @@ describe('View', () => {
 				</View>
 			);
 
-			ref.current.componentWillLeave(spy);
+			act(() => ref.current.componentWillLeave(spy));
 
 			const expected = 1;
 
@@ -94,6 +94,7 @@ describe('View', () => {
 		});
 
 		test('should reset entering if a rendered panel re-enters', () => {
+			jest.useFakeTimers();
 			const spy = jest.fn();
 			const ref = createRef();
 			render(
@@ -102,13 +103,13 @@ describe('View', () => {
 				</View>
 			);
 
-			ref.current.componentDidAppear(spy);
+			act(() => ref.current.componentDidAppear(spy));
 			const firstExpected = 'false';
 			const firstSpan = screen.getByTestId('span');
 
 			expect(firstSpan).toHaveAttribute('data-entering', firstExpected);
 
-			ref.current.componentWillEnter(spy);
+			act(() => ref.current.componentWillEnter(spy));
 			const secondExpected = 'true';
 			const secondSpan = screen.getByTestId('span');
 
@@ -117,6 +118,14 @@ describe('View', () => {
 	});
 
 	describe('imperative API with arranger', () => {
+		beforeEach(() => {
+			jest.useFakeTimers();
+		});
+
+		afterEach(() => {
+			jest.useRealTimers();
+		});
+
 		test('should call callback for "stay"', (done) => {
 			const ref = createRef();
 			render(
@@ -132,7 +141,8 @@ describe('View', () => {
 				done();
 			});
 
-			ref.current.componentWillStay(spy);
+			act(() => ref.current.componentWillStay(spy));
+			jest.runAllTimers();
 		});
 
 		test('should call callback for "enter"', (done) => {
@@ -150,7 +160,8 @@ describe('View', () => {
 				done();
 			});
 
-			ref.current.componentWillEnter(spy);
+			act(() => ref.current.componentWillEnter(spy));
+			jest.runAllTimers();
 		});
 
 		test('should call callback for "leave"', (done) => {
@@ -168,7 +179,8 @@ describe('View', () => {
 				done();
 			});
 
-			ref.current.componentWillLeave(spy);
+			act(() => ref.current.componentWillLeave(spy));
+			jest.runAllTimers();
 		});
 
 		test('should call callback immediately when {noAnimation}', () => {
@@ -180,7 +192,7 @@ describe('View', () => {
 				</View>
 			);
 
-			ref.current.componentWillEnter(spy);
+			act(() => ref.current.componentWillEnter(spy));
 
 			const expected = 1;
 
@@ -196,7 +208,7 @@ describe('View', () => {
 				</View>
 			);
 
-			ref.current.componentWillAppear(spy);
+			act(() => ref.current.componentWillAppear(spy));
 
 			const expected = 1;
 
@@ -226,7 +238,7 @@ describe('View', () => {
 				</View>
 			);
 
-			ref.current.componentWillEnter();
+			act(() => ref.current.componentWillEnter());
 			expect(arranger.enter).toBeCalledWith(arrangerStruct);
 		});
 	});
