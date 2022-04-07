@@ -788,7 +788,7 @@ const Spotlight = (function () {
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
 		 */
-		 focusFromContainer: function (containerId) {
+		focusFromContainer: function (containerId) {
 			containerId = containerId || getLastContainer();
 
 			if (typeof containerId === 'string') {
