@@ -11,6 +11,7 @@
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
+import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import {useImperativeHandle, useEffect, useRef, useState} from 'react';
@@ -37,6 +38,9 @@ let currentLine = {
 	currentLinesArray = [],
 	actionsIndex = -1,
 	lastAction = '';
+
+// "1" for webos since using actual ratio will slow the drawing process after calling getImageData() in the fill function
+const ratio = platform.platformName === 'webos' ? 1 : window.devicePixelRatio;
 
 const generateEraseCursor = (brushSize) => {
 	let canvas = document.createElement('canvas');
@@ -292,7 +296,8 @@ const DrawingBase = kind({
 				contextRef.current.lineTo(offsetX, offsetY); // draw a single point
 				contextRef.current.stroke();
 			} else if (drawingTool === 'fill') {
-				fillDrawing(ev, contextRef);
+				fillDrawing(ev, contextRef, fillColor);
+				return;
 			} else if (drawingTool === 'triangle') {
 				drawTriangle(contextRef, offsetX, offsetY);
 				return;
@@ -356,7 +361,6 @@ const DrawingBase = kind({
 		const contextRef = useRef(null);
 
 		useEffect(() => {
-			const ratio = window.devicePixelRatio;
 			const canvas = canvasRef.current;
 			canvas.height = Math.floor(ri.scale(canvasHeight * ratio));
 			canvas.width = Math.floor(ri.scale(canvasWidth * ratio));
@@ -391,7 +395,6 @@ const DrawingBase = kind({
 				const context = canvas.getContext('2d');
 
 				contextRef.current.globalCompositeOperation = 'destination-out';
-				const ratio = window.devicePixelRatio;
 				context.fillRect(0, 0, Math.round(canvas.width / ratio), Math.round(canvas.height / ratio));
 
 				if (drawingTool === 'erase') {
@@ -476,7 +479,6 @@ const DrawingBase = kind({
 			const canvas = canvasRef.current;
 			const context = canvas.getContext('2d');
 			const handleResize = () => {
-				const ratio = window.devicePixelRatio;
 				canvas.height = Math.floor(ri.scale(canvasHeight * ratio));
 				canvas.width = Math.floor(ri.scale(canvasWidth * ratio));
 				canvas.style.height = `${ri.scale(canvasHeight)}px`;
