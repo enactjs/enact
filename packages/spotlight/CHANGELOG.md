@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `spotlight.Spotlight` method `focusFromContainer()` to focus recursively
+
 ## [4.1.4] - 2022-03-24
 
 No significant changes.

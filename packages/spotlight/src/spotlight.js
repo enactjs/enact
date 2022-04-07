@@ -774,6 +774,32 @@ const Spotlight = (function () {
 			return false;
 		},
 
+		// focusFromContainer()
+		// focusFromContainer(<containerId>)
+		/**
+		 * Focuses from the specified container.
+		 * If the proper target is not in the container, repeat with the outer container.
+		 *
+		 * If Spotlight is in pointer mode, focus is not changed but `elem` will be set as the last
+		 * focused element of its spotlight containers.
+		 *
+		 * @param {String} [containerId] The starting spotlight container ID . If not supplied,
+		 *  the last container will be focused.
+		 * @returns {Boolean} `true` if focus successful, `false` if not.
+		 * @public
+		 */
+		 focusFromContainer: function (containerId) {
+			containerId = containerId || getLastContainer();
+
+			if (typeof containerId === 'string') {
+				const containerNode = getContainerNode(containerId);
+
+				return getContainersForNode(containerNode).reduceRight((result, id) => {
+					return result || this.focus(id);
+				}, null);
+			}
+		},
+
 		// move(<direction>)
 		// move(<direction>, <selector>)
 		/**
