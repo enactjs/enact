@@ -623,9 +623,8 @@ const getAllContainerIds = () => {
 /**
  * Returns the default focus element for a container
  *
- * @param   {String}                             containerId        ID of container
- * @param   {('last-focused'|'default-element')} [preferredEnterTo] Prefer the given enterTo
- *                                                                  configuration
+ * @param   {String}                                       containerId        Container ID
+ * @param   {('last-focused'|'default-element'|'topmost')} [preferredEnterTo] Prefer the given enterTo configuration
  *
  * @returns {Node|null}                 Default focus element
  * @memberof spotlight/container
@@ -722,9 +721,8 @@ function setContainerLastFocusedElement (node, containerIds) {
  * return that element as the only element in an array. If that fails or if navigation is not
  * restricted, it will return an array of all possible navigable nodes.
  *
- * @param   {String}                             containerId        Container ID
- * @param   {('last-focused'|'default-element')} [preferredEnterTo] Prefer the given enterTo
- *                                                                  configuration
+ * @param   {String}                                       containerId        Container ID
+ * @param   {('last-focused'|'default-element'|'topmost')} [preferredEnterTo] Prefer the given enterTo configuration
  *
  * @returns {Node[]}             Navigable elements within container
  * @memberof spotlight/container
@@ -769,6 +767,10 @@ function getContainerNavigableElements (containerId, preferredEnterTo) {
 
 				return contains(containerRect, getRect(element));
 			});
+
+			if (next && preferredEnterTo === 'topmost') {
+				next.sort((a, b) => (getRect(a).top - getRect(b).top));
+			}
 		}
 
 		// otherwise, return all spottables within the container
@@ -784,9 +786,8 @@ function getContainerNavigableElements (containerId, preferredEnterTo) {
  * Determines the preferred focus target, traversing any sub-containers as necessary, for the given
  * container.
  *
- * @param   {String}                             containerId        ID of container
- * @param   {('last-focused'|'default-element')} [preferredEnterTo] Prefer the given enterTo
- *                                                                  configuration
+ * @param   {String}                                       containerId        Container ID
+ * @param   {('last-focused'|'default-element'|'topmost')} [preferredEnterTo] Prefer the given enterTo configuration
  *
  * @returns {Node}                 Preferred target as either a DOM node or container-id
  * @memberof spotlight/container
