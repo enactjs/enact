@@ -94,7 +94,7 @@ class ScrollbarBase extends PureComponent {
 	};
 
 	static defaultProps = {
-		childRenderer: nop,
+		childRenderer: nop, // eslint-disable-line react/default-props-match-prop-types
 		corner: false,
 		css: componentCss,
 		vertical: true

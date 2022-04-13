@@ -1,3 +1,4 @@
+/* eslint-disable react/no-this-in-sfc */
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
@@ -214,9 +215,9 @@ const VirtualListBaseFactory = (type) => {
 
 		static defaultProps = {
 			cbScrollTo: nop,
-			itemsRenderer: nop,
 			dataSize: 0,
 			direction: 'vertical',
+			itemsRenderer: nop, // eslint-disable-line react/default-props-match-prop-types
 			overhang: 3,
 			pageScroll: false,
 			spacing: 0
@@ -269,7 +270,6 @@ const VirtualListBaseFactory = (type) => {
 		componentDidMount () {
 			if (!this.props.clientSize) {
 				this.calculateMetrics(this.props);
-				// eslint-disable-next-line react/no-did-mount-set-state
 				this.setState(this.getStatesAndUpdateBounds(this.props));
 			} else {
 				this.emitUpdateItems();
@@ -347,7 +347,6 @@ const VirtualListBaseFactory = (type) => {
 				const {x, y} = this.getXY(this.scrollPosition, 0);
 
 				this.calculateMetrics(this.props);
-				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState(this.getStatesAndUpdateBounds(this.props));
 				this.setContainerSize();
 
@@ -363,7 +362,6 @@ const VirtualListBaseFactory = (type) => {
 				deferScrollTo = true;
 			} else if (this.hasDataSizeChanged) {
 				const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
-				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState(newState);
 				this.setContainerSize();
 
