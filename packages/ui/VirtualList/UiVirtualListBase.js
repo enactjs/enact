@@ -214,6 +214,7 @@ const VirtualListBaseFactory = (type) => {
 
 		static defaultProps = {
 			cbScrollTo: nop,
+			itemsRenderer: nop,
 			dataSize: 0,
 			direction: 'vertical',
 			overhang: 3,

@@ -13,6 +13,7 @@ import componentCss from './Scrollbar.module.less';
 const
 	minThumbSize = 18, // Size in pixels
 	thumbHidingDelay = 400; // in milliseconds
+	nop = () => {};
 
 /*
  * Set CSS Varaible value.
@@ -93,6 +94,7 @@ class ScrollbarBase extends PureComponent {
 	};
 
 	static defaultProps = {
+		childRenderer: nop,
 		corner: false,
 		css: componentCss,
 		vertical: true
