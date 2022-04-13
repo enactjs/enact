@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@enact/docs-utils": "^0.3.6",
-    "eslint-config-enact-proxy": "^1.0.3",
+    "eslint-config-enact-proxy": "^1.0.4",
     "lerna": "^4.0.0"
   }
 }
