@@ -66,7 +66,7 @@ Now, you are all set to use the new Concurrent Features of React 18.
 Let's look into some of Concurrent Features in detail.
 
 
-### Automatic Batching
+#### Automatic Batching
 In earlier versions of React, batching was only done for the React event handlers.
 With `createRoot`, all updates will be automatically batched, no matter where they originate from.
 Updates inside of promises, setTimeout, native event handlers, or any other event were not batched in React by default:
@@ -105,7 +105,8 @@ We have an example app for demonstration.
 In the example we increment and decrement a variable that by 1 for a 1000 times and we count the re-renders. Before Automatic Batching every time the value is changed the component had to re-render, slowing the app for no real reason.
 
 
-### startTransition
+#### startTransition
+A transition is a new concept in React to distinguish between urgent and non-urgent updates.
 Updates wrapped in `startTransition` are handled as non-urgent and will be interrupted if more urgent updates like clicks or key presses come in. If a transition gets interrupted by the user (for example, by typing multiple characters in a row), React will throw out the stale rendering work that wasn’t finished and render only the latest update.
 
 Imagine that you have multiple tabs and when a tab is selected, some data needs to be fetched.
@@ -120,6 +121,27 @@ const [isPending, startTransition] = useTransition({timeoutMs: 3000});
 The fetching of the new data is wrapped inside `startTransition`. The `isPending` data tells if the content is currently being loaded or not. Its `timeoutMs` property specifies how long we're willing to wait for the transition to finish.
 Now instead of switching tabs immediately, the current tab continues to show its content until the new tab's content is ready. There is also the possibility to show a loading indicator, by making use of the `isPending` prop of `useTransition`.
 
+Here is an example app for demonstration.
+
+
+#### Suspense
+`Suspense` lets you declaratively specify the loading state for a part of the component tree if it’s not yet ready to be displayed:
+```js
+function ProfilePage() {
+    return (
+        <Suspense fallback={<Spinner />}>
+            <ProfileDetails />
+            <Suspense fallback={<Spinner />}>
+                <ProfileTimeline />
+            </Suspense>
+        </Suspense>
+    );
+}
+```
+Let's look at the example app.
+We have 2 panels, one with `Suspense`, one without. They both load the same list of images. On the first panel, where we have implemented `Suspense`, we can see that until the data is available, we display a skeleton page, meaning the exact visual structure of the page, but with placeholders for the lazy loading data. This offers a more pleasant UI experience. As opposed to it, on the second panel, where we haven't implemented `Suspense`, we can observe that it takes several seconds for content to show on the page. In this time user sees a blank page that might be confusing.
+
+So far, we took around for key Concurrent Features of React 18, other than this, React 18 introduces new hooks like `useId`, `useDeferredValue`, etc.
 If you want more information, please refer to [How to Upgrade to React 18](https://reactjs.org/blog/2022/03/08/react-18-upgrade-guide.html) and other great articles from the official [React Blog](https://reactjs.org/blog).
 
 
@@ -127,15 +149,21 @@ If you want more information, please refer to [How to Upgrade to React 18](https
 `@enact/cli` must be upgraded to version `5.0.0-alpha.1` or newer.
 `@enact/cli` `5.0.0-alpha.1` updates the `webpack` to `5.x`, `eslint` to `8.x`, `jest` to `27.x`,
 `react`, `react-dom` to `18.x`, and drops the support of `enzyme`.
+Developers should ensure their code does not rely on features that are no longer available in these versions.
 
-Please proceed to replace `enzyme` with [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/) when you make your unit tests.
+Please do not hesitate to replace `enzyme` with [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/) when you make your unit tests.
 
 As `@enact/cli` updates `react` and `react-dom` to `18.x`, `PrerenderPlugin` will automatically
 convert `ReactDOMClient.createRoot` to `ReactDOMClient.hydrateRoot` for prerendered apps.
 Please make sure to follow the above new `createRoot` API pattern to work prerendering properly.
 
-Below are the highlights of `webpack 5` changes for your information.
+As we updates to `eslint 8`, some of lint rules could be changed. If you run into unknown lint warnings or errors, don't be afraid, and please proceed to fix them. They are likely to be the rules from [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react), so refer to the console message and look up which rule is related.
+The in-editor-linting will work just fine if you followed the guide from migration to 4.0.
+Don't forget to install ESlint globally and uninstall any previous globally-installed Enact linting package.
 
+`webpack 5` removed polyfills for native NodeJS libraries like `crypto`.
+But `@enact/cli` needs to have NodeJS polyfills to run Screenshot tests so we've added `node-polyfill-webpack-plugin` so if you were using those polyfills, you will be fine.
+Although `@enact/cli` supports them for specific reasons, please avoid using it in the frontend code.
 
 
 ### webOS TV
@@ -143,7 +171,11 @@ Enact 4.5 no longer supports the 2022 TV platform or earlier versions.
 
 ## sandstone
 
-###
+### General
+
+All unit tests were migrated to [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/).
+All components are updated to use `forwardCustom` and add `type` when forwarding custom events. If you were using `event` object from custom events, it may not have the information that you expect.
+
 
 ## ui
 
