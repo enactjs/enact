@@ -12,8 +12,8 @@ import componentCss from './Scrollbar.module.less';
 
 const
 	minThumbSize = 18, // Size in pixels
+	nop = () => {},
 	thumbHidingDelay = 400; // in milliseconds
-	nop = () => {};
 
 /*
  * Set CSS Varaible value.
