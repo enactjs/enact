@@ -18,8 +18,8 @@
     "@enact/ui": "^4.1.4",
     "@enact/webos": "^4.1.4",
     "classnames": "^2.3.1",
-    "ilib": "^14.11.1",
-    "prop-types": "^15.8.0",
+    "ilib": "^14.14.0",
+    "prop-types": "^15.8.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
@@ -28,7 +28,7 @@
     "@storybook/addons": "6.3.12",
     "@storybook/react": "6.3.12",
     "@storybook/theming": "6.3.12",
-    "babel-loader": "^8.2.3",
-    "core-js": "^3.20.1"
+    "babel-loader": "^8.2.4",
+    "core-js": "^3.21.1"
   }
 }
