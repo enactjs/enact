@@ -101,7 +101,7 @@ function handleClick() {
   // React has updated the DOM by now
 }
 ```
-We have an example app for demonstration.
+We have an example app for demonstration [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new)on the `Automatic Batching` tab.
 In the example we increment and decrement a variable that by 1 for a 1000 times and we count the re-renders. Before Automatic Batching every time the value is changed the component had to re-render, slowing the app for no real reason.
 
 
@@ -121,7 +121,7 @@ const [isPending, startTransition] = useTransition({timeoutMs: 3000});
 The fetching of the new data is wrapped inside `startTransition`. The `isPending` data tells if the content is currently being loaded or not. Its `timeoutMs` property specifies how long we're willing to wait for the transition to finish.
 Now instead of switching tabs immediately, the current tab continues to show its content until the new tab's content is ready. There is also the possibility to show a loading indicator, by making use of the `isPending` prop of `useTransition`.
 
-Here is an example app for demonstration.
+[Here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) is an example app for demonstration on the `useTransition` tab.
 
 
 #### Suspense
@@ -138,7 +138,7 @@ function ProfilePage() {
     );
 }
 ```
-Let's look at the example app.
+Let's look at the example app from [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) on the `Suspense` tab.
 We have 2 panels, one with `Suspense`, one without. They both load the same list of images. On the first panel, where we have implemented `Suspense`, we can see that until the data is available, we display a skeleton page, meaning the exact visual structure of the page, but with placeholders for the lazy loading data. This offers a more pleasant UI experience. As opposed to it, on the second panel, where we haven't implemented `Suspense`, we can observe that it takes several seconds for content to show on the page. In this time user sees a blank page that might be confusing.
 
 So far, we took around for key Concurrent Features of React 18, other than this, React 18 introduces new hooks like `useId`, `useDeferredValue`, etc.
@@ -157,7 +157,7 @@ As `@enact/cli` updates `react` and `react-dom` to `18.x`, `PrerenderPlugin` wil
 convert `ReactDOMClient.createRoot` to `ReactDOMClient.hydrateRoot` for prerendered apps.
 Please make sure to follow the above new `createRoot` API pattern to work prerendering properly.
 
-As we updates to `eslint 8`, some of lint rules could be changed. If you run into unknown lint warnings or errors, don't be afraid, and please proceed to fix them. They are likely to be the rules from [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react), so refer to the console message and look up which rule is related.
+As we update to `eslint 8`, some of lint rules could be changed. If you run into unknown lint warnings or errors, don't be afraid, and please proceed to fix them. They are likely to be the rules from [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react), so refer to the console message and look up which rule is related.
 The in-editor-linting will work just fine if you followed the guide from migration to 4.0.
 Don't forget to install ESlint globally and uninstall any previous globally-installed Enact linting package.
 
@@ -176,41 +176,30 @@ Enact 4.5 no longer supports the 2022 TV platform or earlier versions.
 All unit tests were migrated to [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/).
 All components are updated to use `forwardCustom` and add `type` when forwarding custom events. If you were using `event` object from custom events, it may not have the information that you expect.
 
+### `DatePicker` and `TimePicker`
+They are changed to not show press effect on touch input.
+
+### `Icon`
+The public class name `icon` is added.
+
+### `Picker` and `RangePicker`
+The prop `changedBy` is added to provide a way to control with left and right keys in horizontal joined Picker.
+
+### `Scroller` and `VirtualList`
+They are changed to show overscroll effect when flicking by default.
+The props `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label` are added.
+
+### `VideoPlayer`
+The props `backButtonAriaLabel`, `onWillFastForward`, `onWillJumpBackward`, `onWillJumpForward`, `onWillPause`, `onWillPlay`, and `onWillRewind` are added.
+The prop `onBack` is added to provide a way to exit video player via touch.
 
 ## ui
 
-### `A11yDecorator`
-The `ui/A11yDecorator` has been removed.
+### General
+All components are updated to use `forwardCustom` and add `type` when forwarding custom events. If you were using `event` object from custom events, it may not have the information that you expect.
 
-### `Button`, `Icon`, `IconButton`, and `LabeledIcon`
-The default `size` value has been removed.
+### `MarqueeDecorator`
+The `locale` type for `forceDirection` prop is added not to override the direction depending on contents.
 
-### `BodyText`, `Button`, `Group`, `Heading`, `Icon`, `IconButton`, `Image`, `ImageItem`, `LabeledIcon`, `Layout`, `ProgressBar`, `Repeater`, `Slider`, `SlotItem`, `Spinner`, `ToggleIcon`, `ToggleItem`, and `ViewManager`
-The forwarding `ref`s to the respective root component support is added.
-
-### `Touchable`
-The `onHold` and `onHoldPulse` changed to `onHoldStart` and `onHold` respectively.
-
-| 3.x | 4.0 |
-|---|---|
-| onHold | onHoldStart |
-| onHoldPulse | onHold |
-| onHoldEnd | onHoldEnd |
-
-#### Example
-##### 3.x
-```js
-...
-import Button from '@enact/ui/Button';
-...
-<Button onHold={handleHoldStart} onHoldPulse={handleHold} />
-...
-```
-##### 4.0
-```js
-...
-import Button from '@enact/ui/Button';
-...
-<Button onHoldStart={handleHoldStart} onHold={handleHold} />
-...
-```
+### `Scroller` and `VirtualList`
+The props `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label` are removed.
