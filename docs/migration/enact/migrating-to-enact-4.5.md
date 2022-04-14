@@ -12,14 +12,14 @@ this guide.
 
 ### React and React DOM
 Enact 4.5 updates the `react` and `react-dom` dependencies to 18.x.  Developers should ensure
-their code does not rely on features that are no longer available in these versions.
+their code does not rely on features that are no longer available in these versions.  
 
-React 18 introduces out-of-the-box improvements like automatic batching, new APIs like startTransition, and streaming server-side rendering with support for Suspense.
+React 18 introduces out-of-the-box improvements like automatic batching, new APIs like startTransition, and streaming server-side rendering with support for Suspense.  
 In this guide, we'll walk you through what are these features and how to use them with examples.
 
 #### The new root API
-Root API in React is a pointer for the top-level data structures on the application that React uses to track a render tree.
-Two different root APIs will be deployed when using React 18, the Legacy `ReactDOM.render` and `ReactDOMClient.createRoot`.
+Root API in React is a pointer for the top-level data structures on the application that React uses to track a render tree.  
+Two different root APIs will be deployed when using React 18, the Legacy `ReactDOM.render` and `ReactDOMClient.createRoot`.  
 The Legacy root API will run a legacy mode root API, trigger warnings that the API is deprecated, and suggest moving it to the new root API like below.
 
 ```sh
@@ -65,13 +65,13 @@ if (typeof window !== 'undefined') {
 export default appElement;
 ```
 
-Now, you are all set to use the new Concurrent Features of React 18.
+Now, you are all set to use the new Concurrent Features of React 18.  
 Let's look into some of the Concurrent Features in detail.
 
 
 #### Automatic Batching
-In earlier versions of React, batching was only done for the React event handlers.
-With `createRoot`, all updates will be automatically batched, no matter where they originate from.
+In earlier versions of React, batching was only done for the React event handlers.  
+With `createRoot`, all updates will be automatically batched, no matter where they originate from.  
 This means that updates inside of timeouts, promises, native event handlers, or any other event will batch the same way as updates inside of React events:
 ```js
 // After React 18 updates inside of timeouts, promises,
@@ -104,12 +104,12 @@ function handleClick() {
   // React has updated the DOM by now
 }
 ```
-We have an example app for demonstration [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) at the `Automatic Batching` tab.
+We have an example app for demonstration [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) at the `Automatic Batching` tab.  
 In the example, we increment and decrement a variable by 1 for 1000 times and we count the re-renders. Before Automatic Batching every time the value is changed the component had to re-render, slowing the app for no real reason.
 
 
 #### startTransition
-A transition is a new concept in React to distinguish between urgent and non-urgent updates.
+A transition is a new concept in React to distinguish between urgent and non-urgent updates.  
 Updates wrapped in `startTransition` are handled as non-urgent and will be interrupted if more urgent updates like clicks or keypresses come in. If a transition gets interrupted by the user (for example, by typing multiple characters in a row), React will throw out the stale rendering work that wasn’t finished and render only the latest update.
 
 Imagine that you have multiple tabs and when a tab is selected, some data needs to be fetched.
@@ -121,10 +121,11 @@ With React18's `useTransition` hook, the previous state of the UI can be held un
 ```js
 const [isPending, startTransition] = useTransition({timeoutMs: 3000});
 ```
-The fetching of the new data is wrapped inside `startTransition`. The `isPending` tells if the content is currently being loaded or not. Its `timeoutMs` property specifies how long we're willing to wait for the transition to finish.
+The fetching of the new data is wrapped inside `startTransition`. The `isPending` tells if the content is currently being loaded or not. Its `timeoutMs` property specifies how long we're willing to wait for the transition to finish.  
 Now instead of switching tabs immediately, the current tab continues to show its content until the new tab's content is ready. There is also the possibility to show a loading indicator, by making use of the `isPending` prop of `useTransition`.
 
-[Here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) is an example app for demonstration. Check out the `useTransition` tab.
+[Here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) is an example app for demonstration.
+Check out the `useTransition` tab.
 
 
 #### Suspense
@@ -141,31 +142,31 @@ function ProfilePage() {
     );
 }
 ```
-Let's look at the example app from [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) at the `Suspense` tab.
+Let's look at the example app from [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) at the `Suspense` tab.  
 We have two panels, one with `Suspense`, one without. They both load the same list of images. On the first panel, where we have implemented `Suspense`, we can see that until the data is available, we display a skeleton page that has the exact visual structure of the page with placeholders for the lazy loading data. This offers a more pleasant UI experience. As opposed to it, on the second panel, where we haven't implemented `Suspense`, we can observe that it takes several seconds for content to show on the page. During this time user sees a blank page that might be confusing.
 
-So far, we took around for key Concurrent Features of React 18, other than this, React 18 introduces new hooks like `useId`, `useDeferredValue`, etc.
+So far, we took around for key Concurrent Features of React 18, other than this, React 18 introduces new hooks like `useId`, `useDeferredValue`, etc.  
 If you want more information, please refer to [How to Upgrade to React 18](https://reactjs.org/blog/2022/03/08/react-18-upgrade-guide.html) and other great articles from the official [React Blog](https://reactjs.org/blog).
 
 
 ### cli
-`@enact/cli` must be upgraded to version `5.0.0-alpha.1` or newer.
+`@enact/cli` must be upgraded to version `5.0.0-alpha.1` or newer.  
 `@enact/cli` `5.0.0-alpha.1` updates the `webpack` to `5.x`, `eslint` to `8.x`, `jest` to `27.x`,
-`react`, `react-dom` to `18.x`, and drops the support of `enzyme`.
+`react`, `react-dom` to `18.x`, and drops the support of `enzyme`.  
 Developers should ensure their code does not rely on features that are no longer available in these versions.
 
 Please do not hesitate to replace `enzyme` with [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/) when you make your unit tests.
 
 As `@enact/cli` updates `react` and `react-dom` to `18.x`, `PrerenderPlugin` will automatically
-convert `ReactDOMClient.createRoot` to `ReactDOMClient.hydrateRoot` for prerendered apps.
+convert `ReactDOMClient.createRoot` to `ReactDOMClient.hydrateRoot` for prerendered apps.  
 Please make sure to follow the above new `createRoot` API pattern to work prerendering properly.
 
-As we update to `eslint 8`, some of the lint rules could be changed. If you run into unknown lint warnings or errors, don't be afraid, and please proceed to fix them. They are likely to be the rules from [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react), so refer to the console message and look up which rule is related.
-The in-editor-linting will work just fine if you followed the guide from migration to 4.0.
+As we update to `eslint 8`, some of the lint rules could be changed. If you run into unknown lint warnings or errors, don't be afraid, and please proceed to fix them. They are likely to be the rules from [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react), so refer to the console message and look up which rule is related.  
+The in-editor-linting will work just fine if you followed the guide from migration to 4.0.  
 Don't forget to install ESlint globally and uninstall any previous globally-installed Enact linting package.
 
-`webpack 5` removed polyfills for native NodeJS libraries like `crypto`.
-But `@enact/cli` needs to have NodeJS polyfills to run Screenshot tests so we've added `node-polyfill-webpack-plugin`. So, if you were using those polyfills, you will be fine.
+`webpack 5` removed polyfills for native NodeJS libraries like `crypto`.  
+But `@enact/cli` needs to have NodeJS polyfills to run Screenshot tests so we've added `node-polyfill-webpack-plugin`. So, if you were using those polyfills, you will be fine.  
 Although `@enact/cli` supports them for specific reasons, please avoid using it in the frontend code.
 
 
@@ -176,8 +177,7 @@ Enact 4.5 no longer supports the 2022 TV platform or earlier versions.
 
 ### General
 
-All unit tests were migrated to [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/).
-
+All unit tests were migrated to [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/).  
 All components are updated to use `forwardCustom` and add `type` when forwarding custom events. If you were using `event` object from custom events, it may not have the information that you expect.
 
 ### `DatePicker` and `TimePicker`
@@ -190,13 +190,11 @@ The public class name `icon` is added.
 The prop `changedBy` is added to provide a way to control left and right keys in horizontal joined Picker.
 
 ### `Scroller` and `VirtualList`
-They are changed to show overscroll effect when flicking by default.
-
+They are changed to show overscroll effect when flicking by default.  
 The props `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label` are added.
 
 ### `VideoPlayer`
-The props `backButtonAriaLabel`, `onWillFastForward`, `onWillJumpBackward`, `onWillJumpForward`, `onWillPause`, `onWillPlay`, and `onWillRewind` are added.
-
+The props `backButtonAriaLabel`, `onWillFastForward`, `onWillJumpBackward`, `onWillJumpForward`, `onWillPause`, `onWillPlay`, and `onWillRewind` are added.  
 The prop `onBack` is added to provide a way to exit the video player via touch.
 
 ## ui
