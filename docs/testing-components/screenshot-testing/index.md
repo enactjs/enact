@@ -6,7 +6,7 @@ title: Screenshot Testing
 - [What is the Screenshot Testing](#what-is-the-screenshot-testing)
 - [Prerequisites](#prerequisites)
 - [Setting up a UI Library](#setting-up-a-ui-library)
-- [Creating tests](#creating-tests)
+- [Creating Tests](#creating-tests)
 - [Running Tests](#running-tests)
 - [Viewing Test Results](#viewing-test-results)
 - [Reference and Screen](#reference-and-screen)
