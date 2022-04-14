@@ -196,7 +196,6 @@ describe('Job', () => {
 			const j = new Job(() => 'job value');
 			j.promise(Promise.resolve(true)).then(value => {
 				expect(value).toBeUndefined();
-				done();
 			});
 			j.promise(Promise.resolve(true)).then(() => done());
 		});
