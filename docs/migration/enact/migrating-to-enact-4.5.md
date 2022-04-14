@@ -26,7 +26,7 @@ The Legacy root API will run a legacy mode root API, trigger warnings that the A
 ReactDOM.render is no longer supported in React 18. Use createRoot instead. Until you switch to the new API, your app will behave as if it’s running React 17. Learn more: https://reactjs.org/link/switch-to-createroot
 ```
 
-The new root API as known as `ReactDOMClient.createRoot` will add all the improvements to the application. Without adding it to the app, the new Concurrent Features, Suspense, or Automatic Batching features will not be available!
+The new root API as known as `ReactDOMClient.createRoot` will add all the improvements to the application. Without adding it to the app, the new Concurrent Features, like Suspense or Automatic Batching features will not be available!
 
 So, all you have to do is the below in your `index.js`, entry of your app.
 
@@ -57,7 +57,7 @@ const appElement = (<App />);
 if (typeof window !== 'undefined') {
 	const container = document.getElementById('root');
 	const root = createRoot(container);
-    // or simply, const root = createRoot(document.getElementById('root'));
+	// or simply, const root = createRoot(document.getElementById('root'));
 
 	root.render(appElement);
 }
@@ -177,6 +177,7 @@ Enact 4.5 no longer supports the 2022 TV platform or earlier versions.
 ### General
 
 All unit tests were migrated to [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/).
+
 All components are updated to use `forwardCustom` and add `type` when forwarding custom events. If you were using `event` object from custom events, it may not have the information that you expect.
 
 ### `DatePicker` and `TimePicker`
@@ -190,10 +191,12 @@ The prop `changedBy` is added to provide a way to control left and right keys in
 
 ### `Scroller` and `VirtualList`
 They are changed to show overscroll effect when flicking by default.
+
 The props `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label` are added.
 
 ### `VideoPlayer`
 The props `backButtonAriaLabel`, `onWillFastForward`, `onWillJumpBackward`, `onWillJumpForward`, `onWillPause`, `onWillPlay`, and `onWillRewind` are added.
+
 The prop `onBack` is added to provide a way to exit the video player via touch.
 
 ## ui
