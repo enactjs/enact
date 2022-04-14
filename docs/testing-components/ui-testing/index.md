@@ -1,16 +1,6 @@
 ---
 title: UI Testing
 ---
-<nav role="navigation" class="page-toc">
-
-- [What is the UI Testing](#what-is-the-ui-testing)
-- [Prerequisites](#prerequisites)
-- [Setting up a UI Library](#setting-up-a-ui-library)
-- [Creating Tests](#creating-tests)
-- [Running Tests](#running-tests)
-- [Viewing Test Results](#viewing-test-results)
-
-</nav>
 
 ## What is the UI Testing
 Manual tests are time consuming and sometimes error occurs. A more efficient approach is to create UI tests so that user tasks are executed in an automated test. With UI test, tests can be executed quickly and reliably in a repeatable way. Simply stated, first priority considering is two things.

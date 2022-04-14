@@ -1,17 +1,6 @@
 ---
 title: Screenshot Testing
 ---
-<nav role="navigation" class="page-toc">
-
-- [What is the Screenshot Testing](#what-is-the-screenshot-testing)
-- [Prerequisites](#prerequisites)
-- [Setting up a UI Library](#setting-up-a-ui-library)
-- [Creating Tests](#creating-tests)
-- [Running Tests](#running-tests)
-- [Viewing Test Results](#viewing-test-results)
-- [Reference and Screen](#reference-and-screen)
-
-</nav>
 
 ## What is the Screenshot Testing
 Screenshot test is visual test that takes a screenshot, then compares it to a reference screenshot file saved. When ui changes, one of the major considering is whether visual changes exist. Some changes may be easy to check, but some changes are hard to check due to very small change. With Screenshot test, very small changes can easily check due to compare pixel-by-pixel. Additionlally, Screenshot testing is the most reliable test for static images. If you want to test animated image or video, you should check result.
