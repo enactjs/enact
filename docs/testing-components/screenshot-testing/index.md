@@ -61,7 +61,8 @@ Within the UI Library, create an app for testing in `./tests/screenshot/apps` an
 						testComponent-specs.js		<-- create spec file here
 
 In screenshot test, create apps to test component. Please refer sample code.
-> Button.js
+* Button.js
+
 ```JS
 import Button from '../../../../Button';
 
@@ -72,7 +73,8 @@ const ButtonTests = [
 export default ButtonTests;
 ```
 And create spec to test additional specification. It is commonly used by all components. Please refer sample code.
-> Common-spec.js
+* Common-spec.js
+
 ```JS
 const {Page} = require('@enact/ui-test-utils/utils');
 const {runTest} = require('@enact/ui-test-utils/utils');
