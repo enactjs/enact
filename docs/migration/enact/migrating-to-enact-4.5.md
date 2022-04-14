@@ -43,7 +43,10 @@ if (typeof window !== 'undefined') {
 }
 
 export default appElement;
+```
+The code above should be changed to below.
 
+```js
 // After
 import {createRoot} from 'react-dom/client';
 
@@ -101,7 +104,7 @@ function handleClick() {
   // React has updated the DOM by now
 }
 ```
-We have an example app for demonstration [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new)at the `Automatic Batching` tab.
+We have an example app for demonstration [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) at the `Automatic Batching` tab.
 In the example, we increment and decrement a variable by 1 for 1000 times and we count the re-renders. Before Automatic Batching every time the value is changed the component had to re-render, slowing the app for no real reason.
 
 
@@ -139,7 +142,7 @@ function ProfilePage() {
 }
 ```
 Let's look at the example app from [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) at the `Suspense` tab.
-We have 2 panels, one with `Suspense`, one without. They both load the same list of images. On the first panel, where we have implemented `Suspense`, we can see that until the data is available, we display a skeleton page that has the exact visual structure of the page with placeholders for the lazy loading data. This offers a more pleasant UI experience. As opposed to it, on the second panel, where we haven't implemented `Suspense`, we can observe that it takes several seconds for content to show on the page. During this time user sees a blank page that might be confusing.
+We have two panels, one with `Suspense`, one without. They both load the same list of images. On the first panel, where we have implemented `Suspense`, we can see that until the data is available, we display a skeleton page that has the exact visual structure of the page with placeholders for the lazy loading data. This offers a more pleasant UI experience. As opposed to it, on the second panel, where we haven't implemented `Suspense`, we can observe that it takes several seconds for content to show on the page. During this time user sees a blank page that might be confusing.
 
 So far, we took around for key Concurrent Features of React 18, other than this, React 18 introduces new hooks like `useId`, `useDeferredValue`, etc.
 If you want more information, please refer to [How to Upgrade to React 18](https://reactjs.org/blog/2022/03/08/react-18-upgrade-guide.html) and other great articles from the official [React Blog](https://reactjs.org/blog).
