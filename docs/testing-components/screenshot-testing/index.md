@@ -3,6 +3,7 @@ title: Screenshot Testing
 ---
 <nav role="navigation" class="page-toc">
 
+- [What is the Screenshot Testing](#what-is-the-screenshot-testing)
 - [Prerequisites](#prerequisites)
 - [Setting up a UI Library](#setting-up-a-ui-library)
 - [Creating tests](#creating-tests)
@@ -11,6 +12,9 @@ title: Screenshot Testing
 - [Reference and Screen](#reference-and-screen)
 
 </nav>
+
+## What is the Screenshot Testing
+Screenshot test is visual test that takes a screenshot, then compares it to a reference screenshot file saved. When ui changes, one of the major considering is whether visual changes exist. Some changes may be easy to check, but some changes are hard to check due to very small change. With Screenshot test, very small changes can easily check due to compare pixel-by-pixel. Additionlally, Screenshot testing is the most reliable test for static images. If you want to test animated image or video, you should check result.
 
 ## Prerequisites
 Created a enact project using the enact cli.
@@ -62,6 +66,7 @@ Within the UI Library, create an app for testing in `./tests/screenshot/apps` an
 
 In screenshot test, create apps to test component. Please refer sample code.
 * Button.js
+
 ```JS
 import Button from '../../../../Button';
 
@@ -73,6 +78,7 @@ export default ButtonTests;
 ```
 And create spec to test additional specification. It is commonly used by all components. Please refer sample code.
 * Common-spec.js
+
 ```JS
 const {Page} = require('@enact/ui-test-utils/utils');
 const {runTest} = require('@enact/ui-test-utils/utils');

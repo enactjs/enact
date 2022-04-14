@@ -1,16 +1,21 @@
 ---
-title: Ui Testing
+title: UI Testing
 ---
 <nav role="navigation" class="page-toc">
 
+- [What is the UI Testing](#what-is-the-ui-testing)
 - [Prerequisites](#prerequisites)
 - [Setting up a UI Library](#setting-up-a-ui-library)
-- [Creating tests](#creating-tests)
+- [Creating Tests](#creating-tests)
 - [Running Tests](#running-tests)
 - [Viewing Test Results](#viewing-test-results)
-- [Goal of Ui Testing](#goal-of-ui-testing)
 
 </nav>
+
+## What is the UI Testing
+Manual tests are time consuming and sometimes error occurs. A more efficient approach is to create UI tests so that user tasks are executed in an automated test. With UI test, tests can be executed quickly and reliably in a repeatable way. Simply stated, first priority considering is two things.
+* how component handles user actions performed via used input devices.
+* whether elements correctly work as intended.
 
 ## Prerequisites
 Created a enact project using the enact cli.
@@ -47,7 +52,7 @@ Created a enact project using the enact cli.
    }
 ```
 
-## Creating tests
+## Creating Tests
 Within the UI Library, create an app for testing in `./tests/ui/apps` and create a corresponding test in `./tests/ui/specs`.
 
 	+ src
@@ -86,8 +91,3 @@ By default, Test result display on console whether pass or fail.
 If fail occurs, fail log display in console and you can see the screenshot about fail in `./test/ui/errorShots/`.
 Also, you can see the view you made on chrome. This requires that a server be running on port 5000. If you have globally installed the serve command with npm install -g serve you can start the server like this `serve ./test/ui/dist/`.
 To open a specific test app, open the URL path for the test. A specific app display as directory in this page. You can see the app as click the app you wanted.
-
-## Goal of Ui Testing
-Manual tests are time consuming and somtimes error occurs. A more efficient approach is to create UI tests so that user tasks are executed in an automated test. With UI test, tests can be executed quickly and reliably in a repeatable way. Simply stated, first priority considering is two things.
-* how component handles user actions performed via used input devices.
-* whether elements correctly work as intended.
