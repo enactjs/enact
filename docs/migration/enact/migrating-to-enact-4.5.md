@@ -28,7 +28,7 @@ ReactDOM.render is no longer supported in React 18. Use createRoot instead. Unti
 
 The new root API as known as `ReactDOMClient.createRoot` will add all the improvements to the application. Without adding it to the app, the new Concurrent Features, Suspense, or Automatic Batching features will not be available!
 
-So, all you have to do is the below in your `index.js`, the entry of your app.
+So, all you have to do is the below in your `index.js`, entry of your app.
 
 ```js
 // Before
@@ -63,13 +63,13 @@ export default appElement;
 ```
 
 Now, you are all set to use the new Concurrent Features of React 18.
-Let's look into some of Concurrent Features in detail.
+Let's look into some of the Concurrent Features in detail.
 
 
 #### Automatic Batching
 In earlier versions of React, batching was only done for the React event handlers.
 With `createRoot`, all updates will be automatically batched, no matter where they originate from.
-Updates inside of promises, setTimeout, native event handlers, or any other event were not batched in React by default:
+This means that updates inside of timeouts, promises, native event handlers, or any other event will batch the same way as updates inside of React events:
 ```js
 // After React 18 updates inside of timeouts, promises,
 // native event handlers or any other event are batched.
@@ -101,27 +101,27 @@ function handleClick() {
   // React has updated the DOM by now
 }
 ```
-We have an example app for demonstration [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new)on the `Automatic Batching` tab.
-In the example we increment and decrement a variable that by 1 for a 1000 times and we count the re-renders. Before Automatic Batching every time the value is changed the component had to re-render, slowing the app for no real reason.
+We have an example app for demonstration [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new)at the `Automatic Batching` tab.
+In the example, we increment and decrement a variable by 1 for 1000 times and we count the re-renders. Before Automatic Batching every time the value is changed the component had to re-render, slowing the app for no real reason.
 
 
 #### startTransition
 A transition is a new concept in React to distinguish between urgent and non-urgent updates.
-Updates wrapped in `startTransition` are handled as non-urgent and will be interrupted if more urgent updates like clicks or key presses come in. If a transition gets interrupted by the user (for example, by typing multiple characters in a row), React will throw out the stale rendering work that wasn’t finished and render only the latest update.
+Updates wrapped in `startTransition` are handled as non-urgent and will be interrupted if more urgent updates like clicks or keypresses come in. If a transition gets interrupted by the user (for example, by typing multiple characters in a row), React will throw out the stale rendering work that wasn’t finished and render only the latest update.
 
 Imagine that you have multiple tabs and when a tab is selected, some data needs to be fetched.
 
 Until React 17, when needing to fetch data before showing some UI that depends on that data, a custom loading state would have been rendered in its place(if the app developers decided to have a visual loading state), for example a spinner, until the request resolved. The main disadvantage is that the previous state of the UI was automatically lost.
 
-With React18's `useTransition` hook, the previous state of the UI can be held until the data is ready. It can be introduced in the app like any other hooks.
+With React18's `useTransition` hook, the previous state of the UI can be held until the data is ready.
 
 ```js
 const [isPending, startTransition] = useTransition({timeoutMs: 3000});
 ```
-The fetching of the new data is wrapped inside `startTransition`. The `isPending` data tells if the content is currently being loaded or not. Its `timeoutMs` property specifies how long we're willing to wait for the transition to finish.
+The fetching of the new data is wrapped inside `startTransition`. The `isPending` tells if the content is currently being loaded or not. Its `timeoutMs` property specifies how long we're willing to wait for the transition to finish.
 Now instead of switching tabs immediately, the current tab continues to show its content until the new tab's content is ready. There is also the possibility to show a loading indicator, by making use of the `isPending` prop of `useTransition`.
 
-[Here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) is an example app for demonstration on the `useTransition` tab.
+[Here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) is an example app for demonstration. Check out the `useTransition` tab.
 
 
 #### Suspense
@@ -138,8 +138,8 @@ function ProfilePage() {
     );
 }
 ```
-Let's look at the example app from [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) on the `Suspense` tab.
-We have 2 panels, one with `Suspense`, one without. They both load the same list of images. On the first panel, where we have implemented `Suspense`, we can see that until the data is available, we display a skeleton page, meaning the exact visual structure of the page, but with placeholders for the lazy loading data. This offers a more pleasant UI experience. As opposed to it, on the second panel, where we haven't implemented `Suspense`, we can observe that it takes several seconds for content to show on the page. In this time user sees a blank page that might be confusing.
+Let's look at the example app from [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) at the `Suspense` tab.
+We have 2 panels, one with `Suspense`, one without. They both load the same list of images. On the first panel, where we have implemented `Suspense`, we can see that until the data is available, we display a skeleton page that has the exact visual structure of the page with placeholders for the lazy loading data. This offers a more pleasant UI experience. As opposed to it, on the second panel, where we haven't implemented `Suspense`, we can observe that it takes several seconds for content to show on the page. During this time user sees a blank page that might be confusing.
 
 So far, we took around for key Concurrent Features of React 18, other than this, React 18 introduces new hooks like `useId`, `useDeferredValue`, etc.
 If you want more information, please refer to [How to Upgrade to React 18](https://reactjs.org/blog/2022/03/08/react-18-upgrade-guide.html) and other great articles from the official [React Blog](https://reactjs.org/blog).
@@ -157,12 +157,12 @@ As `@enact/cli` updates `react` and `react-dom` to `18.x`, `PrerenderPlugin` wil
 convert `ReactDOMClient.createRoot` to `ReactDOMClient.hydrateRoot` for prerendered apps.
 Please make sure to follow the above new `createRoot` API pattern to work prerendering properly.
 
-As we update to `eslint 8`, some of lint rules could be changed. If you run into unknown lint warnings or errors, don't be afraid, and please proceed to fix them. They are likely to be the rules from [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react), so refer to the console message and look up which rule is related.
+As we update to `eslint 8`, some of the lint rules could be changed. If you run into unknown lint warnings or errors, don't be afraid, and please proceed to fix them. They are likely to be the rules from [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react), so refer to the console message and look up which rule is related.
 The in-editor-linting will work just fine if you followed the guide from migration to 4.0.
 Don't forget to install ESlint globally and uninstall any previous globally-installed Enact linting package.
 
 `webpack 5` removed polyfills for native NodeJS libraries like `crypto`.
-But `@enact/cli` needs to have NodeJS polyfills to run Screenshot tests so we've added `node-polyfill-webpack-plugin` so if you were using those polyfills, you will be fine.
+But `@enact/cli` needs to have NodeJS polyfills to run Screenshot tests so we've added `node-polyfill-webpack-plugin`. So, if you were using those polyfills, you will be fine.
 Although `@enact/cli` supports them for specific reasons, please avoid using it in the frontend code.
 
 
@@ -177,13 +177,13 @@ All unit tests were migrated to [@testing-library/react](https://testing-library
 All components are updated to use `forwardCustom` and add `type` when forwarding custom events. If you were using `event` object from custom events, it may not have the information that you expect.
 
 ### `DatePicker` and `TimePicker`
-They are changed to not show press effect on touch input.
+They are changed to not show a pressing effect on touch input.
 
 ### `Icon`
 The public class name `icon` is added.
 
 ### `Picker` and `RangePicker`
-The prop `changedBy` is added to provide a way to control with left and right keys in horizontal joined Picker.
+The prop `changedBy` is added to provide a way to control left and right keys in horizontal joined Picker.
 
 ### `Scroller` and `VirtualList`
 They are changed to show overscroll effect when flicking by default.
@@ -191,7 +191,7 @@ The props `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-web
 
 ### `VideoPlayer`
 The props `backButtonAriaLabel`, `onWillFastForward`, `onWillJumpBackward`, `onWillJumpForward`, `onWillPause`, `onWillPlay`, and `onWillRewind` are added.
-The prop `onBack` is added to provide a way to exit video player via touch.
+The prop `onBack` is added to provide a way to exit the video player via touch.
 
 ## ui
 
