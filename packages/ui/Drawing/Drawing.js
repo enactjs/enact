@@ -235,8 +235,12 @@ const DrawingBase = kind({
 				return;
 			}
 
-			points.push({x: offsetX, y: offsetY});
-			setLineOptions(brushColor, brushSize, currentLine, drawingTool, ev, fillColor, offsetX, offsetY);
+			if (points[points.length - 1].x !== offsetX && points[points.length - 1].x !== offsetX) {
+				points.push({x: offsetX, y: offsetY});
+				setLineOptions(brushColor, brushSize, currentLine, drawingTool, ev, fillColor, offsetX, offsetY);
+			} else {
+				return;
+			}
 
 			if (points.length > 3) {
 				const lastTwoPoints = points.slice(-2);
