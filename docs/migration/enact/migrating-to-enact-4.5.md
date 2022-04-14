@@ -33,7 +33,6 @@ So, all you have to do is the below in your `index.js`, entry of your app.
 ```js
 // Before
 import {render} from 'react-dom';
-
 import App from './App';
 
 const appElement = (<App />);
@@ -49,7 +48,6 @@ The code above should be changed to below.
 ```js
 // After
 import {createRoot} from 'react-dom/client';
-
 import App from './App';
 
 const appElement = (<App />);
@@ -58,7 +56,6 @@ if (typeof window !== 'undefined') {
 	const container = document.getElementById('root');
 	const root = createRoot(container);
 	// or simply, const root = createRoot(document.getElementById('root'));
-
 	root.render(appElement);
 }
 
@@ -105,7 +102,7 @@ function handleClick() {
 }
 ```
 We have an example app for demonstration [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) at the `Automatic Batching` tab.  
-In the example, we increment and decrement a variable by 1 for 1000 times and we count the re-renders. Before Automatic Batching every time the value is changed the component had to re-render, slowing the app for no real reason.
+In the example, we increment and decrement a variable by 1 for 1000 times and we count the re-renders. Before Automatic Batching, every time the value is changed the component had to re-render, slowing the app for no real reason.
 
 
 #### startTransition
