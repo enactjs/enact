@@ -101,7 +101,6 @@ export default class LS2Request {
 			this.subscribe = parameters.subscribe;
 		}
 
-		// eslint-disable-next-line no-undef
 		this.ts = performance.now();
 		refs[this.ts] = this;
 
