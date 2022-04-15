@@ -88,17 +88,14 @@ let GlobalConfig = {
  * @private
  */
 const querySelector = (node, includeSelector, excludeSelector) => {
-	const include = Array.prototype.slice.call(node.querySelectorAll(includeSelector));
+	let include = new Set(node.querySelectorAll(includeSelector));
 	const exclude = node.querySelectorAll(excludeSelector);
 
 	for (let i = 0; i < exclude.length; i++) {
-		const index = include.indexOf(exclude.item(i));
-		if (index >= 0) {
-			include.splice(index, 1);
-		}
+		include.delete(exclude[i]);
 	}
 
-	return include;
+	return Array.from(include);
 };
 
 /**
@@ -272,6 +269,45 @@ const navigableFilter = (node, containerId) => {
 };
 
 /**
+ * Determines if `node` is a navigable element within the container identified by `containerId`.
+ *
+ * @param   {Node}     node         DOM node to check if it is navigable
+ * @param   {String}   containerId  ID of the container containing `node`
+ * @param   {Boolean}  verify       `true` to verify the node matches the container's `selector`
+ *
+ * @returns {Boolean}               `true` if `node` is navigable
+ * @memberof spotlight/container
+ * @public
+ */
+const isNavigable = (node, containerId, verify) => {
+	const nodeStyle = node && window && window.getComputedStyle(node);
+
+	if (!node || (
+		// jsdom reports all nodes as having no size so we must skip this condition in our tests
+		process.env.NODE_ENV !== 'test' &&
+		node.offsetWidth <= 0 && node.offsetHeight <= 0
+	)) {
+		return false;
+	}
+
+	if (nodeStyle.display === 'none' || nodeStyle.visibility === 'hidden') {
+		return false;
+	}
+
+	const containerNode = getContainerNode(containerId);
+	if (containerNode !== document && containerNode.dataset[disabledKey] === 'true') {
+		return false;
+	}
+
+	const config = getContainerConfig(containerId);
+	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
+		return false;
+	}
+
+	return navigableFilter(node, containerId);
+};
+
+/**
  * Determines nodes that are owned by `node` based on `aria-owns`.
  *
  * @param   {Node}   node          Owner
@@ -328,7 +364,7 @@ const getSpottableDescendants = (containerId) => {
 
 	candidates.push(...getOwnedNodes(node, selector));
 
-	return candidates.filter(n => navigableFilter(n, containerId));
+	return candidates.filter(n => isNavigable(n, containerId));
 };
 
 /**
@@ -563,39 +599,6 @@ const removeAllContainers = () => {
  */
 const configureDefaults = (config) => {
 	GlobalConfig = mergeConfig(GlobalConfig, config);
-};
-
-/**
- * Determines if `node` is a navigable element within the container identified by `containerId`.
- *
- * @param   {Node}     node         DOM node to check if it is navigable
- * @param   {String}   containerId  ID of the container containing `node`
- * @param   {Boolean}  verify       `true` to verify the node matches the container's `selector`
- *
- * @returns {Boolean}               `true` if `node` is navigable
- * @memberof spotlight/container
- * @public
- */
-const isNavigable = (node, containerId, verify) => {
-	if (!node || (
-		// jsdom reports all nodes as having no size so we must skip this condition in our tests
-		process.env.NODE_ENV !== 'test' &&
-		node.offsetWidth <= 0 && node.offsetHeight <= 0
-	)) {
-		return false;
-	}
-
-	const containerNode = getContainerNode(containerId);
-	if (containerNode !== document && containerNode.dataset[disabledKey] === 'true') {
-		return false;
-	}
-
-	const config = getContainerConfig(containerId);
-	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
-		return false;
-	}
-
-	return navigableFilter(node, containerId);
 };
 
 /**
