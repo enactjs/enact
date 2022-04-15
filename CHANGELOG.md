@@ -4,7 +4,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [4.5.0-alpha.1] - 2022-04-15
 
--  Update dependencies including React 18.0.0
+- Update dependencies including React 18.0.0
 
 ### Fixed
 
