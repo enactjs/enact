@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.5.0-alpha.1] - 2022-04-15
+
+-  Update dependencies including React 18.0.0
+
+### Fixed
+
+- `ui/FloatingLayer` to stack popups always in the order in which they were opened
+
 ## [4.1.4] - 2022-03-24
 
 ### Removed
