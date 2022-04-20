@@ -97,7 +97,7 @@ The render method works like this:
 const {...Results} = render(<Component {...props} />, {...Options});
 ```
 
-When we render the component we have a number of render Options:
+When we render the component we have a number of render options:
 
 * `{container}` - By default, React Testing Library will create a div and append that div to the document.body and this is where your React component will be rendered. If you provide your own HTMLElement container via this option, it will not be appended to the document.body automatically
 * `{baseElement}` - If the container is specified, then this defaults to that, otherwise this defaults to document.body. This is used as the base element for the queries as well as what is printed when you use debug()
@@ -106,7 +106,7 @@ When we render the component we have a number of render Options:
 * `{wrapper}` - Pass a React Component as the wrapper option to have it rendered around the inner elementReturns the props of the component
 * `{queries}` - Queries to bind. Overrides the default set from DOM Testing Library unless merged.
 
-There are also some render Results:
+There are also some render results:
 
 * `{queries}` -  The most important feature of render is that the queries from DOM Testing Library are automatically returned with their first argument bound to the baseElement, which defaults to document.body. See [Queries](https://testing-library.com/docs/queries/about/) for a complete list.
 * `{container}` - The containing DOM node of your rendered React Element (rendered using ReactDOM.render)
