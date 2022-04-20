@@ -104,7 +104,7 @@ When we render the component we have a number of render options:
 * `{wrapper}` - Pass a React Component as the wrapper option to have it rendered around the inner elementReturns the props of the component
 * `{queries}` - Queries to bind. Overrides the default set from DOM Testing Library unless merged.
 
-There are also some render Results:
+There are also some render results:
 
 * `{queries}` -  The most important feature of render is that the queries from DOM Testing Library are automatically returned with their first argument bound to the baseElement, which defaults to document.body. See [Queries](https://testing-library.com/docs/queries/about/) for a complete list.
 * `{container}` - The containing DOM node of your rendered React Element (rendered using ReactDOM.render)
