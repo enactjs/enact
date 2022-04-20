@@ -95,7 +95,7 @@ The render method works like this:
 const {...Results} = render(<Component {...props} />, {...Options});
 ```
 
-When we render the component we have a number of render Options:
+When we render the component we have a number of render options:
 
 * `{container}` - By default, React Testing Library will create a div and append that div to the document.body and this is where your React component will be rendered. If you provide your own HTMLElement container via this option, it will not be appended to the document.body automatically
 * `{baseElement}` - If the container is specified, then this defaults to that, otherwise this defaults to document.body. This is used as the base element for the queries as well as what is printed when you use debug()
