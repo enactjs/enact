@@ -34,7 +34,7 @@ component or item under test and end with the `"-specs.js"` suffix.
 We use a dizzying number of tools to perform unit testing.  A quick overview of the different tools can be helpful.
 
 *   [Jest](https://jestjs.io/) - A test framework. This tool allows us to setup, assert and run tests. We can also use `jest` as a mocking library.
-*   [Enzyme](https://enzymejs.github.io/enzyme/) - A test library for use with React.  It allows us to shallowly render components and inspect the output.
+*   [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) - A test library for use with React.  It allows us to render components and inspect the output.
 *   [jsdom](https://github.com/jsdom/jsdom) - A pure-JavaScript implementation of many web standards, notably the WHATWG DOM and HTML Standards, for use with Node.js.
 
 ## Unit Testing
@@ -115,7 +115,7 @@ and outputs we can test basically any JavaScript function that returns a value.
 
 ## Testing React
 
-To test react we use [Enzyme](https://enzymejs.github.io/enzyme/) plus other tools you can find out about [here](../test-driven-development/index.md).
+To test react we use [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) plus other tools you can find out about [here](../test-driven-development/index.md).
 
 ```js
 const Text = (props) => {
@@ -123,33 +123,18 @@ const Text = (props) => {
 }
 
 test('Should contain text', () => { 
-	const subject = shallow( 
-		<Text content='sample' /> 
+	render( 
+		<Text data-testid="test-text" content='sample' /> 
 	);
 	
-	const expected = 'sample'; 
-	const actual = subject.text()
-	expect(actual).toBe(expected); 
+	const textElement = screen.getByTestId('test-text');
+	const expected = 'sample';
+	
+	expect(textElement).toHaveTextContent(expected); 
 });
 ```
 
-If you wish to learn more about Enzyme's library of functions look [here](https://github.com/enzymejs/enzyme).
-
-The three main parts about Enzyme that you need to know are it's rendering methods.
-
-### shallow()
-
-[Shallow](https://github.com/enzymejs/enzyme/blob/master/docs/api/shallow.md) is the virtual DOM representation. It will only render the component plus one level of children. This allows
-us to stay within the smaller confines of a component when testing.
-
-### mount()
-
-[mount](https://github.com/enzymejs/enzyme/blob/master/docs/api/mount.md) is the virtual DOM representation. It will render everything inside the component, including all nested children.
-This is a little beyond unit testing as you start to test the integration of a few components.
-
-### render()
-
-[render](https://github.com/enzymejs/enzyme/blob/master/docs/api/render.md) is the DOM representation. It will print a string of the output dom that the browser sees.
+If you wish to learn more about React Testing Library's library of functions look [here](https://github.com/testing-library/react-testing-library).
 
 ## Why Unit Testing?
 
@@ -205,25 +190,27 @@ const Text = (props) => {
 
 //Example A - Bad
 test('Should pass prop to component', () => {
-	const Text = shallow(
-	    <Text content='sample' />
+	render(
+		<Text data-testid="test-text" content='sample' />
 	);
-	
+
+	const textElement = screen.getByTestId('test-text');
 	const expected = 'sample';
-	const contentProp = Text.prop('content')
-	expect(contentProp).toBe(expected);
+	
+	expect(textElement).expect(button).toHaveProperty('content', expected);
 });
 
 //Example B - Better
 
-test('Should contain text', () => { 
-	const subject = shallow( 
-	   <Text content='sample' /> 
+test('Should contain text', () => {
+	render(
+		<Text data-testid="test-text" content='sample' />
 	);
+
+	const textElement = screen.getByTestId('test-text');
+	const expected = 'sample';
 	
-	const expected = 'sample'; 
-	const actual = subject.text()
-	expect(actual).toBe(expected); 
+	expect(textElement).toHaveTextContent(expected);
 }); 
 ```
 

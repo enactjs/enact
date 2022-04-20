@@ -34,14 +34,12 @@ verify that an IconButton with `minWidth={true}` does not change the child compo
 describe('IconButton Specs', () => {
 	
 	test('should always maintain minWidth=false for its <Button> child', () => {
-		const iconButton = mount(
-			<IconButton minWidth>star</IconButton>
-		);
-		const button = iconButton.find('Button');
-		const expected = false;
-		const actual = (button.prop('minWidth'));
-	
-		expect(actual).toBe(expected);
+		render(<IconButton minWidth>star</IconButton>);
+		const button = screen.getByRole('button');
+
+		const expected = 'minWidth';
+
+		expect(button).toHaveClass(expected);
 	});
 });
 ```
@@ -65,14 +63,13 @@ properties are applied to the Button child.
 
 ```js
 test('should apply same prop to <Button> child', function () {
-	const iconButton = mount(
+	render(
 		<IconButton size="small">star</IconButton>
 	);
-	const button = iconButton.find('Button');
-	const expected = true;
-	const actual = button.prop('small');
-	
-	expect(actual).toBe(expected);
+	const button = screen.getByRole('button');
+	const expected = 'small'
+
+	expect(button).toHaveProperty('size', expected);
 });
 ```
 
@@ -88,37 +85,33 @@ solution.
 We use `Jest` for our unit testing. While there are quite a few comparisons it can help to stick to `.toBe()` and `.not.toBe()`.  These methods come after
 the `expect()` call.
 
-We use Enzyme to render our components for testing. Enzyme can render a component in one of three different ways.  Each
-has its benefits and drawbacks.  A summary of the methods follows.
+We use React Testing Library to render our components for testing.
 
-### Shallow Rendering - `shallow()`
+### Component Rendering - `render()`
 
-[Shallow](https://github.com/enzymejs/enzyme/blob/master/docs/api/shallow.md) rendering renders the component specified but does not render any of its children.  This can be useful when you
-only want to test the output of the single object.  If you need to be able to test that properties get passed to children,
-then you will need to use Mount rendering.  Once a component is rendered a number of methods are available to inspect the
-output.  These include:
+The render method works like this:
 
-*   `find()` - Returns nodes that match the passed-in selector.  For custom components, usually you can use the name of the control
-*   `contains()` - Returns true if a node or array of nodes exist in the render
-*   `hasClass()` - Returns true if the component has the specified className
-*   `children()` - Returns the children of the component, wrapped so that these methods can be applied. (Note: In shallow render, the children will not be complete)
-*   `props()` - Returns the props of the component
-*   `prop()` - Returns the value of the specified prop
-*   `simulate()` - Simulates an event
-*   `instance()` - Returns the instance of the root component
-*   `setState()` - Sets the state of the component to the passed-in state
-*   `setProps()` - Manually sets the props of the component
+```js
+const {...Results} = render(<Component {...props} />, {...Options});
+```
 
-### Full Rendering - `mount()`
+When we render the component we have a number of render Options:
 
-Full rendering or [mount](https://github.com/enzymejs/enzyme/blob/master/docs/api/mount.md) renders the component specified as well as all children.  This can be useful when you need to be able to
-test that properties get passed to children. Mount rendering uses the same methods as Shallow rendering listed above.
+* `{container}` - By default, React Testing Library will create a div and append that div to the document.body and this is where your React component will be rendered. If you provide your own HTMLElement container via this option, it will not be appended to the document.body automatically
+* `{baseElement}` - If the container is specified, then this defaults to that, otherwise this defaults to document.body. This is used as the base element for the queries as well as what is printed when you use debug()
+* `{hydrate}` - If hydrate is set to true, then it will render with ReactDOM.hydrate. This may be useful if you are using server-side rendering and use ReactDOM.hydrate to mount your components.
+* `{legacyRoot}` - Used for apps that requires rendering like in React 17 or older
+* `{wrapper}` - Pass a React Component as the wrapper option to have it rendered around the inner elementReturns the props of the component
+* `{queries}` - Queries to bind. Overrides the default set from DOM Testing Library unless merged.
 
-### Static Rendering - `render()`
+There are also some render Results:
 
-Static rendering or [render](https://github.com/enzymejs/enzyme/blob/master/docs/api/render.md), generates the HTML output from the specified component.  Static rendering has several utility methods including:
+* `{queries}` -  The most important feature of render is that the queries from DOM Testing Library are automatically returned with their first argument bound to the baseElement, which defaults to document.body. See [Queries](https://testing-library.com/docs/queries/about/) for a complete list.
+* `{container}` - The containing DOM node of your rendered React Element (rendered using ReactDOM.render)
+* `{baseElement}` - If the container is specified, then this defaults to that, otherwise this defaults to document.body. This is used as the base element for the queries as well as what is printed when you use debug()
+* `{hydrate}` - If hydrate is set to true, then it will render with ReactDOM.hydrate. This may be useful if you are using server-side rendering and use ReactDOM.hydrate to mount your components
+* `{debug}` - This method is a shortcut for console.log(prettyDOM(baseElement))
+* `{rerender}` - This function can be used to update props of the rendered component
+* `{unmount}` - This will cause the rendered component to be unmounted
+* `{asFragment}` - Returns a DocumentFragment of your rendered component
 
-*   `text()` - Returns the text of the selected node
-*   `html()` - Returns the raw HTML of the selected node
-*   `children()` - Returns the children of the selected node
-*   `find()` - searches the node for the passed-in selector
