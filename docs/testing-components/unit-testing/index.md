@@ -118,8 +118,8 @@ and outputs we can test basically any JavaScript function that returns a value.
 To test react we use [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) plus other tools you can find out about [here](../test-driven-development/index.md).
 
 ```js
-const Text = (props) => {
-	return <p>{props.content}</p>;
+const Text = ({content, ...rest}) => {
+	return <p {...rest}>{content}</p>;
 }
 
 test('Should contain text', () => { 
@@ -179,13 +179,13 @@ This example looks quite silly, but let's look at it in a React context:
 
 ```js
 //original code
-const Text = (props) => {
-	return <p>{props.content}</p>;
+const Text = ({content, ...rest}) => {
+	return <p {...rest}>{content}</p>;
 }
 
 //breaking change
-const Text = (props) => {
-	return <p>{props.cont}</p>;
+const Text = ({cont, ...rest}) => {
+	return <p {...rest}>{cont}</p>;
 }
 
 //Example A - Bad
