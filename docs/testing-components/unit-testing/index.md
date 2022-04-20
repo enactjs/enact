@@ -134,7 +134,10 @@ test('Should contain text', () => {
 });
 ```
 
-If you wish to learn more about React Testing Library's library of functions look [here](https://github.com/testing-library/react-testing-library).
+If you wish to learn more about React Testing Library's library of functions look [here](https://testing-library.com/docs/react-testing-library).
+
+### render()
+[render](https://testing-library.com/docs/react-testing-library/api#render) is the DOM representation. It will print a string of the output dom that the browser sees.
 
 ## Why Unit Testing?
 

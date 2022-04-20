@@ -87,6 +87,8 @@ the `expect()` call.
 
 We use React Testing Library to render our components for testing.
 
+The primary purpose of React Testing Library is to increase confidence in your tests by testing your components in the way a user would use them. Users don't care what happens behind the scenes, they just see and interact with the output. Instead of accessing the components' internal APIs or evaluating their state, you'll get more confidence by writing your tests based on the component output.
+
 ### Component Rendering - `render()`
 
 The render method works like this:
