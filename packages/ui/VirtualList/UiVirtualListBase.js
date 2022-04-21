@@ -224,6 +224,7 @@ const VirtualListBaseFactory = (type) => {
 			cbScrollTo: nop,
 			dataSize: 0,
 			direction: 'vertical',
+			itemsRenderer: nop, // eslint-disable-line react/default-props-match-prop-types
 			overhang: 3,
 			pageScroll: false,
 			spacing: 0
