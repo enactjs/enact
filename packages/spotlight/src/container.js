@@ -7,6 +7,7 @@
 
 import and from 'ramda/src/and';
 import concat from 'ramda/src/concat';
+import {isWindowReady} from '@enact/core/snapshot';
 import {coerceArray} from '@enact/core/util';
 import intersection from 'ramda/src/intersection';
 import last from 'ramda/src/last';
@@ -258,7 +259,7 @@ const getContainerNode = (containerId) => {
  * @private
  */
 const navigableFilter = (node, containerId) => {
-	const nodeStyle = node && window && window.getComputedStyle(node);
+	const nodeStyle = node && isWindowReady() && window.getComputedStyle(node);
 	const config = getContainerConfig(containerId);
 
 	if (!nodeStyle || nodeStyle.display === 'none' || nodeStyle.visibility === 'hidden') {
