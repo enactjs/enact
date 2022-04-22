@@ -161,13 +161,13 @@ const TimerState = {
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {blur, component: MarqueeComponent, enter, focus, invalidateProps, leave, marqueeDirection} = config;
 
-	const configClassName = config.className &&  deprecate(() => config.className, {
+	const configClassName = config.className && deprecate(() => config.className, {
 		name: 'ui/MarqueeDecorator.config.className',
 		replacedBy: 'ui/MarqueeDecorator.config.css',
 		until: '5.0.0'
 	})();
 
-	const css =  (typeof config.css === 'object' &&  config.css) || {marquee: configClassName};
+	const css = (typeof config.css === 'object' &&  config.css) || {marquee: configClassName};
 
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
@@ -901,7 +901,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					<MarqueeComponent
 						alignment={alignment}
 						animating={this.state.animating}
-						className={configClassName}
 						clientRef={this.cacheNode}
 						css={css}
 						distance={this.distance}
