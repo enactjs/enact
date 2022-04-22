@@ -88,7 +88,7 @@ let GlobalConfig = {
  * @private
  */
 const querySelector = (node, includeSelector, excludeSelector) => {
-	let include = new Set(node.querySelectorAll(includeSelector));
+	const include = new Set(node.querySelectorAll(includeSelector));
 	const exclude = node.querySelectorAll(excludeSelector);
 
 	for (let i = 0; i < exclude.length; i++) {
@@ -247,28 +247,6 @@ const getContainerNode = (containerId) => {
 };
 
 /**
- * Calls the `navigableFilter` function for the container if defined.
- *
- * @param   {Node}    node         DOM node to check if it is navigable
- * @param   {String}  containerId  ID of container
- *
- * @returns {Boolean}              `true` if it passes the `navigableFilter` method or if that
- *                                  method is not defined for the container
- * @memberof spotlight/container
- * @private
- */
-const navigableFilter = (node, containerId) => {
-	const config = getContainerConfig(containerId);
-	if (config && typeof config.navigableFilter === 'function') {
-		if (config.navigableFilter(node, containerId) === false) {
-			return false;
-		}
-	}
-
-	return true;
-};
-
-/**
  * Determines if `node` is a navigable element within the container identified by `containerId`.
  *
  * @param   {Node}     node         DOM node to check if it is navigable
@@ -287,10 +265,6 @@ const isNavigable = (node, containerId, verify) => {
 		process.env.NODE_ENV !== 'test' &&
 		node.offsetWidth <= 0 && node.offsetHeight <= 0
 	)) {
-		return false;
-	}
-
-	if (nodeStyle.display === 'none' || nodeStyle.visibility === 'hidden') {
 		return false;
 	}
 
@@ -364,7 +338,7 @@ const getSpottableDescendants = (containerId) => {
 
 	candidates.push(...getOwnedNodes(node, selector));
 
-	return candidates.filter(n => isNavigable(n, containerId));
+	return candidates.filter(n => navigableFilter(n, containerId));
 };
 
 /**
@@ -586,6 +560,33 @@ const removeContainer = (containerId) => {
  */
 const removeAllContainers = () => {
 	containerConfigs.clear();
+};
+
+/**
+ * Calls the `navigableFilter` function for the container if defined.
+ *
+ * @param   {Node}    node         DOM node to check if it is navigable
+ * @param   {String}  containerId  ID of container
+ *
+ * @returns {Boolean}              `true` if it passes the `navigableFilter` method or if that
+ *                                  method is not defined for the container
+ * @memberof spotlight/container
+ * @private
+ */
+ const navigableFilter = (node, containerId) => {
+	const config = getContainerConfig(containerId);
+	if (config && typeof config.navigableFilter === 'function') {
+		if (config.navigableFilter(node, containerId) === false) {
+			return false;
+		} else {
+			const nodeStyle = node && window && window.getComputedStyle(node);
+			if (!nodeStyle || nodeStyle.display === 'none' || nodeStyle.visibility === 'hidden') {
+				return false;
+			}
+		}
+	}
+
+	return true;
 };
 
 /**
