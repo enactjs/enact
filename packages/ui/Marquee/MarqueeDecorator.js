@@ -2,6 +2,7 @@ import direction from 'direction';
 import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import deprecate from '@enact/core/internal/deprecate';
 import {is} from '@enact/core/keymap';
 import {Job, shallowEqual} from '@enact/core/util';
 import PropTypes from 'prop-types';
@@ -14,7 +15,7 @@ import {ResizeContext} from '../Resizable';
 import MarqueeBase from './MarqueeBase';
 import {MarqueeControllerContext} from './MarqueeController';
 
-import css from './Marquee.module.less';
+import componentCss from './Marquee.module.less';
 
 /**
  * Default configuration parameters for {@link ui/Marquee.MarqueeDecorator}
@@ -39,6 +40,7 @@ const defaultConfig = {
 	 * @type {String}
 	 * @default null
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
+	 * @deprecated Will be removed in 5.0.0. Use {@link ui/Marquee.MarqueeDecorator.defaultConfig.css} instead.
 	 */
 	className: null,
 
@@ -50,6 +52,24 @@ const defaultConfig = {
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	component: MarqueeBase,
+
+	/**
+	 * Customizes the component by mapping the supplied collection of CSS class names to the
+	 * corresponding internal elements and states of this component.
+	 *
+	 * The following classes are supported:
+	 *
+	 * * `marquee` - The root component class
+	 * * `animate` - Applied to the inner content node when the text is animating
+	 * * `spacing` - The spacing node used between the repeated content
+	 * * `text` - The inner content node
+	 * * `willAnimate` - Applied to the inner content node shortly before animation
+	 *
+	 * @type {Object}
+	 * @default null
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
+	 */
+	css: null,
 
 	/**
 	 * Property containing the callback to start the animation when `marqueeOn` is `'hover'`
@@ -139,7 +159,15 @@ const TimerState = {
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, className: configClassName, component: MarqueeComponent, enter, focus, invalidateProps, leave, marqueeDirection} = config;
+	const {blur, component: MarqueeComponent, enter, focus, invalidateProps, leave, marqueeDirection} = config;
+
+	const configClassName = config.className &&  deprecate(() => config.className, {
+		name: 'ui/MarqueeDecorator.config.className',
+		replacedBy: 'ui/MarqueeDecorator.config.css',
+		until: '5.0.0'
+	})();
+
+	const css =  (typeof config.css === 'object' &&  config.css) || {marquee: configClassName};
 
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
@@ -502,7 +530,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		measureWidths () {
-			if (this.node.querySelector(`.${css.marquee}`)) {
+			if (this.node.querySelector(`.${componentCss.marquee}`)) {
 				warning(false, 'Marquee should not be nested inside another Marquee');
 
 				return {scrollWidth: this.node.scrollWidth, width: this.node.getBoundingClientRect().width};
@@ -875,6 +903,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						animating={this.state.animating}
 						className={configClassName}
 						clientRef={this.cacheNode}
+						css={css}
 						distance={this.distance}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}
