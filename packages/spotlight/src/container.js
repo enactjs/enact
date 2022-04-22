@@ -258,15 +258,16 @@ const getContainerNode = (containerId) => {
  * @private
  */
 const navigableFilter = (node, containerId) => {
+	const nodeStyle = node && window && window.getComputedStyle(node);
 	const config = getContainerConfig(containerId);
+
+	if (!nodeStyle || nodeStyle.display === 'none' || nodeStyle.visibility === 'hidden') {
+		return false;
+	}
+
 	if (config && typeof config.navigableFilter === 'function') {
 		if (config.navigableFilter(node, containerId) === false) {
 			return false;
-		} else {
-			const nodeStyle = node && window && window.getComputedStyle(node);
-			if (!nodeStyle || nodeStyle.display === 'none' || nodeStyle.visibility === 'hidden') {
-				return false;
-			}
 		}
 	}
 
