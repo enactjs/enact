@@ -247,38 +247,30 @@ const getContainerNode = (containerId) => {
 };
 
 /**
- * Determines if `node` is a navigable element within the container identified by `containerId`.
+ * Calls the `navigableFilter` function for the container if defined.
  *
- * @param   {Node}     node         DOM node to check if it is navigable
- * @param   {String}   containerId  ID of the container containing `node`
- * @param   {Boolean}  verify       `true` to verify the node matches the container's `selector`
+ * @param   {Node}    node         DOM node to check if it is navigable
+ * @param   {String}  containerId  ID of container
  *
- * @returns {Boolean}               `true` if `node` is navigable
+ * @returns {Boolean}              `true` if it passes the `navigableFilter` method or if that
+ *                                  method is not defined for the container
  * @memberof spotlight/container
- * @public
+ * @private
  */
-const isNavigable = (node, containerId, verify) => {
-	const nodeStyle = node && window && window.getComputedStyle(node);
-
-	if (!node || (
-		// jsdom reports all nodes as having no size so we must skip this condition in our tests
-		process.env.NODE_ENV !== 'test' &&
-		node.offsetWidth <= 0 && node.offsetHeight <= 0
-	)) {
-		return false;
-	}
-
-	const containerNode = getContainerNode(containerId);
-	if (containerNode !== document && containerNode.dataset[disabledKey] === 'true') {
-		return false;
-	}
-
+const navigableFilter = (node, containerId) => {
 	const config = getContainerConfig(containerId);
-	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
-		return false;
+	if (config && typeof config.navigableFilter === 'function') {
+		if (config.navigableFilter(node, containerId) === false) {
+			return false;
+		} else {
+			const nodeStyle = node && window && window.getComputedStyle(node);
+			if (!nodeStyle || nodeStyle.display === 'none' || nodeStyle.visibility === 'hidden') {
+				return false;
+			}
+		}
 	}
 
-	return navigableFilter(node, containerId);
+	return true;
 };
 
 /**
@@ -563,33 +555,6 @@ const removeAllContainers = () => {
 };
 
 /**
- * Calls the `navigableFilter` function for the container if defined.
- *
- * @param   {Node}    node         DOM node to check if it is navigable
- * @param   {String}  containerId  ID of container
- *
- * @returns {Boolean}              `true` if it passes the `navigableFilter` method or if that
- *                                  method is not defined for the container
- * @memberof spotlight/container
- * @private
- */
- const navigableFilter = (node, containerId) => {
-	const config = getContainerConfig(containerId);
-	if (config && typeof config.navigableFilter === 'function') {
-		if (config.navigableFilter(node, containerId) === false) {
-			return false;
-		} else {
-			const nodeStyle = node && window && window.getComputedStyle(node);
-			if (!nodeStyle || nodeStyle.display === 'none' || nodeStyle.visibility === 'hidden') {
-				return false;
-			}
-		}
-	}
-
-	return true;
-};
-
-/**
  * Configures the `GlobalConfig` for containers
  *
  * @param   {Object}  config  New global configuration. Cannot introduce new keys
@@ -600,6 +565,39 @@ const removeAllContainers = () => {
  */
 const configureDefaults = (config) => {
 	GlobalConfig = mergeConfig(GlobalConfig, config);
+};
+
+/**
+ * Determines if `node` is a navigable element within the container identified by `containerId`.
+ *
+ * @param   {Node}     node         DOM node to check if it is navigable
+ * @param   {String}   containerId  ID of the container containing `node`
+ * @param   {Boolean}  verify       `true` to verify the node matches the container's `selector`
+ *
+ * @returns {Boolean}               `true` if `node` is navigable
+ * @memberof spotlight/container
+ * @public
+ */
+const isNavigable = (node, containerId, verify) => {
+	if (!node || (
+		// jsdom reports all nodes as having no size so we must skip this condition in our tests
+		process.env.NODE_ENV !== 'test' &&
+		node.offsetWidth <= 0 && node.offsetHeight <= 0
+	)) {
+		return false;
+	}
+
+	const containerNode = getContainerNode(containerId);
+	if (containerNode !== document && containerNode.dataset[disabledKey] === 'true') {
+		return false;
+	}
+
+	const config = getContainerConfig(containerId);
+	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
+		return false;
+	}
+
+	return navigableFilter(node, containerId);
 };
 
 /**
