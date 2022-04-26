@@ -4,6 +4,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Changed
+
 - `spotlight` to not focus an invisible element
 
 ## [4.5.0-alpha.1] - 2022-04-15
