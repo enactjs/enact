@@ -6,11 +6,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Deprecated
 
-- `ui/MarqueeDecorator` config `className` to be removed in 5.0.0
+- `ui/Marquee.MarqueeDecorator` config `className` to be removed in 5.0.0
 
 ### Added
 
-- `ui/MarqueeDecorator` config `css` to support customizing the MarqueeBase styles
+- `ui/Marquee.MarqueeDecorator` config `css` to support customizing the marquee styles
 
 ## [4.5.0-alpha.1] - 2022-04-15
 
