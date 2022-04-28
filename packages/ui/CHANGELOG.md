@@ -7,6 +7,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Deprecated
 
 - `ui/GridListImageItem` to be removed in 5.0.0, use `ui/ImageItem` instead
+- `ui/Marquee.MarqueeDecorator` config `className` to be removed in 5.0.0
+
+### Added
+
+- `ui/Marquee.MarqueeDecorator` config `css` to support customizing the marquee styles
 
 ## [4.5.0-alpha.1] - 2022-04-15
 
@@ -22,7 +27,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/MarqueeDecorator` `locale` type for `forceDirection` prop not to override the direction depending on contents
+- `ui/Marquee.MarqueeDecorator` `locale` type for `forceDirection` prop not to override the direction depending on contents
 
 ### Fixed
 
@@ -48,13 +53,13 @@ No significant changes.
 
 ### Fixed
 
-- `ui/MarqueeDecorator` to restart animation when text changed while focus retained
+- `ui/Marquee.MarqueeDecorator` to restart animation when text changed while focus retained
 
 ## [4.0.8] - 2021-10-21
 
 ### Fixed
 
-- `ui/MarqueeDecorator` style to render text properly when starting animation
+- `ui/Marquee.MarqueeDecorator` style to render text properly when starting animation
 
 ## [4.0.7] - 2021-09-28
 
@@ -72,7 +77,7 @@ No significant changes.
 
 ### Fixed
 
-- `ui/MarqueeDecorator` to stop marquee properly after hiding pointer when `marqueeOn` is `hover`
+- `ui/Marquee.MarqueeDecorator` to stop marquee properly after hiding pointer when `marqueeOn` is `hover`
 
 ## [4.0.3] - 2021-06-18
 
