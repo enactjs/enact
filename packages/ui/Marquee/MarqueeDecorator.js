@@ -169,7 +169,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		});
 	}
 
-	const css = (typeof config.css === 'object' &&  config.css) || {marquee: config.className};
+	const css = (typeof config.css === 'object' && config.css) || {marquee: config.className};
 
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
