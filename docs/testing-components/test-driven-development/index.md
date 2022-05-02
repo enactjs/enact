@@ -100,7 +100,7 @@ const {...results} = render(<Component {...props} />, {...options});
 When we render the component we have a number of render options:
 
 * `{container}` - By default, React Testing Library will create a div and append that div to the document.body and this is where your React component will be rendered. If you provide your own HTMLElement container via this option, it will not be appended to the document.body automatically.
-* `{baseElement}` - If the container is specified, then this defaults to that, otherwise this defaults to document.body. This is used as the base element for the queries as well as what is printed when you use debug()
+* `{baseElement}` - If the container is specified, then this defaults to that, otherwise this defaults to document.body. This is used as the base element for the queries as well as what is printed when you use `debug()`.
 * `{hydrate}` - If hydrate is set to true, then it will render with ReactDOM.hydrate. This may be useful if you are using server-side rendering and use ReactDOM.hydrate to mount your components.
 * `{legacyRoot}` - Used for apps that requires rendering like in React 17 or older
 * `{wrapper}` - Pass a React Component as the wrapper option to have it rendered around the inner elementReturns the props of the component
