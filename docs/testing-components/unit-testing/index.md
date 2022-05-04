@@ -118,23 +118,21 @@ and outputs we can test basically any JavaScript function that returns a value.
 To test react we use [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) plus other tools you can find out about [here](../test-driven-development/index.md).
 
 ```js
-const Text = ({content, ...rest}) => {
-	return <p {...rest}>{content}</p>;
+const Text = (props) => {
+	return <p>{props.content}</p>;
 }
 
 test('Should contain text', () => { 
 	render( 
-		<Text data-testid="test-text" content='sample' /> 
+		<Text content='sample' /> 
 	);
 	
-	const textElement = screen.getByTestId('test-text');
-	const expected = 'sample';
+	const textElement = screen.querryByText('sample');
 	
-	expect(textElement).toHaveTextContent(expected); 
+	expect(textElement).not.toBeNull();
 });
 ```
-
-If you wish to learn more about React Testing Library's library of functions look [here](https://testing-library.com/docs/react-testing-library).
+React Testing Library has access to a single rendering method.
 
 ### render()
 [render](https://testing-library.com/docs/react-testing-library/api#render) is the DOM representation. It will print a string of the output dom that the browser sees.
@@ -168,7 +166,7 @@ as standard library functions or basic JavaScript behavior.
 
 ```js
 // this is probably going to work
-const returnArg (arg) => {
+const returnArg = (arg) => {
 	return arg;
 }
 
@@ -183,37 +181,36 @@ This example looks quite silly, but let's look at it in a React context:
 ```js
 //original code
 const Text = ({content, ...rest}) => {
-	return <p {...rest}>{content}</p>;
+	return(<p {...rest}>{content}</p>);
 }
 
 //breaking change
 const Text = ({cont, ...rest}) => {
-	return <p {...rest}>{cont}</p>;
-}
+	return(<p {...rest}>{cont}</p>);
+};
 
 //Example A - Bad
 test('Should pass prop to component', () => {
-	render(
-		<Text data-testid="test-text" content='sample' />
-	);
+		render(
+			<Text data-testid='text' content='sample' />
+		);
 
-	const textElement = screen.getByTestId('test-text');
-	const expected = 'sample';
-	
-	expect(textElement).expect(button).toHaveProperty('content', expected);
+		const textElement = screen.getByTestId('text');
+		const expected = 'sample';
+
+		expect(textElement).toHaveAttribute('content', expected);
 });
 
 //Example B - Better
 
 test('Should contain text', () => {
 	render(
-		<Text data-testid="test-text" content='sample' />
+		<Text content='sample' />
 	);
 
-	const textElement = screen.getByTestId('test-text');
-	const expected = 'sample';
-	
-	expect(textElement).toHaveTextContent(expected);
+	const textElement = screen.querryByText('sample');
+
+	expect(textElement).toBeInTheDocument();
 }); 
 ```
 
@@ -224,9 +221,8 @@ In test Example A, we can be very confident that React will do this correctly (p
 break, even if somebody makes a change to the code. Example A will continue to pass because it tests passing arguments,
 not what the component is supposed to display.
 
-In test Example B, we have something that is fairly simple, but has a higher chance of breaking. We changed the property
-that we're using to render. By testing the final output and not the property we get an accurate test.  Also, this is
-likely the only test we'd need for such a simple component.
+In test Example B, we have something that is fairly simple, but has a higher chance of breaking. By testing the final 
+output and not the property we get an accurate test. Also, this is likely the only test we'd need for such a simple component.
 
 ## How Tests Influence Code
 
@@ -247,7 +243,7 @@ Simply stated, this means we can't have anything other than the arguments determ
 
 ```js
 //Pure Function
-const add2 (num) => {
+const add2 = (num) => {
 	return num + 2
 }
 add2(4) //6
