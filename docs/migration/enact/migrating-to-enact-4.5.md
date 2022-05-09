@@ -101,7 +101,7 @@ function handleClick() {
   // React has updated the DOM by now
 }
 ```
-We have an example app for demonstration [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) at the `Automatic Batching` tab.  
+We have an example app for demonstration [here](https://github.com/enactjs/samples/tree/develop/sandstone/pattern-react18-new) at the `Automatic Batching` tab.  
 In the example, we increment and decrement a variable by 1 for 1000 times and we count the re-renders. Before Automatic Batching, every time the value is changed the component had to re-render, slowing the app for no real reason.
 
 
@@ -121,7 +121,7 @@ const [isPending, startTransition] = useTransition({timeoutMs: 3000});
 The fetching of the new data is wrapped inside `startTransition`. The `isPending` tells if the content is currently being loaded or not. Its `timeoutMs` property specifies how long we're willing to wait for the transition to finish.  
 Now instead of switching tabs immediately, the current tab continues to show its content until the new tab's content is ready. There is also the possibility to show a loading indicator, by making use of the `isPending` prop of `useTransition`.
 
-[Here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) is an example app for demonstration.
+[Here](https://github.com/enactjs/samples/tree/develop/sandstone/pattern-react18-new) is an example app for demonstration.
 Check out the `useTransition` tab.
 
 
@@ -139,7 +139,7 @@ function ProfilePage() {
     );
 }
 ```
-Let's look at the example app from [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) at the `Suspense` tab.  
+Let's look at the example app from [here](https://github.com/enactjs/samples/tree/develop/sandstone/pattern-react18-new) at the `Suspense` tab.  
 We have two panels, one with `Suspense`, one without. They both load the same list of images. On the first panel, where we have implemented `Suspense`, we can see that until the data is available, we display a skeleton page that has the exact visual structure of the page with placeholders for the lazy loading data. This offers a more pleasant UI experience. As opposed to it, on the second panel, where we haven't implemented `Suspense`, we can observe that it takes several seconds for content to show on the page. During this time user sees a blank page that might be confusing.
 
 So far, we took around for key Concurrent Features of React 18, other than this, React 18 introduces new hooks like `useId`, `useDeferredValue`, etc.  
@@ -147,7 +147,12 @@ If you want more information, please refer to [How to Upgrade to React 18](https
 
 
 ### cli
-`@enact/cli` must be upgraded to version `5.0.0-alpha.1` or newer.  
+`@enact/cli` must be upgraded to version `5.0.0-alpha.1` or newer like below.  
+
+```sh
+npm install -g @enact/cli@5.0.0-alpha.1
+```
+
 `@enact/cli` `5.0.0-alpha.1` updates the `webpack` to `5.x`, `eslint` to `8.x`, `jest` to `27.x`,
 `react`, `react-dom` to `18.x`, and drops the support of `enzyme`.  
 Developers should ensure their code does not rely on features that are no longer available in these versions.
