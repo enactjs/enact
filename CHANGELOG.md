@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.5.0-alpha.2] - 2022-05-09
+
+### Deprecated
+
+- `ui/Marquee.MarqueeDecorator` config `className` to be removed in 5.0.0
+
+### Added
+
+- `ui/Marquee.MarqueeDecorator` config `css` to support customizing the marquee styles
+
+### Changed
+
+- `spotlight` to not focus on an invisible element
+
 ## [4.5.0-alpha.1] - 2022-04-15
 
 - Update dependencies including React 18.0.0
