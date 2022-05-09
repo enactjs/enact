@@ -4,6 +4,13 @@ import {configure, getConfig, resetDefaultConfig} from '../config';
 import Touchable from '../Touchable';
 
 describe('Touchable', () => {
+	beforeEach(() => {
+		jest.useFakeTimers();
+	});
+	afterEach(() => {
+		jest.useRealTimers();
+	});
+
 	let data;
 
 	const DivComponent = ({children = 'Toggle', id, onClick, onMouseDown, onMouseLeave, onMouseUp, onTouchStart, onTouchEnd, ...props}) => {
@@ -55,10 +62,10 @@ describe('Touchable', () => {
 			fireEvent.mouseDown(component, ev);
 			rerender(<Component holdConfig={holdConfig} onHold={handler} onHoldStart={() => {}} />);
 
-			setTimeout(() => {
-				expect(handler).toHaveBeenCalled();
-				done();
-			}, 20);
+			jest.runOnlyPendingTimers();
+
+			expect(handler).toHaveBeenCalled();
+			done();
 		});
 
 		test('should update state configurations onHoldStart events', (done) => {
@@ -78,10 +85,10 @@ describe('Touchable', () => {
 			fireEvent.mouseDown(component, ev);
 			rerender(<Component holdConfig={holdConfig} onHold={() => {}} onHoldStart={handler} />);
 
-			setTimeout(() => {
-				expect(handler).toHaveBeenCalled();
-				done();
-			}, 20);
+			jest.runOnlyPendingTimers();
+
+			expect(handler).toHaveBeenCalled();
+			done();
 		});
 
 		test('should update state configurations onHoldEnd events', (done) => {
@@ -101,11 +108,11 @@ describe('Touchable', () => {
 			fireEvent.mouseDown(component, ev);
 			rerender(<Component holdConfig={holdConfig} onHold={() => {}} onHoldEnd={handler} />);
 
-			setTimeout(() => {
-				fireEvent.mouseUp(component, ev);
-				expect(handler).toHaveBeenCalled();
-				done();
-			}, 30);
+			jest.runOnlyPendingTimers();
+
+			fireEvent.mouseUp(component, ev);
+			expect(handler).toHaveBeenCalled();
+			done();
 		});
 
 		test('should merge configurations', () => {
