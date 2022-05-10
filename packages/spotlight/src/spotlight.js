@@ -783,7 +783,7 @@ const Spotlight = (function () {
 		 * If Spotlight is in pointer mode, focus is not changed but `elem` will be set as the last
 		 * focused element of its spotlight containers.
 		 *
-		 * @param {String} [containerId] The starting spotlight container ID . If not supplied,
+		 * @param {String} [containerId] The starting spotlight container ID. If not supplied,
 		 *  the last container will be focused.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
