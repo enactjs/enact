@@ -42,15 +42,16 @@ describe('useAnnounce', () => {
 	// TODO: find a relevant scenario that works on testing-library
 	test.skip('should set the value passed to announce into the ARIA role="alert" node', () => {
 		const text = '__NOTIFY__';
-		const {container} = render(<Component />);
+		render(<Component data-testid="skipped-test" />);
 
-		container.find(Base).invoke('announce')(text);
-		container.update();
+		const component = screen.getByTestId('skipped-test');
+		component.find(Base).invoke('announce')(text);
+		component.update();
 
 		const expected = text;
 		// Have to get the actual DOM node here since Announce updates the DOM directly so the
 		// change isn't represented in either the React or Enzyme views
-		const actual = container.find({role: 'alert'}).instance().getAttribute('aria-label');
+		const actual = component.find({role: 'alert'}).instance().getAttribute('aria-label');
 
 		expect(actual).toBe(expected);
 	});
