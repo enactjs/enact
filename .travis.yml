@@ -1,6 +1,8 @@
 language: node_js
 node_js:
-    - "14"
+    - lts/*
+    - 18
+    - 14  
 sudo: false
 cache:
   directories:
