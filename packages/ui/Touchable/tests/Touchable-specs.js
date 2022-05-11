@@ -1,9 +1,16 @@
-import {fireEvent, render, screen} from '@testing-library/react';
+import {createEvent, fireEvent, render, screen} from '@testing-library/react';
 
 import {configure, getConfig, resetDefaultConfig} from '../config';
 import Touchable from '../Touchable';
 
 describe('Touchable', () => {
+	beforeEach(() => {
+		jest.useFakeTimers();
+	});
+	afterEach(() => {
+		jest.useRealTimers();
+	});
+
 	let data;
 
 	const DivComponent = ({children = 'Toggle', id, onClick, onMouseDown, onMouseLeave, onMouseUp, onTouchStart, onTouchEnd, ...props}) => {
@@ -55,10 +62,10 @@ describe('Touchable', () => {
 			fireEvent.mouseDown(component, ev);
 			rerender(<Component holdConfig={holdConfig} onHold={handler} onHoldStart={() => {}} />);
 
-			setTimeout(() => {
-				expect(handler).toHaveBeenCalled();
-				done();
-			}, 20);
+			jest.runOnlyPendingTimers();
+
+			expect(handler).toHaveBeenCalled();
+			done();
 		});
 
 		test('should update state configurations onHoldStart events', (done) => {
@@ -78,10 +85,10 @@ describe('Touchable', () => {
 			fireEvent.mouseDown(component, ev);
 			rerender(<Component holdConfig={holdConfig} onHold={() => {}} onHoldStart={handler} />);
 
-			setTimeout(() => {
-				expect(handler).toHaveBeenCalled();
-				done();
-			}, 20);
+			jest.runOnlyPendingTimers();
+
+			expect(handler).toHaveBeenCalled();
+			done();
 		});
 
 		test('should update state configurations onHoldEnd events', (done) => {
@@ -101,11 +108,11 @@ describe('Touchable', () => {
 			fireEvent.mouseDown(component, ev);
 			rerender(<Component holdConfig={holdConfig} onHold={() => {}} onHoldEnd={handler} />);
 
-			setTimeout(() => {
-				fireEvent.mouseUp(component, ev);
-				expect(handler).toHaveBeenCalled();
-				done();
-			}, 30);
+			jest.runOnlyPendingTimers();
+
+			fireEvent.mouseUp(component, ev);
+			expect(handler).toHaveBeenCalled();
+			done();
 		});
 
 		test('should merge configurations', () => {
@@ -245,22 +252,25 @@ describe('Touchable', () => {
 			expect(actual).toEqual(expected);
 		});
 
-		// TODO This test is unstable. `fireEvent` does not recognize the timeStamp property
-		test.skip('should be called before onClick on mouse up', () => {
+		test('should be called before onClick on mouse up', () => {
 			const Component = Touchable({activeProp: 'active'}, DivComponent);
 			const handler = jest.fn();
 			render(<Component onClick={handler} onTap={handler} />);
 			const component = screen.getByTestId('component');
 
-			const ev = {
-				// a matching timeStamp is used by Touchable to prevent multiple onTaps on "true"
-				// click (mouseup + click)
-				timeStamp: 1
-			};
-			const clickEv = {};
-			fireEvent.mouseDown(component, ev);
-			fireEvent.mouseUp(component, ev);
-			fireEvent.click(component, clickEv);
+			const mouseDownEvent = createEvent.mouseDown(component, {});
+			const mouseUpEvent = createEvent.mouseUp(component, {});
+			const clickEvent = createEvent.click(component, {});
+
+			// a matching timeStamp is used by Touchable to prevent multiple onTaps on "true"
+			// click (mouseup + click)
+			Object.defineProperty(mouseDownEvent, 'timeStamp', {value: 1});
+			Object.defineProperty(mouseUpEvent, 'timeStamp', {value: 1});
+			Object.defineProperty(clickEvent, 'timeStamp', {value: 1});
+
+			fireEvent(component, mouseDownEvent);
+			fireEvent(component, mouseUpEvent);
+			fireEvent(component, clickEvent);
 
 			const expected = ['onTap', 'click'];
 			const actual = handler.mock.calls.map(call => call[0].type);

@@ -87,9 +87,6 @@ const useScrollBase = (props) => {
 			children,
 			className,
 			clientSize,
-			'data-webos-voice-disabled': voiceDisabled,
-			'data-webos-voice-focused': voiceFocused,
-			'data-webos-voice-group-label': voiceGroupLabel,
 			assignProperties,
 			dataSize,
 			direction,
@@ -356,6 +353,7 @@ const useScrollBase = (props) => {
 		scrollContentHandle.current.calculateMetrics(scrollContentHandle.current.props);
 		forceUpdate();
 	}, [forceUpdate, scrollContentHandle]);
+	// scrollMode 'translate' ]]
 
 	function handleResizeWindow () {
 		const propsHandleResizeWindow = props.handleResizeWindow;
@@ -368,15 +366,14 @@ const useScrollBase = (props) => {
 			if (scrollMode === 'translate') {
 				scrollTo({position: {x: 0, y: 0}, animate: false});
 			} else {
-				scrollContentRef.current.style.scrollBehavior = null;
-				scrollContentHandle.current.scrollToPosition(0, 0);
-				scrollContentRef.current.style.scrollBehavior = 'smooth';
+				scrollContentHandle.current.scrollToPosition(0, 0, 'instant');
 			}
 
 			enqueueForceUpdate();
 		});
 	}
 
+	// scrollMode 'translate' [[
 	const handleResize = useCallback((ev) => {
 		if (ev.action === 'invalidateBounds') {
 			enqueueForceUpdate();
@@ -1133,11 +1130,9 @@ const useScrollBase = (props) => {
 			}
 		} else { // scrollMode 'native'
 			if (animate) {
-				scrollContentHandle.current.scrollToPosition(targetX, targetY);
+				scrollContentHandle.current.scrollToPosition(targetX, targetY, 'smooth');
 			} else {
-				scrollContentRef.current.style.scrollBehavior = null;
-				scrollContentHandle.current.scrollToPosition(targetX, targetY);
-				scrollContentRef.current.style.scrollBehavior = 'smooth';
+				scrollContentHandle.current.scrollToPosition(targetX, targetY, 'instant');
 			}
 
 			if (props.start) {
@@ -1200,7 +1195,7 @@ const useScrollBase = (props) => {
 			setScrollTop(top);
 		}
 
-		scrollContentHandle.current.setScrollPosition(mutableRef.current.scrollLeft, mutableRef.current.scrollTop, rtl);
+		scrollContentHandle.current.setScrollPosition(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
 		forwardScrollEvent('onScroll');
 	}
 	// scrollMode 'translate' ]]
@@ -1225,9 +1220,11 @@ const useScrollBase = (props) => {
 	}
 
 	function stopForNative () {
-		scrollContentRef.current.style.scrollBehavior = null;
-		scrollContentHandle.current.scrollToPosition(mutableRef.current.scrollLeft + (rtl ? -0.1 : 0.1), mutableRef.current.scrollTop + 0.1);
-		scrollContentRef.current.style.scrollBehavior = 'smooth';
+		scrollContentHandle.current.scrollToPosition(
+			mutableRef.current.scrollLeft + (rtl ? -0.1 : 0.1),
+			mutableRef.current.scrollTop + 0.1,
+			'instant'
+		);
 	}
 
 	function stop () {
@@ -1447,7 +1444,6 @@ const useScrollBase = (props) => {
 		// scrollMode 'native' [[
 		if (scrollMode === 'native' && scrollContentRef.current) {
 			utilEvent('scroll').addEventListener(scrollContentRef, onScroll, {passive: true});
-			scrollContentRef.current.style.scrollBehavior = 'smooth';
 		}
 		// scrollMode 'native' ]]
 
@@ -1517,12 +1513,6 @@ const useScrollBase = (props) => {
 		})
 	});
 
-	const voiceProps = {
-		'data-webos-voice-disabled': voiceDisabled,
-		'data-webos-voice-focused': voiceFocused,
-		'data-webos-voice-group-label': voiceGroupLabel
-	};
-
 	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
 		{
 			childProps,
@@ -1540,7 +1530,6 @@ const useScrollBase = (props) => {
 
 	assignProperties('scrollContentProps', {
 		...scrollContentProps,
-		...voiceProps,
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
 		direction,

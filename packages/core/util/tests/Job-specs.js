@@ -1,10 +1,19 @@
+import {act} from '@testing-library/react';
+
 import Job from '../Job';
 
 describe('Job', () => {
+	beforeEach(() => {
+		jest.useFakeTimers();
+	});
+	afterEach(() => {
+		jest.useRealTimers();
+	});
 	describe('#start', () => {
 		test('should start job', done => {
 			const j = new Job(done, 10);
 			j.start();
+			jest.runAllTimers();
 		});
 
 		test('should pass args to fn', done => {
@@ -19,6 +28,7 @@ describe('Job', () => {
 
 			const j = new Job(fn, 10);
 			j.start(value);
+			jest.runAllTimers();
 		});
 	});
 
@@ -33,9 +43,9 @@ describe('Job', () => {
 			j.start();
 			j.stop();
 
-			window.setTimeout(function () {
-				if (!ran) done();
-			}, 30);
+			act(() => jest.advanceTimersByTime(30));
+
+			if (!ran) done();
 		});
 	});
 
@@ -47,22 +57,22 @@ describe('Job', () => {
 			}, 20);
 
 			j.throttle();
-			window.setTimeout(function () {
-				j.throttle();
-			}, 5);
-			window.setTimeout(function () {
-				j.throttle();
-			}, 15);
-			window.setTimeout(function () {
-				j.throttle();
-			}, 25);
-			window.setTimeout(function () {
-				if (number === 2) {
-					done();
-				} else {
-					done(new Error('too many or too few calls' + number));
-				}
-			}, 30);
+
+			act(() => jest.advanceTimersByTime(5));
+			j.throttle();
+
+			act(() => jest.advanceTimersByTime(10));
+			j.throttle();
+
+			act(() => jest.advanceTimersByTime(10));
+			j.throttle();
+
+			act(() => jest.advanceTimersByTime(5));
+			if (number === 2) {
+				done();
+			} else {
+				done(new Error('too many or too few calls' + number));
+			}
 		});
 
 		test('should pass args to fn', done => {
@@ -102,6 +112,7 @@ describe('Job', () => {
 		test('should start job', done => {
 			const j = new Job(done, 10);
 			j.idle();
+			jest.runAllTimers();
 		});
 
 		test('should pass args to fn', done => {
@@ -116,6 +127,7 @@ describe('Job', () => {
 
 			const j = new Job(fn, 10);
 			j.idle(value);
+			jest.runAllTimers();
 		});
 
 		test('should clear an existing job id before starting job', done => {
@@ -129,6 +141,7 @@ describe('Job', () => {
 			const j = new Job(fn);
 			j.idle('first');
 			j.idle('second');
+			jest.runAllTimers();
 		});
 	});
 
@@ -163,7 +176,9 @@ describe('Job', () => {
 				done(new Error('Job ran for rejected promise'));
 			});
 			j.promise(Promise.reject(true)).catch(() => {});
-			setTimeout(done, 10);
+
+			act(() => jest.advanceTimersByTime(10));
+			done();
 		});
 
 		test('should not start job when stopped before promise resolves', done => {
@@ -171,8 +186,12 @@ describe('Job', () => {
 				done(new Error('Job ran for stopped promise'));
 			});
 			j.promise(new Promise(resolve => setTimeout(resolve, 20)));
-			setTimeout(() => j.stop(), 10);
-			setTimeout(done, 30);
+
+			act(() => jest.advanceTimersByTime(10));
+			j.stop();
+
+			act(() => jest.advanceTimersByTime(20));
+			done();
 		});
 
 		test('should not start job when another is started', done => {
@@ -196,7 +215,6 @@ describe('Job', () => {
 			const j = new Job(() => 'job value');
 			j.promise(Promise.resolve(true)).then(value => {
 				expect(value).toBeUndefined();
-				done();
 			});
 			j.promise(Promise.resolve(true)).then(() => done());
 		});

@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import {render, screen, waitFor} from '@testing-library/react';
+import {act, render, screen, waitFor} from '@testing-library/react';
 import {Component} from 'react';
 
 import ViewManager from '../';
@@ -7,6 +7,14 @@ import {MockArranger} from './test-utils';
 
 describe('ViewManager', () => {
 	// Suite-wide setup
+	beforeEach(() => {
+		jest.useFakeTimers();
+	});
+
+	afterEach(() => {
+		jest.useRealTimers();
+	});
+
 	test('should render {component} as its child - <div/> by default', () => {
 		render(
 			<ViewManager data-testid="component">
@@ -93,7 +101,7 @@ describe('ViewManager', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should have 1 child immediately after setting new {index} with an {arranger} and {noAnimation} is false', () => {
+	test('should have 1 child immediately after setting new {index} with an {arranger} and {noAnimation} is true', () => {
 		const {rerender} = render(
 			<ViewManager arranger={MockArranger} data-testid="viewManager" index={3} noAnimation>
 				<div>View 1</div>
@@ -115,6 +123,7 @@ describe('ViewManager', () => {
 		);
 
 		const expected = 1;
+
 		const actual = screen.getByTestId('viewManager').children.length;
 
 		expect(actual).toBe(expected);
@@ -193,30 +202,29 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 
-		window.setTimeout(function () {
-			const expected = 1;
-			const actual = screen.getByTestId('viewManager').children.length;
+		act(() => jest.advanceTimersByTime(duration + 10));
 
-			expect(actual).toBe(expected);
-			done();
-		}, duration + 10);
+		const expected = 1;
+		const actual = screen.getByTestId('viewManager').children.length;
+
+		expect(actual).toBe(expected);
+		done();
 	});
 
-	// TODO cannot read props of child components
-	test.skip('should have size of 1 on TransitionGroup', () => {
+	test('should have 1 child when noAnimation is true', () => {
 		render(
-			<ViewManager duration={0} index={0} noAnimation>
-				<div className="view">View 1</div>
-				<div className="view">View 2</div>
-				<div className="view">View 3</div>
-				<div className="view">View 4</div>
-				<div className="view">View 5</div>
+			<ViewManager data-testid="viewManager" duration={0} index={0} noAnimation>
+				<div>View 1</div>
+				<div>View 2</div>
+				<div>View 3</div>
+				<div>View 4</div>
+				<div>View 5</div>
 			</ViewManager>
 		);
 
-		// const expected = 1;
-		// const actual = subject.find('TransitionGroup').prop('size');
-		// expect(actual).toBe(expected);
+		const expected = 1;
+		const actual = screen.getByTestId('viewManager').children.length;
+		expect(actual).toBe(expected);
 	});
 
 	// TODO cannot read props of child components

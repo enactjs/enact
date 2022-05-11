@@ -2,6 +2,52 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.5.0-alpha.2] - 2022-05-09
+
+### Deprecated
+
+- `ui/Marquee.MarqueeDecorator` config `className` to be removed in 5.0.0
+
+### Added
+
+- `ui/Marquee.MarqueeDecorator` config `css` to support customizing the marquee styles
+
+### Changed
+
+- `spotlight` to not focus on an invisible element
+
+## [4.5.0-alpha.1] - 2022-04-15
+
+- Update dependencies including React 18.0.0
+
+### Fixed
+
+- `ui/FloatingLayer` to stack popups always in the order in which they were opened
+
+## [4.1.4] - 2022-03-24
+
+### Removed
+
+- `ui/Scroller` and `ui/VirtualList` prop `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label`
+
+### Added
+
+- `ui/Marquee.MarqueeDecorator` `locale` type for `forceDirection` prop not to override the direction depending on contents
+
+### Fixed
+
+- `ui/Button` not to pass `icon` prop as children when `icon` is true
+- `ui/Transition` to pass the event when handling transition event
+
+## [4.1.3] - 2022-03-07
+
+- Updated to use `forwardCustom` and add `type` when forwarding custom events
+
+### Fixed
+
+- `spotlight` to correctly control focus when boundaries of an element are not integers
+- Styles for `debug spotlight` option in samplers to work properly
+
 ## [4.1.2] - 2021-12-22
 
 ### Fixed
@@ -22,13 +68,13 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Fixed
 
 - `spotlight/SpotlightRootDecorator` to show focus effect after initial loading
-- `ui/MarqueeDecorator` to restart animation when text changed while focus retained
+- `ui/Marquee.MarqueeDecorator` to restart animation when text changed while focus retained
 
 ## [4.0.8] - 2021-10-21
 
 ### Fixed
 
-`ui/MarqueeDecorator` style to render text properly when starting animation
+`ui/Marquee.MarqueeDecorator` style to render text properly when starting animation
 
 ## [4.0.7] - 2021-09-28
 
@@ -50,7 +96,7 @@ No significant changes.
 
 ### Fixed
 
-- `ui/MarqueeDecorator` to stop marquee properly after hiding pointer when `marqueeOn` is `hover`
+- `ui/Marquee.MarqueeDecorator` to stop marquee properly after hiding pointer when `marqueeOn` is `hover`
 
 ## [4.0.3] - 2021-06-18
 

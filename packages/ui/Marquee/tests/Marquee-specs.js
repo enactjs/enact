@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import {render, screen} from '@testing-library/react';
+import {act, render, screen} from '@testing-library/react';
 
 import {Marquee, MarqueeBase} from '../index.js';
 
@@ -9,6 +9,7 @@ const
 
 describe('Marquee', () => {
 	beforeEach(() => {
+		jest.useFakeTimers();
 		global.Element.prototype.getBoundingClientRect = jest.fn(() => {
 			return {
 				width: 100,
@@ -19,6 +20,10 @@ describe('Marquee', () => {
 				right: 0
 			};
 		});
+	});
+
+	afterEach(() => {
+		jest.useRealTimers();
 	});
 
 	test('should determine the correct directionality of latin text on initial render', () => {
@@ -79,6 +84,19 @@ describe('Marquee', () => {
 		expect(marquee).toHaveStyle({'direction': expected});
 	});
 
+	test('should not override direction to RTL when forceDirection is "locale" and locale is LTR', () => {
+		const {rerender} = render(<Marquee forceDirection="locale">{ltrText}</Marquee>);
+		const marquee = screen.getByText(ltrText);
+
+		const expected = 'ltr';
+
+		expect(marquee).toHaveStyle({'direction': expected});
+
+		rerender(<Marquee forceDirection="locale">{rtlText}</Marquee>);
+
+		expect(marquee).toHaveStyle({'direction': expected});
+	});
+
 	test('should override direction to LTR when forceDirection is set and locale is RTL', () => {
 		render(<Marquee data-testid="marquee" forceDirection="ltr" locale="rtl" />);
 		const marquee = screen.getByTestId('marquee').children.item(0).children.item(0);
@@ -109,25 +127,25 @@ describe('Marquee', () => {
 	test('should convert percentage values of marqueeSpacing to absolute values', (done) => {
 		render(<Marquee data-testid="marquee" marqueeOn="render" marqueeOnRenderDelay={10} marqueeSpacing="60%" />);
 
-		setTimeout(() => {
-			const expected = '60';
-			const marquee = screen.getByTestId('marquee').children.item(0).children.item(0);
+		act(() => jest.advanceTimersByTime(100));
 
-			expect(marquee).toHaveStyle({'--ui-marquee-spacing': expected});
-			done();
-		}, 100);
+		const expected = '60';
+		const marquee = screen.getByTestId('marquee').children.item(0).children.item(0);
+
+		expect(marquee).toHaveStyle({'--ui-marquee-spacing': expected});
+		done();
 	});
 
 	test('should pass absolute values of marqueeSpacing', (done) => {
 		render(<Marquee data-testid="marquee" marqueeOn="render" marqueeOnRenderDelay={10} marqueeSpacing={80} />);
 
-		setTimeout(() => {
-			const expected = '80';
-			const marquee = screen.getByTestId('marquee').children.item(0).children.item(0);
+		act(() => jest.advanceTimersByTime(100));
 
-			expect(marquee).toHaveStyle({'--ui-marquee-spacing': expected});
-			done();
-		}, 100);
+		const expected = '80';
+		const marquee = screen.getByTestId('marquee').children.item(0).children.item(0);
+
+		expect(marquee).toHaveStyle({'--ui-marquee-spacing': expected});
+		done();
 	});
 });
 
