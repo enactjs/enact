@@ -1,6 +1,5 @@
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
-import {memo} from 'react';
 
 import Skinnable from '../Skinnable';
 
@@ -393,29 +392,35 @@ describe('Skinnable Specs', () => {
 			<div {...props} />
 		);
 
-		const ChildComponent = memo(() => {
+		const ChildComponent = () => {
 			wasRendered();
 			return <div>Hello</div>;
-		});
+		};
 
 		const SkinnableParent = Skinnable(config, Component);
 		const SkinnableChild = Skinnable(config, ChildComponent);
 
+		const childrenProp = (<SkinnableChild />);
+
 		const {rerender} = render(
-			<SkinnableParent>
-				<SkinnableChild />
-			</SkinnableParent>
+			<SkinnableParent children={childrenProp} />
 		);
 
 		rerender(
-			<SkinnableParent className="foo">
-				<SkinnableChild />
-			</SkinnableParent>
+			<SkinnableParent children={childrenProp} className={"foo"} />
 		);
 
-		const expected = 1;
-		const actual = wasRendered.mock.calls.length;
+		const expected1 = 1;
+		const actual1 = wasRendered.mock.calls.length;
 
-		expect(actual).toEqual(expected);
+		rerender(
+			<SkinnableParent children={childrenProp} skin="light" className={"foo"} />
+		);
+
+		const expected2 = 2;
+		const actual2 = wasRendered.mock.calls.length;
+
+		expect(actual1).toEqual(expected1);
+		expect(actual2).toEqual(expected2);
 	});
 });
