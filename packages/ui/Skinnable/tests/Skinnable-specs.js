@@ -403,18 +403,24 @@ describe('Skinnable Specs', () => {
 		const childrenProp = (<SkinnableChild />);
 
 		const {rerender} = render(
-			<SkinnableParent children={childrenProp} />
+			<SkinnableParent>
+				{childrenProp}
+			</SkinnableParent>
 		);
 
 		rerender(
-			<SkinnableParent children={childrenProp} className={"foo"} />
+			<SkinnableParent className="foo">
+				{childrenProp}
+			</SkinnableParent>
 		);
 
 		const expected1 = 1;
 		const actual1 = wasRendered.mock.calls.length;
 
 		rerender(
-			<SkinnableParent children={childrenProp} skin="light" className={"foo"} />
+			<SkinnableParent className="foo" skin="light">
+				{childrenProp}
+			</SkinnableParent>
 		);
 
 		const expected2 = 2;
