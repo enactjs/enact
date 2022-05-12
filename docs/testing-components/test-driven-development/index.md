@@ -73,11 +73,11 @@ test('should apply same class to <Button> child', function () {
 });
 ```
 
-When we run this test, it will fail.  Now, we can wire up the property correctly and verify our component works. We can
+When we run this test, it will fail.  Now, we can wire up the property correctly and verify our component works.  We can
 then add a test for each new piece of functionality and then write the corresponding code to allow the test to pass.
 
 While this process may seem a little naive, it does allow us to focus on writing the minimal amount of code that will solve
-the problem at hand.  It serves as a reminder of the YAGNI principle: You Ain't Gonna Need It. Don't overengineer the
+the problem at hand.  It serves as a reminder of the YAGNI principle: You Ain't Gonna Need It.  Don't overengineer the
 solution.
 
 ## Test Method Introduction
