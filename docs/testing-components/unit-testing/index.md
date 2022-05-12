@@ -127,15 +127,21 @@ test('Should contain text', () => {
 		<Text content='sample' /> 
 	);
 	
-	const textElement = screen.querryByText('sample');
+	const textElement = screen.queryByText('sample');
 	
 	expect(textElement).not.toBeNull();
 });
 ```
-React Testing Library has access to a single rendering method.
+React Testing Library provides the following methods regarding render.
 
 ### render()
 [render](https://testing-library.com/docs/react-testing-library/api#render) is the DOM representation. It will print a string of the output dom that the browser sees.
+
+### rerender()
+[rerender](https://testing-library.com/docs/react-testing-library/api#rerender) is used to update the props of a rendered component in your test.
+
+### unmount()
+[unmount](https://testing-library.com/docs/react-testing-library/api#unmount) is used to cause the rendered component to be unmounted.
 
 ## Why Unit Testing?
 
@@ -168,9 +174,9 @@ as standard library functions or basic JavaScript behavior.
 // this is probably going to work
 const returnArg = (arg) => {
 	return arg;
-}
+};
 
-test('Should return arg', () =>{ 
+test('Should return arg', () => { 
 	const actual = returnArg('sample');
 	expect(actual).toBe('sample');
 });
@@ -182,7 +188,7 @@ This example looks quite silly, but let's look at it in a React context:
 //original code
 const Text = ({content, ...rest}) => {
 	return(<p {...rest}>{content}</p>);
-}
+};
 
 //breaking change
 const Text = ({cont, ...rest}) => {
@@ -191,14 +197,14 @@ const Text = ({cont, ...rest}) => {
 
 //Example A - Bad
 test('Should pass prop to component', () => {
-		render(
-			<Text data-testid='text' content='sample' />
-		);
+	render(
+		<Text data-testid='text' content='sample' />
+	);
 
-		const textElement = screen.getByTestId('text');
-		const expected = 'sample';
+	const textElement = screen.getByTestId('text');
+	const expected = 'sample';
 
-		expect(textElement).toHaveAttribute('content', expected);
+	expect(textElement).toHaveAttribute('content', expected);
 });
 
 //Example B - Better
@@ -208,7 +214,7 @@ test('Should contain text', () => {
 		<Text content='sample' />
 	);
 
-	const textElement = screen.querryByText('sample');
+	const textElement = screen.queryByText('sample');
 
 	expect(textElement).toBeInTheDocument();
 }); 

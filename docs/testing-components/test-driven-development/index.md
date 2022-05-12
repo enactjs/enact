@@ -9,9 +9,9 @@ the basic information on what unit testing is and how to start unit testing.
 
 ## Overview
 
-This document describes the test-first methodology we aspire to on the Enact team. The concept behind Test Driven
-Development (TDD) is that you write tests before you begin implementation. The theory is that testing helps you think
-through the problem and serves as a sort of design for the forthcoming code. Additionally, the tests serve as a validation
+This document describes the test-first methodology we aspire to on the Enact team.  The concept behind Test Driven
+Development (TDD) is that you write tests before you begin implementation.  The theory is that testing helps you think
+through the problem and serves as a sort of design for the forthcoming code.  Additionally, the tests serve as a validation
 that refactoring has not broken the code.
 
 ## Introduction to TDD
@@ -24,10 +24,10 @@ an understanding of how it impacts the development process, check out [this gent
 ## Sample TDD Scenario
 
 Imagine we're going to create the `@enact/ui/IconButton` component and that the only requirements we have so far
-are that it will have a `<Button>` containing an `<Icon>` as its children and that all properties assigned to the IconButton
+are that it will have a `<Button>` containing an `<Icon>` as its children and that all classes assigned to the IconButton
 should be applied to the Button child except `minWidth`, which should always be `false`.
 
-In this scenario, we would create an empty IconButton component that has no functionality. Then, we might write a test to
+In this scenario, we would create an empty IconButton component that has no functionality.  Then, we might write a test to
 verify that an IconButton with `minWidth={true}` does not change the child component's property.
 
 ```js
@@ -44,8 +44,8 @@ describe('IconButton Specs', () => {
 });
 ```
 
-If we execute the test at this point it will fail. We have not implemented any functionality in our IconButton, so we
-should expect this will fail. TDD suggests we should write the minimal amount of code that will allow this test to pass.
+If we execute the test at this point it will fail.  We have not implemented any functionality in our IconButton, so we
+should expect this will fail.  TDD suggests we should write the minimal amount of code that will allow this test to pass.
 So, we might write the following code in `IconButton.js`:
 
 ```js
@@ -58,8 +58,8 @@ const IconButton = () => {
 };
 ```
 
-This will make the test pass, but it's not a very useful IconButton. Let's add a test to check the requirement that other
-properties are applied to the Button child.
+This will make the test pass, but it's not a very useful IconButton.  Let's add a test to check the requirement that other
+classes are applied to the Button child.
 
 ```js
 test('should apply same class to <Button> child', function () {
@@ -73,11 +73,11 @@ test('should apply same class to <Button> child', function () {
 });
 ```
 
-When we run this test, it will fail. Now, we can wire up the property correctly and verify our component works. We can
+When we run this test, it will fail.  Now, we can wire up the property correctly and verify our component works. We can
 then add a test for each new piece of functionality and then write the corresponding code to allow the test to pass.
 
 While this process may seem a little naive, it does allow us to focus on writing the minimal amount of code that will solve
-the problem at hand. It serves as a reminder of the YAGNI principle: You Ain't Gonna Need It. Don't overengineer the
+the problem at hand.  It serves as a reminder of the YAGNI principle: You Ain't Gonna Need It. Don't overengineer the
 solution.
 
 ## Test Method Introduction
