@@ -730,21 +730,27 @@ const Spotlight = (function () {
 		 * @param {String|Node} [elem] The spotlight ID or selector for either a spottable
 		 *  component or a spotlight container, or spottable node. If not supplied, the default
 		 *  container will be focused.
-		 * @param {Object} [containerOption] An optional object containing preferred `enterTo`.
-		 *  It will be passed to the `getTargetByContainer` when `elem` is a container.
+		 * @param {Object} [containerOption] An optional The object including `enterTo` and `toOuterContainer`.
+		 * @param {String} [containerOption.enterTo] It will be passed to the `getTargetByContainer`
+		 * when `elem` is a container.
+		 * @param {Boolean} [containerOption.toOuterContainer] If the proper target is not in the
+		 * container, repeat with the outer container.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
 		 */
 		focus: function (elem, containerOption = {}) {
 			let target = elem;
 			let wasContainerId = false;
+			let currentContainerNode;
 
 			if (!elem) {
 				target = getTargetByContainer();
+				currentContainerNode = getContainerNode(getLastContainer());
 			} else if (typeof elem === 'string') {
 				if (getContainerConfig(elem)) {
 					target = getTargetByContainer(elem, containerOption.enterTo);
 					wasContainerId = true;
+					currentContainerNode = getContainerNode(elem);
 				} else if (/^[\w\d-]+$/.test(elem)) {
 					// support component IDs consisting of alphanumeric, dash, or underscore
 					target = getTargetBySelector(`[data-spotlight-id=${elem}]`);
@@ -753,6 +759,7 @@ const Spotlight = (function () {
 				}
 			} else if (isContainer(elem)) {
 				target = getTargetByContainer(getContainerId(elem), containerOption.enterTo);
+				currentContainerNode = elem;
 			}
 
 			const nextContainerIds = getContainersForNode(target);
@@ -771,33 +778,17 @@ const Spotlight = (function () {
 				setLastContainer(elem);
 			}
 
-			return false;
-		},
+			if (containerOption.toOuterContainer && currentContainerNode) {
+				const outerContainer = getContainersForNode(currentContainerNode.parentElement).pop();
 
-		// focusFromContainer()
-		// focusFromContainer(<containerId>)
-		/**
-		 * Focuses from the specified container.
-		 * If the proper target is not in the container, repeat with the outer container.
-		 *
-		 * If Spotlight is in pointer mode, focus is not changed but `elem` will be set as the last
-		 * focused element of its spotlight containers.
-		 *
-		 * @param {String} [containerId] The starting spotlight container ID. If not supplied,
-		 *  the last container will be focused.
-		 * @returns {Boolean} `true` if focus successful, `false` if not.
-		 * @public
-		 */
-		focusFromContainer: function (containerId) {
-			containerId = containerId || getLastContainer();
-
-			if (typeof containerId === 'string') {
-				const containerNode = getContainerNode(containerId);
-
-				return getContainersForNode(containerNode).reduceRight((result, id) => {
-					return result || this.focus(id);
-				}, null);
+				if (outerContainer) {
+					return this.focus(outerContainer, containerOption);
+				} else {
+					return false;
+				}
 			}
+
+			return false;
 		},
 
 		// move(<direction>)
