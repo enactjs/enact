@@ -129,7 +129,7 @@ test('Should contain text', () => {
 	
 	const textElement = screen.queryByText('sample');
 	
-	expect(textElement).not.toBeNull();
+	expect(textElement).toBeInTheDocument();
 });
 ```
 React Testing Library provides the following methods regarding render.
@@ -187,12 +187,12 @@ This example looks quite silly, but let's look at it in a React context:
 ```js
 //original code
 const Text = ({content, ...rest}) => {
-	return(<p {...rest}>{content}</p>);
+	return (<p {...rest}>{content}</p>);
 };
 
 //breaking change
 const Text = ({cont, ...rest}) => {
-	return(<p {...rest}>{cont}</p>);
+	return (<p {...rest}>{cont}</p>);
 };
 
 //Example A - Bad

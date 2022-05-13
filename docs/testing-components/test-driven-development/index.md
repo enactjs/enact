@@ -25,15 +25,15 @@ an understanding of how it impacts the development process, check out [this gent
 
 Imagine we're going to create the `@enact/ui/IconButton` component and that the only requirements we have so far
 are that it will have a `<Button>` containing an `<Icon>` as its children and that all classes assigned to the IconButton
-should be applied to the Button child except `minWidth`, which should always be `false`.
+should be applied to the Button child except `minWidth`, which should always not be assigned.
 
 In this scenario, we would create an empty IconButton component that has no functionality.  Then, we might write a test to
-verify that an IconButton with `minWidth={true}` does not change the child component's property.
+verify that an IconButton with `minWidth={true}` does not change the child component's class.
 
 ```js
 describe('IconButton Specs', () => {
 	
-	test('should always have no minWidth class for its <Button> child', () => {
+	test('should always have no `minWidth` class for its <Button> child', () => {
 		render(<IconButton minWidth>star</IconButton>);
 		const button = screen.getByRole('button');
 
@@ -51,7 +51,7 @@ So, we might write the following code in `IconButton.js`:
 ```js
 const IconButton = () => {
 	return (
-		<Button minWidth={false}>
+		<Button>
 			<Icon>star</Icon>
 		</Button>
 	);
