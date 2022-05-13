@@ -376,7 +376,7 @@ describe('Skinnable Specs', () => {
 		expect(component).toHaveClass(expected);
 	});
 
-	test.skip('should not force re-render of child if child unaffected', () => {
+	test('should not force re-render of child if child unaffected', () => {
 		const config = {
 			defaultSkin: 'dark',
 			defaultVariants: 'normal',
@@ -400,19 +400,33 @@ describe('Skinnable Specs', () => {
 		const SkinnableParent = Skinnable(config, Component);
 		const SkinnableChild = Skinnable(config, ChildComponent);
 
-		// eslint-disable-next-line
-		const subject = mount(
+		const childrenProp = (<SkinnableChild />);
+
+		const {rerender} = render(
 			<SkinnableParent>
-				<SkinnableChild />
+				{childrenProp}
 			</SkinnableParent>
 		);
 
-		// Sending props to force parent to re-render
-		subject.setProps({className: 'foo'});
+		rerender(
+			<SkinnableParent className="foo">
+				{childrenProp}
+			</SkinnableParent>
+		);
 
-		const expected = 1;
-		const actual = wasRendered.mock.calls.length;
+		const expected1 = 1;
+		const actual1 = wasRendered.mock.calls.length;
 
-		expect(actual).toEqual(expected);
+		rerender(
+			<SkinnableParent className="foo" skin="light">
+				{childrenProp}
+			</SkinnableParent>
+		);
+
+		const expected2 = 2;
+		const actual2 = wasRendered.mock.calls.length;
+
+		expect(actual1).toEqual(expected1);
+		expect(actual2).toEqual(expected2);
 	});
 });
