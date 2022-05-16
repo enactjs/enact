@@ -734,7 +734,8 @@ const Spotlight = (function () {
 		 * @param {String} [containerOption.enterTo] It will be passed to the `getTargetByContainer`
 		 *  when `elem` is a container.
 		 * @param {Boolean} [containerOption.toOuterContainer] If the proper target is not found, search one
-		 *  repeatedly to outer container.
+		 *  recursively to outer container.
+		 * It works when the first parameter ` elem ` is either a spotlight container ID or a spotlight container node.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
 		 */
@@ -745,7 +746,6 @@ const Spotlight = (function () {
 
 			if (!elem) {
 				target = getTargetByContainer();
-				currentContainerNode = getContainerNode(getLastContainer());
 			} else if (typeof elem === 'string') {
 				if (getContainerConfig(elem)) {
 					target = getTargetByContainer(elem, containerOption.enterTo);
