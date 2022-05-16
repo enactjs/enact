@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Added
 
-- `spotlight` function `focusFromContainer` to focus from a container to outer container recursively
+- `spotlight` an optional `containerOption.toOuterContainer` parameter to `focus` function to search target repeatedly to outer container
  
 ## [4.5.0-alpha.2] - 2022-05-09
 

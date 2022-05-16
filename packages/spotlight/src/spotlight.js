@@ -732,9 +732,9 @@ const Spotlight = (function () {
 		 *  container will be focused.
 		 * @param {Object} [containerOption] An optional The object including `enterTo` and `toOuterContainer`.
 		 * @param {String} [containerOption.enterTo] It will be passed to the `getTargetByContainer`
-		 * when `elem` is a container.
-		 * @param {Boolean} [containerOption.toOuterContainer] If the proper target is not in the
-		 * container, repeat with the outer container.
+		 *  when `elem` is a container.
+		 * @param {Boolean} [containerOption.toOuterContainer] If the proper target is not found, search one
+		 *  repeatedly to outer container.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
 		 */
