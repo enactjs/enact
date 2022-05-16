@@ -783,8 +783,6 @@ const Spotlight = (function () {
 
 				if (outerContainer) {
 					return this.focus(outerContainer, containerOption);
-				} else {
-					return false;
 				}
 			}
 
