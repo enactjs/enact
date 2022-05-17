@@ -1,4 +1,3 @@
-/* eslint-disable jest/valid-expect */
 const Page = require('./LoaderPage');
 
 // When running these tests manually in the browser, be sure to clear localStorage via dev tools or

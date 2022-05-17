@@ -337,7 +337,7 @@ class VirtualListBasic extends Component {
 	componentDidMount () {
 		if (!this.props.clientSize) {
 			this.calculateMetrics(this.props);
-			this.setState(this.getStatesAndUpdateBounds(this.props)); // eslint-disable-line react/no-did-mount-set-state
+			this.setState(this.getStatesAndUpdateBounds(this.props));
 		} else {
 			this.emitUpdateItems();
 		}
@@ -414,7 +414,7 @@ class VirtualListBasic extends Component {
 			const {x, y} = this.getXY(this.scrollPosition, 0);
 
 			this.calculateMetrics(this.props);
-			this.setState(this.getStatesAndUpdateBounds(this.props)); // eslint-disable-line react/no-did-update-set-state
+			this.setState(this.getStatesAndUpdateBounds(this.props));
 			this.setContainerSize();
 
 			const {clientHeight, clientWidth, scrollHeight, scrollWidth} = this.scrollBounds;
@@ -429,7 +429,7 @@ class VirtualListBasic extends Component {
 			deferScrollTo = true;
 		} else if (this.hasDataSizeChanged) {
 			const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
-			this.setState(newState); // eslint-disable-line react/no-did-update-set-state
+			this.setState(newState);
 			this.setContainerSize();
 
 			deferScrollTo = true;

@@ -270,7 +270,7 @@ const VirtualListBaseFactory = (type) => {
 		componentDidMount () {
 			if (!this.props.clientSize) {
 				this.calculateMetrics(this.props);
-				this.setState(this.getStatesAndUpdateBounds(this.props)); // eslint-disable-line react/no-did-mount-set-state
+				this.setState(this.getStatesAndUpdateBounds(this.props));
 			} else {
 				this.emitUpdateItems();
 			}
@@ -347,7 +347,7 @@ const VirtualListBaseFactory = (type) => {
 				const {x, y} = this.getXY(this.scrollPosition, 0);
 
 				this.calculateMetrics(this.props);
-				this.setState(this.getStatesAndUpdateBounds(this.props)); // eslint-disable-line react/no-did-update-set-state
+				this.setState(this.getStatesAndUpdateBounds(this.props));
 				this.setContainerSize();
 
 				const {clientHeight, clientWidth, scrollHeight, scrollWidth} = this.scrollBounds;
@@ -362,7 +362,7 @@ const VirtualListBaseFactory = (type) => {
 				deferScrollTo = true;
 			} else if (this.hasDataSizeChanged) {
 				const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
-				this.setState(newState); // eslint-disable-line react/no-did-update-set-state
+				this.setState(newState);
 				this.setContainerSize();
 
 				deferScrollTo = true;
