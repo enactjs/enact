@@ -13,7 +13,6 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
 import {useImperativeHandle, useEffect, useRef, useState} from 'react';
 
 import ForwardRef from '../ForwardRef';
@@ -537,31 +536,20 @@ const DrawingBase = kind({
 });
 
 /**
- * Applies Drawing behaviors.
- *
- * @hoc
- * @memberof ui/Drawing
- * @mixes ui/ForwardRef.ForwardRef
- * @public
- */
-const DrawingDecorator = compose(ForwardRef({prop: 'drawingRef'}));
-
-/**
  * A simple, unstyled drawing canvas component.
  *
  * @class Drawing
  * @memberof ui/Drawing
  * @extends ui/Drawing.DrawingBase
- * @mixes ui/Drawing.DrawingDecorator
+ * @mixes ui/ForwardRef.ForwardRef
  * @omit drawingRef
  * @ui
  * @public
  */
-const Drawing = DrawingDecorator(DrawingBase);
+const Drawing = ForwardRef({prop: 'drawingRef'}, DrawingBase);
 
 export default Drawing;
 export {
 	Drawing,
-	DrawingBase,
-	DrawingDecorator
+	DrawingBase
 };
