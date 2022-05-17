@@ -730,12 +730,12 @@ const Spotlight = (function () {
 		 * @param {String|Node} [elem] The spotlight ID or selector for either a spottable
 		 *  component or a spotlight container, or spottable node. If not supplied, the default
 		 *  container will be focused.
-		 * @param {Object} [containerOption] An optional The object including `enterTo` and `toOuterContainer`.
-		 * @param {String} [containerOption.enterTo] It will be passed to the `getTargetByContainer`
-		 *  when `elem` is a container.
+		 * @param {Object} [containerOption] The object including `enterTo` and `toOuterContainer`.
+		 *  It works when the first parameter `elem` is either a spotlight container ID or a spotlight container node.
+		 * @param {('last-focused'|'default-element'|'topmost')} [containerOption.enterTo] Specifies preferred `enterTo` configuration.
+		 *  It will be passed to the `getTargetByContainer`.
 		 * @param {Boolean} [containerOption.toOuterContainer] If the proper target is not found, search one
 		 *  recursively to outer container.
-		 * It works when the first parameter ` elem ` is either a spotlight container ID or a spotlight container node.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
 		 */
