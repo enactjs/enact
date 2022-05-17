@@ -91,7 +91,7 @@ The primary purpose of React Testing Library is to increase confidence in your t
 
 ### Component Rendering - `render()`
 
-The render method works like this:
+The [render](https://testing-library.com/docs/preact-testing-library/api/#render) method works like this:
 
 ```js
 const {...results} = render(<Component {...props} />, {...options});
