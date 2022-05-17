@@ -42,7 +42,7 @@ describe('useAnnounce', () => {
 	// TODO: find a relevant scenario that works on testing-library
 	test.skip('should set the value passed to announce into the ARIA role="alert" node', () => {
 		const text = '__NOTIFY__';
-		render(<Component data-testid="skipped-test" />);
+		render(<Component data-testid="announce-test" />);
 
 		const component = screen.getByTestId('skipped-test');
 		component.find(Base).invoke('announce')(text);
