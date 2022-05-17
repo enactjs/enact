@@ -44,7 +44,7 @@ describe('useAnnounce', () => {
 		const text = '__NOTIFY__';
 		render(<Component data-testid="announce-test" />);
 
-		const component = screen.getByTestId('skipped-test');
+		const component = screen.getByTestId('announce-test');
 		component.find(Base).invoke('announce')(text);
 		component.update();
 
