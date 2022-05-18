@@ -2,6 +2,7 @@ dist: focal
 language: node_js
 node_js:
     - lts/*
+    # - node
 sudo: false
 cache:
   directories:
