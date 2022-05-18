@@ -7,27 +7,27 @@ class LoaderPage extends Page {
 		this.title = 'Loader Test';
 	}
 
-	get loadState () {
-		return browser.$('#loaded').getText();
+	async loadState () {
+		return await browser.$('#loaded').getText();
 	}
 
-	get locale () {
-		return browser.$('#locale').getText();
+	async locale () {
+		return await browser.$('#locale').getText();
 	}
 
-	get textDirection () {
-		return browser.$('#dir').getText();
+	async textDirection () {
+		return await browser.$('#dir').getText();
 	}
 
-	get text () {
-		return browser.$('#text').getText();
+	async text () {
+		return await browser.$('#text').getText();
 	}
 
-	open (opts) {
+	async open (opts) {
 		const urlExtra = Object.keys(opts).reduce((v, key) => {
 			return v + encodeURIComponent(key) + '=' + encodeURIComponent(opts[key]) + '&';
 		}, '?');
-		super.open('Loader-View', urlExtra);
+		await super.open('Loader-View', urlExtra);
 	}
 }
 
