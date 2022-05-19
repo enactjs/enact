@@ -58,12 +58,7 @@ project. Please read this section carefully if you are interested in contributin
 	`npm run lint` with no warnings.
 	*   Please squash pull requests down to a single commit to simplify review and keep history clean.
 	*   Ensure all new features have unit tests that pass and any bug fixes include tests that
-	fail without the fix applied.
-
-	   -	[UI Testing](./ui-testing.md) -  How to use UI-Test in sandstone source.
-
-	   -	[Screenshot Testing](./screenshot-testing.md) -  How to use Screenshot-Test in sandstone source.
-
+	fail without the fix applied. If you want to test for ui or screenshot, refer the [UI-Test](./ui-testing.md)/[Screenshot](./screenshot-testing.md) page.
 	*   Help keep diffs easy to read by not making unnecessary rearrangements to the source code.
 	*   Make sure not to inadvertently change line ending types from Unix to Windows.
 	*   Ensure inline API documentation exists and is up-to-date (minimum: component summary and descriptions of all
