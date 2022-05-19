@@ -52,6 +52,6 @@ describe('Spinner Specs', () => {
 		const spinner = screen.getByTestId('spinner');
 
 		expect(spinner).toBeInTheDocument();
-		expect(spinner.parentElement.parentElement.parentElement.id).toBe('floatLayer');
+		expect(spinner.parentElement.parentElement.id).toBe('floatLayer');
 	});
 });
