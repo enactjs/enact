@@ -3,41 +3,22 @@ title: Screenshot Testing
 ---
 
 ## What is the Screenshot Testing
-Screenshot test is visual test that takes a screenshot, then compares it to a reference screenshot file saved. When ui changes, one of the major considering is whether visual changes exist. Some changes may be easy to check, but some changes are hard to check due to very small change. With Screenshot test, very small changes can easily check due to compare pixel-by-pixel. Additionlally, Screenshot testing is the most reliable test for static images. If you want to test animated image or video, you should check result.
+Screenshot test is visual test that takes a screenshot, then compares it to a reference screenshot file saved. When ui changes, one of the major considerations is whether visual changes exist. Some changes may be easy to check, but some changes are hard to check due to very small change. With Screenshot test, very small changes can easily check due to compare pixel-by-pixel. Additionally, Screenshot testing is the most reliable test for static images.
 
 ## Prerequisites
-Created a enact project using the enact cli.
+Clone sandstone from GitHub, install dependencies and connect the modules using Lerna:
 
-## Setting up a UI Library
-1. Add @enact/ui-test-utils as a devDependency: npm i --save-dev @enact/ui-test-utils.
-
-2. Create the tests/screenshot folder structure within the UI library.
-
-3. Add apps and specs folders to tests/screenshot.
-
-4. Add local WebDriver configuration files within tests/screenshot:
-
-	- wdio.conf.js 
-	```JS
-	module.exports = require('@enact/ui-test-utils/screenshot/wdio.conf.js');
-	```
-
-	- wdio.docker.conf.js
-	```JS
-	module.exports = require('@enact/ui-test-utils/screenshot/wdio.docker.conf.js');
-	```
-
-	- wdio.tv.conf.js
-	```JS
-	module.exports = require('@enact/ui-test-utils/screenshot/wdio.tv.conf.js');
-	```
-
-5. Add npm scripts for each of the above configuration files. There are likely other scripts already defined so these will be added to the existing scripts.
-```JSON
-   "scripts": {
-	  "test-ss": "start-tests tests/screenshot/wdio.conf.js",
-	  "test-ss-docker": "start-tests tests/screenshot/wdio.docker.conf.js",
-   }
+```shell
+# clone the repo!
+git clone git@github.com:enactjs/sandstone.git
+# move in
+cd sandstone
+# we're using git flow so develop is our working branch
+git checkout develop
+# install lerna
+npm install
+# link dependencies
+enact link
 ```
 
 ## Creating tests
