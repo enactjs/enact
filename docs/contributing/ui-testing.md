@@ -1,50 +1,20 @@
 ---
 title: Ui Testing
 ---
-<nav role="navigation" class="page-toc">
-
-- [Prerequisites](#prerequisites)
-- [Setting up a UI Library](#setting-up-a-ui-library)
-- [Creating tests](#creating-tests)
-- [Running Tests](#running-tests)
-- [Viewing Test Results](#viewing-test-results)
-- [Goal of Ui Testing](#goal-of-ui-testing)
-
-</nav>
-
 ## Prerequisites
-Created a enact project using the enact cli.
+Clone sandstone from GitHub, install dependencies and connect the modules using Lerna:
 
-## Setting up a UI Library
-1. Add @enact/ui-test-utils as a devDependency: npm i --save-dev @enact/ui-test-utils.
-
-2. Create the tests/ui folder structure within the UI library.
-
-3. Add apps and specs folders to tests/ui.
-
-4. Add local WebDriver configuration files within tests/ui:
-
-	- wdio.conf.js 
-	```JS
-	module.exports = require('@enact/ui-test-utils/ui/wdio.conf.js');
-	```
-
-	- wdio.docker.conf.js
-	```JS
-	module.exports = require('@enact/ui-test-utils/ui/wdio.docker.conf.js');
-	```
-
-	- wdio.tv.conf.js
-	```JS
-	module.exports = require('@enact/ui-test-utils/ui/wdio.tv.conf.js');
-	```
-
-5. Add npm scripts for each of the above configuration files. There are likely other scripts already defined so these will be added to the existing scripts.
-```JSON
-   "scripts": {
-	  "test-ui": "start-tests tests/ui/wdio.conf.js",
-	  "test-ui-docker": "start-tests tests/ui/wdio.docker.conf.js",
-   }
+```shell
+# clone the repo!
+git clone git@github.com:enactjs/sandstone.git
+# move in
+cd sandstone
+# we're using git flow so develop is our working branch
+git checkout develop
+# install lerna
+npm install
+# link dependencies
+enact link
 ```
 
 ## Creating tests
@@ -59,6 +29,45 @@ Within the UI Library, create an app for testing in `./tests/ui/apps` and create
 				+ specs
 					+ testComponent
 						testComponent-specs.js		<-- create spec file here
+ In UI test, create apps to test view and specs. Please refer sample code.
+* Button.js
+
+```JS
+import Button from '../../../../Button';
+import ThemeDecorator from '../../../../ThemeDecorator';
+
+const app = (props) => <div {...props}>
+	<div>
+		<Button
+			id="button"
+		>
+			Default Button
+		</Button>
+	</div>
+</div>;
+
+export default ThemeDecorator(app);
+```
+
+* Button-specs.js
+
+```JS
+const Page = require('@enact/ui-test-utils/utils');
+
+describe('Button', function () {
+
+	beforeEach(async function () {
+		await Page.open();
+	});
+
+	describe('5-way', function () {
+		it('should focus disabled button on 5-way right', async function () {
+			await Page.spotlightDown();
+			await Page.spotlightSelect();
+		});
+	});
+});
+```
 
 The Page component from `@enact/ui-test-utils/utils/` Page contains useful methods for loading tests.
 
