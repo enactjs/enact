@@ -60,9 +60,9 @@ project. Please read this section carefully if you are interested in contributin
 	*   Ensure all new features have unit tests that pass and any bug fixes include tests that
 	fail without the fix applied.
 
-	[UI Testing](./ui-testing.md) -  How to use UI-Test in sandstone source.
+	   -	[UI Testing](./ui-testing.md) -  How to use UI-Test in sandstone source.
 
-	[Screenshot Testing](./screenshot-testing.md) -  How to use Screenshot-Test in sandstone source.
+	   -	[Screenshot Testing](./screenshot-testing.md) -  How to use Screenshot-Test in sandstone source.
 
 	*   Help keep diffs easy to read by not making unnecessary rearrangements to the source code.
 	*   Make sure not to inadvertently change line ending types from Unix to Windows.

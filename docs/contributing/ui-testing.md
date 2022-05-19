@@ -97,6 +97,6 @@ Also, you can see the view you made on chrome. This requires that a server be ru
 To open a specific test app, open the URL path for the test. A specific app display as directory in this page. You can see the app as click the app you wanted.
 
 ## Goal of Ui Testing
-Manual tests are time consuming and somtimes error occurs. A more efficient approach is to create UI tests so that user tasks are executed in an automated test. With UI test, tests can be executed quickly and reliably in a repeatable way. Simply stated, first priority considering is two things.
-* how component handles user actions performed via used input devices.
+Manual tests are time-consuming and sometimes error occurs. A more efficient approach is to create UI tests so that user tasks are executed in an automated test. With UI test, tests can be executed quickly and reliably in a repeatable way. Simply stated, first priority considering is two things.
+* how component handles user actions performed via input devices.
 * whether elements correctly work as intended.

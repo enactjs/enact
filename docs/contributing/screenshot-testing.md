@@ -34,7 +34,7 @@ Within the UI Library, create an app for testing in `./tests/screenshot/apps` an
 				+ specs
 						testComponent-specs.js		<-- create spec file here
 
-In screenshot test, create apps to test component. Please refer sample code.
+In screenshot test, create apps to test components. Please refer sample code.
 * Button.js
 
 ```JS
@@ -83,4 +83,4 @@ Images can be navigated using the keyboard arrow keys. Click on an image to zoom
 * In the output, the test case button opens the sample app with the parameters that produced the output. This requires that a server be running on port 5000. If you have globally installed the serve command with npm install -g serve you can start the server like this: `serve tests/screenshot/dist`
 
 ## Reference and Screen
-Screenshot testing is a test that compares and assures two different outputs. For the first test without any criteria, all results are saved in the `tests/screenshot/dist/reference` and they become criteria for later tests. In Second run, all results are saved in the `tests/screenshot/dist/screen` and compares screen with reference.
+Screenshot testing is a test that compares and assures two different outputs. For the first test without any criteria, all results are saved in the `tests/screenshot/dist/reference` and they become criteria for later tests. In Second run, all results are saved in the `tests/screenshot/dist/screen` and compare screen with reference.
