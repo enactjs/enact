@@ -34,7 +34,7 @@ component or item under test and end with the `"-specs.js"` suffix.
 We use a dizzying number of tools to perform unit testing.  A quick overview of the different tools can be helpful.
 
 *   [Jest](https://jestjs.io/) - A test framework. This tool allows us to setup, assert and run tests. We can also use `jest` as a mocking library.
-*   [Enzyme](https://enzymejs.github.io/enzyme/) - A test library for use with React.  It allows us to shallowly render components and inspect the output.
+*   [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) - A test library for use with React.  It allows us to render components and inspect the output.
 *   [jsdom](https://github.com/jsdom/jsdom) - A pure-JavaScript implementation of many web standards, notably the WHATWG DOM and HTML Standards, for use with Node.js.
 
 ## Unit Testing
@@ -115,7 +115,7 @@ and outputs we can test basically any JavaScript function that returns a value.
 
 ## Testing React
 
-To test react we use [Enzyme](https://enzymejs.github.io/enzyme/) plus other tools you can find out about [here](../test-driven-development/index.md).
+To test react we use [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) plus other tools you can find out about [here](../test-driven-development/index.md).
 
 ```js
 const Text = (props) => {
@@ -123,33 +123,25 @@ const Text = (props) => {
 }
 
 test('Should contain text', () => { 
-	const subject = shallow( 
+	render( 
 		<Text content='sample' /> 
 	);
 	
-	const expected = 'sample'; 
-	const actual = subject.text()
-	expect(actual).toBe(expected); 
+	const textElement = screen.queryByText('sample');
+	
+	expect(textElement).toBeInTheDocument();
 });
 ```
-
-If you wish to learn more about Enzyme's library of functions look [here](https://github.com/enzymejs/enzyme).
-
-The three main parts about Enzyme that you need to know are it's rendering methods.
-
-### shallow()
-
-[Shallow](https://github.com/enzymejs/enzyme/blob/master/docs/api/shallow.md) is the virtual DOM representation. It will only render the component plus one level of children. This allows
-us to stay within the smaller confines of a component when testing.
-
-### mount()
-
-[mount](https://github.com/enzymejs/enzyme/blob/master/docs/api/mount.md) is the virtual DOM representation. It will render everything inside the component, including all nested children.
-This is a little beyond unit testing as you start to test the integration of a few components.
+React Testing Library provides the following methods regarding render.
 
 ### render()
+[render](https://testing-library.com/docs/react-testing-library/api#render) is the DOM representation. It will print a string of the output dom that the browser sees.
 
-[render](https://github.com/enzymejs/enzyme/blob/master/docs/api/render.md) is the DOM representation. It will print a string of the output dom that the browser sees.
+### rerender()
+[rerender](https://testing-library.com/docs/react-testing-library/api#rerender) is used to update the props of a rendered component in your test.
+
+### unmount()
+[unmount](https://testing-library.com/docs/react-testing-library/api#unmount) is used to cause the rendered component to be unmounted.
 
 ## Why Unit Testing?
 
@@ -180,11 +172,11 @@ as standard library functions or basic JavaScript behavior.
 
 ```js
 // this is probably going to work
-const returnArg (arg) => {
+const returnArg = (arg) => {
 	return arg;
-}
+};
 
-test('Should return arg', () =>{ 
+test('Should return arg', () => { 
 	const actual = returnArg('sample');
 	expect(actual).toBe('sample');
 });
@@ -194,36 +186,37 @@ This example looks quite silly, but let's look at it in a React context:
 
 ```js
 //original code
-const Text = (props) => {
-	return <p>{props.content}</p>;
-}
+const Text = ({content, ...rest}) => {
+	return (<p {...rest}>{content}</p>);
+};
 
 //breaking change
-const Text = (props) => {
-	return <p>{props.cont}</p>;
-}
+const Text = ({cont, ...rest}) => {
+	return (<p {...rest}>{cont}</p>);
+};
 
 //Example A - Bad
 test('Should pass prop to component', () => {
-	const Text = shallow(
-	    <Text content='sample' />
+	render(
+		<Text data-testid='text' content='sample' />
 	);
-	
+
+	const textElement = screen.getByTestId('text');
 	const expected = 'sample';
-	const contentProp = Text.prop('content')
-	expect(contentProp).toBe(expected);
+
+	expect(textElement).toHaveAttribute('content', expected);
 });
 
 //Example B - Better
 
-test('Should contain text', () => { 
-	const subject = shallow( 
-	   <Text content='sample' /> 
+test('Should contain text', () => {
+	render(
+		<Text content='sample' />
 	);
-	
-	const expected = 'sample'; 
-	const actual = subject.text()
-	expect(actual).toBe(expected); 
+
+	const textElement = screen.queryByText('sample');
+
+	expect(textElement).toBeInTheDocument();
 }); 
 ```
 
@@ -234,9 +227,8 @@ In test Example A, we can be very confident that React will do this correctly (p
 break, even if somebody makes a change to the code. Example A will continue to pass because it tests passing arguments,
 not what the component is supposed to display.
 
-In test Example B, we have something that is fairly simple, but has a higher chance of breaking. We changed the property
-that we're using to render. By testing the final output and not the property we get an accurate test.  Also, this is
-likely the only test we'd need for such a simple component.
+In test Example B, we have something that is fairly simple, but has a higher chance of breaking. By testing the final 
+output and not the property we get an accurate test. Also, this is likely the only test we'd need for such a simple component.
 
 ## How Tests Influence Code
 
@@ -257,7 +249,7 @@ Simply stated, this means we can't have anything other than the arguments determ
 
 ```js
 //Pure Function
-const add2 (num) => {
+const add2 = (num) => {
 	return num + 2
 }
 add2(4) //6
