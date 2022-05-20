@@ -12,6 +12,7 @@ install:
     - npm install
     - npm run bootstrap
 script:
+    - npm cache clean --force
     - echo -e "\x1b\x5b35;1m*** Starting tests...\x1b\x5b0m"
     - npm test -- -- -- --runInBand --coverage
     - codecov
