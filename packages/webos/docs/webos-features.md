@@ -10,7 +10,7 @@ Included within the webOS system itself are the following custom document events
 *   `webOSRelaunch`: Dispatched when an already-running application is launched, potentially with new launch parameters.
 *   `webOSLocaleChange`: Dispatched when the system changes its language settings.
 
-To listen for these events, you can use the global dispatcher's `on()` method.
+To listen for these events, you can use the global dispatcher's `on()` method. Note that you can omit the event listener target as its default value is `document`.
 
 ```js
 import {off, on} from '@enact/core/dispatcher';
@@ -18,7 +18,7 @@ import {off, on} from '@enact/core/dispatcher';
 const handleLaunch = () => {
   console.log('APP LAUNCH');
 };
-on('webOSLaunch', handleLaunch, window);
+on('webOSLaunch', handleLaunch, document);
 ...
 ```
 
