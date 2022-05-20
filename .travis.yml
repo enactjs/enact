@@ -1,4 +1,4 @@
-dist: focal 
+dist: focal
 language: node_js
 node_js:
     - lts/*
@@ -10,7 +10,6 @@ cache:
 before_install:
     - sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 install:
-    - npm cache clean --force
     - npm config set prefer-offline true
     - npm install -g enactjs/cli#develop
     - npm install -g codecov
