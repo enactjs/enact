@@ -733,7 +733,7 @@ const Spotlight = (function () {
 		 * @param {Object} [containerOption] The object including `enterTo` and `toOuterContainer`.
 		 *  It works when the first parameter `elem` is either a spotlight container ID or a spotlight container node.
 		 * @param {('last-focused'|'default-element'|'topmost')} [containerOption.enterTo] Specifies preferred
-		 *  `enterTo` configuration. It will be passed to the `getTargetByContainer`.
+		 *  `enterTo` configuration.
 		 * @param {Boolean} [containerOption.toOuterContainer] If the proper target is not found, search one
 		 *  recursively to outer container.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
