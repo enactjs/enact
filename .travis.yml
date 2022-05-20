@@ -6,6 +6,7 @@ cache:
   directories:
     - $(npm config get cache)
 install:
+    - npm cache clean --force
     - npm config set prefer-offline true
     - npm install -g enactjs/cli#develop
     - npm install -g codecov
