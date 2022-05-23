@@ -742,7 +742,7 @@ const Spotlight = (function () {
 		focus: function (elem, containerOption = {}) {
 			let target = elem;
 			let wasContainerId = false;
-			let currentContainerNode;
+			let currentContainerNode = null;
 
 			if (!elem) {
 				target = getTargetByContainer();
