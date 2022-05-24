@@ -234,8 +234,9 @@ const ButtonBase = kind({
 		delete rest.selected;
 		delete rest.size;
 
+		// custom role to trigger jsx-a11y
 		return (
-			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled} ref={componentRef}>
+			<div role="barf" {...rest} aria-disabled={disabled} disabled={disabled} ref={componentRef}>
 				{decoration ? (
 					<div className={css.decoration}>{decoration}</div>
 				) : null}

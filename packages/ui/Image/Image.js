@@ -183,10 +183,11 @@ const ImageBase = kind({
 		delete rest.sizing;
 		delete rest.src;
 
+		// custom role and alt to trigger jsx-a11y
 		return (
-			<div role="img" {...rest} aria-label={ariaLabel || alt} ref={componentRef} style={{...style, backgroundImage: bgImage}}>
+			<div role="barf" {...rest} aria-label={ariaLabel || alt} ref={componentRef} style={{...style, backgroundImage: bgImage}}>
 				{children}
-				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
+				<img className={css.img} src={imgSrc} alt="image" onLoad={onLoad} onError={onError} /> //
 			</div>
 		);
 	}
