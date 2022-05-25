@@ -58,7 +58,7 @@ runTest({
 });
 ```
 
-For details on the GitHub Screenshot-test, see [here](https://github.com/enactjs/ui-test-utils).
+For details on the GitHub methods of Screenshot-test, see [ui-test-utils](https://github.com/enactjs/ui-test-utils).
 
 ## Running Tests
 For a single-run, execute `npm run test-ss`. 
