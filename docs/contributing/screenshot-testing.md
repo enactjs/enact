@@ -17,8 +17,6 @@ cd sandstone
 git checkout develop
 # install lerna
 npm install
-# link dependencies
-enact link
 ```
 
 ## Creating tests
@@ -59,7 +57,8 @@ runTest({
 	skin: 'light'
 });
 ```
-The generateTestData and Page component from `@enact/ui-test-utils/utils/` generateTestData and Page contain useful methods for screenshot tests.
+
+For details on the GitHub Screenshot-test, see [here](https://github.com/enactjs/ui-test-utils).
 
 ## Running Tests
 For a single-run, execute `npm run test-ss`. 
@@ -83,4 +82,4 @@ Images can be navigated using the keyboard arrow keys. Click on an image to zoom
 * In the output, the test case button opens the sample app with the parameters that produced the output. This requires that a server be running on port 5000. If you have globally installed the serve command with npm install -g serve you can start the server like this: `serve tests/screenshot/dist`
 
 ## Reference and Screen
-Screenshot testing is a test that compares and assures two different outputs. For the first test without any criteria, all results are saved in the `tests/screenshot/dist/reference` and they become criteria for later tests. In Second run, all results are saved in the `tests/screenshot/dist/screen` and compare screen with reference.
+Screenshot testing is a test that compares and assures two different outputs. For the first test without any reference, all results are saved in the `tests/screenshot/dist/reference` and they become reference for later tests. In the second run, all results are saved in the `tests/screenshot/dist/screen` and compare screen with reference.

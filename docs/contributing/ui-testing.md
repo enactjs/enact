@@ -1,6 +1,11 @@
 ---
 title: Ui Testing
 ---
+## What is UI testing?
+Manual tests are time-consuming and sometimes error occurs. A more efficient approach is to create UI tests so that user tasks are executed in an automated test. With UI test, tests can be executed quickly and reliably in a repeatable way. Simply stated, first priority considering is two things.
+* how component handles user actions performed via input devices.
+* whether elements correctly work as intended.
+
 ## Prerequisites
 Clone sandstone from GitHub, install dependencies and connect the modules using Lerna:
 
@@ -69,7 +74,7 @@ describe('Button', function () {
 });
 ```
 
-The Page component from `@enact/ui-test-utils/utils/` Page contains useful methods for loading tests.
+ For details on the GitHub UI-test, see [here](https://github.com/enactjs/ui-test-utils).
 
 ## Running Tests
 For a single-run, execute `npm run test-ui`. 
@@ -93,10 +98,5 @@ For a single-run, execute `npm run test-ui`.
 ## Viewing Test Results
 By default, Test result display on console whether pass or fail.
 If fail occurs, fail log display in console and you can see the screenshot about fail in `./test/ui/errorShots/`.
-Also, you can see the view you made on chrome. This requires that a server be running on port 5000. If you have globally installed the serve command with npm install -g serve you can start the server like this `serve ./test/ui/dist/`.
-To open a specific test app, open the URL path for the test. A specific app display as directory in this page. You can see the app as click the app you wanted.
-
-## Goal of Ui Testing
-Manual tests are time-consuming and sometimes error occurs. A more efficient approach is to create UI tests so that user tasks are executed in an automated test. With UI test, tests can be executed quickly and reliably in a repeatable way. Simply stated, first priority considering is two things.
-* how component handles user actions performed via input devices.
-* whether elements correctly work as intended.
+Also, you can see the view you made on your browser. This requires that a server be running on port 5000. If you have globally installed the `serve` command with `npm install -g serve` you can start the server like this `serve ./test/ui/dist/`.
+To open a specific test app, open the URL path for the test. A specific app is displayed as a directory on this page. You can see the app as click the app you wanted.
