@@ -17,6 +17,9 @@ import Scrollbar from './Scrollbar';
 
 import css from './Scrollable.module.less';
 
+/**
+ * @deprecated
+ */
 const
 	constants = {
 		epsilon: 1,
@@ -54,6 +57,7 @@ const TouchableDiv = Touchable('div');
  * @memberof ui/ScrollableNative
  * @ui
  * @private
+ * @deprecated
  */
 class ScrollableBaseNative extends Component {
 	static displayName = 'ui:ScrollableBaseNative';
@@ -1396,6 +1400,7 @@ class ScrollableBaseNative extends Component {
  * @extends ui/Scrollable.ScrollableBaseNative
  * @ui
  * @private
+ * @deprecated
  */
 class ScrollableNative extends Component {
 	static displayName = 'ui:ScrollableNative';

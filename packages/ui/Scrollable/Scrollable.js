@@ -27,6 +27,9 @@ import Scrollbar from './Scrollbar';
 
 import css from './Scrollable.module.less';
 
+/**
+ * @deprecated
+ */
 const
 	constants = {
 		animationDuration: 1000,
@@ -68,6 +71,7 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
  * @memberof ui/Scrollable
  * @ui
  * @private
+ * @deprecated
  */
 class ScrollableBase extends Component {
 	static displayName = 'ui:ScrollableBase';
@@ -1392,6 +1396,7 @@ class ScrollableBase extends Component {
  * @extends ui/Scrollable.ScrollableBase
  * @ui
  * @private
+ * @deprecated
  */
 class Scrollable extends Component {
 	static displayName = 'ui:Scrollable';

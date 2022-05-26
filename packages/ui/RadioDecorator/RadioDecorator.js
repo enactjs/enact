@@ -58,6 +58,7 @@ const defaultConfig = {
  * @memberof ui/RadioDecorator
  * @hoc
  * @public
+ * @deprecated Will be removed soon
  */
 const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {activate, deactivate, prop} = config;

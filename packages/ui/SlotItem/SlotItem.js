@@ -27,6 +27,7 @@ import ForwardRef from '../ForwardRef';
  * @memberof ui/SlotItem
  * @ui
  * @public
+ * @deprecated
  */
 const SlotItemBase = kind({
 	name: 'SlotItem',
@@ -189,6 +190,7 @@ const SlotItemBase = kind({
  * @mixes ui/ForwardRef.ForwardRef
  * @hoc
  * @public
+ * @deprecated
  */
 const SlotItemDecorator = compose(
 	ForwardRef({prop: 'componentRef'}),
@@ -217,6 +219,7 @@ const SlotItemDecorator = compose(
  * @omit componentRef
  * @ui
  * @public
+ * @deprecated
  */
 const SlotItem = SlotItemDecorator(SlotItemBase);
 

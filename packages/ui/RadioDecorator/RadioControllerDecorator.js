@@ -2,6 +2,9 @@ import hoc from '@enact/core/hoc';
 import Registry from '@enact/core/internal/Registry';
 import {createContext, Component} from 'react';
 
+/**
+ * @deprecated Will be removed soon
+ */
 const RadioContext = createContext();
 
 /**
@@ -13,6 +16,7 @@ const RadioContext = createContext();
  * @memberof ui/RadioDecorator
  * @hoc
  * @public
+ * @deprecated Will be removed soon
  */
 const RadioControllerDecorator = hoc((config, Wrapped) => {
 

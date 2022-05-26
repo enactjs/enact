@@ -41,6 +41,7 @@ const
  * @class ScrollAnimator
  * @memberof ui/Scrollable
  * @private
+ * @deprecated
  */
 class ScrollAnimator {
 	rAFId = null;

@@ -14,6 +14,7 @@ import css from './UiScroller.module.less';
  * @memberof ui/Scroller
  * @ui
  * @public
+ * @deprecated
  */
 class ScrollerBase extends Component {
 	static displayName = 'ui:ScrollerBase';

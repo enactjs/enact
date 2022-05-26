@@ -12,6 +12,13 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Deprecated
 
+- `ui/IconButton` to be removed in the future
+- `ui/RadioDecorator` to be removed in the future
+- `ui/Scrollable` to be removed in the future
+- `ui/Scroller.UiScroller` to be removed in the future
+- `ui/SlotItem` to be removed in the future
+- `ui/ToggleItem` to be removed in the future
+- `ui/VirtualList.UiVirtalListBase`
 - `ui/Marquee.MarqueeDecorator` config `className` to be removed in 5.0.0
 
 ### Added
