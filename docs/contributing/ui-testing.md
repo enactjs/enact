@@ -3,8 +3,8 @@ title: Ui Testing
 ---
 ## What is UI testing?
 Manual tests are time-consuming and sometimes error occurs. A more efficient approach is to create UI tests so that user tasks are executed in an automated test. With UI test, tests can be executed quickly and reliably in a repeatable way. Simply stated, first priority considering is two things.
-* how component handles user actions performed via input devices.
-* whether elements correctly work as intended.
+* How component handles user actions performed via input devices.
+* Whether elements correctly work as intended.
 
 ## Prerequisites
 Clone sandstone from GitHub, install dependencies and connect the modules using Lerna:
@@ -18,8 +18,6 @@ cd sandstone
 git checkout develop
 # install lerna
 npm install
-# link dependencies
-enact link
 ```
 
 ## Creating tests
@@ -74,7 +72,7 @@ describe('Button', function () {
 });
 ```
 
- For details on the GitHub methods of UI-test, see [ui-test-utils](https://github.com/enactjs/ui-test-utils).
+  For details on the GitHub methods of UI-test, see [ui-test-utils](https://github.com/enactjs/ui-test-utils).
 
 ## Running Tests
 For a single-run, execute `npm run test-ui`. 
