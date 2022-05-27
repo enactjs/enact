@@ -72,7 +72,7 @@ describe('Button', function () {
 });
 ```
 
-For details on the GitHub methods of UI-test, see [ui-test-utils](https://github.com/enactjs/ui-test-utils).
+For details on the relevant APIs or options, please see [ui-test-utils](https://github.com/enactjs/ui-test-utils).
 
 ## Running Tests
 For a single-run, execute `npm run test-ui`. 
