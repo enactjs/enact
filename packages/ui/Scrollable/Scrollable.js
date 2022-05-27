@@ -27,9 +27,6 @@ import Scrollbar from './Scrollbar';
 
 import css from './Scrollable.module.less';
 
-/**
- * @deprecated
- */
 const
 	constants = {
 		animationDuration: 1000,

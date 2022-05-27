@@ -17,9 +17,6 @@ import Scrollbar from './Scrollbar';
 
 import css from './Scrollable.module.less';
 
-/**
- * @deprecated
- */
 const
 	constants = {
 		epsilon: 1,

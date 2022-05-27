@@ -2,9 +2,6 @@ import hoc from '@enact/core/hoc';
 import Registry from '@enact/core/internal/Registry';
 import {createContext, Component} from 'react';
 
-/**
- * @deprecated Will be removed soon
- */
 const RadioContext = createContext();
 
 /**
