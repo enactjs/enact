@@ -30,7 +30,7 @@ import componentCss from './IconButton.module.less';
  * @memberof ui/IconButton
  * @ui
  * @public
- * @deprecated Will be removed soon
+ * @deprecated Will be removed in 5.0.0.
  */
 const IconButtonBase = kind({
 	name: 'ui:IconButton',
@@ -203,7 +203,7 @@ const IconButtonBase = kind({
  * @mixes ui/ForwardRef.ForwardRef
  * @mixes ui/Touchable.Touchable
  * @public
- * @deprecated Will be removed soon
+ * @deprecated Will be removed in 5.0.0.
  */
 const IconButtonDecorator = compose(
 	ForwardRef({prop: 'componentRef'}),
@@ -227,7 +227,7 @@ const IconButtonDecorator = compose(
  * @memberof ui/IconButton
  * @ui
  * @public
- * @deprecated Will be removed soon
+ * @deprecated Will be removed in 5.0.0.
  */
 const IconButton = IconButtonDecorator(IconButtonBase);
 

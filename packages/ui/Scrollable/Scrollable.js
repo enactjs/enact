@@ -68,7 +68,7 @@ const TouchableDiv = ForwardRef({prop: 'ref'}, Touchable('div'));
  * @memberof ui/Scrollable
  * @ui
  * @private
- * @deprecated Will be removed soon
+ * @deprecated Will be removed in 5.0.0.
  */
 class ScrollableBase extends Component {
 	static displayName = 'ui:ScrollableBase';
@@ -1393,7 +1393,7 @@ class ScrollableBase extends Component {
  * @extends ui/Scrollable.ScrollableBase
  * @ui
  * @private
- * @deprecated Will be removed soon
+ * @deprecated Will be removed in 5.0.0.
  */
 class Scrollable extends Component {
 	static displayName = 'ui:Scrollable';

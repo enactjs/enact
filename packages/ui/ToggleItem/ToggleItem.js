@@ -69,7 +69,7 @@ const iconCreator = (position) => ({disabled, icon, iconComponent, iconPosition,
  * @memberof ui/ToggleItem
  * @ui
  * @public
- * @deprecated Will be removed soon
+ * @deprecated Will be removed in 5.0.0.
  */
 const ToggleItemBase = kind({
 	name: 'ui:ToggleItem',
@@ -279,7 +279,7 @@ const ToggleItemBase = kind({
  * @mixes ui/Toggleable.Toggleable
  * @hoc
  * @public
- * @deprecated Will be removed soon
+ * @deprecated Will be removed in 5.0.0.
  */
 const ToggleItemDecorator = compose(
 	ForwardRef({prop: 'componentRef'}),
@@ -302,7 +302,7 @@ const ToggleItemDecorator = compose(
  * @omit componentRef
  * @ui
  * @public
- * @deprecated Will be removed soon
+ * @deprecated Will be removed in 5.0.0.
  */
 const ToggleItem = ToggleItemDecorator(ToggleItemBase);
 

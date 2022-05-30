@@ -1170,7 +1170,7 @@ const VirtualListBaseFactory = (type) => {
  * @memberof ui/VirtualList
  * @ui
  * @public
- * @deprecated Will be removed soon
+ * @deprecated Will be removed in 5.0.0.
  */
 const VirtualListBase = VirtualListBaseFactory(JS);
 VirtualListBase.displayName = 'ui:VirtualListBase';
@@ -1183,7 +1183,7 @@ VirtualListBase.displayName = 'ui:VirtualListBase';
  * @memberof ui/VirtualList
  * @ui
  * @private
- * @deprecated Will be removed soon
+ * @deprecated Will be removed in 5.0.0.
  */
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';
