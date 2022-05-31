@@ -360,14 +360,12 @@ const useScrollBase = (props) => {
 
 		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
 		setTimeout(() => {
-			let handleResizeResult;
-			if (propsHandleResizeWindow) {
-				handleResizeResult = propsHandleResizeWindow();
-			}
-			if (scrollMode === 'translate' && !handleResizeResult) {
-				scrollTo({position: {x: 0, y: 0}, animate: false});
-			} else {
-				if (!handleResizeResult) {
+			const handleResizeResult = propsHandleResizeWindow?.();
+
+			if (handleResizeResult) {
+				if (scrollMode === 'translate') {
+					scrollTo({position: {x: 0, y: 0}, animate: false});
+				} else {
 					scrollContentHandle.current.scrollToPosition(0, 0, 'instant');
 				}
 			}
