@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/GridListImageItem`, to be removed in 5.0.0. Use `ui/ImageItem` instead
 
+### Added
+
+- `ui/FloatingLayer` to add `detail` property containing `inputType` in `onDismiss` event payload
+
 ## [4.5.0-alpha.2] - 2022-05-09
 
 ### Deprecated
