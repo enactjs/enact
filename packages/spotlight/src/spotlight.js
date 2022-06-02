@@ -730,14 +730,19 @@ const Spotlight = (function () {
 		 * @param {String|Node} [elem] The spotlight ID or selector for either a spottable
 		 *  component or a spotlight container, or spottable node. If not supplied, the default
 		 *  container will be focused.
-		 * @param {Object} [containerOption] An optional object containing preferred `enterTo`.
-		 *  It will be passed to the `getTargetByContainer` when `elem` is a container.
+		 * @param {Object} [containerOption] The object including `enterTo` and `toOuterContainer`.
+		 *  It works when the first parameter `elem` is either a spotlight container ID or a spotlight container node.
+		 * @param {('last-focused'|'default-element'|'topmost')} [containerOption.enterTo] Specifies preferred
+		 *  `enterTo` configuration.
+		 * @param {Boolean} [containerOption.toOuterContainer] If the proper target is not found, search one
+		 *  recursively to outer container.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
 		 */
 		focus: function (elem, containerOption = {}) {
 			let target = elem;
 			let wasContainerId = false;
+			let currentContainerNode = null;
 
 			if (!elem) {
 				target = getTargetByContainer();
@@ -745,6 +750,7 @@ const Spotlight = (function () {
 				if (getContainerConfig(elem)) {
 					target = getTargetByContainer(elem, containerOption.enterTo);
 					wasContainerId = true;
+					currentContainerNode = getContainerNode(elem);
 				} else if (/^[\w\d-]+$/.test(elem)) {
 					// support component IDs consisting of alphanumeric, dash, or underscore
 					target = getTargetBySelector(`[data-spotlight-id=${elem}]`);
@@ -753,6 +759,7 @@ const Spotlight = (function () {
 				}
 			} else if (isContainer(elem)) {
 				target = getTargetByContainer(getContainerId(elem), containerOption.enterTo);
+				currentContainerNode = elem;
 			}
 
 			const nextContainerIds = getContainersForNode(target);
@@ -769,6 +776,14 @@ const Spotlight = (function () {
 				// if we failed to find a spottable target within the provided container, we'll set
 				// it as the active container to allow it to focus itself if its contents change
 				setLastContainer(elem);
+			}
+
+			if (containerOption.toOuterContainer && currentContainerNode) {
+				const outerContainer = getContainersForNode(currentContainerNode.parentElement).pop();
+
+				if (outerContainer) {
+					return this.focus(outerContainer, containerOption);
+				}
 			}
 
 			return false;

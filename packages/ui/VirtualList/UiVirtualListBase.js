@@ -1,4 +1,3 @@
-/* eslint-disable react/no-this-in-sfc */
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
