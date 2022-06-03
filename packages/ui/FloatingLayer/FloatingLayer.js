@@ -69,6 +69,11 @@ class FloatingLayerBase extends Component {
 		 * by `FloatingLayerDecorator`. When cancel key is pressed, the function will only invoke if
 		 * `noAutoDismiss` is set to `false`.
 		 *
+		 * When pressing `ESC` key, event payload carries `detail` property containing `inputType`
+		 * value of `'key'`.
+		 * When clicking outside the boundary of the popup, event payload carries `detail` property
+		 * containing `inputType` value of `'click'`.
+		 *
 		 * @type {Function}
 		 * @public
 		 */
@@ -196,7 +201,7 @@ class FloatingLayerBase extends Component {
 	handleClick = handle(
 		forProp('noAutoDismiss', false),
 		forProp('open', true),
-		forwardCustom('onDismiss')
+		forwardCustom('onDismiss', () => ({detail: {inputType: 'click'}}))
 	).bind(this);
 
 	handleScroll = (ev) => {
@@ -253,7 +258,7 @@ class FloatingLayerBase extends Component {
 const handleCancel = handle(
 	// can't use forProp safely since either could be undefined ~= false
 	(ev, {open, noAutoDismiss, onDismiss}) => open && !noAutoDismiss && onDismiss,
-	forwardCustom('onDismiss'),
+	forwardCustom('onDismiss', () => ({detail: {inputType: 'key'}})),
 	stop
 );
 

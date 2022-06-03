@@ -3,7 +3,7 @@
  *
  * @module ui/GridListImageItem
  * @exports GridListImageItem
- * @deprecated Will be removed in 4.0.0. Use {@link ui/ImageItem} instead.
+ * @deprecated Will be removed in 5.0.0. Use {@link ui/ImageItem} instead.
  */
 
 import deprecate from '@enact/core/internal/deprecate';
@@ -215,7 +215,7 @@ const GridListImageItem = kind({
 	}, {
 		name: 'ui/GridListImageItem',
 		replacedBy: 'ui/ImageItem',
-		until: '4.0.0'
+		until: '5.0.0'
 	})
 });
 

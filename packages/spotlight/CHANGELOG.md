@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [4.5.0-beta.1] - 2022-05-31
+
+### Added
+
+- `spotlight` an optional `containerOption.toOuterContainer` parameter to `focus` function to search target recursively to outer container
+ 
 ## [4.5.0-alpha.2] - 2022-05-09
 
 ### Changed
