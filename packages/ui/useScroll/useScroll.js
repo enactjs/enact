@@ -471,8 +471,6 @@ const useScrollBase = (props) => {
 		mutableRef.current.resizeRegistry = Registry.create(handleResize);
 	}
 
-	// scroll start/stop
-
 	// scrollMode 'translate' [[
 	const doScrollStop = useCallback(() => {
 		mutableRef.current.scrolling = false;
@@ -1116,8 +1114,6 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	// scroll start/stop
-
 	// scrollMode 'translate' [[
 	function scrollAnimation (animationInfo) {
 		return (curTime) => {
@@ -1176,6 +1172,8 @@ const useScrollBase = (props) => {
 		forwardScrollEvent('onScroll');
 	}
 	// scrollMode 'translate' ]]
+
+	// scroll start/stop
 
 	function start ({targetX, targetY, animate = true, duration = animationDuration, overscrollEffect = false}) {
 		const
