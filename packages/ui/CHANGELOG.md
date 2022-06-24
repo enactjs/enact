@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to rerender property when `clientSize` is changed
+
 ## [4.5.0-rc.1] - 2022-06-23
 
 No significant changes.
