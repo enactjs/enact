@@ -403,7 +403,7 @@ const useScrollBase = (props) => {
 		};
 	}, [direction, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl, scrollMode, spotlightContainerDisabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		const
 			{hasDataSizeChanged} = scrollContentHandle.current,
 			{prevState, resizeRegistry, scrollToInfo} = mutableRef.current;
