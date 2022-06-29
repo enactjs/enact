@@ -757,7 +757,7 @@ const forwardCustom = handle.forwardCustom = (name, adapter) => handle(
 /**
  * Creates a handler that will forward the event to a function at `name` on `props` with capability
  * to prevent default behavior. If the specified prop is `undefined` or is not a function, it is
- * ignored. Returns `false` when `event.preventDefault()` has been called in a handler.
+ * ignored. The created handler returns `false` when `event.preventDefault()` has been called in a handler.
  *
  * If `adapter` is not specified, a new event payload will be generated with a `type` member with
  * the `name` of the custom event. If `adapter` is specified, the `type` member is added to the
@@ -800,7 +800,7 @@ const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = named((name, 
 
 	const adapterWithPrevent = (ev, ...args) => {
 		let customEventPayload = adapter ? adapter(ev, ...args) : null;
-		let preventDefaultFromAdapter = null;
+		let existingPreventDefault = null;
 
 		// Handle either no adapter or a non-object return from the adapter
 		if (!customEventPayload || typeof customEventPayload !== 'object') {
@@ -808,15 +808,15 @@ const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = named((name, 
 		}
 
 		if (typeof customEventPayload.preventDefault === 'function') {
-			preventDefaultFromAdapter = customEventPayload.preventDefault;
+			existingPreventDefault = customEventPayload.preventDefault;
 		} else if (typeof ev.preventDefault === 'function') {
-			preventDefaultFromAdapter = ev.preventDefault.bind(ev);
+			existingPreventDefault = ev.preventDefault.bind(ev);
 		}
 
 		customEventPayload.preventDefault = () => {
 			prevented = true;
-			if (typeof preventDefaultFromAdapter === 'function') {
-				preventDefaultFromAdapter();
+			if (typeof existingPreventDefault === 'function') {
+				existingPreventDefault();
 			}
 		};
 
