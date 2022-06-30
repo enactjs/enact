@@ -113,6 +113,8 @@ const defaultConfig = {
 	 * indicates there should be no restrictions when 5-way navigating the container.
 	 *
 	 * @type {String}
+	 * @default 'self-first'
+	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
 	restrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
@@ -228,6 +230,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * indicates there should be no restrictions when 5-way navigating the container.
 		 *
 		 * @type {String}
+		 * @default 'self-first'
 		 * @public
 		 */
 		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
