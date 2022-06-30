@@ -61,8 +61,10 @@ const defaultConfig = {
 
 	/**
 	 * The selector for the default spottable element within the container.
+	 * When an array of selectors is provided, the first selector that successfully matches a
+	 * node is used.
 	 *
-	 * @type {String}
+	 * @type {String|String[]}
 	 * @default '.spottable-default'
 	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
 	 * @public
@@ -99,7 +101,21 @@ const defaultConfig = {
 	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
-	preserveId: false
+	preserveId: false,
+
+	/**
+	 * Restricts or prioritizes navigation when focus attempts to leave the container. It
+	 * can be either 'none', 'self-first', or 'self-only'. Specifying 'self-first' indicates that
+	 * elements within the container will have a higher likelihood to be chosen as the next
+	 * navigable element. Specifying 'self-only' indicates that elements in other containers
+	 * cannot be navigated to by using 5-way navigation - however, elements in other containers
+	 * can still receive focus by calling `Spotlight.focus(elem)` explicitly. Specifying 'none'
+	 * indicates there should be no restrictions when 5-way navigating the container.
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	restrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
 };
 
 /**
@@ -182,6 +198,8 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * Used to identify this component within the Spotlight system.
 		 *
 		 * If the value is `null`, an id will be generated.
+		 * To keep the container information for restoring focus, it is required to specify
+		 * a unique identifier.
 		 *
 		 * @type {String}
 		 * @public
@@ -190,6 +208,9 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		/**
 		 * Whether or not the container is in muted mode.
+		 * When in muted mode, Spottable controls within the container can still gain focus,
+		 * however their `:focus` CSS styles will not be applied, giving them the appearance of not
+		 * having focus.
 		 *
 		 * @type {Boolean}
 		 * @default false
