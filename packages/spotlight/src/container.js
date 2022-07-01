@@ -955,7 +955,7 @@ function mayActivateContainer (containerId) {
 	// activated is not inside the restrict container, the next container should not be activated.
 	const currentContainerNode = getContainerNode(currentContainerId);
 	const restrictContainer = getContainersForNode(currentContainerNode).reduceRight((result, outerContainerId) => {
-		return result || (isRestrictedContainer(outerContainerId) ? outerContainerId : null) ;
+		return result || (isRestrictedContainer(outerContainerId) ? outerContainerId : null);
 	}, null);
 
 	return !restrictContainer || containsContainer(restrictContainer, containerId);
