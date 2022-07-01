@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+- `spotlight` to not leave the restrict container after when returning from another app
+ 
 ## [4.5.0-rc.1] - 2022-06-23
 
 No significant changes.
