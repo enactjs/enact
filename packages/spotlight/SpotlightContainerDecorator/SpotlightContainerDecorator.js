@@ -110,7 +110,7 @@ const defaultConfig = {
 	 * navigable element. Specifying 'self-only' indicates that elements in other containers
 	 * cannot be navigated to by using 5-way navigation - however, elements in other containers
 	 * can still receive focus by calling `Spotlight.focus(elem)` explicitly. Specifying 'none'
-	 * indicates there should be no restrictions when 5-way navigating the container.
+	 * indicates there is no restrictions when 5-way navigating the container.
 	 *
 	 * @type {String}
 	 * @default 'self-first'
@@ -211,7 +211,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		/**
 		 * Whether or not the container is in muted mode.
 		 * When in muted mode, Spottable controls within the container can still gain focus,
-		 * however their `:focus` CSS styles will not be applied, giving them the appearance of not
+		 * but their `:focus` CSS styles will not be applied, giving them the appearance of not
 		 * having focus.
 		 *
 		 * @type {Boolean}
@@ -227,7 +227,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * navigable element. Specifying 'self-only' indicates that elements in other containers
 		 * cannot be navigated to by using 5-way navigation - however, elements in other containers
 		 * can still receive focus by calling `Spotlight.focus(elem)` explicitly. Specifying 'none'
-		 * indicates there should be no restrictions when 5-way navigating the container.
+		 * indicates there is no restrictions when 5-way navigating the container.
 		 *
 		 * @type {String}
 		 * @default 'self-first'
