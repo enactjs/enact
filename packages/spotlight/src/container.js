@@ -951,8 +951,9 @@ function containsContainer (outerContainerId, innerContainerId) {
 function mayActivateContainer (containerId) {
 	const currentContainerId = getLastContainer();
 
-	// If the current container or Its outer containers are restricted to 'self-only' and if the next container to be
-	// activated is not inside the restrict container, the next container should not be activated.
+	// If the current container or its outer containers are restricted to 'self-only' and
+	// if the next container to be activated is not inside the restrict container,
+	// the next container should not be activated.
 	const currentContainerNode = getContainerNode(currentContainerId);
 	const restrictContainer = getContainersForNode(currentContainerNode).reduceRight((result, outerContainerId) => {
 		return result || (isRestrictedContainer(outerContainerId) ? outerContainerId : null);
