@@ -126,7 +126,7 @@ describe('Spotlight', () => {
 			}
 		));
 
-		test('should focus container by node', testScenario(
+		test('should focus container by selector', testScenario(
 			scenarios.complexTree,
 			(root) => {
 				configureContainer('first-container');

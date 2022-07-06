@@ -470,10 +470,13 @@ describe('ViewManager', () => {
 
 		await waitFor(() => {
 			const expected = 1;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
+		});
+		await waitFor(() => {
 			const expectedType = {type: 'onAppear'};
 			const actual = spy.mock.calls.length && spy.mock.calls[0][0];
 
-			expect(spy).toHaveBeenCalledTimes(expected);
 			expect(actual).toMatchObject(expectedType);
 		});
 	});

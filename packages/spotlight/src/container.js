@@ -7,6 +7,7 @@
 
 import and from 'ramda/src/and';
 import concat from 'ramda/src/concat';
+import {isWindowReady} from '@enact/core/snapshot';
 import {coerceArray} from '@enact/core/util';
 import intersection from 'ramda/src/intersection';
 import last from 'ramda/src/last';
@@ -88,17 +89,14 @@ let GlobalConfig = {
  * @private
  */
 const querySelector = (node, includeSelector, excludeSelector) => {
-	const include = Array.prototype.slice.call(node.querySelectorAll(includeSelector));
+	const include = new Set(node.querySelectorAll(includeSelector));
 	const exclude = node.querySelectorAll(excludeSelector);
 
 	for (let i = 0; i < exclude.length; i++) {
-		const index = include.indexOf(exclude.item(i));
-		if (index >= 0) {
-			include.splice(index, 1);
-		}
+		include.delete(exclude[i]);
 	}
 
-	return include;
+	return Array.from(include);
 };
 
 /**
@@ -261,7 +259,13 @@ const getContainerNode = (containerId) => {
  * @private
  */
 const navigableFilter = (node, containerId) => {
+	const nodeStyle = node && isWindowReady() && window.getComputedStyle(node);
 	const config = getContainerConfig(containerId);
+
+	if (!nodeStyle || nodeStyle.display === 'none' || nodeStyle.visibility === 'hidden') {
+		return false;
+	}
+
 	if (config && typeof config.navigableFilter === 'function') {
 		if (config.navigableFilter(node, containerId) === false) {
 			return false;
@@ -947,13 +951,15 @@ function containsContainer (outerContainerId, innerContainerId) {
 function mayActivateContainer (containerId) {
 	const currentContainerId = getLastContainer();
 
-	// If the current container is restricted to 'self-only' and if the next container to be
-	// activated is not inside the currently activated container, the next container should not be
-	// activated.
-	return (
-		!isRestrictedContainer(currentContainerId) ||
-		containsContainer(currentContainerId, containerId)
-	);
+	// If the current container or its outer containers are restricted to 'self-only' and
+	// if the next container to be activated is not inside the restrict container,
+	// the next container should not be activated.
+	const currentContainerNode = getContainerNode(currentContainerId);
+	const restrictContainer = getContainersForNode(currentContainerNode).reduceRight((result, outerContainerId) => {
+		return result || (isRestrictedContainer(outerContainerId) ? outerContainerId : null);
+	}, null);
+
+	return !restrictContainer || containsContainer(restrictContainer, containerId);
 }
 
 function getDefaultContainer () {
