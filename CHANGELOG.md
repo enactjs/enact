@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.5.0-rc.2] - 2022-07-06
+
+### Changed
+
+- `core/handle.forwardCustom` handler to include `preventDefault` and `stopPropagation` methods in the forwarded event payload
+
+### Fixed
+
+- `spotlight` to not leave the restrict container after returning from another app
+- `ui/Scroller` and `ui/VirtualList` to rerender property when `clientSize` is changed
+
 ## [4.5.0-rc.1] - 2022-06-23
 
 No significant changes.
