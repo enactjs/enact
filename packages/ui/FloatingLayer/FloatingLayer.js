@@ -46,7 +46,8 @@ class FloatingLayerBase extends Component {
 		floatLayerId: PropTypes.string,
 
 		/**
-		 * Prevents FloatingLayer from hiding when the user presses `ESC` key.
+		 * Prevents FloatingLayer from hiding when the user presses cancel/back (e.g. `ESC`) key or
+		 * clicks outside the floating layer.
 		 *
 		 * @type {Boolean}
 		 * @default false

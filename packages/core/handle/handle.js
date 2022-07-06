@@ -436,7 +436,7 @@ const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
  * @param    {Object}    ev     Event payload
  * @param    {Object}    props  Props object
  *
- * @returns  {Boolean}          Returns `true` if default action is prevented
+ * @returns  {Boolean}          Returns `false` if default action is prevented
  * @curried
  * @memberof core/handle
  * @private
@@ -732,21 +732,104 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
  */
 const forwardCustom = handle.forwardCustom = (name, adapter) => handle(
 	adaptEvent(
-		(...args) => {
-			let ev = adapter ? adapter(...args) : null;
+		(ev, ...args) => {
+			let customEventPayload = adapter ? adapter(ev, ...args) : null;
 
 			// Handle either no adapter or a non-object return from the adapter
-			if (!ev || typeof ev !== 'object') {
-				ev = {};
+			if (!customEventPayload || typeof customEventPayload !== 'object') {
+				customEventPayload = {};
 			}
 
-			ev.type = name;
+			customEventPayload.type = name;
+			if (typeof customEventPayload.preventDefault !== 'function' && typeof ev?.preventDefault === 'function') {
+				customEventPayload.preventDefault = ev.preventDefault.bind(ev);
+			}
+			if (typeof customEventPayload.stopPropagation !== 'function' && typeof ev?.stopPropagation === 'function') {
+				customEventPayload.stopPropagation = ev.stopPropagation.bind(ev);
+			}
 
-			return ev;
+			return customEventPayload;
 		},
 		forward(name)
 	)
 ).named('forwardCustom');
+
+/**
+ * Creates a handler that will forward the event to a function at `name` on `props` with capability
+ * to prevent default behavior. If the specified prop is `undefined` or is not a function, it is
+ * ignored. The created handler returns `false` when `event.preventDefault()` has been called in a handler.
+ *
+ * If `adapter` is not specified, a new event payload will be generated with a `type` member with
+ * the `name` of the custom event. If `adapter` is specified, the `type` member is added to the
+ * value returned by `adapter`.
+ *
+ * The `adapter` function receives the same arguments as any handler. The value returned from
+ * `adapter` is passed as the first argument to `handler` with the remaining arguments kept the
+ * same. This is often useful to generate a custom event payload before forwarding on to a callback.
+ *
+ * Example:
+ * ```
+ * import {forwardCustomWithPrevent, handle} from '@enact/core/handle';
+ *
+ * // calls the onChange callback with the event: {type: 'onChange'}
+ * const forwardChangePreventDefault = handle(
+ *   forwardCustomWithPrevent('onChange'),
+ *   (ev) => console.log('default action', ev)
+ * );
+ *
+ * // calls the onChange callback with the event: {type: 'onChange', index}
+ * const forwardChangeWithIndexPreventDefault = handle(
+ *   forwardCustomWithPrevent('onChange', (ev, {index}) => ({index})),
+ *   (ev) => console.log('default action', ev)
+ * );
+ * ```
+ *
+ * @method   forwardCustomWithPrevent
+ * @param    {String}        name      Name of method on the `props`
+ * @param    {EventAdapter}  [adapter] Function to adapt the event payload
+ *
+ * @returns  {HandlerFunction}         Returns an [event handler]{@link core/handle.EventHandler}
+ *                                     (suitable for passing to handle or used directly within
+ *                                     `handlers` in [kind]{@link core/kind}) that will forward the
+ *                                     custom event and will return `false` if default action is prevented
+ * @memberof core/handle
+ * @private
+ */
+const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = named((name, adapter) => {
+	let prevented = false;
+
+	const adapterWithPrevent = (ev, ...args) => {
+		let customEventPayload = adapter ? adapter(ev, ...args) : null;
+		let existingPreventDefault = null;
+
+		// Handle either no adapter or a non-object return from the adapter
+		if (!customEventPayload || typeof customEventPayload !== 'object') {
+			customEventPayload = {};
+		}
+
+		if (typeof customEventPayload.preventDefault === 'function') {
+			existingPreventDefault = customEventPayload.preventDefault;
+		} else if (typeof ev.preventDefault === 'function') {
+			existingPreventDefault = ev.preventDefault.bind(ev);
+		}
+
+		customEventPayload.preventDefault = () => {
+			prevented = true;
+			if (typeof existingPreventDefault === 'function') {
+				existingPreventDefault();
+			}
+		};
+
+		return customEventPayload;
+	};
+
+	return (
+		handle(
+			forwardCustom(name, adapterWithPrevent),
+			() => (!prevented)
+		)
+	);
+}, 'forwardCustomWithPrevent');
 
 /**
  * Accepts a handler and returns the logical complement of the value returned from the handler.
@@ -782,6 +865,7 @@ export {
 	callOnEvent,
 	forward,
 	forwardCustom,
+	forwardCustomWithPrevent,
 	forwardWithPrevent,
 	forEventProp,
 	forKey,

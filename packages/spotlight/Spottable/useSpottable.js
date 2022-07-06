@@ -1,6 +1,5 @@
 import useClass from '@enact/core/useClass';
 import {useLayoutEffect, useRef} from 'react';
-import ReactDOM from 'react-dom';
 
 import {SpottableCore, spottableClass} from './SpottableCore';
 
@@ -75,8 +74,7 @@ const useSpottable = ({spotRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE
 	hook.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context.current);
 
 	useLayoutEffect(() => {
-		// eslint-disable-next-line react/no-find-dom-node
-		hook.load(ReactDOM.findDOMNode(spotRef || null));
+		hook.load(spotRef || null);
 
 		return () => {
 			hook.unload();
