@@ -298,7 +298,7 @@ this container receives focus first.
 
 Whether the container will preserve the id when it unmounts.
 
-#### Configuration Properties
+#### Properties
 
 `containerId`
 + Type: [string]
