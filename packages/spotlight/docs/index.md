@@ -215,12 +215,12 @@ matches `selector`. This method has no effect if Spotlight is paused.
 Moves focus in the specified direction of `selector`. If `selector` is not specified,
 Spotlight will move in the given direction of the currently spotted control.
 
-## HOC Configuration And Properties
+## HOC Configuration Parameters And Properties
 
-##### Spotlight HOC Configuration
+##### Spotlight HOC Configuration Parameters
 
-Configuration in the form of an object can be passed as an initial argument to a HOC when creating a
-Spotlight control. In these cases, the HOC configuration should remain static and unchanged in the
+Configuration parameters in the form of an object can be passed as an initial argument to a HOC when creating a
+Spotlight control. In these cases, the HOC configuration parameters should remain static and unchanged in the
 life-cycle of the control.
 
 ```js
@@ -246,9 +246,9 @@ const App = kind({
 
 ### Spottable
 
-For more details and full list of `Spottable` api, see [spotlight/Spottable/](../../modules/spotlight/Spottable/).
+For more details and full list of `Spottable` API, see [spotlight/Spottable](../../modules/spotlight/Spottable).
 
-##### Configuration
+##### Configuration Parameters
 
 `emulateMouse`
 + Type: [boolean]
@@ -273,9 +273,9 @@ A callback function to override default spotlight behavior when exiting the spot
 
 ### Container
 
-For more details and full list of `Container` api, see [spotlight/SpotlightContainerDecorator](../../modules/spotlight/SpotlightContainerDecorator/).
+For more details and full list of `Container` API, see [spotlight/SpotlightContainerDecorator](../../modules/spotlight/SpotlightContainerDecorator).
 
-##### Configuration
+##### Configuration Parameters
 
 `defaultElement`
 + Type: [string|string[]]
@@ -291,6 +291,26 @@ provided, the first selector that successfully matches a node is used.
 
 If the focus originates from another container, you can define which element in
 this container receives focus first. 
+
+`preserveId`
++ Type: [boolean]
++ Default: `false`
+
+Whether the container will preserve the id when it unmounts.
+
+#### Configuration Properties
+
+`containerId`
++ Type: [string]
+
+Specifies the container id. If the value is `null`, an id will be generated.
+
+`spotlightRestrict`
++ Type: [string]
++ Values: [`'none'`, `'self-first'`, or `'self-only'`]
++ Default: `'none'`
+
+Restricts or prioritizes focus to the controls in the current container.
 
 ```js
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
