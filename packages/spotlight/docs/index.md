@@ -290,7 +290,7 @@ provided, the first selector that successfully matches a node is used.
 + Default: `''`
 
 If the focus originates from another container, you can define which element in
-this container receives focus first. 
+this container receives focus first.
 
 `preserveId`
 + Type: [boolean]
