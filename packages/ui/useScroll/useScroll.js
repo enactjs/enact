@@ -90,6 +90,7 @@ const useScrollBase = (props) => {
 			assignProperties,
 			dataSize,
 			direction,
+			editable,
 			horizontalScrollbar,
 			horizontalScrollbarHandle,
 			itemRenderer,
@@ -1534,6 +1535,7 @@ const useScrollBase = (props) => {
 		cbScrollTo: scrollTo,
 		className: [css.scrollFill],
 		direction,
+		editable,
 		get isHorizontalScrollbarVisible () {
 			return isHorizontalScrollbarVisible;
 		},

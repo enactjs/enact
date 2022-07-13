@@ -116,6 +116,8 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 	 */
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
+	editable: PropTypes.object, // TBD // FIXME
+
 	/**
 	 * Specifies how to show horizontal scrollbar.
 	 *
@@ -279,6 +281,7 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 VirtualList.defaultProps = {
 	cbScrollTo: nop,
 	direction: 'vertical',
+	editable: null,
 	horizontalScrollbar: 'auto',
 	noScrollByDrag: false,
 	noScrollByWheel: false,
@@ -385,6 +388,8 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 	 * @public
 	 */
 	direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+	editable: PropTypes.object, // TBD // FIXME
 
 	/**
 	 * Specifies how to show horizontal scrollbar.
@@ -549,6 +554,7 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 VirtualGridList.defaultProps = {
 	cbScrollTo: nop,
 	direction: 'vertical',
+	editable: null,
 	horizontalScrollbar: 'auto',
 	noScrollByDrag: false,
 	noScrollByWheel: false,
