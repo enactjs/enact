@@ -1,10 +1,8 @@
 ---
-title: Ui Testing
+title: UI Testing
 ---
-## What is UI testing?
-Manual tests are time-consuming and sometimes error occurs. A more efficient approach is to create UI tests so that user tasks are executed in an automated test. With UI test, tests can be executed quickly and reliably in a repeatable way. Simply stated, first priority considering is two things.
-* How component handles user actions performed via input devices.
-* Whether elements correctly work as intended.
+## What is UI Testing?
+Enact supports automated UI interaction testing. It automates the user's input and tests if the component functions correctly. Enact has ui-test-utils package which includes the common WebDriver configurations and some utility modules for executing automated UI tests from Enact UI packages.
 
 ## Prerequisites
 Clone sandstone from GitHub, install dependencies and connect the modules using Lerna:
@@ -20,11 +18,11 @@ git checkout develop
 npm install
 ```
 
-## Creating tests
+## Creating Tests
 Within the UI Library, create an app for testing in `./tests/ui/apps` and create a corresponding test in `./tests/ui/specs`.
 
 	+ src
-		+ test
+		+ tests
 			+ ui
 				+ apps
 					+testComponent
@@ -32,8 +30,10 @@ Within the UI Library, create an app for testing in `./tests/ui/apps` and create
 				+ specs
 					+ testComponent
 						testComponent-specs.js		<-- create spec file here
- In UI test, create apps to test view and specs. Please refer sample code.
-* Button.js
+
+Say you created the Button component. To test the component, we could write something like:
+
+* Button-View.js
 
 ```JS
 import Button from '../../../../Button';
@@ -75,26 +75,43 @@ describe('Button', function () {
 For details on the relevant APIs or options, please see [ui-test-utils](https://github.com/enactjs/ui-test-utils).
 
 ## Running Tests
-For a single-run, execute `npm run test-ui`. 
+```bash
+npm run test-ui
+```
 
-* Filtering UI by Component:
+### Filtering UI by Component
 
-	`npm run test-ui -- --spec <name-of-component>`
+```bash
+npm run test-ui -- --spec <pattern>
+```
 
-* Re-run tests without building:
+### Re-run tests without building
+```bash
+npm run test-ui -- --skip-build
+```
 
-	`npm run test-ui -- --skip-build`
+### Running with visible browser
+```bash
+npm run test-ui -- --visible
+```
 
-* Running with visible browser:
+### Running with filtering by component and without building
+```bash
+npm run test-ui -- --spec <pattern> --skip-build
+```
 
-	`npm run test-ui -- --visible`
-
-* Running with filtering by component and without building:
-
-	`npm run test-ui -- --spec <name-of-component> --skip-build`
+Note: `<pattern>` can also be a regex and may need to be in quotes to prevent expansion on the command line.
 
 ## Viewing Test Results
-By default, Test result display on console whether pass or fail.
-If fail occurs, fail log display in console and you can see the screenshot about fail in `./test/ui/errorShots/`.
-Also, you can see the view you made on your browser. This requires that a server be running on port 5000. If you have globally installed the `serve` command with `npm install -g serve` you can start the server like this `serve ./test/ui/dist/`.
-To open a specific test app, open the URL path for the test. A specific app is displayed as a directory on this page. You can see the app as click the app you wanted.
+After a test runs, you can view the test results on the console. When a test fails, a screenshot will be captured showing the state when it failed. The screenshots are saved to `./test/ui/errorShots/`. The test run will display the filename for a failed test:
+
+Example:
+
+```none
+	Screenshot location: ./tests/ui/errorShots/should-meet-initial-conditions.png
+```
+In the output, the **test case** button opens the sample app with the parameters that produced the output. This requires that a server be running on port 5000. If you have globally installed the `serve` command with `npm install -g serve` you can start the server like this:
+
+```bash
+serve tests/screenshot/dist
+```

@@ -57,7 +57,7 @@ project. Please read this section carefully if you are interested in contributin
 	*   Please make sure your contributions follow our Style Guide.  At a minimum, ensure your source passes through
 	`npm run lint` with no warnings.
 	*   Please squash pull requests down to a single commit to simplify review and keep history clean.
-	*   Ensure all new features have unit tests,[UI-Test](./ui-testing.md) and [Screenshot](./screenshot-testing.md) that pass and any bug fixes include tests that fail without the fix applied.
+	*   Ensure all new features have unit tests that pass and any bug fixes include tests that fail without the fix applied. Adding automated [UI tests](./ui-testing.md) and [Screenshot tests](./screenshot-testing.md) supported by Enact packages are highly recommended.
 	*   Help keep diffs easy to read by not making unnecessary rearrangements to the source code.
 	*   Make sure not to inadvertently change line ending types from Unix to Windows.
 	*   Ensure inline API documentation exists and is up-to-date (minimum: component summary and descriptions of all
