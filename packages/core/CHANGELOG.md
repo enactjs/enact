@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [4.5.0-rc.2] - 2022-07-06
+
+### Changed
+
+- `core/handle.forwardCustom` handler to include `preventDefault` and `stopPropagation` methods in the forwarded event payload
+
+## [4.5.0-rc.1] - 2022-06-23
+
+No significant changes.
+
+## [4.5.0-beta.1] - 2022-05-31
+
+No significant changes.
+
 ## [4.5.0-alpha.2] - 2022-05-09
 
 No significant changes.

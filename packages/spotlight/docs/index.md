@@ -215,12 +215,12 @@ matches `selector`. This method has no effect if Spotlight is paused.
 Moves focus in the specified direction of `selector`. If `selector` is not specified,
 Spotlight will move in the given direction of the currently spotted control.
 
-## HOC Parameters And Properties
+## HOC Configuration Parameters And Properties
 
-##### Spotlight HOC Parameters
+##### Spotlight HOC Configuration Parameters
 
-Parameters in the form of an object can be passed as an initial argument to a HOC when creating a
-Spotlight control. In these cases, the HOC parameter should remain static and unchanged in the
+Configuration parameters in the form of an object can be passed as an initial argument to a HOC when creating a
+Spotlight control. In these cases, the HOC configuration parameters should remain static and unchanged in the
 life-cycle of the control.
 
 ```js
@@ -246,7 +246,9 @@ const App = kind({
 
 ### Spottable
 
-##### Parameters
+For more details and full list of `Spottable` API, see [spotlight/Spottable](../../modules/spotlight/Spottable).
+
+##### Configuration Parameters
 
 `emulateMouse`
 + Type: [boolean]
@@ -269,14 +271,11 @@ May be added to temporarily make a control not spottable.
 
 A callback function to override default spotlight behavior when exiting the spottable control.
 
-`onSpotlightDisappear`
-+ Type: [function]
-
-A callback function to be called when the component is removed while retaining focus.
-
 ### Container
 
-##### Parameters
+For more details and full list of `Container` API, see [spotlight/SpotlightContainerDecorator](../../modules/spotlight/SpotlightContainerDecorator).
+
+##### Configuration Parameters
 
 `defaultElement`
 + Type: [string|string[]]
@@ -305,22 +304,6 @@ Whether the container will preserve the id when it unmounts.
 + Type: [string]
 
 Specifies the container id. If the value is `null`, an id will be generated.
-
-`spotlightDisabled`
-+ Type: [boolean]
-+ Default: `false`
-
-When `true`, controls in the container cannot be navigated.
-
-`spotlightMuted`
-+ Type: [boolean]
-+ Default: `false`
-
-Whether or not the container is in muted mode. When in muted mode, Spottable controls within the container
-can still gain focus, however their `:focus` CSS styles will not be applied, giving them the appearance
-of not having focus. Muting a container is generally done to temporarily disable CSS changes and
-default `onFocus` and `onBlur` events without removing focus from the container itself - which would
-happen if you disabled the container using `spotlightDisabled`.
 
 `spotlightRestrict`
 + Type: [string]

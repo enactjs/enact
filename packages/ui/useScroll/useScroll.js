@@ -360,13 +360,14 @@ const useScrollBase = (props) => {
 
 		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
 		setTimeout(() => {
-			if (propsHandleResizeWindow) {
-				propsHandleResizeWindow();
-			}
-			if (scrollMode === 'translate') {
-				scrollTo({position: {x: 0, y: 0}, animate: false});
-			} else {
-				scrollContentHandle.current.scrollToPosition(0, 0, 'instant');
+			const handleResizeResult = propsHandleResizeWindow?.();
+
+			if (handleResizeResult) {
+				if (scrollMode === 'translate') {
+					scrollTo({position: {x: 0, y: 0}, animate: false});
+				} else {
+					scrollContentHandle.current.scrollToPosition(0, 0, 'instant');
+				}
 			}
 
 			enqueueForceUpdate();
@@ -402,7 +403,7 @@ const useScrollBase = (props) => {
 		};
 	}, [direction, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl, scrollMode, spotlightContainerDisabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		const
 			{hasDataSizeChanged} = scrollContentHandle.current,
 			{prevState, resizeRegistry, scrollToInfo} = mutableRef.current;
