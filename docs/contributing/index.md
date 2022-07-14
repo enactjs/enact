@@ -7,6 +7,7 @@ submitting code or documentation to the project:
 
 <!-- *   [Coding Style Guide](./code-style.md) - The Enact code style explained -->
 *   [Building Enact Locally](./building-enact-locally.md) - How to install and use the Enact source
+*   [Adding Automated UI Tests](./adding-automated-ui-tests.md) - How to add and run the automated UI tests of Enact components
 *   [Documentation Style Guide](./documentation.md) - How we use jsDoc comments to document Enact
 *   [Documenting Changes](./changelogs.md) -  The Enact `CHANGELOG.md` guidelines
 
@@ -57,7 +58,7 @@ project. Please read this section carefully if you are interested in contributin
 	*   Please make sure your contributions follow our Style Guide.  At a minimum, ensure your source passes through
 	`npm run lint` with no warnings.
 	*   Please squash pull requests down to a single commit to simplify review and keep history clean.
-	*   Ensure all new features have unit tests that pass and any bug fixes include tests that fail without the fix applied. Adding automated [UI tests](./ui-testing.md) and [Screenshot tests](./screenshot-testing.md) supported by Enact packages are highly recommended.
+	*   Ensure all new features have [unit tests](../testing-components/unit-testing/index.md) that pass and any bug fixes include tests that fail without the fix applied. [Adding automated UI tests](./adding-automated-ui-tests.md) supported by Enact packages are highly recommended.
 	*   Help keep diffs easy to read by not making unnecessary rearrangements to the source code.
 	*   Make sure not to inadvertently change line ending types from Unix to Windows.
 	*   Ensure inline API documentation exists and is up-to-date (minimum: component summary and descriptions of all
