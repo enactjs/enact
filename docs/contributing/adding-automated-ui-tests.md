@@ -50,7 +50,7 @@ npm run test-ui -- --spec <pattern>
 
 Check out [here](https://github.com/enactjs/ui-test-utils/blob/master/README.md) for more options.
 
-## Viewing Test Results
+### Viewing Test Results
 
 After a test runs, you can view the test results on the console. When a test fails, a screenshot will be captured showing the state when it failed. The screenshots are saved to `./tests/ui/errorShots/`. The test run will display the filename for a failed test:
 
@@ -150,7 +150,7 @@ npm run test-ui -- --component <pattern>
 
 Check out [here](https://github.com/enactjs/ui-test-utils/blob/master/README.md) for more options.
 
-## Viewing Test Results
+### Viewing Test Results
 
 After a test runs, if new screenshots are generated, a page is created with links to open each of the images. To open this file (on a Mac):
 
