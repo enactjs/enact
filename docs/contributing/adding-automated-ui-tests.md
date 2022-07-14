@@ -124,7 +124,7 @@ describe('Button', function () {
 });
 ```
 
-Please refer to the existing Screenshot test cases of other Sandstone components. It should be a great example for you. Also, there are useful helper functions in [@enact/ui-test-utils/utils](https://github.com/enactjs/ui-test-utils/tree/master/utils).
+Please refer to the existing UI test cases of other Sandstone components. It should be a great example for you. Also, there are useful helper functions in [@enact/ui-test-utils/utils](https://github.com/enactjs/ui-test-utils/tree/master/utils).
 
 ## Screenshot Testing
 
