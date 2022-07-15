@@ -199,7 +199,21 @@ const ButtonTests = [
 export default ButtonTests;
 ```
 
-And add your component to the `SandstoneComponents.js` file like:
+And add your component to the `SandstoneComponents.js` and `importer.js` file like:
+
+* importer.js
+
+```JS
+import Button from '../../../Button';
+
+const components = {
+	ActionGuide,
+	Alert,
+	BodyText,
+	Button, // Added here!
+	//...
+};
+```
 
 * SandstoneComponents.js
 
