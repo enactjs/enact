@@ -48,7 +48,7 @@ If you run the tests of specific component(s), run the following command:
 npm run test-ui -- --spec <pattern>
 ```
 
-Check out [here](https://github.com/enactjs/ui-test-utils/blob/master/README.md) for more options.
+Check out [here](https://github.com/enactjs/ui-test-utils/blob/master/README.md#filtering-tests) for more options.
 
 ### Viewing Test Results
 
@@ -57,7 +57,7 @@ After a test runs, you can view the test results on the console. When a test fai
 Example:
 
 ```none
-	Screenshot location: ./tests/ui/errorShots/should-meet-initial-conditions.png
+Screenshot location: ./tests/ui/errorShots/should-meet-initial-conditions.png
 ```
 
 Also, you could open and inspect the built testing apps under `./tests/ui/dist`. If you have globally installed the `serve` command with `npm install -g serve` you can start the server like this:
@@ -148,7 +148,7 @@ If you run the tests of specific component(s), run the following command:
 npm run test-ui -- --component <pattern>
 ```
 
-Check out [here](https://github.com/enactjs/ui-test-utils/blob/master/README.md) for more options.
+Check out [here](https://github.com/enactjs/ui-test-utils/blob/master/README.md#filtering-screenshot-by-component) for more options.
 
 ### Viewing Test Results
 
