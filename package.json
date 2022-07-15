@@ -23,7 +23,7 @@
     "extends": "enact-proxy/strict"
   },
   "devDependencies": {
-    "@enact/docs-utils": "enactjs/docs-utils#feature/WRO-6381",
+    "@enact/docs-utils": "0.3.7",
     "eslint-config-enact-proxy": "^1.0.5",
     "lerna": "^5.1.8"
   }
