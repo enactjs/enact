@@ -11,8 +11,7 @@ this guide.
 ## General Changes
 
 ### React and React DOM
-Enact 4.5 updates the `react` and `react-dom` dependencies to 18.x.  Developers should ensure
-their code does not rely on features that are no longer available in these versions.  
+Enact 4.5 updates the `react` and `react-dom` dependencies to 18.x.
 
 React 18 introduces out-of-the-box improvements like automatic batching, new APIs like startTransition, and streaming server-side rendering with support for Suspense.  
 In this guide, we'll walk you through what are these features and how to use them with examples.
@@ -62,6 +61,29 @@ if (typeof window !== 'undefined') {
 export default appElement;
 ```
 
+If you build your app with the isomorphic or snapshot build option with the Enact CLI, please use `ReactDOMClient.hydrateRoot` like below.
+
+```js
+/* global ENACT_PACK_ISOMORPHIC */
+import {createRoot, hydrateRoot} from 'react-dom/client';
+
+import App from './App';
+
+const appElement = (<App />);
+
+// In a browser environment, render the app to the document.
+if (typeof window !== 'undefined') {
+  const container = document.getElementById('root');
+	if (ENACT_PACK_ISOMORPHIC) {
+		hydrateRoot(container, appElement);
+	} else {
+		createRoot(container).render(appElement);
+	}
+}
+
+export default appElement;
+```
+
 Now, you are all set to use the new Concurrent Features of React 18.  
 Let's look into some of the Concurrent Features in detail.
 
@@ -101,7 +123,7 @@ function handleClick() {
   // React has updated the DOM by now
 }
 ```
-We have an example app for demonstration [here](https://github.com/enactjs/samples/tree/develop/sandstone/pattern-react18-new) at the `Automatic Batching` tab.  
+We have an example app for demonstration [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) at the `Automatic Batching` tab.  
 In the example, we increment and decrement a variable by 1 for 1000 times and we count the re-renders. Before Automatic Batching, every time the value is changed the component had to re-render, slowing the app for no real reason.
 
 
@@ -121,7 +143,7 @@ const [isPending, startTransition] = useTransition({timeoutMs: 3000});
 The fetching of the new data is wrapped inside `startTransition`. The `isPending` tells if the content is currently being loaded or not. Its `timeoutMs` property specifies how long we're willing to wait for the transition to finish.  
 Now instead of switching tabs immediately, the current tab continues to show its content until the new tab's content is ready. There is also the possibility to show a loading indicator, by making use of the `isPending` prop of `useTransition`.
 
-[Here](https://github.com/enactjs/samples/tree/develop/sandstone/pattern-react18-new) is an example app for demonstration.
+[Here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) is an example app for demonstration.
 Check out the `useTransition` tab.
 
 
@@ -139,7 +161,7 @@ function ProfilePage() {
     );
 }
 ```
-Let's look at the example app from [here](https://github.com/enactjs/samples/tree/develop/sandstone/pattern-react18-new) at the `Suspense` tab.  
+Let's look at the example app from [here](https://github.com/enactjs/samples/tree/master/sandstone/pattern-react18-new) at the `Suspense` tab.  
 We have two panels, one with `Suspense`, one without. They both load the same list of images. On the first panel, where we have implemented `Suspense`, we can see that until the data is available, we display a skeleton page that has the exact visual structure of the page with placeholders for the lazy loading data. This offers a more pleasant UI experience. As opposed to it, on the second panel, where we haven't implemented `Suspense`, we can observe that it takes several seconds for content to show on the page. During this time user sees a blank page that might be confusing.
 
 So far, we took around for key Concurrent Features of React 18, other than this, React 18 introduces new hooks like `useId`, `useDeferredValue`, etc.  
@@ -147,29 +169,25 @@ If you want more information, please refer to [How to Upgrade to React 18](https
 
 
 ### cli
-`@enact/cli` must be upgraded to version `5.0.0-alpha.1` or newer like below.  
+`@enact/cli` must be upgraded to version `5.0.0` or newer like below.  
 
 ```sh
-npm install -g @enact/cli@5.0.0-alpha.1
+npm install -g @enact/cli
 ```
 
-`@enact/cli` `5.0.0-alpha.1` updates the `webpack` to `5.x`, `eslint` to `8.x`, `jest` to `27.x`,
+`@enact/cli` `5.0.0` updates the `webpack` to `5.x`, `eslint` to `8.x`, `jest` to `27.x`,
 `react`, `react-dom` to `18.x`, and drops the support of `enzyme`.  
 Developers should ensure their code does not rely on features that are no longer available in these versions.
 
 Please do not hesitate to replace `enzyme` with [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/) when you make your unit tests.
 
-As `@enact/cli` updates `react` and `react-dom` to `18.x`, `PrerenderPlugin` will automatically
-convert `ReactDOMClient.createRoot` to `ReactDOMClient.hydrateRoot` for prerendered apps.  
-Please make sure to follow the above new `createRoot` API pattern to work prerendering properly.
+As `@enact/cli` updates `react` and `react-dom` to `18.x`, please make sure to follow the above new `hydrateRoot` API pattern to work prerendering properly.
 
 As we update to `eslint 8`, some of the lint rules could be changed. If you run into unknown lint warnings or errors, don't be afraid, and please proceed to fix them. They are likely to be the rules from [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react), so refer to the console message and look up which rule is related.  
-The in-editor-linting will work just fine if you followed the guide from migration to 4.0.  
-Don't forget to install ESlint globally and uninstall any previous globally-installed Enact linting package.
 
 `webpack 5` removed polyfills for native NodeJS libraries like `crypto`.  
 But `@enact/cli` needs to have NodeJS polyfills to run Screenshot tests so we've added `node-polyfill-webpack-plugin`. So, if you were using those polyfills, you will be fine.  
-Although `@enact/cli` supports them for specific reasons, please avoid using it in the frontend code.
+Although `@enact/cli` supports them for specific reasons, please avoid using it in the front-end code.
 
 
 ### webOS TV
@@ -185,15 +203,33 @@ All components are updated to use `forwardCustom` and add `type` when forwarding
 ### `DatePicker` and `TimePicker`
 They are changed to not show a pressing effect on touch input.
 
+### `FixedPopupPanels`, `FlexiblePopupPanels`, `Popup`, and `PopupTabLayout`
+Detail property containing `inputType` is added in `onClose` event payload.
+
 ### `Icon`
 The public class name `icon` is added.
+The new icon `wallpaper` is added.
+
+### `Panels.Header` and `WizardPanels`
+The prop `noSubtitle` is added to hide subtitle area.
+
+### `Panels.Header` and `RadioItem`
+They are changed to use `onClick` instead of `onTap` for touch support.
 
 ### `Picker` and `RangePicker`
 The prop `changedBy` is added to provide a way to control left and right keys in horizontal joined Picker.
+They are changed to read out `title`.
+
+### `Scroller`
+The prop `editable` is added to enable editing items in the scroller.
+Scrollbar thumb is now read out 'press ok button to read text' additionally when `focusableScrollbar` prop is `byEnter` and read out 'leftmost', 'rightmost', 'topmost', or 'downmost' when reaching the end of the scroll.
 
 ### `Scroller` and `VirtualList`
 They are changed to show overscroll effect when flicking by default.  
 The props `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label` are added.
+
+### `TabLayout`
+The component is changed to eliminate the horizontal maximum number of tabs.
 
 ### `VideoPlayer`
 The props `backButtonAriaLabel`, `onWillFastForward`, `onWillJumpBackward`, `onWillJumpForward`, `onWillPause`, `onWillPlay`, and `onWillRewind` are added.  
@@ -206,6 +242,11 @@ All components are updated to use `forwardCustom` and add `type` when forwarding
 
 ### `MarqueeDecorator`
 The `locale` type for `forceDirection` prop is added not to override the direction depending on contents.
+The `className` config is deprecated and has been replaced by `css`. It will be removed in 5.0.0. Use `css` instead to customize the marquee styles.
 
 ### `Scroller` and `VirtualList`
 The props `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label` are removed.
+
+## spotlight
+It has been changed to not focus on an invisible element.
+An optional `containerOption.toOuterContainer` parameter is added to `focus` function to search target recursively to outer container.
