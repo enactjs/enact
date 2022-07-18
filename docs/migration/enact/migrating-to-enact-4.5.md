@@ -207,7 +207,7 @@ They are changed to not show a pressing effect on touch input.
 Detail property containing `inputType` is added in `onClose` event payload.
 
 ### `Icon`
-The public class name `icon` is added.
+The public class name `icon` is added.  
 The new icon `wallpaper` is added.
 
 ### `Panels.Header` and `WizardPanels`
@@ -217,11 +217,11 @@ The prop `noSubtitle` is added to hide subtitle area.
 They are changed to use `onClick` instead of `onTap` for touch support.
 
 ### `Picker` and `RangePicker`
-The prop `changedBy` is added to provide a way to control left and right keys in horizontal joined Picker.
+The prop `changedBy` is added to provide a way to control left and right keys in horizontal joined Picker.  
 They are changed to read out `title`.
 
 ### `Scroller`
-The prop `editable` is added to enable editing items in the scroller.
+The prop `editable` is added to enable editing items in the scroller.  
 Scrollbar thumb is now read out 'press ok button to read text' additionally when `focusableScrollbar` prop is `byEnter` and read out 'leftmost', 'rightmost', 'topmost', or 'downmost' when reaching the end of the scroll.
 
 ### `Scroller` and `VirtualList`
@@ -241,12 +241,12 @@ The prop `onBack` is added to provide a way to exit the video player via touch.
 All components are updated to use `forwardCustom` and add `type` when forwarding custom events. If you were using `event` object from custom events, it may not have the information that you expect.
 
 ### `MarqueeDecorator`
-The `locale` type for `forceDirection` prop is added not to override the direction depending on contents.
+The `locale` type for `forceDirection` prop is added not to override the direction depending on contents.  
 The `className` config is deprecated and has been replaced by `css`. It will be removed in 5.0.0. Use `css` instead to customize the marquee styles.
 
 ### `Scroller` and `VirtualList`
 The props `data-webos-voice-focused`, `data-webos-voice-disabled`, and `data-webos-voice-group-label` are removed.
 
 ## spotlight
-It has been changed to not focus on an invisible element.
+It has been changed to not focus on an invisible element.  
 An optional `containerOption.toOuterContainer` parameter is added to `focus` function to search target recursively to outer container.
