@@ -21,15 +21,22 @@ npm run bootstrap
 # wait a while … installing :allthethings:
 ```
 
-Once this process completes, you can begin working with Enact, run unit tests, or run the sampler. To use the local Enact install with your apps, you will first need to `npm link` each submodule manually or use the `link-all` task:
+Once this process completes, you can begin working with Enact, run unit tests, or run the sampler. To use the local Enact install with your apps or our theme libraries like Sandstone, you will first need to `npm link` each submodule manually or use the `link-all` task:
 
 ```shell
 npm run link-all
 ```
 
-Once this process is complete, you can use the Enact cli to link the dependencies to your app:
+Once this process is complete, you can use the Enact CLI to link the dependencies to your app or our theme libraries:
 
 ```shell
-# from within your app directory
+# from within your app/our theme libraries directory
 enact link
+```
+
+Please note that the Enact CLI provides a command `enact bootstrap` to install dependencies and link Enact packages in one step:
+
+```shell
+# from within your app/our theme libraries directory
+enact bootstrap
 ```
