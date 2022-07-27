@@ -6,7 +6,7 @@
  */
 
 import {createContext, useContext, Component as ReactComponent} from 'react';
-
+import {useDispatch} from 'react-redux';
 import useHandlers from '../useHandlers';
 import Handlers from '../useHandlers/Handlers';
 
@@ -135,6 +135,7 @@ const kind = (config) => {
 		name,
 		propTypes,	// eslint-disable-line react/forbid-foreign-prop-types
 		render,
+		dispatchs,
 		styles: cfgStyles
 	} = config;
 
@@ -156,9 +157,21 @@ const kind = (config) => {
 			const ctx = useContext(contextType);
 			const boundHandlers = useHandlers(handlers, props, ctx);
 
-			const merged = {
+			const dispatchHandlers = {};
+			if (dispatchs) {
+				const dispatch = useDispatch();
+				const dispatchHandlerKeys = Object.keys(dispatchs);
+				if (dispatchHandlerKeys && dispatchHandlerKeys.length > 0) {
+					dispatchHandlerKeys.forEach(handler => {
+						dispatchHandlers[handler] = (...prop) => dispatch(dispatchs[handler](...prop));
+					});
+				}
+			}
+
+			let merged = {
 				...props,
-				...boundHandlers
+				...boundHandlers,
+				...dispatchHandlers
 			};
 
 			return renderKind(merged, ctx);
