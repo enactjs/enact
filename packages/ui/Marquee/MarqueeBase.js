@@ -256,7 +256,7 @@ const MarqueeBase = kind({
 					{duplicate ? (
 						<Fragment>
 							<div className={css.spacing} ref={applyOffset} />
-							<span dir={rtl ? "rtl" : "rtl"}>
+							<span dir={rtl ? "rtl" : "ltr"}>
 								{children}
 							</span>
 						</Fragment>
