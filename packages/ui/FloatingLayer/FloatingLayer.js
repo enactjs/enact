@@ -106,7 +106,7 @@ class FloatingLayerBase extends Component {
 		 * @default 'translucent'
 		 * @public
 		 */
-		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none'])
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none', 'blur'])
 	};
 
 	static contextType = FloatingLayerContext;
