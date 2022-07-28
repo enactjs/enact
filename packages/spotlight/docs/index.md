@@ -110,7 +110,7 @@ const App = SpotlightRootDecorator(ApplicationView);
 ```
 
 It's worth noting that `@enact/sandstone` applications include `SpotlightRootDecorator`
-by default in its `sandstone/ThemeDecorator` HOC.
+by default in its `@enact/sandstone/ThemeDecorator` HOC.
 
 ## Spottable
 
