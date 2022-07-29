@@ -36,7 +36,7 @@ describe('usePublicClassNames', () => {
 		expect(result.current.b).toBe(expected.b);
 	});
 
-	test('should return a merged css has all keys from `componentCss` and merged values when `publicClassNames` is an array of strings', () => {
+	test('should return a merged css has the keys from `publicClassNames` array and merged values when `publicClassNames` is an array of strings', () => {
 		const {result} = renderHook(() => usePublicClassNames({componentCss, customCss, publicClassNames: ['a', 'b']}));
 
 		const expected = {
