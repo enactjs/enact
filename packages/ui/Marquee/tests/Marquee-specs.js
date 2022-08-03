@@ -228,13 +228,13 @@ describe('MarqueeBase', () => {
 
 	test('should duplicate from content when promoted and a non-zero distance', () => {
 		render(
-			<MarqueeBase distance={100} willAnimate>
+			<MarqueeBase data-testid="marquee" distance={100} willAnimate>
 				Text
 			</MarqueeBase>
 		);
-		const marquee = screen.getByText('TextText');
+		const marquee = screen.getByTestId('marquee');
 
-		expect(marquee).toBeInTheDocument();
+		expect(marquee).toHaveTextContent('TextText');
 	});
 
 	test('should not duplicate from content when promoted and a zero distance', () => {

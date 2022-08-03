@@ -7,6 +7,7 @@ import {is} from '@enact/core/keymap';
 import {Job, shallowEqual} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import {PureComponent} from 'react';
+import {flushSync} from 'react-dom';
 import warning from 'warning';
 
 import {scale} from '../resolution';
@@ -728,8 +729,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		restartAnimation = (delay) => {
-			this.setState({
-				animating: false
+			flushSync(() => {
+				this.setState({
+					animating: false
+				});
 			});
 			// synchronized Marquees defer to the controller to restart them
 			if (this.sync) {
