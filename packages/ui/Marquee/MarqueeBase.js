@@ -174,8 +174,9 @@ const MarqueeBase = kind({
 			new global.IntersectionObserver(function (entries, observer) {
 				const {left, right} = entries[0].boundingClientRect;
 				const {left: rootLeft, right: rootRight} = entries[0].rootBounds;
+				const scale = (root.getBoundingClientRect().width / root.offsetWidth) || 1;
 
-				const textWidth = rtl ? rootRight - right : left - rootLeft;
+				const textWidth = (rtl ? rootRight - right : left - rootLeft) / scale;
 				const offset = distance - (textWidth + spacing);
 
 				node.style.setProperty('--ui-marquee-offset', offset);
