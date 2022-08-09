@@ -115,17 +115,16 @@ import {Component} from 'react';
 import {connect} from 'react-redux';
 import {getSystemSettings} from '../actions';
 
-class App extends Component {
-	componentDidMount () {
-		this.props.dispatch(getSystemSettings({
+const App = ({dispatch}) => {
+	useEffect(() => {
+		dispatch(getSystemSettings({
 			category: 'picture',
 			key: 'pictureMode',
 			subscribe: true
 		}));
-	}
-	render () {
-		return <p>{this.props.pictureMode}</p>;
-	}
+	}, []);
+
+	return <p>{this.props.pictureMode}</p>;
 }
 
 export default connect()(App);
