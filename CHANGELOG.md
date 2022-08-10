@@ -2,9 +2,13 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [4.5.1] - 2022-08-03
+## [unreleased]
+
+### Changed
 
 - Updated React-Redux related documentation 
+
+## [4.5.1] - 2022-08-03
 
 ### Fixed
 
