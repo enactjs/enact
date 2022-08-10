@@ -4,6 +4,8 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [4.5.1] - 2022-08-03
 
+- Updated React-Redux related documentation 
+
 ### Fixed
 
 - `ui/Marquee.MarqueeDecorator` to have proper spacing for bidirectional text
