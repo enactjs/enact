@@ -2,10 +2,11 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [4.5.1] - 2022-08-03
 
 ### Fixed
 
+- `ui/Marquee.MarqueeDecorator` to have proper spacing for bidirectional text
 - `ui/Marquee.MarqueeDecorator` to restart animation properly with React 18
 
 ## [4.5.0] - 2022-07-19
