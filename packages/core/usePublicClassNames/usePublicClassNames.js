@@ -17,14 +17,18 @@ function usePublicClassNames ({componentCss, customCss, publicClassNames}) {
 	let allowedClassNames = publicClassNames;
 	let mergedCss = componentCss;
 
-	if (componentCss && allowedClassNames === true) {
+	if (!componentCss || !customCss) {
+		return mergedCss;
+	}
+
+	if (allowedClassNames === true) {
 		allowedClassNames = Object.keys(componentCss);
 	} else if (typeof allowedClassNames === 'string') {
 		allowedClassNames = allowedClassNames.split(/\s+/);
 	}
 
 	// if the config includes a css map, merge them together now
-	if (componentCss && allowedClassNames && customCss) {
+	if (allowedClassNames) {
 		mergedCss = mergeClassNameMaps(componentCss, customCss, allowedClassNames);
 	}
 
