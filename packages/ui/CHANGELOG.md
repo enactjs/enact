@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Marquee` to stop at the starting point after one cycle when scale is applied
+- `ui/Marquee` to stop at the starting point after one cycle when scaled
 
 ## [4.5.1] - 2022-08-03
 
