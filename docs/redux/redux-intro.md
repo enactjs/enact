@@ -9,7 +9,7 @@ This document provides a high-level overview of Redux and how it is used.
 
 ### What is Redux?
 
-Redux is a library that allows you to manage application state. It helps you write applications that behave consistently, run in different environments (client, server, and native), and are easy to test. On top of that, it provides a great developer experience, such as [live code editing combined with a time traveling debugger](https://github.com/reduxjs/redux-devtools). 
+Redux is a library that allows you to manage application state. It closely follows React's Flux data flow model and works well with React, though it does not require it. State management has become more complicated due to a mixing of mutability and asynchronicity, and redux tries to resolve this issue by make state mutation **predictable**.
 State management has become more complicated due to a mixing of mutability and asynchronicity, and redux tries to resolve this issue by make state mutation **predictable**.
 
 We recommend using the most recent version of Redux. To see which version of Redux is appropriate, refer to the [Redux Installation Instructions](https://react-redux.js.org/introduction/quick-start#installation).
@@ -20,91 +20,15 @@ We recommend using the most recent version of Redux. To see which version of Red
 
 The entire **[state](https://redux.js.org/understanding/thinking-in-redux/glossary#state)** of the application will be represented by one JavaScript object, a **[store](https://redux.js.org/understanding/thinking-in-redux/glossary#store)**.
 
-This makes it easy to create universal apps, as the state from your server can be serialized and hydrated into the client with no extra coding effort. A single state tree also makes it easier to debug or inspect an application; it also enables you to persist your app's state in development, for a faster development cycle. Some functionality which has been traditionally difficult to implement - Undo/Redo, for example - can suddenly become trivial to implement, if all of your state is stored in a single tree.
-
-
-```js
-console.log(store.getState())
-
-/* Prints
-{
-  visibilityFilter: 'SHOW_ALL',
-  todos: [
-    {
-      text: 'Consider using Redux',
-      completed: true,
-    },
-    {
-      text: 'Keep all state in a single tree',
-      completed: false
-    }
-  ]
-}
-*/
-```
-
 ##### State is read-only
 
 If you want to change the state, you have to **dispatch** an **[action](https://redux.js.org/understanding/thinking-in-redux/glossary#action)**, an object describing the change.
-
-This ensures that neither the views nor the network callbacks will ever write directly to the state. Instead, they express an intent to transform the state. Because all changes are centralized and happen one by one in a strict order, there are no subtle race conditions to watch out for. As actions are just plain objects, they can be logged, serialized, stored, and later replayed for debugging or testing purposes.
-
-```js
-store.dispatch({
-  type: 'COMPLETE_TODO',
-  index: 1
-})
-
-store.dispatch({
-  type: 'SET_VISIBILITY_FILTER',
-  filter: 'SHOW_COMPLETED'
-})
-```
 
 ##### Changes are made with pure functions
 
 To describe state mutations you have to write a function that takes the previous state of the app and the action being dispatched, then returns the next state of the app. This function is called the [Reducer](https://redux.js.org/understanding/thinking-in-redux/glossary#reducer).
 
-Reducers are just pure functions that take the previous state and an action, and return the next state. Remember to return new state objects, instead of mutating the previous state. You can start with a single reducer, and as your app grows, split it off into smaller reducers that manage specific parts of the state tree. Because reducers are just functions, you can control the order in which they are called, pass additional data, or even make reusable reducers for common tasks such as pagination.
-
-```js
-function visibilityFilter(state = 'SHOW_ALL', action) {
-  switch (action.type) {
-    case 'SET_VISIBILITY_FILTER':
-      return action.filter
-    default:
-      return state
-  }
-}
-
-function todos(state = [], action) {
-  switch (action.type) {
-    case 'ADD_TODO':
-      return [
-        ...state,
-        {
-          text: action.text,
-          completed: false
-        }
-      ]
-    case 'COMPLETE_TODO':
-      return state.map((todo, index) => {
-        if (index === action.index) {
-          return Object.assign({}, todo, {
-            completed: true
-          })
-        }
-        return todo
-      })
-    default:
-      return state
-  }
-}
-
-import { combineReducers, createStore } from 'redux'
-const reducer = combineReducers({ visibilityFilter, todos })
-const store = createStore(reducer)
-```
+Please find more information [here](https://redux.js.org/understanding/thinking-in-redux/three-principles).
 
 #### What You Need
 
@@ -137,6 +61,7 @@ An action is just a POJO (unless you use middleware as described) that contains 
   error: true
 }
 ```
+
 
 ##### Reducers
 
@@ -177,6 +102,7 @@ const todo = (state, action) => {
   }
 }
 ```
+
 
 ##### Store
 
@@ -231,8 +157,7 @@ Live demo: [http://jsbin.com/keyahus/edit?html,js,output](http://jsbin.com/keyah
 ```js
 import {createStore} from 'redux';
 import PropTypes from 'prop-types';
-import {Component} from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 // reducer
 function counter (state = 0, action) {
 	switch (action.type) {
@@ -259,13 +184,13 @@ Counter.propTypes = {
 };
 const store = createStore(counter);
 const render = () => {
-	ReactDOM.render(
-		<Counter
+  const appElement = (
+    <Counter
 			value={store.getState()}
 			onIncrement={() => store.dispatch({type: 'INCREMENT'})}
-		/>,
-		document.getElementById('root')
-	);
+		/>
+  );
+  createRoot(document.getElementById('root')).render(appElement);
 }
 render();
 store.subscribe(render);
@@ -273,9 +198,8 @@ store.subscribe(render);
 
 Live Demo: [https://jsbin.com/pudurig/edit?html,js,output](https://jsbin.com/pudurig/edit?html,js,output)
 
-## Redux Toolkit
+### Redux Toolkit
 
-### What is Redux Toolkit?
 [Redux Toolkit](https://redux-toolkit.js.org/) is React official, opinionated, batteries-included toolset for efficient Redux development. It is intended to be the standard way to write Redux logic, and React team strongly recommends using it.
 
 It includes several utility functions that simplify the most common Redux use cases, including store setup, defining reducers, immutable update logic, and even creating entire "slices" of state at once without writing any action creators or action types by hand. It also includes the most widely used Redux addons, like Redux Thunk for async logic and Reselect for writing selector functions, so that you can use them right away.
@@ -324,13 +248,13 @@ import store from './app/store'
 import { Provider } from 'react-redux'
 
 // As of React 18
-const root = ReactDOM.createRoot(document.getElementById('root'))
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <Provider store={store}>
     <App />
   </Provider>
-)
+);
 ```
 
 #### Create a Redux State Slice
@@ -343,7 +267,7 @@ Redux requires that [we write all state updates immutably, by making copies of d
 
 `features/counter/counterSlice.js`
 ```js
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 export const counterSlice = createSlice({
   name: 'counter',
@@ -365,12 +289,12 @@ export const counterSlice = createSlice({
       state.value += action.payload
     },
   },
-})
+});
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = counterSlice.actions
+export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
-export default counterSlice.reducer
+export default counterSlice.reducer;
 ```
 
 #### Add Slice Reducers to the Store
@@ -379,14 +303,14 @@ Next, we need to import the reducer function from the counter slice and add it t
 
 `app/store.js`
 ```js
-import { configureStore } from '@reduxjs/toolkit'
-import counterReducer from '../features/counter/counterSlice'
+import { configureStore } from '@reduxjs/toolkit';
+import counterReducer from '../features/counter/counterSlice';
 
 export default configureStore({
   reducer: {
     counter: counterReducer,
   },
-})
+});
 ```
 
 #### Use Redux State and Actions in React Components
@@ -395,14 +319,14 @@ Now we can use the React Redux hooks to let React components interact with the R
 
 `features/counter/Counter.js`
 ```js
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { decrement, increment } from './counterSlice'
-import styles from './Counter.module.css'
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { decrement, increment } from './counterSlice';
+import styles from './Counter.module.css';
 
 export function Counter() {
-  const count = useSelector((state) => state.counter.value)
-  const dispatch = useDispatch()
+  const count = useSelector((state) => state.counter.value);
+  const dispatch = useDispatch();
 
   return (
     <div>
@@ -422,7 +346,7 @@ export function Counter() {
         </button>
       </div>
     </div>
-  )
+  );
 }
 ```
 Now, any time we click the "Increment" and "Decrement buttons:
