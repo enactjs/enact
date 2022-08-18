@@ -2,6 +2,23 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.5.2] - 2022-08-17
+
+### Fixed
+
+- `ui/Marquee` to stop at the starting point after one cycle when scaled
+
+## [4.5.1] - 2022-08-03
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to have proper spacing for bidirectional text
+- `ui/Marquee.MarqueeDecorator` to restart animation properly with React 18
+
+## [4.5.0] - 2022-07-19
+
+No significant changes.
+
 ## [4.5.0-rc.2] - 2022-07-06
 
 ### Changed

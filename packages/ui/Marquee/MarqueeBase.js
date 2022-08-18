@@ -174,8 +174,9 @@ const MarqueeBase = kind({
 			new global.IntersectionObserver(function (entries, observer) {
 				const {left, right} = entries[0].boundingClientRect;
 				const {left: rootLeft, right: rootRight} = entries[0].rootBounds;
+				const scale = (root.getBoundingClientRect().width / root.offsetWidth) || 1;
 
-				const textWidth = rtl ? rootRight - right : left - rootLeft;
+				const textWidth = (rtl ? rootRight - right : left - rootLeft) / scale;
 				const offset = distance - (textWidth + spacing);
 
 				node.style.setProperty('--ui-marquee-offset', offset);
@@ -234,13 +235,12 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({applyOffset, children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, ...rest}) => {
+	render: ({applyOffset, children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, rtl, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;
 		delete rest.onMarqueeComplete;
 		delete rest.overflow;
-		delete rest.rtl;
 		delete rest.spacing;
 		delete rest.speed;
 		delete rest.willAnimate;
@@ -257,7 +257,9 @@ const MarqueeBase = kind({
 					{duplicate ? (
 						<Fragment>
 							<div className={css.spacing} ref={applyOffset} />
-							{children}
+							<span dir={rtl ? "rtl" : "ltr"}>
+								{children}
+							</span>
 						</Fragment>
 					) : null}
 				</div>

@@ -109,8 +109,8 @@ import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
 const App = SpotlightRootDecorator(ApplicationView);
 ```
 
-It's worth noting that `@enact/moonstone` applications include `SpotlightRootDecorator`
-by default in its `MoonstoneDecorator` HOC.
+It's worth noting that `@enact/sandstone` applications include `SpotlightRootDecorator`
+by default in its `@enact/sandstone/ThemeDecorator` HOC.
 
 ## Spottable
 
