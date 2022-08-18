@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [4.5.2] - 2022-08-17
+
+No significant changes.
+
 ## [4.5.1] - 2022-08-03
 
 No significant changes.
