@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact i18n module, newest chan
 ### Fixed
 
 - `i18n` resource loader to override strings where the original strings file does not exist
+
 ## [4.5.2] - 2022-08-17
 
 No significant changes.
