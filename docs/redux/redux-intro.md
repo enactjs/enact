@@ -200,163 +200,92 @@ Live Demo: [https://jsbin.com/pudurig/edit?html,js,output](https://jsbin.com/pud
 
 ### Redux Toolkit
 
-[Redux Toolkit](https://redux-toolkit.js.org/) is React official, opinionated, batteries-included toolset for efficient Redux development. It is intended to be the standard way to write Redux logic, and React team strongly recommends using it.
+The patterns shown above, unfortunately, require lots of verbose and repetitive code. To make it easier to write Redux applications in general, Redux team introduced [Redux Toolkit](https://redux-toolkit.js.org/).
+It is the official recommended approach for writing Redux logic as of now.
 
-It includes several utility functions that simplify the most common Redux use cases, including store setup, defining reducers, immutable update logic, and even creating entire "slices" of state at once without writing any action creators or action types by hand. It also includes the most widely used Redux addons, like Redux Thunk for async logic and Reselect for writing selector functions, so that you can use them right away.
+It includes utilities that help simplify many common use cases, including store setup, creating reducers and writing immutable update logic, and even creating entire "slices" of state at once. It also includes the most widely used Redux addons, like Redux Thunk for async logic and Reselect for writing selector functions, so that you can use them right away.
 
-Redux Toolkit includes:
+Redux Toolkit provides two key APIs that simplify the most common things you do in every Redux app.
 
-* [configureStore()](https://redux-toolkit.js.org/api/configureStore): wraps createStore to provide simplified configuration options and good defaults. It can automatically combine your slice reducers, adds whatever Redux middleware you supply, includes redux-thunk by default, and enables use of the Redux DevTools Extension.
-* [createReducer()](https://redux-toolkit.js.org/api/createReducer): that lets you supply a lookup table of action types to case reducer functions, rather than writing switch statements. In addition, it automatically uses the immer library to let you write simpler immutable updates with normal mutative code, like state.todos[3].completed = true.
-* [createAction()](https://redux-toolkit.js.org/api/createAction): generates an action creator function for the given action type string. The function itself has `toString()` defined, so that it can be used in place of the type constant.
-* [createSlice()](https://redux-toolkit.js.org/api/createSlice): accepts an object of reducer functions, a slice name, and an initial state value, and automatically generates a slice reducer with corresponding action creators and action types.
-* [createAsyncThunk](https://redux-toolkit.js.org/api/createAsyncThunk): accepts an action type string and a function that returns a promise, and generates a thunk that dispatches `pending/fulfilled/rejected` action types based on that promise
-* [createEntityAdapter](https://redux-toolkit.js.org/api/createEntityAdapter): generates a set of reusable reducers and selectors to manage normalized data in the store
-* The [createSelector](https://redux-toolkit.js.org/api/createSelector) utility from the [Reselect](https://github.com/reduxjs/reselect) library, re-exported for ease of use.
+* [configureStore](https://redux-toolkit.js.org/api/configureStore) sets up a well-configured Redux store with a sing function call, including combining reducers, adding the thunk middleware, and setting up the Redux DevTools integration.
+
+* [createSlice](https://redux-toolkit.js.org/api/createSlice) helps you write reducers that use the [Immer](https://immerjs.github.io/immer) library to enable writing immutable updates using "mutating" JS syntax like `state.value = 123`, with no spreads needed. It also automatically generates action creator functions for each reducer, and generates action type strings internally based on your reducer's names.
+
+Please see [here](https://redux.js.org/introduction/why-rtk-is-redux-today) to find out more about Redux Toolkit.
+Also, see [here](https://react-redux.js.org/tutorials/quick-start) for a greate tutorial.
 
 ### Redux and React
 
 As mentioned above Redux can be used without React. React bindings for redux is available from [react-redux](https://github.com/reduxjs/react-redux), which is a generic library that connects React components to a Redux store. More on how to use it is available [here](https://redux.js.org/tutorials/fundamentals/part-5-ui-react).
 
-We will focus on just how to set up a Redux application with Redux Toolkit and the main APIs we'll use.
+#### What `react-redux` does
 
-#### Creating a Redux Store
+`react-redux` allows you to specify how react components get data from the redux store and how they behave by calling its own custom hooks. We use `react-redux` module's [useSelector()](https://github.com/reduxjs/react-redux/blob/master/docs/api/hooks.md#useselector) hook to let our React components read data from the Redux store.
 
-To create a redux store we just have to import the `configureStore` API from Redux Toolkit.
+Back in the days, we had [connect()](https://github.com/reduxjs/react-redux/blob/master/docs/api/connect.md) and `mapStateToProps()` method to get data from the redux store. They are also available but we recommend using `useSelectors()` hook instead.
 
-`app/store.js`
+`useSelector()` accepts a single function, which we call a selector function. A selector is a function that takes the entire Redux store state as its argument, reads some value from the state, and returns that result.
+
+Also, we use [useDispatch()](https://github.com/reduxjs/react-redux/blob/master/docs/api/hooks.md#usedispatch) hook to dispatch actions. It gives you the store's `dispatch` method as its result so that you can call it with some `action` to dispatch.
+
+Our components need access to the Redux store so they can subscribe to it. This can be cumbersome as your number of components grows and you have to manually pass store around. `react-redux` incorporates [context](https://reactjs.org/docs/context.html) in React and provides a [`<Provider />`](https://github.com/reduxjs/react-redux/blob/master/docs/api/Provider.md) component to make store available to all components without passings stores around by hand. You only need to use it once at the `render()` of root component.
+
+#### example
+
 ```js
-import { configureStore } from '@reduxjs/toolkit'
-
-export default configureStore({
-  reducer: {},
-})
-```
-This creates a Redux store, and also automatically configure the Redux DevTools extension so that you can inspect the store while developing.
-
-#### Provide the Redux Store to React
-
-Once the store is created, we can make it available to our React components by putting a React Redux `<Provider>` around our application in src/index.js. Import the Redux store we just created, wrap the `<App>` component with the `<Provider>` and pass the store as props:
-
-`index.js`
-```js
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.css'
-import App from './App'
-import store from './app/store'
-import { Provider } from 'react-redux'
-
-// As of React 18
-const root = ReactDOM.createRoot(document.getElementById('root'));
-
-root.render(
-  <Provider store={store}>
-    <App />
-  </Provider>
-);
-```
-
-#### Create a Redux State Slice
-
-Add a new file named `src/features/counter/counterSlice.js`. In that file, we have to import the `createSlice` API from Redux Toolkit.
-
-Creating a slice requires a string name to identify the slice, an initial state value, and one or more reducer functions to define how the state can be updated. Once a slice is created, we can export the generated Redux action creators and the reducer function for the whole slice.
-
-Redux requires that [we write all state updates immutably, by making copies of data and updating the copies](https://redux.js.org/tutorials/fundamentals/part-2-concepts-data-flow#immutability). However, Redux Toolkit's `createSlice` and `createReducer` APIs use [Immer](https://immerjs.github.io/immer/) inside to allow us to [write "mutating" update logic that becomes correct immutable updates](https://redux.js.org/tutorials/fundamentals/part-8-modern-redux#immutable-updates-with-immer).
-
-`features/counter/counterSlice.js`
-```js
-import { createSlice } from '@reduxjs/toolkit';
-
-export const counterSlice = createSlice({
-  name: 'counter',
-  initialState: {
-    value: 0,
-  },
-  reducers: {
-    increment: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-      state.value += 1
-    },
-    decrement: (state) => {
-      state.value -= 1
-    },
-    incrementByAmount: (state, action) => {
-      state.value += action.payload
-    },
-  },
-});
-
-// Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = counterSlice.actions;
-
-export default counterSlice.reducer;
-```
-
-#### Add Slice Reducers to the Store
-
-Next, we need to import the reducer function from the counter slice and add it to our store. By defining a field inside the reducers parameter, we tell the store to use this slice reducer function to handle all updates to that state.
-
-`app/store.js`
-```js
-import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
-
-export default configureStore({
-  reducer: {
-    counter: counterReducer,
-  },
-});
-```
-
-#### Use Redux State and Actions in React Components
-
-Now we can use the React Redux hooks to let React components interact with the Redux store. We can read data from the store with `useSelector`, and `dispatch` actions using useDispatch. Let's create a `src/features/counter/Counter.js` file with a `<Counter>` component inside, then import that component into` App.js` and render it inside of `<App>`.
-
-`features/counter/Counter.js`
-```js
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { decrement, increment } from './counterSlice';
-import styles from './Counter.module.css';
-
-export function Counter() {
-  const count = useSelector((state) => state.counter.value);
-  const dispatch = useDispatch();
-
-  return (
-    <div>
-      <div>
-        <button
-          aria-label="Increment value"
-          onClick={() => dispatch(increment())}
-        >
-          Increment
-        </button>
-        <span>{count}</span>
-        <button
-          aria-label="Decrement value"
-          onClick={() => dispatch(decrement())}
-        >
-          Decrement
-        </button>
-      </div>
-    </div>
-  );
+import {createStore} from 'redux';
+import {connect, Provider} from 'react-redux';
+import PropTypes from 'prop-types';
+import {Component} from 'react';
+import {render} from 'react-dom';
+// reducer
+function counter (state = 0, action) {
+	switch (action.type) {
+		case 'INCREMENT':
+			return state + 1;
+		default:
+			return state;
+	}
 }
+// presentational counter component
+class Counter extends Component {
+	render () {
+		const {value, onIncrement} = this.props;
+		return (
+			<p>
+				Clicked: {value} times
+				{' '}
+				<button onClick={onIncrement}>
+					+
+				</button>
+			</p>
+		);
+	}
+}
+const mapStateToProps = (state) => {
+	return {value: state};
+};
+const mapDispatchToProps = (dispatch) => {
+	return {
+		onIncrement: () => dispatch({type: 'INCREMENT'})
+	};
+};
+// creates a connected container component with `connect`
+const EnhancedCounter = connect(mapStateToProps, mapDispatchToProps)(Counter);
+const store = createStore(counter);
+class App extends Component {
+	render () {
+		return (
+			<Provider store={store}>
+				<EnhancedCounter />
+			</Provider>
+		);
+	}
+}
+render(<App />, document.getElementById('root'));
 ```
-Now, any time we click the "Increment" and "Decrement buttons:
+Live Demo: [http://jsbin.com/zukojok/1/edit?html,js,output](http://jsbin.com/zukojok/1/edit?html,js,output)
 
-* The corresponding Redux action will be dispatched to the store
-* The counter slice reducer will see the actions and update its state
-* The `<Counter>` component will see the new state value from the store and re-render itself with the new data
-
-### The full counter App example can be found [here](https://codesandbox.io/s/github/reduxjs/redux-essentials-counter-example/tree/master/?from-embed)
-- - - -
 ### Resources
 
 [Official Redux documentation](http://redux.js.org/)
