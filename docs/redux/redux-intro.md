@@ -212,7 +212,7 @@ Redux Toolkit provides two key APIs that simplify the most common things you do 
 * [createSlice](https://redux-toolkit.js.org/api/createSlice) helps you write reducers that use the [Immer](https://immerjs.github.io/immer) library to enable writing immutable updates using "mutating" JS syntax like `state.value = 123`, with no spreads needed. It also automatically generates action creator functions for each reducer, and generates action type strings internally based on your reducer's names.
 
 Please see [here](https://redux.js.org/introduction/why-rtk-is-redux-today) to find out more about Redux Toolkit.
-Also, see [here](https://react-redux.js.org/tutorials/quick-start) for a greate tutorial.
+Also, see [here](https://react-redux.js.org/tutorials/quick-start) for a great tutorial.
 
 ### Redux and React
 
