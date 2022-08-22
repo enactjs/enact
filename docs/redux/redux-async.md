@@ -110,7 +110,7 @@ export const {receiveSystemSettings, updateSystemSettings} = rootSlice.actions;
 export default rootSlice;
 ```
 
-Connected container dispatches ``getSystemSettings`` on component mout and renders a ``pictureMode`` prop that's been hooked up with a redux store.
+Connected container dispatches ``getSystemSettings`` on component mount and renders a ``pictureMode`` prop that's been hooked up with a redux store.
 
 ```js
 import {useDispatch, useSelector} from 'react-redux';
