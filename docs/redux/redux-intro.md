@@ -10,7 +10,6 @@ This document provides a high-level overview of Redux and how it is used.
 ### What is Redux?
 
 Redux is a library that allows you to manage application state. It closely follows React's Flux data flow model and works well with React, though it does not require it. State management has become more complicated due to a mixing of mutability and asynchronicity, and redux tries to resolve this issue by make state mutation **predictable**.
-State management has become more complicated due to a mixing of mutability and asynchronicity, and redux tries to resolve this issue by make state mutation **predictable**.
 
 We recommend using the most recent version of Redux. To see which version of Redux is appropriate, refer to the [Redux Installation Instructions](https://react-redux.js.org/introduction/quick-start#installation).
 
@@ -155,9 +154,10 @@ Live demo: [http://jsbin.com/keyahus/edit?html,js,output](http://jsbin.com/keyah
 #### React
 
 ```js
+import {createRoot} from 'react-dom/client';
 import {createStore} from 'redux';
-import PropTypes from 'prop-types';
-import { createRoot } from 'react-dom/client';
+import { useDispatch, useSelector } from 'react-redux';
+
 // reducer
 function counter (state = 0, action) {
 	switch (action.type) {
@@ -167,36 +167,32 @@ function counter (state = 0, action) {
 			return state;
 	}
 }
-const Counter = ({value, onIncrement}) =>  {
-	return (
-		<p>
-			Clicked: {value} times
-			{' '}
-			<button onClick={onIncrement}>
-				+
-			</button>
-		</p>
-	);
-}
-Counter.propTypes = {
-	onIncrement: PropTypes.func.isRequired,
-	value: PropTypes.number.isRequired
+const Counter = () => {
+  const value = useSelector((state) => state.counter);
+  const dispatch = useDispatch();
+
+  const incrementHandler = () => {
+    dispatch({ type: 'INCREMENT' });
+  };
+
+  return (
+    <p>
+      Clicked: {value} times <button onClick={incrementHandler}>+</button>
+    </p>
+  );
 };
+
 const store = createStore(counter);
 const render = () => {
   const appElement = (
-    <Counter
-			value={store.getState()}
-			onIncrement={() => store.dispatch({type: 'INCREMENT'})}
-		/>
+    <Counter/>
   );
   createRoot(document.getElementById('root')).render(appElement);
 }
 render();
-store.subscribe(render);
 ```
 
-Live Demo: [https://jsbin.com/pudurig/edit?html,js,output](https://jsbin.com/pudurig/edit?html,js,output)
+Live Demo: [https://stackblitz.com/edit/react-u1qccn?file=src%2Fstore%2Findex.js,src%2Findex.js,src%2FApp.js](https://stackblitz.com/edit/react-u1qccn?file=src%2Fstore%2Findex.js,src%2Findex.js,src%2FApp.js)
 
 ### Redux Toolkit
 
@@ -233,56 +229,51 @@ Our components need access to the Redux store so they can subscribe to it. This 
 #### example
 
 ```js
+import {createRoot} from 'react-dom/client';
 import {createStore} from 'redux';
-import {connect, Provider} from 'react-redux';
-import PropTypes from 'prop-types';
-import {Component} from 'react';
-import {render} from 'react-dom';
+import {Provider, useDispatch, useSelector} from 'react-redux';
+
 // reducer
-function counter (state = 0, action) {
-	switch (action.type) {
-		case 'INCREMENT':
-			return state + 1;
-		default:
-			return state;
-	}
-}
+const counterReducer = (state = { counter: 0 }, action) => {
+  switch (action.type) {
+    case 'INCREMENT':
+      return { counter: state.counter + 1 };
+    default:
+      return state;
+  }
+};
+
+//store
+const store = createStore(counterReducer);
+
 // presentational counter component
-class Counter extends Component {
-	render () {
-		const {value, onIncrement} = this.props;
-		return (
-			<p>
-				Clicked: {value} times
-				{' '}
-				<button onClick={onIncrement}>
-					+
-				</button>
-			</p>
-		);
-	}
-}
-const mapStateToProps = (state) => {
-	return {value: state};
+const Counter = () => {
+  const value = useSelector((state) => state.counter);
+  const dispatch = useDispatch();
+
+  const incrementHandler = () => {
+    dispatch({ type: 'INCREMENT' });
+  };
+
+  return (
+    <p>
+      Clicked: {value} times <button onClick={incrementHandler}>+</button>
+    </p>
+  );
 };
-const mapDispatchToProps = (dispatch) => {
-	return {
-		onIncrement: () => dispatch({type: 'INCREMENT'})
-	};
-};
-// creates a connected container component with `connect`
-const EnhancedCounter = connect(mapStateToProps, mapDispatchToProps)(Counter);
-const store = createStore(counter);
-class App extends Component {
-	render () {
-		return (
-			<Provider store={store}>
-				<EnhancedCounter />
-			</Provider>
-		);
-	}
+
+const App = () => {
+  return <Counter />;
 }
-render(<App />, document.getElementById('root'));
+
+const rootElement = document.getElementById('root');
+const root = createRoot(rootElement);
+
+root.render(
+    <Provider store={store}>
+      <App />
+    </Provider>
+);
 ```
 
 Live Demo: [http://jsbin.com/zukojok/1/edit?html,js,output](http://jsbin.com/zukojok/1/edit?html,js,output)

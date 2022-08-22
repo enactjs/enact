@@ -55,17 +55,18 @@ render(
 Store is configured to accept thunk middleware
 
 ```js
-import {createStore, applyMiddleware} from 'redux';
+import {configureStore, createSlice} from '@reduxjs/toolkit';
 import thunkMiddleware from 'redux-thunk';
-import systemSettingsReducer from '../reducers';
+import rootSlice from '../reducers';
 
-export default function configureStore (initialState) {
-	const store = createStore(
-		systemSettingsReducer,
+
+
+export default function configureAppStore (initialState) {
+	return configureStore({
+		reducer: rootSlice.reducer,
 		initialState,
-		applyMiddleware(thunkMiddleware) // lets us dispatch functions
-	);
-	return store;
+		middleware: [thunkMiddleware]
+	});
 }
 ```
 
@@ -73,12 +74,6 @@ Here we create a thunk action creator which returns a function instead of a plai
 
 ```js
 import LS2Request from '@enact/webos/LS2Request';
-function receiveSystemSettings (res) {
-	return {
-		type: 'RECEIVE_SYSTEM_SETTINGS',
-		payload: res
-	};
-}
 // function returning function!
 export const getSystemSettings = params => dispatch => {
 	// possible to dispatch an action at the start of fetching
@@ -98,24 +93,33 @@ export const getSystemSettings = params => dispatch => {
 Reducer receives a payload and creates a new state.
 
 ```js
-export default function systemSettingsReducer (state = {}, action) {
-	switch (action.type) {
-		case 'RECEIVE_SYSTEM_SETTINGS':
+const rootSlice = createSlice({
+	name: 'systemReducer',
+	initialState: {},
+	reducers: {
+		receiveSystemSettings: (state, action) =>  {
 			return Object.assign({}, state, action.payload.settings);
-		default:
-			return state;
+		},
+		updateSystemSettings: (state, action) => {
+			return Object.assign({}, state, action.payload.settings);
+		}
 	}
-}
+});
+
+export const {receiveSystemSettings, updateSystemSettings} = rootSlice.actions;
+export default rootSlice;
 ```
 
-Connected container dispatches ``getSystemSettings`` on componentDidMount and renders a ``pictureMode`` prop that's been hooked up with a redux store.
+Connected container dispatches ``getSystemSettings`` on component mout and renders a ``pictureMode`` prop that's been hooked up with a redux store.
 
 ```js
-import {Component} from 'react';
-import {connect} from 'react-redux';
-import {getSystemSettings} from '../actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {getSystemSettings} from '../reducers';
 
-const App = ({dispatch}) => {
+const App = () => {
+	const pictureMode = useSelector(store => store.pictureMode);
+	const dispatch = useDispatch();
+
 	useEffect(() => {
 		dispatch(getSystemSettings({
 			category: 'picture',
@@ -124,8 +128,8 @@ const App = ({dispatch}) => {
 		}));
 	}, []);
 
-	return <p>{this.props.pictureMode}</p>;
+	return <p>{pictureMode}</p>;
 }
 
-export default connect()(App);
+export default App;
 ```
