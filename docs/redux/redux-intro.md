@@ -156,7 +156,7 @@ Live demo: [http://jsbin.com/keyahus/edit?html,js,output](http://jsbin.com/keyah
 ```js
 import {createRoot} from 'react-dom/client';
 import {createStore} from 'redux';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 // reducer
 function counter (state = 0, action) {
