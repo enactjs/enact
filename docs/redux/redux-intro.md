@@ -192,7 +192,7 @@ const render = () => {
 render();
 ```
 
-Live Demo: [https://stackblitz.com/edit/react-u1qccn?file=src%2Fstore%2Findex.js,src%2Findex.js,src%2FApp.js](https://stackblitz.com/edit/react-u1qccn?file=src%2Fstore%2Findex.js,src%2Findex.js,src%2FApp.js)
+Live Demo: [https://codesandbox.io/s/charming-burnell-92or5q?file=/src/App.js](https://codesandbox.io/s/charming-burnell-92or5q?file=/src/App.js)
 
 ### Redux Toolkit
 
