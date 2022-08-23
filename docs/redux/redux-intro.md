@@ -155,41 +155,62 @@ Live demo: [http://jsbin.com/keyahus/edit?html,js,output](http://jsbin.com/keyah
 
 ```js
 import {createRoot} from 'react-dom/client';
-import {createStore} from 'redux';
-import {useDispatch, useSelector} from 'react-redux';
+import {configureStore, createSlice} from '@reduxjs/toolkit';
+import {Provider, useDispatch, useSelector} from 'react-redux';
 
 // reducer
-function counter (state = 0, action) {
-	switch (action.type) {
-		case 'INCREMENT':
-			return state + 1;
-		default:
-			return state;
+const initialState = {counter: 0};
+const counterReducer = createSlice({
+	name: 'counterReducer',
+	initialState,
+	reducers: {
+		increment: (state) =>  {
+			return {counter: state.counter + 1};
+		}
 	}
-}
+});
+
+// store
+const store = configureStore({
+	reducer: counterReducer.reducer,
+	initialState
+});
+
+
+// presentational counter component
 const Counter = () => {
 	const value = useSelector((state) => state.counter);
 	const dispatch = useDispatch();
+	const {increment} = counterReducer.actions;
 
 	const incrementHandler = () => {
-		dispatch({ type: 'INCREMENT' });
+		dispatch(increment());
 	};
 
 	return (
 		<p>
-			Clicked: {value} times <button onClick={incrementHandler}>+</button>
+			Clicked: {value} times
+			<button
+				onClick={// eslint-disable-line react/jsx-no-bind
+					incrementHandler
+				}
+			>+</button>
 		</p>
 	);
 };
 
-const store = createStore(counter);
-const render = () => {
-	const appElement = (
-		<Counter/>
-	);
-	createRoot(document.getElementById('root')).render(appElement);
-}
-render();
+const App = () => {
+	return <Counter />;
+};
+
+const rootElement = document.getElementById('root');
+const root = createRoot(rootElement);
+
+root.render(
+	<Provider store={store}>
+		<App />
+	</Provider>
+);
 ```
 
 Live Demo: [https://codesandbox.io/s/charming-burnell-92or5q?file=/src/App.js](https://codesandbox.io/s/charming-burnell-92or5q?file=/src/App.js)
@@ -230,53 +251,65 @@ Our components need access to the Redux store so they can subscribe to it. This 
 
 ```js
 import {createRoot} from 'react-dom/client';
-import {createStore} from 'redux';
+import {configureStore, createSlice} from '@reduxjs/toolkit';
 import {Provider, useDispatch, useSelector} from 'react-redux';
 
 // reducer
-const counterReducer = (state = { counter: 0 }, action) => {
-	switch (action.type) {
-		case 'INCREMENT':
-			return { counter: state.counter + 1 };
-		default:
-			return state;
+const initialState = {counter: 0};
+const counterReducer = createSlice({
+	name: 'counterReducer',
+	initialState,
+	reducers: {
+		increment: (state) =>  {
+			return {counter: state.counter + 1};
+		}
 	}
-};
+});
 
-//store
-const store = createStore(counterReducer);
+// store
+const store = configureStore({
+	reducer: counterReducer.reducer,
+	initialState
+});
+
 
 // presentational counter component
 const Counter = () => {
 	const value = useSelector((state) => state.counter);
 	const dispatch = useDispatch();
+	const {increment} = counterReducer.actions;
 
 	const incrementHandler = () => {
-		dispatch({ type: 'INCREMENT' });
+		dispatch(increment());
 	};
 
 	return (
 		<p>
-			Clicked: {value} times <button onClick={incrementHandler}>+</button>
+			Clicked: {value} times
+			<button
+				onClick={// eslint-disable-line react/jsx-no-bind
+					incrementHandler
+				}
+			>+</button>
 		</p>
 	);
 };
 
 const App = () => {
 	return <Counter />;
-}
+};
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
 root.render(
-		<Provider store={store}>
-			<App />
-		</Provider>
+	<Provider store={store}>
+		<App />
+	</Provider>
 );
 ```
 
-Live Demo: [http://jsbin.com/zukojok/1/edit?html,js,output](http://jsbin.com/zukojok/1/edit?html,js,output)
+Live Demo: [https://codesandbox.io/s/charming-burnell-92or5q?file=/src/App.js](https://codesandbox.io/s/charming-burnell-92or5q?file=/src/App.js)
 
 ### Resources
 
