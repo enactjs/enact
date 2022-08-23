@@ -47,17 +47,17 @@ An action is just a POJO (unless you use middleware as described) that contains 
 
 // A basic Flux Standard Action (FSA):
 {
-  type: 'ADD_TODO',
-  payload: {
-    text: 'Do something.'
-  }
+	type: 'ADD_TODO',
+	payload: {
+		text: 'Do something.'
+	}
 }
 
 // An FSA that represents an error
 {
-  type: 'ADD_TODO',
-  payload: new Error(),
-  error: true
+	type: 'ADD_TODO',
+	payload: new Error(),
+	error: true
 }
 ```
 
@@ -69,36 +69,36 @@ A reducing function (reducer) returns the next state tree, given the current sta
 ```js
 // counter reducer
 function counter(state = 0, action) {
-  switch (action.type) {
-    case 'INCREMENT':
-      return state + 1;
-    case 'DECREMENT':
-      return state - 1;
-    default:
-      return state;
-  }
+	switch (action.type) {
+		case 'INCREMENT':
+			return state + 1;
+		case 'DECREMENT':
+			return state - 1;
+		default:
+			return state;
+	}
 }
 
 // todo reducer (ES6 style)
 const todo = (state, action) => {
-  switch (action.type) {
-    case 'ADD_TODO':
-      return {
-        id: action.id,
-        text: action.text,
-        completed: false
-      };
-    case 'TOGGLE_TODO':
-      if (state.id !== action.id) {
-        return state;
-      }
-      return {
-        ...state,
-        completed: !state.completed
-      };
-    default:
-      return state;
-  }
+	switch (action.type) {
+		case 'ADD_TODO':
+			return {
+				id: action.id,
+				text: action.text,
+				completed: false
+			};
+		case 'TOGGLE_TODO':
+			if (state.id !== action.id) {
+				return state;
+			}
+			return {
+				...state,
+				completed: !state.completed
+			};
+		default:
+			return state;
+	}
 }
 ```
 
@@ -168,26 +168,26 @@ function counter (state = 0, action) {
 	}
 }
 const Counter = () => {
-  const value = useSelector((state) => state.counter);
-  const dispatch = useDispatch();
+	const value = useSelector((state) => state.counter);
+	const dispatch = useDispatch();
 
-  const incrementHandler = () => {
-    dispatch({ type: 'INCREMENT' });
-  };
+	const incrementHandler = () => {
+		dispatch({ type: 'INCREMENT' });
+	};
 
-  return (
-    <p>
-      Clicked: {value} times <button onClick={incrementHandler}>+</button>
-    </p>
-  );
+	return (
+		<p>
+			Clicked: {value} times <button onClick={incrementHandler}>+</button>
+		</p>
+	);
 };
 
 const store = createStore(counter);
 const render = () => {
-  const appElement = (
-    <Counter/>
-  );
-  createRoot(document.getElementById('root')).render(appElement);
+	const appElement = (
+		<Counter/>
+	);
+	createRoot(document.getElementById('root')).render(appElement);
 }
 render();
 ```
@@ -235,12 +235,12 @@ import {Provider, useDispatch, useSelector} from 'react-redux';
 
 // reducer
 const counterReducer = (state = { counter: 0 }, action) => {
-  switch (action.type) {
-    case 'INCREMENT':
-      return { counter: state.counter + 1 };
-    default:
-      return state;
-  }
+	switch (action.type) {
+		case 'INCREMENT':
+			return { counter: state.counter + 1 };
+		default:
+			return state;
+	}
 };
 
 //store
@@ -248,31 +248,31 @@ const store = createStore(counterReducer);
 
 // presentational counter component
 const Counter = () => {
-  const value = useSelector((state) => state.counter);
-  const dispatch = useDispatch();
+	const value = useSelector((state) => state.counter);
+	const dispatch = useDispatch();
 
-  const incrementHandler = () => {
-    dispatch({ type: 'INCREMENT' });
-  };
+	const incrementHandler = () => {
+		dispatch({ type: 'INCREMENT' });
+	};
 
-  return (
-    <p>
-      Clicked: {value} times <button onClick={incrementHandler}>+</button>
-    </p>
-  );
+	return (
+		<p>
+			Clicked: {value} times <button onClick={incrementHandler}>+</button>
+		</p>
+	);
 };
 
 const App = () => {
-  return <Counter />;
+	return <Counter />;
 }
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
 root.render(
-    <Provider store={store}>
-      <App />
-    </Provider>
+		<Provider store={store}>
+			<App />
+		</Provider>
 );
 ```
 
