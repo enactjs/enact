@@ -154,66 +154,58 @@ Live demo: [http://jsbin.com/keyahus/edit?html,js,output](http://jsbin.com/keyah
 #### React
 
 ```js
-import {createRoot} from 'react-dom/client';
-import {configureStore, createSlice} from '@reduxjs/toolkit';
-import {Provider, useDispatch, useSelector} from 'react-redux';
+import {createStore} from 'redux';
+import PropTypes from 'prop-types';
+import {Component} from 'react';
+import ReactDOM from 'react-dom';
 
 // reducer
-const initialState = {counter: 0};
-const counterReducer = createSlice({
-	name: 'counterReducer',
-	initialState,
-	reducers: {
-		increment: (state) =>  {
-			return {counter: state.counter + 1};
-		}
+function counter (state = 0, action) {
+	switch (action.type) {
+		case 'INCREMENT':
+			return state + 1;
+		default:
+			return state;
 	}
-});
+}
 
-// store
-const store = configureStore({
-	reducer: counterReducer.reducer,
-	initialState
-});
+class Counter extends Component {
+	render () {
+		const {value, onIncrement} = this.props;
+		return (
+			<p>
+				Clicked: {value} times
+				{' '}
+				<button onClick={onIncrement}>
+					+
+				</button>
+			</p>
+		);
+	}
+}
 
+Counter.propTypes = {
+	onIncrement: PropTypes.func.isRequired,
+	value: PropTypes.number.isRequired
+};
 
-// presentational counter component
-const Counter = () => {
-	const value = useSelector((state) => state.counter);
-	const dispatch = useDispatch();
-	const {increment} = counterReducer.actions;
+const store = createStore(counter);
 
-	const incrementHandler = () => {
-		dispatch(increment());
-	};
-
-	return (
-		<p>
-			Clicked: {value} times
-			<button
-				onClick={// eslint-disable-line react/jsx-no-bind
-					incrementHandler
-				}
-			>+</button>
-		</p>
+function render () {
+	ReactDOM.render(
+		<Counter
+			value={store.getState()}
+			onIncrement={() => store.dispatch({type: 'INCREMENT'})}
+		/>,
+		document.getElementById('root');
 	);
-};
+}
 
-const App = () => {
-	return <Counter />;
-};
-
-const rootElement = document.getElementById('root');
-const root = createRoot(rootElement);
-
-root.render(
-	<Provider store={store}>
-		<App />
-	</Provider>
-);
+render();
+store.subscribe(render);
 ```
 
-Live Demo: [https://codesandbox.io/s/charming-burnell-92or5q?file=/src/App.js](https://codesandbox.io/s/charming-burnell-92or5q?file=/src/App.js)
+Live Demo: [http://jsbin.com/nemofa/edit?html,js,output](http://jsbin.com/nemofa/edit?html,js,output)
 
 ### Redux Toolkit
 
