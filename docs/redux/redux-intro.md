@@ -242,6 +242,7 @@ Our components need access to the Redux store so they can subscribe to it. This 
 #### Example
 
 ```js
+import {useCallback} from 'react';
 import {createRoot} from 'react-dom/client';
 import {configureStore, createSlice} from '@reduxjs/toolkit';
 import {Provider, useDispatch, useSelector} from 'react-redux';
@@ -271,18 +272,13 @@ const Counter = () => {
 	const dispatch = useDispatch();
 	const {increment} = counterReducer.actions;
 
-	const incrementHandler = () => {
+	const incrementHandler = useCallback(() => {
 		dispatch(increment());
-	};
+	}, [dispatch, increment]);
 
 	return (
 		<p>
-			Clicked: {value} times
-			<button
-				onClick={// eslint-disable-line react/jsx-no-bind
-					incrementHandler
-				}
-			>+</button>
+			Clicked: {value} times <button onClick={incrementHandler}>+</button>
 		</p>
 	);
 };
