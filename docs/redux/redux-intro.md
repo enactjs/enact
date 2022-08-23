@@ -61,7 +61,6 @@ An action is just a POJO (unless you use middleware as described) that contains 
 }
 ```
 
-
 ##### Reducers
 
 A reducing function (reducer) returns the next state tree, given the current state tree and an action to handle. Reducers are run in response to actions that are made against the store. Reducing functions should be pure (given the same arguments, they should always return the same value) and perform no side effects (API calls, routing transitions, etc.) or call other non-pure functions (i.e. `Date.now()` or `Math.random()`).
@@ -101,7 +100,6 @@ const todo = (state, action) => {
 	}
 }
 ```
-
 
 ##### Store
 
