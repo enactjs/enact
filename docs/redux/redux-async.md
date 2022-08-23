@@ -7,7 +7,7 @@ Most complex apps rely heavily on fetching data asynchronously. In this document
 
 ### Introduction to Middleware and `redux-thunk`
 
-When using an API, you are probably dealing with asynchronous actions. However, the Redux store only supports synchronous actions without using [middleware](https://redux.js.org/tutorials/fundamentals/part-4-store#middleware) (more on that later). To use middleware in Redux, we use the [`applyMiddleware()`](https://redux.js.org/api/applymiddleware) store enhancer from Redux. `redux-thunk` middleware is the standard way to handle asynchronous actions.
+When using an API, you are probably dealing with asynchronous actions. However, the Redux store only supports synchronous actions without using [middleware](https://redux.js.org/tutorials/fundamentals/part-4-store#middleware) (more on that later). To use middleware in Redux, we use the [`applyMiddleware()`](https://redux.js.org/api/applymiddleware) store enhancer from Redux. `redux-thunk` middleware is the standard way to handle asynchronous actions. If you are using Redux Toolkit, you don't need to install `redux-thunk` and call `applyMiddleware()` directly since Redux Toolkit provides `configureStore()` which includes `redux-thunk` middleware by default.
 
 We use `redux-thunk` middleware to enable asynchronous requests to work with synchronous action creators. It allows an action creator to return a function instead of an object (action) and executes that function when it is returned. This allows non-pure actions (i.e. ones that can call APIs that might have different data each time). These action creators can dispatch other actions, so, for example, you can dispatch a `REQUEST_BEGIN` action, then fetch remote data asynchronously and, after it returns, dispatch the `REQUEST_SUCCESS` or `REQUEST_ERROR` actions.
 
@@ -17,17 +17,17 @@ For example, you can create an async incrementer as follows:
 const INCREMENT_COUNTER = 'INCREMENT_COUNTER';
 
 function increment() {
-  return {
-    type: INCREMENT_COUNTER
-  };
+	return {
+		type: INCREMENT_COUNTER
+	};
 }
 
 function incrementAsync() {
-  return dispatch => {
-    setTimeout(() => {
-      dispatch(increment());
-    }, 1000);
-  };
+	return dispatch => {
+		setTimeout(() => {
+			dispatch(increment());
+		}, 1000);
+	};
 }
 ```
 
@@ -38,6 +38,7 @@ A combination of `redux-thunk` and `LS2Request` allows us to fetch and display d
 At the root level, we use `<Provider />` to pass store down the component hierarchy.
 
 ```js
+import {createRoot} from 'react-dom/client';
 import {Provider} from 'react-redux';
 
 import App from './App';
@@ -49,10 +50,10 @@ let appElement = () => (
 	</Provider>
 );
 
-export default appElement;
+createRoot(document.getElementById('root')).render(appElement);
 ```
 
-Store is configured to accept thunk middleware
+Store is configured to accept thunk middleware by `configureStore()` from Redux Toolkit.
 
 ```js
 import {configureStore} from '@reduxjs/toolkit';
@@ -109,7 +110,7 @@ export const {receiveSystemSettings, updateSystemSettings} = rootSlice.actions;
 export default rootSlice;
 ```
 
-Connected container dispatches ``getSystemSettings`` on component mount and renders a ``pictureMode`` prop that's been hooked up with a redux store.
+Component dispatches ``getSystemSettings`` on component mount and renders a ``pictureMode`` prop that's been got from a redux store.
 
 ```js
 import {useDispatch, useSelector} from 'react-redux';

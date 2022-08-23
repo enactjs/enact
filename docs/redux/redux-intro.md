@@ -154,47 +154,49 @@ Live demo: [https://codesandbox.io/s/bold-bas-zxofpj?file=/src/index.js](https:/
 #### React
 
 ```js
+import {useCallback} from 'react';
 import {createRoot} from 'react-dom/client';
+import {Provider, useDispatch, useSelector} from 'react-redux';
 import {createStore} from 'redux';
-import {useDispatch, useSelector} from 'react-redux';
+
 // reducer
 const counterReducer = (state = {counter: 0}, action) => {
-  switch (action.type) {
-    case "INCREMENT":
-      return { counter: state.counter + 1 };
-    default:
-      return state;
-  }
+	switch (action.type) {
+		case 'INCREMENT':
+			return {counter: state.counter + 1};
+		default:
+			return state;
+	}
 };
 
+// store
 const store = createStore(counterReducer);
 
+// counter component
 const Counter = () => {
-  const value = useSelector((state) => state.counter);
-  const dispatch = useDispatch();
+	const value = useSelector((state) => state.counter);
+	const dispatch = useDispatch();
 
-  const incrementHandler = () => {
-    dispatch({ type: "INCREMENT" });
-  };
+	const incrementHandler = useCallback(() => {
+		dispatch({type: 'INCREMENT'});
+	}, [dispatch]);
 
-  return (
-    <p>
-      Clicked: {value} times <button onClick={incrementHandler}>+</button>
-    </p>
-  );
+	return (
+		<p>
+			Clicked: {value} times <button onClick={incrementHandler}>+</button>
+		</p>
+	);
 };
 
-const App = () =>  <Counter />;
+const App = () => <Counter />;
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
 
 root.render(
-  <StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </StrictMode>
+	<Provider store={store}>
+		<App />
+	</Provider>
 );
 ```
 
@@ -235,9 +237,9 @@ Our components need access to the Redux store so they can subscribe to it. This 
 #### Example
 
 ```js
+import {configureStore, createSlice} from '@reduxjs/toolkit';
 import {useCallback} from 'react';
 import {createRoot} from 'react-dom/client';
-import {configureStore, createSlice} from '@reduxjs/toolkit';
 import {Provider, useDispatch, useSelector} from 'react-redux';
 
 // reducer
@@ -246,7 +248,7 @@ const counterReducer = createSlice({
 	name: 'counterReducer',
 	initialState,
 	reducers: {
-		increment: (state) =>  {
+		increment: (state) => {
 			return {counter: state.counter + 1};
 		}
 	}
@@ -258,8 +260,7 @@ const store = configureStore({
 	initialState
 });
 
-
-// presentational counter component
+// counter component
 const Counter = () => {
 	const value = useSelector((state) => state.counter);
 	const dispatch = useDispatch();
