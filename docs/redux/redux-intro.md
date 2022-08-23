@@ -149,63 +149,56 @@ document.addEventListener('click', () => {
 });
 ```
 
-Live demo: [http://jsbin.com/keyahus/edit?html,js,output](http://jsbin.com/keyahus/edit?html,js,output)
+Live demo: [https://codesandbox.io/s/bold-bas-zxofpj?file=/src/index.js](https://codesandbox.io/s/bold-bas-zxofpj?file=/src/index.js)
 
 #### React
 
 ```js
+import {createRoot} from 'react-dom/client';
 import {createStore} from 'redux';
-import PropTypes from 'prop-types';
-import {Component} from 'react';
-import ReactDOM from 'react-dom';
-
+import {useDispatch, useSelector} from 'react-redux';
 // reducer
-function counter (state = 0, action) {
-	switch (action.type) {
-		case 'INCREMENT':
-			return state + 1;
-		default:
-			return state;
-	}
-}
-
-class Counter extends Component {
-	render () {
-		const {value, onIncrement} = this.props;
-		return (
-			<p>
-				Clicked: {value} times
-				{' '}
-				<button onClick={onIncrement}>
-					+
-				</button>
-			</p>
-		);
-	}
-}
-
-Counter.propTypes = {
-	onIncrement: PropTypes.func.isRequired,
-	value: PropTypes.number.isRequired
+const counterReducer = (state = {counter: 0}, action) => {
+  switch (action.type) {
+    case "INCREMENT":
+      return { counter: state.counter + 1 };
+    default:
+      return state;
+  }
 };
 
-const store = createStore(counter);
+const store = createStore(counterReducer);
 
-function render () {
-	ReactDOM.render(
-		<Counter
-			value={store.getState()}
-			onIncrement={() => store.dispatch({type: 'INCREMENT'})}
-		/>,
-		document.getElementById('root');
-	);
-}
+const Counter = () => {
+  const value = useSelector((state) => state.counter);
+  const dispatch = useDispatch();
 
-render();
-store.subscribe(render);
+  const incrementHandler = () => {
+    dispatch({ type: "INCREMENT" });
+  };
+
+  return (
+    <p>
+      Clicked: {value} times <button onClick={incrementHandler}>+</button>
+    </p>
+  );
+};
+
+const App = () =>  <Counter />;
+
+const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
+
+root.render(
+  <StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </StrictMode>
+);
 ```
 
-Live Demo: [http://jsbin.com/nemofa/edit?html,js,output](http://jsbin.com/nemofa/edit?html,js,output)
+Live Demo: [https://codesandbox.io/s/thirsty-kowalevski-jfi9wm?file=/src/index.js](https://codesandbox.io/s/thirsty-kowalevski-jfi9wm?file=/src/index.js)
 
 ### Redux Toolkit
 
