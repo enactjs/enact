@@ -239,7 +239,7 @@ Also, we use [useDispatch()](https://github.com/reduxjs/react-redux/blob/master/
 
 Our components need access to the Redux store so they can subscribe to it. This can be cumbersome as your number of components grows and you have to manually pass store around. `react-redux` incorporates [context](https://reactjs.org/docs/context.html) in React and provides a [`<Provider />`](https://github.com/reduxjs/react-redux/blob/master/docs/api/Provider.md) component to make store available to all components without passings stores around by hand. You only need to use it once at the `render()` of root component.
 
-#### example
+#### Example
 
 ```js
 import {createRoot} from 'react-dom/client';
