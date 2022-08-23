@@ -43,11 +43,8 @@ import {Provider} from 'react-redux';
 import App from './App';
 import store from './store';
 
-// set default launch path
-const appStore = store();
-
 let appElement = () => (
-	<Provider store={appStore}>
+	<Provider store={store}>
 		<App />
 	</Provider>
 );
