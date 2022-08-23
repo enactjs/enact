@@ -38,36 +38,36 @@ A combination of `redux-thunk` and `LS2Request` allows us to fetch and display d
 At the root level, we use `<Provider />` to pass store down the component hierarchy.
 
 ```js
-import {render} from 'react-dom';
 import {Provider} from 'react-redux';
-import configureStore from './store';
-import App from './containers/App';
 
-const store = configureStore();
-render(
-	<Provider store={store}>
+import App from './App';
+import store from './store';
+
+// set default launch path
+const appStore = store();
+
+let appElement = () => (
+	<Provider store={appStore}>
 		<App />
-	</Provider>,
-	document.getElementById('root')
+	</Provider>
 );
+
+export default appElement;
 ```
 
 Store is configured to accept thunk middleware
 
 ```js
-import {configureStore, createSlice} from '@reduxjs/toolkit';
-import thunkMiddleware from 'redux-thunk';
+import {configureStore} from '@reduxjs/toolkit';
 import rootSlice from '../reducers';
 
+const initialState = {};
+const store = configureStore({
+	reducer: rootSlice.reducer,
+	initialState
+});
 
-
-export default function configureAppStore (initialState) {
-	return configureStore({
-		reducer: rootSlice.reducer,
-		initialState,
-		middleware: [thunkMiddleware]
-	});
-}
+export default store;
 ```
 
 Here we create a thunk action creator which returns a function instead of a plain object. It is also possible to dispatch an action or request at the beginning.
@@ -93,6 +93,8 @@ export const getSystemSettings = params => dispatch => {
 Reducer receives a payload and creates a new state.
 
 ```js
+import {configureStore} from '@reduxjs/toolkit';
+
 const rootSlice = createSlice({
 	name: 'systemReducer',
 	initialState: {},
