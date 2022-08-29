@@ -6,8 +6,8 @@ cache:
   directories:
     - $(npm config get cache)
 install:
-    - npm config set prefer-offline true
-    - npm install -g enactjs/cli#4.1.7
+    - npm config set prefer-offline false
+    - npm install -g @enact/cli@4.1.7
     - npm install -g codecov
     - npm install
     - npm run bootstrap
