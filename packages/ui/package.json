@@ -7,7 +7,7 @@
     "url": "https://github.com/enactjs/enact.git",
     "directory": "packages/ui"
   },
-  "homepage": "https://github.com/enactjs/enact/tree/master/packages/ui#readme", 
+  "homepage": "https://enactjs.com", 
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",

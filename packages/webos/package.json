@@ -7,7 +7,7 @@
     "url": "https://github.com/enactjs/enact.git",
     "directory": "packages/webos"
   },
-  "homepage": "https://github.com/enactjs/enact/tree/master/packages/webos#readme", 
+  "homepage": "https://enactjs.com", 
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",

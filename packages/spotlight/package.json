@@ -7,7 +7,7 @@
     "url": "https://github.com/enactjs/enact.git",
     "directory": "packages/spotlight"
   },
-  "homepage": "https://github.com/enactjs/enact/tree/master/packages/spotlight#readme", 
+  "homepage": "https://enactjs.com", 
   "main": "src/spotlight.js",
   "scripts": {
     "clean": "enact clean",

@@ -8,7 +8,7 @@
     "url": "https://github.com/enactjs/enact.git",
     "directory": "packages/i18n"
   },
-  "homepage": "https://github.com/enactjs/enact/tree/master/packages/i18n#readme", 
+  "homepage": "https://enactjs.com", 
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --strict",
