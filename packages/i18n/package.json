@@ -3,6 +3,12 @@
   "main": "./src/index.js",
   "version": "4.5.2",
   "description": "Internationalization support for Enact using iLib",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enactjs/enact.git",
+    "directory": "packages/i18n"
+  },
+  "homepage": "https://enactjs.com", 
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --strict",

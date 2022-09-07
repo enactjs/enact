@@ -2,6 +2,12 @@
   "name": "@enact/spotlight",
   "version": "4.5.2",
   "description": "A focus management library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enactjs/enact.git",
+    "directory": "packages/spotlight"
+  },
+  "homepage": "https://enactjs.com", 
   "main": "src/spotlight.js",
   "scripts": {
     "clean": "enact clean",
