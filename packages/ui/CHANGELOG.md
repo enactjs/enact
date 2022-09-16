@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [4.0.12] - 2022-09-16
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to have proper spacing for bidirectional text
+
 ## [4.0.11] - 2022-04-25
 
 No significant changes.
