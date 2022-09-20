@@ -5,6 +5,7 @@ import css from './Scrim.module.less';
 
 const transparentClassName = css.scrim + ' enact-fit ' + css.transparent;
 const translucentClassName = css.scrim + ' enact-fit ' + css.translucent;
+const blurClassName = css.scrim + ' enact-fit ' + css.blur;
 
 // Stores references to any Scrim instances whose type is translucent to ensure that only the top-
 // most Scrim is visible to avoid stacking scrims.
@@ -69,7 +70,7 @@ class Scrim extends Component {
 		 * @default `translucent`
 		 * @public
 		 */
-		type: PropTypes.oneOf(['transparent', 'translucent'])
+		type: PropTypes.oneOf(['transparent', 'translucent', 'blur'])
 	};
 
 	static defaultProps = {
@@ -116,8 +117,10 @@ class Scrim extends Component {
 	render () {
 		if (this.state.visible) {
 			const {type, ...rest} = this.props;
-			const className = type === 'transparent' ? transparentClassName : translucentClassName;
-
+			let className = type === 'transparent' ? transparentClassName : translucentClassName;
+			if (type === 'blur') {
+				className = blurClassName;
+			}
 			return (
 				<div {...rest} className={className} />
 			);
