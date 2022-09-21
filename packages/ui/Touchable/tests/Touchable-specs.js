@@ -115,6 +115,69 @@ describe('Touchable', () => {
 			done();
 		});
 
+		test('should update state configurations onPinchZoomStart events', (done) => {
+			const pinchZoomConfig = {
+				global: true,
+				scaleTolerance: 0
+			};
+
+			const Component = Touchable(DivComponent);
+			const handler = jest.fn();
+			const {rerender} = render(<Component pinchZoomConfig={pinchZoomConfig} onPinchZoom={() => {}} />);
+			const component = screen.getByTestId('component');
+
+			const touchEvent = {
+				timeStamp: 1,
+				type: 'touch',
+				clientX: 0, clientY: 0,
+				changedTouches: [{clientX: 0, clientY: 0}, {clientX: 10, clientY: 10}],
+				targetTouches: [{clientX: 0, clientY: 0}, {clientX: 10, clientY: 10}]
+			};
+
+			rerender(<Component pinchZoomConfig={pinchZoomConfig} onPinchZoom={() => {}} onPinchZoomStart={handler} />);
+
+			fireEvent.touchStart(component, touchEvent);
+			fireEvent.mouseDown(component, touchEvent);
+
+			jest.runOnlyPendingTimers();
+
+			expect(handler).toHaveBeenCalled();
+			done();
+		});
+
+		test('should update state configurations onPinchZoomEnd events', (done) => {
+			const pinchZoomConfig = {
+				global: true,
+				scaleTolerance: 0
+			};
+
+			const Component = Touchable(DivComponent);
+			const handler = jest.fn();
+			const {rerender} = render(<Component pinchZoomConfig={pinchZoomConfig} onPinchZoom={() => {}} />);
+			const component = screen.getByTestId('component');
+
+			const touchEvent = {
+				timeStamp: 1,
+				type: 'touch',
+				clientX: 0, clientY: 0,
+				changedTouches: [{clientX: 0, clientY: 0}, {clientX: 10, clientY: 10}],
+				targetTouches: [{clientX: 0, clientY: 0}, {clientX: 10, clientY: 10}]
+			};
+
+			fireEvent.touchStart(component, touchEvent);
+			fireEvent.mouseDown(component, touchEvent);
+
+			rerender(<Component pinchZoomConfig={pinchZoomConfig} onPinchZoom={() => {}} onPinchZoomEnd={handler} />);
+
+			jest.runOnlyPendingTimers();
+
+			fireEvent.touchEnd(component, touchEvent);
+			fireEvent.mouseUp(component, touchEvent);
+
+			expect(handler).toHaveBeenCalled();
+			done();
+		});
+
 		test('should merge configurations', () => {
 			configure({
 				flick: {
