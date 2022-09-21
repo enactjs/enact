@@ -7,7 +7,7 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 ### Changed
 
 - `sampler` look and feel by updating to Storybook 6.5.
-- `ui\VirtualGridList` to use a local svg instead of downloading images.
+- `ui\VirtualGridList` sample to use a local svg instead of downloading images.
 
 ## [4.5.2] - 2022-08-17
 
