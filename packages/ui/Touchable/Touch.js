@@ -10,12 +10,18 @@ import ClickAllow from './ClickAllow';
 import {Drag} from './Drag';
 import {Flick} from './Flick';
 import {Hold} from './Hold';
+import {PinchZoom} from './PinchZoom';
 
 const getEventCoordinates = (ev) => {
 	let {clientX: x, clientY: y, type} = ev;
 	if (type.indexOf('touch') === 0) {
-		x = ev.targetTouches[0].clientX;
-		y = ev.targetTouches[0].clientY;
+		if (ev.targetTouches.length >= 2) {
+			console.log(ev.targetTouches);
+			return Array.from(ev.targetTouches, (targetTouch) => ({x: targetTouch.clientX, y: targetTouch.clientY}));
+		} else {
+			x = ev.targetTouches[0].clientX;
+			y = ev.targetTouches[0].clientY;
+		}
 	}
 
 	return {x, y};
@@ -178,6 +184,7 @@ class Touch {
 		this.drag = new Drag();
 		this.flick = new Flick();
 		this.hold = new Hold();
+		this.pinchZoom = new PinchZoom();
 
 		this.clickAllow = new ClickAllow();
 
@@ -210,11 +217,12 @@ class Touch {
 		this.context.setState = setState;
 	}
 
-	updateGestureConfig (dragConfig, flickConfig, holdConfig) {
+	updateGestureConfig (dragConfig, flickConfig, holdConfig, pinchZoomConfig) {
 		this.config = mergeConfig({
 			drag: dragConfig,
 			flick: flickConfig,
-			hold: holdConfig
+			hold: holdConfig,
+			pinchZoom: pinchZoomConfig
 		});
 	}
 
@@ -277,7 +285,8 @@ class Touch {
 	}
 
 	updateProps (props) {
-		// Update the props onHoldStart, onHold, and onHoldEnd on any gesture (hold, flick, drag).
+		// Update the props onHoldStart, onHold, and onHoldEnd on any gesture (pinchZoom, hold, flick, drag).
+		this.pinchZoom.updateProps(props);
 		this.hold.updateProps(props);
 		this.flick.updateProps(props);
 		this.drag.updateProps(props);
@@ -301,12 +310,15 @@ class Touch {
 
 	startGesture (ev, props) {
 		const coords = getEventCoordinates(ev);
-		let {hold, flick, drag} = this.config;
+		let {pinchZoom, hold, flick, drag} = this.config;
 
-		this.hold.begin(hold, props, coords);
-		this.flick.begin(flick, props, coords);
-		this.drag.begin(drag, props, coords, this.target);
-
+		if (Array.isArray(coords)) {
+			this.pinchZoom.begin(pinchZoom, props, coords, this.target);
+		} else {
+			this.hold.begin(hold, props, coords);
+			this.flick.begin(flick, props, coords);
+			this.drag.begin(drag, props, coords, this.target);
+		}
 		this.targetHadFocus = this.target === document.activeElement;
 
 		return true;
@@ -315,9 +327,13 @@ class Touch {
 	moveGesture (ev) {
 		const coords = getEventCoordinates(ev);
 
-		this.hold.move(coords);
-		this.flick.move(coords);
-		this.drag.move(coords);
+		if (Array.isArray(coords)) {
+			this.pinchZoom.move(coords);
+		} else {
+			this.hold.move(coords);
+			this.flick.move(coords);
+			this.drag.move(coords);
+		}
 
 		return true;
 	}
@@ -349,6 +365,7 @@ class Touch {
 	endGesture () {
 		this.targetHadFocus = false;
 
+		this.pinchZoom.end();
 		this.hold.end();
 		this.flick.end();
 		this.drag.end();

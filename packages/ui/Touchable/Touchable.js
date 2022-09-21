@@ -15,12 +15,13 @@ import {configure} from './config';
 import {dragConfigPropType} from './Drag';
 import {flickConfigPropType} from './Flick';
 import {holdConfigPropType} from './Hold';
+import {pinchZoomConfigPropType} from './PinchZoom';
 import useTouch from './useTouch';
 
 const selectProps = (props) => {
 	const {
 		/* configs */
-		dragConfig, flickConfig, holdConfig,
+		dragConfig, flickConfig, holdConfig, pinchZoomConfig,
 		/* general props */
 		disabled,
 		noResume,
@@ -35,6 +36,7 @@ const selectProps = (props) => {
 		onFlick,
 		onHold, onHoldEnd, onHoldStart,
 		onMove,
+		onPinchZoom, onPinchZoomEnd, onPinchZoomStart,
 		onTap,
 		onUp,
 		/* rest */
@@ -44,7 +46,7 @@ const selectProps = (props) => {
 	return {
 		configForHook: {
 			/* configs */
-			dragConfig, flickConfig, holdConfig,
+			dragConfig, flickConfig, holdConfig, pinchZoomConfig,
 			/* general props */
 			disabled,
 			noResume,
@@ -59,6 +61,7 @@ const selectProps = (props) => {
 			onFlick,
 			onHold, onHoldEnd, onHoldStart,
 			onMove,
+			onPinchZoom, onPinchZoomEnd, onPinchZoomStart,
 			onTap,
 			onUp
 		},
@@ -89,7 +92,7 @@ const defaultConfig = {
 /**
  * A higher-order component that provides a consistent set of pointer events -- `onDown`, `onUp`,
  * and `onTap` -- across mouse and touch interfaces along with support for common gestures including
- * `onFlick`, `onDrag`, `onHoldStart`, `onHold`, and `onHoldEnd`.
+ * `onFlick`, `onDrag`, `onHoldStart`, `onHold`, `onHoldEnd`, `onPinchZoomStart`, `onPinchZoom` and `onPinchZoomEnd`.
  *
  * Note: This HoC passes a number of props to the wrapped component that should be passed to the
  * main DOM node or consumed by the wrapped component.
@@ -294,6 +297,47 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		onMove: PropTypes.func,
 
 		/**
+		 * Event handler for a pinchZoom gesture.
+		 *
+		 * Event payload includes:
+		 *
+		 * * `type` - Type of event, `'onPinchZoom'`
+		 * * `coords` - the coordinates array of the touch point, relative to the viewport
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onPinchZoom: PropTypes.func,
+
+		/**
+		  * Event handler for the end of a pinchZoom gesture.
+		  *
+		  * Event payload includes:
+		  *
+		  * * `type` - Type of event, `'onPinchZoomEnd'`
+		  *
+		  * @memberof ui/Touchable.Touchable.prototype
+		  * @type {Function}
+		  * @public
+		  */
+		onPinchZoomEnd: PropTypes.func,
+
+		/**
+		  * Event handler for the start of a pinchZoom gesture.
+		  *
+		  * Event payload includes:
+		  *
+		  * * `type` - Type of event, `'onPinchZoomStart'`
+		  * * `coords` - the coordinates array of the touch point, relative to the viewport
+		  *
+		  * @memberof ui/Touchable.Touchable.prototype
+		  * @type {Function}
+		  * @public
+		  */
+		onPinchZoomStart: PropTypes.func,
+
+		/**
 		 * Event handler for 'tap' pointer events.
 		 *
 		 * @memberof ui/Touchable.Touchable.prototype
@@ -309,7 +353,17 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * @type {Function}
 		 * @public
 		 */
-		onUp: PropTypes.func
+		onUp: PropTypes.func,
+
+		/**
+		 * Instance-specific overrides of the pinchZoom configuration.
+		 *
+		 * @see {@link ui/Touchable.configure}
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Object}
+		 * @public
+		 */
+		pinchZoomConfig: pinchZoomConfigPropType
 	};
 
 	Touchable.defaultProps = {
