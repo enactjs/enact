@@ -46,7 +46,7 @@ const updateDataSize = (dataSize) => {
 			count = (headingZeros + i).slice(-itemNumberDigits),
 			text = `Item ${count}${shouldAddLongContent({index: i, modIndex: 2})}`,
 			color = Math.floor(Math.random() * (0x1000000 - 0x101010) + 0x101010).toString(16),
-			source = svgGenerator(300, 300, color, 'ffffff', `Image ${i}`)
+			source = svgGenerator(300, 300, color, 'ffffff', `Image ${i}`);
 
 		items.push({text, source});
 	}
