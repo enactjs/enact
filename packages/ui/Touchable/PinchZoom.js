@@ -65,8 +65,9 @@ class PinchZoom {
 	};
 
 	begin = (config, {noResume, onPinchZoom, onPinchZoomEnd, onPinchZoomStart}, coords, node) => {
-		if (!onPinchZoom && !onPinchZoomStart && !onPinchZoomEnd) return;
-
+		if (!onPinchZoom && !onPinchZoomStart && !onPinchZoomEnd) {
+			return;
+		}
 
 		this.pinchZoomConfig = {
 			...config,
@@ -83,11 +84,9 @@ class PinchZoom {
 		this.startDist = Math.sqrt((dx * dx + dy * dy));
 		this.startScale = this.scale;
 
-
 		this.onPinchZoom = onPinchZoom;
 		this.onPinchZoomStart = onPinchZoomStart;
 		this.onPinchZoomEnd = onPinchZoomEnd;
-
 
 		if (this.onPinchZoomStart) {
 			this.onPinchZoomStart({

@@ -16,7 +16,10 @@ const getEventCoordinates = (ev) => {
 	let {clientX: x, clientY: y, type} = ev;
 	if (type.indexOf('touch') === 0) {
 		if (ev.targetTouches.length >= 2) {
-			return Array.from(ev.targetTouches, (targetTouch) => ({x: targetTouch.clientX, y: targetTouch.clientY}));
+			return Array.from(ev.targetTouches, (targetTouch) => ({
+				x: targetTouch.clientX,
+				y: targetTouch.clientY
+			}));
 		} else {
 			x = ev.targetTouches[0].clientX;
 			y = ev.targetTouches[0].clientY;
