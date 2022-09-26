@@ -8,16 +8,44 @@ describe('useId', () => {
 
 	function Base (props) {
 		data.push(props);
-		return <div id={data.id} generateid={data.generateId} />;
+		return <div
+			id={data.id}
+			generateid={data.generateId}
+			generateprop={data.generateProp}
+			idprop={data.idProp}
+		/>;
 	}
 
-	function Component ({key, prefix, onUnmount}) {
+	function Component ({key, prefix, onUnmount, generateProp, idProp}) {
 		const provider = useId({prefix});
 
-		return <Base {...provider} id={provider.generateId(key, prefix, onUnmount)} />;
+		return <Base
+			{...provider}
+			id={provider.generateId(key, prefix, onUnmount)}
+			generateProp={provider.generateId(generateProp)}
+			idProp={provider.generateId(idProp)}
+		/>;
 	}
 
 	afterEach(() => data.splice(0, data.length));
+
+	test('should generate a prop', () => {
+		render(<Component />);
+
+		const expected = 'undefined1';
+		const actual = data[0].generateProp;
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should generate an id prop', () => {
+		render(<Component />);
+
+		const expected = 'undefined2';
+		const actual = data[0].idProp;
+
+		expect(actual).toBe(expected);
+	});
 
 	test('should provide a generateId method', () => {
 		render(<Component />);
