@@ -21,7 +21,7 @@ describe('Slider', () => {
 
 	test('should set knob proportion to 0 when \'defaultValue\' is smaller than min value', () => {
 		jest.spyOn(console, 'warn').mockImplementation(() => {});
-		render(<Slider data-testid="slider" defaultValue={-10} max={100} min={0} progressBarComponent={ProgressBar} />);
+		render(<Slider data-testid="slider" defaultValue={-10} max={100} min={0} progressBarComponent={ProgressBar} step={3} />);
 
 		const slider = screen.getByTestId('slider');
 		const expected = '0';
@@ -31,7 +31,7 @@ describe('Slider', () => {
 
 	test('should set knob proportion to 1 when \'defaultValue\' is bigger than max value', () => {
 		jest.spyOn(console, 'warn').mockImplementation(() => {});
-		render(<Slider data-testid="slider" defaultValue={110} max={100} min={0} progressBarComponent={ProgressBar} />);
+		render(<Slider data-testid="slider" defaultValue={110} max={100} min={0} progressBarComponent={ProgressBar} step={3} />);
 
 		const slider = screen.getByTestId('slider');
 		const expected = '1';
@@ -40,7 +40,7 @@ describe('Slider', () => {
 	});
 
 	test('should set knob proportion to 0.5 when \'defaultValue\' is half of the range between min and max value', () => {
-		render(<Slider data-testid="slider" defaultValue={50} max={100} min={0} progressBarComponent={ProgressBar} />);
+		render(<Slider data-testid="slider" defaultValue={50} max={100} min={0} progressBarComponent={ProgressBar} step={3} />);
 
 		const slider = screen.getByTestId('slider');
 		const expected = '0.5';
@@ -50,7 +50,7 @@ describe('Slider', () => {
 
 	test('should fire `onChange` with `onChange` type of horizontal slider when value changed', () => {
 		const handleChange = jest.fn();
-		render(<Slider defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} role="slider" />);
+		render(<Slider defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} role="slider" step={5} />);
 
 		const slider = screen.getByRole('slider');
 		fireEvent.mouseDown(slider);
@@ -63,7 +63,7 @@ describe('Slider', () => {
 
 	test('should fire `onChange` with `onChange` type of vertical slider when value changed', () => {
 		const handleChange = jest.fn();
-		render(<Slider defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} orientation="vertical" role="slider" />);
+		render(<Slider defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} orientation="vertical" role="slider" step={5} />);
 
 		const slider = screen.getByRole('slider');
 		fireEvent.mouseDown(slider);
