@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 
 import Knob from '../Knob';
 import Slider from '../Slider';
@@ -47,6 +47,33 @@ describe('Slider', () => {
 
 		expect(slider).toHaveStyle({'--ui-slider-proportion-end-knob': expected});
 	});
+
+	test('should fire `onChange` with `onChange` type of horizontal slider when value changed', () => {
+		const handleChange = jest.fn();
+		render(<Slider defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} role="slider" />);
+
+		const slider = screen.getByRole('slider');
+		fireEvent.mouseDown(slider);
+
+		const expected = {type: 'onChange'};
+		const actual = handleChange.mock.calls.length && handleChange.mock.calls[0][0];
+
+		expect(actual).toMatchObject(expected);
+	});
+
+	test('should fire `onChange` with `onChange` type of vertical slider when value changed', () => {
+		const handleChange = jest.fn();
+		render(<Slider defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} orientation="vertical" role="slider" />);
+
+		const slider = screen.getByRole('slider');
+		fireEvent.mouseDown(slider);
+
+		const expected = {type: 'onChange'};
+		const actual = handleChange.mock.calls.length && handleChange.mock.calls[0][0];
+
+		expect(actual).toMatchObject(expected);
+	});
+
 
 	test('should render a knob', () => {
 		render(<Knob role="knob" />);
