@@ -20,7 +20,7 @@ describe('Slider', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should set knob proportion to 0 when \'defaultValue\' is smaller than min value', () => {
+	test('should set \'ui-slider-proportion-end-knob\' to 0 when \'defaultValue\' is smaller than min value', () => {
 		jest.spyOn(console, 'warn').mockImplementation(() => {});
 		render(<Slider defaultValue={-10} knobComponent={Knob} max={100} min={0} progressBarComponent={ProgressBar} step={3} />);
 screen.debug()
@@ -30,7 +30,7 @@ screen.debug()
 		expect(slider).toHaveStyle({'--ui-slider-proportion-end-knob': expected});
 	});
 
-	test('should set knob proportion to 1 when \'defaultValue\' is bigger than max value', () => {
+	test('should set \'ui-slider-proportion-end-knob\' to 1 when \'defaultValue\' is bigger than max value', () => {
 		jest.spyOn(console, 'warn').mockImplementation(() => {});
 		render(<Slider defaultValue={110} knobComponent={Knob} max={100} min={0} progressBarComponent={ProgressBar} step={3} />);
 
@@ -40,7 +40,7 @@ screen.debug()
 		expect(slider).toHaveStyle({'--ui-slider-proportion-end-knob': expected});
 	});
 
-	test('should set knob proportion to 0.5 when \'defaultValue\' is half of the range between min and max value', () => {
+	test('should set \'ui-slider-proportion-end-knob\' to 0.5 when \'defaultValue\' is half of the range between min and max value', () => {
 		render(<Slider defaultValue={50} knobComponent={Knob} max={100} min={0} progressBarComponent={ProgressBar} step={3} />);
 
 		const slider = screen.getByRole('progressbar').parentElement;
