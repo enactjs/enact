@@ -2,16 +2,17 @@ import '@testing-library/jest-dom';
 import {fireEvent, render, screen} from '@testing-library/react';
 
 import Knob from '../Knob';
+import ProgressBar from '../../ProgressBar';
 import Slider from '../Slider';
 
 describe('Slider', () => {
-	function ProgressBar () {
+	function CustomProgressBar () {
 		return <div />;
 	}
 
 	test('should return a DOM node reference for `componentRef`', () => {
 		const ref = jest.fn();
-		render(<Slider progressBarComponent={ProgressBar} ref={ref} />);
+		render(<Slider progressBarComponent={CustomProgressBar} ref={ref} />);
 
 		const expected = 'DIV';
 		const actual = ref.mock.calls[0][0].nodeName;
@@ -21,9 +22,9 @@ describe('Slider', () => {
 
 	test('should set knob proportion to 0 when \'defaultValue\' is smaller than min value', () => {
 		jest.spyOn(console, 'warn').mockImplementation(() => {});
-		render(<Slider data-testid="slider" defaultValue={-10} max={100} min={0} progressBarComponent={ProgressBar} step={3} />);
-
-		const slider = screen.getByTestId('slider');
+		render(<Slider defaultValue={-10} knobComponent={Knob} max={100} min={0} progressBarComponent={ProgressBar} step={3} />);
+screen.debug()
+		const slider = screen.getByRole('progressbar').parentElement;
 		const expected = '0';
 
 		expect(slider).toHaveStyle({'--ui-slider-proportion-end-knob': expected});
@@ -31,18 +32,18 @@ describe('Slider', () => {
 
 	test('should set knob proportion to 1 when \'defaultValue\' is bigger than max value', () => {
 		jest.spyOn(console, 'warn').mockImplementation(() => {});
-		render(<Slider data-testid="slider" defaultValue={110} max={100} min={0} progressBarComponent={ProgressBar} step={3} />);
+		render(<Slider defaultValue={110} knobComponent={Knob} max={100} min={0} progressBarComponent={ProgressBar} step={3} />);
 
-		const slider = screen.getByTestId('slider');
+		const slider = screen.getByRole('progressbar').parentElement;
 		const expected = '1';
 
 		expect(slider).toHaveStyle({'--ui-slider-proportion-end-knob': expected});
 	});
 
 	test('should set knob proportion to 0.5 when \'defaultValue\' is half of the range between min and max value', () => {
-		render(<Slider data-testid="slider" defaultValue={50} max={100} min={0} progressBarComponent={ProgressBar} step={3} />);
+		render(<Slider defaultValue={50} knobComponent={Knob} max={100} min={0} progressBarComponent={ProgressBar} step={3} />);
 
-		const slider = screen.getByTestId('slider');
+		const slider = screen.getByRole('progressbar').parentElement;
 		const expected = '0.5';
 
 		expect(slider).toHaveStyle({'--ui-slider-proportion-end-knob': expected});
@@ -50,9 +51,9 @@ describe('Slider', () => {
 
 	test('should fire `onChange` with `onChange` type of horizontal slider when value changed', () => {
 		const handleChange = jest.fn();
-		render(<Slider defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} role="slider" step={5} />);
+		render(<Slider defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} step={5} />);
 
-		const slider = screen.getByRole('slider');
+		const slider = screen.getByRole('progressbar').parentElement;
 		fireEvent.mouseDown(slider);
 
 		const expected = {type: 'onChange'};
@@ -63,9 +64,9 @@ describe('Slider', () => {
 
 	test('should fire `onChange` with `onChange` type of vertical slider when value changed', () => {
 		const handleChange = jest.fn();
-		render(<Slider defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} orientation="vertical" role="slider" step={5} />);
+		render(<Slider defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} orientation="vertical" step={5} />);
 
-		const slider = screen.getByRole('slider');
+		const slider = screen.getByRole('progressbar').parentElement;
 		fireEvent.mouseDown(slider);
 
 		const expected = {type: 'onChange'};
@@ -73,7 +74,6 @@ describe('Slider', () => {
 
 		expect(actual).toMatchObject(expected);
 	});
-
 
 	test('should render a knob', () => {
 		render(<Knob role="knob" />);
