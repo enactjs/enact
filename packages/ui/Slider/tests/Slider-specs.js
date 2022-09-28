@@ -23,7 +23,7 @@ describe('Slider', () => {
 	test('should set \'ui-slider-proportion-end-knob\' to 0 when \'defaultValue\' is smaller than min value', () => {
 		jest.spyOn(console, 'warn').mockImplementation(() => {});
 		render(<Slider defaultValue={-10} knobComponent={Knob} max={100} min={0} progressBarComponent={ProgressBar} step={3} />);
-screen.debug()
+
 		const slider = screen.getByRole('progressbar').parentElement;
 		const expected = '0';
 
@@ -53,8 +53,8 @@ screen.debug()
 		const handleChange = jest.fn();
 		render(<Slider defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} step={5} />);
 
-		const slider = screen.getByRole('progressbar').parentElement;
-		fireEvent.mouseDown(slider);
+		const knob = screen.getByRole('progressbar').children.item(1);
+		fireEvent.mouseDown(knob);
 
 		const expected = {type: 'onChange'};
 		const actual = handleChange.mock.calls.length && handleChange.mock.calls[0][0];
@@ -66,15 +66,17 @@ screen.debug()
 		const handleChange = jest.fn();
 		render(<Slider defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} orientation="vertical" step={5} />);
 
-		const slider = screen.getByRole('progressbar').parentElement;
-		fireEvent.mouseDown(slider);
+		const knob = screen.getByRole('progressbar').children.item(1);
+		fireEvent.mouseDown(knob);
 
 		const expected = {type: 'onChange'};
 		const actual = handleChange.mock.calls.length && handleChange.mock.calls[0][0];
 
 		expect(actual).toMatchObject(expected);
 	});
+});
 
+describe('Knob', () => {
 	test('should render a knob', () => {
 		render(<Knob role="knob" />);
 
