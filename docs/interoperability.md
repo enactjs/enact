@@ -37,6 +37,12 @@ For libraries like bootstrap, you can also import the css in your `App.less` fil
 @global-import 'bootstrap/dist/css/bootstrap.css';
 ```
 
+As of `Enact CLI 5.0.0` you can import `.scss` files. This makes it possible to use a package's built-in Sass variables for global style preferences.
+
+```scss
+@import '~bootstrap/scss/bootstrap.scss';
+```
+
 The advantage of this is you get to use Enact's `cli` to develop, test, and build applications.
 If you need to configure Webpack plugin, you can use the [`eject` command](../../developer-tools/cli/ejecting-apps) to copy all the configuration options to the app directory such as the `npm run eject` of the CRA app. After doing that, you don't need `cli` and your application is fully under your control.
 
