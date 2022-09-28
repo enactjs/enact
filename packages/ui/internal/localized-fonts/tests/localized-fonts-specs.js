@@ -5,8 +5,16 @@ describe('localized-fonts', () => {
 		generateFontRules('en-US');
 	});
 
+	test('generateFontRules negative', () => {
+		generateFontRules();
+	});
+
 	test('generateFontOverrideRules', () => {
 		generateFontOverrideRules('ar-SA');
+	});
+
+	test('generateFontOverrideRules negative', () => {
+		generateFontOverrideRules();
 	});
 
 	test('addLocalizedFont', () => {
