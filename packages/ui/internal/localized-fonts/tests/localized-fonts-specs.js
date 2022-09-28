@@ -21,7 +21,15 @@ describe('localized-fonts', () => {
 		addLocalizedFont('en-US', {regular: 'LG Smart UI Bengali'});
 	});
 
+	test('addLocalizedFont negative', () => {
+		addLocalizedFont();
+	});
+
 	test('removeLocalizedFont', () => {
 		removeLocalizedFont('en-US');
+	});
+
+	test('removeLocalizedFont negative', () => {
+		removeLocalizedFont();
 	});
 });
