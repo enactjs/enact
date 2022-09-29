@@ -37,7 +37,7 @@ For libraries like bootstrap, you can also import the css in your `App.less` fil
 @global-import 'bootstrap/dist/css/bootstrap.css';
 ```
 
-As of `Enact CLI 5.0.0` you can import `.scss` files. This makes it possible to use a package's built-in Sass variables for global style preferences.
+For bootstrap 4 or above, you need to import bootstrap's source Sass files in your `custom.scss`. Make sure you are using Enact CLI 5.0.0 or above.
 
 ```scss
 @import '~bootstrap/scss/bootstrap.scss';
