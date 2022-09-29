@@ -160,6 +160,31 @@ describe('Marquee', () => {
 		expect(marquee).toHaveStyle({'--ui-marquee-spacing': expected});
 		done();
 	});
+
+	test('should warn when marquees are nested', () => {
+		const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+		render(
+			<Marquee marqueeOn="render" marqueeOnRenderDelay={10} marqueeSpacing={80} >
+				<Marquee marqueeOn="render" marqueeOnRenderDelay={-10} marqueeSpacing={80} />
+			</Marquee>
+		);
+
+		act(() => jest.advanceTimersByTime(300));
+
+		const expected = 1;
+		const actual = spy.mock.calls.length;
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should not animate when marquee is disabled', () => {
+		render(<Marquee marqueeDisabled>{ltrText}</Marquee>);
+		const marquee = screen.getByText(ltrText).parentElement;
+
+		const expected = 'marquee';
+
+		expect(marquee).not.toHaveClass(expected);
+	});
 });
 
 describe('MarqueeBase', () => {
