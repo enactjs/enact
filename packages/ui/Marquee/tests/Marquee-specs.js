@@ -20,6 +20,19 @@ describe('Marquee', () => {
 				right: 0
 			};
 		});
+
+		const observe = jest.fn();
+		global.IntersectionObserver = class IntersectionObserver {
+			constructor () {}
+
+			disconnect () {
+				return null;
+			}
+
+			observe () {
+				return observe;
+			}
+		};
 	});
 
 	afterEach(() => {
@@ -149,7 +162,6 @@ describe('Marquee', () => {
 	});
 });
 
-
 describe('MarqueeBase', () => {
 	// Computed Property Tests
 	test('should not include the animate class when animating is false', () => {
@@ -268,9 +280,7 @@ describe('MarqueeBase', () => {
 		);
 		const marquee = screen.getByTestId('marquee');
 
-		const expected = text;
-
-		expect(marquee).toHaveAttribute('aria-label', expected);
+		expect(marquee).toHaveAttribute('aria-label', text);
 	});
 
 	test('should not override aria-label with content when promoted and a non-zero distance', () => {
@@ -282,9 +292,7 @@ describe('MarqueeBase', () => {
 		);
 		const marquee = screen.getByTestId('marquee');
 
-		const expected = aria;
-
-		expect(marquee).toHaveAttribute('aria-label', expected);
+		expect(marquee).toHaveAttribute('aria-label', aria);
 	});
 
 	test('should concatenate string children when promoted and a non-zero distance', () => {
