@@ -6,6 +6,7 @@ ignore:
     - "packages/webos/pmloglib"
     - "packages/webos/deviceinfo"
     - "packages/webos/application"
+    - "packages/webos/LS2Request"
     - "packages/ui/Scrollable"
     - "packages/ui/GridListImageItem"
 
