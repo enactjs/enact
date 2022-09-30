@@ -1,44 +1,50 @@
 import '@testing-library/jest-dom';
 import {act, fireEvent, render, screen} from '@testing-library/react';
 
-import {Marquee, MarqueeBase} from '../index.js';
+import {Marquee, MarqueeBase, MarqueeController} from '../index.js';
 
 const
 	ltrText = 'This is some fine latin text.',
-	rtlText = 'العربية - العراق';
+	rtlText = 'العربية - العراق',
+	ltrArray = [
+		'The first quick brown fox jumped over the first lazy dog. The bean bird flies at sundown.',
+		'The second quick brown fox jumped over the second lazy dog. The bean bird flies at sundown.'
+	];
 
-describe('Marquee', () => {
-	beforeEach(() => {
-		jest.useFakeTimers();
-		global.Element.prototype.getBoundingClientRect = jest.fn(() => {
-			return {
-				width: 100,
-				height: 50,
-				top: 0,
-				left: 0,
-				bottom: 0,
-				right: 0
-			};
-		});
+const Controller = MarqueeController({marqueeOnFocus: true}, 'div');
 
-		const observe = jest.fn();
-		global.IntersectionObserver = class IntersectionObserver {
-			constructor () {}
-
-			disconnect () {
-				return null;
-			}
-
-			observe () {
-				return observe;
-			}
+beforeEach(() => {
+	jest.useFakeTimers();
+	global.Element.prototype.getBoundingClientRect = jest.fn(() => {
+		return {
+			width: 100,
+			height: 50,
+			top: 0,
+			left: 0,
+			bottom: 0,
+			right: 0
 		};
 	});
 
-	afterEach(() => {
-		jest.useRealTimers();
-	});
+	const observe = jest.fn();
+	global.IntersectionObserver = class IntersectionObserver {
+		constructor () {}
 
+		disconnect () {
+			return null;
+		}
+
+		observe () {
+			return observe;
+		}
+	};
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
+
+describe('Marquee', () => {
 	test('should determine the correct directionality of latin text on initial render', () => {
 		render(<Marquee>{ltrText}</Marquee>);
 		const marquee = screen.getByText(ltrText);
@@ -186,7 +192,7 @@ describe('Marquee', () => {
 		expect(marquee).not.toHaveClass(expected);
 	});
 
-	test('should start marquee on focus when', () => {
+	test('should start marquee on focus', () => {
 		render(<Marquee marqueeOn="focus" marqueeDelay={10}>{ltrText}</Marquee>);
 		const marquee = screen.getByText(ltrText);
 
@@ -387,4 +393,94 @@ describe('MarqueeBase', () => {
 
 		expect(renderSubject).not.toThrow();
 	});
+});
+
+describe('MarqueeController', () => {
+	test('should start marquee on all children on render', () => {
+		render(
+			<Controller>
+				{ltrArray.map((children, index) => (
+					<Marquee
+						key={index}
+						marqueeDelay={10}
+						marqueeOn="render"
+						marqueeOnRenderDelay={10}
+					>
+						{children}
+					</Marquee>
+				))}
+			</Controller>
+		);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		const marquee1 = screen.getByText(ltrArray[0]);
+		const marquee2 = screen.getByText(ltrArray[1]);
+
+		expect(marquee1).toHaveStyle({'--ui-marquee-spacing': '50'});
+		expect(marquee2).toHaveStyle({'--ui-marquee-spacing': '50'});
+	});
+
+	test('should start marquee on all children when one is focused', () => {
+		render(
+			<Controller>
+				{ltrArray.map((children, index) => (
+					<Marquee
+						key={index}
+						marqueeDelay={10}
+						marqueeOn="focus"
+					>
+						{children}
+					</Marquee>
+				))}
+			</Controller>
+		);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		const marquee1 = screen.getByText(ltrArray[0]);
+		const marquee2 = screen.getByText(ltrArray[1]);
+
+		fireEvent.focus(marquee1);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		expect(marquee1).toHaveStyle({'--ui-marquee-spacing': '50'});
+		expect(marquee2).toHaveStyle({'--ui-marquee-spacing': '50'});
+
+		// calling blur for code coverage purposes. onBlur does not trigger any visual changes in jsdom.
+		fireEvent.blur(marquee1);
+	});
+
+	test('should start marquee on all children when one is hovered', () => {
+		render(
+			<Controller>
+				{ltrArray.map((children, index) => (
+					<Marquee
+						key={index}
+						marqueeDelay={10}
+						marqueeOn="hover"
+					>
+						{children}
+					</Marquee>
+				))}
+			</Controller>
+		);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		const marquee1 = screen.getByText(ltrArray[0]);
+		const marquee2 = screen.getByText(ltrArray[1]);
+
+		fireEvent.mouseOver(marquee1);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		expect(marquee1).toHaveStyle({'--ui-marquee-spacing': '50'});
+		expect(marquee2).toHaveStyle({'--ui-marquee-spacing': '50'});
+
+		// calling mouseLeave code coverage purposes. MouseLeave does not trigger any visual changes in jsdom.
+		fireEvent.mouseLeave(marquee1);
+	});
+
 });
