@@ -192,7 +192,7 @@ describe('Marquee', () => {
 		expect(marquee).not.toHaveClass(expected);
 	});
 
-	test('should start marquee on focus', () => {
+	test('should start marquee on focus if `marqueeOn` is focus', () => {
 		render(<Marquee marqueeOn="focus" marqueeDelay={10}>{ltrText}</Marquee>);
 		const marquee = screen.getByText(ltrText);
 
@@ -203,12 +203,10 @@ describe('Marquee', () => {
 		expect(marquee).toHaveStyle({'--ui-marquee-spacing': '50'});
 
 		// calling blur for code coverage purposes. onBlur does not trigger any visual changes in jsdom.
-		act(() => jest.advanceTimersByTime(100));
-
 		fireEvent.blur(marquee.parentElement.parentElement);
 	});
 
-	test('should start marquee on hover', () => {
+	test('should start marquee on hover if `marqueeOn` is hover', () => {
 		render(<Marquee marqueeOn="hover" marqueeDelay={10}>{ltrText}</Marquee>);
 		const marquee = screen.getByText(ltrText);
 
@@ -341,7 +339,9 @@ describe('MarqueeBase', () => {
 		);
 		const marquee = screen.getByTestId('marquee');
 
-		expect(marquee).toHaveAttribute('aria-label', text);
+		const expected = text;
+
+		expect(marquee).toHaveAttribute('aria-label', expected);
 	});
 
 	test('should not override aria-label with content when promoted and a non-zero distance', () => {
@@ -353,7 +353,9 @@ describe('MarqueeBase', () => {
 		);
 		const marquee = screen.getByTestId('marquee');
 
-		expect(marquee).toHaveAttribute('aria-label', aria);
+		const expected = aria;
+
+		expect(marquee).toHaveAttribute('aria-label', expected);
 	});
 
 	test('should concatenate string children when promoted and a non-zero distance', () => {
@@ -396,7 +398,7 @@ describe('MarqueeBase', () => {
 });
 
 describe('MarqueeController', () => {
-	test('should start marquee on all children on render', () => {
+	test('should start marquee on all children on render if `marqueeOn` is render', () => {
 		render(
 			<Controller>
 				{ltrArray.map((children, index) => (
@@ -421,7 +423,7 @@ describe('MarqueeController', () => {
 		expect(marquee2).toHaveStyle({'--ui-marquee-spacing': '50'});
 	});
 
-	test('should start marquee on all children when one is focused', () => {
+	test('should start marquee on all children when one is focused and `marqueeOn` is focus', () => {
 		render(
 			<Controller>
 				{ltrArray.map((children, index) => (
@@ -452,7 +454,7 @@ describe('MarqueeController', () => {
 		fireEvent.blur(marquee1);
 	});
 
-	test('should start marquee on all children when one is hovered', () => {
+	test('should start marquee on all children when one is hovered and `marqueeOn` is hover', () => {
 		render(
 			<Controller>
 				{ltrArray.map((children, index) => (
