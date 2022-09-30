@@ -3,14 +3,14 @@ import {render, screen} from '@testing-library/react';
 
 import PlaceholderDecorator from '../../Placeholder';
 
-describe('Placeholder', () => {
+describe('PlaceholderDecorator', () => {
 	const Component = PlaceholderDecorator('div');
 
 	describe('config', () => {
 		test('should configure the default style of the placeholder element', () => {
 			render(
 				<div data-testid="wrapper">
-					<Component placeholderComponent={'span'} />
+					<Component />
 				</div>
 			);
 
