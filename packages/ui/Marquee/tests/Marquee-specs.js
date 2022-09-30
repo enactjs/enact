@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import {act, render, screen} from '@testing-library/react';
+import {act, fireEvent, render, screen} from '@testing-library/react';
 
 import {Marquee, MarqueeBase} from '../index.js';
 
@@ -169,7 +169,7 @@ describe('Marquee', () => {
 			</Marquee>
 		);
 
-		act(() => jest.advanceTimersByTime(300));
+		act(() => jest.advanceTimersByTime(100));
 
 		const expected = 1;
 		const actual = spy.mock.calls.length;
@@ -184,6 +184,36 @@ describe('Marquee', () => {
 		const expected = 'marquee';
 
 		expect(marquee).not.toHaveClass(expected);
+	});
+
+	test('should start marquee on focus when', () => {
+		render(<Marquee marqueeOn="focus" marqueeDelay={10}>{ltrText}</Marquee>);
+		const marquee = screen.getByText(ltrText);
+
+		fireEvent.focus(marquee);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		expect(marquee).toHaveStyle({'--ui-marquee-spacing': '50'});
+
+		// calling blur for code coverage purposes. onBlur does not trigger any visual changes in jsdom.
+		act(() => jest.advanceTimersByTime(100));
+
+		fireEvent.blur(marquee.parentElement.parentElement);
+	});
+
+	test('should start marquee on hover', () => {
+		render(<Marquee marqueeOn="hover" marqueeDelay={10}>{ltrText}</Marquee>);
+		const marquee = screen.getByText(ltrText);
+
+		fireEvent.mouseOver(marquee);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		expect(marquee).toHaveStyle({'--ui-marquee-spacing': '50'});
+
+		// calling mouseLeave code coverage purposes. MouseLeave does not trigger any visual changes in jsdom.
+		fireEvent.mouseLeave(marquee);
 	});
 });
 
