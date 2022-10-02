@@ -26,11 +26,11 @@ class Base extends Component {
 	}
 }
 
-const Component = Pure(Base);
+const PureComponent = Pure(Base);
 
 describe('Pure', () => {
 	test('should pass \'propKeys\' to wrapped component', () => {
-		render(<Component propkeys={defaultConfig.propKeys} />);
+		render(<PureComponent propkeys={defaultConfig.propKeys} />);
 
 		const wrappedComponent = screen.getByTestId('baseComponent');
 
@@ -40,7 +40,7 @@ describe('Pure', () => {
 	});
 
 	test('should pass \'nextKeys\' to wrapped component', () => {
-		render(<Component nextkeys={defaultConfig.nextKeys} />);
+		render(<PureComponent nextkeys={defaultConfig.nextKeys} />);
 
 		const wrappedComponent = screen.getByTestId('baseComponent');
 
@@ -50,30 +50,29 @@ describe('Pure', () => {
 	});
 
 	test('should have a \'comparator\' function', () => {
-		render(<Component comparators={defaultConfig.propComparators} />);
+		render(<PureComponent comparators={defaultConfig.propComparators} />);
 
 		expect(typeof data.comparators['*']).toBe('function');
 	});
 
-	// Pass the same prop in order to test `shouldComponentUpdate` lifecycle method
-	test('should not updated wrapped component when passing different props', () => {
-		const {rerender} = render(<Component a={1} onChange={defaultConfig.hasChanged} />);
+	// Pass the same prop in order to test `shouldComponentUpdate` lifecycle method [WRO-12371]
+	test('should not updated wrapped component when passing the same props', () => {
+		const onChange = jest.fn();
+		const {rerender} = render(<PureComponent a={1} onChange={defaultConfig.hasChanged} />);
 
-		rerender(<Component a={1} onChange={defaultConfig.hasChanged} />)
+		rerender(<PureComponent onChange={defaultConfig.hasChanged} a={1} />)
 
-		const component = screen.getByTestId('baseComponent');
-
-		expect(component).toHaveTextContent('Value: 1');
+		expect(onChange).not.toHaveBeenCalled();
 	});
 
-	// Pass a different prop in order to test `shouldComponentUpdate` lifecycle method
+	// Pass a different prop in order to test `shouldComponentUpdate` lifecycle method [WRO-12371]
 	test('should updated wrapped component when passing different props', () => {
-		const {rerender} = render(<Component a={1} onChange={defaultConfig.hasChanged} />);
+		const {rerender} = render(<PureComponent a={1} onChange={defaultConfig.hasChanged} />);
 
-		rerender(<Component a={2} onChange={defaultConfig.hasChanged} />);
+		rerender(<PureComponent a={2} onChange={defaultConfig.hasChanged} />)
 
-		const component = screen.getByTestId('baseComponent');
+		const actual = screen.getByTestId('baseComponent');
 
-		expect(component).toHaveTextContent('Value: 2');
+		expect(actual).toHaveTextContent('Value: 2');
 	});
 });
