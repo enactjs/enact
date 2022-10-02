@@ -1,12 +1,12 @@
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
-import React from 'react';
+import {Component} from 'react';
 
 import Pure from '../Pure.js';
 
 const defaultConfig = {
-	propKeys: [1, 2, 3],
-	nextKeys: [1, 2, 3],
+	propKeys: [1],
+	nextKeys: [1],
 	propComparators: {
 		'*': (a, b) => a === b
 	},
@@ -15,23 +15,18 @@ const defaultConfig = {
 
 let data = [];
 
-class Base extends React.Component {
+class Base extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			a: 1,
-			b: 2,
-			c: 3
-		};
 	};
 
 	render(props) {
 		data = this.props;
-		return <div {...this.props} data-testid="baseComponent">Values: {this.state.a}, {this.state.b}, {this.state.c}</div>
+		return <div {...this.props} data-testid="baseComponent">Value: {this.props.a}</div>
 	}
 }
 
-const Component = Pure(defaultConfig, Base);
+const Component = Pure(Base);
 
 describe('Pure', () => {
 	test('should pass \'propKeys\' to wrapped component', () => {
@@ -39,7 +34,7 @@ describe('Pure', () => {
 
 		const wrappedComponent = screen.getByTestId('baseComponent');
 
-		const expected = "1,2,3";
+		const expected = "1";
 
 		expect(wrappedComponent).toHaveAttribute('propkeys', expected);
 	});
@@ -49,7 +44,7 @@ describe('Pure', () => {
 
 		const wrappedComponent = screen.getByTestId('baseComponent');
 
-		const expected = "1,2,3";
+		const expected = "1";
 
 		expect(wrappedComponent).toHaveAttribute('nextkeys', expected);
 	});
@@ -60,12 +55,25 @@ describe('Pure', () => {
 		expect(typeof data.comparators['*']).toBe('function');
 	});
 
+	// Pass the same prop in order to test `shouldComponentUpdate` lifecycle method
 	test('should not updated wrapped component when passing different props', () => {
-		const onChange = jest.fn();
-		const {rerender} = render(<Component onChange={defaultConfig.hasChanged} />);
+		const {rerender} = render(<Component a={1} onChange={defaultConfig.hasChanged} />);
 
-		rerender(<Component onChange={defaultConfig.hasChanged} d={4} e={5} f={6} />)
+		rerender(<Component a={1} onChange={defaultConfig.hasChanged} />)
 
-		expect(onChange).not.toHaveBeenCalled();
+		const component = screen.getByTestId('baseComponent');
+
+		expect(component).toHaveTextContent('Value: 1');
+	});
+
+	// Pass a different prop in order to test `shouldComponentUpdate` lifecycle method
+	test('should updated wrapped component when passing different props', () => {
+		const {rerender} = render(<Component a={1} onChange={defaultConfig.hasChanged} />);
+
+		rerender(<Component a={2} onChange={defaultConfig.hasChanged} />);
+
+		const component = screen.getByTestId('baseComponent');
+
+		expect(component).toHaveTextContent('Value: 2');
 	});
 });
