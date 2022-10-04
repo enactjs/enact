@@ -74,15 +74,15 @@ describe('Measurable', () => {
 		act(() => {
 			listener([
 				{
-					addedNodes : [],
-					attributeName :"class",
-					attributeNamespace:null,
-					nextSibling:null,
-					oldValue:null,
-					previousSibling:null,
+					addedNodes: [],
+					attributeName: "class",
+					attributeNamespace: null,
+					nextSibling: null,
+					oldValue: null,
+					previousSibling: null,
 					removedNodes: [],
 					target: 'div.Button_button__XZ8WH',
-					type:"attributes"
+					type: "attributes"
 				}
 			]);
 		});
