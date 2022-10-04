@@ -16,13 +16,13 @@ const defaultConfig = {
 let data = [];
 
 class Base extends Component {
-	constructor(props) {
+	constructor (props) {
 		super(props);
-	};
+	}
 
-	render(props) {
+	render () {
 		data = this.props;
-		return <div {...this.props} data-testid="baseComponent">Value: {this.props.a}</div>
+		return <div {...this.props} data-testid="baseComponent">Value: {this.props.a}</div>;
 	}
 }
 
@@ -60,7 +60,7 @@ describe('Pure', () => {
 		const onChange = jest.fn();
 		const {rerender} = render(<PureComponent a={1} onChange={defaultConfig.hasChanged} />);
 
-		rerender(<PureComponent a={1} onChange={defaultConfig.hasChanged} />)
+		rerender(<PureComponent a={1} onChange={defaultConfig.hasChanged} />);
 
 		expect(onChange).not.toHaveBeenCalled();
 	});
@@ -69,7 +69,7 @@ describe('Pure', () => {
 	test('should updated wrapped component when passing different props', () => {
 		const {rerender} = render(<PureComponent a={1} onChange={defaultConfig.hasChanged} />);
 
-		rerender(<PureComponent a={2} onChange={defaultConfig.hasChanged} />)
+		rerender(<PureComponent a={2} onChange={defaultConfig.hasChanged} />);
 
 		const actual = screen.getByTestId('baseComponent');
 

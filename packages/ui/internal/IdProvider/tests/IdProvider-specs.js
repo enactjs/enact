@@ -5,9 +5,9 @@ import IdProvider from '../IdProvider';
 
 describe('IdProvider', () => {
 	test('should pass id to wrapped component', () => {
-		const Base = (props) => <div role="button" {...props} />
+		const Base = (props) => <div role="button" {...props} />;
 
-		const Component = IdProvider({generateProp: null, prefix: 'custom_'}, Base)
+		const Component = IdProvider({generateProp: null, prefix: 'custom_'}, Base);
 
 		render(<Component />);
 		const wrappedDiv = screen.getByRole('button');
@@ -23,13 +23,14 @@ describe('IdProvider', () => {
 
 		const Base = (props) => {
 			actual = props;
-			return <div />
+			return <div />;
 		};
 
 		const Component = IdProvider({generateProp: expected, prefix: 'custom_'}, Base);
 
 		render(<Component />);
 
+		// eslint-disable-next-line no-undefined
 		expect(actual[expected]).not.toBe(undefined);
 		expect(typeof actual[expected]).toBe('function');
 	});
