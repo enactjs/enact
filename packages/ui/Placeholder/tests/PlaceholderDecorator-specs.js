@@ -1,17 +1,22 @@
+import Registry from '@enact/core/internal/Registry';
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 
-import PlaceholderDecorator from '../../Placeholder';
+import {PlaceholderContext} from '../PlaceholderControllerDecorator';
+import PlaceholderDecorator from '../PlaceholderDecorator';
 
 describe('PlaceholderDecorator', () => {
 	const Component = PlaceholderDecorator('div');
 
 	describe('config', () => {
 		test('should configure the default style of the placeholder element', () => {
+			const resizeRegistry = Registry.create();
 			render(
-				<div data-testid="wrapper">
-					<Component />
-				</div>
+				<PlaceholderContext.Provider value={resizeRegistry.register}>
+					<div data-testid="wrapper">
+						<Component />
+					</div>
+				</PlaceholderContext.Provider>
 			);
 
 			const expectedAttribute = 'style';
