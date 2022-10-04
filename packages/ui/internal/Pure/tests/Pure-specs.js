@@ -56,17 +56,16 @@ describe('Pure', () => {
 	});
 
 	// Pass the same prop in order to trigger `shouldComponentUpdate` lifecycle method [WRO-12371]
-	test('should not updated wrapped component when passing the same props', () => {
-		const onChange = jest.fn();
+	test('should not update wrapped component when passing the same props', () => {
 		const {rerender} = render(<PureComponent a={1} onChange={defaultConfig.hasChanged} />);
 
 		rerender(<PureComponent a={1} onChange={defaultConfig.hasChanged} />);
 
-		expect(onChange).not.toHaveBeenCalled();
+		expect(defaultConfig.hasChanged).not.toHaveBeenCalled();
 	});
 
 	// Pass a different prop in order to trigger `shouldComponentUpdate` lifecycle method [WRO-12371]
-	test('should updated wrapped component when passing different props', () => {
+	test('should update wrapped component when passing different props', () => {
 		const {rerender} = render(<PureComponent a={1} onChange={defaultConfig.hasChanged} />);
 
 		rerender(<PureComponent a={2} onChange={defaultConfig.hasChanged} />);
