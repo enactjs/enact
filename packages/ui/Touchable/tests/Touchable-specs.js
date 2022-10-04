@@ -158,6 +158,25 @@ describe('Touchable', () => {
 			expect(actual).toBe(expected);
 		});
 
+		test('should not update config when local hold object is mutated', () => {
+			const cfg = {
+				hold: {
+					cancelOnMove: false,
+					events: [
+						{name: 'hold', time: 600}
+					]
+				}
+			};
+
+			configure(cfg);
+			cfg.hold.cancelOnMove = true;
+
+			const expected = false;
+			const actual = getConfig().hold.cancelOnMove;
+
+			expect(actual).toBe(expected);
+		});
+
 		test('should not update config when local hold.events array is mutated', () => {
 			const cfg = {
 				hold: {
