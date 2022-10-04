@@ -1,6 +1,7 @@
+import Registry from '@enact/core/internal/Registry';
 import {render} from '@testing-library/react';
 
-import Resizable from '../Resizable';
+import Resizable, {ResizeContext} from '../Resizable';
 
 describe('Resizable', () => {
 	let data;
@@ -15,7 +16,12 @@ describe('Resizable', () => {
 
 	describe('config', () => {
 		test('should pass \'onClick\' handler to the wrapped component', () => {
-			render(<ResizableComponent />);
+			const resizeRegistry = Registry.create();
+			render(
+				<ResizeContext.Provider value={resizeRegistry.register}>
+					<ResizableComponent />
+				</ResizeContext.Provider>
+			);
 
 			expect(data).toHaveProperty('onClick');
 
