@@ -1,4 +1,6 @@
 ignore:
+    - "packages/i18n/src/glue.js"
+    - "packages/i18n/src/Loader.js"
     - "packages/i18n/src/packedbuffer.js"
     - "packages/i18n/src/zoneinfo.js"
     - "packages/i18n/Text"
