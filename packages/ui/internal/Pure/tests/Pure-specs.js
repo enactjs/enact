@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 import {Component} from 'react';
 
-import Pure from '../Pure.js';
+import Pure from '../Pure';
 
 const defaultConfig = {
 	propKeys: [1],
@@ -55,17 +55,17 @@ describe('Pure', () => {
 		expect(typeof data.comparators['*']).toBe('function');
 	});
 
-	// Pass the same prop in order to test `shouldComponentUpdate` lifecycle method [WRO-12371]
+	// Pass the same prop in order to trigger `shouldComponentUpdate` lifecycle method [WRO-12371]
 	test('should not updated wrapped component when passing the same props', () => {
 		const onChange = jest.fn();
 		const {rerender} = render(<PureComponent a={1} onChange={defaultConfig.hasChanged} />);
 
-		rerender(<PureComponent onChange={defaultConfig.hasChanged} a={1} />)
+		rerender(<PureComponent a={1} onChange={defaultConfig.hasChanged} />)
 
 		expect(onChange).not.toHaveBeenCalled();
 	});
 
-	// Pass a different prop in order to test `shouldComponentUpdate` lifecycle method [WRO-12371]
+	// Pass a different prop in order to trigger `shouldComponentUpdate` lifecycle method [WRO-12371]
 	test('should updated wrapped component when passing different props', () => {
 		const {rerender} = render(<PureComponent a={1} onChange={defaultConfig.hasChanged} />);
 

@@ -1,35 +1,19 @@
-import {generateFontRules, generateFontOverrideRules, addLocalizedFont, removeLocalizedFont} from '../localized-fonts.js';
+import {generateFontRules, generateFontOverrideRules, addLocalizedFont, removeLocalizedFont} from '../localized-fonts';
 
 describe('localized-fonts', () => {
-	test('generateFontRules', () => {
-		generateFontRules('gu');
-	});
-
-	test('generateFontRules negative', () => {
+	test('generateFontRules should return \'undefined\' when no locale is passed', () => {
 		expect(generateFontRules()).toBe(undefined);
 	});
 
-	test('generateFontOverrideRules', () => {
-		generateFontOverrideRules('ar-SA');
-	});
-
-	test('generateFontOverrideRules negative', () => {
+	test('generateFontOverrideRules should return \'undefined\' when no locale is passed', () => {
 		expect(generateFontOverrideRules()).toBe(undefined);
 	});
 
-	test('addLocalizedFont', () => {
-		addLocalizedFont('custom', {custom: 'LG Custom UI'});
-	});
-
-	test('addLocalizedFont negative', () => {
+	test('addLocalizedFont should return \'undefined\' when no locale is passed', () => {
 		expect(addLocalizedFont('', null)).toBe(undefined);
 	});
 
-	test('removeLocalizedFont', () => {
-		removeLocalizedFont('bn');
-	});
-
-	test('removeLocalizedFont negative', () => {
+	test('removeLocalizedFont should return \'undefined\' when no locale is passed', () => {
 		expect(removeLocalizedFont('')).toBe(undefined);
 	});
 });

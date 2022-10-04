@@ -1,4 +1,4 @@
-import {warn, validateRange, validateStepped} from '../validators.js';
+import {warn, validateRange, validateStepped} from '../validators';
 
 describe('validators', () => {
 	test('should throw a console warning', () => {

@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 
-import IdProvider from '../IdProvider.js';
+import IdProvider from '../IdProvider';
 
 describe('IdProvider', () => {
 	test('should pass id to wrapped component', () => {
