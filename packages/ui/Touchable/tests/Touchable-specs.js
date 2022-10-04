@@ -3,6 +3,30 @@ import {createEvent, fireEvent, render, screen} from '@testing-library/react';
 import {configure, getConfig, resetDefaultConfig} from '../config';
 import Touchable from '../Touchable';
 
+const getElementClientCenter = (element) => {
+	const {left, top, width, height} = element.getBoundingClientRect();
+	return {x: left + width / 2, y: top + height / 2};
+};
+
+const drag = async (element, {delta, steps = 1}) => {
+	const from = getElementClientCenter(element);
+	const to = {x: from.x + delta.x, y: from.y + delta.y};
+	const step = {x: (to.x - from.x) / steps, y: (to.y - from.y) / steps};
+	const current = {clientX: from.x, clientY: from.y};
+
+	fireEvent.mouseEnter(element, current);
+	fireEvent.mouseOver(element, current);
+	fireEvent.mouseMove(element, current);
+	fireEvent.mouseDown(element, current);
+	for (let i = 0; i < steps; i++) {
+		current.clientX += step.x;
+		current.clientY += step.y;
+		act(() => jest.advanceTimersByTime(1000 / steps));
+		fireEvent.mouseMove(element, current);
+	}
+	fireEvent.mouseUp(element, current);
+};
+
 describe('Touchable', () => {
 	beforeEach(() => {
 		jest.useFakeTimers();
@@ -124,6 +148,19 @@ describe('Touchable', () => {
 
 			const expected = 10;
 			const actual = getConfig().flick.maxMoves;
+
+			expect(actual).toBe(expected);
+		});
+
+		test('should merge drag configurations', () => {
+			configure({
+				drag: {
+					moveTolerance: 10
+				}
+			});
+
+			const expected = 10;
+			const actual = getConfig().drag.moveTolerance;
 
 			expect(actual).toBe(expected);
 		});
@@ -400,7 +437,7 @@ describe('Touchable', () => {
 	});
 
 	describe('touch', () => {
-		test('should only emit onTap once when tapping an child instance of Touchable', () => {
+		test('should only emit onTap once when tapping a child instance of Touchable', () => {
 			const Component = Touchable(DivComponent);
 			const handler = jest.fn();
 			render(
