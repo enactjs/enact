@@ -22,7 +22,8 @@ class Base extends Component {
 
 	render () {
 		data = this.props;
-		return <div {...this.props} data-testid="baseComponent">Value: {this.props.a}</div>;
+		const {value} = this.props;
+		return <div {...this.props} data-testid="baseComponent">Value: {value}</div>;
 	}
 }
 
@@ -57,18 +58,18 @@ describe('Pure', () => {
 
 	// Pass the same prop in order to trigger `shouldComponentUpdate` lifecycle method [WRO-12371]
 	test('should not update wrapped component when passing the same props', () => {
-		const {rerender} = render(<PureComponent a={1} onChange={defaultConfig.hasChanged} />);
+		const {rerender} = render(<PureComponent value={1} onChange={defaultConfig.hasChanged} />);
 
-		rerender(<PureComponent a={1} onChange={defaultConfig.hasChanged} />);
+		rerender(<PureComponent value={1} onChange={defaultConfig.hasChanged} />);
 
 		expect(defaultConfig.hasChanged).not.toHaveBeenCalled();
 	});
 
 	// Pass a different prop in order to trigger `shouldComponentUpdate` lifecycle method [WRO-12371]
 	test('should update wrapped component when passing different props', () => {
-		const {rerender} = render(<PureComponent a={1} onChange={defaultConfig.hasChanged} />);
+		const {rerender} = render(<PureComponent value={1} onChange={defaultConfig.hasChanged} />);
 
-		rerender(<PureComponent a={2} onChange={defaultConfig.hasChanged} />);
+		rerender(<PureComponent value={2} onChange={defaultConfig.hasChanged} />);
 
 		const actual = screen.getByTestId('baseComponent');
 
