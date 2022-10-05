@@ -1,23 +1,40 @@
-import {generateFontRules, generateFontOverrideRules, addLocalizedFont, removeLocalizedFont} from '../localized-fonts';
+import '@testing-library/jest-dom';
+
+import {generateFontRules, generateFontOverrideRules, addLocalizedFont} from '../localized-fonts';
 
 describe('localized-fonts', () => {
-	test('generateFontRules should return \'undefined\' when no locale is passed', () => {
-		// eslint-disable-next-line no-undefined
-		expect(generateFontRules()).toBe(undefined);
+	beforeEach(() => {
+		const fontName = 'Enact';
+		const fonts = {
+			'ja': {
+				regular: 'LG Smart UI JP'
+			},
+			'ur': {
+				regular: ['LG Smart UI Urdu', 'LGSmartUIUrdu'] // This needs 2 references because the "full name" differs from the "family name". To target this font file directly in all OSs we must also include the "postscript name" in addition to the "full name".
+			}
+
+		};
+
+		addLocalizedFont(fontName, fonts);
 	});
 
-	test('generateFontOverrideRules should return \'undefined\' when no locale is passed', () => {
-		// eslint-disable-next-line no-undefined
-		expect(generateFontOverrideRules()).toBe(undefined);
+	test('should add \'ja\' font rules when calling generateFontRules', () => {
+		generateFontRules('ja');
+
+		const innerHTMLString = document.head.innerHTML.toString();
+		const expected1 = innerHTMLString.includes("id=\"localized-fonts\"");
+		const expected2 = innerHTMLString.includes("Enact ja");
+
+		expect(expected1).toBeTruthy();
+		expect(expected2).toBeTruthy();
 	});
 
-	test('addLocalizedFont should return \'undefined\' when no locale is passed', () => {
-		// eslint-disable-next-line no-undefined
-		expect(addLocalizedFont('', null)).toBe(undefined);
-	});
+	test('should add `localized-fonts-override` styles when calling generateFontOverrideRules', () => {
+		generateFontOverrideRules('ur');
+		const innerHTMLString = document.head.innerHTML.toString();
 
-	test('removeLocalizedFont should return \'undefined\' when no locale is passed', () => {
-		// eslint-disable-next-line no-undefined
-		expect(removeLocalizedFont('')).toBe(undefined);
+		const expected1 = innerHTMLString.includes("id=\"localized-fonts-override\"");
+
+		expect(expected1).toBeTruthy();
 	});
 });
