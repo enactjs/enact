@@ -1,4 +1,4 @@
-import {createEvent, fireEvent, render, screen} from '@testing-library/react';
+import {act, createEvent, fireEvent, render, screen} from '@testing-library/react';
 
 import {configure, getConfig, resetDefaultConfig} from '../config';
 import Touchable from '../Touchable';
@@ -13,7 +13,7 @@ describe('Touchable', () => {
 
 	let data;
 
-	const DivComponent = ({children = 'Toggle', id, onClick, onMouseDown, onMouseLeave, onMouseUp, onTouchStart, onTouchEnd, ...props}) => {
+	const DivComponent = ({children = 'Toggle', id, onClick, onMouseDown, onMouseLeave, onMouseMove, onMouseUp, onTouchStart, onTouchEnd, ...props}) => {
 		data = props;
 		return (
 			<div
@@ -21,6 +21,7 @@ describe('Touchable', () => {
 				id={id}
 				onClick={onClick}
 				onMouseDown={onMouseDown}
+				onMouseMove={onMouseMove}
 				onMouseUp={onMouseUp}
 				onMouseLeave={onMouseLeave}
 				onTouchStart={onTouchStart}
@@ -140,6 +141,29 @@ describe('Touchable', () => {
 			const actual = getConfig().flick.notSupported;
 
 			expect(actual).toBe(expected);
+		});
+
+		test('should update state configurations onFlick events', (done) => {
+			const Component = Touchable(DivComponent);
+			const handler = jest.fn();
+			render(<Component onFlick={handler} />);
+
+			const component = screen.getByTestId('component');
+
+			fireEvent.mouseDown(component, {clientX: 10, clientY: 20});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 20, clientY: 30});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 30, clientY: 40});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 40, clientY: 50});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseUp(component, {clientX: 40, clientY: 50});
+
+			jest.runOnlyPendingTimers();
+
+			expect(handler).toHaveBeenCalled();
+			done();
 		});
 
 		test('should not update config when local object is mutated', () => {
