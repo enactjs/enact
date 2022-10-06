@@ -22,8 +22,8 @@ describe('localized-fonts', () => {
 		generateFontRules('ja');
 
 		const innerHTMLString = document.head.innerHTML.toString();
-		const expected1 = innerHTMLString.includes("id=\"localized-fonts\"");
-		const expected2 = innerHTMLString.includes("Enact ja");
+		const expected1 = innerHTMLString.includes('id=\"localized-fonts\"');
+		const expected2 = innerHTMLString.includes('Enact ja');
 
 		expect(expected1).toBeTruthy();
 		expect(expected2).toBeTruthy();
@@ -33,7 +33,7 @@ describe('localized-fonts', () => {
 		generateFontOverrideRules('ur');
 		const innerHTMLString = document.head.innerHTML.toString();
 
-		const expected1 = innerHTMLString.includes("id=\"localized-fonts-override\"");
+		const expected1 = innerHTMLString.includes('id=\"localized-fonts-override\"');
 
 		expect(expected1).toBeTruthy();
 	});
