@@ -201,10 +201,34 @@ describe('Touchable', () => {
 			expect(actual).toBe(expected);
 		});
 
-		test('should update state configurations onDrag event', (done) => {
+		test('should update state configurations onDragStart event', (done) => {
 			const Component = Touchable(DivComponent);
 			const handler = jest.fn();
-			render(<Component onDrag={handler} />);
+			const {rerender} = render(<Component onDrag={() => {}} />);
+
+			const component = screen.getByTestId('component');
+
+			fireEvent.mouseDown(component, {clientX: 10, clientY: 20});
+			act(() => jest.advanceTimersByTime(20));
+
+			rerender(<Component onDrag={() => {}} onDragStart={handler} />);
+
+			jest.runOnlyPendingTimers();
+
+			fireEvent.mouseMove(component, {clientX: 20, clientY: 30});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 30, clientY: 40});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 40, clientY: 50});
+			fireEvent.mouseUp(component, {clientX: 40, clientY: 50});
+			expect(handler).toHaveBeenCalled();
+			done();
+		});
+
+		test('should update state configurations onDragEnd event', (done) => {
+			const Component = Touchable(DivComponent);
+			const handler = jest.fn();
+			const {rerender} = render(<Component onDrag={() => {}} />);
 
 			const component = screen.getByTestId('component');
 
@@ -215,11 +239,11 @@ describe('Touchable', () => {
 			fireEvent.mouseMove(component, {clientX: 30, clientY: 40});
 			act(() => jest.advanceTimersByTime(20));
 			fireEvent.mouseMove(component, {clientX: 40, clientY: 50});
-			act(() => jest.advanceTimersByTime(20));
-			fireEvent.mouseUp(component, {clientX: 40, clientY: 50});
+			rerender(<Component onDrag={() => {}} onDragEnd={handler} />);
 
 			jest.runOnlyPendingTimers();
 
+			fireEvent.mouseUp(component, {clientX: 40, clientY: 50});
 			expect(handler).toHaveBeenCalled();
 			done();
 		});
