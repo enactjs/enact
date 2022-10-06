@@ -117,7 +117,7 @@ describe('validators', () => {
 						},
 					],
 				]
-      		`);
+			`);
 			expect(normalizedValues).toMatchInlineSnapshot(`"ANY_THING_SPY_VALUE"`);
 		})
 	});
