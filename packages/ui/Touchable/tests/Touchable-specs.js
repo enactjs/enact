@@ -117,6 +117,32 @@ describe('Touchable', () => {
 			done();
 		});
 
+		test('should update state configurations onHoldEnd events with cancelOnMove=true', (done) => {
+			const holdConfig = {
+				cancelOnMove: true,
+				events: [
+					{name: 'hold', time: 10}
+				],
+				frequency: 10
+			};
+
+			const Component = Touchable(DivComponent);
+			const handler = jest.fn();
+			const {rerender} = render(<Component holdConfig={holdConfig} onHold={() => {}} />);
+			const component = screen.getByTestId('component');
+
+			const ev = {currentTarget: {}};
+			fireEvent.mouseDown(component, ev);
+			fireEvent.mouseMove(component, ev);
+			rerender(<Component holdConfig={holdConfig} onHold={() => {}} onHoldEnd={handler} />);
+
+			jest.runOnlyPendingTimers();
+
+			fireEvent.mouseUp(component, ev);
+			expect(handler).toHaveBeenCalled();
+			done();
+		});
+
 		test('should merge configurations', () => {
 			configure({
 				flick: {
