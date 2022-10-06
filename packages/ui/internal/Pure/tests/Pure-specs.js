@@ -16,7 +16,7 @@ let data = [];
 class Base extends Component {
 	static propTypes = {
 		value: PropTypes.number
-	}
+	};
 
 	constructor (props) {
 		super(props);
