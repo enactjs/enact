@@ -69,6 +69,34 @@ describe('Touchable', () => {
 			done();
 		});
 
+		test('should update state configurations onHold events, moveTolerance exceeded', (done) => {
+			const holdConfig = {
+				events: [
+					{name: 'hold', time: 10}
+				],
+				moveTolerance: 10
+			};
+
+			const Component = Touchable(DivComponent);
+			const handler = jest.fn();
+			const {rerender} = render(<Component onHoldStart={() => {}} holdConfig={holdConfig} />);
+			const component = screen.getByTestId('component');
+
+			fireEvent.mouseDown(component, {clientX: 10, clientY: 20});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 20, clientY: 30});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 30, clientY: 40});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 40, clientY: 50});
+			rerender(<Component holdConfig={holdConfig} onHold={handler} onHoldStart={() => {}} />);
+
+			jest.runOnlyPendingTimers();
+
+			expect(handler).toHaveBeenCalled();
+			done();
+		});
+
 		test('should update state configurations onHoldStart events', (done) => {
 			const holdConfig = {
 				events: [
