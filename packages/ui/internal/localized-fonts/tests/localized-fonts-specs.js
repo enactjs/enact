@@ -12,7 +12,6 @@ describe('localized-fonts', () => {
 			'ur': {
 				regular: ['LG Smart UI Urdu', 'LGSmartUIUrdu'] // This needs 2 references because the "full name" differs from the "family name". To target this font file directly in all OSs we must also include the "postscript name" in addition to the "full name".
 			}
-
 		};
 
 		addLocalizedFont(fontName, fonts);
@@ -22,7 +21,7 @@ describe('localized-fonts', () => {
 		generateFontRules('ja');
 
 		const innerHTMLString = document.head.innerHTML.toString();
-		const expected1 = innerHTMLString.includes('id=\"localized-fonts\"');
+		const expected1 = innerHTMLString.includes("id=\"localized-fonts\"");
 		const expected2 = innerHTMLString.includes('Enact ja');
 
 		expect(expected1).toBeTruthy();
@@ -33,7 +32,7 @@ describe('localized-fonts', () => {
 		generateFontOverrideRules('ur');
 		const innerHTMLString = document.head.innerHTML.toString();
 
-		const expected1 = innerHTMLString.includes('id=\"localized-fonts-override\"');
+		const expected1 = innerHTMLString.includes("id=\"localized-fonts-override\"");
 
 		expect(expected1).toBeTruthy();
 	});
