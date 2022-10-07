@@ -93,6 +93,30 @@ describe('Touchable', () => {
 			done();
 		});
 
+		test('should not call onHoldStart on mouseLeave', (done) => {
+			const holdConfig = {
+				events: [
+					{name: 'hold', time: 10}
+				],
+				frequency: 10
+			};
+
+			const Component = Touchable(DivComponent);
+			const handler = jest.fn();
+			const {rerender} = render(<Component holdConfig={holdConfig} onHold={() => {}} />);
+			const component = screen.getByTestId('component');
+
+			const ev = {};
+			fireEvent.mouseDown(component, ev);
+			fireEvent.mouseLeave(component, ev);
+			rerender(<Component holdConfig={holdConfig} onHold={() => {}} onHoldStart={handler} />);
+
+			jest.runOnlyPendingTimers();
+
+			expect(handler).not.toHaveBeenCalled();
+			done();
+		});
+
 		test('should update state configurations onHoldEnd events', (done) => {
 			const holdConfig = {
 				events: [
