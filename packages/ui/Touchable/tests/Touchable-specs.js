@@ -13,13 +13,12 @@ describe('Touchable', () => {
 
 	let data;
 
-	const DivComponent = ({children = 'Toggle', id, onBlur, onClick, onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp, onTouchStart, onTouchEnd, ...props}) => {
+	const DivComponent = ({children = 'Toggle', id, onClick, onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp, onTouchStart, onTouchEnd, ...props}) => {
 		data = props;
 		return (
 			<div
 				data-testid="component"
 				id={id}
-				onBlur={onBlur}
 				onClick={onClick}
 				onMouseDown={onMouseDown}
 				onMouseEnter={onMouseEnter}
@@ -300,33 +299,12 @@ describe('Touchable', () => {
 			fireEvent.mouseUp(component, {clientX: 40, clientY: 50});
 			expect(handler).toHaveBeenCalled();
 			done();
-				test('should not call onDragEnd on mouseLeave', (done) => {
-				const Component = Touchable(DivComponent);
-				const handler = jest.fn();
-				const {rerender} = render(<Component onDrag={() => {}} />);
-
-				const component = screen.getByTestId('component');
-
-				fireEvent.mouseDown(component, {clientX: 10, clientY: 20});
-				act(() => jest.advanceTimersByTime(20));
-				fireEvent.mouseMove(component, {clientX: 20, clientY: 30});
-				act(() => jest.advanceTimersByTime(20));
-				fireEvent.mouseMove(component, {clientX: 30, clientY: 40});
-				act(() => jest.advanceTimersByTime(20));
-				fireEvent.mouseMove(component, {clientX: 40, clientY: 50});
-				rerender(<Component onDrag={() => {}} onDragEnd={handler} />);
-
-				jest.runOnlyPendingTimers();
-
-				fireEvent.mouseLeave(component);
-				expect(handler).not.toHaveBeenCalled();
-				done();
 		});
 
-		test('should call onBlur event', (done) => {
+		test('should not call onDragEnd on mouseLeave', (done) => {
 			const Component = Touchable(DivComponent);
 			const handler = jest.fn();
-			render(<Component onBlur={handler} onDrag={() => {}} />);
+			const {rerender} = render(<Component onDrag={() => {}} />);
 
 			const component = screen.getByTestId('component');
 
@@ -337,11 +315,12 @@ describe('Touchable', () => {
 			fireEvent.mouseMove(component, {clientX: 30, clientY: 40});
 			act(() => jest.advanceTimersByTime(20));
 			fireEvent.mouseMove(component, {clientX: 40, clientY: 50});
-			fireEvent.blur(component);
+			rerender(<Component onDrag={() => {}} onDragEnd={handler} />);
 
 			jest.runOnlyPendingTimers();
 
-			expect(handler).toHaveBeenCalled();
+			fireEvent.mouseLeave(component);
+			expect(handler).not.toHaveBeenCalled();
 			done();
 		});
 	});
