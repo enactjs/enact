@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 
-import {generateFontRules, generateFontOverrideRules, addLocalizedFont} from '../localized-fonts';
+import {addLocalizedFont, generateFontRules, generateFontOverrideRules} from '../localized-fonts';
 
 describe('localized-fonts', () => {
 	beforeEach(() => {
@@ -28,12 +28,12 @@ describe('localized-fonts', () => {
 		expect(expected2).toBeTruthy();
 	});
 
-	test('should add `localized-fonts-override` styles when calling generateFontOverrideRules', () => {
+	test('should add \'localized-fonts-override\' styles when calling generateFontOverrideRules', () => {
 		generateFontOverrideRules('ur');
 		const innerHTMLString = document.head.innerHTML.toString();
 
-		const expected1 = innerHTMLString.includes("id=\"localized-fonts-override\"");
+		const expected = innerHTMLString.includes("id=\"localized-fonts-override\"");
 
-		expect(expected1).toBeTruthy();
+		expect(expected).toBeTruthy();
 	});
 });
