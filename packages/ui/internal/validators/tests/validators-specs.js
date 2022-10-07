@@ -1,39 +1,45 @@
 import {warn, validateRange, validateStepped, validateRangeOnce, validateSteppedOnce} from '../validators';
 
 describe('validators', () => {
-	test('should throw a console warning', () => {
-		const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-		warn('Warning!');
+	describe('warn', () => {
+		test('should throw a console warning', () => {
+			const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+			warn('Warning!');
 
-		expect(consoleSpy).toHaveBeenCalled();
+			expect(consoleSpy).toHaveBeenCalled();
+		});
 	});
 
-	test('should throw a console warning when \'value\' is less than \'min\'', () => {
-		const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-		validateRange(10, 11, 20, 'component', 'value', 'min', 'max');
+	describe('validateRange', () => {
+		test('should throw a console warning when \'value\' is less than \'min\'', () => {
+			const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+			validateRange(10, 11, 20, 'component', 'value', 'min', 'max');
 
-		expect(consoleSpy).toHaveBeenCalled();
+			expect(consoleSpy).toHaveBeenCalled();
+		});
+
+		test('should throw a console warning when \'value\' is greater than \'max\'', () => {
+			const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+			validateRange(21, 1, 20, 'component', 'value', 'min', 'max');
+
+			expect(consoleSpy).toHaveBeenCalled();
+		});
+
+		test('should throw a console warning when \'min\' is greater than \'max\'', () => {
+			const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+			validateRange(10, 21, 20, 'component', 'value', 'min', 'max');
+
+			expect(consoleSpy).toHaveBeenCalled();
+		});
 	});
 
-	test('should throw a console warning when \'value\' is greater than \'max\'', () => {
-		const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-		validateRange(21, 1, 20, 'component', 'value', 'min', 'max');
+	describe('validateStepped', () => {
+		test('should throw a console warning when \'value\' is not evenly divisible by \'step\'', () => {
+			const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+			validateStepped(11, 20, 2, 'component', 'value', 'step');
 
-		expect(consoleSpy).toHaveBeenCalled();
-	});
-
-	test('should throw a console warning when \'min\' is greater than \'max\'', () => {
-		const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-		validateRange(10, 21, 20, 'component', 'value', 'min', 'max');
-
-		expect(consoleSpy).toHaveBeenCalled();
-	});
-
-	test('should throw a console warning when \'value\' is evenly divisible by \'step\'', () => {
-		const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-		validateStepped(10, 1, 2, 'component', 'value', 'step');
-
-		expect(consoleSpy).toHaveBeenCalled();
+			expect(consoleSpy).toHaveBeenCalled();
+		});
 	});
 
 	describe('validateRangeOnce', () => {
@@ -55,27 +61,12 @@ describe('validators', () => {
 				max: 10
 			});
 
+			const expected = 'Warning: ANY_COMPONENT value (1) less than min (2)';
+
 			expect(consoleSpy).toHaveBeenCalled();
 			expect(thingSpy).toHaveBeenCalled();
-			expect(consoleSpy.mock.calls).toMatchSnapshot(`
-				Array [
-					Array [
-						'Warning: ANY_COMPONENT value (1) less than min (2)'
-					],
-				]
-			`);
-			expect(thingSpy.mock.calls).toMatchSnapshot(`
-				Array [
-					Array [
-						Object {
-							"max": 10,
-							"min": 2,
-							"value": 1,
-						},
-					],
-				]
-      		`);
-			expect(normalizedValues).toMatchInlineSnapshot(`"ANY_THING_SPY_VALUE"`);
+			expect(consoleSpy.mock.calls[0][0]).toBe(expected);
+			expect(normalizedValues).toBe('ANY_THING_SPY_VALUE');
 		});
 	});
 
@@ -98,27 +89,12 @@ describe('validators', () => {
 				step: 2
 			});
 
+			const expected = 'Warning: ANY_COMPONENT value (10) must be evenly divisible by step (2)';
+
 			expect(consoleSpy).toHaveBeenCalled();
 			expect(thingSpy).toHaveBeenCalled();
-			expect(consoleSpy.mock.calls).toMatchSnapshot(`
-				Array [
-					Array [
-						'Warning: ANY_COMPONENT value (10) must be evenly divisible by step (2)'
-					],
-				]
-			`);
-			expect(thingSpy.mock.calls).toMatchSnapshot(`
-				Array [
-					Array [
-						Object {
-							"value": 10,
-							"min": 1,
-							"step": 2,
-						},
-					],
-				]
-			`);
-			expect(normalizedValues).toMatchInlineSnapshot(`"ANY_THING_SPY_VALUE"`);
+			expect(consoleSpy.mock.calls[0][0]).toBe(expected);
+			expect(normalizedValues).toBe('ANY_THING_SPY_VALUE');
 		});
 	});
 });
