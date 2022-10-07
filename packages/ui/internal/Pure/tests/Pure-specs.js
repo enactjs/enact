@@ -20,13 +20,15 @@ class Base extends Component {
 
 	constructor (props) {
 		super(props);
+		this.countRenders = 0;
 	}
 
 	render () {
 		data = this.props;
 		const {value} = this.props;
+		this.countRenders++;
 
-		return <div {...this.props} data-testid="baseComponent">Value: {value}</div>;
+		return <div {...this.props} data-testid="baseComponent">Value: {value}, CountRenders: {this.countRenders}</div>;
 	}
 }
 
@@ -39,25 +41,21 @@ describe('Pure', () => {
 		expect(typeof data.comparators['*']).toBe('function');
 	});
 
-	// Pass the same prop in order to trigger `shouldComponentUpdate` lifecycle method [WRO-12371]
 	test('should not update wrapped component when passing the same props', () => {
-		const hasChanged = jest.fn();
-		const {rerender} = render(<PureComponent value={1} onChange={hasChanged} />);
+		const {rerender} = render(<PureComponent value={1} />);
 
-		rerender(<PureComponent value={1} onChange={hasChanged} />);
-
-		expect(hasChanged).not.toHaveBeenCalled();
-	});
-
-	// Pass a different prop in order to trigger `shouldComponentUpdate` lifecycle method [WRO-12371]
-	test('should update wrapped component when passing different props', () => {
-		const hasChanged = jest.fn();
-		const {rerender} = render(<PureComponent value={1} onChange={hasChanged} />);
-
-		rerender(<PureComponent value={2} onChange={hasChanged} />);
+		rerender(<PureComponent value={1} />);
 
 		const actual = screen.getByTestId('baseComponent');
+		expect(actual).toHaveTextContent('CountRenders: 1');
+	});
 
-		expect(actual).toHaveTextContent('Value: 2');
+	test('should update wrapped component when passing different props', () => {
+		const {rerender} = render(<PureComponent value={1} />);
+
+		rerender(<PureComponent value={2} />);
+
+		const actual = screen.getByTestId('baseComponent');
+		expect(actual).toHaveTextContent('CountRenders: 2');
 	});
 });
