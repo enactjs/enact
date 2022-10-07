@@ -13,7 +13,7 @@ describe('Touchable', () => {
 
 	let data;
 
-	const DivComponent = ({children = 'Toggle', id, onBlur, onClick, onMouseDown, onMouseLeave, onMouseMove, onMouseUp, onTouchStart, onTouchEnd, ...props}) => {
+	const DivComponent = ({children = 'Toggle', id, onBlur, onClick, onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp, onTouchStart, onTouchEnd, ...props}) => {
 		data = props;
 		return (
 			<div
@@ -22,6 +22,7 @@ describe('Touchable', () => {
 				onBlur={onBlur}
 				onClick={onClick}
 				onMouseDown={onMouseDown}
+				onMouseEnter={onMouseEnter}
 				onMouseMove={onMouseMove}
 				onMouseUp={onMouseUp}
 				onMouseLeave={onMouseLeave}
@@ -132,6 +133,7 @@ describe('Touchable', () => {
 
 			const ev = {currentTarget: {}};
 			fireEvent.mouseDown(component, ev);
+			fireEvent.mouseEnter(component, ev);
 			rerender(<Component holdConfig={holdConfig} onHold={() => {}} onHoldEnd={handler} />);
 
 			jest.runOnlyPendingTimers();
@@ -265,6 +267,7 @@ describe('Touchable', () => {
 
 			jest.runOnlyPendingTimers();
 
+			fireEvent.mouseEnter(component, {clientX: 10, clientY: 20});
 			fireEvent.mouseMove(component, {clientX: 20, clientY: 30});
 			act(() => jest.advanceTimersByTime(20));
 			fireEvent.mouseMove(component, {clientX: 30, clientY: 40});
