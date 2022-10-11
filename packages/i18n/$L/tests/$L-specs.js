@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import {render} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 
 import {I18nDecorator} from '../../I18nDecorator';
 import {clearResBundle, getResBundle} from '../../src/resBundle';
@@ -16,7 +16,10 @@ describe('$L', () => {
 		const Wrapped = I18nDecorator({sync: true}, Component);
 		render(<Wrapped />);
 
-		expect(expected).toEqual(expected);
+		const actual = screen.getByText(expected);
+
+		expect(actual).toBeInTheDocument();
+		expect(actual.textContent).toEqual(expected);
 	});
 
 	test('should clear ResBundle with calling `clearResBundle`', () => {
@@ -29,7 +32,9 @@ describe('$L', () => {
 		render(<Wrapped />);
 
 		clearResBundle();
+
 		const actual = getResBundle();
+
 		expect(actual).toEqual(expected);
 	});
 });
