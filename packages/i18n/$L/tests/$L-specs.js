@@ -19,7 +19,6 @@ describe('$L', () => {
 		const actual = screen.getByText(expected);
 
 		expect(actual).toBeInTheDocument();
-		expect(actual.textContent).toEqual(expected);
 	});
 
 	test('should clear ResBundle with calling `clearResBundle`', () => {
