@@ -15,7 +15,7 @@ import componentCss from './BodyText.module.less';
 
 /**
  * A simple, unstyled text block component, without
- * [BodyTextDecorator](ui/BodyText.BodyTextDecorator) applied.
+ * {@link ui/BodyText.BodyTextDecorator|BodyTextDecorator} applied.
  *
  * @class BodyTextBase
  * @memberof ui/BodyText
