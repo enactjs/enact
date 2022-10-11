@@ -849,8 +849,8 @@ const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = named((name, 
  * @param    {HandlerFunction}  handler  Handler to complement
  *
  * @returns  {HandlerFunction}           Returns an {@link core/handle.HandlerFunction|event handler}
- *										 (suitable for passing to handle) that returns the complement of the
- *										 return value of `handler`
+ *                                       (suitable for passing to handle) that returns the complement of the
+ *                                       return value of `handler`
  * @curried
  * @memberof core/handle
  * @public
