@@ -30,7 +30,7 @@ const BodyTextBase = kind({
 		 * Centers the contents.
 		 *
 		 * Applies the `centered` CSS class which can be customized by
-		 * [theming]{@link /docs/developer-guide/theming/}.
+		 * {@link /docs/developer-guide/theming/|theming}.
 		 *
 		 * @type {Boolean}
 		 * @default false

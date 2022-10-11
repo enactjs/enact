@@ -151,7 +151,7 @@ const HeadingBase = kind({
 });
 
 /**
- * A higher-order component that adds behavior to [Heading]{@link ui/Heading.HeadingBase}.
+ * A higher-order component that adds behavior to {@link ui/Heading.HeadingBase|Heading}.
  *
  * @hoc
  * @memberof ui/Heading
