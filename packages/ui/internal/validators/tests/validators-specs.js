@@ -46,13 +46,13 @@ describe('validators', () => {
 		let thingSpy;
 
 		beforeEach(() => {
-			thingSpy = jest.fn().mockReturnValue("ANY_THING_SPY_VALUE");
+			thingSpy = jest.fn().mockReturnValue('ANY_THING_SPY_VALUE');
 		});
 
 		test('should throw a console warning when \'value\' is lower than \'min\'', () => {
 			const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 			const validateFn = validateRangeOnce(thingSpy, {
-				component: "ANY_COMPONENT"
+				component: 'ANY_COMPONENT'
 			});
 
 			const normalizedValues = validateFn({
@@ -74,22 +74,22 @@ describe('validators', () => {
 		let thingSpy;
 
 		beforeEach(() => {
-			thingSpy = jest.fn().mockReturnValue("ANY_THING_SPY_VALUE");
+			thingSpy = jest.fn().mockReturnValue('ANY_THING_SPY_VALUE');
 		});
 
-		test('validateSteppedOnce test', () => {
+		test('should throw a console warning when \'value\' is not evenly divisible by \'step\'', () => {
 			const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 			const validateFn = validateSteppedOnce(thingSpy, {
-				component: "ANY_COMPONENT"
+				component: 'ANY_COMPONENT'
 			});
 
 			const normalizedValues = validateFn({
-				value: 10,
-				min: 1,
+				value: 11,
+				min: 2,
 				step: 2
 			});
 
-			const expected = 'Warning: ANY_COMPONENT value (10) must be evenly divisible by step (2)';
+			const expected = 'Warning: ANY_COMPONENT value (11) must be evenly divisible by step (2)';
 
 			expect(consoleSpy).toHaveBeenCalled();
 			expect(thingSpy).toHaveBeenCalled();
