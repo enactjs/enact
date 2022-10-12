@@ -177,10 +177,7 @@ describe('Marquee', () => {
 
 		act(() => jest.advanceTimersByTime(100));
 
-		const expected = 1;
-		const actual = spy.mock.calls.length;
-
-		expect(actual).toBe(expected);
+		expect(spy).toHaveBeenCalled();
 	});
 
 	test('should not animate when marquee is disabled', () => {
@@ -201,9 +198,6 @@ describe('Marquee', () => {
 		act(() => jest.advanceTimersByTime(100));
 
 		expect(marquee).toHaveStyle({'--ui-marquee-spacing': '50'});
-
-		// calling blur for code coverage purposes. onBlur does not trigger any visual changes in jsdom.
-		fireEvent.blur(marquee.parentElement.parentElement);
 	});
 
 	test('should start marquee on hover if `marqueeOn` is hover', () => {
@@ -215,9 +209,34 @@ describe('Marquee', () => {
 		act(() => jest.advanceTimersByTime(100));
 
 		expect(marquee).toHaveStyle({'--ui-marquee-spacing': '50'});
+	});
 
-		// calling mouseLeave code coverage purposes. MouseLeave does not trigger any visual changes in jsdom.
+	test('should call onBlur event', () => {
+		const spy = jest.fn();
+		render(<Marquee marqueeOn="focus" marqueeDelay={10} onBlur={spy}>{ltrText}</Marquee>);
+		const marquee = screen.getByText(ltrText);
+
+		fireEvent.focus(marquee);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		fireEvent.blur(marquee.parentElement.parentElement);
+
+		expect(spy).toHaveBeenCalled();
+	});
+
+	test('should call onMouseLeave event', () => {
+		const spy = jest.fn();
+		render(<Marquee marqueeOn="hover" marqueeDelay={10} onMouseLeave={spy}>{ltrText}</Marquee>);
+		const marquee = screen.getByText(ltrText);
+
+		fireEvent.mouseOver(marquee);
+
+		act(() => jest.advanceTimersByTime(100));
+
 		fireEvent.mouseLeave(marquee);
+
+		expect(spy).toHaveBeenCalled();
 	});
 });
 
@@ -449,9 +468,6 @@ describe('MarqueeController', () => {
 
 		expect(marquee1).toHaveStyle({'--ui-marquee-spacing': '50'});
 		expect(marquee2).toHaveStyle({'--ui-marquee-spacing': '50'});
-
-		// calling blur for code coverage purposes. onBlur does not trigger any visual changes in jsdom.
-		fireEvent.blur(marquee1);
 	});
 
 	test('should start marquee on all children when one is hovered and `marqueeOn` is hover', () => {
@@ -480,9 +496,61 @@ describe('MarqueeController', () => {
 
 		expect(marquee1).toHaveStyle({'--ui-marquee-spacing': '50'});
 		expect(marquee2).toHaveStyle({'--ui-marquee-spacing': '50'});
-
-		// calling mouseLeave code coverage purposes. MouseLeave does not trigger any visual changes in jsdom.
-		fireEvent.mouseLeave(marquee1);
 	});
 
+	test('should forward onBlur event to all children when one is blured and `marqueeOn` is focus', () => {
+		const spy = jest.fn();
+		render(
+			<Controller onBlur={spy}>
+				{ltrArray.map((children, index) => (
+					<Marquee
+						key={index}
+						marqueeDelay={10}
+						marqueeOn="focus"
+					>
+						{children}
+					</Marquee>
+				))}
+			</Controller>
+		);
+
+		const marquee1 = screen.getByText(ltrArray[0]);
+		const marquee2 = screen.getByText(ltrArray[1]);
+
+		fireEvent.focus(marquee1);
+		fireEvent.blur(marquee1);
+
+		fireEvent.focus(marquee2);
+		fireEvent.blur(marquee2);
+
+		expect(spy).toHaveBeenCalledTimes(2);
+	});
+
+	test('should forward onMouseLeave event to all children when one is unhovered and `marqueeOn` is hover', () => {
+		const spy = jest.fn();
+		render(
+			<Controller onMouseLeave={spy}>
+				{ltrArray.map((children, index) => (
+					<Marquee
+						key={index}
+						marqueeDelay={10}
+						marqueeOn="hover"
+					>
+						{children}
+					</Marquee>
+				))}
+			</Controller>
+		);
+
+		const marquee1 = screen.getByText(ltrArray[0]);
+		const marquee2 = screen.getByText(ltrArray[1]);
+
+		fireEvent.mouseOver(marquee1);
+		fireEvent.mouseLeave(marquee1);
+
+		fireEvent.mouseOver(marquee2);
+		fireEvent.mouseLeave(marquee2);
+
+		expect(spy).toHaveBeenCalledTimes(2);
+	});
 });

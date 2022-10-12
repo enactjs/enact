@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom';
 import {fireEvent, render, screen} from '@testing-library/react';
 
-import Knob from '../Knob';
 import ProgressBar from '../../ProgressBar';
+
+import Knob from '../Knob';
 import Slider from '../Slider';
 
 describe('Slider', () => {
