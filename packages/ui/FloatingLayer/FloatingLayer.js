@@ -195,12 +195,16 @@ class FloatingLayerBase extends Component {
 	}
 
 	handleClose = handle(
+		()=>{console.log("FloatingLayer handleClose1"); return true;},
 		forProp('open', true),
+		()=>{console.log("FloatingLayer handleClose2"); return true;},
 		forwardCustom('onDismiss')
 	).bind(this);
 
 	handleClick = handle(
+		()=>{console.log("FloatingLayer handleClick"); return true;},
 		forProp('noAutoDismiss', false),
+		()=>{console.log("FloatingLayer handleClick"); return true;},
 		forProp('open', true),
 		forwardCustom('onDismiss', () => ({detail: {inputType: 'click'}}))
 	).bind(this);
@@ -258,7 +262,9 @@ class FloatingLayerBase extends Component {
 
 const handleCancel = handle(
 	// can't use forProp safely since either could be undefined ~= false
+	()=>{console.log("FloatingLayer handleClose"); return true;},
 	(ev, {open, noAutoDismiss, onDismiss}) => open && !noAutoDismiss && onDismiss,
+	()=>{console.log("FloatingLayer handleClose2"); return true;},
 	forwardCustom('onDismiss', () => ({detail: {inputType: 'key'}})),
 	stop
 );
