@@ -211,7 +211,7 @@ describe('Marquee', () => {
 		expect(marquee).toHaveStyle({'--ui-marquee-spacing': '50'});
 	});
 
-	test('should call onBlur event', () => {
+	test('should forward `blur` event', () => {
 		const spy = jest.fn();
 		render(<Marquee marqueeOn="focus" marqueeDelay={10} onBlur={spy}>{ltrText}</Marquee>);
 		const marquee = screen.getByText(ltrText);
@@ -225,7 +225,7 @@ describe('Marquee', () => {
 		expect(spy).toHaveBeenCalled();
 	});
 
-	test('should call onMouseLeave event', () => {
+	test('should forward `mouseleave` event', () => {
 		const spy = jest.fn();
 		render(<Marquee marqueeOn="hover" marqueeDelay={10} onMouseLeave={spy}>{ltrText}</Marquee>);
 		const marquee = screen.getByText(ltrText);
@@ -498,7 +498,7 @@ describe('MarqueeController', () => {
 		expect(marquee2).toHaveStyle({'--ui-marquee-spacing': '50'});
 	});
 
-	test('should forward onBlur event to all children when one is blured and `marqueeOn` is focus', () => {
+	test('should forward `blur` event when one of the children is blurred and `marqueeOn` is focus', () => {
 		const spy = jest.fn();
 		render(
 			<Controller onBlur={spy}>
@@ -526,7 +526,7 @@ describe('MarqueeController', () => {
 		expect(spy).toHaveBeenCalledTimes(2);
 	});
 
-	test('should forward onMouseLeave event to all children when one is unhovered and `marqueeOn` is hover', () => {
+	test('should forward `mouseleave` event when one of the children is unhovered and `marqueeOn` is hover', () => {
 		const spy = jest.fn();
 		render(
 			<Controller onMouseLeave={spy}>
