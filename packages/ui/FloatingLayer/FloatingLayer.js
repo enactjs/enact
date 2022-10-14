@@ -134,7 +134,11 @@ class FloatingLayerBase extends Component {
 			this.controller = this.context(this.handleNotify.bind(this));
 		}
 
+		console.log("FloatingLayer ComponentDidmout scrimType=" + this.props.scrimType);
+
 		if (this.props.scrimType === 'none' && this.props.open) {
+			console.log("FloatingLayer ComponentDidmout on handleClick");
+
 			on('click', this.handleClick);
 		}
 	}
@@ -156,11 +160,15 @@ class FloatingLayerBase extends Component {
 			forwardCustom('onOpen')(null, this.props);
 		}
 
+		console.log("FloatingLayer componentDidUpdate scrimType=" + this.props.scrimType);
+
 		if (scrimType === 'none') {
 			if (!prevProps.open && open) {
+				console.log("FloatingLayer componentDidUpdate on handleClick1");
 				on('click', this.handleClick);
 			} else if (prevProps.open && !open) {
 				off('click', this.handleClick);
+				console.log("FloatingLayer componentDidUpdate on handleClick2");
 			}
 		}
 	}
@@ -245,6 +253,8 @@ class FloatingLayerBase extends Component {
 		delete rest.onClose;
 		delete rest.onDismiss;
 		delete rest.onOpen;
+
+		console.log("FloatingLayer render. scrimType = " + scrimType);
 
 		if (open && this.state.readyToRender) {
 			return ReactDOM.createPortal(

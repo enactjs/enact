@@ -36,7 +36,11 @@ const setDefaultTargetById = (id) => {
  * @memberof core/dispatcher
  * @private
  */
-const getDefaultTarget = () => defaultTarget;
+const getDefaultTarget = () => {
+	console.log("getDefaultTarget defaultTarget= ");
+	console.log(defaultTarget);
+	return defaultTarget || (typeof document === 'object' && document);
+};
 
 /*
  * Wraps event callbacks with a try-catch block to prevent unrelated code from blocking.
@@ -91,6 +95,13 @@ const dispatcher = function (ev) {
  * @public
  */
 const on = function (name, fn, target = getDefaultTarget()) {
+	console.log("on. target =");
+	console.log(target);
+	console.log(document);
+	console.log(target === document);
+
+	console.log("===========");
+
 	if (target) {
 		const added = addListener(target, name, fn);
 
