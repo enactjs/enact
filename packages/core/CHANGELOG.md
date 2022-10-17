@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `core/dispatcher`  to set the default target for event listeners properly when built with the snapshot option
+
 ## [4.5.2] - 2022-08-17
 
 No significant changes.
