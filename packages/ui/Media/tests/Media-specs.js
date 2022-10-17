@@ -26,6 +26,7 @@ describe('Media', () => {
 		mediaPlayStub.mockRestore();
 		mediaPauseStub.mockRestore();
 	});
+
 	test('should use the same node when changing the `source`', () => {
 		const {rerender} = render(
 			<Media mediaComponent="video" data-testid="media-id" source="abc.mp4" />
@@ -41,12 +42,14 @@ describe('Media', () => {
 
 		expect(actual).toBe(expected);
 	});
-	test('should return key when node provided', () => {
+
+	test('should return the key when a node provided', () => {
 		const expected = 'path/file.mp4';
-		const actual = getKeyFromSource('path/file.mp4');
+		const actual = getKeyFromSource(<source src="path/file.mp4" type="video/mp4" />);
 
 		expect(actual).toEqual(expected);
 	});
+
 	test('should fire `onCanPlay` when canplay event is fired', () => {
 		const handleCanPlay = jest.fn();
 
@@ -60,6 +63,7 @@ describe('Media', () => {
 
 		expect(handleCanPlay).toBeCalled();
 	});
+
 	test('should fire `onCustom` when custom event is fired', () => {
 		const handleCustom = jest.fn();
 
@@ -73,6 +77,7 @@ describe('Media', () => {
 
 		expect(handleCustom).toBeCalled();
 	});
+
 	test('should call load', () => {
 		const ref = createRef();
 
@@ -84,6 +89,7 @@ describe('Media', () => {
 
 		expect(mediaLoadStub).toHaveBeenCalled();
 	});
+
 	test('should call play', () => {
 		const ref = createRef();
 
@@ -95,6 +101,7 @@ describe('Media', () => {
 
 		expect(mediaPlayStub).toHaveBeenCalled();
 	});
+
 	test('should call pause', () => {
 		const ref = createRef();
 
@@ -106,6 +113,7 @@ describe('Media', () => {
 
 		expect(mediaPauseStub).toHaveBeenCalled();
 	});
+
 	test('should return duration', () => {
 		const ref = createRef();
 
@@ -126,6 +134,7 @@ describe('Media', () => {
 
 		expect(actual).toEqual(expected);
 	});
+
 	test('should return proportionPlayed', () => {
 		const ref = createRef();
 
@@ -148,6 +157,7 @@ describe('Media', () => {
 
 		expect(actual).toEqual(expected);
 	});
+
 	test('should be able to get and set the current time', () => {
 		const ref = createRef();
 		const expected = 3;
@@ -161,6 +171,7 @@ describe('Media', () => {
 
 		expect(actual).toEqual(expected);
 	});
+
 	test('should be able to get and set the playback rate', () => {
 		const ref = createRef();
 		const expected = 2;
