@@ -39,7 +39,7 @@ const setDefaultTargetById = (id) => {
 const getDefaultTarget = () => {
 	console.log("getDefaultTarget defaultTarget= ");
 	console.log(defaultTarget);
-	return defaultTarget || (typeof document === 'object' && document);
+	return defaultTarget; // || (typeof document === 'object' && document);
 };
 
 /*
