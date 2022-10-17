@@ -1,6 +1,6 @@
 import deprecate from '../deprecate';
 
-describe('ApiDecorator', () => {
+describe('deprecate', () => {
 	const Thing = () => ('return');
 	const config = {
 		name: 'DeprecatedThing',
