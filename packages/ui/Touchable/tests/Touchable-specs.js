@@ -142,7 +142,7 @@ describe('Touchable', () => {
 			done();
 		});
 
-		test('should update state configurations onHoldEnd events with cancelOnMove=true', (done) => {
+		test('should update state configurations onHoldEnd events if holdConfig.cancelOnMove is true', (done) => {
 			const holdConfig = {
 				cancelOnMove: true,
 				events: [
