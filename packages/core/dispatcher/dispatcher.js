@@ -12,6 +12,7 @@ import curry from 'ramda/src/curry';
 import {getListeners, addListener} from './listeners';
 
 let defaultTarget = typeof document === 'object' && document;
+let rootId;
 
 /*
  * Sets a selector for the default target. If no selector is set, `document` is the default target.
@@ -25,6 +26,7 @@ let defaultTarget = typeof document === 'object' && document;
  */
 const setDefaultTargetById = (id) => {
 	defaultTarget = typeof document === 'object' && document.querySelector('#' + id) || defaultTarget;
+	rootId = id;
 };
 
 /*
@@ -37,9 +39,10 @@ const setDefaultTargetById = (id) => {
  * @private
  */
 const getDefaultTarget = () => {
-	console.log("getDefaultTarget defaultTarget= ");
-	console.log(defaultTarget);
-	return defaultTarget; // || (typeof document === 'object' && document);
+	if (!defaultTarget) {
+		setDefaultTargetById(rootId);
+	}
+	return defaultTarget;
 };
 
 /*
