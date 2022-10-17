@@ -1,4 +1,4 @@
-import {act, render, screen} from '@testing-library/react';
+import {act, render} from '@testing-library/react';
 
 import Measurable, {useMeasurable} from '../Measurable';
 
