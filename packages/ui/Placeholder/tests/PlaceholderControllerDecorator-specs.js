@@ -12,7 +12,7 @@ describe('PlaceholderControllerDecorator', () => {
 		return <div data-testid="component" />;
 	};
 
-	const Component = PlaceholderControllerDecorator({notify: 'onScroll'}, DivComponent);
+	const Component = PlaceholderControllerDecorator(DivComponent);
 
 	describe('config', () => {
 		test('should pass \'onScroll\' handler to the wrapped component', () => {
