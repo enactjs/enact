@@ -1,4 +1,4 @@
-import {act, render} from '@testing-library/react';
+import {act, render, screen} from '@testing-library/react';
 
 import Measurable, {useMeasurable} from '../Measurable';
 
@@ -81,7 +81,7 @@ describe('Measurable', () => {
 					oldValue: null,
 					previousSibling: null,
 					removedNodes: [],
-					target: 'div.Button_button__XZ8WH',
+					target: 'div',
 					type: "attributes"
 				}
 			]);
