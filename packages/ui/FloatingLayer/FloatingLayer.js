@@ -158,7 +158,7 @@ class FloatingLayerBase extends Component {
 
 		if (scrimType === 'none') {
 			if (!prevProps.open && open) {
-				on('click', this.handleClick );
+				on('click', this.handleClick);
 			} else if (prevProps.open && !open) {
 				off('click', this.handleClick);
 			}
