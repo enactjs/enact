@@ -93,7 +93,7 @@ describe('Touchable', () => {
 			done();
 		});
 
-		test('should not call onHoldStart on mouseLeave', (done) => {
+		test('should not call onHoldStart if mouse leaved', (done) => {
 			const holdConfig = {
 				events: [
 					{name: 'hold', time: 10}
