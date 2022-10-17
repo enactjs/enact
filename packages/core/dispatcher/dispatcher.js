@@ -98,13 +98,6 @@ const dispatcher = function (ev) {
  * @public
  */
 const on = function (name, fn, target = getDefaultTarget()) {
-	console.log("on. target =");
-	console.log(target);
-	console.log(document);
-	console.log(target === document);
-
-	console.log("===========");
-
 	if (target) {
 		const added = addListener(target, name, fn);
 
