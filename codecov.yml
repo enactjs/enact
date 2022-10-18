@@ -12,4 +12,6 @@ ignore:
     - "packages/webos/LS2Request"
     - "packages/ui/Scrollable"
     - "packages/ui/GridListImageItem"
+    - "packages/ui/VirtualList/VirtualListBase.js"
+    - "packages/ui/VirtualList/UiVirtualListBase.js"
 
