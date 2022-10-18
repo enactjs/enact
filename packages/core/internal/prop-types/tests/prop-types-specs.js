@@ -127,12 +127,10 @@ describe('prop-types', () => {
 			expect(consoleErrorMock).not.toHaveBeenCalled();
 		});
 
-		test('should call console.error for EnactPropTypes.ref if ref value is given', () => {
-			const ref = dummyString;
-
+		test('should call console.error for EnactPropTypes.ref if non-ref value is given', () => {
 			render(
 				<TestComponent
-					typeRef={ref}
+					typeRef={dummyString}
 				/>
 			);
 
