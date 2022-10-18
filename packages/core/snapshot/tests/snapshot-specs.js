@@ -1,7 +1,6 @@
 import {isWindowReady, onWindowReady, windowReady} from '../snapshot';
 
-function returnsUndefined () {
-}
+function returnsUndefined () {}
 
 describe('snapshot', () => {
 	describe('isWindowReady', () => {
