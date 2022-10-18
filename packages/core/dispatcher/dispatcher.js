@@ -31,6 +31,8 @@ const setDefaultTargetById = (id) => {
 
 /*
  * Checks if the default target of `document` exists before returning it, otherwise returns `false`.
+ * If the default target is falsy and the stored id of the root exists, it tries to find the
+ * default target based on the id.
  *
  * @function
  *
@@ -39,9 +41,10 @@ const setDefaultTargetById = (id) => {
  * @private
  */
 const getDefaultTarget = () => {
-	if (!defaultTarget) {
+	if (!defaultTarget && rootId) {
 		setDefaultTargetById(rootId);
 	}
+
 	return defaultTarget;
 };
 
