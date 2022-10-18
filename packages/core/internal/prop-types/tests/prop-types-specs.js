@@ -29,6 +29,19 @@ describe('prop-types (except EnactPropTypes.deprecated)', () => {
 		}
 	}
 
+	class RequiredComponent extends Component {
+		static displayName = 'RequiredComponent';
+
+		static propTypes = {
+			typeRequired: EnactPropTypes.renderable.isRequired
+		};
+
+		render ({...rest} = {}) {
+			delete rest.typeRequired;
+			return (<div>Test</div>);
+		}
+	}
+
 	let consoleErrorMock = null;
 
 	beforeEach(() => {
@@ -40,38 +53,12 @@ describe('prop-types (except EnactPropTypes.deprecated)', () => {
 	});
 
 	test('should not call console.error when required prop value is given', () => {
-		class RequiredComponent extends Component {
-			static displayName = 'RequiredComponent';
-
-			static propTypes = {
-				typeRequired: EnactPropTypes.renderable.isRequired
-			};
-
-			render ({...rest} = {}) {
-				delete rest.typeRequired;
-				return (<div>Test</div>);
-			}
-		}
-
 		render(<RequiredComponent typeRequired={DummyRenderable} />);
 
 		expect(consoleErrorMock).not.toHaveBeenCalled();
 	});
 
 	test('should call console.error when prop value is missing for isRequired', () => {
-		class RequiredComponent extends Component {
-			static displayName = 'RequiredComponent';
-
-			static propTypes = {
-				typeRequired: EnactPropTypes.renderable.isRequired
-			};
-
-			render ({...rest} = {}) {
-				delete rest.typeRequired;
-				return (<div>Test</div>);
-			}
-		}
-
 		render(<RequiredComponent />);
 
 		expect(consoleErrorMock).toHaveBeenCalled();
