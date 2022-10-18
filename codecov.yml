@@ -1,4 +1,7 @@
 ignore:
+    - "packages/i18n/src/Loader.js"
+    - "packages/i18n/src/packedbuffer.js"
+    - "packages/i18n/src/zoneinfo.js"
     - "packages/i18n/Text"
     - "packages/webos/speech"
     - "packages/webos/keyboard"
