@@ -132,6 +132,33 @@ describe('VirtualGridList', () => {
 		expect(actual).toBe(expected);
 	});
 
+	test('should re-render clientHeight / itemHeight + overhang) items after changing client size', () => {
+		const {rerender} = render(
+			<VirtualGridList
+				clientSize={clientSize}
+				dataSize={dataSize}
+				itemRenderer={renderItem}
+				itemSize={itemSize}
+			/>
+		);
+
+		const newClientSize = {clientWidth: 1280, clientHeight: 360};
+
+		rerender(
+			<VirtualGridList
+				clientSize={newClientSize}
+				dataSize={dataSize}
+				itemRenderer={renderItem}
+				itemSize={itemSize}
+			/>
+		);
+
+		const expected = 35; // (7 * 2) + (7 * 3)
+		const actual = screen.getByRole('list').children.length;
+
+		expect(actual).toBe(expected);
+	});
+
 	describe('ScrollTo', () => {
 		test('should scroll to the specific item of a given index with scrollTo', (done) => {
 			const onScrollStop = handlerOnScrollStop(done, () => {
