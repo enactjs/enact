@@ -83,6 +83,7 @@ const deprecate = function (thing, config) {
 			};
 		}
 	} else {
+		/* istanbul ignore next */
 		return thing;
 	}
 };
