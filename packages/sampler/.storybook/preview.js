@@ -37,12 +37,11 @@ const backgrounds = {
 };
 
 configureActions();
+
 export const parameters = {
 	docs: {
 		container: DocsContainer,
 		page: DocsPage,
-		iframeHeight: 360,
-		inlineStories: false,
 		theme: themes.light
 	},
 	options: {
@@ -51,6 +50,7 @@ export const parameters = {
 		}
 	}
 };
+
 export const globalTypes = {
 	'locale': getObjectType('locale', 'en-US', locales),
 	'background': getObjectType('background', 'default', backgrounds),
@@ -58,4 +58,5 @@ export const globalTypes = {
 	'debug layout': getBooleanType('debug layout'),
 	'debug spotlight': getBooleanType('debug spotlight')
 };
+
 export const decorators = [Environment];

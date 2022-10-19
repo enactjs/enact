@@ -38,6 +38,7 @@ const StorybookDecorator = (story, config) => {
 
 	const {globals} = config;
 
+	const height = config.viewMode === "docs" ? {height: '360px'} : {};
 	const hasText = config.parameters && config.parameters.info && config.parameters.info.text;
 
 	// NOTE: The properties of globals are only defined by string type.
@@ -46,23 +47,26 @@ const StorybookDecorator = (story, config) => {
 		layout: JSON.parse(globals['debug layout']),
 		spotlight: JSON.parse(globals['debug spotlight'])
 	};
+
 	if (Object.keys(classes).length > 0) {
 		classes.debug = true;
 	}
 
 	return (
-		<PanelsBase
-			className={classnames(classes)}
-			title={`${config.kind}`.replace(/\//g, ' ').trim()}
-			description={hasText ? config.parameters.info.text : null}
-			locale={globals.locale}
-			style={{
-				'--env-background': globals.background === 'default' ? '' : globals.background
-			}}
-			{...config.panelsProps}
-		>
-			{sample}
-		</PanelsBase>
+		<div style={height}>
+			<PanelsBase
+				className={classnames(classes)}
+				title={`${config.kind}`.replace(/\//g, ' ').trim()}
+				description={hasText ? config.parameters.info.text : null}
+				locale={globals.locale}
+				style={{
+					'--env-background': globals.background === 'default' ? '' : globals.background
+				}}
+				{...config.panelsProps}
+			>
+				{sample}
+			</PanelsBase>
+		</div>
 	);
 };
 
