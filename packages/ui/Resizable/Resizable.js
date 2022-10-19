@@ -55,13 +55,13 @@ const defaultConfig = {
  * A higher-order component that notifies a container that the wrapped component has been resized.
  *
  * It may be useful in cases where a component may need to update itself as a result of its children
- * changing in size, such as a [Scroller]{@link ui/Scroller}.
+ * changing in size, such as a {@link ui/Scroller|Scroller}.
  *
  * Containers must provide an `invalidateBounds` method via React's context in order for `Resizable`
  * instances to notify it of resize.
  *
  * The wrapped component must respond to the configured
- * [resize]{@link ui/Resizable.Resizable.defaultConfig.resize} event.
+ * {@link ui/Resizable.Resizable.defaultConfig.resize|resize} event.
  *
  * @class Resizable
  * @memberof ui/Resizable
