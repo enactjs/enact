@@ -83,7 +83,7 @@ const GridListImageItem = kind({
 		imageComponent: EnactPropTypes.component,
 
 		/**
-		 * Placeholder image used while [source]{@link ui/GridListImageItem.GridListImageItem#source}
+		 * Placeholder image used while {@link ui/GridListImageItem.GridListImageItem#source|source}
 		 * is loaded.
 		 *
 		 * @type {String}

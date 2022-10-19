@@ -82,7 +82,7 @@ const VirtualListBaseFactory = (type) => {
 
 			/**
 			 * Callback method of scrollTo.
-			 * Normally, [Scrollable]{@link ui/Scrollable.Scrollable} should set this value.
+			 * Normally, {@link ui/Scrollable.Scrollable|Scrollable} should set this value.
 			 *
 			 * @type {Function}
 			 * @private
@@ -1163,7 +1163,7 @@ const VirtualListBaseFactory = (type) => {
 
 /**
  * A basic base component for
- * [VirtualList]{@link ui/VirtualList.VirtualList} and [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
+ * {@link ui/VirtualList.VirtualList|VirtualList} and {@link ui/VirtualList.VirtualGridList|VirtualGridList}.
  *
  * @class VirtualListBase
  * @memberof ui/VirtualList
@@ -1175,7 +1175,7 @@ VirtualListBase.displayName = 'ui:VirtualListBase';
 
 /**
  * A basic base component for
- * [VirtualListNative]{@link ui/VirtualList.VirtualListNative} and [VirtualGridListNative]{@link ui/VirtualList.VirtualGridListNative}.
+ * {@link ui/VirtualList.VirtualListNative|VirtualListNative} and {@link ui/VirtualList.VirtualGridListNative|VirtualGridListNative}.
  *
  * @class VirtualListBaseNative
  * @memberof ui/VirtualList

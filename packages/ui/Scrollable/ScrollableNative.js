@@ -140,7 +140,7 @@ class ScrollableBaseNative extends Component {
 		/**
 		 * Direction of the list or the scroller.
 		 *
-		 * `'both'` could be only used for[Scroller]{@link ui/Scroller.Scroller}.
+		 * `'both'` could be only used for {@link ui/Scroller.Scroller|Scroller}.
 		 *
 		 * Valid values are:
 		 * * `'both'`,
