@@ -44,7 +44,7 @@ describe('util', () => {
 			};
 			const expected = {
 				role: 'button',
-				'aria-hidden': true,
+				'aria-hidden': true
 			};
 			const remaining = {
 				value: 'value'
