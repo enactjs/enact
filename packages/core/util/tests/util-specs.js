@@ -1,8 +1,62 @@
 import {forwardRef, memo, lazy} from 'react';
 
-import {mapAndFilterChildren, memoize, isRenderable} from '../util';
+import {cap, clamp, coerceArray, coerceFunction, extractAriaProps, isRenderable, memoize, mergeClassNameMaps, mapAndFilterChildren, shallowEqual} from '../util';
 
 describe('util', () => {
+	describe('cap', () => {
+		test('should return a capitalized string', () => {
+			expect(cap('abc')).toBe('Abc');
+		});
+	});
+
+	describe('clamp', () => {
+		test('should return a value between a min value and a max value', () => {
+			expect(clamp(10, 20, 15)).toBe(15);
+			expect(clamp(10, 20, 0)).toBe(10);
+			expect(clamp(10, 20, 30)).toBe(20);
+			expect(clamp(10, 20, 10)).toBe(10);
+			expect(clamp(10, 20, 20)).toBe(20);
+			expect(clamp(20, 10, 10)).toBe(20); // special case
+		});
+	});
+
+	describe('coerceArray', () => {
+		test('should return an array', () => {
+			expect(coerceArray(['a'])).toEqual(['a']);
+			expect(coerceArray('a')).toEqual(['a']);
+		});
+	});
+
+	describe('coerceFunction', () => {
+		test('should return a function', () => {
+			expect(typeof coerceFunction(() => 'function')).toEqual('function');
+			expect(typeof coerceFunction('value')).toEqual('function');
+			expect(coerceFunction('value')?.()).toEqual('value');
+		});
+	});
+
+	describe('extractAriaProps', () => {
+		test('should extract aria-related props as a return object', () => {
+			const testProps = {
+				role: 'button',
+				'aria-hidden': true,
+				value: 'value'
+			};
+			const expected = {
+				role: 'button',
+				'aria-hidden': true,
+			};
+			const remaining = {
+				value: 'value'
+			};
+
+			const actual = extractAriaProps(testProps);
+
+			expect(actual).toMatchObject(expected);
+			expect(testProps).toMatchObject(remaining);
+		});
+	});
+
 	describe('isRenderable', () => {
 		test('should return {true} for function', () => {
 			const expected = true;
@@ -65,6 +119,46 @@ describe('util', () => {
 			const actual = spy.mock.calls[0];
 
 			expect(expected).toEqual(actual);
+		});
+	});
+
+	describe('mergeClassNameMaps', () => {
+		const baseMap = {
+			'class-base-only': 'real-class-base-only',
+			'class-shared': 'real-class-shared-base',
+			'class-shared-another': 'real-class-shared-another-base'
+		};
+		const additiveMap = {
+			'class-shared': 'real-class-shared-additive',
+			'class-shared-another': 'real-class-shared-another-additive',
+			'class-additive-only': 'real-class-additive-only'
+		};
+
+		test('should return a base map if an additive map is not given', () => {
+			const expected = mergeClassNameMaps(baseMap);
+
+			expect(expected['class-base-only']).toEqual('real-class-base-only');
+			expect(expected['class-shared']).toEqual('real-class-shared-base');
+			expect(expected['class-shared-another']).toEqual('real-class-shared-another-base');
+			expect(expected['class-additive-only']).not.toEqual('real-class-additive-only');
+		});
+
+		test('should return a merged map containing shared class names', () => {
+			const expected = mergeClassNameMaps(baseMap, additiveMap);
+
+			expect(expected['class-base-only']).toEqual('real-class-base-only');
+			expect(expected['class-shared']).toEqual('real-class-shared-base real-class-shared-additive');
+			expect(expected['class-shared-another']).toEqual('real-class-shared-another-base real-class-shared-another-additive');
+			expect(expected['class-additive-only']).not.toEqual('real-class-additive-only');
+		});
+
+		test('should return a merged map containing allowed matching class names', () => {
+			const expected = mergeClassNameMaps(baseMap, additiveMap, ['class-shared']);
+
+			expect(expected['class-base-only']).toEqual('real-class-base-only');
+			expect(expected['class-shared']).toEqual('real-class-shared-base real-class-shared-additive');
+			expect(expected['class-shared-another']).toEqual('real-class-shared-another-base');
+			expect(expected['class-additive-only']).not.toEqual('real-class-additive-only');
 		});
 	});
 
@@ -141,6 +235,32 @@ describe('util', () => {
 			const actual = spy.mock.calls[0];
 
 			expect(expected).toEqual(actual);
+		});
+	});
+
+	describe('shallowEqual', () => {
+		const child = {
+			name: 'child'
+		};
+
+		test('should return `true` if the values of all keys are strictly equal', () => {
+			expect(shallowEqual(child, child)).toBe(true);
+
+			expect(shallowEqual(child, null)).toBe(false);
+
+			const fakeChild = {
+				name: 'fake'
+			};
+
+			expect(shallowEqual(child, fakeChild)).toBe(false);
+
+			fakeChild.name = 'child';
+			expect(shallowEqual(child, fakeChild)).toBe(true);
+
+			child.toString = (...args) => {
+				child.toString(...args);
+			};
+			expect(shallowEqual(child, fakeChild)).toBe(false);
 		});
 	});
 });
