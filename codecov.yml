@@ -18,6 +18,6 @@ ignore:
     - "packages/spotlight/spottable"
     - "packages/ui/useScroll"
     - "packages/core/util"
-    - "packages/core/handle"
-    - "packages/core/platform"  
+    - "packages/core/snapshot" 
+    - "packages/core/platform"
 
