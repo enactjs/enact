@@ -110,17 +110,17 @@ describe('platform', () => {
 			`Mozilla/5.0 (${unifiedPlatform}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${majorVersion}.0.0.0 ${deviceCompatibility} Safari/537.36`
 		);
 		const testCases = [
-			uaGenerator('Macintosh; Intel Mac OS X 10_15_7'),
-			uaGenerator('Windows NT 10.0; Win64; x64'),
-			uaGenerator('X11; Linux x86_64'),
-			uaGenerator('X11; CrOS x86_64 14541.0.0'),
-			uaGenerator('Fuchsia')
-			// uaGenerator('Linux; Android 10; K', 'Mobile') // Currently not supported
+			[uaGenerator('Macintosh; Intel Mac OS X 10_15_7'), 'chrome'],
+			[uaGenerator('Windows NT 10.0; Win64; x64'), 'chrome'],
+			[uaGenerator('X11; Linux x86_64'), 'chrome'],
+			[uaGenerator('X11; CrOS x86_64 14541.0.0'), 'chrome'],
+			[uaGenerator('Fuchsia'), 'chrome'],
+			[uaGenerator('Linux; Android 10; K', 'Mobile'), 'androidChrome']
 		];
 
 		test(`should return object including chrome ${testVersion}`, () => {
 			for (let i = 0; i < testCases.length; i++) {
-				expect(parseUserAgent(testCases[i])?.chrome?.toString()).toBe(testVersion);
+				expect(parseUserAgent(testCases[i][0])?.[testCases[i][1]]?.toString()).toBe(testVersion);
 			}
 		});
 	});
