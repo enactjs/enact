@@ -15,4 +15,9 @@ ignore:
     - "packages/ui/GridListImageItem"
     - "packages/ui/VirtualList/VirtualListBase.js"
     - "packages/ui/VirtualList/UiVirtualListBase.js"
+    - "packages/spotlight/spottable"
+    - "packages/ui/useScroll"
+    - "packages/core/util"
+    - "packages/core/handle"
+    - "packages/core/platform"  
 
