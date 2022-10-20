@@ -1,9 +1,10 @@
 import '@testing-library/jest-dom';
 import {act, render, screen} from '@testing-library/react';
 
-import VirtualList from '../VirtualList';
+import {VirtualGridList} from '../VirtualList';
+import {ImageItem as UiImageItem} from '../../ImageItem';
 
-describe('VirtualList', () => {
+describe('VirtualGridList', () => {
 	let
 		clientSize,
 		dataSize,
@@ -12,17 +13,20 @@ describe('VirtualList', () => {
 		handlerOnScrollStart,
 		handlerOnScrollStop,
 		items,
+		itemSize,
 		myScrollTo,
 		onScrollCount,
 		onScrollStartCount,
 		onScrollStopCount,
 		renderItem,
-		resultScrollTop;
+		resultScrollTop,
+		svgGenerator;
 
 	beforeEach(() => {
 		clientSize = {clientWidth: 1280, clientHeight: 720};
 		dataSize = 100;
 		items = [];
+		itemSize = {minWidth: 180, minHeight: 270};
 		onScrollCount = 0;
 		onScrollStartCount = 0;
 		onScrollStopCount = 0;
@@ -44,17 +48,40 @@ describe('VirtualList', () => {
 			testCase();
 			done();
 		};
+
 		renderItem = ({index, ...rest}) => {	// eslint-disable-line enact/display-name
+			const {text, source} = items[index];
 			return (
-				<div {...rest} id={'item' + index}>
-					{items[index].name}
-				</div>
+				<UiImageItem
+					{...rest}
+					src={source}
+					style={{width: '100%'}}
+				>
+					{text}
+				</UiImageItem>
 			);
 		};
 
+		svgGenerator = (width, height, bgColor, textColor, customText) => (
+			`data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${width} ${height}' width='${width}' height='${height}'%3E` +
+			`%3Crect width='${width}' height='${height}' fill='%23${bgColor}'%3E%3C/rect%3E` +
+			`%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='36px' fill='%23${textColor}'%3E${customText}%3C/text%3E%3C/svg%3E`
+		);
+
+		const itemNumberDigits = dataSize > 0 ? (dataSize - 1 + '').length : 0;
+		const headingZeros = Array(itemNumberDigits).join('0');
+
 		for (let i = 0; i < dataSize; i++) {
-			items.push({name: 'Account ' + i});
+			const
+				count = (headingZeros + i).slice(-itemNumberDigits),
+				text = `Item ${count}`,
+				color = Math.floor(Math.random() * (0x1000000 - 0x101010) + 0x101010).toString(16),
+				source = svgGenerator(300, 300, color, 'ffffff', `Image ${i}`);
+
+			items.push({text, source});
 		}
+
+		return dataSize;
 	});
 
 	afterEach(() => {
@@ -75,46 +102,31 @@ describe('VirtualList', () => {
 
 	test('should render a list of \'items\'', () => {
 		render(
-			<VirtualList
+			<VirtualGridList
 				clientSize={clientSize}
 				dataSize={dataSize}
 				itemRenderer={renderItem}
-				itemSize={30}
+				itemSize={itemSize}
 			/>
 		);
 
-		const expected = 'Account 0';
+		const expected = 'Item 00';
 		const actual = screen.getByRole('list').children.item(0).textContent;
-
-		expect(actual).toBe(expected);
-	});
-
-	test('should render overhang items when clientSize is not given', () => {
-		render(
-			<VirtualList
-				dataSize={dataSize}
-				itemRenderer={renderItem}
-				itemSize={30}
-			/>
-		);
-
-		const expected = 3;
-		const actual = screen.getByRole('list').children.length;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should render (clientHeight / itemHeight + overhang) items', () => {
 		render(
-			<VirtualList
+			<VirtualGridList
 				clientSize={clientSize}
 				dataSize={dataSize}
 				itemRenderer={renderItem}
-				itemSize={30}
+				itemSize={itemSize}
 			/>
 		);
 
-		const expected = 27; // 720 / 30 + 3
+		const expected = 42; // (7 * 3) + (7 * 3)
 		const actual = screen.getByRole('list').children.length;
 
 		expect(actual).toBe(expected);
@@ -122,26 +134,26 @@ describe('VirtualList', () => {
 
 	test('should re-render clientHeight / itemHeight + overhang) items after changing client size', () => {
 		const {rerender} = render(
-			<VirtualList
+			<VirtualGridList
 				clientSize={clientSize}
 				dataSize={dataSize}
 				itemRenderer={renderItem}
-				itemSize={30}
+				itemSize={itemSize}
 			/>
 		);
 
 		const newClientSize = {clientWidth: 1280, clientHeight: 360};
 
 		rerender(
-			<VirtualList
+			<VirtualGridList
 				clientSize={newClientSize}
 				dataSize={dataSize}
 				itemRenderer={renderItem}
-				itemSize={30}
+				itemSize={itemSize}
 			/>
 		);
 
-		const expected = 15; // 360 / 30 + 3
+		const expected = 35; // (7 * 2) + (7 * 3)
 		const actual = screen.getByRole('list').children.length;
 
 		expect(actual).toBe(expected);
@@ -150,7 +162,7 @@ describe('VirtualList', () => {
 	describe('ScrollTo', () => {
 		test('should scroll to the specific item of a given index with scrollTo', (done) => {
 			const onScrollStop = handlerOnScrollStop(done, () => {
-				const expected = 300;
+				const expected = 273; // 270 + 3
 				const actual = resultScrollTop;
 
 				expect(actual).toBe(expected);
@@ -158,17 +170,17 @@ describe('VirtualList', () => {
 			});
 
 			render(
-				<VirtualList
+				<VirtualGridList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
 					dataSize={dataSize}
 					itemRenderer={renderItem}
-					itemSize={30}
+					itemSize={itemSize}
 					onScrollStop={onScrollStop}
 				/>
 			);
 
-			act(() => myScrollTo({index: 10, animate: false}));
+			act(() => myScrollTo({index: 8, animate: false}));
 		});
 
 		test('should scroll to the given \'x\' position with scrollTo', (done) => {
@@ -180,13 +192,13 @@ describe('VirtualList', () => {
 			});
 
 			render(
-				<VirtualList
+				<VirtualGridList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
 					dataSize={dataSize}
 					direction="horizontal"
 					itemRenderer={renderItem}
-					itemSize={30}
+					itemSize={itemSize}
 					onScrollStop={onScrollStop}
 				/>
 			);
@@ -203,12 +215,12 @@ describe('VirtualList', () => {
 			});
 
 			render(
-				<VirtualList
+				<VirtualGridList
 					cbScrollTo={getScrollTo}
 					clientSize={clientSize}
 					dataSize={dataSize}
 					itemRenderer={renderItem}
-					itemSize={30}
+					itemSize={itemSize}
 					onScrollStop={onScrollStop}
 				/>
 			);
@@ -219,12 +231,12 @@ describe('VirtualList', () => {
 		describe('scroll events', () => {
 			test('should call onScrollStart once', () => {
 				render(
-					<VirtualList
+					<VirtualGridList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
 						dataSize={dataSize}
 						itemRenderer={renderItem}
-						itemSize={30}
+						itemSize={itemSize}
 						onScrollStart={handlerOnScrollStart}
 					/>
 				);
@@ -239,12 +251,12 @@ describe('VirtualList', () => {
 
 			test('should call onScroll once', () => {
 				render(
-					<VirtualList
+					<VirtualGridList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
 						dataSize={dataSize}
 						itemRenderer={renderItem}
-						itemSize={30}
+						itemSize={itemSize}
 						onScroll={handlerOnScroll}
 					/>
 				);
@@ -266,12 +278,12 @@ describe('VirtualList', () => {
 				});
 
 				render(
-					<VirtualList
+					<VirtualGridList
 						cbScrollTo={getScrollTo}
 						clientSize={clientSize}
 						dataSize={dataSize}
 						itemRenderer={renderItem}
-						itemSize={30}
+						itemSize={itemSize}
 						onScrollStop={onScrollStop}
 					/>
 				);
@@ -293,21 +305,21 @@ describe('VirtualList', () => {
 			};
 
 			const {rerender} = render(
-				<VirtualList
+				<VirtualGridList
 					clientSize={clientSize}
 					dataSize={itemArray.length}
 					itemRenderer={renderItemArray}
-					itemSize={30}
+					itemSize={itemSize}
 				/>
 			);
 
 			itemArray.unshift({name: 'Password 0'});
 			rerender(
-				<VirtualList
+				<VirtualGridList
 					clientSize={clientSize}
 					dataSize={itemArray.length}
 					itemRenderer={renderItemArray}
-					itemSize={30}
+					itemSize={itemSize}
 				/>
 			);
 
