@@ -3,7 +3,7 @@ import {act, render, screen} from '@testing-library/react';
 
 import VirtualList from '../VirtualList';
 
-describe('VirtualListNative', () => {
+describe('VirtualList with native scrollMode', () => {
 	let
 		clientSize,
 		dataSize,

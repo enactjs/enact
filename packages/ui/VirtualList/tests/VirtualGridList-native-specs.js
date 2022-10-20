@@ -4,7 +4,7 @@ import {act, render, screen} from '@testing-library/react';
 import {VirtualGridList} from '../VirtualList';
 import {ImageItem as UiImageItem} from '../../ImageItem';
 
-describe('VirtualGridListNative', () => {
+describe('VirtualGridList with native scrollMode', () => {
 	let
 		clientSize,
 		dataSize,
