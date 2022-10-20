@@ -126,23 +126,19 @@ describe('platform', () => {
 	});
 
 	describe('platform', () => {
-		test('should have truthy value for `node` if window does not exist', () => {
-			function returnsUndefined () {}
-			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(returnsUndefined);
+		test('should return `true` for `node` if window does not exist', () => {
+			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(() => {});
 
 			expect(platform['node']).toBe(true);
 
 			windowSpy.mockRestore();
 		});
 
-		test('should have truthy value for `unknown` in the testing environment', () => {
+		test('should return `true` for `unknown` in the testing environment', () => {
 			// The first access invokes detecting based on user agent value
 			expect(platform['unknown']).toBe(true);
 			// The second access makes the module to return already detected platform information
 			expect(platform['unknown']).toBe(true);
-		});
-
-		test('should have platform information', () => {
 		});
 	});
 });

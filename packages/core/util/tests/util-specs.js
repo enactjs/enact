@@ -134,31 +134,54 @@ describe('util', () => {
 			'class-additive-only': 'real-class-additive-only'
 		};
 
-		test('should return a base map if an additive map is not given', () => {
-			const expected = mergeClassNameMaps(baseMap);
+		// Do NOT use destructuring operator as 'pxory' does not have properties but have only getters for properties.
+		const avoidProxy = (proxy) => {
+			const keys = ['class-base-only', 'class-shared', 'class-shared-another', 'class-additive-only'];
+			const obj = {};
 
-			expect(expected['class-base-only']).toEqual('real-class-base-only');
-			expect(expected['class-shared']).toEqual('real-class-shared-base');
-			expect(expected['class-shared-another']).toEqual('real-class-shared-another-base');
-			expect(expected['class-additive-only']).not.toEqual('real-class-additive-only');
+			for (let i = 0; i < keys.length; i++) {
+				if (keys[i] !== proxy[keys[i]]) {
+					obj[keys[i]] = proxy[keys[i]];
+				}
+			}
+
+			return obj;
+		};
+
+		test('should return a base map if an additive map is not given', () => {
+			const expected = {
+				'class-base-only': 'real-class-base-only',
+				'class-shared': 'real-class-shared-base',
+				'class-shared-another': 'real-class-shared-another-base'
+			};
+
+			const actual = mergeClassNameMaps(baseMap);
+
+			expect(actual).toEqual(expected);
 		});
 
 		test('should return a merged map containing shared class names', () => {
-			const expected = mergeClassNameMaps(baseMap, additiveMap);
+			const expected = {
+				'class-base-only': 'real-class-base-only',
+				'class-shared': 'real-class-shared-base real-class-shared-additive',
+				'class-shared-another': 'real-class-shared-another-base real-class-shared-another-additive'
+			}
 
-			expect(expected['class-base-only']).toEqual('real-class-base-only');
-			expect(expected['class-shared']).toEqual('real-class-shared-base real-class-shared-additive');
-			expect(expected['class-shared-another']).toEqual('real-class-shared-another-base real-class-shared-another-additive');
-			expect(expected['class-additive-only']).not.toEqual('real-class-additive-only');
+			const actual = avoidProxy(mergeClassNameMaps(baseMap, additiveMap));
+
+			expect(actual).toEqual(expected);
 		});
 
 		test('should return a merged map containing allowed matching class names', () => {
-			const expected = mergeClassNameMaps(baseMap, additiveMap, ['class-shared']);
+			const expected = {
+				'class-base-only': 'real-class-base-only',
+				'class-shared': 'real-class-shared-base real-class-shared-additive',
+				'class-shared-another': 'real-class-shared-another-base'
+			};
 
-			expect(expected['class-base-only']).toEqual('real-class-base-only');
-			expect(expected['class-shared']).toEqual('real-class-shared-base real-class-shared-additive');
-			expect(expected['class-shared-another']).toEqual('real-class-shared-another-base');
-			expect(expected['class-additive-only']).not.toEqual('real-class-additive-only');
+			const actual = avoidProxy(mergeClassNameMaps(baseMap, additiveMap, ['class-shared']));
+
+			expect(actual).toEqual(expected);
 		});
 	});
 
