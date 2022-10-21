@@ -4,14 +4,14 @@ function returnsUndefined () {}
 
 describe('snapshot', () => {
 	describe('isWindowReady', () => {
-		test('should return true if window is ready', () => {
+		test('should return `true` if window is ready', () => {
 			const expected = true;
 			const actual = isWindowReady();
 
 			expect(actual).toBe(expected);
 		});
 
-		test('should return false if window is not ready', () => {
+		test('should return `false` if window is not ready', () => {
 			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(returnsUndefined);
 
 			const expected = false;

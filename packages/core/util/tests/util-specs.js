@@ -165,7 +165,7 @@ describe('util', () => {
 				'class-base-only': 'real-class-base-only',
 				'class-shared': 'real-class-shared-base real-class-shared-additive',
 				'class-shared-another': 'real-class-shared-another-base real-class-shared-another-additive'
-			}
+			};
 
 			const actual = avoidProxy(mergeClassNameMaps(baseMap, additiveMap));
 
