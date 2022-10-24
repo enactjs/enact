@@ -134,8 +134,8 @@ describe('util', () => {
 			'class-additive-only': 'real-class-additive-only'
 		};
 
-		// Do NOT use destructuring operator as 'pxory' does not have properties but have only getters for properties.
-		const avoidProxy = (proxy) => {
+		// Helper function to get an object from the proxy object that has only getters for properties to make testing easier
+		const getResultFromProxy = (proxy) => {
 			const keys = ['class-base-only', 'class-shared', 'class-shared-another', 'class-additive-only'];
 			const obj = {};
 
@@ -149,15 +149,9 @@ describe('util', () => {
 		};
 
 		test('should return a base map if an additive map is not given', () => {
-			const expected = {
-				'class-base-only': 'real-class-base-only',
-				'class-shared': 'real-class-shared-base',
-				'class-shared-another': 'real-class-shared-another-base'
-			};
-
 			const actual = mergeClassNameMaps(baseMap);
 
-			expect(actual).toEqual(expected);
+			expect(actual).toEqual(baseMap);
 		});
 
 		test('should return a merged map containing shared class names', () => {
@@ -167,7 +161,7 @@ describe('util', () => {
 				'class-shared-another': 'real-class-shared-another-base real-class-shared-another-additive'
 			};
 
-			const actual = avoidProxy(mergeClassNameMaps(baseMap, additiveMap));
+			const actual = getResultFromProxy(mergeClassNameMaps(baseMap, additiveMap));
 
 			expect(actual).toEqual(expected);
 		});
@@ -179,7 +173,7 @@ describe('util', () => {
 				'class-shared-another': 'real-class-shared-another-base'
 			};
 
-			const actual = avoidProxy(mergeClassNameMaps(baseMap, additiveMap, ['class-shared']));
+			const actual = getResultFromProxy(mergeClassNameMaps(baseMap, additiveMap, ['class-shared']));
 
 			expect(actual).toEqual(expected);
 		});
