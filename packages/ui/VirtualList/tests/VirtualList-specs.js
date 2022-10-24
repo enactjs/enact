@@ -276,6 +276,7 @@ describe('VirtualList', () => {
 
 		test('should scroll to the given align with scrollTo after changing dataSize', (done) => {
 			const newDataSize = 50;
+
 			const onScrollStop = handlerOnScrollStop(done, () => {
 				const expected = newDataSize * itemSize - clientSize.clientHeight;
 				const actual = resultScrollTop;
@@ -310,6 +311,7 @@ describe('VirtualList', () => {
 
 		test('should scroll to the given align with scrollTo after changing itemSize', (done) => {
 			const newItemSize = 50;
+
 			const onScrollStop = handlerOnScrollStop(done, () => {
 				const expected = dataSize * newItemSize - clientSize.clientHeight;
 				const actual = resultScrollTop;
@@ -344,6 +346,7 @@ describe('VirtualList', () => {
 
 		test('should scroll to the given align with scrollTo after changing spacing', (done) => {
 			const newSpacing = 30;
+
 			const onScrollStop = handlerOnScrollStop(done, () => {
 				const expected = dataSize * (itemSize + newSpacing) - clientSize.clientHeight - newSpacing;
 				const actual = resultScrollTop;
@@ -371,6 +374,42 @@ describe('VirtualList', () => {
 					itemSize={itemSize}
 					onScrollStop={onScrollStop}
 					spacing={newSpacing}
+				/>
+			);
+
+			act(() => myScrollTo({align: 'bottom', animate: false}));
+		});
+
+		test('should scroll to the given align with scrollTo when itemSizes is given', (done) => {
+			const itemSizes = [100, 200, 300, 400, 100, 200, 300, 400, 100, 200];
+			const itemSizeSum = 2300;
+			const onScrollStop = handlerOnScrollStop(done, () => {
+				const expected = itemSizeSum - clientSize.clientHeight;
+				const actual = resultScrollTop;
+
+				expect(actual).toBe(expected);
+			});
+
+			const {rerender} = render(
+				<VirtualList
+					cbScrollTo={getScrollTo}
+					clientSize={clientSize}
+					dataSize={10}
+					itemRenderer={renderItem}
+					itemSize={itemSize}
+					onScrollStop={onScrollStop}
+				/>
+			);
+
+			rerender(
+				<VirtualList
+					cbScrollTo={getScrollTo}
+					clientSize={clientSize}
+					dataSize={dataSize}
+					itemRenderer={renderItem}
+					itemSize={itemSize}
+					itemSizes={itemSizes}
+					onScrollStop={onScrollStop}
 				/>
 			);
 
