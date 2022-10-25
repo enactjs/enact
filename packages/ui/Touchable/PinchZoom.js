@@ -140,7 +140,7 @@ class PinchZoom {
 	end = () => {
 		if (!this.isZooming()) return;
 
-		if (this.onPinchZoomEnd ) {
+		if (this.onPinchZoomEnd) {
 			this.onPinchZoomEnd({type: 'onPinchZoomEnd'});
 		}
 
