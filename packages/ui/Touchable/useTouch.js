@@ -57,7 +57,8 @@ import Touch from './Touch';
 /**
  * Provides a consistent set of pointer events -- `onDown`, `onUp`, and `onTap` --
  * across mouse and touch interfaces along with support for common gestures including
- * `onFlick`, `onDrag`, `onHoldStart`, `onHold`, `onHoldEnd`, and onPinchZoom.
+ * `onFlick`, `onDragStart`, `onDrag`, `onDragEnd`, `onHoldStart`, `onHold`, `onHoldEnd`,
+ * `onPinchZoomStart`, `onPinchZoom`, and `onPinchZoomEnd`.
  * @param {useTouchConfig} config Configuration options
  * @returns {useTouchInterface}
  * @private

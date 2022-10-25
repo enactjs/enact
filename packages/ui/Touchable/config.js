@@ -107,7 +107,7 @@ const mergeConfig = (cfg) => {
  *     Only applies when `global` is `false`.
  *     * `'border-box'` - the default, includes the padding and border but excludes the margin.
  *     * `'content-box'` - excludes the padding, border, and margin.
- *   * `global` - When `true`, drag gestures will continue when leaving the bounds of the component
+ *   * `global` - When `true`, pinchZoom gestures will continue when leaving the bounds of the component
  *      or blurring the component.
  *   * `maxZoom` - The maximum zoom value. Defaults to `4`.
  *   * `minZoom` - The minimum zoom value. Defaults to `0.5`.

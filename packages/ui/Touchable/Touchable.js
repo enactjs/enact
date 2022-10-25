@@ -92,8 +92,8 @@ const defaultConfig = {
 /**
  * A higher-order component that provides a consistent set of pointer events -- `onDown`, `onUp`,
  * and `onTap` -- across mouse and touch interfaces along with support for common gestures including
- * `onFlick`, `onDrag`, `onHoldStart`, `onHold`, `onHoldEnd`, `onPinchZoomStart`, `onPinchZoom` and `onPinchZoomEnd`.
- *
+ * `onFlick`, `onDragStart`, `onDrag`, `onDragEnd`, `onHoldStart`, `onHold`, `onHoldEnd`,
+ * `onPinchZoomStart`, `onPinchZoom`, and `onPinchZoomEnd`.*
  * Note: This HoC passes a number of props to the wrapped component that should be passed to the
  * main DOM node or consumed by the wrapped component.
  *

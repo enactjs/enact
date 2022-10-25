@@ -12,7 +12,7 @@ class PinchZoom {
 		const {global: isGlobal, boxSizing} = this.pinchZoomConfig;
 		let bounds = null;
 
-		if (!node) return;
+		if (typeof window === 'undefined' || !node) return;
 
 		if (isGlobal) {
 			bounds = {
@@ -96,7 +96,7 @@ class PinchZoom {
 		}
 	};
 
-	// This method will get the `onPinchZoom`, `onPinchZoomEnd`, `onPinchZoomStart` props.
+	// This method will get the `onPinchZoom`, `onPinchZoomEnd`, and `onPinchZoomStart` props.
 	updateProps = ({onPinchZoom, onPinchZoomEnd, onPinchZoomStart}) => {
 		// Check `isZooming` gesture is not in progress. Check if gesture exists before updating the references to the `pinchZoomConfig`
 		if (!this.isZooming()) return;
