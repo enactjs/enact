@@ -20,7 +20,7 @@ import Router from './Router';
 import {propTypes, toSegments, RouteContext, resolve} from './util';
 
 /**
- * Default config for [`Routable`]{@link ui/Routable.Routable}.
+ * Default config for {@link ui/Routable.Routable|Routable}.
  *
  * @memberof ui/Routable.Routable
  * @hocconfig
@@ -29,7 +29,7 @@ const defaultConfig = {
 	/**
 	 * The event to listen to for path changes.
 	 *
-	 * This defines the actual name of the [navigate]{@link ui/Routable.Routable#navigate}
+	 * This defines the actual name of the {@link ui/Routable.Routable#navigate|navigate}
 	 * property.
 	 *
 	 * @type {String}

@@ -173,7 +173,7 @@ const ImageItemBase = kind({
 
 /**
  * A higher-order component that adds behaviors to an
- * [ImageItemBase]{@link ui/ImageItem.ImageItemBase}.
+ * {@link ui/ImageItem.ImageItemBase|ImageItemBase}.
  *
  * @hoc
  * @memberof ui/ImageItem

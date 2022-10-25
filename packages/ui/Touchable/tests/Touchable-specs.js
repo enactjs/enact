@@ -1,4 +1,4 @@
-import {createEvent, fireEvent, render, screen} from '@testing-library/react';
+import {act, createEvent, fireEvent, render, screen} from '@testing-library/react';
 
 import {configure, getConfig, resetDefaultConfig} from '../config';
 import Touchable from '../Touchable';
@@ -13,7 +13,7 @@ describe('Touchable', () => {
 
 	let data;
 
-	const DivComponent = ({children = 'Toggle', id, onClick, onMouseDown, onMouseLeave, onMouseUp, onTouchStart, onTouchEnd, ...props}) => {
+	const DivComponent = ({children = 'Toggle', id, onClick, onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp, onTouchStart, onTouchEnd, ...props}) => {
 		data = props;
 		return (
 			<div
@@ -21,6 +21,8 @@ describe('Touchable', () => {
 				id={id}
 				onClick={onClick}
 				onMouseDown={onMouseDown}
+				onMouseEnter={onMouseEnter}
+				onMouseMove={onMouseMove}
 				onMouseUp={onMouseUp}
 				onMouseLeave={onMouseLeave}
 				onTouchStart={onTouchStart}
@@ -91,6 +93,30 @@ describe('Touchable', () => {
 			done();
 		});
 
+		test('should not call onHoldStart if mouse leaved', (done) => {
+			const holdConfig = {
+				events: [
+					{name: 'hold', time: 10}
+				],
+				frequency: 10
+			};
+
+			const Component = Touchable(DivComponent);
+			const handler = jest.fn();
+			const {rerender} = render(<Component holdConfig={holdConfig} onHold={() => {}} />);
+			const component = screen.getByTestId('component');
+
+			const ev = {};
+			fireEvent.mouseDown(component, ev);
+			fireEvent.mouseLeave(component, ev);
+			rerender(<Component holdConfig={holdConfig} onHold={() => {}} onHoldStart={handler} />);
+
+			jest.runOnlyPendingTimers();
+
+			expect(handler).not.toHaveBeenCalled();
+			done();
+		});
+
 		test('should update state configurations onHoldEnd events', (done) => {
 			const holdConfig = {
 				events: [
@@ -106,6 +132,33 @@ describe('Touchable', () => {
 
 			const ev = {currentTarget: {}};
 			fireEvent.mouseDown(component, ev);
+			fireEvent.mouseEnter(component, ev);
+			rerender(<Component holdConfig={holdConfig} onHold={() => {}} onHoldEnd={handler} />);
+
+			jest.runOnlyPendingTimers();
+
+			fireEvent.mouseUp(component, ev);
+			expect(handler).toHaveBeenCalled();
+			done();
+		});
+
+		test('should update state configurations onHoldEnd events if holdConfig.cancelOnMove is true', (done) => {
+			const holdConfig = {
+				cancelOnMove: true,
+				events: [
+					{name: 'hold', time: 10}
+				],
+				frequency: 10
+			};
+
+			const Component = Touchable(DivComponent);
+			const handler = jest.fn();
+			const {rerender} = render(<Component holdConfig={holdConfig} onHold={() => {}} />);
+			const component = screen.getByTestId('component');
+
+			const ev = {currentTarget: {}};
+			fireEvent.mouseDown(component, ev);
+			fireEvent.mouseMove(component, ev);
 			rerender(<Component holdConfig={holdConfig} onHold={() => {}} onHoldEnd={handler} />);
 
 			jest.runOnlyPendingTimers();
@@ -205,6 +258,29 @@ describe('Touchable', () => {
 			expect(actual).toBe(expected);
 		});
 
+		test('should call onFlick event', (done) => {
+			const Component = Touchable(DivComponent);
+			const handler = jest.fn();
+			render(<Component onFlick={handler} />);
+
+			const component = screen.getByTestId('component');
+
+			fireEvent.mouseDown(component, {clientX: 10, clientY: 20});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 20, clientY: 30});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 30, clientY: 40});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 40, clientY: 50});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseUp(component, {clientX: 40, clientY: 50});
+
+			jest.runOnlyPendingTimers();
+
+			expect(handler).toHaveBeenCalled();
+			done();
+		});
+
 		test('should not update config when local object is mutated', () => {
 			const cfg = {
 				flick: {
@@ -237,6 +313,78 @@ describe('Touchable', () => {
 			const actual = getConfig().hold.events[0].time;
 
 			expect(actual).toBe(expected);
+		});
+
+		test('should call onDragStart event', (done) => {
+			const Component = Touchable(DivComponent);
+			const handler = jest.fn();
+			const {rerender} = render(<Component onDrag={() => {}} />);
+
+			const component = screen.getByTestId('component');
+
+			fireEvent.mouseDown(component, {clientX: 10, clientY: 20});
+			act(() => jest.advanceTimersByTime(20));
+
+			rerender(<Component onDrag={() => {}} onDragStart={handler} />);
+
+			jest.runOnlyPendingTimers();
+
+			fireEvent.mouseEnter(component, {clientX: 10, clientY: 20});
+			fireEvent.mouseMove(component, {clientX: 20, clientY: 30});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 30, clientY: 40});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 40, clientY: 50});
+			fireEvent.mouseUp(component, {clientX: 40, clientY: 50});
+
+			expect(handler).toHaveBeenCalled();
+			done();
+		});
+
+		test('should call onDragEnd event', (done) => {
+			const Component = Touchable(DivComponent);
+			const handler = jest.fn();
+			const {rerender} = render(<Component onDrag={() => {}} />);
+
+			const component = screen.getByTestId('component');
+
+			fireEvent.mouseDown(component, {clientX: 10, clientY: 20});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 20, clientY: 30});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 30, clientY: 40});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 40, clientY: 50});
+			rerender(<Component onDrag={() => {}} onDragEnd={handler} />);
+
+			jest.runOnlyPendingTimers();
+
+			fireEvent.mouseUp(component, {clientX: 40, clientY: 50});
+			expect(handler).toHaveBeenCalled();
+			done();
+		});
+
+		test('should not call onDragEnd on mouseLeave', (done) => {
+			const Component = Touchable(DivComponent);
+			const handler = jest.fn();
+			const {rerender} = render(<Component onDrag={() => {}} />);
+
+			const component = screen.getByTestId('component');
+
+			fireEvent.mouseDown(component, {clientX: 10, clientY: 20});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 20, clientY: 30});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 30, clientY: 40});
+			act(() => jest.advanceTimersByTime(20));
+			fireEvent.mouseMove(component, {clientX: 40, clientY: 50});
+			rerender(<Component onDrag={() => {}} onDragEnd={handler} />);
+
+			jest.runOnlyPendingTimers();
+
+			fireEvent.mouseLeave(component);
+			expect(handler).not.toHaveBeenCalled();
+			done();
 		});
 	});
 

@@ -89,6 +89,21 @@ describe('VirtualList', () => {
 		expect(actual).toBe(expected);
 	});
 
+	test('should render overhang items when clientSize is not given', () => {
+		render(
+			<VirtualList
+				dataSize={dataSize}
+				itemRenderer={renderItem}
+				itemSize={30}
+			/>
+		);
+
+		const expected = 3;
+		const actual = screen.getByRole('list').children.length;
+
+		expect(actual).toBe(expected);
+	});
+
 	test('should render (clientHeight / itemHeight + overhang) items', () => {
 		render(
 			<VirtualList
@@ -100,6 +115,33 @@ describe('VirtualList', () => {
 		);
 
 		const expected = 27; // 720 / 30 + 3
+		const actual = screen.getByRole('list').children.length;
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should re-render clientHeight / itemHeight + overhang) items after changing client size', () => {
+		const {rerender} = render(
+			<VirtualList
+				clientSize={clientSize}
+				dataSize={dataSize}
+				itemRenderer={renderItem}
+				itemSize={30}
+			/>
+		);
+
+		const newClientSize = {clientWidth: 1280, clientHeight: 360};
+
+		rerender(
+			<VirtualList
+				clientSize={newClientSize}
+				dataSize={dataSize}
+				itemRenderer={renderItem}
+				itemSize={30}
+			/>
+		);
+
+		const expected = 15; // 360 / 30 + 3
 		const actual = screen.getByRole('list').children.length;
 
 		expect(actual).toBe(expected);
