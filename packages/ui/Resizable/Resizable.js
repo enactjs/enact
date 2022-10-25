@@ -8,16 +8,9 @@
 import {call, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import invariant from 'invariant';
-import {createContext, Component} from 'react';
+import {Component} from 'react';
 
-/**
- * Used internally for things to notify children that they need to resize because of a parent
- * update.
- *
- * @type Object
- * @private
- */
-const ResizeContext = createContext();
+import ResizeContext from './ResizeContext';
 
 /**
  * Default config for `Resizable`.
