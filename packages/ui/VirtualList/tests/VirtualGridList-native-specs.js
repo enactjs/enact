@@ -8,18 +8,9 @@ describe('VirtualGridList with native scrollMode', () => {
 	let
 		clientSize,
 		dataSize,
-		getScrollTo,
-		handlerOnScroll,
-		handlerOnScrollStart,
-		handlerOnScrollStop,
 		items,
 		itemSize,
-		myScrollTo,
-		onScrollCount,
-		onScrollStartCount,
-		onScrollStopCount,
 		renderItem,
-		resultScrollTop,
 		svgGenerator;
 
 	beforeEach(() => {
@@ -27,27 +18,6 @@ describe('VirtualGridList with native scrollMode', () => {
 		dataSize = 100;
 		items = [];
 		itemSize = {minWidth: 180, minHeight: 270};
-		onScrollCount = 0;
-		onScrollStartCount = 0;
-		onScrollStopCount = 0;
-		resultScrollTop = 0;
-
-		getScrollTo = (scrollTo) => {
-			myScrollTo = scrollTo;
-		};
-		handlerOnScroll = () => {
-			onScrollCount++;
-		};
-		handlerOnScrollStart = () => {
-			onScrollStartCount++;
-		};
-		handlerOnScrollStop = (done, testCase) => (e) => {
-			onScrollStopCount++;
-			resultScrollTop = e.scrollTop;
-
-			testCase();
-			done();
-		};
 
 		renderItem = ({index, ...rest}) => {	// eslint-disable-line enact/display-name
 			const {text, source} = items[index];
@@ -87,17 +57,9 @@ describe('VirtualGridList with native scrollMode', () => {
 	afterEach(() => {
 		clientSize = null;
 		dataSize = null;
-		getScrollTo = null;
-		handlerOnScroll = null;
-		handlerOnScrollStart = null;
-		handlerOnScrollStop = null;
 		items = null;
-		myScrollTo = null;
-		onScrollCount = null;
-		onScrollStartCount = null;
-		onScrollStopCount = null;
+		itemSize = null;
 		renderItem = null;
-		resultScrollTop = null;
 	});
 
 	test('should render a list of \'items\'', () => {
@@ -161,146 +123,6 @@ describe('VirtualGridList with native scrollMode', () => {
 		const actual = screen.getByRole('list').children.length;
 
 		expect(actual).toBe(expected);
-	});
-
-	describe('ScrollTo', () => {
-		test.skip('should scroll to the specific item of a given index with scrollTo', (done) => {
-			const onScrollStop = handlerOnScrollStop(done, () => {
-				const expected = 273; // 270 + 3
-				const actual = resultScrollTop;
-
-				expect(actual).toBe(expected);
-
-			});
-
-			render(
-				<VirtualGridList
-					cbScrollTo={getScrollTo}
-					clientSize={clientSize}
-					dataSize={dataSize}
-					itemRenderer={renderItem}
-					itemSize={itemSize}
-					onScrollStop={onScrollStop}
-					scrollMode="native"
-				/>
-			);
-
-			act(() => myScrollTo({index: 8, animate: false}));
-		});
-
-		test.skip('should scroll to the given \'x\' position with scrollTo', (done) => {
-			const onScrollStop = handlerOnScrollStop(done, () => {
-				const expected = 1;
-				const actual = onScrollStopCount;
-
-				expect(actual).toBe(expected);
-			});
-
-			render(
-				<VirtualGridList
-					cbScrollTo={getScrollTo}
-					clientSize={clientSize}
-					dataSize={dataSize}
-					direction="horizontal"
-					itemRenderer={renderItem}
-					itemSize={itemSize}
-					onScrollStop={onScrollStop}
-					scrollMode="native"
-				/>
-			);
-
-			act(() => myScrollTo({position: {x: 100}, animate: false}));
-		});
-
-		test.skip('should scroll to the given \'y\' position with scrollTo', (done) => {
-			const onScrollStop = handlerOnScrollStop(done, () => {
-				const expected = 100;
-				const actual = resultScrollTop;
-
-				expect(actual).toBe(expected);
-			});
-
-			render(
-				<VirtualGridList
-					cbScrollTo={getScrollTo}
-					clientSize={clientSize}
-					dataSize={dataSize}
-					itemRenderer={renderItem}
-					itemSize={itemSize}
-					onScrollStop={onScrollStop}
-					scrollMode="native"
-				/>
-			);
-
-			act(() => myScrollTo({position: {y: 100}, animate: false}));
-		});
-
-		describe('scroll events', () => {
-			test.skip('should call onScrollStart once', () => {
-				render(
-					<VirtualGridList
-						cbScrollTo={getScrollTo}
-						clientSize={clientSize}
-						dataSize={dataSize}
-						itemRenderer={renderItem}
-						itemSize={itemSize}
-						onScrollStart={handlerOnScrollStart}
-						scrollMode="native"
-					/>
-				);
-
-				act(() => myScrollTo({position: {y: 100}, animate: false}));
-
-				const expected = 1;
-				const actual = onScrollStartCount;
-
-				expect(actual).toBe(expected);
-			});
-
-			test.skip('should call onScroll once', () => {
-				render(
-					<VirtualGridList
-						cbScrollTo={getScrollTo}
-						clientSize={clientSize}
-						dataSize={dataSize}
-						itemRenderer={renderItem}
-						itemSize={itemSize}
-						onScroll={handlerOnScroll}
-						scrollMode="native"
-					/>
-				);
-
-				act(() => myScrollTo({position: {y: 100}, animate: false}));
-
-				const expected = 1;
-				const actual = onScrollCount;
-
-				expect(actual).toBe(expected);
-			});
-
-			test.skip('should call onScrollStop once', (done) => {
-				const onScrollStop = handlerOnScrollStop(done, () => {
-					const expected = 1;
-					const actual = onScrollStopCount;
-
-					expect(actual).toBe(expected);
-				});
-
-				render(
-					<VirtualGridList
-						cbScrollTo={getScrollTo}
-						clientSize={clientSize}
-						dataSize={dataSize}
-						itemRenderer={renderItem}
-						itemSize={itemSize}
-						onScrollStop={onScrollStop}
-						scrollMode="native"
-					/>
-				);
-
-				act(() => myScrollTo({position: {y: 100}, animate: false}));
-			});
-		});
 	});
 
 	describe('Adding an item', () => {
