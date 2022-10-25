@@ -7,43 +7,16 @@ describe('VirtualList with native scrollMode', () => {
 	let
 		clientSize,
 		dataSize,
-		getScrollTo,
-		handlerOnScroll,
-		handlerOnScrollStart,
-		handlerOnScrollStop,
 		items,
-		myScrollTo,
-		onScrollCount,
-		onScrollStartCount,
-		onScrollStopCount,
-		renderItem,
-		resultScrollTop;
+		itemSize,
+		renderItem;
 
 	beforeEach(() => {
 		clientSize = {clientWidth: 1280, clientHeight: 720};
 		dataSize = 100;
 		items = [];
-		onScrollCount = 0;
-		onScrollStartCount = 0;
-		onScrollStopCount = 0;
-		resultScrollTop = 0;
+		itemSize = 30;
 
-		getScrollTo = (scrollTo) => {
-			myScrollTo = scrollTo;
-		};
-		handlerOnScroll = () => {
-			onScrollCount++;
-		};
-		handlerOnScrollStart = () => {
-			onScrollStartCount++;
-		};
-		handlerOnScrollStop = (done, testCase) => (e) => {
-			onScrollStopCount++;
-			resultScrollTop = e.scrollTop;
-
-			testCase();
-			done();
-		};
 		renderItem = ({index, ...rest}) => {	// eslint-disable-line enact/display-name
 			return (
 				<div {...rest} id={'item' + index}>
@@ -60,17 +33,9 @@ describe('VirtualList with native scrollMode', () => {
 	afterEach(() => {
 		clientSize = null;
 		dataSize = null;
-		getScrollTo = null;
-		handlerOnScroll = null;
-		handlerOnScrollStart = null;
-		handlerOnScrollStop = null;
 		items = null;
-		myScrollTo = null;
-		onScrollCount = null;
-		onScrollStartCount = null;
-		onScrollStopCount = null;
+		itemSize = null;
 		renderItem = null;
-		resultScrollTop = null;
 	});
 
 	test('should render a list of \'items\'', () => {
@@ -79,7 +44,7 @@ describe('VirtualList with native scrollMode', () => {
 				clientSize={clientSize}
 				dataSize={dataSize}
 				itemRenderer={renderItem}
-				itemSize={30}
+				itemSize={itemSize}
 				scrollMode="native"
 			/>
 		);
@@ -95,7 +60,7 @@ describe('VirtualList with native scrollMode', () => {
 			<VirtualList
 				dataSize={dataSize}
 				itemRenderer={renderItem}
-				itemSize={30}
+				itemSize={itemSize}
 				scrollMode="native"
 			/>
 		);
@@ -112,7 +77,7 @@ describe('VirtualList with native scrollMode', () => {
 				clientSize={clientSize}
 				dataSize={dataSize}
 				itemRenderer={renderItem}
-				itemSize={30}
+				itemSize={itemSize}
 				scrollMode="native"
 			/>
 		);
@@ -129,7 +94,7 @@ describe('VirtualList with native scrollMode', () => {
 				clientSize={clientSize}
 				dataSize={dataSize}
 				itemRenderer={renderItem}
-				itemSize={30}
+				itemSize={itemSize}
 				scrollMode="native"
 			/>
 		);
@@ -141,7 +106,7 @@ describe('VirtualList with native scrollMode', () => {
 				clientSize={newClientSize}
 				dataSize={dataSize}
 				itemRenderer={renderItem}
-				itemSize={30}
+				itemSize={itemSize}
 				scrollMode="native"
 			/>
 		);
@@ -150,145 +115,6 @@ describe('VirtualList with native scrollMode', () => {
 		const actual = screen.getByRole('list').children.length;
 
 		expect(actual).toBe(expected);
-	});
-
-	describe('ScrollTo', () => {
-		test.skip('should scroll to the specific item of a given index with scrollTo', (done) => {
-			const onScrollStop = handlerOnScrollStop(done, () => {
-				const expected = 300;
-				const actual = resultScrollTop;
-
-				expect(actual).toBe(expected);
-			});
-
-			render(
-				<VirtualList
-					cbScrollTo={getScrollTo}
-					clientSize={clientSize}
-					dataSize={dataSize}
-					itemRenderer={renderItem}
-					itemSize={30}
-					onScrollStop={onScrollStop}
-					scrollMode="native"
-				/>
-			);
-
-			act(() => myScrollTo({index: 10, animate: false}));
-		});
-
-		test.skip('should scroll to the given \'x\' position with scrollTo', (done) => {
-			const onScrollStop = handlerOnScrollStop(done, () => {
-				const expected = 1;
-				const actual = onScrollStopCount;
-
-				expect(actual).toBe(expected);
-			});
-
-			render(
-				<VirtualList
-					cbScrollTo={getScrollTo}
-					clientSize={clientSize}
-					dataSize={dataSize}
-					direction="horizontal"
-					itemRenderer={renderItem}
-					itemSize={30}
-					onScrollStop={onScrollStop}
-					scrollMode="native"
-				/>
-			);
-
-			act(() => myScrollTo({position: {x: 100}, animate: false}));
-		});
-
-		test.skip('should scroll to the given \'y\' position with scrollTo', (done) => {
-			const onScrollStop = handlerOnScrollStop(done, () => {
-				const expected = 100;
-				const actual = resultScrollTop;
-
-				expect(actual).toBe(expected);
-			});
-
-			render(
-				<VirtualList
-					cbScrollTo={getScrollTo}
-					clientSize={clientSize}
-					dataSize={dataSize}
-					itemRenderer={renderItem}
-					itemSize={30}
-					onScrollStop={onScrollStop}
-					scrollMode="native"
-				/>
-			);
-
-			act(() => myScrollTo({position: {y: 100}, animate: false}));
-		});
-
-		describe('scroll events', () => {
-			test.skip('should call onScrollStart once', () => {
-				render(
-					<VirtualList
-						cbScrollTo={getScrollTo}
-						clientSize={clientSize}
-						dataSize={dataSize}
-						itemRenderer={renderItem}
-						itemSize={30}
-						onScrollStart={handlerOnScrollStart}
-						scrollMode="native"
-					/>
-				);
-
-				act(() => myScrollTo({position: {y: 100}, animate: false}));
-
-				const expected = 1;
-				const actual = onScrollStartCount;
-
-				expect(actual).toBe(expected);
-			});
-
-			test.skip('should call onScroll once', () => {
-				render(
-					<VirtualList
-						cbScrollTo={getScrollTo}
-						clientSize={clientSize}
-						dataSize={dataSize}
-						itemRenderer={renderItem}
-						itemSize={30}
-						onScroll={handlerOnScroll}
-						scrollMode="native"
-					/>
-				);
-
-				act(() => myScrollTo({position: {y: 100}, animate: false}));
-
-				const expected = 1;
-				const actual = onScrollCount;
-
-				expect(actual).toBe(expected);
-			});
-
-			test.skip('should call onScrollStop once', (done) => {
-				const onScrollStop = handlerOnScrollStop(done, () => {
-					const expected = 1;
-					const actual = onScrollStopCount;
-
-					expect(actual).toBe(expected);
-				});
-
-				render(
-					<VirtualList
-						cbScrollTo={getScrollTo}
-						clientSize={clientSize}
-						dataSize={dataSize}
-						itemRenderer={renderItem}
-						itemSize={30}
-						onScrollStop={onScrollStop}
-						scrollMode="native"
-					/>
-				);
-
-				act(() => myScrollTo({position: {y: 100}, animate: false}));
-			});
-		});
 	});
 
 	describe('Adding an item', () => {
@@ -307,7 +133,7 @@ describe('VirtualList with native scrollMode', () => {
 					clientSize={clientSize}
 					dataSize={itemArray.length}
 					itemRenderer={renderItemArray}
-					itemSize={30}
+					itemSize={itemSize}
 					scrollMode="native"
 				/>
 			);
@@ -318,7 +144,7 @@ describe('VirtualList with native scrollMode', () => {
 					clientSize={clientSize}
 					dataSize={itemArray.length}
 					itemRenderer={renderItemArray}
-					itemSize={30}
+					itemSize={itemSize}
 					scrollMode="native"
 				/>
 			);
