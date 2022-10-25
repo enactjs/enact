@@ -4,7 +4,7 @@ import {act, fireEvent, render, screen} from '@testing-library/react';
 import VirtualList from '../VirtualList';
 
 const activate = (list) => fireEvent.keyUp(list, {keyCode: 13});
-const keyDown = (keyCode) => (slider) => fireEvent.keyDown(slider, {keyCode});
+const keyDown = (keyCode) => (list) => fireEvent.keyDown(list, {keyCode});
 
 const downKeyDown = keyDown(40);
 
@@ -68,7 +68,7 @@ describe('VirtualList', () => {
 			onScrollCount++;
 		};
 		handlerOnScrollStart = (e) => {
-			resultScrollTop = e.scrollTop;
+			startScrollTop = e.scrollTop;
 			onScrollStartCount++;
 		};
 		handlerOnScrollStop = (done, testCase) => (e) => {
@@ -490,7 +490,7 @@ describe('VirtualList', () => {
 			jest.useRealTimers();
 		});
 
-		test('should scroll to the by wheel', (done) => {
+		test('should scroll by wheel', (done) => {
 			const fn = jest.fn();
 
 			const onScrollStop = handlerOnScrollStop(done, () => {
@@ -519,7 +519,7 @@ describe('VirtualList', () => {
 			expect(fn).toBeCalled();
 		});
 
-		test('should not scroll to the by wheel when `noScrollByWheel` prop is true', (done) => {
+		test('should not scroll by wheel when `noScrollByWheel` prop is true', (done) => {
 			const fn = jest.fn();
 
 			render(
@@ -544,7 +544,7 @@ describe('VirtualList', () => {
 			done();
 		});
 
-		test('should scroll to the by drag', async () => {
+		test('should scroll by drag', async () => {
 			const fn = jest.fn();
 
 			const onScrollStop = (e) => {
@@ -577,7 +577,7 @@ describe('VirtualList', () => {
 			expect(fn).toBeCalled();
 		});
 
-		test('should not scroll to the by key', (done) => {
+		test('should not scroll by key', (done) => {
 			const fn = jest.fn();
 
 			render(

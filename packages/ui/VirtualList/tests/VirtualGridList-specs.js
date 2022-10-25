@@ -5,7 +5,7 @@ import {VirtualGridList} from '../VirtualList';
 import {ImageItem as UiImageItem} from '../../ImageItem';
 
 const activate = (list) => fireEvent.keyUp(list, {keyCode: 13});
-const keyDown = (keyCode) => (slider) => fireEvent.keyDown(slider, {keyCode});
+const keyDown = (keyCode) => (list) => fireEvent.keyDown(list, {keyCode});
 
 const downKeyDown = keyDown(40);
 
@@ -70,7 +70,7 @@ describe('VirtualGridList', () => {
 			onScrollCount++;
 		};
 		handlerOnScrollStart = (e) => {
-			resultScrollTop = e.scrollTop;
+			startScrollTop = e.scrollTop;
 			onScrollStartCount++;
 		};
 		handlerOnScrollStop = (done, testCase) => (e) => {
@@ -264,7 +264,7 @@ describe('VirtualGridList', () => {
 
 		test('should scroll to the given align with scrollTo', (done) => {
 			const onScrollStop = handlerOnScrollStop(done, () => {
-				const expected = Math.ceil(dataSize / 7 ) * (itemSize.minHeight + 3) - clientSize.clientHeight; // 1280/180 = 7
+				const expected = Math.ceil(dataSize / 7) * (itemSize.minHeight + 3) - clientSize.clientHeight; // 1280/180 = 7
 				const actual = resultScrollTop;
 
 				expect(actual).toBe(expected);
@@ -287,7 +287,7 @@ describe('VirtualGridList', () => {
 		test('should scroll to the given align with scrollTo after changing dataSize', (done) => {
 			const newDataSize = 50;
 			const onScrollStop = handlerOnScrollStop(done, () => {
-				const expected = Math.ceil(newDataSize / 7 ) * (itemSize.minHeight + 3) - clientSize.clientHeight;
+				const expected = Math.ceil(newDataSize / 7) * (itemSize.minHeight + 3) - clientSize.clientHeight;
 				const actual = resultScrollTop;
 
 				expect(actual).toBe(expected);
@@ -321,7 +321,7 @@ describe('VirtualGridList', () => {
 		test('should scroll to the given align with scrollTo after changing itemSize', (done) => {
 			const newItemSize = {minWidth: 180, minHeight: 300};
 			const onScrollStop = handlerOnScrollStop(done, () => {
-				const expected = Math.ceil(dataSize / 7 ) * (newItemSize.minHeight + 3) - clientSize.clientHeight;
+				const expected = Math.ceil(dataSize / 7) * (newItemSize.minHeight + 3) - clientSize.clientHeight;
 				const actual = resultScrollTop;
 
 				expect(actual).toBe(expected);
@@ -355,7 +355,7 @@ describe('VirtualGridList', () => {
 		test('should scroll to the given align with scrollTo after changing spacing', (done) => {
 			const newSpacing = 1;
 			const onScrollStop = handlerOnScrollStop(done, () => {
-				const expected = Math.ceil(dataSize / 7 ) * (itemSize.minHeight + newSpacing + 3) - clientSize.clientHeight - newSpacing;
+				const expected = Math.ceil(dataSize / 7) * (itemSize.minHeight + newSpacing + 3) - clientSize.clientHeight - newSpacing;
 				const actual = resultScrollTop;
 
 				expect(actual).toBe(expected);
@@ -461,7 +461,7 @@ describe('VirtualGridList', () => {
 			jest.useRealTimers();
 		});
 
-		test('should scroll to the by wheel', (done) => {
+		test('should scroll by wheel', (done) => {
 			const fn = jest.fn();
 
 			const onScrollStop = handlerOnScrollStop(done, () => {
@@ -490,7 +490,7 @@ describe('VirtualGridList', () => {
 			expect(fn).toBeCalled();
 		});
 
-		test('should not scroll to the by wheel when `noScrollByWheel` prop is true', (done) => {
+		test('should not scroll by wheel when `noScrollByWheel` prop is true', (done) => {
 			const fn = jest.fn();
 
 			render(
@@ -515,7 +515,7 @@ describe('VirtualGridList', () => {
 			done();
 		});
 
-		test('should scroll to the by drag', async () => {
+		test('should scroll by drag', async () => {
 			const fn = jest.fn();
 
 			const onScrollStop = (e) => {
@@ -548,7 +548,7 @@ describe('VirtualGridList', () => {
 			expect(fn).toBeCalled();
 		});
 
-		test('should not scroll to the by key', (done) => {
+		test('should not scroll by key', (done) => {
 			const fn = jest.fn();
 
 			render(
