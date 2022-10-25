@@ -110,7 +110,7 @@ class PinchZoom {
 	move = (coords) => {
 		if (!this.isZooming()) return;
 
-		const {scaleTolerance} = this.pinchZoomConfig;
+		const {moveTolerance} = this.pinchZoomConfig;
 
 		let {x: x1, y: y1} = this.getBoundsCoords(coords[0]);
 		let {x: x2, y: y2} = this.getBoundsCoords(coords[1]);
@@ -118,9 +118,11 @@ class PinchZoom {
 		const dx = x1 - x2;
 		const dy = y1 - y2;
 
-		const scale = (Math.sqrt(dx * dx + dy * dy) / this.startDist) * this.startScale;
+		const currentDist = Math.sqrt(dx * dx + dy * dy);
+		const scale = (currentDist / this.startDist) * this.startScale;
 
-		if (Math.abs(this.scale - scale) > scaleTolerance && this.onPinchZoom && this.updateZoom(scale)) {
+
+		if (Math.abs(this.startDist - currentDist) > moveTolerance && this.onPinchZoom && this.updateZoom(scale)) {
 			this.onPinchZoom({
 				type: 'onPinchZoom',
 				scale: this.scale,
@@ -153,7 +155,7 @@ const defaultPinchZoomConfig = {
 	global: false,
 	maxZoom: 4,
 	minZoom: 0.5,
-	scaleTolerance: 0.02
+	moveTolerance: 16
 };
 
 const pinchZoomConfigPropType = PropTypes.shape({
@@ -161,7 +163,7 @@ const pinchZoomConfigPropType = PropTypes.shape({
 	global: PropTypes.bool,
 	maxZoom: PropTypes.number,
 	minZoom: PropTypes.number,
-	scaleTolerance: PropTypes.number
+	moveTolerance: PropTypes.number
 });
 
 export default PinchZoom;

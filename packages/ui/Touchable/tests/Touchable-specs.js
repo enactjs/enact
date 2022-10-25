@@ -171,7 +171,7 @@ describe('Touchable', () => {
 		test('should update state configurations onPinchZoomStart events', (done) => {
 			const pinchZoomConfig = {
 				global: true,
-				scaleTolerance: 0
+				moveTolerance: 0
 			};
 
 			const Component = Touchable(DivComponent);
@@ -201,7 +201,7 @@ describe('Touchable', () => {
 		test('should update state configurations onPinchZoomEnd events', (done) => {
 			const pinchZoomConfig = {
 				global: true,
-				scaleTolerance: 0
+				moveTolerance: 0
 			};
 
 			const Component = Touchable(DivComponent);
