@@ -111,8 +111,8 @@ const mergeConfig = (cfg) => {
  *      or blurring the component.
  *   * `maxZoom` - The maximum zoom value. Defaults to `4`.
  *   * `minZoom` - The minimum zoom value. Defaults to `0.5`.
- *   * `scaleTolerance` - The scale difference from the previous scale that the pointer may move
- *     before cancelling the scaling. Defaults to `0.02`.
+ *   * `moveTolerance` - The distance difference from the previous distance that the pointer may move
+ *     before cancelling the scaling. Defaults to `4`.
  *
  * @function
  * @param   {Object}     cfg  A partial or complete configuration object

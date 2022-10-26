@@ -82,6 +82,7 @@ class PinchZoom {
 		const dy = y1 - y2;
 
 		this.startDist = Math.sqrt((dx * dx + dy * dy));
+		this.previousDist = this.startDist;
 		this.startScale = this.scale;
 
 		this.onPinchZoom = onPinchZoom;
@@ -122,12 +123,14 @@ class PinchZoom {
 		const scale = (currentDist / this.startDist) * this.startScale;
 
 
-		if (Math.abs(this.startDist - currentDist) > moveTolerance && this.onPinchZoom && this.updateZoom(scale)) {
+		if (Math.abs(this.previousDist - currentDist) > moveTolerance && this.onPinchZoom && this.updateZoom(scale)) {
 			this.onPinchZoom({
 				type: 'onPinchZoom',
 				scale: this.scale,
 				coords
 			});
+
+			this.previousDist = currentDist;
 		}
 	};
 
