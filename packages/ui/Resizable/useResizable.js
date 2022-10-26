@@ -11,7 +11,7 @@ import ResizeContext from './ResizeContext';
 const useResizable = (props, config) => {
 	// `resize` is the name of the event on the component to listen for size changes.
 	const {resize} = config;
-	const onResize = props[resize];
+	const forwardHandler = props[resize];
 
 	const resizeContextValue = useContext(ResizeContext);
 	const mutableRef = useRef({
@@ -24,16 +24,18 @@ const useResizable = (props, config) => {
 		}
 	}, [resizeContextValue]);
 
-	const invalidateBounds = useCallback(() => {
-		onResize();
+	const handleResize = useCallback(() => {
+		if (typeof forwardHandler === 'function') {
+			forwardHandler();
+		}
 		// Notifies a container that a resize is necessary
 		if (mutableRef.current.resizeRegistry) {
 			mutableRef.current.resizeRegistry.notify({action: 'invalidateBounds'});
 		}
-	}, [onResize]);
+	}, [forwardHandler]);
 
 	const handlers = Object.assign({});
-	handlers[resize] = invalidateBounds;
+	handlers[resize] = handleResize;
 	return handlers;
 };
 
