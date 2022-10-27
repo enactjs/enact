@@ -116,7 +116,7 @@ const BodyTextDecorator = ForwardRef({prop: 'componentRef'});
  *
  * @class BodyText
  * @memberof ui/BodyText
- * @extends ui/BodyText.BodyTextBase
+ * @extends ui/BodyText#BodyTextBase
  * @mixes ui/BodyText.BodyTextDecorator
  * @omit componentRef
  * @ui

@@ -26,7 +26,7 @@ const nop = () => {};
  *
  * @class VirtualList
  * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBasic
+ * @extends ui/VirtualList#VirtualListBasic
  * @ui
  * @public
  */
@@ -300,7 +300,7 @@ VirtualList.defaultProps = {
  *
  * @class VirtualGridList
  * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBasic
+ * @extends ui/VirtualList#VirtualListBasic
  * @ui
  * @public
  */

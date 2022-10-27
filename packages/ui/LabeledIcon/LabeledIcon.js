@@ -265,7 +265,7 @@ const LabeledIconDecorator = compose(
  *
  * @class LabeledIcon
  * @memberof ui/LabeledIcon
- * @extends ui/LabeledIcon.LabeledIconBase
+ * @extends ui/LabeledIcon#LabeledIconBase
  * @mixes ui/LabeledIcon.LabeledIconDecorator
  * @omit componentRef
  * @ui
