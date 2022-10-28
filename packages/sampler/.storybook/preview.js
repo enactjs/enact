@@ -6,7 +6,6 @@ import {themes} from '@storybook/theming';
 
 import Environment from '../src/Environment';
 
-
 // NOTE: Locales taken from strawman. Might need to add more in the future.
 const locales = {
 	'local':                                                             '',
