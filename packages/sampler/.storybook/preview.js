@@ -1,9 +1,10 @@
 import {configureActions} from '@enact/storybook-utils/addons/actions';
 import {getBooleanType, getObjectType} from '@enact/storybook-utils/addons/controls';
-import {DocsPage, DocsContainer} from '@enact/storybook-utils/addons/docs';
+import {DocsContainer, Primary, Title} from '@enact/storybook-utils/addons/docs';
 import {themes} from '@storybook/theming';
 
 import Environment from '../src/Environment';
+import ri from "../../ui/resolution";
 
 // NOTE: Locales taken from strawman. Might need to add more in the future.
 const locales = {
@@ -41,7 +42,14 @@ configureActions();
 export const parameters = {
 	docs: {
 		container: DocsContainer,
-		page: DocsPage,
+		inlineStories: false,
+		iframeHeight: ri.scaleToRem(300),
+		page: () => (
+			<>
+				<Title />
+				<Primary />
+			</>
+		),
 		theme: themes.light
 	},
 	options: {
