@@ -58,7 +58,7 @@
     "ilib": "^14.14.0 || ^14.14.0-webos1"
   },
   "devDependencies": {
-    "@enact/ui-test-utils": "^1.0.0-alpha.1",
-    "ilib": "^14.14.0"
+    "@enact/ui-test-utils": "^1.0.1",
+    "ilib": "^14.15.1"
   }
 }
