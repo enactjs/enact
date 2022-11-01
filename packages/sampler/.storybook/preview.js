@@ -43,7 +43,7 @@ export const parameters = {
 	docs: {
 		container: DocsContainer,
 		inlineStories: false,
-		iframeHeight: ri.scaleToRem(300),
+		iframeHeight: ri.scaleToRem(900),
 		page: () => (
 			<>
 				<Title />
