@@ -24,7 +24,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@enact/storybook-utils": "^5.0.0",
+    "@enact/storybook-utils": "^5.0.1",
     "@storybook/addons": "^6.5.12",
     "@storybook/builder-webpack5": "^6.5.12",
     "@storybook/manager-webpack5": "^6.5.12",
