@@ -211,3 +211,47 @@ import CustomButton from './CustomButton';
 ```
 
 For more details and advanced theming features and recommendations, see our [Theming Guide](./theming.md).
+
+## Customizing Sandstone skin at Run-Time
+
+Enact provides several ways to customize the appearance of components but all these methods are at design time. We've got lots of requests to support runtime customization. We've added Sandstone skin customization feature at runtime. This means you can customize the appearance of Sandstone components after the application is built.
+We've made a list of CSS variables and made those variables can override the Sandstone skin. This approach makes style changes work properly and safely after the build.
+
+All you need to do is build your app with `--custom-skin` option and add a CSS file named `custom_skin.css` which includes a preset of colors, under the `customizations` folder in the build result like below.
+
+```bash
+enact pack --custom-skin
+```
+
+```none
+my-app/
+  README.md
+  .gitignore
+  package.json
+  dist/
+    customizations/
+      custom_skin.css
+    main.css
+    main.js
+    ...
+  node_modules/
+  src/
+  resources/
+  webos-meta/
+```
+
+You can make `custom_skin.css` file from the the [Sandstone custom-skin sample](https://github.com/enactjs/samples/tree/master/sandstone/custom-skin). The sample also support preview of your customized skin. Pressing `SHOW OUTPUT` button will popup the customized CSS and `DOWNLOAD` button will download your customized `custom_skin.css` file. The content of the `custom_skin.css` file looks like this:
+
+```css
+// custom_skin.css
+//
+.sandstone-theme {
+	--sand-bg-color: #000000;
+	--sand-text-color-rgb: 230, 230, 230;
+	--sand-component-text-color-rgb: 230, 230, 230;
+	--sand-component-bg-color: #7D848C;
+	--sand-component-active-indicator-bg-color: #E6E6E6;
+	--sand-component-inactive-indicator-bg-color: #9DA2A7;
+}
+```
+> Note: You should be sure to put RGB-separated values in the css variable name ending with `-rgb` if you edit the value in the file directly.
