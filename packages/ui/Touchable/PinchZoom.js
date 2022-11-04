@@ -52,6 +52,18 @@ class PinchZoom {
 		return {x: clamp(minX, maxX, x) - minX, y: clamp(minY, maxY, y) - minY};
 	};
 
+	getDistance = (coords) => {
+		if (Array.isArray(coords)) {
+			const {x: x1, y: y1} = this.getBoundsCoords(coords[0]);
+			const {x: x2, y: y2} = this.getBoundsCoords(coords[1]);
+			const dx = x1 - x2;
+			const dy = y1 - y2;
+
+			return Math.sqrt((dx * dx + dy * dy));
+		}
+		return 0;
+	};
+
 	updateZoom = (scale) => {
 		const {maxZoom, minZoom} = this.pinchZoomConfig;
 		const newScale = clamp(minZoom, maxZoom, scale);
@@ -76,12 +88,8 @@ class PinchZoom {
 		};
 
 		this.setContainerBounds(node);
-		const {x: x1, y: y1} = this.getBoundsCoords(coords[0]);
-		const {x: x2, y: y2} = this.getBoundsCoords(coords[1]);
-		const dx = x1 - x2;
-		const dy = y1 - y2;
 
-		this.startDist = Math.sqrt((dx * dx + dy * dy));
+		this.startDist = this.getDistance(coords);
 		this.previousDist = this.startDist;
 		this.startScale = this.scale;
 
@@ -113,13 +121,7 @@ class PinchZoom {
 
 		const {moveTolerance} = this.pinchZoomConfig;
 
-		let {x: x1, y: y1} = this.getBoundsCoords(coords[0]);
-		let {x: x2, y: y2} = this.getBoundsCoords(coords[1]);
-
-		const dx = x1 - x2;
-		const dy = y1 - y2;
-
-		const currentDist = Math.sqrt(dx * dx + dy * dy);
+		const currentDist = this.getDistance(coords);
 		const scale = (currentDist / this.startDist) * this.startScale;
 
 
@@ -158,7 +160,7 @@ const defaultPinchZoomConfig = {
 	global: false,
 	maxZoom: 4,
 	minZoom: 0.5,
-	moveTolerance: 16
+	moveTolerance: 4
 };
 
 const pinchZoomConfigPropType = PropTypes.shape({
