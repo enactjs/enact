@@ -108,14 +108,16 @@ class Drag {
 				if (this.onDragStart) {
 					this.onDragStart({
 						type: 'onDragStart',
-						...coords
+						...coords,
+						node: this.dragConfig.node
 					});
 				}
 			}
 		} else if (this.onDrag && this.tracking === Tracking.Active && this.updatePosition(coords)) {
 			this.onDrag({
 				type: 'onDrag',
-				...coords
+				...coords,
+				node: this.dragConfig.node
 			});
 		}
 	};
@@ -132,7 +134,9 @@ class Drag {
 		if (!this.isDragging()) return;
 
 		if (this.onDragEnd && this.tracking !== Tracking.Untracked) {
-			this.onDragEnd({type: 'onDragEnd'});
+			this.onDragEnd({type: 'onDragEnd',
+				node: this.dragConfig.node
+			});
 		}
 
 		this.tracking = Tracking.Untracked;
