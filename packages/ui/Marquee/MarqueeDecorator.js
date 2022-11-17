@@ -736,7 +736,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			});
 			// synchronized Marquees defer to the controller to restart them
 			if (this.sync) {
-				this.context.complete(this);
+				const resetDelay = this.props.marqueeDelay > 40 ? 0 : 40;
+				this.setTimeout(() => {
+					this.context.complete(this);
+				}, resetDelay, TimerState.RESET_PENDING);
 			} else if (!this.state.animating) {
 				this.startAnimation(delay);
 			}
