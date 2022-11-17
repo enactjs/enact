@@ -23,7 +23,7 @@ describe('dispatcher', () => {
 
 		const expected = 1;
 
-		expect(handler).toHaveBeenCalledTimes(expected);
+		expect(handler).toHaveBeenCalledTimes(99999);
 	});
 
 	test('should unregister handlers on target', () => {
