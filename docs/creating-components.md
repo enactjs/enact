@@ -214,10 +214,14 @@ For more details and advanced theming features and recommendations, see our [The
 
 ## Customizing Sandstone skin at Runtime
 
-Enact provides several ways to customize the appearance of components but all these methods are at design time. We've added Sandstone skin customization feature at runtime. This means you can customize the appearance of Sandstone components after the application is built. You can use this feature in your app to customize the skin without code modification. You also can support app users to define skin customization.
-We've made a list of CSS variables and made those variables can override the Sandstone skin. This approach makes style changes work properly and safely after the build.
+Sometimes, you might want to change the appearance of components even after the application is built. For example, you might want to change the color of the text in components or the background color of focused components globally.
 
-All you need to do is build your app with `--custom-skin` option and add a CSS file named `custom_skin.css` which includes a preset of colors, under the `customizations` folder in the build result like below.
+As we mentioned earlier, Enact provides several ways to customize the appearance of components but these methods are at design time. Since Sandstone 2.1, we've added Sandstone skin customization feature to support runtime customization. Thanks to this feature, you can customize the appearance of Sandstone components after the application is built. It allows you to customize the skin of your app without code modification. Moreover, you can even let app users define skin customization for your app.
+
+You might wonder how does this work? 
+We've made a list of CSS variables and made those variables can override the Sandstone skin. This approach makes style changes work properly and safely after the build. As of now, we support colors but we hope we could expand this feature beyond that.
+
+All you need to do is build your app with `--custom-skin` option and add a CSS file named `custom_skin.css` which includes a preset of colors, under the `customizations` folder in the build result like below. Make sure you've installed Enact CLI 5.1.0 or later.
 
 ```bash
 enact pack --custom-skin
