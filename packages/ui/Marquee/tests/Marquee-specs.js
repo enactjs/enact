@@ -553,16 +553,16 @@ describe('MarqueeController', () => {
 
 		expect(spy).toHaveBeenCalledTimes(2);
 	});
-	
+
 	test('should set a minimum value for reset delay when `marqueeDelay` is less than 40', () => {
 		render(
 			<Controller>
-					<Marquee
-						marqueeDelay={0}
-						marqueeOn="render"
-					>
-						{ltrArray[0]}
-					</Marquee>
+				<Marquee
+					marqueeDelay={0}
+					marqueeOn="render"
+				>
+					{ltrArray[0]}
+				</Marquee>
 			</Controller>
 		);
 
