@@ -462,11 +462,22 @@ describe('MarqueeController', () => {
 		const marquee1 = screen.getByText(ltrArray[0]);
 		const marquee2 = screen.getByText(ltrArray[1]);
 
+		marquee1.getBoundingClientRect = jest.fn(() => {
+			return {
+				width: 50,
+				height: 50,
+				top: 0,
+				left: 0,
+				bottom: 0,
+				right: 0
+			};
+		});
+
 		fireEvent.focus(marquee1);
 
 		act(() => jest.advanceTimersByTime(100));
 
-		expect(marquee1).toHaveStyle({'--ui-marquee-spacing': '50'});
+		expect(marquee1).toHaveStyle({'--ui-marquee-spacing': '25'});
 		expect(marquee2).toHaveStyle({'--ui-marquee-spacing': '50'});
 	});
 
