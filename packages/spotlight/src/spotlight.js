@@ -195,6 +195,8 @@ const Spotlight = (function () {
 	}
 
 	function focusElement (elem, containerIds, fromPointer) {
+		console.log("focusElement:", elem, new Error().stack);
+
 		if (!elem) {
 			return false;
 		}
