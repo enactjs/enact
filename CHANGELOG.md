@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.0.12] - 2022-09-16
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to have proper spacing for bidirectional text
+
 ## [4.5.2] - 2022-08-17
 
 ### Fixed
@@ -55,6 +61,10 @@ No significant changes.
 
 - `spotlight` to not focus on an invisible element
 
+## [4.0.11] - 2022-04-25
+
+No significant changes.
+
 ## [4.5.0-alpha.1] - 2022-04-15
 
 - Update dependencies including React 18.0.0
@@ -62,6 +72,12 @@ No significant changes.
 ### Fixed
 
 - `ui/FloatingLayer` to stack popups always in the order in which they were opened
+
+## [4.0.10] - 2022-04-05
+
+### Added
+
+- Support for loading changed resources and additional ilib resources paths
 
 ## [4.1.4] - 2022-03-24
 
@@ -87,12 +103,22 @@ No significant changes.
 - `spotlight` to correctly control focus when boundaries of an element are not integers
 - Styles for `debug spotlight` option in samplers to work properly
 
+## [3.2.7] - 2022-01-17
+
+### Fixed
+
+- `moonstone/Panels.Panel` to restore focus properly when it has `moonstone/Scroller` with `focusableScrollbar`
+
 ## [4.1.2] - 2021-12-22
 
 ### Fixed
 
 - `ui/Scroller` and `ui/VirtualList` to avoid stuttering of content on drag in mobile devices
 - `ui/Scroller` and `ui/VirtualList` to scroll correctly on Android platform for RTL locales
+
+## [4.0.9] - 2021-12-15
+
+No significant changes.
 
 ## [4.1.1] - 2021-11-30
 
@@ -456,6 +482,8 @@ No significant changes.
 
 ### Fixed
 
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to show items properly when reducing data size by updating `firstIndex` correctly
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` not to suddenly jump when pressing directional keys after wheeling
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to show items properly when reducing data size
 
 ## [3.2.5] - 2019-11-14
