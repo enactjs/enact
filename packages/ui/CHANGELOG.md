@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to restart animation properly when `marqueeDelay` is 0
+
 ## [4.5.2] - 2022-08-17
 
 ### Fixed

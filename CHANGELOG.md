@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
-
-### Fixed
-
-- `ui/Marquee.MarqueeDecorator` to correctly set minimum reset delay when synchronized
-
 ## [4.5.2] - 2022-08-17
 
 ### Fixed
