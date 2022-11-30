@@ -17,20 +17,20 @@
     "@enact/spotlight": "^4.5.2",
     "@enact/ui": "^4.5.2",
     "@enact/webos": "^4.5.2",
-    "classnames": "^2.3.1",
-    "ilib": "^14.14.0",
+    "classnames": "^2.3.2",
+    "ilib": "^14.15.1",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@enact/storybook-utils": "^5.0.1",
-    "@storybook/addons": "^6.5.12",
-    "@storybook/builder-webpack5": "^6.5.12",
-    "@storybook/manager-webpack5": "^6.5.12",
-    "@storybook/react": "^6.5.12",
-    "@storybook/theming": "^6.5.12",
+    "@storybook/addons": "^6.5.13",
+    "@storybook/builder-webpack5": "^6.5.13",
+    "@storybook/manager-webpack5": "^6.5.13",
+    "@storybook/react": "^6.5.13",
+    "@storybook/theming": "^6.5.13",
     "babel-loader": "^8.2.5",
-    "core-js": "^3.23.5"
+    "core-js": "^3.26.1"
   }
 }

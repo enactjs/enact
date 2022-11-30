@@ -15,7 +15,7 @@ const toFlexAlign = (align) => (
 
 /**
  * A stateless component that provides a space for your content in a
- * {@link ui/Layout.Layout|Layout}, without [CellDecorator](ui/Layout.CellDecorator) applied.
+ * {@link ui/Layout.Layout|Layout}, without {@link ui/Layout.CellDecorator|CellDecorator} applied.
  *
  * @class CellBase
  * @memberof ui/Layout
