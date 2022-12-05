@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [4.6.0] - 2022-12-05
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to restart animation properly when `marqueeDelay` is 0
+
+## [4.0.12] - 2022-09-16
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to have proper spacing for bidirectional text
+
 ## [4.5.2] - 2022-08-17
 
 ### Fixed
@@ -49,11 +61,19 @@ No significant changes.
 
 - `ui/Marquee.MarqueeDecorator` config `css` to support customizing the marquee styles
 
+## [4.0.11] - 2022-04-25
+
+No significant changes.
+
 ## [4.5.0-alpha.1] - 2022-04-15
 
 ### Fixed
 
 - `ui/FloatingLayer` to stack popups always in the order in which they were opened
+
+## [4.0.10] - 2022-04-05
+
+No significant changes.
 
 ## [4.1.4] - 2022-03-24
 
@@ -74,12 +94,20 @@ No significant changes.
 
 - Updated to use `forwardCustom` and add `type` when forwarding custom events
 
+## [3.2.7] - 2022-01-17
+
+No significant changes.
+
 ## [4.1.2] - 2021-12-22
 
 ### Fixed
 
 - `ui/Scroller` and `ui/VirtualList` to avoid stuttering of content on drag in mobile devices
 - `ui/Scroller` and `ui/VirtualList` to scroll correctly on Android platform for RTL locales
+
+## [4.0.9] - 2021-12-15
+
+No significant changes.
 
 ## [4.1.1] - 2021-11-30
 
@@ -376,6 +404,8 @@ No significant changes.
 
 ### Fixed
 
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to show items properly when reducing data size by updating `firstIndex` correctly
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` not to suddenly jump when pressing directional keys after wheeling
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to show items properly when reducing data size
 
 ## [3.2.5] - 2019-11-14
