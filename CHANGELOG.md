@@ -4,10 +4,6 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [4.6.0] - 2022-12-05
 
-### Changed
-
-- `ui/VirtualList.VirtualGridList` sample to use a local svg instead of downloading images
-
 ### Fixed
 
 - `core/dispatcher`  to set the default target for event listeners properly when built with the snapshot option
