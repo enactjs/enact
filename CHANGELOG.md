@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.6.0] - 2022-12-05
+
+### Changed
+
+- `ui/VirtualList.VirtualGridList` sample to use a local svg instead of downloading images
+
+### Fixed
+
+- `core/dispatcher`  to set the default target for event listeners properly when built with the snapshot option
+- `ui/Marquee.MarqueeDecorator` to restart animation properly when `marqueeDelay` is 0
+
 ## [4.0.12] - 2022-09-16
 
 ### Fixed
@@ -121,8 +132,6 @@ No significant changes.
 No significant changes.
 
 ## [4.1.1] - 2021-11-30
-
-- Replaced the deprecated plugin `addon-knobs` with `addon-controls`
 
 ### Added
 
