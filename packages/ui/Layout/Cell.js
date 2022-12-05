@@ -15,7 +15,7 @@ const toFlexAlign = (align) => (
 
 /**
  * A stateless component that provides a space for your content in a
- * [Layout]{@link ui/Layout.Layout}, without [CellDecorator](ui/Layout.CellDecorator) applied.
+ * {@link ui/Layout.Layout|Layout}, without {@link ui/Layout.CellDecorator|CellDecorator} applied.
  *
  * @class CellBase
  * @memberof ui/Layout
@@ -42,7 +42,7 @@ const CellBase = kind({
 		align: PropTypes.string,
 
 		/**
-		 * Any valid [Node]{@link /docs/developer-guide/glossary/#node} that should be positioned in this `Cell`.
+		 * Any valid {@link /docs/developer-guide/glossary/#node|Node} that should be positioned in this `Cell`.
 		 *
 		 * @type {Any}
 		 * @public
@@ -76,7 +76,7 @@ const CellBase = kind({
 		 * A `shrink`able cell will contract to its minimum size, according to the dimensions of its
 		 * contents. This is used when you want the size of this Cell's content to influence the
 		 * dimensions of this cell. `shrink` will not allow the contents of the Layout to be pushed
-		 * beyond its boundaries (overflowing). See the [size]{@link ui/Layout.Cell#size} property
+		 * beyond its boundaries (overflowing). See the {@link ui/Layout.Cell#size|size} property
 		 * for more details.
 		 *
 		 * @type {Boolean}
@@ -88,7 +88,7 @@ const CellBase = kind({
 		/**
 		 * Sets the desired size of the Cell using any valid CSS measurement value.
 		 *
-		 * When used in conjunction with [shrink]{@link ui/Layout.Cell#shrink}, the size will be
+		 * When used in conjunction with {@link ui/Layout.Cell#shrink|shrink}, the size will be
 		 * the maximum size, shrinking as necessary, to fit the content.
 		 *
 		 * E.g.
@@ -98,8 +98,8 @@ const CellBase = kind({
 		 *
 		 * This accepts any valid CSS measurement value string. If a numeric value is used, it will
 		 * be treated as a pixel value and converted to a
-		 * [relative unit]{@link ui/resolution.unit} based on the rules of
-		 * [resolution independence]{@link ui/resolution}.
+		 * {@link ui/resolution.unit|relative unit} based on the rules of
+		 * {@link ui/resolution|resolution independence}.
 		 *
 		 * @type {String|Number}
 		 * @public
@@ -162,7 +162,7 @@ const CellDecorator = ForwardRef({prop: 'componentRef'});
 
 /**
  * A stateless component that provides a space for your content in a
- * [Layout]{@link ui/Layout.Layout}.
+ * {@link ui/Layout.Layout|Layout}.
  *
  * @class Cell
  * @memberof ui/Layout

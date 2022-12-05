@@ -13,10 +13,55 @@ describe('Heading Specs', () => {
 		expect(actual).toBeInTheDocument();
 	});
 
-	test('should apply a size class when defining a size', () => {
+	test('should have medium class by default', () => {
+		render(<Heading>Heading Text</Heading>);
+
+		const expected = 'medium';
+		const actual = screen.getByText('Heading Text');
+
+		expect(actual).toHaveClass(expected);
+	});
+
+	test('should have title class if `size` is title', () => {
+		render(<Heading size="title">Heading Text</Heading>);
+
+		const expected = 'title';
+		const actual = screen.getByText('Heading Text');
+
+		expect(actual).toHaveClass(expected);
+	});
+
+	test('should have subtitle class if `size` is subtitle', () => {
+		render(<Heading size="subtitle">Heading Text</Heading>);
+
+		const expected = 'subtitle';
+		const actual = screen.getByText('Heading Text');
+
+		expect(actual).toHaveClass(expected);
+	});
+
+	test('should have large class if `size` is large', () => {
 		render(<Heading size="large">Heading Text</Heading>);
 
 		const expected = 'large';
+		const actual = screen.getByText('Heading Text');
+
+		expect(actual).toHaveClass(expected);
+	});
+
+	test('should have small class if `size` is small', () => {
+		render(<Heading size="small">Heading Text</Heading>);
+
+		const expected = 'small';
+		const actual = screen.getByText('Heading Text');
+
+		expect(actual).toHaveClass(expected);
+	});
+
+	test('should have tiny class if `size` is tiny', () => {
+		render(<Heading size="tiny">Heading Text</Heading>);
+
+		const expected = 'tiny';
 		const actual = screen.getByText('Heading Text');
 
 		expect(actual).toHaveClass(expected);
@@ -35,6 +80,42 @@ describe('Heading Specs', () => {
 		render(<Heading size="large" spacing="small">Heading Text</Heading>);
 
 		const expected = 'smallSpacing';
+		const actual = screen.getByText('Heading Text');
+
+		expect(actual).toHaveClass(expected);
+	});
+
+	test('should have largeSpacing class if `spacing` is large', () => {
+		render(<Heading spacing="large">Heading Text</Heading>);
+
+		const expected = 'largeSpacing';
+		const actual = screen.getByText('Heading Text');
+
+		expect(actual).toHaveClass(expected);
+	});
+
+	test('should have mediumSpacing class if `spacing` is medium', () => {
+		render(<Heading spacing="medium">Heading Text</Heading>);
+
+		const expected = 'mediumSpacing';
+		const actual = screen.getByText('Heading Text');
+
+		expect(actual).toHaveClass(expected);
+	});
+
+	test('should have smallSpacing class if `spacing` is small', () => {
+		render(<Heading spacing="small">Heading Text</Heading>);
+
+		const expected = 'smallSpacing';
+		const actual = screen.getByText('Heading Text');
+
+		expect(actual).toHaveClass(expected);
+	});
+
+	test('should have noneSpacing class if `spacing` is none', () => {
+		render(<Heading spacing="none">Heading Text</Heading>);
+
+		const expected = 'noneSpacing';
 		const actual = screen.getByText('Heading Text');
 
 		expect(actual).toHaveClass(expected);

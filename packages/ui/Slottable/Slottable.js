@@ -1,7 +1,7 @@
 /**
  * Provides a higher-order component that render child components into pre-designated slots.
  *
- * See [SlotItem]{@link ui/SlotItem.SlotItemDecorator} for the use of `Slottable`.
+ * See {@link ui/SlotItem.SlotItemDecorator|SlotItem} for the use of `Slottable`.
  *
  * @module ui/Slottable
  * @exports Slottable

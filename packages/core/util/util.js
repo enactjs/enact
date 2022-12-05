@@ -143,6 +143,7 @@ const extractAriaProps = function (props) {
  * @memberof core/util
  * @public
  */
+/* istanbul ignore next */
 const perfNow = function () {
 	if (typeof window === 'object') {
 		return window.performance.now();
