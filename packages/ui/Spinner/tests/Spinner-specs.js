@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 
 import {SpinnerBase} from '../Spinner';
-import {FloatingLayerDecorator} from '../../FloatingLayer/FloatingLayerDecorator';
+import {FloatingLayerDecorator} from '../../FloatingLayer';
 
 describe('Spinner Specs', () => {
 	test('should have centered class when centered prop equals true', () => {
