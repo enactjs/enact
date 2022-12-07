@@ -1,6 +1,7 @@
 import {configureActions} from '@enact/storybook-utils/addons/actions';
 import {getBooleanType, getObjectType} from '@enact/storybook-utils/addons/controls';
-import {DocsPage, DocsContainer} from '@enact/storybook-utils/addons/docs';
+import {DocsContainer, Primary, Title} from '@enact/storybook-utils/addons/docs';
+import ri from '@enact/ui/resolution';
 import {themes} from '@storybook/theming';
 
 import Environment from '../src/Environment';
@@ -37,12 +38,18 @@ const backgrounds = {
 };
 
 configureActions();
+
 export const parameters = {
 	docs: {
 		container: DocsContainer,
-		page: DocsPage,
-		iframeHeight: 360,
 		inlineStories: false,
+		iframeHeight: ri.scaleToRem(300),
+		page: () => (
+			<>
+				<Title />
+				<Primary />
+			</>
+		),
 		theme: themes.light
 	},
 	options: {
@@ -51,6 +58,7 @@ export const parameters = {
 		}
 	}
 };
+
 export const globalTypes = {
 	'locale': getObjectType('locale', 'en-US', locales),
 	'background': getObjectType('background', 'default', backgrounds),
@@ -58,4 +66,5 @@ export const globalTypes = {
 	'debug layout': getBooleanType('debug layout'),
 	'debug spotlight': getBooleanType('debug spotlight')
 };
+
 export const decorators = [Environment];
