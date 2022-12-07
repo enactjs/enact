@@ -22,6 +22,7 @@ script:
     - npm run lerna -- run lint -- -- -- --report-unused-disable-directives --max-warnings 0 .
     - echo -e "\x1b\x5b35;1m*** eslint complete\x1b\x5b0m"
     - echo -e "\x1b\x5b35;1m*** Starting docs validation...\x1b\x5b0m"
+    - npm install
     - npm run validate-docs
     - echo -e "\x1b\x5b35;1m*** Docs validation complete\x1b\x5b0m"
     - echo -e "\x1b\x5b35;1m*** Starting sampler builds...\x1b\x5b0m"
