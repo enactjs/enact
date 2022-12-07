@@ -214,7 +214,7 @@ For more details and advanced theming features and recommendations, see our [The
 
 ## Customizing Sandstone skin at Runtime
 
-Sometimes, you might want to change the appearance of components even after the application is built. For example, you might want to change the color of the text in components or the background color of focused components globally.
+Sometimes, you might want to change the appearance of components even after the application is built, for example, changing the color of the text in components or the background color of focused components globally.
 
 As we mentioned earlier, Enact provides several ways to customize the appearance of components but these methods are at design time. Since Sandstone 2.1, we've added Sandstone skin customization feature to support runtime customization. Thanks to this feature, you can customize the appearance of Sandstone components after the application is built. It allows you to customize the skin of your app without code modification. Moreover, you can even let app users define skin customization for your app.
 
