@@ -10,6 +10,7 @@ install:
     - npm config set prefer-offline false
     - npm install -g enactjs/cli#develop
     - npm install -g codecov
+    - npm cache verify
     - npm install
     - npm run bootstrap --legacy-peer-deps
 script:
