@@ -2,7 +2,37 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
+## [4.6.0] - 2022-12-05
+
+No significant changes.
+
+## [4.0.12] - 2022-09-16
+
+No significant changes.
+
+## [4.5.2] - 2022-08-17
+
+No significant changes.
+
+## [4.5.1] - 2022-08-03
+
+No significant changes.
+
+## [4.5.0] - 2022-07-19
+
+No significant changes.
+
+## [4.5.0-rc.2] - 2022-07-06
+
+### Fixed
+
+- `spotlight` to not leave the restrict container after returning from another app
+ 
+## [4.5.0-rc.1] - 2022-06-23
+
+No significant changes.
+
+## [4.5.0-beta.1] - 2022-05-31
 
 ### Added
 
@@ -14,7 +44,15 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 - `spotlight` to not focus on an invisible element
 
+## [4.0.11] - 2022-04-25
+
+No significant changes.
+
 ## [4.5.0-alpha.1] - 2022-04-15
+
+No significant changes.
+
+## [4.0.10] - 2022-04-05
 
 No significant changes.
 
@@ -31,7 +69,15 @@ No significant changes.
 - `spotlight` to correctly control focus when boundaries of an element are not integers
 - Styles for `debug spotlight` option in samplers to work properly
 
+## [3.2.7] - 2022-01-17
+
+No significant changes.
+
 ## [4.1.2] - 2021-12-22
+
+No significant changes.
+
+## [4.0.9] - 2021-12-15
 
 No significant changes.
 

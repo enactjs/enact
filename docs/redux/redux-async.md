@@ -7,7 +7,7 @@ Most complex apps rely heavily on fetching data asynchronously. In this document
 
 ### Introduction to Middleware and `redux-thunk`
 
-When using an API, you are probably dealing with asynchronous actions. However, the Redux store only supports synchronous actions without using [middleware](https://redux.js.org/tutorials/fundamentals/part-4-store#middleware) (more on that later). To use middleware in Redux, we use the [`applyMiddleware()`](https://redux.js.org/api/applymiddleware) store enhancer from Redux. `redux-thunk` middleware is the standard way to handle asynchronous actions.
+When using an API, you are probably dealing with asynchronous actions. However, the Redux store only supports synchronous actions without using [middleware](https://redux.js.org/tutorials/fundamentals/part-4-store#middleware) (more on that later). To use middleware in Redux, we use the [`applyMiddleware()`](https://redux.js.org/api/applymiddleware) store enhancer from Redux. `redux-thunk` middleware is the standard way to handle asynchronous actions. If you are using [Redux Toolkit](https://redux-toolkit.js.org), you don't need to install `redux-thunk` and call `applyMiddleware()` directly since Redux Toolkit provides `configureStore()` which includes `redux-thunk` middleware by default.
 
 We use `redux-thunk` middleware to enable asynchronous requests to work with synchronous action creators. It allows an action creator to return a function instead of an object (action) and executes that function when it is returned. This allows non-pure actions (i.e. ones that can call APIs that might have different data each time). These action creators can dispatch other actions, so, for example, you can dispatch a `REQUEST_BEGIN` action, then fetch remote data asynchronously and, after it returns, dispatch the `REQUEST_SUCCESS` or `REQUEST_ERROR` actions.
 
@@ -17,17 +17,17 @@ For example, you can create an async incrementer as follows:
 const INCREMENT_COUNTER = 'INCREMENT_COUNTER';
 
 function increment() {
-  return {
-    type: INCREMENT_COUNTER
-  };
+	return {
+		type: INCREMENT_COUNTER
+	};
 }
 
 function incrementAsync() {
-  return dispatch => {
-    setTimeout(() => {
-      dispatch(increment());
-    }, 1000);
-  };
+	return dispatch => {
+		setTimeout(() => {
+			dispatch(increment());
+		}, 1000);
+	};
 }
 ```
 
@@ -38,47 +38,40 @@ A combination of `redux-thunk` and `LS2Request` allows us to fetch and display d
 At the root level, we use `<Provider />` to pass store down the component hierarchy.
 
 ```js
-import {render} from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import {Provider} from 'react-redux';
-import configureStore from './store';
-import App from './containers/App';
 
-const store = configureStore();
-render(
+import App from './App';
+import store from './store';
+
+let appElement = () => (
 	<Provider store={store}>
 		<App />
-	</Provider>,
-	document.getElementById('root')
+	</Provider>
 );
+
+createRoot(document.getElementById('root')).render(appElement);
 ```
 
-Store is configured to accept thunk middleware
+Store is configured to accept thunk middleware by `configureStore()` from Redux Toolkit.
 
 ```js
-import {createStore, applyMiddleware} from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import systemSettingsReducer from '../reducers';
+import {configureStore} from '@reduxjs/toolkit';
+import rootSlice from '../reducers';
 
-export default function configureStore (initialState) {
-	const store = createStore(
-		systemSettingsReducer,
-		initialState,
-		applyMiddleware(thunkMiddleware) // lets us dispatch functions
-	);
-	return store;
-}
+const initialState = {};
+const store = configureStore({
+	reducer: rootSlice.reducer,
+	initialState
+});
+
+export default store;
 ```
 
 Here we create a thunk action creator which returns a function instead of a plain object. It is also possible to dispatch an action or request at the beginning.
 
 ```js
 import LS2Request from '@enact/webos/LS2Request';
-function receiveSystemSettings (res) {
-	return {
-		type: 'RECEIVE_SYSTEM_SETTINGS',
-		payload: res
-	};
-}
 // function returning function!
 export const getSystemSettings = params => dispatch => {
 	// possible to dispatch an action at the start of fetching
@@ -98,35 +91,45 @@ export const getSystemSettings = params => dispatch => {
 Reducer receives a payload and creates a new state.
 
 ```js
-export default function systemSettingsReducer (state = {}, action) {
-	switch (action.type) {
-		case 'RECEIVE_SYSTEM_SETTINGS':
+import {configureStore} from '@reduxjs/toolkit';
+
+const rootSlice = createSlice({
+	name: 'systemReducer',
+	initialState: {},
+	reducers: {
+		receiveSystemSettings: (state, action) =>  {
 			return Object.assign({}, state, action.payload.settings);
-		default:
-			return state;
+		},
+		updateSystemSettings: (state, action) => {
+			return Object.assign({}, state, action.payload.settings);
+		}
 	}
-}
+});
+
+export const {receiveSystemSettings, updateSystemSettings} = rootSlice.actions;
+export default rootSlice;
 ```
 
-Connected container dispatches ``getSystemSettings`` on componentDidMount and renders a ``pictureMode`` prop that's been hooked up with a redux store.
+Component dispatches ``getSystemSettings`` on component mount and renders a ``pictureMode`` prop that's been got from a redux store.
 
 ```js
-import {Component} from 'react';
-import {connect} from 'react-redux';
-import {getSystemSettings} from '../actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {getSystemSettings} from '../reducers';
 
-class App extends Component {
-	componentDidMount () {
-		this.props.dispatch(getSystemSettings({
+const App = () => {
+	const pictureMode = useSelector(store => store.pictureMode);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(getSystemSettings({
 			category: 'picture',
 			key: 'pictureMode',
 			subscribe: true
 		}));
-	}
-	render () {
-		return <p>{this.props.pictureMode}</p>;
-	}
+	}, []);
+
+	return <p>{pictureMode}</p>;
 }
 
-export default connect()(App);
+export default App;
 ```

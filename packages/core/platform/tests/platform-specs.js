@@ -1,8 +1,8 @@
-import {parseUserAgent} from '../platform';
+import {parseUserAgent, platform} from '../platform';
 
 describe('platform', () => {
 
-	describe('webOS', () => {
+	describe('parseUserAgent for webOS', () => {
 		// From http://webostv.developer.lge.com/discover/specifications/web-engine/
 		const webOSTVNext = 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 WebAppManager';
 		const webOSTV6 = 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3440.106 Safari/537.36 WebAppManager';
@@ -101,6 +101,44 @@ describe('platform', () => {
 			const expected = {webos: -1, legacy: 2};
 
 			expect(parseUserAgent(webOS2)).toMatchObject(expected);
+		});
+	});
+
+	describe('parseUserAgent for User-Agent Reduction', () => {
+		const testVersion = '113';
+		const uaGenerator = (unifiedPlatform, deviceCompatibility = '', majorVersion = testVersion) => (
+			`Mozilla/5.0 (${unifiedPlatform}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${majorVersion}.0.0.0 ${deviceCompatibility} Safari/537.36`
+		);
+		const testCases = [
+			[uaGenerator('Macintosh; Intel Mac OS X 10_15_7'), 'chrome'],
+			[uaGenerator('Windows NT 10.0; Win64; x64'), 'chrome'],
+			[uaGenerator('X11; Linux x86_64'), 'chrome'],
+			[uaGenerator('X11; CrOS x86_64 14541.0.0'), 'chrome'],
+			[uaGenerator('Fuchsia'), 'chrome'],
+			[uaGenerator('Linux; Android 10; K', 'Mobile'), 'androidChrome']
+		];
+
+		test(`should return object including chrome ${testVersion}`, () => {
+			for (let i = 0; i < testCases.length; i++) {
+				expect(parseUserAgent(testCases[i][0])?.[testCases[i][1]]?.toString()).toBe(testVersion);
+			}
+		});
+	});
+
+	describe('platform', () => {
+		test('should return `true` for `node` if window does not exist', () => {
+			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(() => {});
+
+			expect(platform['node']).toBe(true);
+
+			windowSpy.mockRestore();
+		});
+
+		test('should return `true` for `unknown` in the testing environment', () => {
+			// The first access invokes detecting based on user agent value
+			expect(platform['unknown']).toBe(true);
+			// The second access makes the module to return already detected platform information
+			expect(platform['unknown']).toBe(true);
 		});
 	});
 });

@@ -27,6 +27,8 @@ If you want to change the state, you have to **dispatch** an **[action](https://
 
 To describe state mutations you have to write a function that takes the previous state of the app and the action being dispatched, then returns the next state of the app. This function is called the [Reducer](https://redux.js.org/understanding/thinking-in-redux/glossary#reducer).
 
+Please find more information [here](https://redux.js.org/understanding/thinking-in-redux/three-principles).
+
 #### What You Need
 
 *   Actions - what your app can do
@@ -45,17 +47,17 @@ An action is just a POJO (unless you use middleware as described) that contains 
 
 // A basic Flux Standard Action (FSA):
 {
-  type: 'ADD_TODO',
-  payload: {
-    text: 'Do something.'
-  }
+	type: 'ADD_TODO',
+	payload: {
+		text: 'Do something.'
+	}
 }
 
 // An FSA that represents an error
 {
-  type: 'ADD_TODO',
-  payload: new Error(),
-  error: true
+	type: 'ADD_TODO',
+	payload: new Error(),
+	error: true
 }
 ```
 
@@ -66,36 +68,36 @@ A reducing function (reducer) returns the next state tree, given the current sta
 ```js
 // counter reducer
 function counter(state = 0, action) {
-  switch (action.type) {
-    case 'INCREMENT':
-      return state + 1;
-    case 'DECREMENT':
-      return state - 1;
-    default:
-      return state;
-  }
+	switch (action.type) {
+		case 'INCREMENT':
+			return state + 1;
+		case 'DECREMENT':
+			return state - 1;
+		default:
+			return state;
+	}
 }
 
 // todo reducer (ES6 style)
 const todo = (state, action) => {
-  switch (action.type) {
-    case 'ADD_TODO':
-      return {
-        id: action.id,
-        text: action.text,
-        completed: false
-      };
-    case 'TOGGLE_TODO':
-      if (state.id !== action.id) {
-        return state;
-      }
-      return {
-        ...state,
-        completed: !state.completed
-      };
-    default:
-      return state;
-  }
+	switch (action.type) {
+		case 'ADD_TODO':
+			return {
+				id: action.id,
+				text: action.text,
+				completed: false
+			};
+		case 'TOGGLE_TODO':
+			if (state.id !== action.id) {
+				return state;
+			}
+			return {
+				...state,
+				completed: !state.completed
+			};
+		default:
+			return state;
+	}
 }
 ```
 
@@ -145,137 +147,154 @@ document.addEventListener('click', () => {
 });
 ```
 
-Live demo: [http://jsbin.com/keyahus/edit?html,js,output](http://jsbin.com/keyahus/edit?html,js,output)
+Live demo: [https://codesandbox.io/s/bold-bas-zxofpj?file=/src/index.js](https://codesandbox.io/s/bold-bas-zxofpj?file=/src/index.js)
 
 #### React
 
 ```js
+import {useCallback} from 'react';
+import {createRoot} from 'react-dom/client';
+import {Provider, useDispatch, useSelector} from 'react-redux';
 import {createStore} from 'redux';
-import PropTypes from 'prop-types';
-import {Component} from 'react';
-import ReactDOM from 'react-dom';
+
 // reducer
-function counter (state = 0, action) {
+const counterReducer = (state = {counter: 0}, action) => {
 	switch (action.type) {
 		case 'INCREMENT':
-			return state + 1;
+			return {counter: state.counter + 1};
 		default:
 			return state;
 	}
-}
-class Counter extends Component {
-	render () {
-		const {value, onIncrement} = this.props;
-		return (
-			<p>
-				Clicked: {value} times
-				{' '}
-				<button onClick={onIncrement}>
-					+
-				</button>
-			</p>
-		);
-	}
-}
-Counter.propTypes = {
-	onIncrement: PropTypes.func.isRequired,
-	value: PropTypes.number.isRequired
 };
-const store = createStore(counter);
-function render () {
-	ReactDOM.render(
-		<Counter
-			value={store.getState()}
-			onIncrement={() => store.dispatch({type: 'INCREMENT'})}
-		/>,
-		document.getElementById('root')
+
+// store
+const store = createStore(counterReducer);
+
+// counter component
+const Counter = () => {
+	const value = useSelector((state) => state.counter);
+	const dispatch = useDispatch();
+
+	const incrementHandler = useCallback(() => {
+		dispatch({type: 'INCREMENT'});
+	}, [dispatch]);
+
+	return (
+		<p>
+			Clicked: {value} times <button onClick={incrementHandler}>+</button>
+		</p>
 	);
-}
-render();
-store.subscribe(render);
+};
+
+const App = () => <Counter />;
+
+const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
+
+root.render(
+	<Provider store={store}>
+		<App />
+	</Provider>
+);
 ```
 
-Live Demo: [http://jsbin.com/nemofa/edit?html,js,output](http://jsbin.com/nemofa/edit?html,js,output)
+Live Demo: [https://codesandbox.io/s/thirsty-kowalevski-jfi9wm?file=/src/index.js](https://codesandbox.io/s/thirsty-kowalevski-jfi9wm?file=/src/index.js)
+
+### Redux Toolkit
+
+The patterns shown above, unfortunately, require lots of verbose and repetitive code. To make it easier to write Redux applications in general, Redux team introduced [Redux Toolkit](https://redux-toolkit.js.org/).
+It is the official recommended approach for writing Redux logic as of now.
+
+It includes utilities that help simplify many common use cases, including store setup, creating reducers and writing immutable update logic, and even creating entire "slices" of state at once. It also includes the most widely used Redux addons, like Redux Thunk for async logic and Reselect for writing selector functions, so that you can use them right away.
+
+Redux Toolkit provides two key APIs that simplify the most common things you do in every Redux app.
+
+* [configureStore](https://redux-toolkit.js.org/api/configureStore) sets up a well-configured Redux store with a sing function call, including combining reducers, adding the thunk middleware, and setting up the Redux DevTools integration.
+
+* [createSlice](https://redux-toolkit.js.org/api/createSlice) helps you write reducers that use the [Immer](https://immerjs.github.io/immer) library to enable writing immutable updates using "mutating" JS syntax like `state.value = 123`, with no spreads needed. It also automatically generates action creator functions for each reducer, and generates action type strings internally based on your reducer's names.
+
+Please see [here](https://redux.js.org/introduction/why-rtk-is-redux-today) to find out more about Redux Toolkit.
+Also, see [here](https://react-redux.js.org/tutorials/quick-start) for a great tutorial.
 
 ### Redux and React
 
 As mentioned above Redux can be used without React. React bindings for redux is available from [react-redux](https://github.com/reduxjs/react-redux), which is a generic library that connects React components to a Redux store. More on how to use it is available [here](https://redux.js.org/tutorials/fundamentals/part-5-ui-react).
 
-#### Presentational and Container Components
-
-There's a simple and very useful pattern in React apps called **presentational and container components**. The idea is to separate concerns of **_how components should look_** and _**what components should do**_. By following this pattern, you get better separation of concerns, better reusability, and you can handle UI more easily. See [here](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0#.6j9fz9g5j) to find out more about it. (STRONGLY SUGGESTED!)
-
-Redux embraces the separation of presentational and container components idea and it's easy to do with `react-redux`. Essentially, presentational components don't know about Redux. They get their data through standard React props and emit changed data by invoking callbacks passed in through props. Container components are where the hook-up to Redux and app state is done and where Redux actions are dispatched. In other words, you would normally create components as a presentational component, and when you find you need to hook up to data, you would then need to create a container component for it.
-
 #### What `react-redux` does
 
-`react-redux` allows you to specify how react components get data from the redux store and how they behave by specifying props and the actions to dispatch. We use `react-redux` module's [connect()](https://github.com/reduxjs/react-redux/blob/master/docs/api/connect.md) method to connect the relevant container component to its presentational one.
+`react-redux` allows you to specify how react components get data from the redux store and how they behave by calling its own custom hooks. We use `react-redux` module's [useSelector()](https://github.com/reduxjs/react-redux/blob/master/docs/api/hooks.md#useselector) hook to let our React components read data from the Redux store.
 
-An optional `mapStateToProps()` method will map a key of the state tree to the connected presentational component's props (i.e. when you do `connect(mapStateToProps)(PresentationalComponent)`). Container components can also dispatch actions by using the `mapDispatchToProps()` method. It allows you to pass callback props to the presentational component.
+Back in the days, we had [connect()](https://github.com/reduxjs/react-redux/blob/master/docs/api/connect.md) and `mapStateToProps()` method to get data from the redux store. They are also available but we recommend using `useSelectors()` hook instead.
 
-Container components need access to the Redux store so they can subscribe to it. This can be cumbersome as your number of components grows and you have to manually pass store around. `react-redux` incorporates [context](https://reactjs.org/docs/context.html) in React and provides a [`<Provider />`](https://github.com/reduxjs/react-redux/blob/master/docs/api/Provider.md) component to make store available to all container components without passings stores around by hand. You only need to use it once at the `render()` of root component.
+`useSelector()` accepts a single function, which we call a selector function. A selector is a function that takes the entire Redux store state as its argument, reads some value from the state, and returns that result.
+
+Also, we use [useDispatch()](https://github.com/reduxjs/react-redux/blob/master/docs/api/hooks.md#usedispatch) hook to dispatch actions. It gives you the store's `dispatch` method as its result so that you can call it with some `action` to dispatch.
+
+Our components need access to the Redux store so they can subscribe to it. This can be cumbersome as your number of components grows and you have to manually pass store around. `react-redux` incorporates [context](https://reactjs.org/docs/context.html) in React and provides a [`<Provider />`](https://github.com/reduxjs/react-redux/blob/master/docs/api/Provider.md) component to make store available to all components without passings stores around by hand. You only need to use it once at the `render()` of root component.
 
 #### Example
 
 ```js
-import {createStore} from 'redux';
-import {connect, Provider} from 'react-redux';
-import PropTypes from 'prop-types';
-import {Component} from 'react';
-import {render} from 'react-dom';
+import {configureStore, createSlice} from '@reduxjs/toolkit';
+import {useCallback} from 'react';
+import {createRoot} from 'react-dom/client';
+import {Provider, useDispatch, useSelector} from 'react-redux';
+
 // reducer
-function counter (state = 0, action) {
-	switch (action.type) {
-		case 'INCREMENT':
-			return state + 1;
-		default:
-			return state;
+const initialState = {counter: 0};
+const counterReducer = createSlice({
+	name: 'counterReducer',
+	initialState,
+	reducers: {
+		increment: (state) => {
+			return {counter: state.counter + 1};
+		}
 	}
-}
-// presentational counter component
-class Counter extends Component {
-	render () {
-		const {value, onIncrement} = this.props;
-		return (
-			<p>
-				Clicked: {value} times
-				{' '}
-				<button onClick={onIncrement}>
-					+
-				</button>
-			</p>
-		);
-	}
-}
-const mapStateToProps = (state) => {
-	return {value: state};
+});
+
+// store
+const store = configureStore({
+	reducer: counterReducer.reducer,
+	initialState
+});
+
+// counter component
+const Counter = () => {
+	const value = useSelector((state) => state.counter);
+	const dispatch = useDispatch();
+	const {increment} = counterReducer.actions;
+
+	const incrementHandler = useCallback(() => {
+		dispatch(increment());
+	}, [dispatch, increment]);
+
+	return (
+		<p>
+			Clicked: {value} times <button onClick={incrementHandler}>+</button>
+		</p>
+	);
 };
-const mapDispatchToProps = (dispatch) => {
-	return {
-		onIncrement: () => dispatch({type: 'INCREMENT'})
-	};
+
+const App = () => {
+	return <Counter />;
 };
-// creates a connected container component with `connect`
-const EnhancedCounter = connect(mapStateToProps, mapDispatchToProps)(Counter);
-const store = createStore(counter);
-class App extends Component {
-	render () {
-		return (
-			<Provider store={store}>
-				<EnhancedCounter />
-			</Provider>
-		);
-	}
-}
-render(<App />, document.getElementById('root'));
+
+const rootElement = document.getElementById('root');
+const root = createRoot(rootElement);
+
+root.render(
+	<Provider store={store}>
+		<App />
+	</Provider>
+);
 ```
 
-Live Demo: [http://jsbin.com/zukojok/1/edit?html,js,output](http://jsbin.com/zukojok/1/edit?html,js,output)
+Live Demo: [https://codesandbox.io/s/charming-burnell-92or5q?file=/src/App.js](https://codesandbox.io/s/charming-burnell-92or5q?file=/src/App.js)
 
 ### Resources
 
 [Official Redux documentation](http://redux.js.org/)
 
-[Egghead tutorial - Getting Started with Redux](https://egghead.io/courses/getting-started-with-redux)
+[Official React Redux documentation](https://react-redux.js.org/tutorials/quick-start)
 
-[Presentational and Container Components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0#.6j9fz9g5j)
+[Egghead tutorial - Getting Started with Redux](https://egghead.io/courses/getting-started-with-redux)
