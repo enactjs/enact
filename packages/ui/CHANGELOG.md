@@ -9,7 +9,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/IconButton` to be removed in 5.0.0.
 - `ui/RadioDecorator` to be removed in 5.0.0.
 - `ui/Scrollable` to be removed in 5.0.0.
-- `ui/Scroller.UiScroller` to be removed in 5.0.0.
+- `ui/Scroller.UiScrollerBase` to be removed in 5.0.0.
 - `ui/SlotItem` to be removed in 5.0.0.
 - `ui/ToggleItem` to be removed in 5.0.0.
 - `ui/VirtualList.UiVirtualListBase` to be removed 5.0.0.
