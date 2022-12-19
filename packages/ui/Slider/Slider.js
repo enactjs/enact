@@ -134,7 +134,7 @@ const SliderBase = kind({
 		 * The maximum value of the slider.
 		 *
 		 * The range between `min` and `max` should be evenly divisible by
-		 * [step]{@link ui/Slider.SliderBase.step}.
+		 * {@link ui/Slider.SliderBase.step|step}.
 		 *
 		 * @type {Number}
 		 * @default 100
@@ -146,7 +146,7 @@ const SliderBase = kind({
 		 * The minimum value of the slider.
 		 *
 		 * The range between `min` and `max` should be evenly divisible by
-		 * [step]{@link ui/Slider.SliderBase.step}.
+		 * {@link ui/Slider.SliderBase.step|step}.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -324,7 +324,7 @@ const SliderBase = kind({
 });
 
 /**
- * Adds touch and drag support to a [SliderBase]{@link ui/Slider.SliderBase}.
+ * Adds touch and drag support to a {@link ui/Slider.SliderBase|SliderBase}.
  *
  * @hoc
  * @memberof ui/Slider

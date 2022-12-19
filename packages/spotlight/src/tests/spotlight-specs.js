@@ -139,4 +139,57 @@ describe('Spotlight', () => {
 			}
 		));
 	});
+
+	describe('#move', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		test('should return false when the direction is not one of \'left\', \'right\', \'up\' or \'down\'', testScenario(
+			scenarios.complexTree,
+			() => {
+				const actual = Spotlight.move('leeeft');
+				expect(actual).toBe(false);
+			}
+		));
+	});
+
+	describe('#initialize', () => {
+		beforeEach(() => {
+			jest.spyOn(window, 'addEventListener').mockImplementationOnce(() => {});
+		});
+		afterEach(() => {
+			window.addEventListener.mockRestore();
+		});
+
+		test('should register event listener of several event types', () => {
+			Spotlight.initialize();
+
+			expect(window.addEventListener).toBeCalledWith('blur', expect.any(Function));
+			expect(window.addEventListener).toBeCalledWith('focus', expect.any(Function));
+			expect(window.addEventListener).toBeCalledWith('keydown', expect.any(Function));
+			expect(window.addEventListener).toBeCalledWith('keyup', expect.any(Function));
+			expect(window.addEventListener).toBeCalledWith('mouseover', expect.any(Function));
+			expect(window.addEventListener).toBeCalledWith('mousemove', expect.any(Function));
+		});
+	});
+
+	describe('#terminate', () => {
+		beforeEach(() => {
+			jest.spyOn(window, 'removeEventListener').mockImplementationOnce(() => {});
+		});
+		afterEach(() => {
+			window.removeEventListener.mockRestore();
+		});
+
+		test('should remove event listener of several event types', () => {
+			Spotlight.terminate();
+
+			expect(window.removeEventListener).toBeCalledWith('blur', expect.any(Function));
+			expect(window.removeEventListener).toBeCalledWith('focus', expect.any(Function));
+			expect(window.removeEventListener).toBeCalledWith('keydown', expect.any(Function));
+			expect(window.removeEventListener).toBeCalledWith('keyup', expect.any(Function));
+			expect(window.removeEventListener).toBeCalledWith('mouseover', expect.any(Function));
+			expect(window.removeEventListener).toBeCalledWith('mousemove', expect.any(Function));
+		});
+	});
 });

@@ -11,14 +11,23 @@ describe('Registry', () => {
 	class NotifiesTree extends Component {
 		static contextType = SomeContext;
 
+		constructor () {
+			super();
+			this.registry = Registry.create(this.handleNotify);
+		}
+
 		componentDidMount () {
 			this.registry.parent = this.context;
 		}
 
-		registry = Registry.create();
+		handleNotify = ({action}) => {
+			if (action === 'update') {
+				this.registry.parent = this.context;
+			}
+		};
 
 		handleClick = () => {
-			this.registry.notify({});
+			this.registry.notify({action: 'notify'});
 		};
 
 		render () {
@@ -53,6 +62,8 @@ describe('Registry', () => {
 		handleResize = () => {
 			this.setState((prevState) => {
 				const number = prevState.number + 1;
+
+				this.registry.notify({action: 'update'});
 
 				return ({
 					number
