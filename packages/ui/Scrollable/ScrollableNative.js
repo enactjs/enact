@@ -54,7 +54,6 @@ const TouchableDiv = Touchable('div');
  * @memberof ui/ScrollableNative
  * @ui
  * @private
- * @deprecated Will be removed in 5.0.0.
  */
 class ScrollableBaseNative extends Component {
 	static displayName = 'ui:ScrollableBaseNative';
@@ -1397,7 +1396,6 @@ class ScrollableBaseNative extends Component {
  * @extends ui/Scrollable.ScrollableBaseNative
  * @ui
  * @private
- * @deprecated Will be removed in 5.0.0.
  */
 class ScrollableNative extends Component {
 	static displayName = 'ui:ScrollableNative';
