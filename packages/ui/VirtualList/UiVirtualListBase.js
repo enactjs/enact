@@ -1182,7 +1182,6 @@ VirtualListBase.displayName = 'ui:VirtualListBase';
  * @memberof ui/VirtualList
  * @ui
  * @private
- * @deprecated Will be removed in 5.0.0.
  */
 const VirtualListBaseNative = VirtualListBaseFactory(Native);
 VirtualListBaseNative.displayName = 'ui:VirtualListBaseNative';

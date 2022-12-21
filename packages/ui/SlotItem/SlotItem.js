@@ -8,6 +8,7 @@
  * @exports SlotItem
  * @exports SlotItemBase
  * @exports SlotItemDecorator
+ * @deprecated Will be removed in 5.0.0.
  */
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
@@ -27,7 +28,6 @@ import ForwardRef from '../ForwardRef';
  * @memberof ui/SlotItem
  * @ui
  * @public
- * @deprecated Will be removed in 5.0.0.
  */
 const SlotItemBase = kind({
 	name: 'SlotItem',
@@ -190,7 +190,6 @@ const SlotItemBase = kind({
  * @mixes ui/ForwardRef.ForwardRef
  * @hoc
  * @public
- * @deprecated Will be removed in 5.0.0.
  */
 const SlotItemDecorator = compose(
 	ForwardRef({prop: 'componentRef'}),
@@ -219,7 +218,6 @@ const SlotItemDecorator = compose(
  * @omit componentRef
  * @ui
  * @public
- * @deprecated Will be removed in 5.0.0.
  */
 const SlotItem = SlotItemDecorator(SlotItemBase);
 
