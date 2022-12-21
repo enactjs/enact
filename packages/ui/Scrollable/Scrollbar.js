@@ -34,7 +34,6 @@ const setCSSVariable = (element, variable, value) => {
  * @memberof ui/Scrollable
  * @ui
  * @private
- * @deprecated Will be removed in 5.0.0.
  */
 class ScrollbarBase extends PureComponent {
 	static displayName = 'ui:Scrollbar';
@@ -199,7 +198,6 @@ class ScrollbarBase extends PureComponent {
  * @memberof ui/Scrollable
  * @ui
  * @private
- * @deprecated Will be removed in 5.0.0.
  */
 class Scrollbar extends Component {
 	static propTypes = /** @lends ui/Scrollable.Scrollbar.prototype */ {

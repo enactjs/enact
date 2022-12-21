@@ -10,7 +10,6 @@ import css from './ScrollThumb.module.less';
  * @memberof ui/Scrollable
  * @ui
  * @private
- * @deprecated Will be removed in 5.0.0.
  */
 const ScrollThumb = kind({
 	name: 'ui:ScrollThumb',
