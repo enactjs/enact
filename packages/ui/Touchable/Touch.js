@@ -10,7 +10,7 @@ import ClickAllow from './ClickAllow';
 import {Drag} from './Drag';
 import {Flick} from './Flick';
 import {Hold} from './Hold';
-import {PinchZoom} from './PinchZoom';
+import {Pinch} from './Pinch';
 
 const getEventCoordinates = (ev) => {
 	let {clientX: x, clientY: y, type} = ev;
@@ -186,7 +186,7 @@ class Touch {
 		this.drag = new Drag();
 		this.flick = new Flick();
 		this.hold = new Hold();
-		this.pinchZoom = new PinchZoom();
+		this.pinch = new Pinch();
 
 		this.clickAllow = new ClickAllow();
 
@@ -219,12 +219,12 @@ class Touch {
 		this.context.setState = setState;
 	}
 
-	updateGestureConfig (dragConfig, flickConfig, holdConfig, pinchZoomConfig) {
+	updateGestureConfig (dragConfig, flickConfig, holdConfig, pinchConfig) {
 		this.config = mergeConfig({
 			drag: dragConfig,
 			flick: flickConfig,
 			hold: holdConfig,
-			pinchZoom: pinchZoomConfig
+			pinch: pinchConfig
 		});
 	}
 
@@ -287,8 +287,8 @@ class Touch {
 	}
 
 	updateProps (props) {
-		// Update the props onHoldStart, onHold, and onHoldEnd on any gesture (pinchZoom, hold, flick, drag).
-		this.pinchZoom.updateProps(props);
+		// Update the props onHoldStart, onHold, and onHoldEnd on any gesture (pinch, hold, flick, drag).
+		this.pinch.updateProps(props);
 		this.hold.updateProps(props);
 		this.flick.updateProps(props);
 		this.drag.updateProps(props);
@@ -312,10 +312,10 @@ class Touch {
 
 	startGesture (ev, props) {
 		const coords = getEventCoordinates(ev);
-		let {pinchZoom, hold, flick, drag} = this.config;
+		let {pinch, hold, flick, drag} = this.config;
 
 		if (Array.isArray(coords)) {
-			this.pinchZoom.begin(pinchZoom, props, coords, this.target);
+			this.pinch.begin(pinch, props, coords, this.target);
 		} else {
 			this.hold.begin(hold, props, coords);
 			this.flick.begin(flick, props, coords);
@@ -330,7 +330,7 @@ class Touch {
 		const coords = getEventCoordinates(ev);
 
 		if (Array.isArray(coords)) {
-			this.pinchZoom.move(coords);
+			this.pinch.move(coords);
 		} else {
 			this.hold.move(coords);
 			this.flick.move(coords);
@@ -367,7 +367,7 @@ class Touch {
 	endGesture () {
 		this.targetHadFocus = false;
 
-		this.pinchZoom.end();
+		this.pinch.end();
 		this.hold.end();
 		this.flick.end();
 		this.drag.end();

@@ -1,15 +1,15 @@
 import clamp from 'ramda/src/clamp';
 import PropTypes from 'prop-types';
 
-class PinchZoom {
-	pinchZoomConfig = null;
+class Pinch {
+	pinchConfig = null;
 	startScale = 1.0;
 	scale = 1.0;
 
-	isZooming = () => this.pinchZoomConfig != null;
+	isPinching = () => this.pinchConfig != null;
 
 	setContainerBounds = (node) => {
-		const {global: isGlobal, boxSizing} = this.pinchZoomConfig;
+		const {global: isGlobal, boxSizing} = this.pinchConfig;
 		let bounds = null;
 
 		if (typeof window === 'undefined' || !node) return;
@@ -65,7 +65,7 @@ class PinchZoom {
 	};
 
 	updateZoom = (scale) => {
-		const {maxZoom, minZoom} = this.pinchZoomConfig;
+		const {maxZoom, minZoom} = this.pinchConfig;
 		const newScale = clamp(minZoom, maxZoom, scale);
 
 		if (newScale !== this.scale) {
@@ -76,12 +76,12 @@ class PinchZoom {
 		return false;
 	};
 
-	begin = (config, {noResume, onPinchZoom, onPinchZoomEnd, onPinchZoomStart}, coords, node) => {
-		if (!onPinchZoom && !onPinchZoomStart && !onPinchZoomEnd) {
+	begin = (config, {noResume, onPinch, onPinchEnd, onPinchStart}, coords, node) => {
+		if (!onPinch && !onPinchStart && !onPinchEnd) {
 			return;
 		}
 
-		this.pinchZoomConfig = {
+		this.pinchConfig = {
 			...config,
 			node,
 			resume: !noResume
@@ -93,41 +93,41 @@ class PinchZoom {
 		this.previousDist = this.startDist;
 		this.startScale = this.scale;
 
-		this.onPinchZoom = onPinchZoom;
-		this.onPinchZoomStart = onPinchZoomStart;
-		this.onPinchZoomEnd = onPinchZoomEnd;
+		this.onPinch = onPinch;
+		this.onPinchStart = onPinchStart;
+		this.onPinchEnd = onPinchEnd;
 
-		if (this.onPinchZoomStart) {
-			this.onPinchZoomStart({
-				type: 'onPinchZoomStart',
+		if (this.onPinchStart) {
+			this.onPinchStart({
+				type: 'onPinchStart',
 				coords
 			});
 		}
 	};
 
-	// This method will get the `onPinchZoom`, `onPinchZoomEnd`, and `onPinchZoomStart` props.
-	updateProps = ({onPinchZoom, onPinchZoomEnd, onPinchZoomStart}) => {
-		// Check `isZooming` gesture is not in progress. Check if gesture exists before updating the references to the `pinchZoomConfig`
-		if (!this.isZooming()) return;
+	// This method will get the `onPinch`, `onPinchEnd`, and `onPinchStart` props.
+	updateProps = ({onPinch, onPinchEnd, onPinchStart}) => {
+		// Check `isPinching` gesture is not in progress. Check if gesture exists before updating the references to the `pinchConfig`
+		if (!this.isPinching()) return;
 
-		// This will update the `pinchZoomConfig` with the new value
-		this.onPinchZoom = onPinchZoom;
-		this.onPinchZoomStart = onPinchZoomStart;
-		this.onPinchZoomEnd = onPinchZoomEnd;
+		// This will update the `pinchConfig` with the new value
+		this.onPinch = onPinch;
+		this.onPinchStart = onPinchStart;
+		this.onPinchEnd = onPinchEnd;
 	};
 
 	move = (coords) => {
-		if (!this.isZooming()) return;
+		if (!this.isPinching()) return;
 
-		const {moveTolerance} = this.pinchZoomConfig;
+		const {moveTolerance} = this.pinchConfig;
 
 		const currentDist = this.getDistance(coords);
 		const scale = (currentDist / this.startDist) * this.startScale;
 
 
-		if (Math.abs(this.previousDist - currentDist) > moveTolerance && this.onPinchZoom && this.updateZoom(scale)) {
-			this.onPinchZoom({
-				type: 'onPinchZoom',
+		if (Math.abs(this.previousDist - currentDist) > moveTolerance && this.onPinch && this.updateZoom(scale)) {
+			this.onPinch({
+				type: 'onPinch',
 				scale: this.scale,
 				coords
 			});
@@ -137,25 +137,25 @@ class PinchZoom {
 	};
 
 	blur = () => {
-		if (!this.isZooming()) return;
+		if (!this.isPinching()) return;
 
-		if (!this.pinchZoomConfig.global) {
+		if (!this.pinchConfig.global) {
 			this.end();
 		}
 	};
 
 	end = () => {
-		if (!this.isZooming()) return;
+		if (!this.isPinching()) return;
 
-		if (this.onPinchZoomEnd) {
-			this.onPinchZoomEnd({type: 'onPinchZoomEnd'});
+		if (this.onPinchEnd) {
+			this.onPinchEnd({type: 'onPinchEnd'});
 		}
 
-		this.pinchZoomConfig = null;
+		this.pinchConfig = null;
 	};
 }
 
-const defaultPinchZoomConfig = {
+const defaultPinchConfig = {
 	boxSizing: 'border-box',
 	global: false,
 	maxZoom: 4,
@@ -163,7 +163,7 @@ const defaultPinchZoomConfig = {
 	moveTolerance: 4
 };
 
-const pinchZoomConfigPropType = PropTypes.shape({
+const pinchConfigPropType = PropTypes.shape({
 	boxSizing: PropTypes.string,
 	global: PropTypes.bool,
 	maxZoom: PropTypes.number,
@@ -171,9 +171,9 @@ const pinchZoomConfigPropType = PropTypes.shape({
 	moveTolerance: PropTypes.number
 });
 
-export default PinchZoom;
+export default Pinch;
 export {
-	defaultPinchZoomConfig,
-	PinchZoom,
-	pinchZoomConfigPropType
+	defaultPinchConfig,
+	Pinch,
+	pinchConfigPropType
 };

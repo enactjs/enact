@@ -1,12 +1,12 @@
 import {defaultDragConfig} from './Drag.js';
 import {defaultFlickConfig} from './Flick.js';
 import {defaultHoldConfig} from './Hold.js';
-import {defaultPinchZoomConfig} from './PinchZoom';
+import {defaultPinchConfig} from './Pinch';
 
 const allowedDragKeys = Object.keys(defaultDragConfig);
 const allowedFlickKeys = Object.keys(defaultFlickConfig);
 const allowedHoldKeys = Object.keys(defaultHoldConfig);
-const allowedPinchZoomKeys = Object.keys(defaultPinchZoomConfig);
+const allowedPinchKeys = Object.keys(defaultPinchConfig);
 
 /**
  * The Global Gesture Configuration Object
@@ -38,7 +38,7 @@ const mergeConfig = (cfg) => {
 		drag: mergeGestureConfig(config.drag, cfg.drag, allowedDragKeys),
 		flick: mergeGestureConfig(config.flick, cfg.flick, allowedFlickKeys),
 		hold: mergeGestureConfig(config.hold, cfg.hold, allowedHoldKeys),
-		pinchZoom: mergeGestureConfig(config.pinchZoom, cfg.pinchZoom, allowedPinchZoomKeys)
+		pinch: mergeGestureConfig(config.pinch, cfg.pinch, allowedPinchKeys)
 	};
 
 	merged.hold.events = merged.hold.events.map(clone);
@@ -101,13 +101,13 @@ const mergeConfig = (cfg) => {
  *     controls the amount of time that must pass before this `onHoldStart` event is fired and should
  *     be a multiple of `frequency`.
  *
- * `pinchZoom`
+ * `pinch`
  *
  *   * `boxSizing` - The part of the component's box model is used as the bounds of the constraint.
  *     Only applies when `global` is `false`.
  *     * `'border-box'` - the default, includes the padding and border but excludes the margin.
  *     * `'content-box'` - excludes the padding, border, and margin.
- *   * `global` - When `true`, pinchZoom gestures will continue when leaving the bounds of the component
+ *   * `global` - When `true`, pinch gestures will continue when leaving the bounds of the component
  *      or blurring the component.
  *   * `maxZoom` - The maximum zoom value. Defaults to `4`.
  *   * `minZoom` - The minimum zoom value. Defaults to `0.5`.
@@ -131,7 +131,7 @@ const resetDefaultConfig = () => configure({
 	drag: defaultDragConfig,
 	flick: defaultFlickConfig,
 	hold: defaultHoldConfig,
-	pinchZoom: defaultPinchZoomConfig
+	pinch: defaultPinchConfig
 });
 
 resetDefaultConfig();

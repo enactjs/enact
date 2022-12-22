@@ -168,15 +168,15 @@ describe('Touchable', () => {
 			done();
 		});
 
-		test('should update state configurations onPinchZoomStart events', (done) => {
-			const pinchZoomConfig = {
+		test('should update state configurations onPinchStart events', (done) => {
+			const pinchConfig = {
 				global: true,
 				moveTolerance: 0
 			};
 
 			const Component = Touchable(DivComponent);
 			const handler = jest.fn();
-			const {rerender} = render(<Component pinchZoomConfig={pinchZoomConfig} onPinchZoom={() => {}} />);
+			const {rerender} = render(<Component pinchConfig={pinchConfig} onPinch={() => {}} />);
 			const component = screen.getByTestId('component');
 
 			const touchEvent = {
@@ -187,7 +187,7 @@ describe('Touchable', () => {
 				targetTouches: [{clientX: 0, clientY: 0}, {clientX: 10, clientY: 10}]
 			};
 
-			rerender(<Component pinchZoomConfig={pinchZoomConfig} onPinchZoom={() => {}} onPinchZoomStart={handler} />);
+			rerender(<Component pinchConfig={pinchConfig} onPinch={() => {}} onPinchStart={handler} />);
 
 			fireEvent.touchStart(component, touchEvent);
 			fireEvent.mouseDown(component, touchEvent);
@@ -198,15 +198,15 @@ describe('Touchable', () => {
 			done();
 		});
 
-		test('should update state configurations onPinchZoomEnd events', (done) => {
-			const pinchZoomConfig = {
+		test('should update state configurations onPinchEnd events', (done) => {
+			const pinchConfig = {
 				global: true,
 				moveTolerance: 0
 			};
 
 			const Component = Touchable(DivComponent);
 			const handler = jest.fn();
-			const {rerender} = render(<Component pinchZoomConfig={pinchZoomConfig} onPinchZoom={() => {}} />);
+			const {rerender} = render(<Component pinchConfig={pinchConfig} onPinch={() => {}} />);
 			const component = screen.getByTestId('component');
 
 			const touchEvent = {
@@ -220,7 +220,7 @@ describe('Touchable', () => {
 			fireEvent.touchStart(component, touchEvent);
 			fireEvent.mouseDown(component, touchEvent);
 
-			rerender(<Component pinchZoomConfig={pinchZoomConfig} onPinchZoom={() => {}} onPinchZoomEnd={handler} />);
+			rerender(<Component pinchConfig={pinchConfig} onPinch={() => {}} onPinchEnd={handler} />);
 
 			jest.runOnlyPendingTimers();
 

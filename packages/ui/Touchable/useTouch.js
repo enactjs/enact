@@ -12,7 +12,7 @@ import Touch from './Touch';
  * @property {Object}    dragConfig       Instance-specific overrides of the drag configuration
  * @property {Object}    flickConfig      Instance-specific overrides of the flick configuration
  * @property {Object}    holdConfig       Instance-specific overrides of the hold configuration
- * @property {Object}    pinchZoomConfig  Instance-specific overrides of the pinchZoom configuration
+ * @property {Object}    pinchConfig  Instance-specific overrides of the pinch configuration
  * @property {Boolean}   getActive        Enables active state management
  * @property {Boolean}   disabled         Disables a hook
  * @property {Boolean}   noResume         Prevents resuming the touch events and gestures when re-entering the component
@@ -34,9 +34,9 @@ import Touch from './Touch';
  * @property {Function}  onHold           Event handler for hold pulse events
  * @property {Function}  onHoldEnd        Event handler for the end of hold events
  * @property {Function}  onHoldStart      Event handler for hold events
- * @property {Function}  onPinchZoom      Event handler for pinch-zoom gesture
- * @property {Function}  onPinchZoomEnd   Event handler for the end of pinch-zoom gesture
- * @property {Function}  onPinchZoomStart Event handler for pinch-zoom gesture
+ * @property {Function}  onPinch          Event handler for pinch gesture
+ * @property {Function}  onPinchEnd       Event handler for the end of pinch gesture
+ * @property {Function}  onPinchStart     Event handler for pinch gesture
  * @property {Function}  onMove           Event handler for a pointer moving
  * @property {Function}  onTap            Event handler for 'tap' pointer events
  * @property {Function}  onUp             Event handler for 'up' pointer events
@@ -58,7 +58,7 @@ import Touch from './Touch';
  * Provides a consistent set of pointer events -- `onDown`, `onUp`, and `onTap` --
  * across mouse and touch interfaces along with support for common gestures including
  * `onFlick`, `onDragStart`, `onDrag`, `onDragEnd`, `onHoldStart`, `onHold`, `onHoldEnd`,
- * `onPinchZoomStart`, `onPinchZoom`, and `onPinchZoomEnd`.
+ * `onPinchStart`, `onPinch`, and `onPinchEnd`.
  * @param {useTouchConfig} config Configuration options
  * @returns {useTouchInterface}
  * @private
@@ -66,8 +66,8 @@ import Touch from './Touch';
 function useTouch (config = {}) {
 	const {
 		getActive = false, disabled,
-		dragConfig, flickConfig, holdConfig, pinchZoomConfig,
-		onDrag, onDragEnd, onDragStart, onHold, onHoldEnd, onHoldStart, onFlick, onPinchZoom, onPinchZoomEnd, onPinchZoomStart
+		dragConfig, flickConfig, holdConfig, pinchConfig,
+		onDrag, onDragEnd, onDragStart, onHold, onHoldEnd, onHoldStart, onFlick, onPinch, onPinchEnd, onPinchStart
 	} = config;
 
 	const touch = useClass(Touch);
@@ -85,12 +85,12 @@ function useTouch (config = {}) {
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		touch.updateGestureConfig(dragConfig, flickConfig, holdConfig, pinchZoomConfig);
-	}, [dragConfig, flickConfig, holdConfig, pinchZoomConfig]); // eslint-disable-line react-hooks/exhaustive-deps
+		touch.updateGestureConfig(dragConfig, flickConfig, holdConfig, pinchConfig);
+	}, [dragConfig, flickConfig, holdConfig, pinchConfig]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		touch.updateProps(config);
-	}, [onDrag, onDragEnd, onDragStart, onHold, onHoldEnd, onHoldStart, onFlick, onPinchZoom, onPinchZoomEnd, onPinchZoomStart]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [onDrag, onDragEnd, onDragStart, onHold, onHoldEnd, onHoldStart, onFlick, onPinch, onPinchEnd, onPinchStart]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		if (disabled) {

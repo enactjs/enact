@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/Touchable` events `onPinchZoom`, `onPinchZoomStart`, and `onPinchZoomEnd` to support pinch zoom gesture
+- `ui/Touchable` events `onPinch`, `onPinchStart`, and `onPinchEnd` to support pinch zoom gesture
 ## [4.6.0] - 2022-12-05
 
 ### Fixed
