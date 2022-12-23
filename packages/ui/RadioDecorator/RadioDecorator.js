@@ -121,7 +121,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			deprecate({
-				name: 'ui/RadioDecorator',
+				name: 'ui/RadioDecorator.RadioDecorator',
 				until: '5.0.0'
 			});
 			let props = this.props;
