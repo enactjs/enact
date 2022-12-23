@@ -7,6 +7,7 @@
  * @deprecated Will be removed in 5.0.0.
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import {forwardCustom} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Component} from 'react';
@@ -119,6 +120,10 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		render () {
+			deprecate({
+				name: 'ui/RadioDecorator',
+				until: '5.0.0'
+			});
 			let props = this.props;
 
 			if (activate || deactivate) {

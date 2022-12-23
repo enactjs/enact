@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import deprecate from '@enact/core/internal/deprecate';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import {createRef, Component} from 'react';
@@ -168,6 +169,10 @@ class ScrollerBase extends Component {
 	}
 
 	render () {
+		deprecate({
+			name: 'ui/Scroller.ScrollerBase',
+			until: '5.0.0'
+		});
 		const
 			{className, style, ...rest} = this.props,
 			mergedStyle = Object.assign({}, style, {
