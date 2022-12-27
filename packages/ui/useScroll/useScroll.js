@@ -213,22 +213,7 @@ const useScrollBase = (props) => {
 
 		prevState: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible}
 	});
-
-	if (mutableRef.current.animator == null) {
-		mutableRef.current.animator = new ScrollAnimator();
-	}
-
-	useLayoutEffect(() => {
-		if (setScrollContainerHandle) {
-			setScrollContainerHandle({
-				animator: mutableRef.current.animator,
-				applyOverscrollEffect,
-				bounds: mutableRef.current.bounds,
-				calculateDistanceByWheel,
-				canScrollHorizontally,
-				canScrollVertically,
-				checkAndApplyOverscrollEffect,
-				getScrollBounds,
+	const scrollContainerHandle = useRef({
 				get isDragging () {
 					return mutableRef.current.isDragging;
 				},
@@ -262,26 +247,45 @@ const useScrollBase = (props) => {
 				get scrollLeft () {
 					return mutableRef.current.scrollLeft;
 				},
-				scrollTo,
-				scrollToAccumulatedTarget,
 				get scrollToInfo () {
 					return mutableRef.current.scrollToInfo;
 				},
 				get scrollTop () {
 					return mutableRef.current.scrollTop;
 				},
-				setOverscrollStatus,
-				showScrollbarTrack,
-				start,
-				startHidingScrollbarTrack,
-				stop,
 				get wheelDirection () {
 					return mutableRef.current.wheelDirection;
 				},
 				set wheelDirection (val) {
 					mutableRef.current.wheelDirection = val;
 				}
+
+	});
+
+	if (mutableRef.current.animator == null) {
+		mutableRef.current.animator = new ScrollAnimator();
+	}
+
+	useLayoutEffect(() => {
+		if (setScrollContainerHandle) {
+			Object.assign(scrollContainerHandle.current, {
+				animator: mutableRef.current.animator,
+				applyOverscrollEffect,
+				bounds: mutableRef.current.bounds,
+				calculateDistanceByWheel,
+				canScrollHorizontally,
+				canScrollVertically,
+				checkAndApplyOverscrollEffect,
+				getScrollBounds,
+				scrollTo,
+				scrollToAccumulatedTarget,
+				setOverscrollStatus,
+				showScrollbarTrack,
+				start,
+				startHidingScrollbarTrack,
+				stop
 			});
+			setScrollContainerHandle(scrollContainerHandle.current);
 		}
 	});
 
