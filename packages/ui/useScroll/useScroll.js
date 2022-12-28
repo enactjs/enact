@@ -214,51 +214,51 @@ const useScrollBase = (props) => {
 		prevState: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible}
 	});
 	const scrollContainerHandle = useRef({
-				get isDragging () {
-					return mutableRef.current.isDragging;
-				},
-				set isDragging (val) {
-					mutableRef.current.isDragging = val;
-				},
-				get isScrollAnimationTargetAccumulated () {
-					return mutableRef.current.isScrollAnimationTargetAccumulated;
-				},
-				set isScrollAnimationTargetAccumulated (val) {
-					mutableRef.current.isScrollAnimationTargetAccumulated = val;
-				},
-				get lastInputType () {
-					return mutableRef.current.lastInputType;
-				},
-				set lastInputType (val) {
-					mutableRef.current.lastInputType = val;
-				},
-				get rtl () {
-					return rtl;
-				},
-				get scrollBounds () {
-					return getScrollBounds();
-				},
-				get scrollHeight () {
-					return mutableRef.current.bounds.scrollHeight;
-				},
-				get scrolling () {
-					return mutableRef.current.scrolling;
-				},
-				get scrollLeft () {
-					return mutableRef.current.scrollLeft;
-				},
-				get scrollToInfo () {
-					return mutableRef.current.scrollToInfo;
-				},
-				get scrollTop () {
-					return mutableRef.current.scrollTop;
-				},
-				get wheelDirection () {
-					return mutableRef.current.wheelDirection;
-				},
-				set wheelDirection (val) {
-					mutableRef.current.wheelDirection = val;
-				}
+		get isDragging () {
+			return mutableRef.current.isDragging;
+		},
+		set isDragging (val) {
+			mutableRef.current.isDragging = val;
+		},
+		get isScrollAnimationTargetAccumulated () {
+			return mutableRef.current.isScrollAnimationTargetAccumulated;
+		},
+		set isScrollAnimationTargetAccumulated (val) {
+			mutableRef.current.isScrollAnimationTargetAccumulated = val;
+		},
+		get lastInputType () {
+			return mutableRef.current.lastInputType;
+		},
+		set lastInputType (val) {
+			mutableRef.current.lastInputType = val;
+		},
+		get rtl () {
+			return rtl;
+		},
+		get scrollBounds () {
+			return getScrollBounds();
+		},
+		get scrollHeight () {
+			return mutableRef.current.bounds.scrollHeight;
+		},
+		get scrolling () {
+			return mutableRef.current.scrolling;
+		},
+		get scrollLeft () {
+			return mutableRef.current.scrollLeft;
+		},
+		get scrollToInfo () {
+			return mutableRef.current.scrollToInfo;
+		},
+		get scrollTop () {
+			return mutableRef.current.scrollTop;
+		},
+		get wheelDirection () {
+			return mutableRef.current.wheelDirection;
+		},
+		set wheelDirection (val) {
+			mutableRef.current.wheelDirection = val;
+		}
 
 	});
 
