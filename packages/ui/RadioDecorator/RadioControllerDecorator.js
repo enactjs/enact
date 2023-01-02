@@ -1,4 +1,5 @@
 import hoc from '@enact/core/hoc';
+import deprecate from '@enact/core/internal/deprecate';
 import Registry from '@enact/core/internal/Registry';
 import {createContext, Component} from 'react';
 
@@ -13,6 +14,7 @@ const RadioContext = createContext();
  * @memberof ui/RadioDecorator
  * @hoc
  * @public
+ * @deprecated Will be removed in 5.0.0.
  */
 const RadioControllerDecorator = hoc((config, Wrapped) => {
 
@@ -51,6 +53,10 @@ const RadioControllerDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
+			deprecate({
+				name: 'ui/RadioDecorator.RadioControllerDecorator',
+				until: '5.0.0'
+			});
 			return (
 				<RadioContext.Provider value={this.registry.register}>
 					<Wrapped {...this.props} />

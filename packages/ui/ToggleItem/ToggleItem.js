@@ -9,8 +9,10 @@
  * @exports ToggleItem
  * @exports ToggleItemBase
  * @exports ToggleItemDecorator
+ * @deprecated Will be removed in 5.0.0.
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
@@ -247,7 +249,7 @@ const ToggleItemBase = kind({
 		slotAfter: iconCreator('after')
 	},
 
-	render: ({component: Component, componentRef, css, children, selected, ...rest}) => {
+	render: deprecate(({component: Component, componentRef, css, children, selected, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconPosition;
 		delete rest.itemIcon;
@@ -265,7 +267,10 @@ const ToggleItemBase = kind({
 				{children}
 			</Component>
 		);
-	}
+	}, {
+		name: 'ui/ToggleItem',
+		until: '5.0.0'
+	})
 });
 
 /**

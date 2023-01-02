@@ -9,8 +9,10 @@
  * @exports IconButton
  * @exports IconButtonBase
  * @exports IconButtonDecorator
+ * @deprecated Will be removed in 5.0.0. Use {@link ui/Button} instead.
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
@@ -172,7 +174,7 @@ const IconButtonBase = kind({
 		className: ({size, styler}) => styler.append(size)
 	},
 
-	render: ({buttonComponent, children, componentRef, css, flip, icon, iconComponent: Icon, size, ...rest}) => {
+	render: deprecate(({buttonComponent, children, componentRef, css, flip, icon, iconComponent: Icon, size, ...rest}) => {
 		// To support the simpler use case of only specifying the icon as the children within
 		// <IconButton>, this falls back on using children if icon isn't specified.
 		if (!icon && children) {
@@ -191,7 +193,11 @@ const IconButtonBase = kind({
 			],
 			ref: componentRef
 		});
-	}
+	}, {
+		name: 'ui/IconButton',
+		replacedBy: 'ui/Button',
+		until: '5.0.0'
+	})
 });
 
 /**
