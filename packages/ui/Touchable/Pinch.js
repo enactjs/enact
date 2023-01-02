@@ -160,7 +160,7 @@ const defaultPinchConfig = {
 	global: false,
 	maxZoom: 4,
 	minZoom: 0.5,
-	moveTolerance: 4
+	moveTolerance: 16
 };
 
 const pinchConfigPropType = PropTypes.shape({
