@@ -12,7 +12,7 @@ import Touch from './Touch';
  * @property {Object}    dragConfig       Instance-specific overrides of the drag configuration
  * @property {Object}    flickConfig      Instance-specific overrides of the flick configuration
  * @property {Object}    holdConfig       Instance-specific overrides of the hold configuration
- * @property {Object}    pinchConfig  Instance-specific overrides of the pinch configuration
+ * @property {Object}    pinchConfig      Instance-specific overrides of the pinch configuration
  * @property {Boolean}   getActive        Enables active state management
  * @property {Boolean}   disabled         Disables a hook
  * @property {Boolean}   noResume         Prevents resuming the touch events and gestures when re-entering the component
