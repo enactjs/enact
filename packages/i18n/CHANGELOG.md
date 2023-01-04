@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `docs/index.md` broken link to i18n sample app repository
+
 ## [4.6.0] - 2022-12-05
 
 No significant changes.
