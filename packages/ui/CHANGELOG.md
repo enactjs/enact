@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/Touchable` events `onPinch`, `onPinchStart`, and `onPinchEnd` to support pinch zoom gesture
+
 ### Deprecated
 
 - `ui/IconButton` to be removed in 5.0.0, use `ui/Button` instead
