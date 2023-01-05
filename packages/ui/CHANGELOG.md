@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/Cell` prop `grow` to support flex-grow
 - `ui/Touchable` events `onPinch`, `onPinchStart`, and `onPinchEnd` to support pinch zoom gesture
 
 ### Deprecated

@@ -73,6 +73,20 @@ const CellBase = kind({
 		/**
 		 * Sizes `Cell` to its contents.
 		 *
+		 * A `grow` cell will expand to its maximum size, according to the dimensions of its parent
+		 * size. This is used when you want to grow the size of this Cell so that it fills the parent
+		 * container.
+		 * See the {@link ui/Layout.Cell#size|size} property for more details.
+		 *
+		 * @type {Number}
+		 * @default 1
+		 * @public
+		 */
+		grow: PropTypes.number,
+
+		/**
+		 * Sizes `Cell` to its contents.
+		 *
 		 * A `shrink`able cell will contract to its minimum size, according to the dimensions of its
 		 * contents. This is used when you want the size of this Cell's content to influence the
 		 * dimensions of this cell. `shrink` will not allow the contents of the Layout to be pushed
@@ -90,11 +104,15 @@ const CellBase = kind({
 		 *
 		 * When used in conjunction with {@link ui/Layout.Cell#shrink|shrink}, the size will be
 		 * the maximum size, shrinking as necessary, to fit the content.
+		 * When used in conjunction with {@link ui/Layout.Cell#grow|grow}, the size will be the
+		 * minimum size, growing as necessary, to fill the parent container while guaranteeing
+		 * the minimum size.
 		 *
 		 * E.g.
 		 * * `size="400px"` -> cell will be 400px, regardless of the dimensions of your content
 		 * * `size="400px" shrink` -> cell will be 400px if your content is greater than 400px,
 		 *   and will match your contents size if it's smaller
+		 * * `size="400px" grow` -> cell will be 400px if your parent container has no enough space
 		 *
 		 * This accepts any valid CSS measurement value string. If a numeric value is used, it will
 		 * be treated as a pixel value and converted to a
@@ -118,7 +136,7 @@ const CellBase = kind({
 	},
 
 	computed: {
-		className: ({shrink, size, styler}) => styler.append({shrink, grow: (!shrink && !size)}),
+		className: ({grow, shrink, size, styler}) => styler.append({shrink, grow: grow ?? (!shrink && !size)}),
 		style: ({align, shrink, size, style}) => {
 			if (typeof size === 'number') size = ri.unit(ri.scale(size), 'rem');
 
