@@ -146,9 +146,15 @@ function getScreenType (rez) {
 	}
 
 	// Loop through resolutions, last->first, largest->smallest
-	for (let i = types.length - 1; i >= 0; i--) {
-		// Does the current resolution fit inside this screenType definition? If so, save it as the current best match.
-		if (rez.height <= types[i].height && rez.width <= types[i].width) {
+	// for (let i = types.length - 1; i >= 0; i--) {
+	// 	// Does the current resolution fit inside this screenType definition? If so, save it as the current best match.
+	// 	if (rez.height <= types[i].height && rez.width <= types[i].width) {
+	// 		bestMatch = types[i].name;
+	// 	}
+	// }
+
+	for (let i = 0; i <= types.length - 1; i++) {
+		if (rez.height >= types[i].height && rez.width >= types[i].width) {
 			bestMatch = types[i].name;
 		}
 	}
@@ -189,6 +195,10 @@ function calculateFontSize (type) {
 		size = scrObj.height / scrObj.width * scrObj.pxPerRem;
 	} else {
 		size = scrObj.pxPerRem;
+
+		if (workspaceBounds.width > scrObj.width && workspaceBounds.height > scrObj.height ) {
+			size = parseInt(workspaceBounds.height * scrObj.pxPerRem / scrObj.height);
+		}
 	}
 	return size + 'px';
 }
