@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Removed
+
+- `ui/Touchable` events `onPinch`, `onPinchStart`, `onPinchEnd` and prop `pinchConfig`.
+
 ### Added
 
 - `ui/Touchable` events `onPinch`, `onPinchStart`, and `onPinchEnd` to support pinch zoom gesture

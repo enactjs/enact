@@ -92,8 +92,7 @@ const defaultConfig = {
 /**
  * A higher-order component that provides a consistent set of pointer events -- `onDown`, `onUp`,
  * and `onTap` -- across mouse and touch interfaces along with support for common gestures including
- * `onFlick`, `onDragStart`, `onDrag`, `onDragEnd`, `onHoldStart`, `onHold`, `onHoldEnd`,
- * `onPinchStart`, `onPinch`, and `onPinchEnd`.
+ * `onFlick`, `onDragStart`, `onDrag`, `onDragEnd`, `onHoldStart`, `onHold`, and `onHoldEnd`.
  * Note: This HoC passes a number of props to the wrapped component that should be passed to the
  * main DOM node or consumed by the wrapped component.
  *
@@ -306,7 +305,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 *
 		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
-		 * @public
+		 * @private
 		 */
 		onPinch: PropTypes.func,
 
@@ -319,7 +318,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		  *
 		  * @memberof ui/Touchable.Touchable.prototype
 		  * @type {Function}
-		  * @public
+		  * @private
 		  */
 		onPinchEnd: PropTypes.func,
 
@@ -333,7 +332,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		  *
 		  * @memberof ui/Touchable.Touchable.prototype
 		  * @type {Function}
-		  * @public
+		  * @private
 		  */
 		onPinchStart: PropTypes.func,
 
@@ -361,7 +360,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * @see {@link ui/Touchable.configure}
 		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Object}
-		 * @public
+		 * @private
 		 */
 		pinchConfig: pinchConfigPropType
 	};
