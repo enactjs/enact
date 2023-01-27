@@ -64,9 +64,9 @@ class Pinch {
 		return 0;
 	};
 
-	updateZoom = (scale) => {
-		const {maxZoom, minZoom} = this.pinchConfig;
-		const newScale = clamp(minZoom, maxZoom, scale);
+	updateScale = (scale) => {
+		const {maxScale, minScale} = this.pinchConfig;
+		const newScale = clamp(minScale, maxScale, scale);
 
 		if (newScale !== this.scale) {
 			this.scale = newScale;
@@ -125,7 +125,7 @@ class Pinch {
 		const scale = (currentDist / this.startDist) * this.startScale;
 
 
-		if (Math.abs(this.previousDist - currentDist) > moveTolerance && this.onPinch && this.updateZoom(scale)) {
+		if (Math.abs(this.previousDist - currentDist) > moveTolerance && this.onPinch && this.updateScale(scale)) {
 			this.onPinch({
 				type: 'onPinch',
 				scale: this.scale,
@@ -158,16 +158,16 @@ class Pinch {
 const defaultPinchConfig = {
 	boxSizing: 'border-box',
 	global: false,
-	maxZoom: 4,
-	minZoom: 0.5,
+	maxScale: 4,
+	minScale: 0.5,
 	moveTolerance: 16
 };
 
 const pinchConfigPropType = PropTypes.shape({
 	boxSizing: PropTypes.string,
 	global: PropTypes.bool,
-	maxZoom: PropTypes.number,
-	minZoom: PropTypes.number,
+	maxScale: PropTypes.number,
+	minScale: PropTypes.number,
 	moveTolerance: PropTypes.number
 });
 
