@@ -109,8 +109,8 @@ const mergeConfig = (cfg) => {
  *     * `'content-box'` - excludes the padding, border, and margin.
  *   * `global` - When `true`, pinch gestures will continue when leaving the bounds of the component
  *      or blurring the component.
- *   * `maxZoom` - The maximum zoom value. Defaults to `4`.
- *   * `minZoom` - The minimum zoom value. Defaults to `0.5`.
+ *   * `maxScale` - The maximum scale value. Defaults to `4`.
+ *   * `minScale` - The minimum scale value. Defaults to `0.5`.
  *   * `moveTolerance` - The distance difference from the previous distance that the pointer may move
  *     before cancelling the scaling. Defaults to `16`.
  *

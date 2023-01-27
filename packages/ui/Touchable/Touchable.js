@@ -302,7 +302,10 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * Event payload includes:
 		 *
 		 * * `type` - Type of event, `'onPinch'`
-		 * * `coords` - the coordinates array of the touch point, relative to the viewport
+		 * * `scale` - The scale factor, calculated from the distance while pinching.
+		 *             The default value is 1.0. The value would be a number between
+		 *             pinchConfig.minScale and pinchConfig.maxScale.
+		 * * `coords` - The coordinates array of the touch point, relative to the viewport
 		 *
 		 * @memberof ui/Touchable.Touchable.prototype
 		 * @type {Function}
@@ -329,7 +332,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		  * Event payload includes:
 		  *
 		  * * `type` - Type of event, `'onPinchStart'`
-		  * * `coords` - the coordinates array of the touch point, relative to the viewport
+		  * * `coords` - The coordinates array of the touch point, relative to the viewport
 		  *
 		  * @memberof ui/Touchable.Touchable.prototype
 		  * @type {Function}
