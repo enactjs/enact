@@ -6,37 +6,37 @@ describe('util', () => {
 	describe('isRenderable', () => {
 		test('should return {true} for function', () => {
 			const expected = true;
-			const actual = isRenderable(function () {});
+			const view = isRenderable(function () {});
 
-			expect(actual).toEqual(expected);
+			expect(view).toEqual(expected);
 		});
 
 		test('should return {true} for string', () => {
 			const expected = true;
-			const actual = isRenderable('div');
+			const view = isRenderable('div');
 
-			expect(actual).toEqual(expected);
+			expect(view).toEqual(expected);
 		});
 
 		test('should return {true} for React.forwardRef', () => {
 			const expected = true;
-			const actual = isRenderable(forwardRef(() => {}));
+			const view = isRenderable(forwardRef(() => {}));
 
-			expect(actual).toEqual(expected);
+			expect(view).toEqual(expected);
 		});
 
 		test('should return {true} for React.memo', () => {
 			const expected = true;
-			const actual = isRenderable(memo(() => {}));
+			const view = isRenderable(memo(() => {}));
 
-			expect(actual).toEqual(expected);
+			expect(view).toEqual(expected);
 		});
 
 		test('should return {true} for React.lazy', () => {
 			const expected = true;
-			const actual = isRenderable(lazy(() => {}));
+			const view = isRenderable(lazy(() => {}));
 
-			expect(actual).toEqual(expected);
+			expect(view).toEqual(expected);
 		});
 	});
 
