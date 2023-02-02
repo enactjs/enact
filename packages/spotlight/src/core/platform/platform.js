@@ -1,12 +1,3 @@
-/**
- * Utilities for detecting basic platform capabilities.
- *
- * @module core/platform
- * @exports detect
- * @exports platform
- * @public
- */
-
 import uniq from 'ramda/src/uniq';
 
 const hasGesture = () => {
@@ -148,28 +139,6 @@ const parseUserAgent = (userAgent) => {
 	return plat;
 };
 
-/**
- * @typedef {Object} PlatformDescription
- * @property {Object} [extra] - Additional information about the detected platform
- * @property {Boolean} gesture - `true` if the platform has native double-finger events
- * @property {Boolean} node - `true` only if `window` is `undefined`
- * @property {String} [platformName] - The name of the platform, if detected
- * @property {Boolean} touch - `true` if the platform has native single-finger events
- * @property {Boolean} touchscreen - `true` if the platform has a touch screen
- * @property {Boolean} unknown - `true` for any unknown system
- *
- * @memberof core/platform
- * @public
- */
-
-/**
- * Returns the {@link core/platform.platform} object.
- *
- * @function detect
- * @returns {PlatformDescription}     The {@link core/platform.platform} object
- * @memberof core/platform
- * @public
- */
 const detect = () => {
 	if (_platform) {
 		// if we've already determined the platform, we'll use that determination
@@ -188,13 +157,6 @@ const detect = () => {
 	return (_platform = parseUserAgent(userAgent));
 };
 
-/**
- * Provides basic information about the running platform.
- *
- * @type {PlatformDescription}
- * @memberof core/platform
- * @public
- */
 const platform = {};
 
 [
