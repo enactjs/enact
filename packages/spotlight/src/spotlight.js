@@ -238,8 +238,10 @@ const Spotlight = (function () {
 		focusEffect.style.top = `${elemRect.y + window.scrollY}px`;
 		focusEffect.style.width = `${elemRect.width}px`;
 		focusEffect.style.height = `${elemRect.height}px`;
+		focusEffect.style.boxShadow = '0 0 0 1px rgba(29, 155, 209, 0.5), 0 0 3px 5px rgba(74, 182, 237, 0.4)';
 
 		// elem.style.outline = 'none';
+
 		elem.focus(focusOptions);
 
 		_duringFocusChange = false;
@@ -522,6 +524,8 @@ const Spotlight = (function () {
 		if (shouldPreventNavigation()) return;
 
 		const {target} = evt;
+
+		focusEffect.style.boxShadow = 'none';
 
 		if (getPointerMode() && hasPointerMoved(evt.clientX, evt.clientY)) {
 			const next = getNavigableTarget(target); // account for child controls

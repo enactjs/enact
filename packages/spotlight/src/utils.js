@@ -173,7 +173,7 @@ function getContainerRect (containerId) {
 }
 
 function isStandardFocusable (element) {
-	if ((element.tabIndex < 0) || isAtagWithoutHref(element) || isActuallyDisabled(element) || isExpresslyInert(element) ) {
+	if ((element.tabIndex < 0) || isAtagWithoutHref(element) || isActuallyDisabled(element) || isExpresslyInert(element) || isElementHidden(element)) {
 		return false;
 	} else if ((!element.parentElement) || (element.tabIndex >= 0)) {
 		return true;
@@ -194,6 +194,15 @@ function isActuallyDisabled (element) {
 
 function isExpresslyInert (element) {
 	return ((element.inert) && (!element.ownerDocument.documentElement.inert));
+}
+
+function isElementHidden (element) {
+	let elemRect = element.getBoundingClientRect();
+	if ((elemRect.width <= 1 && elemRect.height <= 1) || elemRect.x < -3840 || elemRect.y < -2160 || element.getAttribute('hidden')) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 export {
