@@ -214,74 +214,82 @@ const useScrollBase = (props) => {
 		prevState: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible}
 	});
 
+	const themeScrollContainerHandle = useRef({
+		get animator () {
+			return mutableRef.current.animator;
+		},
+		get bounds () {
+			return mutableRef.current.bounds;
+		},
+		get isDragging () {
+			return mutableRef.current.isDragging;
+		},
+		set isDragging (val) {
+			mutableRef.current.isDragging = val;
+		},
+		get isScrollAnimationTargetAccumulated () {
+			return mutableRef.current.isScrollAnimationTargetAccumulated;
+		},
+		set isScrollAnimationTargetAccumulated (val) {
+			mutableRef.current.isScrollAnimationTargetAccumulated = val;
+		},
+		get lastInputType () {
+			return mutableRef.current.lastInputType;
+		},
+		set lastInputType (val) {
+			mutableRef.current.lastInputType = val;
+		},
+		get rtl () {
+			return rtl;
+		},
+		get scrollBounds () {
+			return getScrollBounds();
+		},
+		get scrollHeight () {
+			return mutableRef.current.bounds.scrollHeight;
+		},
+		get scrolling () {
+			return mutableRef.current.scrolling;
+		},
+		get scrollLeft () {
+			return mutableRef.current.scrollLeft;
+		},
+		get scrollToInfo () {
+			return mutableRef.current.scrollToInfo;
+		},
+		get scrollTop () {
+			return mutableRef.current.scrollTop;
+		},
+		get wheelDirection () {
+			return mutableRef.current.wheelDirection;
+		},
+		set wheelDirection (val) {
+			mutableRef.current.wheelDirection = val;
+		}
+	});
+
 	if (mutableRef.current.animator == null) {
 		mutableRef.current.animator = new ScrollAnimator();
 	}
 
 	useLayoutEffect(() => {
 		if (setScrollContainerHandle) {
-			setScrollContainerHandle({
-				animator: mutableRef.current.animator,
+			Object.assign(themeScrollContainerHandle.current, {
 				applyOverscrollEffect,
-				bounds: mutableRef.current.bounds,
 				calculateDistanceByWheel,
 				canScrollHorizontally,
 				canScrollVertically,
 				checkAndApplyOverscrollEffect,
 				getScrollBounds,
-				get isDragging () {
-					return mutableRef.current.isDragging;
-				},
-				set isDragging (val) {
-					mutableRef.current.isDragging = val;
-				},
-				get isScrollAnimationTargetAccumulated () {
-					return mutableRef.current.isScrollAnimationTargetAccumulated;
-				},
-				set isScrollAnimationTargetAccumulated (val) {
-					mutableRef.current.isScrollAnimationTargetAccumulated = val;
-				},
-				get lastInputType () {
-					return mutableRef.current.lastInputType;
-				},
-				set lastInputType (val) {
-					mutableRef.current.lastInputType = val;
-				},
-				get rtl () {
-					return rtl;
-				},
-				get scrollBounds () {
-					return getScrollBounds();
-				},
-				get scrollHeight () {
-					return mutableRef.current.bounds.scrollHeight;
-				},
-				get scrolling () {
-					return mutableRef.current.scrolling;
-				},
-				get scrollLeft () {
-					return mutableRef.current.scrollLeft;
-				},
 				scrollTo,
 				scrollToAccumulatedTarget,
-				get scrollToInfo () {
-					return mutableRef.current.scrollToInfo;
-				},
-				get scrollTop () {
-					return mutableRef.current.scrollTop;
-				},
 				setOverscrollStatus,
 				showScrollbarTrack,
 				start,
 				startHidingScrollbarTrack,
-				stop,
-				get wheelDirection () {
-					return mutableRef.current.wheelDirection;
-				},
-				set wheelDirection (val) {
-					mutableRef.current.wheelDirection = val;
-				}
+				stop
 			});
+			setScrollContainerHandle(themeScrollContainerHandle.current);
 		}
 	});
 
