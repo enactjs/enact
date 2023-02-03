@@ -5,7 +5,7 @@ import invariant from 'invariant';
  *
  * @class Job
  * @memberof core/util
- * @public
+ * @private
  */
 class Job {
 	id = null;
@@ -38,7 +38,7 @@ class Job {
 	 *
 	 * @returns {undefined}
 	 * @memberof core/util.Job.prototype
-	 * @public
+	 * @private
 	 */
 	start = (...args) => {
 		this.startAfter(this.timeout, ...args);
@@ -54,7 +54,7 @@ class Job {
 	 *
 	 * @returns {undefined}
 	 * @memberof core/util.Job.prototype
-	 * @public
+	 * @private
 	 */
 	startAfter = (timeout, ...args) => {
 		this.stop();
@@ -69,7 +69,7 @@ class Job {
 	 *
 	 * @returns {undefined}
 	 * @memberof core/util.Job.prototype
-	 * @public
+	 * @private
 	 */
 	stop = () => {
 		if (this.id) {
@@ -93,7 +93,7 @@ class Job {
 	 *
 	 * @returns {undefined}
 	 * @memberof core/util.Job.prototype
-	 * @public
+	 * @private
 	 */
 	throttle = (...args) => {
 		this.throttleUntil(this.timeout, ...args);
@@ -110,7 +110,7 @@ class Job {
 	 *
 	 * @returns {undefined}
 	 * @memberof core/util.Job.prototype
-	 * @public
+	 * @private
 	 */
 	throttleUntil = (timeout, ...args) => {
 		if (!this.id) {
@@ -128,7 +128,7 @@ class Job {
 	 *
 	 * @returns {undefined}
 	 * @memberof core/util.Job.prototype
-	 * @public
+	 * @private
 	 */
 	idle = (...args) => {
 		this.idleUntil(null, ...args);
@@ -145,7 +145,7 @@ class Job {
 	 *
 	 * @returns {undefined}
 	 * @memberof core/util.Job.prototype
-	 * @public
+	 * @private
 	 */
 	idleUntil = (timeout, ...args) => {
 		if (typeof window !== 'undefined' && window.requestIdleCallback) {
@@ -166,7 +166,7 @@ class Job {
 	 *
 	 * @returns {undefined}
 	 * @memberof core/util.Job.prototype
-	 * @public
+	 * @private
 	 */
 	startRaf = (...args) => {
 		this.startRafAfter(this.timeout, ...args);
@@ -225,7 +225,7 @@ class Job {
 	 *
 	 * @returns {Promise}
 	 * @memberof core/util.Job.prototype
-	 * @public
+	 * @private
 	 */
 	promise = (promise) => {
 		invariant(

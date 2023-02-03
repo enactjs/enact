@@ -549,7 +549,7 @@ const Spotlight = (function () {
 	const exports = /** @lends spotlight.Spotlight */ { // eslint-disable-line no-shadow
 		/**
 		 * Initializes Spotlight. This is generally handled by
-		 * {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}.
+		 * spotlight/SpotlightRootDecorator.SpotlightRootDecorator.
 		 *
 		 * @param {Object} containerDefaults Default configuration for new spotlight containers
 		 * @returns {undefined}

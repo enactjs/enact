@@ -20,6 +20,7 @@
  * @exports is
  * @exports remove
  * @exports removeAll
+ * @private
  */
 
 // keymap uses a singleton object, map, to manage the keymap. since webpack may make multiple copies

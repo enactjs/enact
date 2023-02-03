@@ -14,6 +14,7 @@
  * @exports perfNow
  * @exports mapAndFilterChildren
  * @exports shallowEqual
+ * @private
  */
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
@@ -31,7 +32,7 @@ import Job from './Job';
  *
  * @returns {String}          The capitalized string.
  * @memberof core/util
- * @public
+ * @private
  */
 const cap = function (str) {
 	return str.slice(0, 1).toUpperCase() + str.slice(1);
@@ -49,7 +50,7 @@ const cap = function (str) {
  *
  * @returns {Number}          The clamped value
  * @memberof core/util
- * @public
+ * @private
  */
 const clamp = (min, max, value) => {
 	if (min > max || value < min) return min;
@@ -70,7 +71,7 @@ const clamp = (min, max, value) => {
  *
  * @returns {Function}  Either `arg` if `arg` is a function, or a function that returns `arg`
  * @memberof core/util
- * @public
+ * @private
  */
 const coerceFunction = unless(isType(Function), always);
 
@@ -89,7 +90,7 @@ const coerceFunction = unless(isType(Function), always);
  *
  * @returns {Array}       Either `array` or `[array]`
  * @memberof core/util
- * @public
+ * @private
  */
 const coerceArray = function (array) {
 	return Array.isArray(array) ? array : [array];
@@ -103,7 +104,7 @@ const coerceArray = function (array) {
  *
  * @returns {Boolean}   `true` if `tag` is either a string or a function
  * @memberof core/util
- * @public
+ * @private
  */
 const isRenderable = function (tag) {
 	return ReactIs.isValidElementType(tag);
@@ -120,7 +121,7 @@ const isRenderable = function (tag) {
  *
  * @returns {Object}             ARIA-related props
  * @memberof core/util
- * @public
+ * @private
  */
 const extractAriaProps = function (props) {
 	const aria = {};
@@ -141,7 +142,7 @@ const extractAriaProps = function (props) {
  *
  * @returns {Number}                    The timestamp from `window.performance.now` or `Date.now`
  * @memberof core/util
- * @public
+ * @private
  */
 const perfNow = function () {
 	if (typeof window === 'object') {
@@ -178,7 +179,7 @@ const perfNow = function () {
  *
  * @returns {Object}                       The merged class name map.
  * @memberof core/util
- * @public
+ * @private
  */
 const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
 	let css = baseMap;
@@ -216,7 +217,7 @@ const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
  *
  * @returns {Function}        The new memoized function.
  * @memberof core/util
- * @public
+ * @private
  */
 const memoize = (fn) => {
 	let cache = {};
@@ -248,7 +249,7 @@ const memoize = (fn) => {
  * @returns {*}                The processed children or the value of `children` if not an array.
  * @memberof core/util
  * @see https://reactjs.org/docs/react-api.html#reactchildrenmap
- * @public
+ * @private
  */
 const mapAndFilterChildren = (children, callback, filter) => {
 	const result = Children.map(children, (child, ...rest) => {
@@ -274,7 +275,7 @@ const mapAndFilterChildren = (children, callback, filter) => {
  *
  * @returns {Boolean}          `true` if the values of all keys are strictly equal.
  * @memberof core/util
- * @public
+ * @private
  */
 const shallowEqual = (a, b) => {
 	if (Object.is(a, b)) {

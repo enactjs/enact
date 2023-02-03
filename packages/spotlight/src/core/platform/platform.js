@@ -4,7 +4,7 @@
  * @module core/platform
  * @exports detect
  * @exports platform
- * @public
+ * @private
  */
 
 import uniq from 'ramda/src/uniq';
@@ -159,7 +159,7 @@ const parseUserAgent = (userAgent) => {
  * @property {Boolean} unknown - `true` for any unknown system
  *
  * @memberof core/platform
- * @public
+ * @private
  */
 
 /**
@@ -168,7 +168,7 @@ const parseUserAgent = (userAgent) => {
  * @function detect
  * @returns {PlatformDescription}     The {@link core/platform.platform} object
  * @memberof core/platform
- * @public
+ * @private
  */
 const detect = () => {
 	if (_platform) {
@@ -193,7 +193,7 @@ const detect = () => {
  *
  * @type {PlatformDescription}
  * @memberof core/platform
- * @public
+ * @private
  */
 const platform = {};
 

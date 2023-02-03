@@ -116,7 +116,7 @@ const removeOne = curry(function (name, keyCode) {
  * @returns {undefined}
  * @curried
  * @memberof core/keymap
- * @public
+ * @private
  */
 const add = oneOrArray(addOne);
 
@@ -129,7 +129,7 @@ const add = oneOrArray(addOne);
  * @returns {undefined}
  * @curried
  * @memberof core/keymap
- * @public
+ * @private
  */
 const addAll = forEachObj(add);
 
@@ -143,7 +143,7 @@ const addAll = forEachObj(add);
  * @returns {undefined}
  * @curried
  * @memberof core/keymap
- * @public
+ * @private
  */
 const remove = oneOrArray(removeOne);
 
@@ -156,7 +156,7 @@ const remove = oneOrArray(removeOne);
  * @returns {undefined}
  * @curried
  * @memberof core/keymap
- * @public
+ * @private
  */
 const removeAll = forEachObj(remove);
 
@@ -170,7 +170,7 @@ const removeAll = forEachObj(remove);
  * @returns {Boolean}            `true` if `keyCode` is mapped to `name`
  * @curried
  * @memberof core/keymap
- * @public
+ * @private
  */
 const is = curry(function (name, keyCode) {
 	name = toLowerCase(name);

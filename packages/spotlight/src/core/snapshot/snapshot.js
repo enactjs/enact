@@ -5,7 +5,7 @@
  * @exports isWindowReady
  * @exports onWindowReady
  * @exports windowReady
- * @public
+ * @private
  */
 
 import invariant from 'invariant';
@@ -19,7 +19,7 @@ const windowCallbacks = [];
  *
  * @returns {Boolean} `true` when `window` is ready
  * @memberof core/snapshot
- * @public
+ * @private
  */
 function isWindowReady () {
 	return typeof window !== 'undefined';
@@ -44,7 +44,7 @@ function isWindowReady () {
  *
  * @returns {undefined}
  * @memberof core/snapshot
- * @public
+ * @private
  */
 function onWindowReady (callback) {
 	if (isWindowReady()) {
@@ -63,7 +63,7 @@ function onWindowReady (callback) {
  *
  * @returns {undefined}
  * @memberof core/snapshot
- * @public
+ * @private
  */
 function windowReady () {
 	invariant(
