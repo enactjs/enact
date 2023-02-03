@@ -8,8 +8,10 @@
  * @exports SlotItem
  * @exports SlotItemBase
  * @exports SlotItemDecorator
+ * @deprecated Will be removed in 5.0.0.
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
@@ -162,7 +164,7 @@ const SlotItemBase = kind({
 		)
 	},
 
-	render: ({children, component: Component, componentRef, inline, slotAfter, slotBefore, ...rest}) => {
+	render: deprecate(({children, component: Component, componentRef, inline, slotAfter, slotBefore, ...rest}) => {
 		delete rest.autoHide;
 		delete rest.layout;
 
@@ -177,7 +179,10 @@ const SlotItemBase = kind({
 				{slotAfter}
 			</Component>
 		);
-	}
+	}, {
+		name: 'ui/SlotItem',
+		until: '5.0.0'
+	})
 });
 
 /**

@@ -211,3 +211,51 @@ import CustomButton from './CustomButton';
 ```
 
 For more details and advanced theming features and recommendations, see our [Theming Guide](./theming.md).
+
+## Customizing Sandstone skin at Runtime
+
+Sometimes, you might want to change the appearance of components even after the application is built, for example, changing the color of the text in components or the background color of focused components globally.
+
+As we mentioned earlier, Enact provides several ways to customize the appearance of components but these methods are at design time. Since Sandstone 2.1, we've added Sandstone skin customization feature to support runtime customization. Thanks to this feature, you can customize the appearance of Sandstone components after the application is built. It allows you to customize the skin of your app without code modification. Moreover, you can even let app users define skin customization for your app.
+
+You might wonder how does this work? 
+We've made a list of CSS variables and made those variables can override the Sandstone skin. This approach makes style changes work properly and safely after the build. As of now, we support colors but we hope we could expand this feature beyond that.
+
+All you need to do is build your app with `--custom-skin` option and add a CSS file named `custom_skin.css` which includes a preset of colors, under the `customizations` folder in the build result like below. Make sure you've installed Enact CLI 5.1.0 or later.
+
+```bash
+enact pack --custom-skin
+```
+
+```none
+my-app/
+  README.md
+  .gitignore
+  package.json
+  dist/
+    customizations/
+      custom_skin.css
+    main.css
+    main.js
+    ...
+  node_modules/
+  src/
+  resources/
+  webos-meta/
+```
+
+You can make `custom_skin.css` file from the [Sandstone custom-skin sample](https://github.com/enactjs/samples/tree/master/sandstone/custom-skin). The sample also supports a preview of your customized skin. Pressing `SHOW OUTPUT` button will pop up the customized CSS and `DOWNLOAD` button will download your customized `custom_skin.css` file. The content of an example of `custom_skin.css` file looks like this:
+
+```css
+// custom_skin.css
+//
+.sandstone-theme {
+	--sand-bg-color: #000000;
+	--sand-text-color-rgb: 230, 230, 230;
+	--sand-component-text-color-rgb: 230, 230, 230;
+	--sand-component-bg-color: #7D848C;
+	--sand-component-active-indicator-bg-color: #E6E6E6;
+	--sand-component-inactive-indicator-bg-color: #9DA2A7;
+}
+```
+> Note: You should be sure to put RGB-separated values in the CSS variable names ending with `-rgb` if you edit the value in the file directly.
