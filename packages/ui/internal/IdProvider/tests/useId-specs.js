@@ -8,7 +8,7 @@ describe('useId', () => {
 
 	function Base (props) {
 		data.push(props);
-		return <div id={data.id} />;
+		return <div id={data.id} generateid={data.generateId} />;
 	}
 
 	function Component ({key, prefix, onUnmount}) {
