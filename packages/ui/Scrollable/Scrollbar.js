@@ -131,13 +131,13 @@ class ScrollbarBase extends PureComponent {
 			scrollOrigin = vertical ? scrollTop : scrollLeft,
 
 			thumbSizeRatioBase = scrollSize ? (clientSize / scrollSize) : 1,
-			scrollThumbPositionRatio = (scrollOrigin / (scrollSize - clientSize)),
-			scrollThumbPositionRatioNumberType = (scrollSize - clientSize) ? (scrollOrigin / (scrollSize - clientSize)) : 0,
+			scrollThumbPositionRatio = (scrollSize - clientSize) ? (scrollOrigin / (scrollSize - clientSize)) : 0,
+			scrollThumbPositionValid = (scrollSize - clientSize) ? 'valid' : '',
 			scrollThumbSizeRatio = Math.max(this.minThumbSizeRatio, Math.min(1, thumbSizeRatioBase));
 
 		setCSSVariable(this.thumbRef.current, '--scrollbar-size-ratio', scrollThumbSizeRatio);
 		setCSSVariable(this.thumbRef.current, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
-		setCSSVariable(this.thumbRef.current, '--scrollbar-progress-ratio-number-type', scrollThumbPositionRatioNumberType);
+		setCSSVariable(this.thumbRef.current, '--scrollbar-progress-valid', scrollThumbPositionValid);
 	};
 
 	showThumb = () => {

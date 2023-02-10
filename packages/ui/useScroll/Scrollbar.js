@@ -83,13 +83,13 @@ const useScrollbar = (props) => {
 			scrollContentSize = vertical ? bounds.scrollHeight : bounds.scrollWidth,
 			scrollOrigin = vertical ? bounds.scrollTop : bounds.scrollLeft,
 			scrollbarThumbSizeRatioBase = scrollContentSize ? (scrollViewSize / scrollContentSize) : 1,
-			scrollbarThumbProgressRatio = (scrollOrigin / (scrollContentSize - scrollViewSize)),
-			scrollbarThumbProgressRatioNumberType = (scrollContentSize - scrollViewSize) ? (scrollOrigin / (scrollContentSize - scrollViewSize)) : 0,
+			scrollbarThumbProgressRatio = (scrollContentSize - scrollViewSize) ? (scrollOrigin / (scrollContentSize - scrollViewSize)) : 0,
+			scrollbarThumbProgressValid = (scrollContentSize - scrollViewSize) ? 'valid' : '',
 			scrollbarThumbSizeRatio = Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, scrollbarThumbSizeRatioBase));
 
 		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-size-ratio', scrollbarThumbSizeRatio);
 		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-progress-ratio', scrollbarThumbProgressRatio);
-		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-progress-ratio-number-type', scrollbarThumbProgressRatioNumberType);
+		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-progress-valid', scrollbarThumbProgressValid);
 	}
 
 	if (scrollbarHandle) {

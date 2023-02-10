@@ -2,9 +2,9 @@
 	/* Set these to reasonable default values */
 	--scrollbar-size-ratio: 1;
 	--scrollbar-progress-ratio: 0;
-	--scrollbar-progress-ratio-number-type: 0;
+	--scrollbar-progress-valid: "";
 	--scrollbar-size: ~"calc(100% * var(--scrollbar-size-ratio))";
-	--scrollbar-progress: ~"calc(((1 - var(--scrollbar-size-ratio)) * var(--scrollbar-progress-ratio-number-type)) * 100%)";
+	--scrollbar-progress: ~"calc(((1 - var(--scrollbar-size-ratio)) * var(--scrollbar-progress-ratio)) * 100%)";
 
 	position: relative;
 	width: 3px;
