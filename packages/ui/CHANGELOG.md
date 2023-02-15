@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
-
-### Fixed
-
-- `ui/Scrollable` and `ui/useScroll` to display the scroller thumb for scrollers with short contents after chromium 99 version
-
 ## [4.6.1] - 2023-02-03
 
 ### Added
