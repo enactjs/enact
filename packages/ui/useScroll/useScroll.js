@@ -214,6 +214,7 @@ const useScrollBase = (props) => {
 		prevState: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible}
 	});
 
+	/* istanbul ignore next */
 	const themeScrollContainerHandle = useRef({
 		get animator () {
 			return mutableRef.current.animator;
@@ -273,6 +274,7 @@ const useScrollBase = (props) => {
 	}
 
 	useLayoutEffect(() => {
+		/* istanbul ignore next */
 		if (setScrollContainerHandle) {
 			Object.assign(themeScrollContainerHandle.current, {
 				applyOverscrollEffect,
