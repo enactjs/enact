@@ -232,19 +232,6 @@ class View extends Component {
 		}
 	}
 
-	// This is called when the child has been removed from the ReactTransitionGroup. Though the
-	// child has been removed, ReactTransitionGroup will keep it in the DOM until callback is
-	// called.
-	componentWillLeave (callback) {
-		const {arranger, reverseTransition} = this.props;
-		this.enteringJob.stop();
-		if (arranger) {
-			this.prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback);
-		} else {
-			callback();
-		}
-	}
-
 	/**
 	 * Initiates a new transition
 	 *
