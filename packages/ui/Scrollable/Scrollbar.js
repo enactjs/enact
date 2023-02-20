@@ -130,8 +130,8 @@ class ScrollbarBase extends PureComponent {
 			scrollSize = vertical ? scrollHeight : scrollWidth,
 			scrollOrigin = vertical ? scrollTop : scrollLeft,
 
-			thumbSizeRatioBase = scrollSize !== 0 ? (clientSize / scrollSize) : 1,
-			scrollThumbPositionRatio = (scrollSize - clientSize) !== 0 ? (scrollOrigin / (scrollSize - clientSize)) : 0,
+			thumbSizeRatioBase = (clientSize / scrollSize),
+			scrollThumbPositionRatio = (scrollOrigin / (scrollSize - clientSize)),
 			scrollThumbSizeRatio = Math.max(this.minThumbSizeRatio, Math.min(1, thumbSizeRatioBase));
 
 		setCSSVariable(this.thumbRef.current, '--scrollbar-size-ratio', scrollThumbSizeRatio);
