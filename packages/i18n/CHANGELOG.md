@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+- Fixed to load resources for theme libraries asynchronously
+
 ## [4.6.1] - 2023-02-03
 
 No significant changes.
