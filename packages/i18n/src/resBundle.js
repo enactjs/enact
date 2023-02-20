@@ -10,6 +10,7 @@ let resBundle;
  * @returns {ilib.ResBundle} Current ResBundle
  */
 function getResBundle () {
+	console.log("enact/i18n/resBundle ", resBundle);
 	return resBundle;
 }
 

@@ -27,7 +27,7 @@ import {getIStringFromBundle, getResBundle} from '../src/resBundle';
  */
 function toIString (str) {
 	const rb = getResBundle();
-
+	console.log("enact/i18n rb ?", rb);
 	return getIStringFromBundle(str, rb);
 }
 
@@ -41,6 +41,7 @@ function toIString (str) {
  * @returns {String} The translated string
  */
 function $L (str) {
+	console.log("enact/i18n/$L ", str);
 	return String(toIString(str));
 }
 

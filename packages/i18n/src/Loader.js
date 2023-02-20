@@ -13,6 +13,7 @@ const getImpl = (url, callback, sync) => {
 		let req;
 		xhr({url, sync, beforeSend: (r) => (req = r)}, (err, resp, body) => {
 			let error = err || resp.statusCode !== 200 && resp.statusCode;
+			console.log("i18n Loader::: getImpl sync? ", sync, " url? ", url);
 			// false failure from chrome and file:// urls
 			if (error && req.status === 0 && req.response.length > 0) {
 				body = req.response;
@@ -214,6 +215,8 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 		_root = params.root; // Deprecated; to be removed in future
 	}
 
+	console.log("loadFiles paths ?", paths, " _root? ", _root);
+
 	if (sync) {
 		this.loadManifestsSync(_root);
 		if (this.addPaths && Array.isArray(this.addPaths)) {
@@ -289,7 +292,7 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 		// asynchronous
 		let cache = {data: this._loadFilesCache(_root, paths)};
 
-		Promise.all(paths.map(path => this._loadFilesAsync(path, params, cache))).then(results => {
+		Promise.all(paths.map(path => this._loadFilesAsync(path, params, cache, rootPath))).then(results => {
 			if (cache.update) {
 				this._storeFilesCache(_root, paths, results);
 			}
@@ -375,6 +378,8 @@ EnyoLoader.prototype._loadManifest = function (_root, subpath, sync) {
 		cachedManifest = window.localStorage.getItem(cachePrefix + filepath);
 	}
 
+	console.log("loadManifest dirpath: ", dirpath);
+
 	if (this._validateManifest(cachedManifest, filepath, sync)) {
 		this.manifest[dirpath] = JSON.parse(cachedManifest).files;
 
@@ -393,6 +398,7 @@ EnyoLoader.prototype._loadManifest = function (_root, subpath, sync) {
 };
 
 EnyoLoader.prototype.loadManifests = function (_root) {
+	console.log("!!! loadManifests async!!! ", _root);
 	this._validateCache();
 	return Promise.all([
 		// standard ilib locale data
