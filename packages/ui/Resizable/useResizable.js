@@ -22,6 +22,12 @@ const useResizable = (props, config) => {
 		if (resizeContextValue && typeof resizeContextValue === 'function') {
 			mutableRef.current.resizeRegistry = resizeContextValue(() => {});
 		}
+
+		return () => {
+			if (mutableRef.current.resizeRegistry) {
+				mutableRef.current.resizeRegistry.unregister();
+			}
+		}
 	}, [resizeContextValue]);
 
 	const handleResize = useCallback(() => {
