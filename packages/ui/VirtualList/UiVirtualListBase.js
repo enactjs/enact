@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
+import deprecate from '@enact/core/internal/deprecate';
 import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
@@ -1121,6 +1122,10 @@ const VirtualListBaseFactory = (type) => {
 		}
 
 		render () {
+			deprecate({
+				name: 'ui/VirtualList.VirtualListBase',
+				until: '5.0.0'
+			});
 			const
 				{className, containerProps, itemsRenderer, style, ...rest} = this.props,
 				{cc, itemContainerRef, primary} = this,
@@ -1169,6 +1174,7 @@ const VirtualListBaseFactory = (type) => {
  * @memberof ui/VirtualList
  * @ui
  * @public
+ * @deprecated Will be removed in 5.0.0.
  */
 const VirtualListBase = VirtualListBaseFactory(JS);
 VirtualListBase.displayName = 'ui:VirtualListBase';

@@ -553,4 +553,41 @@ describe('MarqueeController', () => {
 
 		expect(spy).toHaveBeenCalledTimes(2);
 	});
+
+	test('should set a minimum value for reset delay when `marqueeDelay` is less than 40', () => {
+		render(
+			<Controller>
+				<Marquee
+					marqueeDelay={0}
+					marqueeOn="render"
+				>
+					{ltrArray[0]}
+				</Marquee>
+			</Controller>
+		);
+
+		const marquee1 = screen.getByText(ltrArray[0]);
+
+		marquee1.getBoundingClientRect = jest.fn(() => {
+			return {
+				width: 50,
+				height: 50,
+				top: 0,
+				left: 0,
+				bottom: 0,
+				right: 0
+			};
+		});
+
+		fireEvent.focus(marquee1);
+		act(() => jest.advanceTimersByTime(10));
+
+		fireEvent.transitionEnd(marquee1);
+
+		act(() => jest.advanceTimersByTime(10));
+		expect(marquee1).toHaveStyle({'transform': 'translateX(0)'});
+
+		act(() => jest.advanceTimersByTime(40));
+		expect(marquee1).toHaveStyle({'transform': 'translateX(-125px)'});
+	});
 });

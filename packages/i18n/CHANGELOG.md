@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [4.6.1] - 2023-02-03
+
+No significant changes.
+
+## [4.6.0] - 2022-12-05
+
+No significant changes.
+
+## [4.0.12] - 2022-09-16
+
+No significant changes.
+
 ## [4.5.2] - 2022-08-17
 
 No significant changes.
@@ -30,9 +42,19 @@ No significant changes.
 
 No significant changes.
 
+## [4.0.11] - 2022-04-25
+
+No significant changes.
+
 ## [4.5.0-alpha.1] - 2022-04-15
 
 No significant changes.
+
+## [4.0.10] - 2022-04-05
+
+### Added
+
+- Support for loading changed resources and additional ilib resources paths
 
 ## [4.1.4] - 2022-03-24
 
@@ -42,7 +64,15 @@ No significant changes.
 
 No significant changes.
 
+## [3.2.7] - 2022-01-17
+
+No significant changes.
+
 ## [4.1.2] - 2021-12-22
+
+No significant changes.
+
+## [4.0.9] - 2021-12-15
 
 No significant changes.
 
