@@ -231,15 +231,15 @@ const Spotlight = (function () {
 			_duringFocusChange = false;
 			return true;
 		}
+
+		elem.focus(focusOptions);
+
 		const elemRect = elem.getBoundingClientRect();
 
 		focusEffect.style.left = `${elemRect.x + window.scrollX}px`;
 		focusEffect.style.top = `${elemRect.y + window.scrollY}px`;
 		focusEffect.style.width = `${elemRect.width}px`;
 		focusEffect.style.height = `${elemRect.height}px`;
-
-		// elem.style.outline = 'none';
-		elem.focus(focusOptions);
 
 		_duringFocusChange = false;
 
