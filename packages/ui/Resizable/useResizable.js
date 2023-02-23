@@ -19,15 +19,17 @@ const useResizable = (props, config) => {
 	});
 
 	useEffect(() => {
+		let {resizeRegistry} = mutableRef.current;
+
 		if (resizeContextValue && typeof resizeContextValue === 'function') {
 			mutableRef.current.resizeRegistry = resizeContextValue(() => {});
 		}
 
 		return () => {
-			if (mutableRef.current.resizeRegistry) {
-				mutableRef.current.resizeRegistry.unregister();
+			if (resizeRegistry) {
+				resizeRegistry.unregister();
 			}
-		}
+		};
 	}, [resizeContextValue]);
 
 	const handleResize = useCallback(() => {

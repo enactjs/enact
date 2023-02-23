@@ -17,6 +17,7 @@ describe('useResizable', () => {
 		const handlers = useResizable(props, {resize: 'onClick'});
 		return <DivComponent {...handlers}>{props.children}</DivComponent>;
 	};
+
 	describe('config', () => {
 		test('should pass \'onClick\' handler to the wrapped component', () => {
 			const resizeRegistry = Registry.create();
