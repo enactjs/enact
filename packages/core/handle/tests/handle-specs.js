@@ -7,6 +7,7 @@ import {
 	forProp,
 	forward,
 	forwardCustom,
+	forwardCustomWithPrevent,
 	forwardWithPrevent,
 	handle,
 	oneOf,
@@ -565,6 +566,86 @@ describe('handle', () => {
 			const actual = adapter.mock.calls[0];
 
 			expect(actual).toEqual(expected);
+		});
+	});
+
+	describe('#forwardCustomWithPrevent', () => {
+		test('should pass an object with `type` when no adapter is provided', () => {
+			const handler = jest.fn();
+
+			forwardCustomWithPrevent('onCustomEvent')(null, {onCustomEvent: handler});
+
+			const actual = handler.mock.calls[0][0];
+
+			expect(actual).toEqual(expect.objectContaining({
+				type: 'onCustomEvent',
+				preventDefault: expect.any(Function)
+			}));
+		});
+
+		test('should add `type` to object returned by adapter', () => {
+			const handler = jest.fn();
+			const adapter = () => ({index: 0});
+			forwardCustomWithPrevent('onCustomEvent', adapter)(null, {onCustomEvent: handler});
+
+			const actual = handler.mock.calls[0][0];
+
+			expect(actual).toEqual(expect.objectContaining({
+				type: 'onCustomEvent',
+				preventDefault: expect.any(Function),
+				index: 0
+			}));
+		});
+
+		test('should create an event payload if the adapter returns nothing', () => {
+			const handler = jest.fn();
+			const adapter = () => null;
+			forwardCustomWithPrevent('onCustomEvent', adapter)(null, {onCustomEvent: handler});
+
+			const actual = handler.mock.calls[0][0];
+
+			expect(actual).toEqual(expect.objectContaining({
+				type: 'onCustomEvent',
+				preventDefault: expect.any(Function)
+			}));
+		});
+
+		test('should pass event, props, and context args to adapter', () => {
+			const adapter = jest.fn();
+			const args = [
+				1, // ev,
+				2, // props,
+				3  // context
+			];
+			forwardCustomWithPrevent('onCustomEvent', adapter)(...args);
+
+			const expected = args;
+			const actual = adapter.mock.calls[0];
+
+			expect(actual).toEqual(expected);
+		});
+
+		test('should events to function specified in provided props when preventDefault() hasn\'t been called', () => {
+			const event = 'onMyClick';
+			const handler = jest.fn();
+
+			const callback = handle(forwardCustomWithPrevent(event), handler);
+
+			callback();
+			expect(handler).toHaveBeenCalledTimes(1);
+		});
+
+		test('should not events to function specified in provided props when preventDefault() has been called', () => {
+			const event = 'onMyClick';
+			const handler = jest.fn();
+
+			const callback = handle(forwardCustomWithPrevent(event), handler);
+
+			// should stop chain when `preventDefault()` has been called
+			callback({}, {
+				'onMyClick': (ev) => ev.preventDefault()
+			});
+			expect(handler).not.toHaveBeenCalled();
 		});
 	});
 });

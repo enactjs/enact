@@ -810,7 +810,7 @@ const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = named((name, 
 
 			if (typeof customEventPayload.preventDefault === 'function') {
 				existingPreventDefault = customEventPayload.preventDefault;
-			} else if (typeof ev.preventDefault === 'function') {
+			} else if (typeof ev?.preventDefault === 'function') {
 				existingPreventDefault = ev.preventDefault.bind(ev);
 			}
 
