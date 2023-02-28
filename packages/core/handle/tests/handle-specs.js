@@ -610,6 +610,28 @@ describe('handle', () => {
 			}));
 		});
 
+		test('should pass an object with `preventDefault` and `stopPropagation` when event has them', () => {
+			const ev = {
+				preventDefault: jest.fn(),
+				stopPropagation: () => {}
+			};
+			const handler = jest.fn();
+			const adapter = () => null;
+			forwardCustomWithPrevent('onCustomEvent', adapter)(ev, {onCustomEvent: handler});
+
+			const actual = handler.mock.calls[0][0];
+
+			expect(actual).toEqual(expect.objectContaining({
+				type: 'onCustomEvent',
+				preventDefault: expect.any(Function),
+				stopPropagation: expect.any(Function)
+			}));
+
+			actual.preventDefault();
+
+			expect(ev.preventDefault).toHaveBeenCalled();
+		});
+
 		test('should pass event, props, and context args to adapter', () => {
 			const adapter = jest.fn();
 			const args = [
