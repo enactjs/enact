@@ -390,10 +390,15 @@ class TransitionGroup extends Component {
 	performLeave = (key) => {
 		this.currentlyTransitioningKeys[key] = true;
 
-		// Note that this is somewhat dangerous b/c it calls setState()
-		// again, effectively mutating the component before all the work
-		// is done.
-		this._handleDoneLeaving(key);
+		const component = this.groupRefs[key];
+		if (component.componentWillLeave) {
+			component.componentWillLeave(this._handleDoneLeaving.bind(this, key));
+		} else {
+			// Note that this is somewhat dangerous b/c it calls setState()
+			// again, effectively mutating the component before all the work
+			// is done.
+			this._handleDoneLeaving(key);
+		}
 	};
 
 	_handleDoneLeaving = (key) => {
