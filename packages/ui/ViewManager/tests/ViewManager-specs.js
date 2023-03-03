@@ -630,7 +630,7 @@ describe('ViewManager', () => {
 		spy.mockRestore();
 	});
 
-	test('should increase the same number of `views` by 1 right after if the difference between `index` and `end` stays constant', () => {
+	test('should not remove view immediately after `index` change if an arranger is present even for multiple views', () => {
 		const {rerender} = render(
 			<ViewManager arranger={SlideTopArranger} data-testid="viewManager" end={2} index={0}>
 				<div key="view1">View 1</div>
