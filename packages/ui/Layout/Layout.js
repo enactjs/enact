@@ -179,6 +179,7 @@ const LayoutBase = kind({
 		 * This includes support shorthand for combining `align-items` and `justify-content` into
 		 * a single property, separated by a space, in that order. This allows you to specify both
 		 * the horizontal and vertical alignment in one property, separated by a space.
+		 *
 		 * For example, `align="center space-between"` means `align-items: center` and
 		 * `justify-content: space-between` for each. `justify-content` property can be used to
 		 * align the Cells on the main axis and adjust gaps among the Cells. To declare the
