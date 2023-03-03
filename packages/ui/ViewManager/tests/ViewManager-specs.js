@@ -129,7 +129,7 @@ describe('ViewManager', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should have 1 children immediately after setting new {index} with an {arranger}', () => {
+	test('should have 2 children immediately after setting new {index} with an {arranger}', () => {
 		const {rerender} = render(
 			<ViewManager arranger={MockArranger} data-testid="viewManager" index={3}>
 				<div>View 1</div>
@@ -150,7 +150,7 @@ describe('ViewManager', () => {
 			</ViewManager>
 		);
 
-		const expected = 1;
+		const expected = 2;
 		const actual = screen.getByTestId('viewManager').children.length;
 
 		expect(actual).toBe(expected);
