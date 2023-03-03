@@ -1,6 +1,10 @@
 // Layout.module.less
 //
 
+.select-min-width(@a; @b) when (@a > @b) {
+	min-width: @b;
+}
+
 .layout {
 	display: flex;
 	margin: 0;
@@ -8,15 +12,15 @@
 
 	// Children
 	.cell {
-		flex: 1 0;
+		flex: 0 0;
 		position: relative;  // Allow content to treat cells as positionable spaces
 
 		&.grow {
-			flex: 1 1 100%;
+			flex: 1 0 auto;
 		}
 
 		&.shrink {
-			flex: 0 0 auto;
+			flex: 0 1 auto;
 		}
 	}
 
@@ -30,6 +34,10 @@
 				width: 0;
 				max-width: none;
 				min-width: var(--cell-size);
+			}
+			&.shrink {
+				// .select-min-width(var(--cell-size), max-content);
+				min-width: max-content;
 			}
 		}
 	}
@@ -45,6 +53,9 @@
 				align-self: normal;
 				max-height: none;
 				min-height: var(--cell-size);
+			}
+			&.shrink {
+				min-height: max-content;
 			}
 		}
 	}
