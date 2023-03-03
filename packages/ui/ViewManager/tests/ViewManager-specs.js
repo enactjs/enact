@@ -4,6 +4,7 @@ import {Component} from 'react';
 
 import ViewManager from '../';
 import {SlideTopArranger,} from '../Arranger';
+
 import {MockArranger} from './test-utils';
 
 describe('ViewManager', () => {

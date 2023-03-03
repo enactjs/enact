@@ -2,7 +2,9 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-### Unreleased
+## Unreleased
+
+### Fixed
 
 - `ui/ViewManager` fixed problem with arranger
 
