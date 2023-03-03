@@ -3,7 +3,7 @@ import {act, render, screen, waitFor} from '@testing-library/react';
 import {Component} from 'react';
 
 import ViewManager from '../';
-import {SlideTopArranger,} from '../Arranger';
+import {SlideTopArranger} from '../Arranger';
 
 import {MockArranger} from './test-utils';
 
