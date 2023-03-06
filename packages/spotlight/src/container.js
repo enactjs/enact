@@ -599,7 +599,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const config = getContainerConfig(containerId);
-	if (verify && config && config.selector && !isContainer(node) && !(matchSelector(config.selector, node) || (GlobalConfig.isStandardFocusableMode && isStandardFocusable(node)))) {
+	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node) && !(GlobalConfig.isStandardFocusableMode && isStandardFocusable(node))) {
 		return false;
 	}
 
