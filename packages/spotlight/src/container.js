@@ -46,6 +46,7 @@ let GlobalConfig = {
 	continue5WayHold: false,
 	defaultElement: '',     // <extSelector> except "@" syntax.
 	enterTo: '',            // '', 'last-focused', 'default-element'
+	isStandardFocusableMode: false,     // @private - set to true to focus standard focusable element
 	lastFocusedElement: null,
 	lastFocusedKey: null,
 	lastFocusedPersist: (node, all) => {
@@ -90,7 +91,7 @@ let GlobalConfig = {
  */
 const querySelector = (node, includeSelector, excludeSelector) => {
 	let include = new Set(node.querySelectorAll(includeSelector));
-	const focusables = Array.prototype.filter.call(node.getElementsByTagName('*'), isStandardFocusable);
+	const focusables = GlobalConfig.isStandardFocusableMode ? Array.prototype.filter.call(node.getElementsByTagName('*'), isStandardFocusable) : [];
 	include = new Set([...include, ...focusables]);
 
 	const exclude = node.querySelectorAll(excludeSelector);
@@ -598,7 +599,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const config = getContainerConfig(containerId);
-	if (verify && config && config.selector && !isContainer(node) && !(matchSelector(config.selector, node) || isStandardFocusable(node))) {
+	if (verify && config && config.selector && !isContainer(node) && !(matchSelector(config.selector, node) || (GlobalConfig.isStandardFocusableMode && isStandardFocusable(node)))) {
 		return false;
 	}
 

@@ -89,8 +89,6 @@ const isLeft = is('left');
 const isRight = is('right');
 const isUp = is('up');
 
-let focusEffect = document.createElement('div');
-
 /**
  * Translates keyCodes into 5-way direction descriptions (e.g. `'down'`)
  *
@@ -138,6 +136,7 @@ const Spotlight = (function () {
 	*/
 	let _initialized = false;
 	let _duringFocusChange = false;
+	let _focusRingElement = null;
 
 	/*
 	 * Whether a 5-way directional key is being held.
@@ -234,12 +233,14 @@ const Spotlight = (function () {
 
 		elem.focus(focusOptions);
 
-		const elemRect = elem.getBoundingClientRect();
+		if (_focusRingElement) {
+			const elemRect = elem.getBoundingClientRect();
 
-		focusEffect.style.left = `${elemRect.x + window.scrollX}px`;
-		focusEffect.style.top = `${elemRect.y + window.scrollY}px`;
-		focusEffect.style.width = `${elemRect.width}px`;
-		focusEffect.style.height = `${elemRect.height}px`;
+			_focusRingElement.style.left = `${elemRect.x + window.scrollX}px`;
+			_focusRingElement.style.top = `${elemRect.y + window.scrollY}px`;
+			_focusRingElement.style.width = `${elemRect.width}px`;
+			_focusRingElement.style.height = `${elemRect.height}px`;
+		}
 
 		_duringFocusChange = false;
 
@@ -578,6 +579,9 @@ const Spotlight = (function () {
 				// by default, pointer mode is off but the platform's current state will override that
 				setPointerMode(false);
 				setPlatformPointerMode();
+				if (getContainerConfig('spotlightRootDecorator')?.isStandardFocusableMode) {
+					_focusRingElement = document.querySelector('#spotlightFocusRing');
+				}
 				_initialized = true;
 			}
 		},
@@ -958,30 +962,7 @@ const Spotlight = (function () {
 		 */
 		focusNextFromPoint: spotNextFromPoint
 	};
-	window.addEventListener('load', () => {
-		if (typeof window === 'object' && !_initialized) {
-			document.body.appendChild(focusEffect);
 
-			focusEffect.style.position = 'absolute';
-			focusEffect.style.boxShadow = '0 0 0 2px white, 0 0 0 4px #997EF9, 0 0 10px 7px rgb(140, 108, 255, 0.4)';
-			focusEffect.style.borderRadius = '4px';
-			focusEffect.style.transition = 'top 0.2s ease-in-out, left 0.2s ease-in-out';
-			focusEffect.style.willChange = 'top, left';
-			focusEffect.style.zIndex = 10001;
-			focusEffect.style.pointerEvents = 'none';
-
-			Spotlight.initialize({
-				selector: '.' + spottableClass,
-				restrict: 'none'
-			});
-
-			Spotlight.set(rootContainerId, {
-				overflow: true
-			});
-
-			Spotlight.focus();
-		}
-	});
 	return exports;
 
 })();
