@@ -182,10 +182,10 @@ function isStandardFocusable (element) {
 	} else if (['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'OPTGROUP', 'OPTION', 'FIELDSET'].includes(element.tagName) && element.disabled) {
 		// If the element is actually disabled, it is not focusable
 		return false;
-	} else if (element.tagName ==='A' && element.getAttribute('href') !== null) {
+	} else if (element.tagName === 'A' && element.getAttribute('href') !== null) {
 		// Anchor element that has an href attribute is focusable
 		return true;
-	} else if (element.tagName ==='INPUT' && element.type !== 'hidden') {
+	} else if (element.tagName === 'INPUT' && element.type !== 'hidden') {
 		// Input element whose type attribute is not hidden is focusable
 		return true;
 	} else if (element.tabIndex >= 0 || !element.parentElement) {
