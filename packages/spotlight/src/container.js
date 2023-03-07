@@ -90,9 +90,8 @@ let GlobalConfig = {
  * @private
  */
 const querySelector = (node, includeSelector, excludeSelector) => {
-	let include = new Set(node.querySelectorAll(includeSelector));
 	const focusables = GlobalConfig.isStandardFocusableMode ? Array.prototype.filter.call(node.getElementsByTagName('*'), isStandardFocusable) : [];
-	include = new Set([...include, ...focusables]);
+	const include = new Set([...node.querySelectorAll(includeSelector), ...focusables]);
 
 	const exclude = node.querySelectorAll(excludeSelector);
 

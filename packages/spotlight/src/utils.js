@@ -172,32 +172,33 @@ function getContainerRect (containerId) {
 	return getRect(containerNode);
 }
 
+// For details see: https://html.spec.whatwg.org/multipage/interaction.html#focusable-area
 function isStandardFocusable (element) {
-	if ((element.tabIndex < 0) || isAtagWithoutHref(element) || isActuallyDisabled(element) || isExpresslyInert(element) || isElementHidden(element)) {
+	if (element.tabIndex < 0) {
+		// If the tabIndex value is negative, it is not focusable
 		return false;
-	} else if ((!element.parentElement) || (element.tabIndex >= 0)) {
+	} else if (isElementHidden(element)) {
+		return false;
+	} else if (['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'OPTGROUP', 'OPTION', 'FIELDSET'].includes(element.tagName) && element.disabled) {
+		// If the element is actually disabled, it is not focusable
+		return false;
+	} else if (element.tagName ==='A' && element.getAttribute('href') !== null) {
+		// Anchor element that has an href attribute is focusable
 		return true;
-	}
-}
-
-function isAtagWithoutHref (element) {
-	return (element.tagName === 'A' && element.getAttribute('href') === null && element.getAttribute('tabIndex') === null);
-}
-
-function isActuallyDisabled (element) {
-	if (['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'OPTGROUP', 'OPTION', 'FIELDSET'].includes(element.tagName)) {
-		return (element.disabled);
+	} else if (element.tagName ==='INPUT' && element.type !== 'hidden') {
+		// Input element whose type attribute is not hidden is focusable
+		return true;
+	} else if (element.tabIndex >= 0 || !element.parentElement) {
+		// If the tabIndex value is more than 0, it is focusable
+		// If element is document or iframe, it is focusable
+		return true;
 	} else {
 		return false;
 	}
 }
 
-function isExpresslyInert (element) {
-	return ((element.inert) && (!element.ownerDocument.documentElement.inert));
-}
-
 function isElementHidden (element) {
-	let elemRect = element.getBoundingClientRect();
+	const elemRect = element.getBoundingClientRect();
 	if ((elemRect.width <= 1 && elemRect.height <= 1) || elemRect.x < -3840 || elemRect.y < -2160 || element.getAttribute('hidden')) {
 		return true;
 	} else {
