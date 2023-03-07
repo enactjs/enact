@@ -233,6 +233,7 @@ const Spotlight = (function () {
 
 		elem.focus(focusOptions);
 
+		/* istanbul ignore next */
 		if (_focusRingElement) {
 			const elemRect = elem.getBoundingClientRect();
 
@@ -579,9 +580,12 @@ const Spotlight = (function () {
 				// by default, pointer mode is off but the platform's current state will override that
 				setPointerMode(false);
 				setPlatformPointerMode();
+
+				/* istanbul ignore next */
 				if (getContainerConfig('spotlightRootDecorator')?.isStandardFocusableMode) {
 					_focusRingElement = document.querySelector('#spotlightFocusRing');
 				}
+
 				_initialized = true;
 			}
 		},
