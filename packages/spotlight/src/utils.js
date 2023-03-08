@@ -172,6 +172,40 @@ function getContainerRect (containerId) {
 	return getRect(containerNode);
 }
 
+// For details see: https://html.spec.whatwg.org/multipage/interaction.html#focusable-area
+function isStandardFocusable (element) {
+	if (element.tabIndex < 0) {
+		// If the tabIndex value is negative, it is not focusable
+		return false;
+	} else if (isElementHidden(element)) {
+		return false;
+	} else if (['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'OPTGROUP', 'OPTION', 'FIELDSET'].includes(element.tagName) && element.disabled) {
+		// If the element is actually disabled, it is not focusable
+		return false;
+	} else if (element.tagName === 'A' && element.getAttribute('href') !== null) {
+		// Anchor element that has an href attribute is focusable
+		return true;
+	} else if (element.tagName === 'INPUT' && element.type !== 'hidden') {
+		// Input element whose type attribute is not hidden is focusable
+		return true;
+	} else if (element.tabIndex >= 0 || !element.parentElement) {
+		// If the tabIndex value is more than 0, it is focusable
+		// If element is document or iframe, it is focusable
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function isElementHidden (element) {
+	const elemRect = element.getBoundingClientRect();
+	if ((elemRect.width <= 1 && elemRect.height <= 1) || elemRect.x < -3840 || elemRect.y < -2160 || element.getAttribute('hidden')) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 export {
 	contains,
 	getContainerRect,
@@ -179,6 +213,7 @@ export {
 	getRect,
 	getRects,
 	intersects,
+	isStandardFocusable,
 	matchSelector,
 	parseSelector
 };
