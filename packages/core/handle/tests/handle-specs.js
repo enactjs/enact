@@ -570,7 +570,7 @@ describe('handle', () => {
 	});
 
 	describe('#forwardCustomWithPrevent', () => {
-		test('should pass an object with `type` when no adapter is provided', () => {
+		test('should pass an object with `type` and `preventDefault` when no adapter is provided', () => {
 			const handler = jest.fn();
 
 			forwardCustomWithPrevent('onCustomEvent')(null, {onCustomEvent: handler});
@@ -583,7 +583,7 @@ describe('handle', () => {
 			}));
 		});
 
-		test('should add `type` to object returned by adapter', () => {
+		test('should add `type` and `preventDefault` to object returned by adapter', () => {
 			const handler = jest.fn();
 			const adapter = () => ({index: 0});
 			forwardCustomWithPrevent('onCustomEvent', adapter)(null, {onCustomEvent: handler});
@@ -647,7 +647,7 @@ describe('handle', () => {
 			expect(actual).toEqual(expected);
 		});
 
-		test('should events to function specified in provided props when preventDefault() hasn\'t been called', () => {
+		test('should call the next handler when `preventDefault` from provided props hasn\'t been called', () => {
 			const event = 'onMyClick';
 			const handler = jest.fn();
 
@@ -657,7 +657,7 @@ describe('handle', () => {
 			expect(handler).toHaveBeenCalledTimes(1);
 		});
 
-		test('should not events to function specified in provided props when preventDefault() has been called', () => {
+		test('should not call the next handler when `preventDefault` from provided props has been called', () => {
 			const event = 'onMyClick';
 			const handler = jest.fn();
 
