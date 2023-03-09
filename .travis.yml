@@ -2,16 +2,20 @@ dist: focal
 language: node_js
 node_js:
     - lts/*
-    # - node
+    - node
 sudo: false
 before_install:
     - sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 install:
     - npm config set prefer-offline false
-    - npm install -g enactjs/cli#develop
     - npm install -g codecov
+    - git clone --branch=develop --depth 1 https://github.com/enactjs/cli ../cli
+    - pushd ../cli
     - npm install
-    - npm run bootstrap --legacy-peer-deps
+    - npm link
+    - popd
+    - npm install
+    - npm run bootstrap
 script:
     - echo -e "\x1b\x5b35;1m*** Starting tests...\x1b\x5b0m"
     - npm test -- -- -- --runInBand --coverage
@@ -21,7 +25,6 @@ script:
     - npm run lerna -- run lint -- -- -- --report-unused-disable-directives --max-warnings 0 .
     - echo -e "\x1b\x5b35;1m*** eslint complete\x1b\x5b0m"
     - echo -e "\x1b\x5b35;1m*** Starting docs validation...\x1b\x5b0m"
-    - npm install # Workaround for @babel/core error with documentation v13
     - npm run validate-docs
     - echo -e "\x1b\x5b35;1m*** Docs validation complete\x1b\x5b0m"
     - echo -e "\x1b\x5b35;1m*** Starting sampler builds...\x1b\x5b0m"
