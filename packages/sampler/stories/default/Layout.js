@@ -29,7 +29,10 @@ export const _Layout = (args) => (
 			<Cell shrink={args['shrinkable cell']}>
 				<Item>Second</Item>
 			</Cell>
-			<Cell>
+			<Cell
+				grow={args['growable cell']}
+				size={args['cell size'] + 'px'}
+			>
 				<Item>Third</Item>
 			</Cell>
 			<Cell shrink>
@@ -43,6 +46,7 @@ select('align', _Layout, ['start', 'center', 'stretch', 'end'], Layout, 'start')
 select('orientation', _Layout, ['horizontal', 'vertical'], Layout, 'horizontal');
 range('cell size', _Layout, Cell, {min: 0, max: 300, step: 5}, 100);
 boolean('shrinkable cell', _Layout, Cell);
+boolean('growable cell', _Layout, Cell);
 
 _Layout.parameters = {
 	info: {
