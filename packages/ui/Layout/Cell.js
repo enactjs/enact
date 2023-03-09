@@ -130,7 +130,6 @@ const CellBase = kind({
 
 	defaultProps: {
 		component: 'div',
-		grow: false,
 		shrink: false
 	},
 

@@ -2,6 +2,11 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+- `ui/Layout.Cell` prop `grow` to expand its size to the container
+
 ## [4.6.1] - 2023-02-03
 
 ### Added
