@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.6.2] - 2023-03-09
+
+### Fixed
+
+- `i18n` loader to load resources for theme libraries asynchronously
+
 ## [4.6.1] - 2023-02-03
 
 ### Added
