@@ -21,22 +21,22 @@ export const _Layout = (args) => (
 			orientation={args['orientation']}
 		>
 			<Cell
-				size={args['cell size'] + 'px'}
+				size={args['first cell size'] + 'px'}
 				shrink
 			>
-				<Item>First</Item>
+				<Item>First (shrink)</Item>
 			</Cell>
-			<Cell shrink={args['shrinkable cell']}>
-				<Item>Second</Item>
+			<Cell shrink={args['shrinkable second cell']}>
+				<Item>Second (shrinkable)</Item>
 			</Cell>
 			<Cell
-				grow={args['growable cell']}
-				size={args['cell size'] + 'px'}
+				grow={args['growable thrid cell']}
+				size={args['third cell size'] + 'px'}
 			>
-				<Item>Third</Item>
+				<Item>Third (growable)</Item>
 			</Cell>
 			<Cell shrink>
-				<Item>Last</Item>
+				<Item>Last (shrink)</Item>
 			</Cell>
 		</Layout>
 	</div>
@@ -44,9 +44,10 @@ export const _Layout = (args) => (
 
 select('align', _Layout, ['start', 'center', 'stretch', 'end'], Layout, 'start');
 select('orientation', _Layout, ['horizontal', 'vertical'], Layout, 'horizontal');
-range('cell size', _Layout, Cell, {min: 0, max: 300, step: 5}, 100);
-boolean('shrinkable cell', _Layout, Cell);
-boolean('growable cell', _Layout, Cell);
+range('first cell size', _Layout, Cell, {min: 0, max: 300, step: 5}, 100);
+boolean('shrinkable second cell', _Layout, Cell);
+range('third cell size', _Layout, Cell, {min: 0, max: 600, step: 5}, 120);
+boolean('growable thrid cell', _Layout, Cell);
 
 _Layout.parameters = {
 	info: {
