@@ -4,9 +4,9 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ## [unreleased]
 
-### Removed
+### Deprecated
 
-- Windows phone from `platforms` in `core/platform` which means the list of platforms supprorted by Enact
+- Windows phone from `platforms` in `core/platform` to be removed in 5.0.0
 
 ## [4.6.2] - 2023-03-09
 
