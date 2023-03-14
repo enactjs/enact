@@ -48,8 +48,6 @@ const webOSVersion = {
 };
 
 const platforms = [
-	// Windows Phone 7 - 10
-	{platform: 'windowsPhone', regex: /Windows Phone (?:OS )?(\d+)[.\d]+/},
 	// Android 4+ using Chrome
 	{platform: 'androidChrome', regex: /Android .* Chrome\/(\d+)[.\d]+/},
 	// Android 2 - 4
