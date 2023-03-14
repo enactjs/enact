@@ -1,12 +1,12 @@
 {
   "name": "enact-sampler",
-  "version": "4.6.1",
+  "version": "4.6.2",
   "lockfileVersion": 2,
   "requires": true,
   "packages": {
     "": {
       "name": "enact-sampler",
-      "version": "4.6.1",
+      "version": "4.6.2",
       "license": "Apache-2.0",
       "dependencies": {
         "@enact/core": "^4.6.2",
