@@ -145,7 +145,7 @@ It will start to run all the existing Screenshot test cases in Sandstone.
 If you run the tests of specific component(s), run the following command:
 
 ```bash
-npm run test-ui -- --component <pattern>
+npm run test-ss -- --component <pattern>
 ```
 
 Check out [here](https://github.com/enactjs/ui-test-utils/blob/master/README.md#filtering-screenshot-by-component) for more options.
