@@ -79,20 +79,13 @@ export const arrange = ({duration, node, reverse}, keyframes, options) => {
  */
 export const SlideArranger = ({amount = 100, direction}) => ({
 	enter: (config) => {
-		const {from, reverse, to} = config;
+		const {reverse} = config;
 
 		if (reverse && direction === 'bottom') {
-			if (from > to) {
-				return arrange(config, [
-					{transform: slideInOut('in', 0, direction)},
-					{transform: slideInOut('in', amount, direction)}
-				]);
-			} else {
-				return arrange(config, [
-					{transform: slideInOut('out', 0, direction)},
-					{transform: slideInOut('out', amount, direction)}
-				]);
-			}
+			return arrange(config, [
+				{transform: slideInOut('out', 0, direction)},
+				{transform: slideInOut('out', amount, direction)}
+			]);
 		} else {
 			return arrange(config, [
 				{transform: slideInOut('in', amount, direction)},
@@ -101,20 +94,13 @@ export const SlideArranger = ({amount = 100, direction}) => ({
 		}
 	},
 	leave: (config) => {
-		const {from, reverse, to} = config;
+		const {reverse} = config;
 
 		if (direction === 'top' && !reverse) {
-			if (from > to) {
-				return arrange(config, [
-					{transform: slideInOut('out', amount, direction)},
-					{transform: slideInOut('out', 0, direction)}
-				]);
-			} else {
-				return arrange(config, [
-					{transform: slideInOut('in', amount, direction)},
-					{transform: slideInOut('in', 0, direction)}
-				]);
-			}
+			return arrange(config, [
+				{transform: slideInOut('in', amount, direction)},
+				{transform: slideInOut('in', 0, direction)}
+			]);
 		} else {
 			return arrange(config, [
 				{transform: slideInOut('out', 0, direction)},
