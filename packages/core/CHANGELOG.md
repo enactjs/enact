@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ### Deprecated
 
-- `windowsPhone` element in `core/platform.platforms` to be removed in 5.0.0
+- `windowsPhone` platform in `core/platform.platforms` to be removed in 5.0.0
 
 ## [4.6.2] - 2023-03-09
 
