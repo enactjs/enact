@@ -9,6 +9,8 @@
 
 import uniq from 'ramda/src/uniq';
 
+import deprecate from '../internal/deprecate';
+
 const hasGesture = () => {
 	return Boolean(
 		('ongesturestart' in window) ||
@@ -196,6 +198,11 @@ const detect = () => {
  * @public
  */
 const platform = {};
+
+deprecate({
+	name: 'Windows Phone platform',
+	until: '5.0.0'
+});
 
 [
 	'gesture',
