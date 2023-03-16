@@ -130,7 +130,7 @@ const kind = (config) => {
 		computed: cfgComputed,
 		contextType = NoContext,
 		defaultProps,
-		functional,
+		functional = true,
 		handlers,
 		name,
 		propTypes,	// eslint-disable-line react/forbid-foreign-prop-types
