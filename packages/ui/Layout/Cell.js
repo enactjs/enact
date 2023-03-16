@@ -75,9 +75,9 @@ const CellBase = kind({
 		 *
 		 * A `grow`able cell will expand to its maximum size, according to the remaining space of the
 		 * container. This is used when you want to grow the size of this Cell so that it fills the
-		 * container. See the {@link ui/Layout.Cell#size|size} property for more details.
+		 * container. See the {@link ui/Layout.CellBase.size|size} property for more details.
 		 *
-		 * When combined with {@link ui/Layout.Cell#shrink|shrink}, `shrink` prop takes precedence over
+		 * When combined with {@link ui/Layout.CellBase.shrink|shrink}, `shrink` prop takes precedence over
 		 * `grow` prop and `grow` prop is simply ignored.
 		 *
 		 * @type {Boolean}
@@ -106,7 +106,7 @@ const CellBase = kind({
 		 * When used in conjunction with {@link ui/Layout.Cell#shrink|shrink}, the size will be
 		 * the maximum size, shrinking as necessary, to fit the content.
 		 *
-		 * When used in conjunction with {@link ui/Layout.Cell#grow|grow}, the size will be the
+		 * When used in conjunction with {@link ui/Layout.CellBase.grow|grow}, the size will be the
 		 * minimunm size, growing as necessary, to fit the container.
 		 *
 		 * E.g.
