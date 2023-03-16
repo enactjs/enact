@@ -91,6 +91,35 @@ describe('Layout Specs', () => {
 		});
 	});
 
+	test ('should apply a class for grow', () => {
+		render(<Cell>Body</Cell>);
+		const cell = screen.getByText('Body');
+
+		const expected = 'grow';
+
+		expect(cell).toHaveClass(expected);
+	});
+
+	test('should apply a class for grow and flexBasis styles the size prop value 100px', () => {
+		render(<Layout style={{width: "300px"}}><Cell grow size="100px">Body</Cell></Layout>);
+		const cell = screen.getByText('Body');
+
+		const expectedClass = 'grow';
+		const expectedFlexBasis = '100px';
+
+		expect(cell).toHaveClass(expectedClass);
+		expect(cell).toHaveStyle({'flex-basis': expectedFlexBasis});
+	});
+
+	test('should not be apply a class for grow when using shrink', () => {
+		render(<Cell grow shrink>Body</Cell>);
+		const cell = screen.getByText('Body');
+
+		const notExpected = 'grow';
+
+		expect(cell).not.toHaveClass(notExpected);
+	});
+
 	test('should return a DOM node reference for `componentRef` on `Layout`', () => {
 		const ref = jest.fn();
 		render(<Layout ref={ref} />);
