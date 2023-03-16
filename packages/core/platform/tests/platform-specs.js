@@ -126,6 +126,8 @@ describe('platform', () => {
 	});
 
 	describe('platform', () => {
+        const windowsPhone = 'Mozilla/5.0 (Windows Phone 8.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4103.84 Mobile Safari/537.36';
+
 		test('should return `true` for `node` if window does not exist', () => {
 			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(() => {});
 
@@ -139,6 +141,13 @@ describe('platform', () => {
 			expect(platform['unknown']).toBe(true);
 			// The second access makes the module to return already detected platform information
 			expect(platform['unknown']).toBe(true);
+		});
+
+        test('should return platformName `windowsPhone`', () => {
+			const expected = {platformName: 'windowsPhone'};
+			const actual = parseUserAgent(windowsPhone);
+
+			expect(actual).toMatchObject(expected);
 		});
 	});
 });
