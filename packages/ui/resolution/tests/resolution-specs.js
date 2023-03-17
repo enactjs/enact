@@ -2,6 +2,8 @@ import {
 	calculateFontSize,
 	defineScreenTypes,
 	getScreenType,
+	getScreenTypeObject,
+	init,
 	scale,
 	unit
 } from '../resolution.js';
@@ -15,6 +17,7 @@ describe('Resolution Specs', () => {
 		{name: 'uw-uxga', pxPerRem: 24, width: 2560, height: 1080, aspectRatioName: 'cinema'},
 		{name: 'uhd', pxPerRem: 48, width: 3840, height: 2160, aspectRatioName: 'hdtv'}
 	];
+	const originalWorkspaceBounds = getScreenTypeObject('standard');
 
 	test(
 		'should select screen type whose dimensions are smaller than but nearest to the screen',
@@ -61,7 +64,21 @@ describe('Resolution Specs', () => {
 		}
 	);
 
+	test(
+		'should calculate the base font size for the given screen type by considering workspaceBounds',
+		() => {
+			init({measurementNode: {clientWidth: '3840', clientHeight: '1600'}});
+
+			const expectedFHD = '35px';
+			const actualFHD = calculateFontSize('fhd');
+
+			expect(actualFHD).toBe(expectedFHD);
+		}
+	);
+
 	test('should scale pixel measurements for the current screen', () => {
+		init({measurementNode: {clientWidth: originalWorkspaceBounds.width, clientHeight: originalWorkspaceBounds.height}});
+
 		const expectedFHD = 24 / 3;
 		const actualFHD = scale(24);
 

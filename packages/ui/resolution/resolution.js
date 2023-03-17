@@ -189,6 +189,9 @@ function calculateFontSize (type) {
 		size = scrObj.height / scrObj.width * scrObj.pxPerRem;
 	} else {
 		size = scrObj.pxPerRem;
+		if (workspaceBounds.width > scrObj.width && workspaceBounds.height > scrObj.height ) {
+			size = parseInt(workspaceBounds.height * scrObj.pxPerRem / scrObj.height);
+		}
 	}
 	return size + 'px';
 }
