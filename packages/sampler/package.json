@@ -31,6 +31,6 @@
     "@storybook/react": "^6.5.16",
     "@storybook/theming": "^6.5.16",
     "babel-loader": "^8.2.5",
-    "core-js": "^3.29.0"
+    "core-js": "^3.29.1"
   }
 }
