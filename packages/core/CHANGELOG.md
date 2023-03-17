@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+- `windowsPhone` platform in `core/platform.platforms` to be removed in 5.0.0
+
 ## [4.6.2] - 2023-03-09
 
 No significant changes.
@@ -14,7 +20,7 @@ No significant changes.
 
 ### Fixed
 
-- `core/dispatcher`  to set the default target for event listeners properly when built with the snapshot option
+- `core/dispatcher` to set the default target for event listeners properly when built with the snapshot option
 
 ## [4.0.12] - 2022-09-16
 
