@@ -8,6 +8,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Layout.Cell` prop `grow` to expand its size to the container
 
+### Fixed
+
+- `ui/resolution` to select screenType which is smaller than actual screen size
+- `ui/resolution` to calculate the base font size by considering screenType and actual screen size
+
 ## [4.6.2] - 2023-03-09
 
 No significant changes.
