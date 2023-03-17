@@ -17,7 +17,7 @@ describe('Resolution Specs', () => {
 	];
 
 	test(
-		'should select screen type whose dimensions are greater than but nearest to the screen',
+		'should select screen type whose dimensions are smaller than but nearest to the screen',
 		() => {
 			const overHD = {
 				height: 721,
@@ -26,7 +26,7 @@ describe('Resolution Specs', () => {
 
 			defineScreenTypes(screenTypes);
 
-			const expected = 'fhd';
+			const expected = 'hd';
 			const actual = getScreenType(overHD);
 
 			expect(actual).toBe(expected);
