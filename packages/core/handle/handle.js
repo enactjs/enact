@@ -796,39 +796,36 @@ const forwardCustom = handle.forwardCustom = (name, adapter) => handle(
  * @private
  */
 const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = named((name, adapter) => {
-	let prevented = false;
+	return (ev, ...args) => {
+		let prevented = false;
 
-	const adapterWithPrevent = (ev, ...args) => {
-		let customEventPayload = adapter ? adapter(ev, ...args) : null;
-		let existingPreventDefault = null;
+		const adapterWithPrevent = () => {
+			let customEventPayload = adapter ? adapter(ev, ...args) : null;
+			let existingPreventDefault = null;
 
-		// Handle either no adapter or a non-object return from the adapter
-		if (!customEventPayload || typeof customEventPayload !== 'object') {
-			customEventPayload = {};
-		}
-
-		if (typeof customEventPayload.preventDefault === 'function') {
-			existingPreventDefault = customEventPayload.preventDefault;
-		} else if (typeof ev.preventDefault === 'function') {
-			existingPreventDefault = ev.preventDefault.bind(ev);
-		}
-
-		customEventPayload.preventDefault = () => {
-			prevented = true;
-			if (typeof existingPreventDefault === 'function') {
-				existingPreventDefault();
+			// Handle either no adapter or a non-object return from the adapter
+			if (!customEventPayload || typeof customEventPayload !== 'object') {
+				customEventPayload = {};
 			}
+
+			if (typeof customEventPayload.preventDefault === 'function') {
+				existingPreventDefault = customEventPayload.preventDefault;
+			} else if (typeof ev?.preventDefault === 'function') {
+				existingPreventDefault = ev.preventDefault.bind(ev);
+			}
+
+			customEventPayload.preventDefault = () => {
+				prevented = true;
+				if (typeof existingPreventDefault === 'function') {
+					existingPreventDefault(ev);
+				}
+			};
+
+			return customEventPayload;
 		};
 
-		return customEventPayload;
+		return forwardCustom(name, adapterWithPrevent)(ev, ...args) && !prevented;
 	};
-
-	return (
-		handle(
-			forwardCustom(name, adapterWithPrevent),
-			() => (!prevented)
-		)
-	);
 }, 'forwardCustomWithPrevent');
 
 /**

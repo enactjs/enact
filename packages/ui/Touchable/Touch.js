@@ -1,4 +1,4 @@
-import {adaptEvent, call, forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
+import {call, forward, forwardCustom, forwardCustomWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
 import {on, off} from '@enact/core/dispatcher';
 import complement from 'ramda/src/complement';
 import platform from '@enact/core/platform';
@@ -56,7 +56,7 @@ const isEnabled = forProp('disabled', false);
 
 const handleDown = handle(
 	isEnabled,
-	adaptEvent(makeTouchableEvent('onDown'), forwardWithPrevent('onDown')),
+	forwardCustomWithPrevent('onDown', makeTouchableEvent('onDown')),
 	call('activate'),
 	call('startGesture')
 ).named('handleDown');
@@ -65,8 +65,8 @@ const handleUp = handle(
 	isEnabled,
 	call('endGesture'),
 	call('isTracking'),
-	adaptEvent(makeTouchableEvent('onUp'), forwardWithPrevent('onUp')),
-	adaptEvent(makeTouchableEvent('onTap'), forward('onTap'))
+	forwardCustomWithPrevent('onUp', makeTouchableEvent('onUp')),
+	forwardCustom('onTap', makeTouchableEvent('onTap')),
 ).finally(call('deactivate')).named('handleUp');
 
 const handleEnter = handle(
@@ -141,7 +141,7 @@ const handleTouchMove = handle(
 	// detecting when the touch leaves the boundary. oneOf returns the value of whichever
 	// branch it follows so we append moveHold to either to handle moves that aren't
 	// entering or leaving
-	adaptEvent(makeTouchableEvent('onMove'), forward('onMove')),
+	forwardCustom('onMove', makeTouchableEvent('onMove')),
 	oneOf(
 		[call('hasTouchLeftTarget'), handleLeave],
 		[returnsTrue, handleEnter]
