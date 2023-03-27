@@ -200,7 +200,7 @@ const Spotlight = (function () {
 			return false;
 		}
 
-		if ((getPointerMode() && !fromPointer)) {
+		if ((getPointerMode() && !fromPointer) && window?.PalmSystem?.cursor?.visibility) {
 			setContainerLastFocusedElement(elem, containerIds);
 			return false;
 		}
