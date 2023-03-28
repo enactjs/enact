@@ -1,16 +1,18 @@
 /**
- * An [Icon]{@link ui/Icon.Icon} that acts like a [Button]{@link ui/Button.Button}.
+ * An {@link ui/Icon.Icon|Icon} that acts like a {@link ui/Button.Button|Button}.
  *
  * You may specify an image or a font-based icon by setting the `children` to either the path
- * to the image or a string from an [iconList]{@link ui/Icon.Icon.iconList}. This is unstyled,
+ * to the image or a string from an {@link ui/Icon.Icon.iconList|iconList}. This is unstyled,
  * but can easily be extended and customized by a theme or application.
  *
  * @module ui/IconButton
  * @exports IconButton
  * @exports IconButtonBase
  * @exports IconButtonDecorator
+ * @deprecated Will be removed in 5.0.0. Use {@link ui/Button} instead.
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
@@ -46,7 +48,7 @@ const IconButtonBase = kind({
 		buttonComponent: EnactPropTypes.componentOverride.isRequired,
 
 		/**
-		 * The component used to render the [icon]{@link ui/IconButton.IconButtonBase.icon}.
+		 * The component used to render the {@link ui/IconButton.IconButtonBase.icon|icon}.
 		 *
 		 * This component will receive the `flip` and `size` property set on the `IconButton` as well as the
 		 * `icon` class to customize its styling.
@@ -86,7 +88,7 @@ const IconButtonBase = kind({
 		 * The following classes are supported:
 		 *
 		 * * `iconButton` - The root component class
-		 * * `icon` - The [icon component]{@link ui/IconButton.IconButtonBase.iconComponent} class
+		 * * `icon` - The {@link ui/IconButton.IconButtonBase.iconComponent|icon component} class
 		 * * `large` - Applied when `size` prop is `'large'`
 		 * * `small` - Applied when `size` prop is `'small'`
 		 * * `pressed` - Applied when `pressed` prop is `true`
@@ -100,7 +102,7 @@ const IconButtonBase = kind({
 		 * Disables IconButton.
 		 *
 		 * When `true`, the button is shown as disabled and does not generate
-		 * `onClick` [events]{@link /docs/developer-guide/glossary/#event}.
+		 * `onClick` {@link /docs/developer-guide/glossary/#event|events}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -148,7 +150,7 @@ const IconButtonBase = kind({
 		 * The size of the button.
 		 *
 		 * Applies the CSS class which can be customized by
-		 * [theming]{@link /docs/developer-guide/theming/}.
+		 * {@link /docs/developer-guide/theming/|theming}.
 		 *
 		 * @type {String}
 		 * @public
@@ -172,7 +174,7 @@ const IconButtonBase = kind({
 		className: ({size, styler}) => styler.append(size)
 	},
 
-	render: ({buttonComponent, children, componentRef, css, flip, icon, iconComponent: Icon, size, ...rest}) => {
+	render: deprecate(({buttonComponent, children, componentRef, css, flip, icon, iconComponent: Icon, size, ...rest}) => {
 		// To support the simpler use case of only specifying the icon as the children within
 		// <IconButton>, this falls back on using children if icon isn't specified.
 		if (!icon && children) {
@@ -191,11 +193,15 @@ const IconButtonBase = kind({
 			],
 			ref: componentRef
 		});
-	}
+	}, {
+		name: 'ui/IconButton',
+		replacedBy: 'ui/Button',
+		until: '5.0.0'
+	})
 });
 
 /**
- * A higher-order component that adds universal button behaviors to an [IconButtonBase]{@link ui/IconButton.IconButtonBase}.
+ * A higher-order component that adds universal button behaviors to an {@link ui/IconButton.IconButtonBase|IconButtonBase}.
  *
  * @hoc
  * @memberof ui/IconButton

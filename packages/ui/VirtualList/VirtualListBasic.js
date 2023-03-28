@@ -13,7 +13,7 @@ const nop = () => {};
 
 /**
  * The shape for the grid list item size
- * in a list for [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
+ * in a list for {@link ui/VirtualList.VirtualGridList|VirtualGridList}.
  *
  * @typedef {Object} gridListItemSizeShape
  * @memberof ui/VirtualList
@@ -28,7 +28,7 @@ const gridListItemSizeShape = PropTypes.shape({
 
 /**
  * The shape for the list different item size
- * in a list for [VirtualList]{@link ui/VirtualList.VirtualList}.
+ * in a list for {@link ui/VirtualList.VirtualList|VirtualList}.
  *
  * @typedef {Object} itemSizesShape
  * @memberof ui/VirtualList
@@ -43,7 +43,7 @@ const itemSizesShape = PropTypes.shape({
 
 /**
  * A basic base component for
- * [VirtualList]{@link ui/VirtualList.VirtualList} and [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
+ * {@link ui/VirtualList.VirtualList|VirtualList} and {@link ui/VirtualList.VirtualGridList|VirtualGridList}.
  *
  * @class VirtualListBasic
  * @memberof ui/VirtualList

@@ -193,7 +193,7 @@ const GroupBase = kind({
 });
 
 /**
- * A higher-order component that adds behavior to [Group]{@link ui/Group.GroupBase}.
+ * A higher-order component that adds behavior to {@link ui/Group.GroupBase|Group}.
  *
  * @hoc
  * @memberof ui/Group

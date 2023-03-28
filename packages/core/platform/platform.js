@@ -9,6 +9,8 @@
 
 import uniq from 'ramda/src/uniq';
 
+import deprecate from '../internal/deprecate';
+
 const hasGesture = () => {
 	return Boolean(
 		('ongesturestart' in window) ||
@@ -143,6 +145,13 @@ const parseUserAgent = (userAgent) => {
 			plat.platformName = p.platform;
 			break;
 		}
+	}
+
+	if (plat.platformName === 'windowsPhone') {
+		deprecate({
+			name: 'Windows Phone platform',
+			until: '5.0.0'
+		});
 	}
 
 	return plat;

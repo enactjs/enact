@@ -686,7 +686,7 @@ const call = function (method) {
  * @param    {EventAdapter}     adapter  Function to adapt the event payload
  * @param    {HandlerFunction}  handler  Handler to call with the handler function
  *
- * @returns  {HandlerFunction}           Returns an [event handler]{@link core/handle.HandlerFunction} (suitable for passing to handle) that returns the result of `handler`
+ * @returns  {HandlerFunction}           Returns an {@link core/handle.HandlerFunction|event handler} (suitable for passing to handle) that returns the result of `handler`
  * @curried
  * @memberof core/handle
  * @public
@@ -723,9 +723,9 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
  * @param    {String}        name      Name of method on the `props`
  * @param    {EventAdapter}  [adapter] Function to adapt the event payload
  *
- * @returns  {HandlerFunction}         Returns an [event handler]{@link core/handle.EventHandler}
+ * @returns  {HandlerFunction}         Returns an {@link core/handle.EventHandler|event handler}
  *                                     (suitable for passing to handle or used directly within
- *                                     `handlers` in [kind]{@link core/kind}) that will forward the
+ *                                     `handlers` in {@link core/kind|kind}) that will forward the
  *                                     custom event.
  * @memberof core/handle
  * @public
@@ -788,47 +788,44 @@ const forwardCustom = handle.forwardCustom = (name, adapter) => handle(
  * @param    {String}        name      Name of method on the `props`
  * @param    {EventAdapter}  [adapter] Function to adapt the event payload
  *
- * @returns  {HandlerFunction}         Returns an [event handler]{@link core/handle.EventHandler}
+ * @returns  {HandlerFunction}         Returns an {@link core/handle.EventHandler|event handler}
  *                                     (suitable for passing to handle or used directly within
- *                                     `handlers` in [kind]{@link core/kind}) that will forward the
+ *                                     `handlers` in {@link core/kind|kind}) that will forward the
  *                                     custom event and will return `false` if default action is prevented
  * @memberof core/handle
  * @private
  */
 const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = named((name, adapter) => {
-	let prevented = false;
+	return (ev, ...args) => {
+		let prevented = false;
 
-	const adapterWithPrevent = (ev, ...args) => {
-		let customEventPayload = adapter ? adapter(ev, ...args) : null;
-		let existingPreventDefault = null;
+		const adapterWithPrevent = () => {
+			let customEventPayload = adapter ? adapter(ev, ...args) : null;
+			let existingPreventDefault = null;
 
-		// Handle either no adapter or a non-object return from the adapter
-		if (!customEventPayload || typeof customEventPayload !== 'object') {
-			customEventPayload = {};
-		}
-
-		if (typeof customEventPayload.preventDefault === 'function') {
-			existingPreventDefault = customEventPayload.preventDefault;
-		} else if (typeof ev.preventDefault === 'function') {
-			existingPreventDefault = ev.preventDefault.bind(ev);
-		}
-
-		customEventPayload.preventDefault = () => {
-			prevented = true;
-			if (typeof existingPreventDefault === 'function') {
-				existingPreventDefault();
+			// Handle either no adapter or a non-object return from the adapter
+			if (!customEventPayload || typeof customEventPayload !== 'object') {
+				customEventPayload = {};
 			}
+
+			if (typeof customEventPayload.preventDefault === 'function') {
+				existingPreventDefault = customEventPayload.preventDefault;
+			} else if (typeof ev?.preventDefault === 'function') {
+				existingPreventDefault = ev.preventDefault.bind(ev);
+			}
+
+			customEventPayload.preventDefault = () => {
+				prevented = true;
+				if (typeof existingPreventDefault === 'function') {
+					existingPreventDefault(ev);
+				}
+			};
+
+			return customEventPayload;
 		};
 
-		return customEventPayload;
+		return forwardCustom(name, adapterWithPrevent)(ev, ...args) && !prevented;
 	};
-
-	return (
-		handle(
-			forwardCustom(name, adapterWithPrevent),
-			() => (!prevented)
-		)
-	);
 }, 'forwardCustomWithPrevent');
 
 /**
@@ -848,9 +845,8 @@ const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = named((name, 
  * @method   not
  * @param    {HandlerFunction}  handler  Handler to complement
  *
- * @returns  {HandlerFunction}           Returns an [event
- *                                       handler]{@link core/handle.HandlerFunction} (suitable for
- *                                       passing to handle) that returns the complement of the
+ * @returns  {HandlerFunction}           Returns an {@link core/handle.HandlerFunction|event handler}
+ *                                       (suitable for passing to handle) that returns the complement of the
  *                                       return value of `handler`
  * @curried
  * @memberof core/handle

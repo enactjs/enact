@@ -18,6 +18,9 @@ import {MarqueeControllerContext} from './MarqueeController';
 
 import componentCss from './Marquee.module.less';
 
+// The minimum number of milliseconds to wait before resetting the marquee position after it finishes.
+const MINIMUM_MARQUEE_RESET_DELAY = 40;
+
 /**
  * Default configuration parameters for {@link ui/Marquee.MarqueeDecorator}
  *
@@ -736,7 +739,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			});
 			// synchronized Marquees defer to the controller to restart them
 			if (this.sync) {
-				this.context.complete(this);
+				// Even in sync mode, it is necessary to apply a minimum reset delay.
+				// In detail, the timer with 40ms delay needs to be applied only when marqueeDelay is less than 40,
+				// but for consistency, we decided to apply 40ms in all cases.
+				this.setTimeout(() => {
+					this.context.complete(this);
+				}, MINIMUM_MARQUEE_RESET_DELAY, TimerState.RESET_PENDING);
 			} else if (!this.state.animating) {
 				this.startAnimation(delay);
 			}
@@ -748,7 +756,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		resetAnimation = () => {
-			const delay = Math.max(40, this.props.marqueeResetDelay + this.props.marqueeDelay);
+			const delay = Math.max(MINIMUM_MARQUEE_RESET_DELAY, this.props.marqueeResetDelay + this.props.marqueeDelay);
 			// If we're already timing a start action, don't reset.  Start actions will clear us if
 			// sync.
 			if (this.timerState === TimerState.CLEAR) {

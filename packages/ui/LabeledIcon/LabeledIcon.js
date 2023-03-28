@@ -122,7 +122,7 @@ const LabeledIconBase = kind({
 		 * Enables this component to be used in an "inline" context.
 		 *
 		 * This is useful for when you have several of these components in a row and are not using a
-		 * [Layout]{@link ui/Layout} or flex-box configuration.
+		 * {@link ui/Layout|Layout} or flex-box configuration.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -153,7 +153,7 @@ const LabeledIconBase = kind({
 		 * The size of the icon.
 		 *
 		 * Applies the CSS class which can be customized by
-		 * [theming]{@link /docs/developer-guide/theming/}.
+		 * {@link /docs/developer-guide/theming/|theming}.
 		 *
 		 * @type {String}
 		 * @public
@@ -241,7 +241,7 @@ const LabeledIconBase = kind({
 });
 
 /**
- * A higher-order component that adds [slot]{@link ui/Slottable.Slottable} support to [LabeledIconBase]{@link ui/LabeledIcon.LabeledIconBase}
+ * A higher-order component that adds {@link ui/Slottable.Slottable|slot} support to {@link ui/LabeledIcon.LabeledIconBase|LabeledIconBase}
  *
  * @hoc
  * @memberof ui/LabeledIcon

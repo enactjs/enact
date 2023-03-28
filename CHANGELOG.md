@@ -2,6 +2,40 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.6.2] - 2023-03-09
+
+### Fixed
+
+- `i18n` loader to load resources for theme libraries asynchronously
+
+## [4.6.1] - 2023-02-03
+
+### Added
+
+- `ui/Touchable` events `onPinch`, `onPinchStart`, `onPinchEnd`, and config `pinchConfig` to support pinch gesture
+
+### Deprecated
+
+- `ui/IconButton` to be removed in 5.0.0, use `ui/Button` instead
+- `ui/RadioDecorator` to be removed in 5.0.0
+- `ui/Scroller.ScrollerBase` to be removed in 5.0.0
+- `ui/SlotItem` to be removed in 5.0.0
+- `ui/ToggleItem` to be removed in 5.0.0
+- `ui/VirtualList.VirtualListBase` to be removed 5.0.0
+
+## [4.6.0] - 2022-12-05
+
+### Fixed
+
+- `core/dispatcher`  to set the default target for event listeners properly when built with the snapshot option
+- `ui/Marquee.MarqueeDecorator` to restart animation properly when `marqueeDelay` is 0
+
+## [4.0.12] - 2022-09-16
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to have proper spacing for bidirectional text
+
 ## [4.5.2] - 2022-08-17
 
 ### Fixed
@@ -55,6 +89,10 @@ No significant changes.
 
 - `spotlight` to not focus on an invisible element
 
+## [4.0.11] - 2022-04-25
+
+No significant changes.
+
 ## [4.5.0-alpha.1] - 2022-04-15
 
 - Update dependencies including React 18.0.0
@@ -62,6 +100,12 @@ No significant changes.
 ### Fixed
 
 - `ui/FloatingLayer` to stack popups always in the order in which they were opened
+
+## [4.0.10] - 2022-04-05
+
+### Added
+
+- Support for loading changed resources and additional ilib resources paths
 
 ## [4.1.4] - 2022-03-24
 
@@ -87,6 +131,12 @@ No significant changes.
 - `spotlight` to correctly control focus when boundaries of an element are not integers
 - Styles for `debug spotlight` option in samplers to work properly
 
+## [3.2.7] - 2022-01-17
+
+### Fixed
+
+- `moonstone/Panels.Panel` to restore focus properly when it has `moonstone/Scroller` with `focusableScrollbar`
+
 ## [4.1.2] - 2021-12-22
 
 ### Fixed
@@ -94,9 +144,11 @@ No significant changes.
 - `ui/Scroller` and `ui/VirtualList` to avoid stuttering of content on drag in mobile devices
 - `ui/Scroller` and `ui/VirtualList` to scroll correctly on Android platform for RTL locales
 
-## [4.1.1] - 2021-11-30
+## [4.0.9] - 2021-12-15
 
-- Replaced the deprecated plugin `addon-knobs` with `addon-controls`
+No significant changes.
+
+## [4.1.1] - 2021-11-30
 
 ### Added
 
@@ -456,6 +508,8 @@ No significant changes.
 
 ### Fixed
 
+- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to show items properly when reducing data size by updating `firstIndex` correctly
+- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` not to suddenly jump when pressing directional keys after wheeling
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to show items properly when reducing data size
 
 ## [3.2.5] - 2019-11-14

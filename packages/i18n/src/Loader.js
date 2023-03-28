@@ -296,7 +296,7 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 		// asynchronous
 		let cache = {data: this._loadFilesCache(_root, paths)};
 
-		Promise.all(paths.map(path => this._loadFilesAsync(path, params, cache))).then(results => {
+		Promise.all(paths.map(path => this._loadFilesAsync(path, params, cache, rootPath))).then(results => {
 			if (cache.update) {
 				this._storeFilesCache(_root, paths, results);
 			}
