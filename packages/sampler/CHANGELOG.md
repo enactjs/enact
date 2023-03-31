@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/VirtualList.VirtualGridList` sample to use a local svg instead of downloading images
+
 ## [4.5.2] - 2022-08-17
 
 No significant changes.
