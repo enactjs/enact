@@ -1,13 +1,13 @@
 {
   "name": "@enact/core",
-  "version": "4.5.2",
+  "version": "4.5.3",
   "description": "Enact is an open source JavaScript framework containing everything you need to create a fast, scalable mobile or web application.",
   "repository": {
     "type": "git",
     "url": "https://github.com/enactjs/enact.git",
     "directory": "packages/core"
   },
-  "homepage": "https://enactjs.com", 
+  "homepage": "https://enactjs.com",
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",
