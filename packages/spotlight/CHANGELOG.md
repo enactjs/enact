@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [4.5.3] - 2023-04-06
+
+### Fixed
+
+- `spotlight` to show the focus effect when pointer mode is changed to `false` while an app is loading
+
 ## [4.5.2] - 2022-08-17
 
 No significant changes.

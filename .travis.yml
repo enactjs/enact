@@ -1,7 +1,8 @@
 dist: focal
 language: node_js
 node_js:
-    - lts/*
+    - "16"
+    # - lts/*
     # - node
 sudo: false
 before_install:
