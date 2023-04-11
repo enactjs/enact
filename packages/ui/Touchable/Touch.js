@@ -66,7 +66,7 @@ const handleUp = handle(
 	call('endGesture'),
 	call('isTracking'),
 	forwardCustomWithPrevent('onUp', makeTouchableEvent('onUp')),
-	forwardCustom('onTap', makeTouchableEvent('onTap')),
+	forwardCustom('onTap', makeTouchableEvent('onTap'))
 ).finally(call('deactivate')).named('handleUp');
 
 const handleEnter = handle(
