@@ -162,6 +162,7 @@ const useScrollBase = (props) => {
 		// status
 		deferScrollTo: true,
 		isScrollAnimationTargetAccumulated: false,
+		rtl,
 
 		// overscroll
 		lastInputType: null,
@@ -241,7 +242,7 @@ const useScrollBase = (props) => {
 			mutableRef.current.lastInputType = val;
 		},
 		get rtl () {
-			return rtl;
+			return mutableRef.current.rtl;
 		},
 		get scrollBounds () {
 			return getScrollBounds();
@@ -271,6 +272,10 @@ const useScrollBase = (props) => {
 
 	if (mutableRef.current.animator == null) {
 		mutableRef.current.animator = new ScrollAnimator();
+	}
+
+	if (mutableRef.current.rtl !== rtl) {
+		mutableRef.current.rtl = rtl;
 	}
 
 	useLayoutEffect(() => {
