@@ -4,13 +4,13 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
-### Fixed
-
-- ui/ViewManager to set index prop properly when reverseTransition prop is given
-
 ### Added
 
 - `ui/Layout.Cell` prop `grow` to expand its size to the container
+
+### Fixed
+
+- ui/ViewManager to set index prop properly when reverseTransition prop is given
 
 ## [4.6.2] - 2023-03-09
 
