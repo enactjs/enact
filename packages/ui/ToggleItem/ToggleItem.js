@@ -3,7 +3,7 @@
  *
  * This is not intended to be used directly, but should be extended by a component that will
  * customize this component's appearance by supplying an
- * {@link ui/ToggleItem.ToggleItemBase#iconComponent|iconComponent prop}.
+ * {@link ui/ToggleItem.ToggleItemBase.iconComponent|iconComponent} prop.
  *
  * @module ui/ToggleItem
  * @exports ToggleItem

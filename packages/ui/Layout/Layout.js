@@ -335,7 +335,7 @@ const LayoutDecorator = ForwardRef({prop: 'componentRef'});
  *
  * A stateless component that acts as a containing area for {@link ui/Layout.Cell|Cells} to be
  * positioned in a row or a column (horizontally or vertically, respectively. It supports an
- * {@link ui/Layout.Layout#orientation|orientation} property for laying-out its contents
+ * {@link ui/Layout.LayoutBase.orientation|orientation} property for laying-out its contents
  * (`Cells`) in an organized, readable way.
  *
  * Example:
