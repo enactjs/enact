@@ -28,8 +28,10 @@
 			max-width: var(--cell-size);
 			&.grow {
 				width: 0;
-				max-width: none;
-				min-width: var(--cell-size);
+				&.size {
+					max-width: none;
+					min-width: var(--cell-size);
+				}
 			}
 		}
 	}
@@ -43,8 +45,10 @@
 			&.grow {
 				height: 0;
 				align-self: normal;
-				max-height: none;
-				min-height: var(--cell-size);
+				&.size {
+					max-height: none;
+					min-height: var(--cell-size);
+				}
 			}
 		}
 	}

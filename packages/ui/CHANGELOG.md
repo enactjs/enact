@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/resolution` to select screenType which is smaller than actual screen size
 - `ui/resolution` to calculate the base font size by considering screenType and actual screen size
+- `ui/ViewManager` to set index prop properly when reverseTransition prop is given
 
 ## [4.6.2] - 2023-03-09
 

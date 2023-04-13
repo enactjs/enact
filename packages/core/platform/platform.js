@@ -147,6 +147,13 @@ const parseUserAgent = (userAgent) => {
 		}
 	}
 
+	if (plat.platformName === 'windowsPhone') {
+		deprecate({
+			name: 'Windows Phone platform',
+			until: '5.0.0'
+		});
+	}
+
 	return plat;
 };
 
@@ -198,11 +205,6 @@ const detect = () => {
  * @public
  */
 const platform = {};
-
-deprecate({
-	name: 'Windows Phone platform',
-	until: '5.0.0'
-});
 
 [
 	'gesture',

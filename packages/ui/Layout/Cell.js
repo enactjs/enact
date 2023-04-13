@@ -139,7 +139,7 @@ const CellBase = kind({
 	},
 
 	computed: {
-		className: ({grow, shrink, size, styler}) => styler.append({shrink, grow: !shrink && (grow || !size)}),
+		className: ({grow, shrink, size, styler}) => styler.append({shrink, grow: !shrink && (grow || !size), size}),
 		style: ({align, shrink, size, style}) => {
 			if (typeof size === 'number') size = ri.unit(ri.scale(size), 'rem');
 

@@ -100,14 +100,16 @@ describe('Layout Specs', () => {
 		expect(cell).toHaveClass(expected);
 	});
 
-	test('should apply a class for grow and flexBasis styles the size prop value 100px', () => {
+	test('should apply classes for grow and size and flexBasis styles the size prop value 100px', () => {
 		render(<Layout style={{width: "300px"}}><Cell grow size="100px">Body</Cell></Layout>);
 		const cell = screen.getByText('Body');
 
-		const expectedClass = 'grow';
+		const expectedGrowClass = 'grow';
+		const expectedSizeClass = 'size';
 		const expectedFlexBasis = '100px';
 
-		expect(cell).toHaveClass(expectedClass);
+		expect(cell).toHaveClass(expectedGrowClass);
+		expect(cell).toHaveClass(expectedSizeClass);
 		expect(cell).toHaveStyle({'flex-basis': expectedFlexBasis});
 	});
 
