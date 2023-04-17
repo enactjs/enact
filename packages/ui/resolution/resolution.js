@@ -134,7 +134,7 @@ function getScreenType (rez) {
 	rez = rez || workspaceBounds;
 
 	const types = screenTypes;
-	let bestMatch = types[types.length - 1].name; // Blindly set the first screen type, in case no matches are found later.
+	let bestMatch = types[0].name; // Blindly set the first screen type, in case no matches are found later.
 
 	orientation = 'landscape';
 
