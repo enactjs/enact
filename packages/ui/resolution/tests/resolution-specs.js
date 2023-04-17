@@ -20,6 +20,23 @@ describe('Resolution Specs', () => {
 	const originalWorkspaceBounds = getScreenTypeObject('standard');
 
 	test(
+		'should select the first screen type in the screenTypes array if the screen is smaller than defined screen types',
+		() => {
+			const smallestScreen = {
+				height: 400,
+				width: 600
+			};
+
+			defineScreenTypes(screenTypes);
+
+			const expected = 'vga';
+			const actual = getScreenType(smallestScreen);
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
 		'should select screen type whose dimensions are smaller than but nearest to the screen',
 		() => {
 			const overHD = {
