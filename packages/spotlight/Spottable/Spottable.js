@@ -248,7 +248,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		spotlightId: PropTypes.string,
 
 		/*
-		 * Called with a reference to {@link spotlight/Spottable.Spottable#component|component}
+		 * Called with a reference to spottable component
 		 *
 		 * @type {Object|Function}
 		 * @private

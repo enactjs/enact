@@ -91,7 +91,7 @@ const CellBase = kind({
 		 * A `shrink`able cell will contract to its minimum size, according to the dimensions of its
 		 * contents. This is used when you want the size of this Cell's content to influence the
 		 * dimensions of this cell. `shrink` will not allow the contents of the Layout to be pushed
-		 * beyond its boundaries (overflowing). See the {@link ui/Layout.Cell#size|size} property
+		 * beyond its boundaries (overflowing). See the {@link ui/Layout.CellBase.size|size} property
 		 * for more details.
 		 *
 		 * @type {Boolean}
@@ -103,7 +103,7 @@ const CellBase = kind({
 		/**
 		 * Sets the desired size of the Cell using any valid CSS measurement value.
 		 *
-		 * When used in conjunction with {@link ui/Layout.Cell#shrink|shrink}, the size will be
+		 * When used in conjunction with {@link ui/Layout.CellBase.shrink|shrink}, the size will be
 		 * the maximum size, shrinking as necessary, to fit the content.
 		 *
 		 * When used in conjunction with {@link ui/Layout.CellBase.grow|grow}, the size will be the
