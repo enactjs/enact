@@ -57,15 +57,15 @@ const NoContext = createContext(null);
  * @typedef {Object} KindConfig
  * @memberof core/kind
  * @property {String} [name] The name of the component
- * @property {Boolean} [functional] Returns a functional component
+ * @property {Boolean} [functional] Boolean controlling whether the returned component should be a functional component
  * @property {Object.<string, Function>} [propTypes] Specifies expected props
  * @property {Object.<string, any>} [defaultProps] Sets the default props
  * @property {Object} [contextType] Specifies context type
- * @property {StylesBlock} [styles] Configures with the static className to merge with user className
- * @property {Object.<string, HandlerFunction>} [handlers]  Add event handlers that are cached between calls to prevent recreating each call.
- * Any handlers are added to the props passed to `render()`.  See {@link core/handle.handle}.
+ * @property {StylesBlock} [styles] Configures styles with the static className to merge with user className
+ * @property {Object.<string, HandlerFunction>} [handlers]  Adds event handlers that are cached between calls to prevent recreating each call.
+ * Any handlers are added to the props passed to `render()`. See {@link core/handle.handle}.
  * @property {Object.<string, ComputedPropFunction>} [computed] Adds some computed properties, these are added to props passed to `render()`
- * @property {RenderFunction} render Render method
+ * @property {RenderFunction} render The render function
  */
 
 /**
