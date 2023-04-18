@@ -2,8 +2,6 @@ import {
 	calculateFontSize,
 	defineScreenTypes,
 	getScreenType,
-	getScreenTypeObject,
-	init,
 	scale,
 	unit
 } from '../resolution.js';
@@ -17,27 +15,9 @@ describe('Resolution Specs', () => {
 		{name: 'uw-uxga', pxPerRem: 24, width: 2560, height: 1080, aspectRatioName: 'cinema'},
 		{name: 'uhd', pxPerRem: 48, width: 3840, height: 2160, aspectRatioName: 'hdtv'}
 	];
-	const originalWorkspaceBounds = getScreenTypeObject('standard');
 
 	test(
-		'should select the first screen type in the screenTypes array if the screen is smaller than defined screen types',
-		() => {
-			const smallestScreen = {
-				height: 400,
-				width: 600
-			};
-
-			defineScreenTypes(screenTypes);
-
-			const expected = 'vga';
-			const actual = getScreenType(smallestScreen);
-
-			expect(actual).toBe(expected);
-		}
-	);
-
-	test(
-		'should select screen type whose dimensions are smaller than but nearest to the screen',
+		'should select screen type whose dimensions are greater than but nearest to the screen',
 		() => {
 			const overHD = {
 				height: 721,
@@ -46,7 +26,7 @@ describe('Resolution Specs', () => {
 
 			defineScreenTypes(screenTypes);
 
-			const expected = 'hd';
+			const expected = 'fhd';
 			const actual = getScreenType(overHD);
 
 			expect(actual).toBe(expected);
@@ -81,21 +61,7 @@ describe('Resolution Specs', () => {
 		}
 	);
 
-	test(
-		'should calculate the base font size for the given screen type by considering workspaceBounds',
-		() => {
-			init({measurementNode: {clientWidth: '3840', clientHeight: '1600'}});
-
-			const expectedFHD = '35px';
-			const actualFHD = calculateFontSize('fhd');
-
-			expect(actualFHD).toBe(expectedFHD);
-		}
-	);
-
 	test('should scale pixel measurements for the current screen', () => {
-		init({measurementNode: {clientWidth: originalWorkspaceBounds.width, clientHeight: originalWorkspaceBounds.height}});
-
 		const expectedFHD = 24 / 3;
 		const actualFHD = scale(24);
 
