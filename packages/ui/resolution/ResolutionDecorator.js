@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 
-import {init, config as riConfig, defineScreenTypes, getResolutionClasses} from './resolution.js';
+import {init, config as riConfig, defineScreenTypes, getResolutionClasses} from './resolution';
 
 /**
  * Default config for `ResolutionDecorator`.
