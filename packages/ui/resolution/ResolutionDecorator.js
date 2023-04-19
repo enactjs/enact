@@ -30,7 +30,8 @@ const defaultConfig = {
 
 	/**
 	 * Determines how to calculate font-size.
-	 * When set to `scale` and the screen is in `landscape` orientation, calculates font-size linearly based on screen resolution.
+	 * When set to `scale` and the screen is in `landscape` orientation,
+	 * calculates font-size linearly based on screen resolution.
 	 * When set to `normal`, the font-size will be the pxPerRem value of the best match screen type.
 	 *
 	 * @type {('normal'|'scale')}
@@ -42,8 +43,10 @@ const defaultConfig = {
 
 	/**
 	 * Determines how to get the best match screen type of current resolution.
-	 * When set to `true`, the matched screen type will be the one that is smaller and the closest to the screen resolution.
-	 * When set to `false`, the matched screen type will be the one that is greater and the closest to the screen resolution.
+	 * When set to `true`, the matched screen type will be the one that is smaller and
+	 * the closest to the screen resolution.
+	 * When set to `false`, the matched screen type will be the one that is greater and
+	 * the closest to the screen resolution.
 	 *
 	 * @type {Boolean}
 	 * @private
