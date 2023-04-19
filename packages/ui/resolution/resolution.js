@@ -30,6 +30,8 @@ const unitToPixelFactors = {
 };
 
 const configDefaults = {
+	intermediateScreenHandling: 'normal',
+	matchSmallerScreenType: false,
 	orientationHandling: 'normal'
 };
 
@@ -134,7 +136,7 @@ function getScreenType (rez) {
 	rez = rez || workspaceBounds;
 
 	const types = screenTypes;
-	let bestMatch = types[types.length - 1].name; // Blindly set the first screen type, in case no matches are found later.
+	let bestMatch = config.matchSmallerScreenType ? types[0].name : types[types.length - 1].name; // Blindly set the first screen type, in case no matches are found later.
 
 	orientation = 'landscape';
 
@@ -145,13 +147,24 @@ function getScreenType (rez) {
 		rez.height = swap;
 	}
 
-	// Loop through resolutions, first->last, smallest->largest
-	for (let i = 0; i <= types.length - 1; i++) {
-		// Does this screenType definition fit inside the current resolution? If so, save it as the current best match.
-		if (rez.height >= types[i].height && rez.width >= types[i].width) {
-			bestMatch = types[i].name;
+	if (config.matchSmallerScreenType) {
+		// Loop through resolutions, first->last, smallest->largest
+		for (let i = 0; i <= types.length - 1; i++) {
+			// Does this screenType definition fit inside the current resolution? If so, save it as the current best match.
+			if (rez.height >= types[i].height && rez.width >= types[i].width) {
+				bestMatch = types[i].name;
+			}
+		}
+	} else {
+		// Loop through resolutions, last->first, largest->smallest
+		for (let i = types.length - 1; i >= 0; i--) {
+			// Does the current resolution fit inside this screenType definition? If so, save it as the current best match.
+			if (rez.height <= types[i].height && rez.width <= types[i].width) {
+				bestMatch = types[i].name;
+			}
 		}
 	}
+
 	// Return the name of the closest fitting set of dimensions.
 	return bestMatch;
 }
@@ -183,13 +196,15 @@ function getScreenType (rez) {
  */
 function calculateFontSize (type) {
 	const scrObj = getScreenTypeObject(type);
+	const shouldScaleFontSize = (config.intermediateScreenHandling === 'scale') && (config.matchSmallerScreenType ? workspaceBounds.width > scrObj.width && workspaceBounds.height > scrObj.height :
+		workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
 	let size;
 
 	if (orientation === 'portrait' && config.orientationHandling === 'scale') {
 		size = scrObj.height / scrObj.width * scrObj.pxPerRem;
 	} else {
 		size = scrObj.pxPerRem;
-		if (workspaceBounds.width > scrObj.width && workspaceBounds.height > scrObj.height ) {
+		if (orientation === 'landscape' && shouldScaleFontSize) {
 			size = parseInt(workspaceBounds.height * scrObj.pxPerRem / scrObj.height);
 		}
 	}
