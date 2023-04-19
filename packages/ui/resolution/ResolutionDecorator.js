@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 
-import {init, defineScreenTypes, getResolutionClasses} from './resolution';
+import {init, config as riConfig, defineScreenTypes, getResolutionClasses} from './resolution';
 
 /**
  * Default config for `ResolutionDecorator`.
@@ -27,6 +27,29 @@ const defaultConfig = {
 	 * @memberof ui/resolution.ResolutionDecorator.defaultConfig
 	 */
 	dynamic: true,
+
+	/**
+	 *
+	 * Determines how to get the best match screen type of current resolution. When set to `true`, the screen type is the one closest to the screen resolution without going over.
+	 * When set to `false`, the screen type is the one closest to the screen resolution without going below.
+	 *
+	 * @type {Boolean}
+	 * @private
+	 * @memberof ui/resolution.ResolutionDecorator.defaultConfig
+	 */
+	findScreenTypeWithoutGoingOver: false,
+
+	/**
+	 *
+	 * Determines how to calculate font-size. When set to `scale` and the screen is in `landscape` orientation, calculates font-size linearly based on screenTypes.
+	 * When set to `normal`, the font-size will be the pxPerRem value of the best match screen type.
+	 *
+	 * @type {String}
+	 * @default 'normal'
+	 * @private
+	 * @memberof ui/resolution.ResolutionDecorator.defaultConfig
+	 */
+	fontSizeHandling: 'normal',
 
 	/**
 	 * An array of objects containing declarations for screen types to add to the list of known
@@ -76,6 +99,8 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			riConfig.fontSizeHandling = config.fontSizeHandling;
+			riConfig.findScreenTypeWithoutGoingOver = config.findScreenTypeWithoutGoingOver;
 			init({measurementNode: (typeof window !== 'undefined' && window)});
 			this.state = {
 				resolutionClasses: ''
