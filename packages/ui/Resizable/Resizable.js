@@ -8,8 +8,8 @@
 import hoc from '@enact/core/hoc';
 import invariant from 'invariant';
 
-import useResize from './useResize';
 import ResizeContext from './ResizeContext';
+import useResize from './useResize';
 
 /**
  * Default config for `Resizable`.
