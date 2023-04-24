@@ -29,7 +29,7 @@ const defaultConfig = {
 	/**
 	 * The event to listen to for path changes.
 	 *
-	 * This defines the actual name of the {@link ui/Routable.Routable#navigate|navigate}
+	 * This defines the actual name of the {@link ui/Routable.Routable.navigate|navigate}
 	 * property.
 	 *
 	 * @type {String}

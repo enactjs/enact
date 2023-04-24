@@ -136,6 +136,7 @@ const Spotlight = (function () {
 	*/
 	let _initialized = false;
 	let _duringFocusChange = false;
+	let _focusRingElement = null;
 
 	/*
 	 * Whether a 5-way directional key is being held.
@@ -199,7 +200,7 @@ const Spotlight = (function () {
 			return false;
 		}
 
-		if ((getPointerMode() && !fromPointer)) {
+		if ((getPointerMode() && !fromPointer) && (typeof window !== 'undefined' && (!window.PalmSystem || window.PalmSystem.cursor?.visibility))) {
 			setContainerLastFocusedElement(elem, containerIds);
 			return false;
 		}
@@ -231,6 +232,16 @@ const Spotlight = (function () {
 		}
 
 		elem.focus(focusOptions);
+
+		/* istanbul ignore next */
+		if (_focusRingElement) {
+			const elemRect = elem.getBoundingClientRect();
+
+			_focusRingElement.style.left = `${elemRect.x + window.scrollX}px`;
+			_focusRingElement.style.top = `${elemRect.y + window.scrollY}px`;
+			_focusRingElement.style.width = `${elemRect.width}px`;
+			_focusRingElement.style.height = `${elemRect.height}px`;
+		}
 
 		_duringFocusChange = false;
 
@@ -569,6 +580,12 @@ const Spotlight = (function () {
 				// by default, pointer mode is off but the platform's current state will override that
 				setPointerMode(false);
 				setPlatformPointerMode();
+
+				/* istanbul ignore next */
+				if (getContainerConfig('spotlightRootDecorator')?.isStandardFocusableMode) {
+					_focusRingElement = document.querySelector('#spotlightFocusRing');
+				}
+
 				_initialized = true;
 			}
 		},

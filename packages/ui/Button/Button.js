@@ -123,7 +123,7 @@ const ButtonBase = kind({
 		/**
 		 * Flips the icon.
 		 *
-		 * @see {@link ui/Icon.Icon#flip}
+		 * @see {@link ui/Icon.IconBase.flip}
 		 * @type {String}
 		 * @public
 		 */

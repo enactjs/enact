@@ -61,7 +61,7 @@ const SpinnerBase = kind({
 		 * * 'container' blocks up to the nearest ancestor with absolute or relative positioning
 		 *
 		 * When `blockClickOn` is either `'screen'` or `'container'`, a translucent scrim can be added
-		 * by setting {@link ui/Spinner.Spinner#scrim|scrim} prop to `true`.
+		 * by setting {@link ui/Spinner.SpinnerBase.scrim|scrim} prop to `true`.
 		 *
 		 * @type {String|null}
 		 * @public

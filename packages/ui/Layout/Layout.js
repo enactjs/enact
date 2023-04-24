@@ -138,7 +138,7 @@ import css from './Layout.module.less';
  *
  * A stateless component that acts as a containing area for {@link ui/Layout.Cell|Cells} to be
  * positioned in a row or a column (horizontally or vertically, respectively. It supports an
- * {@link ui/Layout.Layout#orientation|orientation} property for laying-out its contents
+ * {@link ui/Layout.LayoutBase.orientation|orientation} property for laying-out its contents
  * (`Cells`) in an organized, readable way.
  *
  * Example:
@@ -176,10 +176,31 @@ const LayoutBase = kind({
 		 * `"start"` refers to the top in a horizontal layout, and left in a vertical LTR layout
 		 * `"end"` refers to the bottom in a horizontal layout, and right in a vertical LTR layout
 		 * `"start"` and `"end"` reverse places when in a vertical layout in a RTL locale.
-		 * This includes support for `align-parts` which is shorthand for combining `align-items`
-		 * and `justify-content` into a single property, separated by a space, in that order.
-		 * This allows you to specify both the horizontal and vertical alignment in one property,
-		 * separated by a space.
+		 * This includes support shorthand for combining `align-items` and `justify-content` into
+		 * a single property, separated by a space, in that order. This allows you to specify both
+		 * the horizontal and vertical alignment in one property, separated by a space.
+		 *
+		 * For example, `align="center space-between"` means `align-items: center` and
+		 * `justify-content: space-between` for each. `justify-content` property can be used to
+		 * align the Cells on the main axis and adjust gaps among the Cells. To declare the
+		 * `justify-content` property only, just add a heading space for `align` prop string like
+		 * `align=" space-between"`. The default value for `align-items` is `stretch`. It can be
+		 * also used for `align` prop like `align="stretch space-between"`. All values of
+		 * `justify-content` are supported, like `start`, `end`, `center`, `space-between`,
+		 * `space-around`, and `space-evenly`.
+		 *
+		 * ```
+		 * <Layout align="center space-around">
+		 *     <Cell>Left Column</Cell>
+		 *     <Cell>Right Column</Cell>
+		 * </Layout>
+		 * ```
+		 * ```
+		 * <Layout align=" space-between">
+		 *     <Cell>Left Column</Cell>
+		 *     <Cell>Right Column</Cell>
+		 * </Layout>
+		 * ```
 		 *
 		 * @type {String}
 		 * @public
@@ -314,7 +335,7 @@ const LayoutDecorator = ForwardRef({prop: 'componentRef'});
  *
  * A stateless component that acts as a containing area for {@link ui/Layout.Cell|Cells} to be
  * positioned in a row or a column (horizontally or vertically, respectively. It supports an
- * {@link ui/Layout.Layout#orientation|orientation} property for laying-out its contents
+ * {@link ui/Layout.LayoutBase.orientation|orientation} property for laying-out its contents
  * (`Cells`) in an organized, readable way.
  *
  * Example:
