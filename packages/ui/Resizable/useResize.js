@@ -1,3 +1,5 @@
+import {forward} from '@enact/core/handle';
+
 import {useCallback, useContext, useEffect, useRef} from 'react';
 
 import ResizeContext from './ResizeContext';
@@ -10,8 +12,7 @@ import ResizeContext from './ResizeContext';
  */
 const useResize = (props, config) => {
 	// `resize` is the name of the event on the component to listen for size changes.
-	const {resize} = config;
-	const forwardHandler = props[resize];
+	const {filter = null, resize = null} = config;
 
 	const resizeContextValue = useContext(ResizeContext);
 	const mutableRef = useRef({
@@ -32,18 +33,18 @@ const useResize = (props, config) => {
 		};
 	}, [resizeContextValue]);
 
-	const handleResize = useCallback(() => {
-		if (typeof forwardHandler === 'function') {
-			forwardHandler();
-		}
+	const handleResize = useCallback((ev) => {
+		forward(resize, ev, props);
+
 		// Notifies a container that a resize is necessary
-		if (mutableRef.current.resizeRegistry) {
+		if ((filter === null || filter) && mutableRef.current.resizeRegistry) {
 			mutableRef.current.resizeRegistry.notify({action: 'invalidateBounds'});
 		}
-	}, [forwardHandler]);
+	}, [filter, props, resize]);
 
 	const handlers = Object.assign({});
 	handlers[resize] = handleResize;
+
 	return handlers;
 };
 
