@@ -4,11 +4,11 @@ import ResizeContext from './ResizeContext';
 
 /**
  * A custom hook which returns handler that indicates a resize is necessary
- * @function useResizable
+ * @function useResize
  * @memberof ui/Resizable
  * @ui
  */
-const useResizable = (props, config) => {
+const useResize = (props, config) => {
 	// `resize` is the name of the event on the component to listen for size changes.
 	const {resize} = config;
 	const forwardHandler = props[resize];
@@ -47,4 +47,4 @@ const useResizable = (props, config) => {
 	return handlers;
 };
 
-export default useResizable;
+export default useResize;
