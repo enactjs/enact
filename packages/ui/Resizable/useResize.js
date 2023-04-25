@@ -37,7 +37,7 @@ const useResize = (props, config) => {
 		forward(resize, ev, props);
 
 		// Notifies a container that a resize is necessary
-		if ((filter === null || filter) && mutableRef.current.resizeRegistry) {
+		if ((filter === null || filter(ev, props)) && mutableRef.current.resizeRegistry) {
 			mutableRef.current.resizeRegistry.notify({action: 'invalidateBounds'});
 		}
 	}, [filter, props, resize]);
