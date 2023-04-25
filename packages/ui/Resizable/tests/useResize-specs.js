@@ -2,9 +2,9 @@ import Registry from '@enact/core/internal/Registry';
 import {render} from '@testing-library/react';
 
 import {ResizeContext} from '../Resizable';
-import useResizable from '../useResizable';
+import useResize from '../useResize';
 
-describe('useResizable', () => {
+describe('useResize', () => {
 	let data;
 
 	const DivComponent = (props) => {
@@ -14,7 +14,7 @@ describe('useResizable', () => {
 	};
 
 	const ResizeButtonWithHook = (props) => {
-		const handlers = useResizable(props, {resize: 'onClick'});
+		const handlers = useResize(props, {resize: 'onClick'});
 		return <DivComponent {...handlers}>{props.children}</DivComponent>;
 	};
 
