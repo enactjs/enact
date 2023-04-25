@@ -350,6 +350,11 @@ class VirtualListBasic extends Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
+		if (this.lastFirstIndex !== null && this.lastFirstIndex !== this.state.firstIndex) {
+			return;
+		}
+		this.lastFirstIndex = null;
+
 		let deferScrollTo = false;
 		const {firstIndex, numOfItems} = this.state;
 
@@ -412,7 +417,6 @@ class VirtualListBasic extends Component {
 			!equals(prevProps.itemSize, this.props.itemSize)
 		) {
 			const {x, y} = this.getXY(this.scrollPosition, 0);
-
 			this.calculateMetrics(this.props);
 			this.setState(this.getStatesAndUpdateBounds(this.props));
 			this.setContainerSize();
@@ -429,6 +433,7 @@ class VirtualListBasic extends Component {
 			deferScrollTo = true;
 		} else if (this.hasDataSizeChanged) {
 			const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
+
 			this.setState(newState);
 			this.setContainerSize();
 
@@ -475,6 +480,7 @@ class VirtualListBasic extends Component {
 	dimensionToExtent = 0;
 	threshold = 0;
 	maxFirstIndex = 0;
+	lastFirstIndex = null;
 	curDataSize = 0;
 	hasDataSizeChanged = false;
 	cc = [];
@@ -694,8 +700,10 @@ class VirtualListBasic extends Component {
 			newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff, firstIndex);
 		}
 
+		this.lastFirstIndex = Math.min(newFirstIndex, this.maxFirstIndex);
+
 		return {
-			firstIndex: Math.min(newFirstIndex, this.maxFirstIndex),
+			firstIndex: this.lastFirstIndex,
 			numOfItems: numOfItems
 		};
 	};
@@ -955,6 +963,7 @@ class VirtualListBasic extends Component {
 
 		if (this.shouldUpdateBounds || firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
+			this.lastFirstIndex = newFirstIndex;
 		}
 	}
 
