@@ -353,8 +353,6 @@ class VirtualListBasic extends Component {
 		let deferScrollTo = false;
 		const {firstIndex, numOfItems} = this.state;
 
-		this.shouldUpdateBounds = false;
-
 		// TODO: remove `this.hasDataSizeChanged` and fix useScroll
 		this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
 
@@ -429,6 +427,7 @@ class VirtualListBasic extends Component {
 			deferScrollTo = true;
 		} else if (this.hasDataSizeChanged) {
 			const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
+
 			this.setState(newState);
 			this.setContainerSize();
 
@@ -885,7 +884,7 @@ class VirtualListBasic extends Component {
 			pos = x;
 		}
 
-		if (pos > threshold.max || pos < threshold.min) {
+		if (pos > threshold.max || pos < threshold.min || this.shouldUpdateBounds) {
 			let newThresholdMin = -Infinity, newThresholdMax = Infinity;
 
 			if (this.props.itemSizes) {
@@ -956,6 +955,8 @@ class VirtualListBasic extends Component {
 		if (this.shouldUpdateBounds || firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
 		}
+
+		this.shouldUpdateBounds = false;
 	}
 
 	// For individually sized item
