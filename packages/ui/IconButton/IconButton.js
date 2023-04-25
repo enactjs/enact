@@ -64,7 +64,7 @@ const IconButtonBase = kind({
 		 *
 		 * If `icon` isn't specified but `children` is, `children` is used as the icon's value.
 		 *
-		 * @see {@link ui/Icon.Icon#children}
+		 * @see {@link ui/Icon.IconBase.children}
 		 * @type {Node}
 		 * @public
 		 */

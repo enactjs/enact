@@ -71,12 +71,27 @@ const CellBase = kind({
 		componentRef: EnactPropTypes.ref,
 
 		/**
+		 * Sizes `Cell` to its container.
+		 *
+		 * A `grow`able cell will expand to its maximum size, according to the remaining space of the
+		 * container. This is used when you want to grow the size of this Cell so that it fills the
+		 * container. See the {@link ui/Layout.CellBase.size|size} property for more details.
+		 *
+		 * When combined with {@link ui/Layout.CellBase.shrink|shrink}, `shrink` prop takes precedence over
+		 * `grow` prop and `grow` prop is simply ignored.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		grow: PropTypes.bool,
+
+		/**
 		 * Sizes `Cell` to its contents.
 		 *
 		 * A `shrink`able cell will contract to its minimum size, according to the dimensions of its
 		 * contents. This is used when you want the size of this Cell's content to influence the
 		 * dimensions of this cell. `shrink` will not allow the contents of the Layout to be pushed
-		 * beyond its boundaries (overflowing). See the {@link ui/Layout.Cell#size|size} property
+		 * beyond its boundaries (overflowing). See the {@link ui/Layout.CellBase.size|size} property
 		 * for more details.
 		 *
 		 * @type {Boolean}
@@ -88,13 +103,19 @@ const CellBase = kind({
 		/**
 		 * Sets the desired size of the Cell using any valid CSS measurement value.
 		 *
-		 * When used in conjunction with {@link ui/Layout.Cell#shrink|shrink}, the size will be
+		 * When used in conjunction with {@link ui/Layout.CellBase.shrink|shrink}, the size will be
 		 * the maximum size, shrinking as necessary, to fit the content.
+		 *
+		 * When used in conjunction with {@link ui/Layout.CellBase.grow|grow}, the size will be the
+		 * minimunm size, growing as necessary, to fit the container.
 		 *
 		 * E.g.
 		 * * `size="400px"` -> cell will be 400px, regardless of the dimensions of your content
 		 * * `size="400px" shrink` -> cell will be 400px if your content is greater than 400px,
 		 *   and will match your contents size if it's smaller
+		 * * `size="400px" grow` -> cell will be 400px if the container has no remaining space.
+		 *   Cell can grow larger than `size` to fill the container if there is remaining space
+		 *   in the container.
 		 *
 		 * This accepts any valid CSS measurement value string. If a numeric value is used, it will
 		 * be treated as a pixel value and converted to a
@@ -118,7 +139,7 @@ const CellBase = kind({
 	},
 
 	computed: {
-		className: ({shrink, size, styler}) => styler.append({shrink, grow: (!shrink && !size)}),
+		className: ({grow, shrink, size, styler}) => styler.append({shrink, grow: !shrink && (grow || !size), size}),
 		style: ({align, shrink, size, style}) => {
 			if (typeof size === 'number') size = ri.unit(ri.scale(size), 'rem');
 
@@ -143,6 +164,7 @@ const CellBase = kind({
 
 	render: ({component: Component, componentRef, ...rest}) => {
 		delete rest.align;
+		delete rest.grow;
 		delete rest.shrink;
 		delete rest.size;
 

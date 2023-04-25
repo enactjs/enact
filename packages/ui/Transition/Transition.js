@@ -490,9 +490,9 @@ class Transition extends Component {
 
 		if (noAnimation) {
 			if (!prevProps.visible && visible) {
-				forwardCustom('onShow')({}, this.props);
+				forwardCustom('onShow')(null, this.props);
 			} else if (prevProps.visible && !visible) {
-				forwardCustom('onHide')({}, this.props);
+				forwardCustom('onHide')(null, this.props);
 			}
 		}
 	}
