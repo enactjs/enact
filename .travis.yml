@@ -11,6 +11,7 @@ install:
     - npm install -g codecov
     - git clone --branch=develop --depth 1 https://github.com/enactjs/cli ../cli
     - pushd ../cli
+    - npm cahce clean --force
     - npm install
     - npm link
     - popd
