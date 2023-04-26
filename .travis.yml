@@ -16,6 +16,9 @@ install:
     - npm link
     - popd
     - npm install
+    - pushd ./packages/sampler
+    - rm npm-shrinkwrap.json
+    - popd
     - npm run bootstrap
 script:
     - echo -e "\x1b\x5b35;1m*** Starting tests...\x1b\x5b0m"
