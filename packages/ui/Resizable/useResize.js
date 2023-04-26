@@ -1,14 +1,26 @@
 import {forward} from '@enact/core/handle';
-
 import {useCallback, useContext, useEffect, useRef} from 'react';
 
 import ResizeContext from './ResizeContext';
 
 /**
- * A custom hook which returns handler that indicates a resize is necessary
- * @function useResize
+ * Object returned by `useResize`
+ * Object has a property named with the value of the resize property of config.
+ * And this property has resizehandler.
+ *
+ * @typedef {Object} useResizeInterface
  * @memberof ui/Resizable
- * @ui
+ * @private
+ */
+
+/**
+ * A custom hook which returns handler that indicates a resize is necessary
+ *
+ * @param {Object} props  Resize component props
+ * @param {Object} config  Configuration options with resize, filter property
+ * @returns {useResizeInterface}
+ * @private
+ *
  */
 const useResize = (props, config) => {
 	// `resize` is the name of the event on the component to listen for size changes.
