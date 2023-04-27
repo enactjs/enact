@@ -2,7 +2,7 @@ dist: focal
 language: node_js
 node_js:
     - lts/*
-    - node
+    - 19
 sudo: false
 before_install:
     - sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
@@ -11,14 +11,10 @@ install:
     - npm install -g codecov
     - git clone --branch=develop --depth 1 https://github.com/enactjs/cli ../cli
     - pushd ../cli
-    - npm cache verify
     - npm install
     - npm link
     - popd
     - npm install
-    - pushd ./packages/sampler
-    - npm install
-    - popd
     - npm run bootstrap
 script:
     - echo -e "\x1b\x5b35;1m*** Starting tests...\x1b\x5b0m"
