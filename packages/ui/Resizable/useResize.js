@@ -32,7 +32,7 @@ const useResize = (props, config) => {
 	});
 
 	useEffect(() => {
-		let {resizeRegistry} = mutableRef.current;
+		const {resizeRegistry} = mutableRef.current;
 
 		if (resizeContextValue && typeof resizeContextValue === 'function') {
 			mutableRef.current.resizeRegistry = resizeContextValue(() => {});
