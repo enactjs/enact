@@ -6,8 +6,8 @@ title: Additional Developer Resources
 
 The Enact framework is built atop React.
 
-*   [Official React documentation](https://react.dev/learn)
-*   [Official React tutorial](https://reactjs.org/tutorial/tutorial.html)
+*   [Official React documentation](https://react.dev/reference/react)
+*   [Official React tutorial](https://react.dev/learn/tutorial-tic-tac-toe)
 *   [Egghead tutorial - Start Using React to Build Web Applications](https://egghead.io/courses/react-fundamentals?utm_source=drip&utm_medium=email&utm_campaign=course-update-react-fundamentals)
 *   [Awesome React](https://github.com/enaqx/awesome-react) - a big collection of links (React and related tech)
 *   [Build with React](http://buildwithreact.com/tutorial) - a simple tutorial with inline editor
