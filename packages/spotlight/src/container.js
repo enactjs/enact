@@ -12,7 +12,7 @@ import {coerceArray} from '@enact/core/util';
 import intersection from 'ramda/src/intersection';
 import last from 'ramda/src/last';
 
-import {contains, matchSelector, getContainerRect, getRect, intersects} from './utils';
+import {contains, matchSelector, getContainerRect, getRect, intersects, isStandardFocusable} from './utils';
 
 const containerAttribute = 'data-spotlight-id';
 const containerConfigs   = new Map();
@@ -46,6 +46,7 @@ let GlobalConfig = {
 	continue5WayHold: false,
 	defaultElement: '',     // <extSelector> except "@" syntax.
 	enterTo: '',            // '', 'last-focused', 'default-element'
+	isStandardFocusableMode: false,     // @private - set to true to focus standard focusable element
 	lastFocusedElement: null,
 	lastFocusedKey: null,
 	lastFocusedPersist: (node, all) => {
@@ -89,7 +90,9 @@ let GlobalConfig = {
  * @private
  */
 const querySelector = (node, includeSelector, excludeSelector) => {
-	const include = new Set(node.querySelectorAll(includeSelector));
+	const focusables = GlobalConfig.isStandardFocusableMode ? Array.prototype.filter.call(node.getElementsByTagName('*'), isStandardFocusable) : [];
+	const include = new Set([...node.querySelectorAll(includeSelector), ...focusables]);
+
 	const exclude = node.querySelectorAll(excludeSelector);
 
 	for (let i = 0; i < exclude.length; i++) {
@@ -595,7 +598,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const config = getContainerConfig(containerId);
-	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
+	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node) && !(GlobalConfig.isStandardFocusableMode && isStandardFocusable(node))) {
 		return false;
 	}
 
@@ -951,13 +954,15 @@ function containsContainer (outerContainerId, innerContainerId) {
 function mayActivateContainer (containerId) {
 	const currentContainerId = getLastContainer();
 
-	// If the current container is restricted to 'self-only' and if the next container to be
-	// activated is not inside the currently activated container, the next container should not be
-	// activated.
-	return (
-		!isRestrictedContainer(currentContainerId) ||
-		containsContainer(currentContainerId, containerId)
-	);
+	// If the current container or its outer containers are restricted to 'self-only' and
+	// if the next container to be activated is not inside the restrict container,
+	// the next container should not be activated.
+	const currentContainerNode = getContainerNode(currentContainerId);
+	const restrictContainer = getContainersForNode(currentContainerNode).reduceRight((result, outerContainerId) => {
+		return result || (isRestrictedContainer(outerContainerId) ? outerContainerId : null);
+	}, null);
+
+	return !restrictContainer || containsContainer(restrictContainer, containerId);
 }
 
 function getDefaultContainer () {

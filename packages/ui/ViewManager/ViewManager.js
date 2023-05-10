@@ -26,7 +26,7 @@ import {wrapWithView} from './View';
 
 /**
  * The base `ViewManager` component, without
- * [ViewManagerDecorator]{@link ui/ViewManager.ViewManagerDecorator} applied.
+ * {@link ui/ViewManager.ViewManagerDecorator|ViewManagerDecorator} applied.
  *
  * @class ViewManagerBase
  * @memberof ui/ViewManager
@@ -225,6 +225,8 @@ const ViewManagerBase = class extends Component {
 	static getDerivedStateFromProps (props, state) {
 		if (props.reverseTransition != null) {
 			return {
+				index: props.index,
+				prevIndex: state.index,
 				reverseTransition: !!props.reverseTransition
 			};
 		} else if (props.index !== state.index) {

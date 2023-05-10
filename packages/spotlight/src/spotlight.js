@@ -136,6 +136,7 @@ const Spotlight = (function () {
 	*/
 	let _initialized = false;
 	let _duringFocusChange = false;
+	let _focusRingElement = null;
 
 	/*
 	 * Whether a 5-way directional key is being held.
@@ -199,7 +200,7 @@ const Spotlight = (function () {
 			return false;
 		}
 
-		if ((getPointerMode() && !fromPointer)) {
+		if ((getPointerMode() && !fromPointer) && (typeof window !== 'undefined' && (!window.PalmSystem || window.PalmSystem.cursor?.visibility))) {
 			setContainerLastFocusedElement(elem, containerIds);
 			return false;
 		}
@@ -231,6 +232,16 @@ const Spotlight = (function () {
 		}
 
 		elem.focus(focusOptions);
+
+		/* istanbul ignore next */
+		if (_focusRingElement) {
+			const elemRect = elem.getBoundingClientRect();
+
+			_focusRingElement.style.left = `${elemRect.x + window.scrollX}px`;
+			_focusRingElement.style.top = `${elemRect.y + window.scrollY}px`;
+			_focusRingElement.style.width = `${elemRect.width}px`;
+			_focusRingElement.style.height = `${elemRect.height}px`;
+		}
 
 		_duringFocusChange = false;
 
@@ -569,6 +580,12 @@ const Spotlight = (function () {
 				// by default, pointer mode is off but the platform's current state will override that
 				setPointerMode(false);
 				setPlatformPointerMode();
+
+				/* istanbul ignore next */
+				if (getContainerConfig('spotlightRootDecorator')?.isStandardFocusableMode) {
+					_focusRingElement = document.querySelector('#spotlightFocusRing');
+				}
+
 				_initialized = true;
 			}
 		},
@@ -730,14 +747,19 @@ const Spotlight = (function () {
 		 * @param {String|Node} [elem] The spotlight ID or selector for either a spottable
 		 *  component or a spotlight container, or spottable node. If not supplied, the default
 		 *  container will be focused.
-		 * @param {Object} [containerOption] An optional object containing preferred `enterTo`.
-		 *  It will be passed to the `getTargetByContainer` when `elem` is a container.
+		 * @param {Object} [containerOption] The object including `enterTo` and `toOuterContainer`.
+		 *  It works when the first parameter `elem` is either a spotlight container ID or a spotlight container node.
+		 * @param {('last-focused'|'default-element'|'topmost')} [containerOption.enterTo] Specifies preferred
+		 *  `enterTo` configuration.
+		 * @param {Boolean} [containerOption.toOuterContainer] If the proper target is not found, search one
+		 *  recursively to outer container.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
 		 */
 		focus: function (elem, containerOption = {}) {
 			let target = elem;
 			let wasContainerId = false;
+			let currentContainerNode = null;
 
 			if (!elem) {
 				target = getTargetByContainer();
@@ -745,6 +767,7 @@ const Spotlight = (function () {
 				if (getContainerConfig(elem)) {
 					target = getTargetByContainer(elem, containerOption.enterTo);
 					wasContainerId = true;
+					currentContainerNode = getContainerNode(elem);
 				} else if (/^[\w\d-]+$/.test(elem)) {
 					// support component IDs consisting of alphanumeric, dash, or underscore
 					target = getTargetBySelector(`[data-spotlight-id=${elem}]`);
@@ -753,6 +776,7 @@ const Spotlight = (function () {
 				}
 			} else if (isContainer(elem)) {
 				target = getTargetByContainer(getContainerId(elem), containerOption.enterTo);
+				currentContainerNode = elem;
 			}
 
 			const nextContainerIds = getContainersForNode(target);
@@ -769,6 +793,14 @@ const Spotlight = (function () {
 				// if we failed to find a spottable target within the provided container, we'll set
 				// it as the active container to allow it to focus itself if its contents change
 				setLastContainer(elem);
+			}
+
+			if (containerOption.toOuterContainer && currentContainerNode) {
+				const outerContainer = getContainersForNode(currentContainerNode.parentElement).pop();
+
+				if (outerContainer) {
+					return this.focus(outerContainer, containerOption);
+				}
 			}
 
 			return false;

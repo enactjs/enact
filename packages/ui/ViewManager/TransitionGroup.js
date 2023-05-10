@@ -94,7 +94,7 @@ class TransitionGroup extends Component {
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to [component]{@link ui/ViewManager.TransitionGroup#component}
+		 * Called with a reference to {@link ui/ViewManager.TransitionGroup.component|component}
 		 *
 		 * @type {Object|Function}
 		 * @private

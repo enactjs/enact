@@ -1,7 +1,13 @@
 {
   "name": "@enact/spotlight",
-  "version": "4.5.0-alpha.2",
+  "version": "4.7.0",
   "description": "A focus management library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enactjs/enact.git",
+    "directory": "packages/spotlight"
+  },
+  "homepage": "https://enactjs.com",
   "main": "src/spotlight.js",
   "scripts": {
     "clean": "enact clean",
@@ -18,12 +24,12 @@
     }
   },
   "dependencies": {
-    "@enact/core": "^4.5.0-alpha.2",
-    "classnames": "^2.3.1",
+    "@enact/core": "^4.7.0",
+    "classnames": "^2.3.2",
     "prop-types": "^15.8.1",
     "ramda": "^0.28.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "warning": "^4.0.3"
   }
 }

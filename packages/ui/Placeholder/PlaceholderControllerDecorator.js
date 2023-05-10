@@ -49,7 +49,7 @@ const defaultConfig = {
 const PlaceholderContext = createContext();
 
 /**
- * A higher-order component (HOC) that render placeholder components.
+ * A higher-order component (HOC) that renders placeholder components.
  *
  * Components are rendered based on their position relative to the `'scrollTop'` from the
  * `'onScroll'`'s parameter. They are not unmounted once rendered.

@@ -189,7 +189,7 @@ describe('target', () => {
 	beforeEach(setupContainers);
 	afterEach(teardownContainers);
 
-	describe.skip('#getNavigableTarget', () => {
+	describe('#getNavigableTarget', () => {
 		test('should find spottable parent', testScenario(
 			scenarios.complexTree,
 			(root) => {

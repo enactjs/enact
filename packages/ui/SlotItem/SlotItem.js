@@ -8,8 +8,10 @@
  * @exports SlotItem
  * @exports SlotItemBase
  * @exports SlotItemDecorator
+ * @deprecated Will be removed in 5.0.0.
  */
 
+import deprecate from '@enact/core/internal/deprecate';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
@@ -36,7 +38,7 @@ const SlotItemBase = kind({
 		 * The type of component to use to render the item.
 		 *
 		 * This component will receive the `inline` prop and any additional unhandled props provided
-		 * to `SlotItem`. A derivative of [Item]{@link ui/Item.Item} is recommended.
+		 * to `SlotItem`. A derivative of {@link ui/Item.Item|Item} is recommended.
 		 *
 		 * @type {Component}
 		 * @required
@@ -162,7 +164,7 @@ const SlotItemBase = kind({
 		)
 	},
 
-	render: ({children, component: Component, componentRef, inline, slotAfter, slotBefore, ...rest}) => {
+	render: deprecate(({children, component: Component, componentRef, inline, slotAfter, slotBefore, ...rest}) => {
 		delete rest.autoHide;
 		delete rest.layout;
 
@@ -177,11 +179,14 @@ const SlotItemBase = kind({
 				{slotAfter}
 			</Component>
 		);
-	}
+	}, {
+		name: 'ui/SlotItem',
+		until: '5.0.0'
+	})
 });
 
 /**
- * A ui-specific higher-order component (HOC) with slot behaviors to apply to [SlotItem]{@link ui/SlotItem.SlotItemBase}.
+ * A ui-specific higher-order component (HOC) with slot behaviors to apply to {@link ui/SlotItem.SlotItemBase|SlotItem}.
  *
  * @class SlotItemDecorator
  * @memberof ui/SlotItem

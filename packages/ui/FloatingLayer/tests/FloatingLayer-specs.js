@@ -69,7 +69,7 @@ describe('FloatingLayer Specs', () => {
 		expect(actual).toMatchObject(expectedType);
 	});
 
-	test('should fire onDimiss event with type when FloatingLayer is closed', () => {
+	test('should fire onDimiss event with type and detail info when FloatingLayer is closed', () => {
 		const handleDismiss = jest.fn();
 
 		render(
@@ -80,7 +80,7 @@ describe('FloatingLayer Specs', () => {
 
 		fireEvent.keyUp(screen.getByText('Hi'), {keyCode: 27});
 
-		const expectedType = {type: 'onDismiss'};
+		const expectedType = {type: 'onDismiss', detail: {inputType: 'key'}};
 		const actual = handleDismiss.mock.calls.length && handleDismiss.mock.calls[0][0];
 
 		expect(actual).toMatchObject(expectedType);

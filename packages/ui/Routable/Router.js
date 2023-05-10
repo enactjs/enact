@@ -8,7 +8,7 @@ import ForwardRef from '../ForwardRef';
 import {propTypes, stringifyRoutes, toSegments} from './util';
 
 /**
- * A Router component for use with [`ViewManager`]{@link ui/ViewManager.ViewManager}
+ * A Router component for use with {@link ui/ViewManager.ViewManager|ViewManager}
  *
  * @class Router
  * @memberof ui/Routable
@@ -45,7 +45,7 @@ const RouterBase = class extends ReactComponent {
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to [component]{@link ui/Routable.Router#component}.
+		 * Called with a reference to {@link ui/Routable.RouterBase.component|component}.
 		 *
 		 * @type {Object|Function}
 		 * @private

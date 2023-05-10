@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import {memo, useEffect, useRef} from 'react';
-import ReactDOM from 'react-dom';
 
 import ri from '../resolution';
 
@@ -13,16 +12,14 @@ import componentCss from './Scrollbar.module.less';
 const scrollbarTrackHidingDelay = 900; // 900ms + 100ms(fade out duration) = 1000ms.
 
 const addClass = (element, className) => {
-	const node = ReactDOM.findDOMNode(element); // eslint-disable-line react/no-find-dom-node
-	if (node) {
-		node.classList.add(className);
+	if (element) {
+		element.classList.add(className);
 	}
 };
 
 const removeClass = (element, className) => {
-	const node = ReactDOM.findDOMNode(element); // eslint-disable-line react/no-find-dom-node
-	if (node) {
-		node.classList.remove(className);
+	if (element) {
+		element.classList.remove(className);
 	}
 };
 
@@ -35,7 +32,7 @@ const removeClass = (element, className) => {
  * @param {String} value - CSS Variable value.
  */
 const setCSSVariable = (element, variable, value) => {
-	ReactDOM.findDOMNode(element).style.setProperty(variable, value); // eslint-disable-line react/no-find-dom-node
+	element.style.setProperty(variable, value);
 };
 
 /**
@@ -85,9 +82,9 @@ const useScrollbar = (props) => {
 			scrollViewSize = vertical ? bounds.clientHeight : bounds.clientWidth,
 			scrollContentSize = vertical ? bounds.scrollHeight : bounds.scrollWidth,
 			scrollOrigin = vertical ? bounds.scrollTop : bounds.scrollLeft,
-			scrollbarThumbSizeRatioBase = (scrollViewSize / scrollContentSize),
-			scrollbarThumbProgressRatio = (scrollOrigin / (scrollContentSize - scrollViewSize)),
-			scrollbarThumbSizeRatio = Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, scrollbarThumbSizeRatioBase));
+			scrollbarThumbSizeRatioBase = scrollContentSize !== 0 ? (scrollViewSize / scrollContentSize) : 1,
+			scrollbarThumbProgressRatio = (scrollContentSize - scrollViewSize) !== 0 ? (scrollOrigin / (scrollContentSize - scrollViewSize)) : 0,
+			scrollbarThumbSizeRatio = trackSize !== 0 ? Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, scrollbarThumbSizeRatioBase)) : 1;
 
 		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-size-ratio', scrollbarThumbSizeRatio);
 		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-progress-ratio', scrollbarThumbProgressRatio);
