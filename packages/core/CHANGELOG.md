@@ -2,9 +2,16 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `core/handle.forwardCustom` and `core/handle.forwardCustomWithPrevent` to bind an adapter function properly
+
 ## [4.5.3] - 2023-04-06
 
 No significant changes.
+
 ## [4.7.0] - 2023-04-25
 
 ### Deprecated
