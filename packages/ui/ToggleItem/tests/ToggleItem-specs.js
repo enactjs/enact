@@ -39,8 +39,9 @@ describe('ToggleItem Specs', () => {
 		expect(handleToggle).toHaveBeenCalledTimes(expected);
 	});
 
-	test('should call onClick when clicked', () => {
+	test('should call onClick when clicked', async () => {
 		const handleClick = jest.fn();
+		const user = userEvent.setup();
 		render(
 			<ToggleItemBase
 				component={SlottedItem}
@@ -52,7 +53,7 @@ describe('ToggleItem Specs', () => {
 		);
 		const toggleItem = screen.getByText('star');
 
-		userEvent.click(toggleItem);
+		await user.click(toggleItem);
 
 		const expected = 1;
 

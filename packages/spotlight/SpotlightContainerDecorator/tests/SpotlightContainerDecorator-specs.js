@@ -25,12 +25,13 @@ describe('SpotlightContainerDecorator', () => {
 		updatePointerPosition(0, 0);
 	});
 
-	test('should set itself as the active container on mouse enter', () => {
+	test('should set itself as the active container on mouse enter', async () => {
 		const Component = SpotlightContainerDecorator(Div);
+		const user = userEvent.setup();
 		render(<Component data-testid={testId} spotlightId="test-container" />);
 		const component = screen.getByTestId(testId);
 
-		userEvent.hover(component, hoverPosition);
+		await user.pointer({target: component, coords: hoverPosition});
 
 		const expected = 'test-container';
 		const actual = Spotlight.getActiveContainer();
@@ -38,9 +39,10 @@ describe('SpotlightContainerDecorator', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should set active container to parent container on mouse leave', () => {
+	test('should set active container to parent container on mouse leave', async () => {
 		const Component = SpotlightContainerDecorator(Div);
 		const node = document.createElement('div');
+		const user = userEvent.setup();
 		render(
 			<Component spotlightId="outer-container">
 				<Component data-testid={testId} spotlightId="inner-container" />
@@ -50,11 +52,11 @@ describe('SpotlightContainerDecorator', () => {
 		const component = screen.getByTestId(testId);
 
 		// set inner-container as active
-		userEvent.hover(component, hoverPosition);
+		await user.pointer({target: component, coords: hoverPosition});
 		updatePointerPosition(0, 1);
 
 		// leave inner-container
-		userEvent.unhover(component, unhoverPosition);
+		await user.pointer({target: component.parentNode, coords: unhoverPosition});
 
 		const expected = 'outer-container';
 		const actual = Spotlight.getActiveContainer();
@@ -62,9 +64,10 @@ describe('SpotlightContainerDecorator', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should not set active container on mouse leave if another container is active', () => {
+	test('should not set active container on mouse leave if another container is active', async () => {
 		const Component = SpotlightContainerDecorator(Div);
 		const node = document.createElement('div');
+		const user = userEvent.setup();
 		render(
 			<Component spotlightId="outer-container">
 				<Component data-testid={testId} spotlightId="inner-container" />
@@ -75,14 +78,14 @@ describe('SpotlightContainerDecorator', () => {
 		const component = screen.getByTestId(testId);
 
 		// set inner-container as active
-		userEvent.hover(component, hoverPosition);
+		await user.pointer({target: component, coords: hoverPosition});
 		updatePointerPosition(0, 1);
 
 		// set another container to be active
 		Spotlight.setActiveContainer('self-only-container');
 
 		// leave inner-container
-		userEvent.unhover(component, unhoverPosition);
+		await user.unhover(component);
 
 		const expected = 'self-only-container';
 		const actual = Spotlight.getActiveContainer();
