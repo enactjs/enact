@@ -54,10 +54,7 @@ const useResize = (props, config) => {
 		}
 	}, [filter, props, resize]);
 
-	const handlers = Object.assign({});
-	handlers[resize] = handleResize;
-
-	return handlers;
+	return {[resize]: handleResize};
 };
 
 export default useResize;
