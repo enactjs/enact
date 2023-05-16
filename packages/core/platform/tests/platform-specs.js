@@ -122,31 +122,71 @@ describe('platform', () => {
 		const edge4 = 'Mozilla/5.0 (Windows Mobile 10; Android 10.0; Microsoft; Lumia 950XL) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36 Edge/40.15254.603';
 
 		test('should return edge for Edg', () => {
-			const expectd = {platformName: 'edge'};
-			const actual = parseUserAgent(edge1);
+			let expected = {platformName: 'edge'};
+			let actual = parseUserAgent(edge1);
 
-			expect(actual).toMatchObject(expectd);
+			expect(actual).toMatchObject(expected);
+
+			expected = {'chrome': 113};
+			actual = parseUserAgent(edge1);
+
+			expect(actual).toMatchObject(expected);
+
+			expected = {'edge': 113};
+			actual = parseUserAgent(edge1);
+
+			expect(actual).toMatchObject(expected);
 		});
 
 		test('should return edge for EdgA', () => {
-			const expectd = {platformName: 'edge'};
-			const actual = parseUserAgent(edge2);
+			let expected = {platformName: 'edge'};
+			let actual = parseUserAgent(edge2);
 
-			expect(actual).toMatchObject(expectd);
+			expect(actual).toMatchObject(expected);
+
+			expected = {'chrome': 113};
+			actual = parseUserAgent(edge2);
+
+			expect(actual).toMatchObject(expected);
+
+			expected = {'edge': 113};
+			actual = parseUserAgent(edge2);
+
+			expect(actual).toMatchObject(expected);
 		});
 
 		test('should return edge for EdgiOS', () => {
-			const expectd = {platformName: 'edge'};
-			const actual = parseUserAgent(edge3);
+			let expected = {platformName: 'edge'};
+			let actual = parseUserAgent(edge3);
 
-			expect(actual).toMatchObject(expectd);
+			expect(actual).toMatchObject(expected);
+
+			expected = {'chrome': 113};
+			actual = parseUserAgent(edge3);
+
+			expect(actual).not.toMatchObject(expected);
+
+			expected = {'edge': 113};
+			actual = parseUserAgent(edge3);
+
+			expect(actual).toMatchObject(expected);
 		});
 
 		test('should return edge for Edge', () => {
-			const expectd = {platformName: 'edge'};
-			const actual = parseUserAgent(edge4);
+			let expected = {platformName: 'edge'};
+			let actual = parseUserAgent(edge4);
 
-			expect(actual).toMatchObject(expectd);
+			expect(actual).toMatchObject(expected);
+
+			expected = {'chrome': 113};
+			actual = parseUserAgent(edge4);
+
+			expect(actual).toMatchObject(expected);
+
+			expected = {'edge': 40};
+			actual = parseUserAgent(edge4);
+
+			expect(actual).toMatchObject(expected);
 		});
 	});
 

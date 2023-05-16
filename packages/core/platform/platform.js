@@ -53,7 +53,7 @@ const platforms = [
 	// Windows Phone 7 - 10
 	{platform: 'windowsPhone', regex: /Windows Phone (?:OS )?(\d+)[.\d]+/},
 	// Edge
-	{platform: 'edge', regex: /Edg(?:e|A|iOS)?\/(\d+)/},
+	{platform: 'edge', regex: /Edg(?:e|A|iOS)?\/(\d+)[.\d]+/},
 	// Android 4+ using Chrome
 	{platform: 'androidChrome', regex: /Android .* Chrome\/(\d+)[.\d]+/},
 	// Android 2 - 4
@@ -143,6 +143,22 @@ const parseUserAgent = (userAgent) => {
 				};
 			}
 			plat.platformName = p.platform;
+
+			if (plat.platformName === 'edge') {
+				const chrome = platforms.filter((item) => {
+					if (item.platform === 'chrome') {
+						return true;
+					}
+				});
+				if (chrome.length > 0) {
+					const chromeRegex = chrome[0].regex;
+					const chromeVersion = chromeRegex.exec(userAgent);
+					if (chromeVersion) {
+						plat['chrome'] = Number(chromeVersion[1]);
+					}
+				}
+			}
+
 			break;
 		}
 	}
