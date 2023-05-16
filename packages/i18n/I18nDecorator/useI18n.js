@@ -40,6 +40,10 @@ import I18n from './I18n';
  */
 function useI18n ({locale, ...config} = {}) {
 	const ilibLocale = ilib.getLocale();
+	console.warn("@@ locale Info", locale);
+	console.warn("@@ ilibLocale Info", ilibLocale);
+	console.warn("@@ navigator.language Info", navigator.language);
+
 	locale = locale && locale !== ilibLocale ? locale : ilibLocale;
 
 	const [state, setState] = useState({

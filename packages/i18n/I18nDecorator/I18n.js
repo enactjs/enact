@@ -120,6 +120,7 @@ class I18n {
 			nonLatinLanguageOverrides: this.nonLatinLanguageOverrides
 		});
 		const bundle = wrapIlibCallback(createResBundle, options);
+		console.warn("@@ load start", locale);
 
 		if (this.sync) {
 			const state = {
