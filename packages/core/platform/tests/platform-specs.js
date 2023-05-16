@@ -127,14 +127,10 @@ describe('platform', () => {
 
 			expect(actual).toMatchObject(expected);
 
-			expected = {'chrome': 113};
-			actual = parseUserAgent(edge1);
-
+			expected = {chrome: 113};
 			expect(actual).toMatchObject(expected);
 
-			expected = {'edge': 113};
-			actual = parseUserAgent(edge1);
-
+			expected = {edge: 113};
 			expect(actual).toMatchObject(expected);
 		});
 
@@ -144,14 +140,10 @@ describe('platform', () => {
 
 			expect(actual).toMatchObject(expected);
 
-			expected = {'chrome': 113};
-			actual = parseUserAgent(edge2);
-
+			expected = {chrome: 113};
 			expect(actual).toMatchObject(expected);
 
-			expected = {'edge': 113};
-			actual = parseUserAgent(edge2);
-
+			expected = {edge: 113};
 			expect(actual).toMatchObject(expected);
 		});
 
@@ -161,14 +153,10 @@ describe('platform', () => {
 
 			expect(actual).toMatchObject(expected);
 
-			expected = {'chrome': 113};
-			actual = parseUserAgent(edge3);
-
+			expected = {chrome: 113};
 			expect(actual).not.toMatchObject(expected);
 
-			expected = {'edge': 113};
-			actual = parseUserAgent(edge3);
-
+			expected = {edge: 113};
 			expect(actual).toMatchObject(expected);
 		});
 
@@ -178,14 +166,10 @@ describe('platform', () => {
 
 			expect(actual).toMatchObject(expected);
 
-			expected = {'chrome': 113};
-			actual = parseUserAgent(edge4);
-
+			expected = {chrome: 113};
 			expect(actual).toMatchObject(expected);
 
-			expected = {'edge': 40};
-			actual = parseUserAgent(edge4);
-
+			expected = {edge: 40};
 			expect(actual).toMatchObject(expected);
 		});
 	});
