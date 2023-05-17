@@ -24,7 +24,7 @@ function detect () {
 	if (_platform) {
 		// if we've already determined the platform, we'll use that determination
 		return _platform;
-	} else if (typeof window === 'undefined' || !window.PalmSystem) {
+	} else if (typeof window === 'undefined' || (!window.webOSSystem && !window.PalmSystem)) {
 		// if window isn't available (in prerendering or snapshot runs), bail out early
 		return {
 			unknown: true
@@ -39,8 +39,9 @@ function detect () {
 	} else if (is('SmartTV') || is('Large Screen')) {
 		_platform.tv = true;
 	} else {
+		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
 		try {
-			let legacyInfo = JSON.parse(window.PalmSystem.deviceInfo || '{}');
+			let legacyInfo = JSON.parse(webOSSystem.deviceInfo || '{}');
 			if (legacyInfo.platformVersionMajor && legacyInfo.platformVersionMinor) {
 				let major = parseInt(legacyInfo.platformVersionMajor);
 				let minor = parseInt(legacyInfo.platformVersionMinor);
@@ -58,7 +59,7 @@ function detect () {
 
 		// TODO: clean these up. They shouldn't be here
 		window.Mojo = window.Mojo || {relaunch: function () {}};
-		if (window.PalmSystem.stageReady) window.PalmSystem.stageReady();
+		if (webOSSystem.stageReady) webOSSystem.stageReady();
 	}
 
 	return _platform;

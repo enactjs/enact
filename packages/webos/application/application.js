@@ -21,9 +21,10 @@ let appInfo = {};
  * @public
  */
 const fetchAppId = () => {
-	if (window.PalmSystem && window.PalmSystem.identifier) {
-		// PalmSystem.identifier: <appid> <processid>
-		return window.PalmSystem.identifier.split(' ')[0];
+	const webOSSystem = window.webOSSystem ?? window.PalmSystem;
+	if (webOSSystem && webOSSystem.identifier) {
+		// webOSSystem.identifier: <appid> <processid>
+		return webOSSystem.identifier.split(' ')[0];
 	}
 };
 
@@ -115,8 +116,9 @@ const fetchAppRootPath = () => {
  * @public
  */
 const platformBack = () => {
-	if (window.PalmSystem && window.PalmSystem.platformBack) {
-		return window.PalmSystem.platformBack();
+	const webOSSystem = window.webOSSystem ?? window.PalmSystem;
+	if (webOSSystem && webOSSystem.platformBack) {
+		return webOSSystem.platformBack();
 	}
 };
 

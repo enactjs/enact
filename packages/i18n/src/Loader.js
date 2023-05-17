@@ -55,7 +55,7 @@ const timeStampKey = 'l10n_timestamp';
 function EnyoLoader () {
 	this.base = iLibBase;
 	// TODO: full enyo.platform implementation for improved accuracy
-	if (typeof window === 'object' && typeof window.PalmSystem === 'object') {
+	if (typeof window === 'object' && typeof (window.webOSSystem ?? window.PalmSystem) === 'object') {
 		this.webos = true;
 	}
 }

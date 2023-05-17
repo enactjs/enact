@@ -189,9 +189,9 @@ const Spotlight = (function () {
 	// An extension point for updating pointer mode based on the current platform.
 	// Currently only webOS
 	function setPlatformPointerMode () {
-		const palmSystem = window.PalmSystem;
-		if (palmSystem && palmSystem.cursor) {
-			setPointerMode(palmSystem.cursor.visibility);
+		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
+		if (webOSSystem && webOSSystem.cursor) {
+			setPointerMode(webOSSystem.cursor.visibility);
 		}
 	}
 
@@ -200,7 +200,8 @@ const Spotlight = (function () {
 			return false;
 		}
 
-		if ((getPointerMode() && !fromPointer) && (typeof window !== 'undefined' && (!window.PalmSystem || window.PalmSystem.cursor?.visibility))) {
+		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
+		if ((getPointerMode() && !fromPointer) && (typeof window !== 'undefined' && (!webOSSystem || webOSSystem.cursor?.visibility))) {
 			setContainerLastFocusedElement(elem, containerIds);
 			return false;
 		}
