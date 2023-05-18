@@ -76,24 +76,26 @@ describe('Button', () => {
 		expect(button).toHaveClass(expected);
 	});
 
-	test('should call onClick', () => {
+	test('should call onClick', async () => {
 		const handleCLick = jest.fn();
+		const user = userEvent.setup();
 		render(<Button onClick={handleCLick}>Hello Button!</Button>);
 		const button = screen.getByRole('button');
 
-		userEvent.click(button);
+		await user.click(button);
 
 		const expected = 1;
 
 		expect(handleCLick).toHaveBeenCalledTimes(expected);
 	});
 
-	test('should not call onClick when button is disabled', () => {
+	test('should not call onClick when button is disabled', async () => {
 		const handleClick = jest.fn();
+		const user = userEvent.setup();
 		render(<Button disabled onClick={handleClick}>Hello Button!</Button>);
 		const button = screen.getByRole('button');
 
-		userEvent.click(button);
+		await user.click(button);
 
 		expect(handleClick).not.toHaveBeenCalled();
 	});
