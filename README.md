@@ -1,8 +1,24 @@
-# Enact [![Travis](https://img.shields.io/travis/enactjs/enact.svg?style=flat-square)](https://travis-ci.org/enactjs/enact) [![license](https://img.shields.io/github/license/enactjs/enact.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0) [![Gitter](https://img.shields.io/gitter/room/EnactJS/Lobby.svg?style=flat-square)](https://gitter.im/EnactJS/Lobby)
+Enact logo here
+<h1>An app development framework built atop React that’s easy to use, performant and customizable.</h1>
+Enact is to provide the building blocks for creating robust and maintainable applications. To that end, we’ve pulled together the best solutions for internationalization (i18n), accessibility (a11y), focus management, linting, testing and building. Then, we created a set of reusable components and behaviors on top of that. We combined these pieces and ensured that they work together seamlessly, allowing developers to focus on implementation.
+
+# Enact [![npm (scoped)](https://img.shields.io/npm/v/@enact/core.svg?style=flat-square)](https://www.npmjs.com/package/@enact/core) [![license](https://img.shields.io/github/license/enactjs/enact.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0) [![Gitter](https://img.shields.io/gitter/room/EnactJS/Lobby.svg?style=flat-square)](https://gitter.im/EnactJS/Lobby) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](https://enactjs.com/docs/developer-guide/contributing)
 
 > A mono-repo containing Enact framework modules
 
+* [core](https://enactjs.com/docs/modules/core/dispatcher) The set of essential building blocks for an Enact-based application.
+* [ui](https://enactjs.com/docs/modules/ui/AnnounceDecorator) A set of reusable behaviors and a library of unstyled components for creating Enact themes.
+* [spotlight](https://enactjs.com/docs/modules/spotlight) An extensible library for 5-way navigation and focus control.
+* [i18n](https://enactjs.com/docs/modules/i18n/$L) Internationalization library based on iLib.
+
 Enact uses lerna to manage the individual modules within this repo.
+
+## Documentation
+
+* [Tutorials](https://enactjs.com/docs/tutorials)
+* [API Docs](https://enactjs.com/docs/modules)
+* [Developer Guide](https://enactjs.com/docs/developer-guide)
+* [Contribution Guide](https://enactjs.com/docs/developer-guide/contributing)
 
 ## Getting Started
 
