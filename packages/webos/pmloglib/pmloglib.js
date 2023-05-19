@@ -42,7 +42,7 @@ const log = (level, messageId, keyVals, freeText) => {
 		if (keyVals) {
 			keyVals = JSON.stringify(keyVals);
 		}
-		const webOSSystem = window.webOSSystem ?? window.PalmSystem
+		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
 		if (webOSSystem.PmLogString) {
 			if (level === levelDebug) { // debug only accepts 2 arguments
 				webOSSystem.PmLogString(level, null, null, freeText);
@@ -190,7 +190,7 @@ const perfLog = (messageId, perfType, perfGroup) => {
 		if (!messageId) {
 			console.warn('PmLogInfoWithClock called with invalid format: messageId was empty');
 		}
-		const webOSSystem = window.webOSSystem ?? window.PalmSystem
+		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
 		if (webOSSystem.PmLogInfoWithClock) {
 			webOSSystem.PmLogInfoWithClock(messageId, perfType ? perfType : '',
 				perfGroup ? perfGroup : '');

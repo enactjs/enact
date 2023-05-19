@@ -16,7 +16,7 @@
 const isShowing = () => {
 	const webOSSystem = window.webOSSystem ?? window.PalmSystem;
 	return webOSSystem && webOSSystem.isKeyboardVisible;
-}
+};
 
 export {
 	isShowing
