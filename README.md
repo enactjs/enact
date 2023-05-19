@@ -1,4 +1,7 @@
-Enact logo here
+<p align="center">
+  <img src="https://github.com/enactjs/enact/assets/4288375/25a32c12-6a9b-44d4-80b3-a8f82ddcc643">
+</p>
+
 <h1>An app development framework built atop React that’s easy to use, performant and customizable.</h1>
 Enact is to provide the building blocks for creating robust and maintainable applications. To that end, we’ve pulled together the best solutions for internationalization (i18n), accessibility (a11y), focus management, linting, testing and building. Then, we created a set of reusable components and behaviors on top of that. We combined these pieces and ensured that they work together seamlessly, allowing developers to focus on implementation.
 
