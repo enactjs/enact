@@ -9,7 +9,7 @@ import {
 	testScenario
 } from './utils';
 
-const spottable = (props) => {
+const focusable = (props) => {
 	if (!props) {
 		props = {};
 	}
@@ -28,11 +28,11 @@ const spottable = (props) => {
 
 const scenarios = {
 	tabIndexMinusOne: node({id: 'child', tabindex: -1}),
-	spottable: spottable(),
-	button: spottable({tag: 'button'}),
-	buttonWithDisabled: spottable({tag: 'button', valueOnlyAttribute: 'disabled'}),
-	link: spottable({tag: 'a', href: 'www.enactjs.com'}),
-	input: spottable({tag: 'input'})
+	focusable: focusable(),
+	button: focusable({tag: 'button'}),
+	buttonWithDisabled: focusable({tag: 'button', valueOnlyAttribute: 'disabled'}),
+	link: focusable({tag: 'a', href: 'www.enactjs.com'}),
+	input: focusable({tag: 'input'})
 };
 
 describe('utils', () => {
@@ -109,7 +109,7 @@ describe('utils', () => {
 		));
 
 		test('should return false if hidden', testScenario(
-			scenarios.spottable,
+			scenarios.focusable,
 			(root) => {
 				const child = root.querySelector('#child');
 				child.getBoundingClientRect = jest.fn(() => {
