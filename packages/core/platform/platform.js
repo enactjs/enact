@@ -53,6 +53,7 @@ const platforms = [
 	// Windows Phone 7 - 10
 	{platform: 'windowsPhone', regex: /Windows Phone (?:OS )?(\d+)[.\d]+/},
 	// Edge
+	{platform: 'edge', regex: /Chrome\/(\d+)[.\d]+.*Edg(?:e|A|iOS)?\/(\d+)[.\d]+/},
 	{platform: 'edge', regex: /Edg(?:e|A|iOS)?\/(\d+)[.\d]+/},
 	// Android 4+ using Chrome
 	{platform: 'androidChrome', regex: /Android .* Chrome\/(\d+)[.\d]+/},
@@ -132,6 +133,9 @@ const parseUserAgent = (userAgent) => {
 				if (v >= 7 || v === -1) {
 					plat.chrome = Number(m[1]);
 				}
+			} else if (p.platform === 'edge' && m[2]) {
+				plat.chrome = Number(m[1]);
+				v = Number(m[2]);
 			} else {
 				v = Number(m[1]);
 			}
@@ -143,21 +147,6 @@ const parseUserAgent = (userAgent) => {
 				};
 			}
 			plat.platformName = p.platform;
-
-			if (plat.platformName === 'edge') {
-				const chrome = platforms.filter((item) => {
-					if (item.platform === 'chrome') {
-						return true;
-					}
-				});
-				if (chrome.length > 0) {
-					const chromeRegex = chrome[0].regex;
-					const chromeVersion = chromeRegex.exec(userAgent);
-					if (chromeVersion) {
-						plat['chrome'] = Number(chromeVersion[1]);
-					}
-				}
-			}
 
 			break;
 		}
