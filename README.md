@@ -6,6 +6,7 @@
 
 <h2>An app development framework built atop React that’s easy to use, performant and customizable.</h2>
 Enact is to provide the building blocks for creating robust and maintainable applications. To that end, we’ve pulled together the best solutions for internationalization (i18n), accessibility (a11y), focus management, linting, testing and building. Then, we created a set of reusable components and behaviors on top of that. We combined these pieces and ensured that they work together seamlessly, allowing developers to focus on implementation.
+<br><br>
 
 [![Travis](https://img.shields.io/travis/com/enactjs/enact/master?style=flat-square)](https://app.travis-ci.com/github/enactjs/enact) [![npm (scoped)](https://img.shields.io/npm/v/@enact/core.svg?style=flat-square)](https://www.npmjs.com/package/@enact/core) [![license](https://img.shields.io/github/license/enactjs/enact.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0) [![Gitter](https://img.shields.io/gitter/room/EnactJS/Lobby.svg?style=flat-square)](https://gitter.im/EnactJS/Lobby) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](https://enactjs.com/docs/developer-guide/contributing)
 
