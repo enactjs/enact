@@ -8,12 +8,8 @@ before_install:
     - sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 install:
     - npm config set prefer-offline false
+    - npm install -g @enact/cli@5.1.3
     - npm install -g codecov
-    - git clone --branch=develop --depth 1 https://github.com/enactjs/cli ../cli
-    - pushd ../cli
-    - npm install
-    - npm link
-    - popd
     - npm install
     - npm run bootstrap
 script:
