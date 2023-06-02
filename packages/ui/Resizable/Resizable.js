@@ -5,19 +5,11 @@
  * @exports Resizable
  */
 
-import {call, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import invariant from 'invariant';
-import {createContext, Component} from 'react';
 
-/**
- * Used internally for things to notify children that they need to resize because of a parent
- * update.
- *
- * @type Object
- * @private
- */
-const ResizeContext = createContext();
+import ResizeContext from './ResizeContext';
+import useResize from './useResize';
 
 /**
  * Default config for `Resizable`.
@@ -69,62 +61,16 @@ const defaultConfig = {
  * @public
  */
 const Resizable = hoc(defaultConfig, (config, Wrapped) => {
-	const {filter, resize} = config;
+	const {resize} = config;
 
 	invariant(resize, `resize is required by Resizable but was omitted when applied to ${Wrapped.displayName}`);
 
-	return class extends Component {
-		static displayName = 'Resizable';
+	// eslint-disable-next-line no-shadow
+	return function Resizable (props) {
+		const handlers = useResize(props, config);
+		const resizableProps = Object.assign({}, props, handlers);
 
-		static contextType = ResizeContext;
-
-		componentDidMount () {
-			if (this.context && typeof this.context === 'function') {
-				// Registry requires a callback but (for now at least) Resizable doesn't respond to
-				// upstream events so we're initializing a no-op function to "handle" callbacks
-				this.resizeRegistry = this.context(() => {});
-			}
-		}
-
-		componentWillUnmount () {
-			if (this.resizeRegistry) {
-				this.resizeRegistry.unregister();
-			}
-		}
-
-		/*
-		 * Notifies a container that a resize is necessary
-		 *
-		 * @returns {undefined}
-		 * @private
-		 */
-		invalidateBounds () {
-			if (this.resizeRegistry) {
-				this.resizeRegistry.notify({action: 'invalidateBounds'});
-			}
-		}
-
-		/*
-		 * Handles the event that indicates a resize is necessary
-		 *
-		 * @param   {Object}    ev  Event payload
-		 *
-		 * @returns {undefined}
-		 * @private
-		 */
-		handleResize = handle(
-			forward(resize),
-			// optionally filter the event before notifying the container
-			filter,
-			call('invalidateBounds')
-		).bind(this);
-
-		render () {
-			const props = Object.assign({}, this.props);
-			props[resize] = this.handleResize;
-
-			return <Wrapped {...props} />;
-		}
+		return <Wrapped {...resizableProps} />;
 	};
 });
 

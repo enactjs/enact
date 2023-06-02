@@ -102,12 +102,13 @@ describe('kind', () => {
 		expect(kindDiv).toHaveTextContent(expected);
 	});
 
-	test('should support contextType in handlers', () => {
+	test('should support contextType in handlers', async () => {
 		const onClick = jest.fn();
+		const user = userEvent.setup();
 		render(<Kind onClick={onClick} prop={1} />);
 
 		const kindDiv = screen.getByTitle('Label');
-		userEvent.click(kindDiv);
+		await user.click(kindDiv);
 
 		const expected = 'initial';
 		const actual = onClick.mock.calls[0][0];
@@ -124,7 +125,8 @@ describe('kind', () => {
 		expect(kindDiv).toHaveAttribute('data-context', expected);
 	});
 
-	test('support using hooks within kind instances', () => {
+	test('support using hooks within kind instances', async () => {
+		const user = userEvent.setup();
 		const Comp = kind({
 			name: 'Comp',
 			functional: true,
@@ -139,7 +141,7 @@ describe('kind', () => {
 		render(<Comp />);
 
 		const button = screen.getByTestId('button');
-		userEvent.click(button);
+		await user.click(button);
 
 		const expected = '1';
 

@@ -76,14 +76,15 @@ describe('Registry', () => {
 		}
 	}
 
-	test('should increment child on click', () => {
+	test('should increment child on click', async () => {
+		const user = userEvent.setup();
 		render(
 			<NotifiesTree data-testid="a-btn">
 				<HandlesNotification data-testid="a" />
 			</NotifiesTree>
 		);
 
-		userEvent.click(screen.getByTestId('a-btn'));
+		await user.click(screen.getByTestId('a-btn'));
 
 		const expected = '1';
 		const child = screen.getByTestId('a');
@@ -91,7 +92,8 @@ describe('Registry', () => {
 		expect(child).toHaveTextContent(expected);
 	});
 
-	test('should increment both children on top click', () => {
+	test('should increment both children on top click', async () => {
+		const user = userEvent.setup();
 		render(
 			<NotifiesTree data-testid="a-btn">
 				<HandlesNotification data-testid="a" />
@@ -101,7 +103,7 @@ describe('Registry', () => {
 			</NotifiesTree>
 		);
 
-		userEvent.click(screen.getByTestId('a-btn'));
+		await user.click(screen.getByTestId('a-btn'));
 
 		const expected = '1';
 		const childA = screen.getByTestId('a');
@@ -111,7 +113,8 @@ describe('Registry', () => {
 		expect(childB).toHaveTextContent(expected);
 	});
 
-	test('should increment the deepest child when we click child button', () => {
+	test('should increment the deepest child when we click child button', async () => {
+		const user = userEvent.setup();
 		render(
 			<NotifiesTree data-testid="a-btn">
 				<HandlesNotification data-testid="a" />
@@ -121,7 +124,7 @@ describe('Registry', () => {
 			</NotifiesTree>
 		);
 
-		userEvent.click(screen.getByTestId('b-btn'));
+		await user.click(screen.getByTestId('b-btn'));
 
 		const expectedA = '0';
 		const expectedB = '1';
@@ -132,7 +135,8 @@ describe('Registry', () => {
 		expect(childB).toHaveTextContent(expectedB);
 	});
 
-	test('should support removing children without error', () => {
+	test('should support removing children without error', async () => {
+		const user = userEvent.setup();
 		const {rerender} = render(
 			<NotifiesTree data-testid="a-btn">
 				<HandlesNotification data-testid="a" />
@@ -140,7 +144,7 @@ describe('Registry', () => {
 			</NotifiesTree>
 		);
 
-		userEvent.click(screen.getByTestId('a-btn'));
+		await user.click(screen.getByTestId('a-btn'));
 
 		// changing children should be safe and not throw errors when notifying instances
 		rerender(
@@ -149,7 +153,7 @@ describe('Registry', () => {
 			</NotifiesTree>
 		);
 
-		userEvent.click(screen.getByTestId('a-btn'));
+		await user.click(screen.getByTestId('a-btn'));
 
 		const expectedC = '1';
 		const childC = screen.getByTestId('c');

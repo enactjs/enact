@@ -64,9 +64,10 @@ describe('RadioDecorator', () => {
 		expect(component).toHaveTextContent(secondExpected);
 	});
 
-	test('should fire `activate` event with type when become activated', () => {
+	test('should fire `activate` event with type when become activated', async () => {
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
 		const handleActivate = jest.fn();
+		const user = userEvent.setup();
 		const Wrapper = () => (
 			<Controller>
 				<Component onClick={handleActivate} />
@@ -77,7 +78,7 @@ describe('RadioDecorator', () => {
 
 		const component = screen.getByTestId('span-element');
 
-		userEvent.click(component);
+		await user.click(component);
 
 		const expected = 1;
 		const expectedType = {type: 'onClick'};
@@ -87,9 +88,10 @@ describe('RadioDecorator', () => {
 		expect(actual).toMatchObject(expectedType);
 	});
 
-	test('should fire `deactivate` event with type when become deactivated', () => {
+	test('should fire `deactivate` event with type when become deactivated', async () => {
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
 		const handleDeactivate = jest.fn();
+		const user = userEvent.setup();
 		const Wrapper = () => (
 			<Controller>
 				<Component onClick={handleDeactivate} />
@@ -100,7 +102,7 @@ describe('RadioDecorator', () => {
 
 		const component = screen.getByTestId('span-element');
 
-		userEvent.click(component);
+		await user.click(component);
 
 		const expected = 1;
 		const expectedType = {type: 'onClick'};
@@ -140,10 +142,11 @@ describe('RadioDecorator', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should be activated when the activated event fires', () => {
+	test('should be activated when the activated event fires', async () => {
 		const controllerRef = createRef();
 		const decoratorRef = createRef();
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
+		const user = userEvent.setup();
 		render(
 			<Controller ref={controllerRef}>
 				<Component ref={decoratorRef} />
@@ -151,15 +154,16 @@ describe('RadioDecorator', () => {
 		);
 		const component = screen.getByTestId('span-element');
 
-		userEvent.click(component);
+		await user.click(component);
 
 		expectToBeActive(controllerRef.current, decoratorRef.current);
 	});
 
-	test('should be deactivated when the deactivated event fires', () => {
+	test('should be deactivated when the deactivated event fires', async () => {
 		const controllerRef = createRef();
 		const decoratorRef = createRef();
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
+		const user = userEvent.setup();
 		render(
 			<Controller ref={controllerRef}>
 				<Component active ref={decoratorRef} />
@@ -167,15 +171,16 @@ describe('RadioDecorator', () => {
 		);
 		const component = screen.getByTestId('span-element');
 
-		userEvent.click(component);
+		await user.click(component);
 
 		expectToBeActive(controllerRef.current, null);
 	});
 
-	test('should be deactivated when the activated event fires on another instance', () => {
+	test('should be deactivated when the activated event fires on another instance', async () => {
 		const controllerRef = createRef();
 		const decoratorRef = createRef();
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
+		const user = userEvent.setup();
 		render(
 			<Controller ref={controllerRef} >
 				<Component active />
@@ -185,17 +190,18 @@ describe('RadioDecorator', () => {
 
 		const inactiveComponent = screen.getByText('Inactive');
 
-		userEvent.click(inactiveComponent);
+		await user.click(inactiveComponent);
 
 		expectToBeActive(controllerRef.current, decoratorRef.current);
 	});
 
-	test('should not deactivate items in a ancestor controller', () => {
+	test('should not deactivate items in a ancestor controller', async () => {
 		const parentControllerRef = createRef();
 		const parentDecoratorRef = createRef();
 		const childControllerRef = createRef();
 		const childDecoratorRef = createRef();
 		const Component = RadioDecorator({activate: 'onClick', prop: 'active'}, Item);
+		const user = userEvent.setup();
 		render(
 			<Controller ref={parentControllerRef}>
 				<Component active ref={parentDecoratorRef} />
@@ -209,7 +215,7 @@ describe('RadioDecorator', () => {
 
 		const inactiveComponents = screen.getAllByText('Inactive');
 
-		userEvent.click(inactiveComponents[1]);
+		await user.click(inactiveComponents[1]);
 
 		// Breaking the pattern of 1 expect per test in order to verify the expect change happened
 		// (activating second component in child controller) and no unexpected change happened in
