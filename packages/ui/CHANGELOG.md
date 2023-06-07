@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [4.5.4] - 2023-06-07
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to pass scrolling state properly to UI libraries
+
 ## [4.5.3] - 2023-04-06
 
 No significant changes.
