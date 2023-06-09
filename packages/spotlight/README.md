@@ -30,8 +30,8 @@ See the [docs](docs/) for more information.
 
 ## Additional Information
 
-When using `@enact/moonstone`, the `SpotlightRootDecorator` is applied automatically by
-`MoonstoneDecorator`.
+When using `@enact/sandstone`, the `SpotlightRootDecorator` is applied automatically by
+`@enact/sandstone/ThemeDecorator`.
 
 ## Acknowledgments
 

@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 - `core/handle.forwardCustom` and `core/handle.forwardCustomWithPrevent` to bind an adapter function properly
 
+## [4.7.1] - 2023-06-02
+
+No significant changes.
+
 ## [4.5.3] - 2023-04-06
 
 No significant changes.

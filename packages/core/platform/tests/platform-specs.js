@@ -115,6 +115,65 @@ describe('platform', () => {
 		});
 	});
 
+	describe('parseUserAgent for Edge', () => {
+		const edge1 = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42';
+		const edge2 = 'Mozilla/5.0 (Linux; Android 10; HD1913) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5672.76 Mobile Safari/537.36 EdgA/113.0.1774.38';
+		const edge3 = 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 EdgiOS/113.1774.42 Mobile/15E148 Safari/605.1.15';
+		const edge4 = 'Mozilla/5.0 (Windows Mobile 10; Android 10.0; Microsoft; Lumia 950XL) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36 Edge/40.15254.603';
+
+		test('should return edge for Edg', () => {
+			let expected = {platformName: 'edge'};
+			let actual = parseUserAgent(edge1);
+
+			expect(actual).toMatchObject(expected);
+
+			expected = {chrome: 113};
+			expect(actual).toMatchObject(expected);
+
+			expected = {edge: 113};
+			expect(actual).toMatchObject(expected);
+		});
+
+		test('should return edge for EdgA', () => {
+			let expected = {platformName: 'edge'};
+			let actual = parseUserAgent(edge2);
+
+			expect(actual).toMatchObject(expected);
+
+			expected = {chrome: 113};
+			expect(actual).toMatchObject(expected);
+
+			expected = {edge: 113};
+			expect(actual).toMatchObject(expected);
+		});
+
+		test('should return edge for EdgiOS', () => {
+			let expected = {platformName: 'edge'};
+			let actual = parseUserAgent(edge3);
+
+			expect(actual).toMatchObject(expected);
+
+			expected = {chrome: 113};
+			expect(actual).not.toMatchObject(expected);
+
+			expected = {edge: 113};
+			expect(actual).toMatchObject(expected);
+		});
+
+		test('should return edge for Edge', () => {
+			let expected = {platformName: 'edge'};
+			let actual = parseUserAgent(edge4);
+
+			expect(actual).toMatchObject(expected);
+
+			expected = {chrome: 113};
+			expect(actual).toMatchObject(expected);
+
+			expected = {edge: 40};
+			expect(actual).toMatchObject(expected);
+		});
+	});
+
 	describe('parseUserAgent for User-Agent Reduction', () => {
 		const testVersion = '113';
 		const uaGenerator = (unifiedPlatform, deviceCompatibility = '', majorVersion = testVersion) => (

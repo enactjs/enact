@@ -52,6 +52,9 @@ const webOSVersion = {
 const platforms = [
 	// Windows Phone 7 - 10
 	{platform: 'windowsPhone', regex: /Windows Phone (?:OS )?(\d+)[.\d]+/},
+	// Edge
+	{platform: 'edge', regex: /Chrome\/(\d+)[.\d]+.*Edg(?:e|A|iOS)?\/(\d+)[.\d]+/},
+	{platform: 'edge', regex: /Edg(?:e|A|iOS)?\/(\d+)[.\d]+/},
 	// Android 4+ using Chrome
 	{platform: 'androidChrome', regex: /Android .* Chrome\/(\d+)[.\d]+/},
 	// Android 2 - 4
@@ -67,8 +70,6 @@ const platforms = [
 	{platform: 'ie', regex: /MSIE (\d+)/},
 	// IE 11
 	{platform: 'ie', regex: /Trident\/.*; rv:(\d+)/},
-	// Edge
-	{platform: 'edge', regex: /Edge\/(\d+)/},
 	// iOS 3 - 5
 	// Apple likes to make this complicated
 	{platform: 'ios', regex: /iP(?:hone|ad;(?: U;)? CPU) OS (\d+)/},
@@ -132,6 +133,9 @@ const parseUserAgent = (userAgent) => {
 				if (v >= 7 || v === -1) {
 					plat.chrome = Number(m[1]);
 				}
+			} else if (p.platform === 'edge' && m[2]) {
+				plat.chrome = Number(m[1]);
+				v = Number(m[2]);
 			} else {
 				v = Number(m[1]);
 			}
@@ -143,6 +147,7 @@ const parseUserAgent = (userAgent) => {
 				};
 			}
 			plat.platformName = p.platform;
+
 			break;
 		}
 	}
