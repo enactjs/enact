@@ -14,7 +14,7 @@ npm install --save @enact/core
 
 ## Test
 
-Tests are implemented in mocha and are run with the Karma runner.
+Unit tests are implemented in Testing Library and are run with Jest. To execute them:
 
 ```
 npm test

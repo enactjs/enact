@@ -2,6 +2,32 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.7.1] - 2023-06-02
+
+No significant changes.
+
+## [4.5.3] - 2023-04-06
+
+### Fixed
+
+- `spotlight` to show the focus effect when pointer mode is changed to `false` while an app is loading
+
+## [4.7.0] - 2023-04-25
+
+### Deprecated
+
+- `windowsPhone` platform in `core/platform.platforms` to be removed in 5.0.0
+
+### Added
+
+- `ui/Layout.Cell` prop `grow` to expand its size to the container
+
+### Fixed
+
+- `i18n` resource loader to override strings where the original strings file does not exist
+- `spotlight` to show the focus effect when pointer mode is changed to `false` while an app is loading
+- `ui/ViewManager` to set index prop properly when reverseTransition prop is given
+
 ## [4.6.2] - 2023-03-09
 
 ### Fixed

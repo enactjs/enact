@@ -45,7 +45,7 @@ const RouterBase = class extends ReactComponent {
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to {@link ui/Routable.Router#component|component}.
+		 * Called with a reference to {@link ui/Routable.RouterBase.component|component}.
 		 *
 		 * @type {Object|Function}
 		 * @private
