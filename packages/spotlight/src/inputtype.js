@@ -1,7 +1,7 @@
 /**
  * Exports methods for working with inputtype in spotlight
  *
- * @module spotlight/pointer
+ * @module spotlight/inputtype
  * @private
  */
 
