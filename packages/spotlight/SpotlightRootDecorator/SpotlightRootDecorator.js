@@ -10,41 +10,12 @@ import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {Component} from 'react';
 
-import Spotlight from '../src/spotlight';
 import {spottableClass} from '../Spottable';
-
 import {rootContainerId} from '../src/container';
+import {activateInputType, getInputType, input, setInputType} from '../src/inputtype';
+import Spotlight from '../src/spotlight';
 
 import '../styles/debug.less';
-
-const input = {
-	activated: false,
-	applied: false,
-	types: {
-		key: true,
-		mouse: false,
-		touch: false
-	}
-};
-
-const activateInputType = (activated) => {
-	input.activated = activated;
-};
-
-const getInputType = () => {
-	return Object.keys(input.types).find(type => input.types[type]);
-};
-
-const setInputType = (inputType) => {
-	if (Object.prototype.hasOwnProperty.call(input.types, inputType) && !input.types[inputType]) {
-		Object.keys(input.types).map((type) => {
-			input.types[type] = false;
-		});
-		input.types[inputType] = true;
-
-		input.applied = false;
-	}
-};
 
 /**
  * Default configuration for SpotlightRootDecorator
