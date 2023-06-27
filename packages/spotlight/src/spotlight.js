@@ -202,7 +202,7 @@ const Spotlight = (function () {
 			return false;
 		}
 
-		if ((getPointerMode() && !fromPointer) && ((typeof window !== 'undefined' && (!window.PalmSystem || window.PalmSystem.cursor?.visibility || (getInputType() === 'touch'))))) {
+		if ((getPointerMode() && !fromPointer) && (getInputType() === 'touch' || (typeof window !== 'undefined' && (!window.PalmSystem || window.PalmSystem.cursor?.visibility)))) {
 			setContainerLastFocusedElement(elem, containerIds);
 			return false;
 		}
