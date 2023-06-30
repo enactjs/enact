@@ -27,7 +27,7 @@ import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
 import {isPaused, pause, resume} from '../Pause';
 
-import {getInputType} from './inputtype';
+import {getInputType} from './inputType';
 import {contains} from './utils';
 
 import {

@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
-
-### Fixed
-
-- `spotlight` to show the focus effect when non-touch pointer mode is changed to `false` while an app is loading
-
 ## [4.7.1] - 2023-06-02
 
 No significant changes.
