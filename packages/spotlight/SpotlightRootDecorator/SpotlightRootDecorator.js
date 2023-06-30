@@ -12,7 +12,7 @@ import {Component} from 'react';
 
 import {spottableClass} from '../Spottable';
 import {rootContainerId} from '../src/container';
-import {activateInputType, getInputType, input, setInputType} from '../src/inputtype';
+import {activateInputType, applyInputTypeToNode, getInputInfo, getInputType, setInputType} from '../src/inputType';
 import Spotlight from '../src/spotlight';
 
 import '../styles/debug.less';
@@ -113,10 +113,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		applyInputType = () => {
 			if (this && this.containerNode) {
-				Object.keys(input.types).map((type) => {
-					this.containerNode.classList.toggle('spotlight-input-' + type, input.types[type]);
-				});
-				input.applied = true;
+				applyInputTypeToNode(this.containerNode);
 			}
 		};
 
@@ -125,7 +122,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		handleFocusIn = () => {
-			if (!input.applied) {
+			if (!getInputInfo().applied) {
 				this.applyInputType();
 			}
 		};
@@ -139,7 +136,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			setTimeout(() => {
-				if (!input.activated) {
+				if (!getInputInfo().activated) {
 					setInputType('key');
 				}
 				this.applyInputType();

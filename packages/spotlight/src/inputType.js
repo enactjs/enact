@@ -1,7 +1,7 @@
 /**
- * Exports methods for working with inputtype in spotlight
+ * Exports methods for working with inputType in spotlight
  *
- * @module spotlight/inputtype
+ * @module spotlight/inputType
  * @private
  */
 
@@ -34,9 +34,22 @@ const setInputType = (inputType) => {
 	}
 };
 
+const applyInputTypeToNode = (node) => {
+	Object.keys(input.types).map((type) => {
+		node.classList.toggle('spotlight-input-' + type, input.types[type]);
+	});
+	input.applied = true;
+};
+
+const getInputInfo = () => {
+	return {activated: input.activated, applied: input.applied};
+};
+
 export {
 	activateInputType,
+	applyInputTypeToNode,
+	getInputInfo,
 	getInputType,
-	input,
 	setInputType
 };
+
