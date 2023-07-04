@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
-- `spotlight` to show the focus effect when the pointer type is not `touch` and pointer mode is changed to `false` while an app is loading
+- `spotlight` to not show the focus effect when pointer mode is changed to `false` by touch while an app is loading
 
 ## [4.7.1] - 2023-06-02
 
