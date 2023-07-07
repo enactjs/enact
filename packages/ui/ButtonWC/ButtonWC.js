@@ -20,6 +20,7 @@ class PocButtonSimple extends Lit.LitElement { // eslint-disable-line no-unused-
 		:host {
 			position: relative;
 			display: inline-block;
+			box-sizing: border-box;
 			vertical-align: middle;
 			text-align: center;
 			z-index: 0;
@@ -38,6 +39,7 @@ class PocButtonSimple extends Lit.LitElement { // eslint-disable-line no-unused-
 		}
 		.content {
 			display: flex;
+			box-sizing: border-box;
 			justify-content: center;
 			align-items: center;
 			height: 100%;
@@ -119,31 +121,6 @@ class PocButtonSimple extends Lit.LitElement { // eslint-disable-line no-unused-
 		icon: {attribute: false},
 
 		/**
-		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
-		 *
-		 * This component will receive the `icon` class to customize its styling.
-		 * If [icon]{@link ui/Button.ButtonBase.icon} is not assigned or is false, this component
-		 * will not be rendered.
-		 *
-		 * If this is a component rather than an HTML element string, this component will also
-		 * receive the `size` and `iconFlip` (as `flip`) properties and should be configured to
-		 * handle it.
-		 *
-		 * @type {Component|Node}
-		 * @public
-		 */
-		iconComponent: {attribute: false},
-
-		/**
-		 * Flips the icon.
-		 *
-		 * @see {@link ui/Icon.Icon#flip}
-		 * @type {String}
-		 * @public
-		 */
-		iconFlip: {attribute: false},
-
-		/**
 		 * Enforces a minimum width for the component.
 		 *
 		 * Applies the `minWidth` CSS class which can be customized by
@@ -206,8 +183,6 @@ class PocButtonSimple extends Lit.LitElement { // eslint-disable-line no-unused-
 				'decoration',
 				'disabled',
 				'icon',
-				'iconComponent',
-				'iconFlip',
 				'minWidth',
 				'pressed',
 				'selected',
@@ -278,24 +253,19 @@ class PocButtonSimple extends Lit.LitElement { // eslint-disable-line no-unused-
 		this.log('render');
 		/*
 		const {children, componentRef, css, decoration, disabled, icon, ...rest} = this;
-		delete rest.iconComponent;
-		delete rest.iconFlip;
 		delete rest.minWidth;
 		delete rest.pressed;
 		delete rest.selected;
 		delete rest.size;
 		*/
 
-		const {css, decoration, disabled} = this;
+		const {css, decoration, disabled, icon} = this;
 		const decorationNode = decoration ? `<div className={${css.decoration}}>${decoration}</div>` : '';
 		return Lit.html`
 			<div role="button" class="root" aria-disabled=${disabled} disabled=${disabled}>
 				${decorationNode}
 				<slot name="background" class="background ${css.bg}"></slot>
-				<slot name="client" class="content ${css.client}">
-					<slot name="icon" class="icon ${css.icon}"></slot>
-					<slot></slot>
-				</slot>
+				<slot class="content"></slot>
 			</div>
 		`;
 	}
