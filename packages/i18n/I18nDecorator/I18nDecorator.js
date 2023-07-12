@@ -76,7 +76,7 @@ const defaultConfig = {
 	resources: null,
 
 	/**
-	 * Retrieve i18n resource files synchronously
+	 * Retrieve i18n resource files synchronously.
 	 *
 	 * @type {Boolean}
 	 * @default false
@@ -87,9 +87,11 @@ const defaultConfig = {
 };
 
 /**
- * A higher-order component that is used to wrap the root element in an app. It provides an `rtl`
- * member on the context of the wrapped component, allowing the children to check the current text
+ * A higher-order component that is used to wrap the root element in an app.
+ * It provides an `rtl` property on the context of the wrapped component, allowing the children to check the current text
  * directionality as well as an `updateLocale` method that can be used to update the current locale.
+ * Additionally, it provides a `locale` property representing the current locale and
+ * a `loaded` property indicating whether external resource files has been loaded.
  *
  * There are no configurable options on this HOC.
  *
@@ -143,12 +145,71 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return I18nDecorator;
 });
 
+/**
+ * Default config for `I18nContextDecorator`.
+ *
+ * @memberof i18n/I18nDecorator.I18nContextDecorator
+ * @hocconfig
+ */
 const contextDefaultConfig = {
+	/**
+	 * The prop name for `locale` property of context.
+	 *
+	 * @type {String}
+	 * @default null
+	 * @public
+	 * @memberof i18n/I18nDecorator.I18nContextDecorator.contextDefaultConfig
+	 */
 	localeProp: null,
+
+	/**
+	 * The prop name for `rtl` property of context.
+	 *
+	 * @type {String}
+	 * @default null
+	 * @public
+	 * @memberof i18n/I18nDecorator.I18nContextDecorator.contextDefaultConfig
+	 */
 	rtlProp: null,
+
+	/**
+	 * The prop name for `updateLocale` property of context.
+	 *
+	 * @type {String}
+	 * @default null
+	 * @public
+	 * @memberof i18n/I18nDecorator.I18nContextDecorator.contextDefaultConfig
+	 */
 	updateLocaleProp: null
 };
 
+/**
+ * A higher-order component that is used to access the properties of the context via props whose names are set as config values.
+ * To access the `locale` property, set the `localeProp` to a desired prop name and to access the `rtl` property, set the `rtlProp` to a desired prop name.
+ * Set the `updateLocaleProp` to a desired prop name to access the `updateLocale` property where the method used to update the locale is stored and
+ * set the `localeProp` to a desired prop name to access the `loaded` property indicating whether external resource files have been loaded.
+ *
+ * Example:
+ * ```
+ *	const Component = ({rtl, _updateLocale}) => {
+ *		const handleClick = () => _updateLocale('ar-SA');
+ *		return (
+ *			<button onClick={handleClick}>{rtl ? 'rtl' : 'ltr'}</button>
+ *		);
+ *	};
+ *
+ *	const SomeComponent = I18nContextDecorator(
+ *			{rtlProp: 'rtl', updateLocaleProp: '_updateLocale'},
+ *			Component
+ *	)
+ *
+ * ```
+ *
+ * @class I18nContextDecorator
+ * @memberof i18n/I18nContextDecorator
+ * @hoc
+ * @public
+ */
 const I18nContextDecorator = hoc(contextDefaultConfig, (config, Wrapped) => {
 	const {loadedProp, localeProp, rtlProp, updateLocaleProp} = config;
 
