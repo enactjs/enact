@@ -206,7 +206,7 @@ const contextDefaultConfig = {
  * ```
  *
  * @class I18nContextDecorator
- * @memberof i18n/I18nContextDecorator
+ * @memberof i18n/I18nDecorator
  * @hoc
  * @public
  */
