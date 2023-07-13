@@ -87,11 +87,9 @@ const defaultConfig = {
 };
 
 /**
- * A higher-order component that is used to wrap the root element in an app.
- * It provides an `rtl` property on the context of the wrapped component, allowing the children to check the current text
+ * A higher-order component that is used to wrap the root element in an app. It provides an `rtl`
+ * member on the context of the wrapped component, allowing the children to check the current text
  * directionality as well as an `updateLocale` method that can be used to update the current locale.
- * Additionally, it provides a `locale` property representing the current locale and
- * a `loaded` property indicating whether external resource files has been loaded.
  *
  * There are no configurable options on this HOC.
  *
@@ -185,9 +183,8 @@ const contextDefaultConfig = {
 
 /**
  * A higher-order component that is used to access the properties of the context via props whose names are set as config values.
- * To access the `locale` property, set the `localeProp` to a desired prop name and to access the `rtl` property, set the `rtlProp` to a desired prop name.
- * Set the `updateLocaleProp` to a desired prop name to access the `updateLocale` property where the method used to update the locale is stored and
- * set the `localeProp` to a desired prop name to access the `loaded` property indicating whether external resource files have been loaded.
+ * Set the `localeProp` to a desired prop name to access the `locale` property and set the `rtlProp` to a desired prop name to access the `rtl` property
+ * and set the `updateLocaleProp` to a desired prop name to access the `updateLocale` property where the method used to update the locale is stored.
  *
  * Example:
  * ```
