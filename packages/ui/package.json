@@ -1,6 +1,6 @@
 {
   "name": "@enact/ui",
-  "version": "4.7.1",
+  "version": "4.7.2",
   "description": "A collection of simplified unstyled cross-platform UI components for Enact",
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
     }
   },
   "dependencies": {
-    "@enact/core": "^4.7.1",
+    "@enact/core": "^4.7.2",
     "classnames": "^2.3.2",
     "direction": "^1.0.4",
     "invariant": "^2.2.4",
