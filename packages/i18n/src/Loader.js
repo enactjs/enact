@@ -1,4 +1,4 @@
-/* global XMLHttpRequest, ILIB_BASE_PATH, ILIB_RESOURCES_PATH, ILIB_ADDITIONAL_RESOURCES_PATH, ILIB_CACHE_ID */
+/* global ILIB_BASE_PATH, ILIB_RESOURCES_PATH, ILIB_ADDITIONAL_RESOURCES_PATH, ILIB_CACHE_ID */
 
 import {memoize} from '@enact/core/util';
 import Loader from 'ilib/lib/Loader';
