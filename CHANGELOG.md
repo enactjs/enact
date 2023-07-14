@@ -2,6 +2,19 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.7.2] - 2023-07-14
+
+### Fixed
+
+- `core/handle.forwardCustom` and `core/handle.forwardCustomWithPrevent` to bind an adapter function properly
+- `spotlight` to not show the focus effect when pointer mode is changed to `false` by touch while an app is loading
+
+## [4.5.4] - 2023-06-07
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to pass scrolling state properly to UI libraries
+
 ## [4.7.1] - 2023-06-02
 
 No significant changes.
