@@ -60,6 +60,17 @@ const CellBase = kind({
 		component:  EnactPropTypes.renderable,
 
 		/**
+		 * Css that is passed to the component used to render as the `Cell`.
+		 *
+		 * When using {@link ui/Layout.Cell}, the `css` prop is forwarded to this component
+		 * as `componentCss`.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		componentCss: PropTypes.object,
+
+		/**
 		 * Called with a reference to the root component.
 		 *
 		 * When using {@link ui/Layout.Cell}, the `ref` prop is forwarded to this component
@@ -162,13 +173,13 @@ const CellBase = kind({
 		}
 	},
 
-	render: ({component: Component, componentRef, ...rest}) => {
+	render: ({component: Component, componentCss, componentRef, ...rest}) => {
 		delete rest.align;
 		delete rest.grow;
 		delete rest.shrink;
 		delete rest.size;
 
-		return <Component ref={componentRef} {...rest} />;
+		return <Component css={componentCss} ref={componentRef} {...rest} />;
 	}
 });
 
