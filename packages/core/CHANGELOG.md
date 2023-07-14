@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
-## [unreleased]
+## [4.7.2] - 2023-07-14
 
 ### Fixed
 
