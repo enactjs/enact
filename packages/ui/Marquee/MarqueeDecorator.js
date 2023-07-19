@@ -1,4 +1,4 @@
-import {direction} from 'direction';
+import direction from 'direction';
 import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
