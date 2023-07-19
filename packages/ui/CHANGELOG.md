@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/Layout.Cell` prop `componentCss` in order to pass classes to the `Cell` component
+- `ui/Layout.Cell` prop `componentCss` in order to customize the component used in `Cell`
 
 ## [4.7.2] - 2023-07-14
 
