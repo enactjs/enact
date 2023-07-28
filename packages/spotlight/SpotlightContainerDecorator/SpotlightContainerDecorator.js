@@ -75,14 +75,14 @@ const defaultConfig = {
 	 * Directs which element receives focus when gaining focus from another container. If
 	 * `'default-element'`, the default focused item will be selected. If `'last-focused'`, the
 	 * container will focus the last focused item; if the container has never had focus, the default
-	 * element will receive focus. If `''`, the default 5-way behavior will be applied.
+	 * element will receive focus. If `null`, the default 5-way behavior will be applied.
 	 *
 	 * @type {String}
-	 * @default ''
+	 * @default null
 	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
-	enterTo: '',
+	enterTo: null,
 
 	/**
 	 * Directs which element receives focus when losing focus in the current container using 5-way direction keys.

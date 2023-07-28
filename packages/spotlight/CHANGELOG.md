@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
-
-### Changed
-
-- `spotlight/SpotlightContainerDecorator` config property, `enterTo`, default value to be `''` rather than `null`
-
 ## [4.7.2] - 2023-07-14
 
 ### Fixed
