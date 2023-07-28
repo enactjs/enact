@@ -5,11 +5,11 @@
   "private": true,
   "scripts": {
     "lerna": "lerna",
-    "bootstrap": "lerna bootstrap --concurrency 1",
+    "bootstrap": "lerna --concurrency 1 exec -- npm install",
     "bootstrap-link": "npm run link-all && npm run interlink",
-    "interlink": "lerna link --loglevel error",
+    "interlink": "lerna --concurrency 1 run interlink",
     "link-all": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock link",
-    "unlink-all": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock unlink",
+    "unlink-all": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock unlink --global",
     "publish": "lerna publish --skip-npm --skip-git",
     "lint": "lerna --concurrency 1 run lint",
     "test": "lerna --concurrency 1 run test",
@@ -25,6 +25,6 @@
   "devDependencies": {
     "@enact/docs-utils": "^0.4.3",
     "eslint-config-enact-proxy": "^1.0.6",
-    "lerna": "^6.6.2"
+    "lerna": "^7.1.4"
   }
 }

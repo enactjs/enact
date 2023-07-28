@@ -11,6 +11,7 @@
   "homepage": "https://enactjs.com",
   "scripts": {
     "clean": "enact clean",
+    "interlink": "npm link @enact/core",
     "lint": "enact lint --strict",
     "test": "enact test",
     "test-json": "enact test --json",
