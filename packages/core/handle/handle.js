@@ -223,7 +223,7 @@ const named = (fn, name) => {
  * @param    {Object}       obj         a instance.
  * @param    {String}       name        Name of the handler.
  *
- * @returns  {EventHandler}		A bound function.
+ * @returns  {EventHandler}		A bound function as a result of binding a provided event handler to the provided instance.
  * @memberof core/handle
  * @public
  */
