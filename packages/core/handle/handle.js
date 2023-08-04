@@ -158,7 +158,7 @@ const named = (fn, name) => {
  * when binding `handle()` to a component instance.
  * Returns the bound handler function by binding the handler with `name' to the instance.
  *
- * Example:
+ * Example 1:
  * ```
  * import {call, forKey, forProp, forward, handle} from '@enact/core/handle';
  * import {Component} from 'react';
@@ -187,8 +187,10 @@ const named = (fn, name) => {
  *   }
  * }
  *
- * or
+ * ```
  *
+ * Example 2:
+ * ```
  * import {call, forKey, forProp, forward, handle} from '@enact/core/handle';
  * import {Component} from 'react';
  *
