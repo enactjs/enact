@@ -203,14 +203,14 @@ Temporarily pauses Spotlight until `resume()` is called.
 Resumes Spotlight navigation.
 
 #### `Spotlight.focus([containerId/selector])`
-+ `containerId/selector`: (optional) String / [Selector](./#selector) (without @ syntax)
++ `containerId/selector`: (optional) String / [Selector](./#selectors) (without @ syntax)
 
 Dispatches focus to the specified containerId or the first spottable child that
 matches `selector`. This method has no effect if Spotlight is paused.
 
 #### `Spotlight.move(direction, [selector])`
 + `direction`: `'left'`, `'right'`, `'up'` or `'down'`
-+ `selector`: (optional) [Selector](./#selector) (without @ syntax)
++ `selector`: (optional) [Selector](./#selectors) (without @ syntax)
 
 Moves focus in the specified direction of `selector`. If `selector` is not specified,
 Spotlight will move in the given direction of the currently spotted control.
@@ -297,7 +297,7 @@ this container receives focus first.
 + Values: {left: [selector](./#selectors), right: [selector](./#selectors), up: [selector](./#selectors), down: [selector](./#selectors)}
 + Default : `null`
 
-If the focus leaves the current container, you can define which element in
+If the focus leaves the current container, you can define which element
 outside of this container receives focus using which 5-way direction key.
 If `null`, the default 5-way behavior will be applied.
 If you want the focus to move to the button on the left of the screen whose id value is `left` when pressing 5-way down, you just set the value to `{down: '#left'}`.
