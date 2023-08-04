@@ -28,7 +28,7 @@
  * `props` and `context`. This allows you to write consistent event handlers for components created
  * either with `kind()` or ES6 classes without worrying about from where the props are sourced.
  *
- * Handlers can either be bound directly using the native `bind()` method or using the `bindAs()`
+ * Handlers can either be bound directly using the native `bind()` method or using the {@link core/handle.bindAs|`bindAs()`}
  * utility method that is appended to the handler.
  *
  * Example:
@@ -153,6 +153,80 @@ const named = (fn, name) => {
 	return fn;
 };
 
+/**
+ * Utility method that can be used instead of native 'bind()'
+ * when binding `handle()` to a component instance.
+ * Returns the bound handler function by binding the handler with `name' to the instance.
+ *
+ * Example:
+ * ```
+ * import {call, forKey, forProp, forward, handle} from '@enact/core/handle';
+ * import {Component} from 'react';
+ *
+ * class Mycomponent extends React.Component {
+ *   constructor () {
+ *     super();
+ *     ...
+ *   }
+ *
+ *   handleEnter = (ev) => {
+ *     ...
+ *   };
+ *
+ *   handleKeyDown = handle(
+ *     forward('onKeyDown'),
+ *     forKey('enter'),
+ *     forProp('disabled', false),
+ *     call('handleEnter')
+ *   ).bindAs(this, 'handleKeyDown');
+ *
+ *   render () {
+ *     return (
+ *       <div onKeyDown={this.handleKeyDown} />
+ *     );
+ *   }
+ * }
+ *
+ * or
+ *
+ * import {call, forKey, forProp, forward, handle} from '@enact/core/handle';
+ * import {Component} from 'react';
+ *
+ * const handleKeyDown = handle(
+ *   forward('onKeyDown'),
+ *   forKey('enter'),
+ *   forProp('disabled', false),
+ *   call('handleEnter')
+ * );
+ *
+ * class Mycomponent extends React.Component {
+ *   constructor () {
+ *     super();
+ *     ...
+ *     handleKeyDown.bindAs(this, 'handleKeyDown');
+ *   }
+ *
+ *   handleEnter = (ev) => {
+ *     ...
+ *   };
+ *
+ *   render () {
+ *     return (
+ *       <div onKeyDown={this.handleKeyDown} />
+ *     );
+ *   }
+ * }
+ * ```
+ *
+ * @method   bindAs
+ * @param    {EventHandler} fn          A function that accepts an event.
+ * @param    {Object}       obj         a instance.
+ * @param    {String}       name        Name of the handler.
+ *
+ * @returns  {EventHandler}		A bound function.
+ * @memberof core/handle
+ * @public
+ */
 const bindAs = (fn, obj, name) => {
 	const namedFunction = name ? named(fn, name) : fn;
 	const bound = namedFunction.bind(obj);
