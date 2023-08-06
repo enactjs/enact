@@ -2,10 +2,6 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
-
-- Updated `lerna` version to `^7.1.4`.
-
 ## [4.7.2] - 2023-07-14
 
 ### Fixed
