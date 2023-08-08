@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Added
 
-- `spotlight/SpotlightContainerDecorator` config option `leaveFor` to direct which element recieves focus when the focus is leaving
+- `spotlight/SpotlightContainerDecorator` config option `leaveFor` to direct which element receives focus when the focus is leaving
 
 ## [4.7.2] - 2023-07-14
 
