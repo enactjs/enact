@@ -26,6 +26,8 @@ import last from 'ramda/src/last';
 import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
 import {isPaused, pause, resume} from '../Pause';
+
+import {getInputType} from './inputType';
 import {contains} from './utils';
 
 import {
@@ -201,7 +203,7 @@ const Spotlight = (function () {
 		}
 
 		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
-		if ((getPointerMode() && !fromPointer) && (typeof window !== 'undefined' && (!webOSSystem || webOSSystem.cursor?.visibility))) {
+		if ((getPointerMode() && !fromPointer) && (getInputType() === 'touch' || (typeof window !== 'undefined' && (!webOSSystem || webOSSystem.cursor?.visibility)))) {
 			setContainerLastFocusedElement(elem, containerIds);
 			return false;
 		}

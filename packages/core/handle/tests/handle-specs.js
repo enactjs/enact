@@ -1,3 +1,7 @@
+import PropTypes from 'prop-types';
+import {Component} from 'react';
+import {render} from '@testing-library/react';
+
 import {
 	adaptEvent,
 	call,
@@ -567,6 +571,90 @@ describe('handle', () => {
 
 			expect(actual).toEqual(expected);
 		});
+
+		test('should support bound adapter function', () => {
+			const handler = jest.fn();
+			const expected = 'ok';
+			const obj = {
+				data: expected,
+				adapter: function () {
+					return {
+						value: this?.data
+					};
+				}
+			};
+			const forwarderFn = forwardCustom('onCustomEvent', obj.adapter).bind(obj);
+			forwarderFn(null, {onCustomEvent: handler}, null);
+
+			const actual = handler.mock.calls[0][0];
+
+			expect(actual).toEqual(expect.objectContaining({
+				value: expected
+			}));
+		});
+
+		test('should support bound adapter function by call', () => {
+			const handler = jest.fn();
+			const expected = 'ok';
+			const obj = {
+				data: expected,
+				adapter: function () {
+					return {
+						value: this?.data
+					};
+				}
+			};
+
+			const forwarderFn = forwardCustom('onCustomEvent', call('adapter')).bind(obj);
+			forwarderFn(null, {onCustomEvent: handler}, null);
+
+			const actual = handler.mock.calls[0][0];
+
+			expect(actual).toEqual(expect.objectContaining({
+				value: expected
+			}));
+		});
+
+		test('should support bound adapter function by handle', () => {
+			const handler = jest.fn();
+			const expected = 'ok';
+
+			class TestComponent extends Component {
+				static propTypes = {
+					onCustomEvent: PropTypes.func
+				};
+
+				constructor (props) {
+					super(props);
+
+					this.data = expected;
+					handle(
+						forwardCustom('onCustomEvent', call('adapter'))
+					).bindAs(this, 'handleCustomEvent');
+				}
+
+				componentDidMount () {
+					this.handleCustomEvent(null, this.props, this.context);
+				}
+
+				adapter () {
+					return {
+						value: this?.data
+					};
+				}
+
+				render () {
+					return <div />;
+				}
+			}
+			render(<TestComponent onCustomEvent={handler} />);
+
+			const actual = handler.mock.calls[0][0];
+
+			expect(actual).toEqual(expect.objectContaining({
+				value: expected
+			}));
+		});
 	});
 
 	describe('#forwardCustomWithPrevent', () => {
@@ -645,6 +733,90 @@ describe('handle', () => {
 			const actual = adapter.mock.calls[0];
 
 			expect(actual).toEqual(expected);
+		});
+
+		test('should support bound adapter function', () => {
+			const handler = jest.fn();
+			const expected = 'ok';
+			const obj = {
+				data: expected,
+				adapter: function () {
+					return {
+						value: this?.data
+					};
+				}
+			};
+			const forwarderFn = forwardCustomWithPrevent('onCustomEvent', obj.adapter).bind(obj);
+			forwarderFn(null, {onCustomEvent: handler}, null);
+
+			const actual = handler.mock.calls[0][0];
+
+			expect(actual).toEqual(expect.objectContaining({
+				value: expected
+			}));
+		});
+
+		test('should support bound adapter function by call', () => {
+			const handler = jest.fn();
+			const expected = 'ok';
+			const obj = {
+				data: expected,
+				adapter: function () {
+					return {
+						value: this?.data
+					};
+				}
+			};
+
+			const forwarderFn = forwardCustomWithPrevent('onCustomEvent', call('adapter')).bind(obj);
+			forwarderFn(null, {onCustomEvent: handler}, null);
+
+			const actual = handler.mock.calls[0][0];
+
+			expect(actual).toEqual(expect.objectContaining({
+				value: expected
+			}));
+		});
+
+		test('should support bound adapter function by handle', () => {
+			const handler = jest.fn();
+			const expected = 'ok';
+
+			class TestComponent extends Component {
+				static propTypes = {
+					onCustomEvent: PropTypes.func
+				};
+
+				constructor (props) {
+					super(props);
+
+					this.data = expected;
+					handle(
+						forwardCustomWithPrevent('onCustomEvent', call('adapter'))
+					).bindAs(this, 'handleCustomEvent');
+				}
+
+				componentDidMount () {
+					this.handleCustomEvent(null, this.props, this.context);
+				}
+
+				adapter () {
+					return {
+						value: this?.data
+					};
+				}
+
+				render () {
+					return <div />;
+				}
+			}
+			render(<TestComponent onCustomEvent={handler} />);
+
+			const actual = handler.mock.calls[0][0];
+
+			expect(actual).toEqual(expect.objectContaining({
+				value: expected
+			}));
 		});
 
 		test('should call the next handler when `preventDefault` from provided props hasn\'t been called', () => {

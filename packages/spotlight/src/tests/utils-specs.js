@@ -1,7 +1,39 @@
 import {
 	getPointRect,
-	getContainerRect
+	getContainerRect,
+	isStandardFocusable
 } from '../utils';
+
+import {
+	node,
+	testScenario
+} from './utils';
+
+const focusable = (props) => {
+	if (!props) {
+		props = {};
+	}
+
+	let nodeObject = {
+		id: 'child',
+		tabindex: 0
+	};
+
+	Object.keys(props).forEach(key => {
+		nodeObject[key] = props[key];
+	});
+
+	return node(nodeObject);
+};
+
+const scenarios = {
+	tabIndexMinusOne: node({id: 'child', tabindex: -1}),
+	focusable: focusable(),
+	button: focusable({tag: 'button'}),
+	buttonWithDisabled: focusable({tag: 'button', valueOnlyAttribute: 'disabled'}),
+	link: focusable({tag: 'a', href: 'www.enactjs.com'}),
+	input: focusable({tag: 'input'})
+};
 
 describe('utils', () => {
 	describe('#getPointRect', () => {
@@ -52,5 +84,94 @@ describe('utils', () => {
 			};
 			expect(actual).toEqual(expected);
 		});
+	});
+
+	describe('#isStandardFocusable', () => {
+		beforeEach(() => {
+			global.Element.prototype.getBoundingClientRect = jest.fn(() => {
+				return {
+					height: 100,
+					width: 100
+				};
+			});
+		});
+
+		test('should return false if tabIndex < 0', testScenario(
+			scenarios.tabIndexMinusOne,
+			(root) => {
+				const child = root.querySelector('#child');
+
+				const expected = false;
+				const actual = isStandardFocusable(child);
+
+				expect(actual).toEqual(expected);
+			}
+		));
+
+		test('should return false if hidden', testScenario(
+			scenarios.focusable,
+			(root) => {
+				const child = root.querySelector('#child');
+				child.getBoundingClientRect = jest.fn(() => {
+					return {
+						height: 0,
+						width: 0
+					};
+				});
+
+				const expected = false;
+				const actual = isStandardFocusable(child);
+
+				expect(actual).toEqual(expected);
+			}
+		));
+
+		test('should return true if button tag', testScenario(
+			scenarios.button,
+			(root) => {
+				const child = root.querySelector('#child');
+
+				const expected = true;
+				const actual = isStandardFocusable(child);
+
+				expect(actual).toEqual(expected);
+			}
+		));
+
+		test('should return false if button tag with disabled', testScenario(
+			scenarios.buttonWithDisabled,
+			(root) => {
+				const child = root.querySelector('#child');
+
+				const expected = false;
+				const actual = isStandardFocusable(child);
+
+				expect(actual).toEqual(expected);
+			}
+		));
+
+		test('should return true if A tag with href', testScenario(
+			scenarios.link,
+			(root) => {
+				const child = root.querySelector('#child');
+
+				const expected = true;
+				const actual = isStandardFocusable(child);
+
+				expect(actual).toEqual(expected);
+			}
+		));
+
+		test('should return true if input tag', testScenario(
+			scenarios.input,
+			(root) => {
+				const child = root.querySelector('#child');
+
+				const expected = true;
+				const actual = isStandardFocusable(child);
+
+				expect(actual).toEqual(expected);
+			}
+		));
 	});
 });
