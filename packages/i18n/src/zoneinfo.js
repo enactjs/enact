@@ -46,7 +46,7 @@
 const
 	PackedBuffer = require('./packedbuffer.js');
 
-const _platform = (typeof (window.webOSSystem ?? window.PalmSystem) !== 'undefined') ? 'webos' : 'browser';
+const _platform = (typeof window !== 'undefined' && (window.webOSSystem || window.PalmSystem)) ? 'webos' : 'browser';
 
 /**
  * Represents a binary zone info file of the sort that the Unix Zone Info Compiler
