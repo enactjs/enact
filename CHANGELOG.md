@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.7.3] - 2023-08-10
+
+### Added
+
+- `spotlight/SpotlightContainerDecorator` config option `leaveFor` to direct which element receives focus when the focus is leaving
+
 ## [4.7.2] - 2023-07-14
 
 ### Fixed
