@@ -28,8 +28,7 @@
  * `props` and `context`. This allows you to write consistent event handlers for components created
  * either with `kind()` or ES6 classes without worrying about from where the props are sourced.
  *
- * Handlers can either be bound directly using the native `bind()` method or using the `bindAs()`
- * utility method that is appended to the handler.
+ * Handlers can be bound directly using the native `bind()` method.
  *
  * Example:
  * ```
@@ -42,12 +41,7 @@
  *     super();
  *
  *     // logEnter will be bound to `this` and set as this.handleKeyDown
- *     //
- *     // Equivalent to the following with the advantage of set the function name to be displayed in
- *     // development tool call stacks
- *     //
- *     //   this.handleKeyDown = logEnter.bind(this)
- *     logEnter.bindAs(this, 'handleKeyDown');
+ *     this.handleKeyDown = logEnter.bind(this);
  *   }
  *
  *   render () {
@@ -153,6 +147,7 @@ const named = (fn, name) => {
 	return fn;
 };
 
+// Setting the function name to be displayed in development tool call stacks rather than `anonymous`
 const bindAs = (fn, obj, name) => {
 	const namedFunction = name ? named(fn, name) : fn;
 	const bound = namedFunction.bind(obj);
