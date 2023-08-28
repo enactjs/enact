@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Marquee` style to avoid letters being cut off
+
 ## [4.7.3] - 2023-08-10
 
 No significant changes.
