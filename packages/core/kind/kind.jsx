@@ -5,6 +5,8 @@
  * @exports kind
  */
 
+window.__DEV__ = true;
+// process.env.__DEV__ = true;
 import {createContext, useContext, Component as ReactComponent} from 'react';
 
 import useHandlers from '../useHandlers';

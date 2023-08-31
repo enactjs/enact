@@ -8,7 +8,7 @@
     "directory": "packages/ui"
   },
   "homepage": "https://enactjs.com",
-  "main": "index.js",
+  "main": "index.jsx",
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --strict",
