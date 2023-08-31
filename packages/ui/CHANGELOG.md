@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [4.7.4] - 2023-08-31
 
 ### Fixed
 
