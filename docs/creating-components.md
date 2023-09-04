@@ -83,7 +83,7 @@ While SFCs have some important benefits, not every problem can be effectively so
 alone. Sometimes creating component instances that extend `React.Component` is necessary. Here are a
 few possible reasons:
 
-* You need access to the [component lifecycle methods](https://reactjs.org/docs/react-component.html#the-component-lifecycle)
+* You need access to the [component lifecycle methods](https://react.dev/learn/lifecycle-of-reactive-effects)
 * You need to maintain some component state (and it's not managed by something like Redux)
 * You need consistent event handler references to prevent unnecessary renders
 * You need to expose imperative APIs (though you should always avoid this when possible)

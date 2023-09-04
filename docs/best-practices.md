@@ -16,8 +16,8 @@ application.
 As part of the release of an application, use `npm shrinkwrap` (<a href="https://docs.npmjs.com/cli/shrinkwrap">https://docs.npmjs.com/cli/shrinkwrap</a>)
 to lock the versions of the application's dependencies (and all of those dependencies' dependencies, and so on).
 
-> <a href="http://javascript.tutorialhorizon.com/2015/03/21/what-is-npm-shrinkwrap-and-when-is-it-needed/">http://javascript.tutorialhorizon.com/2015/03/21/what-is-npm-shrinkwrap-and-when-is-it-needed/</a>
-presents a brief article explaining why and when to use `npm shrinkwrap`.
+<!-- > <a href="http://javascript.tutorialhorizon.com/2015/03/21/what-is-npm-shrinkwrap-and-when-is-it-needed/">http://javascript.tutorialhorizon.com/2015/03/21/what-is-npm-shrinkwrap-and-when-is-it-needed/</a>
+presents a brief article explaining why and when to use `npm shrinkwrap`. -->
 
 ## Code Conventions
 
@@ -38,7 +38,12 @@ Naming is hard.  Property names should be adjectives, as they describe how a com
 ### Boolean
 
 For a boolean property, its presence indicates `true` and its absence indicates `false`.
-> `<MyComponent myBooleanProp />` // myBooleanProp === true; myOtherBooleanProp === false
+```js
+<MyComponent myBooleanProp />  // myBooleanProp === true;
+```
+```js
+// myOtherBooleanProp === false;
+```
 
 Boolean properties should always have a `defaultValue` of `false`.  This may require renaming the prop to be a negative
 (e.g. `noAnimation`).
@@ -46,7 +51,10 @@ Boolean properties should always have a `defaultValue` of `false`.  This may re
 ### String
 
 String properties do not need to be evaluated as an expression.
-> `<MyComponent myStringProp="My String" />` // not `<MyComponent myStringProp={"My String"} />`
+```js
+<MyComponent myStringProp="My String" />  // correct
+<MyComponent myStringProp={"My String"} />  // wrong
+```
 
 ## State Management
 

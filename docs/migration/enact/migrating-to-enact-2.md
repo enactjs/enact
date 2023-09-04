@@ -199,7 +199,7 @@ const handleChange = () => {
 ```
 
 ### `ExpandableList`
-`ExpandableList` now requires a unique key for `Object` type data. [Read about keys](https://reactjs.org/docs/lists-and-keys.html#keys)
+`ExpandableList` now requires a unique key for `Object` type data. [Read about keys](https://react.dev/learn/rendering-lists)
 for more information.
 
 ### `IconButton`
@@ -648,7 +648,7 @@ const MyContainer = SpotlightContainerDecorator(MyComponent);
 ## ui
 
 ### `Group`
-`Group` now requires a unique key for `Object` type data. [Read about keys](https://reactjs.org/docs/lists-and-keys.html#keys)
+`Group` now requires a unique key for `Object` type data. [Read about keys](https://react.dev/learn/rendering-lists)
 for more information.
 
 ### `Holdable`
@@ -658,7 +658,7 @@ This component has been replaced by [`ui/Touchable`](../../../modules/ui/Touchab
 This component has been replaced by [`ui/Touchable`](../../../modules/ui/Touchable/).
 
 ### `Repeater`
-`Repeater` now requires a unique key for `Object` type data. [Read about keys](https://reactjs.org/docs/lists-and-keys.html#keys)
+`Repeater` now requires a unique key for `Object` type data. [Read about keys](https://react.dev/learn/rendering-lists)
 for more information.
 
 ### `Toggleable`

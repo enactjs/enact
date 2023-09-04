@@ -10,7 +10,7 @@ This guide details how to use some of i18n library's features. For an overview o
 
 `I18nDecorator` is a higher-order component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `I18nDecorator` directly for applications using `MoonstoneDecorator`.
 
-The HOC works by passing locale information to the app through [context](https://reactjs.org/docs/context.html) and CSS classes. It passes three properties via context:
+The HOC works by passing locale information to the app through [context](https://react.dev/learn/passing-data-deeply-with-context) and CSS classes. It passes three properties via context:
 
 * `locale` - a string representing the current locale
 * `rtl` - if `true` then the locale is a right-to-left language

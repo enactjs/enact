@@ -50,7 +50,7 @@ const getKeyFromSource = (source = '') => {
 /**
  * Maps standard media event `type` values to React-style callback prop names
  *
- * See https://reactjs.org/docs/events.html#media-events
+ * See https://react.dev/reference/react-dom/components/common#common-props
  *
  * ```
  * {

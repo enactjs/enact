@@ -52,7 +52,7 @@ const GroupBase = kind({
 		 * like `disabled`, `className`, and setting the content using `children`.
 		 *
 		 * NOTE: When providing an array of objects be sure a unique `key` is assigned to each
-		 * item. [Read about keys](https://reactjs.org/docs/lists-and-keys.html#keys) for more
+		 * item. [Read about keys](https://react.dev/learn/rendering-lists) for more
 		 * information.
 		 *
 		 * @type {String[]|Array.<{key: (Number|String)}>}
