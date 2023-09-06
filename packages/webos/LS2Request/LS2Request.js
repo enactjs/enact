@@ -107,7 +107,6 @@ export default class LS2Request {
 		this.ts = performance.now();
 		refs[this.ts] = this;
 
-		// eslint-disable-next-line no-undef
 		this.bridge = new WebOSServiceBridge();
 		this.bridge.onservicecallback = this.callback.bind(this, onSuccess, onFailure, onComplete);
 		if (timeout) {
