@@ -124,4 +124,3 @@ const debugAppBase = () => {
 const App = ThemeDecorator(AppBase);
 ```
 
-
