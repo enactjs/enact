@@ -92,14 +92,14 @@ const App = () => {
 
 Enact also provides ways to debug these accessibility implementations.
 
-### In sampler
+### In Sampler
 
 We provide a sampler in [UI COMPONENTS](https://enactjs.com/sampler/sandstone) that implements several UI components as [Storybook](https://storybook.js.org/).
 If click the `debug aria` tab located at the top of the page of the sampler and select `true`, the ARIA properties of each component is displayed as shown in the image below.
 
 ![debug-aria in sampler](Debugaria-Sampler.png)
 
-### In Enact app
+### In Enact App
 
 This debug feature is designed to work if a class `debug aria` is given to any enact app.
 So just add `debug aria` to className prop in your enact app to see the applied ARIA properties.
