@@ -39,7 +39,7 @@ Naming is hard.  Property names should be adjectives, as they describe how a com
 
 For a boolean property, its presence indicates `true` and its absence indicates `false`.
 ```js
-<MyComponent myBooleanProp />  // myBooleanProp === true, myOtherBooleanProp === false;
+<MyComponent myBooleanProp />  // myBooleanProp === true, myOtherBooleanProp === false
 ```
 
 Boolean properties should always have a `defaultValue` of `false`.  This may require renaming the prop to be a negative
