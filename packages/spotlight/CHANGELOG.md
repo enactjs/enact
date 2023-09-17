@@ -85,6 +85,9 @@ No significant changes.
 ## [4.7.6] - 2023-09-20
 
 No significant changes.
+## Changed
+Added preventScroll parameter to `focusElement` for enhanced scroll control.
+Extended `focus` in `spotlight/Spotlight` with a containerOption parameter that includes preventScroll.
 
 ## [4.7.5] - 2023-09-12
 
