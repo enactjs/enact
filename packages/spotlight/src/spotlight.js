@@ -197,7 +197,7 @@ const Spotlight = (function () {
 		}
 	}
 
-	function focusElement (elem, containerIds, fromPointer) {
+	function focusElement (elem, containerIds, fromPointer, preventScroll = false) {
 		if (!elem) {
 			return false;
 		}
@@ -214,7 +214,8 @@ const Spotlight = (function () {
 			return true;
 		}
 
-		const focusOptions = isWithinOverflowContainer(elem, containerIds) ? {preventScroll: true} : null;
+		const shouldPreventScroll = isWithinOverflowContainer(elem, containerIds) || preventScroll;
+        const focusOptions = shouldPreventScroll ? { preventScroll: true } : null;
 
 		let silentFocus = function () {
 			elem.focus(focusOptions);
@@ -750,12 +751,13 @@ const Spotlight = (function () {
 		 * @param {String|Node} [elem] The spotlight ID or selector for either a spottable
 		 *  component or a spotlight container, or spottable node. If not supplied, the default
 		 *  container will be focused.
-		 * @param {Object} [containerOption] The object including `enterTo` and `toOuterContainer`.
+		 * @param {Object} [containerOption] The object including `enterTo`, `toOuterContainer`, and `preventScroll`.
 		 *  It works when the first parameter `elem` is either a spotlight container ID or a spotlight container node.
 		 * @param {('last-focused'|'default-element'|'topmost')} [containerOption.enterTo] Specifies preferred
 		 *  `enterTo` configuration.
 		 * @param {Boolean} [containerOption.toOuterContainer] If the proper target is not found, search one
 		 *  recursively to outer container.
+		 * @param {Boolean} [containerOption.preventScroll] Prevents automatic scrolling when focusing the element.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
 		 */
@@ -785,7 +787,7 @@ const Spotlight = (function () {
 			const nextContainerIds = getContainersForNode(target);
 			const nextContainerId = last(nextContainerIds);
 			if (isNavigable(target, nextContainerId, true)) {
-				const focused = focusElement(target, nextContainerIds);
+				const focused = focusElement(target, nextContainerIds, false, containerOption.preventScroll);
 
 				if (!focused && wasContainerId) {
 					setLastContainer(elem);
