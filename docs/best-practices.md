@@ -16,9 +16,6 @@ application.
 As part of the release of an application, use `npm shrinkwrap` (<a href="https://docs.npmjs.com/cli/shrinkwrap">https://docs.npmjs.com/cli/shrinkwrap</a>)
 to lock the versions of the application's dependencies (and all of those dependencies' dependencies, and so on).
 
-<!-- > <a href="http://javascript.tutorialhorizon.com/2015/03/21/what-is-npm-shrinkwrap-and-when-is-it-needed/">http://javascript.tutorialhorizon.com/2015/03/21/what-is-npm-shrinkwrap-and-when-is-it-needed/</a>
-presents a brief article explaining why and when to use `npm shrinkwrap`. -->
-
 ## Code Conventions
 
 An `enact cli`-created project also provides linting (`npm run lint`) to statically analyze your code.  Additionally, the Enact programming conventions are provided as a separate [module](https://github.com/enactjs/eslint-config-enact) (also included in `enact cli`-created projects).  Developers are encouraged to enable in-editor analysis of their code to catch potential issues as early as possible.  The module documentation details how to set up various editors.
@@ -39,7 +36,7 @@ Naming is hard.  Property names should be adjectives, as they describe how a com
 
 For a boolean property, its presence indicates `true` and its absence indicates `false`.
 ```js
-<MyComponent myBooleanProp />  // myBooleanProp === true, myOtherBooleanProp === false
+<MyComponent myBooleanProp />  // myBooleanProp === true; myOtherBooleanProp === false
 ```
 
 Boolean properties should always have a `defaultValue` of `false`.  This may require renaming the prop to be a negative
@@ -49,8 +46,8 @@ Boolean properties should always have a `defaultValue` of `false`.  This may re
 
 String properties do not need to be evaluated as an expression.
 ```js
-<MyComponent myStringProp="My String" />  // correct
-<MyComponent myStringProp={"My String"} />  // wrong
+<MyComponent myStringProp="My String" />
+// not <MyComponent myStringProp={"My String"} />
 ```
 
 ## State Management

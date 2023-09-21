@@ -6,7 +6,7 @@ title: Enact Performance Guide
 
 Performance is a critical portion of any application. With Enact you can use all the same tools as you normally would for [React](https://reactjs.org/docs/optimizing-performance.html). We recommend reading this first to gain familiarity with performance testing in React.
 
-Some important things to understand are how to use [React's performance timeline](https://react.dev/learn/render-and-commit#optimizing-performance), understand how to use `shouldComponentUpdate` to [avoid reconciliation](https://reactjs.org/docs/optimizing-performance.html#avoid-reconciliation), and learning to [not mutate data](https://reactjs.org/docs/optimizing-performance.html#the-power-of-not-mutating-data) if possible.
+Some important things to understand are how to use [React's performance timeline](https://reactjs.org/docs/optimizing-performance.html#profiling-components-with-the-chrome-performance-tab), understand how to use `shouldComponentUpdate` to [avoid reconciliation](https://reactjs.org/docs/optimizing-performance.html#avoid-reconciliation), and learning to [not mutate data](https://reactjs.org/docs/optimizing-performance.html#the-power-of-not-mutating-data) if possible.
 
 Enact provides some useful tools to help you achieve faster performance.
 

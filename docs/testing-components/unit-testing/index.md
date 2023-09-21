@@ -39,8 +39,6 @@ We use a dizzying number of tools to perform unit testing.  A quick overview of 
 
 ## Unit Testing
 
-<!-- >> If a video is more your style we have one here: [https://www.youtube.com/watch?v=DNAsXbnCV8w](https://www.youtube.com/watch?v=DNAsXbnCV8w) -->
-
 Unit testing is the core of our testing platform. Unit testing only tests the smallest units of code. Typically a test
 just tests a function/method. For Enact framework developers testing will also extend into component and virtual DOM testing.
 
