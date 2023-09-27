@@ -24,6 +24,7 @@ class PocButtonSimple extends Lit.LitElement { // eslint-disable-line no-unused-
 			vertical-align: middle;
 			text-align: center;
 			z-index: 0;
+			cursor: pointer;
 		}
 		.root {
 			height: 100%;
@@ -87,17 +88,6 @@ class PocButtonSimple extends Lit.LitElement { // eslint-disable-line no-unused-
 		 * @private
 		 */
 		decoration: {attribute: false},
-
-		/**
-		 * Applies the `disabled` class.
-		 *
-		 * When `true`, the button is shown as disabled.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		disabled: {attribute: false},
 
 		/**
 		 * The icon displayed within the Button.
@@ -181,7 +171,6 @@ class PocButtonSimple extends Lit.LitElement { // eslint-disable-line no-unused-
 				'componentRef',
 				'css',
 				'decoration',
-				'disabled',
 				'icon',
 				'minWidth',
 				'pressed',
@@ -207,7 +196,6 @@ class PocButtonSimple extends Lit.LitElement { // eslint-disable-line no-unused-
 
 	constructor () {
 		super();
-		this.disabled = false;
 		this.minWidth = true;
 		this.pressed = false;
 		this.selected = false;
@@ -252,17 +240,17 @@ class PocButtonSimple extends Lit.LitElement { // eslint-disable-line no-unused-
 	render () {
 		this.log('render');
 		/*
-		const {children, componentRef, css, decoration, disabled, icon, ...rest} = this;
+		const {children, componentRef, css, decoration, icon, ...rest} = this;
 		delete rest.minWidth;
 		delete rest.pressed;
 		delete rest.selected;
 		delete rest.size;
 		*/
 
-		const {css, decoration, disabled, icon} = this;
+		const {css, decoration, icon} = this;
 		const decorationNode = decoration ? `<div className={${css.decoration}}>${decoration}</div>` : '';
 		return Lit.html`
-			<div role="button" class="root" aria-disabled=${disabled} disabled=${disabled}>
+			<div role="button" class="root">
 				${decorationNode}
 				<slot name="background" class="background ${css.bg}"></slot>
 				<slot class="content"></slot>
