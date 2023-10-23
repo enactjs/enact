@@ -730,10 +730,10 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
  * @memberof core/handle
  * @public
  */
-const forwardCustom = handle.forwardCustom = (name, adapter) => handle(
-	adaptEvent(
-		(ev, ...args) => {
-			let customEventPayload = adapter ? adapter(ev, ...args) : null;
+const forwardCustom = handle.forwardCustom = function (name, adapter) {
+	return named(adaptEvent(
+		function (ev, ...args) {
+			let customEventPayload = adapter ? adapter.call(this, ev, ...args) : null;
 
 			// Handle either no adapter or a non-object return from the adapter
 			if (!customEventPayload || typeof customEventPayload !== 'object') {
@@ -751,8 +751,8 @@ const forwardCustom = handle.forwardCustom = (name, adapter) => handle(
 			return customEventPayload;
 		},
 		forward(name)
-	)
-).named('forwardCustom');
+	), 'forwardCustom');
+};
 
 /**
  * Creates a handler that will forward the event to a function at `name` on `props` with capability
@@ -795,12 +795,12 @@ const forwardCustom = handle.forwardCustom = (name, adapter) => handle(
  * @memberof core/handle
  * @private
  */
-const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = named((name, adapter) => {
-	return (ev, ...args) => {
+const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = function (name, adapter) {
+	return named(function (ev, ...args) {
 		let prevented = false;
 
-		const adapterWithPrevent = () => {
-			let customEventPayload = adapter ? adapter(ev, ...args) : null;
+		function adapterWithPrevent () {
+			let customEventPayload = adapter ? adapter.call(this, ev, ...args) : null;
 			let existingPreventDefault = null;
 
 			// Handle either no adapter or a non-object return from the adapter
@@ -822,11 +822,11 @@ const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = named((name, 
 			};
 
 			return customEventPayload;
-		};
+		}
 
-		return forwardCustom(name, adapterWithPrevent)(ev, ...args) && !prevented;
-	};
-}, 'forwardCustomWithPrevent');
+		return forwardCustom.call(this, name, adapterWithPrevent.bind(this))(ev, ...args) && !prevented;
+	}, 'forwardCustomWithPrevent');
+};
 
 /**
  * Accepts a handler and returns the logical complement of the value returned from the handler.

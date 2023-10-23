@@ -10,41 +10,12 @@ import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {Component} from 'react';
 
-import Spotlight from '../src/spotlight';
 import {spottableClass} from '../Spottable';
-
 import {rootContainerId} from '../src/container';
+import {activateInputType, applyInputTypeToNode, getInputInfo, getInputType, setInputType} from '../src/inputType';
+import Spotlight from '../src/spotlight';
 
 import '../styles/debug.less';
-
-const input = {
-	activated: false,
-	applied: false,
-	types: {
-		key: true,
-		mouse: false,
-		touch: false
-	}
-};
-
-const activateInputType = (activated) => {
-	input.activated = activated;
-};
-
-const getInputType = () => {
-	return Object.keys(input.types).find(type => input.types[type]);
-};
-
-const setInputType = (inputType) => {
-	if (Object.prototype.hasOwnProperty.call(input.types, inputType) && !input.types[inputType]) {
-		Object.keys(input.types).map((type) => {
-			input.types[type] = false;
-		});
-		input.types[inputType] = true;
-
-		input.applied = false;
-	}
-};
 
 /**
  * Default configuration for SpotlightRootDecorator
@@ -142,10 +113,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		applyInputType = () => {
 			if (this && this.containerNode) {
-				Object.keys(input.types).map((type) => {
-					this.containerNode.classList.toggle('spotlight-input-' + type, input.types[type]);
-				});
-				input.applied = true;
+				applyInputTypeToNode(this.containerNode);
 			}
 		};
 
@@ -154,7 +122,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		handleFocusIn = () => {
-			if (!input.applied) {
+			if (!getInputInfo().applied) {
 				this.applyInputType();
 			}
 		};
@@ -168,7 +136,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			setTimeout(() => {
-				if (!input.activated) {
+				if (!getInputInfo().activated) {
 					setInputType('key');
 				}
 				this.applyInputType();

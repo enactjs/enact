@@ -292,17 +292,10 @@ class VirtualListBasic extends Component {
 	};
 
 	constructor (props) {
-		let nextState = null;
-
 		super(props);
 
 		this.contentRef = createRef();
 		this.itemContainerRefs = [];
-
-		if (props.clientSize) {
-			this.calculateMetrics(props);
-			nextState = this.getStatesAndUpdateBounds(props);
-		}
 
 		this.state = {
 			firstIndex: 0,
@@ -310,9 +303,13 @@ class VirtualListBasic extends Component {
 			prevChildProps: null,
 			prevFirstIndex: 0,
 			updateFrom: 0,
-			updateTo: 0,
-			...nextState
+			updateTo: 0
 		};
+
+		if (props.clientSize) {
+			this.calculateMetrics(props);
+			Object.assign(this.state, this.getStatesAndUpdateBounds(props));
+		}
 	}
 
 	static getDerivedStateFromProps (props, state) {

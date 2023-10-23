@@ -2,6 +2,34 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [4.7.6] - 2023-09-20
+
+No significant changes.
+
+## [4.7.5] - 2023-09-12
+
+No significant changes.
+
+## [4.7.4] - 2023-08-31
+
+### Fixed
+
+- `ui/Marquee` style to avoid letters being cut off
+
+## [4.7.3] - 2023-08-10
+
+No significant changes.
+
+## [4.7.2] - 2023-07-14
+
+No significant changes.
+
+## [4.5.4] - 2023-06-07
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to pass scrolling state properly to UI libraries
+
 ## [4.7.1] - 2023-06-02
 
 No significant changes.

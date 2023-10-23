@@ -75,17 +75,20 @@ export default class LS2Request {
 		subscribe = false,
 		timeout = 0
 	}) {
+		const WebOSServiceBridge = typeof window === 'object' ? (window.WebOSServiceBridge ?? window.PalmServiceBridge) : null;
+
 		this.cancelled = false;
 
 		if (!onFailure && !onComplete) {
 			onFailure = failureHandler;
 		}
 
-		if (typeof window !== 'object' || !window.PalmServiceBridge) {
+		if (typeof WebOSServiceBridge !== 'function') {
+			const errorText = 'WebOSServiceBridge not found.';
 			/* eslint no-unused-expressions: ["error", { "allowShortCircuit": true }]*/
-			if (onFailure) onFailure({errorCode: -1, errorText: 'PalmServiceBridge not found.', returnValue: false});
-			if (onComplete) onComplete({errorCode: -1, errorText: 'PalmServiceBridge not found.', returnValue: false});
-			console.error('PalmServiceBridge not found.');
+			if (onFailure) onFailure({errorCode: -1, errorText, returnValue: false});
+			if (onComplete) onComplete({errorCode: -1, errorText, returnValue: false});
+			console.error(errorText);
 			return;
 		}
 
@@ -104,8 +107,7 @@ export default class LS2Request {
 		this.ts = performance.now();
 		refs[this.ts] = this;
 
-		// eslint-disable-next-line no-undef
-		this.bridge = new PalmServiceBridge();
+		this.bridge = new WebOSServiceBridge();
 		this.bridge.onservicecallback = this.callback.bind(this, onSuccess, onFailure, onComplete);
 		if (timeout) {
 			this.timeoutJob.startAfter(timeout, {onTimeout, timeout});

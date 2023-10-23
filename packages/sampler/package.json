@@ -1,6 +1,6 @@
 {
   "name": "enact-sampler",
-  "version": "4.7.1",
+  "version": "4.7.6",
   "description": "Component and QA samples for Enact",
   "private": true,
   "main": "index.js",
@@ -12,25 +12,22 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@enact/core": "^4.7.1",
-    "@enact/i18n": "^4.7.1",
-    "@enact/spotlight": "^4.7.1",
-    "@enact/ui": "^4.7.1",
-    "@enact/webos": "^4.7.1",
-    "classnames": "^2.3.2",
-    "ilib": "^14.17.0",
-    "prop-types": "^15.8.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@enact/storybook-utils": "^5.0.4",
+    "@enact/core": "^4.7.6",
+    "@enact/i18n": "^4.7.6",
+    "@enact/spotlight": "^4.7.6",
+    "@enact/storybook-utils": "^5.1.0",
+    "@enact/ui": "^4.7.6",
+    "@enact/webos": "^4.7.6",
     "@storybook/addons": "^6.5.16",
     "@storybook/builder-webpack5": "^6.5.16",
     "@storybook/manager-webpack5": "^6.5.16",
     "@storybook/react": "^6.5.16",
     "@storybook/theming": "^6.5.16",
     "babel-loader": "^8.2.5",
-    "core-js": "^3.30.1"
+    "classnames": "^2.3.2",
+    "ilib": "^14.18.0",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }
