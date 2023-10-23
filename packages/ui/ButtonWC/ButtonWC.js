@@ -7,8 +7,8 @@
  * @exports ButtonDecorator
  */
 
-import {createComponent} from '@lit-labs/react';
 import * as Lit from 'lit';
+import {createComponent} from '@lit/react';
 import compose from 'ramda/src/compose';
 import * as React from 'react';
 
