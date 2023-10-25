@@ -39,7 +39,6 @@ class PocButtonSimple extends Lit.LitElement { // eslint-disable-line no-unused-
 			z-index: -1;
 		}
 		.content {
-			display: flex;
 			box-sizing: border-box;
 			justify-content: center;
 			align-items: center;
