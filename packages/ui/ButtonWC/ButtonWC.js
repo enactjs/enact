@@ -81,14 +81,6 @@ class PocButtonSimple extends Lit.LitElement { // eslint-disable-line no-unused-
 		css: {attribute: false},
 
 		/**
-		 * Additional DOM nodes which may be necessary for decorating the Button.
-		 *
-		 * @type {Node}
-		 * @private
-		 */
-		decoration: {attribute: false},
-
-		/**
 		 * The icon displayed within the Button.
 		 *
 		 * The icon will be displayed before the natural reading order of the text, regardless
@@ -169,7 +161,6 @@ class PocButtonSimple extends Lit.LitElement { // eslint-disable-line no-unused-
 			const propertyNames = [
 				'componentRef',
 				'css',
-				'decoration',
 				'icon',
 				'minWidth',
 				'pressed',
@@ -239,18 +230,17 @@ class PocButtonSimple extends Lit.LitElement { // eslint-disable-line no-unused-
 	render () {
 		this.log('render');
 		/*
-		const {children, componentRef, css, decoration, icon, ...rest} = this;
+		const {children, componentRef, css, icon, ...rest} = this;
 		delete rest.minWidth;
 		delete rest.pressed;
 		delete rest.selected;
 		delete rest.size;
 		*/
 
-		const {css, decoration, icon} = this;
-		const decorationNode = decoration ? `<div className={${css.decoration}}>${decoration}</div>` : '';
+		const {css} = this;
 		return Lit.html`
 			<div role="button" class="root">
-				${decorationNode}
+				<slot name="decoration" class="${css.decoration}"></slot>
 				<slot name="background" class="background ${css.bg}"></slot>
 				<slot class="content"></slot>
 			</div>
