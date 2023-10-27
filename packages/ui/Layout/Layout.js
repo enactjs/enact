@@ -254,7 +254,7 @@ const LayoutBase = kind({
 		 * @default 'horizontal'
 		 * @public
 		 */
-		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+		orientation: PropTypes.oneOf(['horizontal', 'vertical', 'none']),
 
 		/**
 		 * Sets the Layout's `flex-wrap` values.
