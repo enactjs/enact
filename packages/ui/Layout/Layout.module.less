@@ -1,5 +1,9 @@
 // Layout.module.less
 //
+.layoutWapper {
+	container-type: inline-size;
+	container-name: layoutContainer;
+}
 
 .layout {
 	display: flex;
@@ -89,4 +93,44 @@
 	& & & & & & .cell {      :global(.debug.layout) & { outline-color: blue; }}
 	& & & & & & & .cell {    :global(.debug.layout) & { outline-color: violet; }}
 	& & & & & & & & .cell {  :global(.debug.layout) & { outline-color: lightslategray; }}
+}
+
+@container layoutContainer (max-width:600px){
+	.layout {
+		&.horizontal {
+			flex-direction: column;
+			height: 100%;
+		}
+
+		> .cell {
+			max-height: var(--cell-size);
+			&.grow {
+				height: 0;
+				align-self: normal;
+				&.size {
+					max-height: none;
+					min-height: var(--cell-size);
+				}
+			}
+		}
+	}
+}
+
+@container layoutContainer (min-width:1200px){
+	.layout {
+		&.vertical {
+			flex-direction: row;
+		}
+
+		> .cell {
+			max-width: var(--cell-size);
+			&.grow {
+				width: 0;
+				&.size {
+					max-width: none;
+					min-width: var(--cell-size);
+				}
+			}
+		}
+	}
 }
