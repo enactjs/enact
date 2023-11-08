@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.5.5] - 2023-11-08
+
+### Fixed
+
+- `i18n` resource loader to override strings where the original strings file does not exist
+- `i18n` resource loader to prioritize strings from additional resources files 
+
 ## [4.5.4] - 2023-06-07
 
 ### Fixed
