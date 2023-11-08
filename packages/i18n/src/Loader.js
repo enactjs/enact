@@ -243,19 +243,28 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 				};
 
 				const handleAdditionalResourcesPath = (json, err) => {
-					if (found && !err && typeof json === 'object') {
-						// Overwrite the _root/path result
-						Object.assign(ret[ret.length - 1], json);
+					if (!err && typeof json === 'object') {
+						if (found) {
+							// Overwrite the _root/path result
+							Object.assign(ret[ret.length - 1], json);
+						} else {
+							// This case is where the file is only in the additional resources path
+							cache.update = true;
+							ret.push(json);
+							found = true;
+						}
 					}
 				};
 
 				if (this.isAvailable(_root, path)) {
 					getSync(this._pathjoin(_root, path), handler);
+				}
 
-					if (this.addPaths && Array.isArray(this.addPaths)) {
-						for (let addedRoot of this.addPaths) {
-							if (this.isAvailable(addedRoot, path)) {
-								getSync(this._pathjoin(addedRoot, path), handleAdditionalResourcesPath);
+				if (this.addPaths && Array.isArray(this.addPaths) && index === paths.length - 1) {
+					for (let addedRoot of this.addPaths) {
+						for (let i = 0; i <= index; i++) {
+							if (this.isAvailable(addedRoot, paths[i])) {
+								getSync(this._pathjoin(addedRoot, paths[i]), handleAdditionalResourcesPath);
 							}
 						}
 					}
