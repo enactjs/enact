@@ -38,6 +38,18 @@ beforeEach(() => {
 			return observe;
 		}
 	};
+
+	global.ResizeObserver = class ResizeObserver {
+		constructor () {}
+
+		disconnect () {
+			return null;
+		}
+
+		observe () {
+			return observe;
+		}
+	};
 });
 
 afterEach(() => {
