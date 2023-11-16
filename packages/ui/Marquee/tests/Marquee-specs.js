@@ -38,6 +38,18 @@ beforeEach(() => {
 			return observe;
 		}
 	};
+
+	global.ResizeObserver = class ResizeObserver {
+		constructor () {}
+
+		disconnect () {
+			return null;
+		}
+
+		observe () {
+			return observe;
+		}
+	};
 });
 
 afterEach(() => {
@@ -237,6 +249,21 @@ describe('Marquee', () => {
 		fireEvent.mouseLeave(marquee);
 
 		expect(spy).toHaveBeenCalled();
+	});
+
+	test('should creates and observes with ResizeObserver', () => {
+		const observe = jest.fn();
+		global.ResizeObserver = jest.fn(() => ({
+			observe,
+			disconnect: jest.fn()
+		}));
+
+		render(<Marquee>{ltrText}</Marquee>);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		expect(global.ResizeObserver).toHaveBeenCalled();
+		expect(observe).toHaveBeenCalled();
 	});
 });
 
