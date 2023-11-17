@@ -9,6 +9,7 @@ install:
     - npm config set prefer-offline false
     - npm install -g @enact/cli@6.0.2
     - npm install -g codecov
+    - npm cache clean --force
     - npm install
     - npm run bootstrap
 script:
