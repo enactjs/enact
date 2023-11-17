@@ -1,13 +1,13 @@
 language: node_js
 node_js:
-    - "14"
+    - "16"
 sudo: false
 cache:
   directories:
     - $(npm config get cache)
 install:
     - npm config set prefer-offline false
-    - npm install -g @enact/cli@4.1.7
+    - npm install -g @enact/cli@6.0.2
     - npm install -g codecov
     - npm install
     - npm run bootstrap
