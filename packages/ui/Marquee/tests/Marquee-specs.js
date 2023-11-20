@@ -192,6 +192,21 @@ describe('Marquee', () => {
 			}, 100);
 		}
 	);
+
+	test(
+		'should creates and observes with ResizeObserver',
+		() => {
+			const observe = jest.fn();
+			global.ResizeObserver = jest.fn(() => ({
+				observe,
+				disconnect: jest.fn()
+			}));
+
+			mount(<Marquee>{ltrText}</Marquee>);
+
+			expect(global.ResizeObserver).toHaveBeenCalled();
+			expect(observe).toHaveBeenCalled();
+		});
 });
 
 

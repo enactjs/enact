@@ -1,3 +1,5 @@
+/* global ResizeObserver */
+
 import direction from 'direction';
 import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
@@ -329,6 +331,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.distance = null;
 			this.contentFits = false;
 			this.resizeRegistry = null;
+			this.resizeObserver = null;
 		}
 
 		componentDidMount () {
@@ -341,6 +344,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.validateTextDirection();
+
+			if (typeof ResizeObserver === 'function' && this.node) {
+				this.resizeObserver = new ResizeObserver(() => {
+					this.handleResize();
+				});
+				this.resizeObserver.observe(this.node);
+			}
+
 			if (this.props.marqueeOn === 'render') {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
