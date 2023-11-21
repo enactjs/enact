@@ -413,6 +413,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.resizeRegistry.unregister(this.handleResize);
 			}
 
+			if (this.resizeObserver) {
+				this.resizeObserver.disconnect();
+				this.resizeObserver = null;
+			}
+
 			off('keydown', this.handlePointerHide);
 		}
 
