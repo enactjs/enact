@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [4.7.8] - 2023-11-17
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to re-render when its size changed
+
+## [4.7.7] - 2023-11-09
+
+No significant changes.
+
 ## [4.7.6] - 2023-09-20
 
 No significant changes.
