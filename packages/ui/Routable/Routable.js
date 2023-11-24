@@ -17,7 +17,7 @@ import warning from 'warning';
 import {Link, Linkable} from './Link';
 import Route from './Route';
 import Router from './Router';
-import {propTypes, toSegments, RouteContext, resolve} from './util';
+import {RoutablePropTypes, toSegments, RouteContext, resolve} from './util';
 
 /**
  * Default config for {@link ui/Routable.Routable|Routable}.
@@ -69,7 +69,7 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @required
 			 * @public
 			 */
-			path: propTypes.path.isRequired,
+			path: RoutablePropTypes.path.isRequired,
 
 			/**
 			 * Called when navigating.
