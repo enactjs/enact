@@ -52,7 +52,7 @@
     "ilib": "^14.4.0 || ^14.6.0-webos"
   },
   "devDependencies": {
-    "@enact/ui-test-utils": "0.5.4",
+    "@enact/ui-test-utils": "enactjs/ui-test-utils#test/0.5.4",
     "ilib": "^14.4.0"
   }
 }
