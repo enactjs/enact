@@ -238,6 +238,25 @@ describe('Marquee', () => {
 
 		expect(spy).toHaveBeenCalled();
 	});
+
+	test('should creates and observes with ResizeObserver', () => {
+		const originalResizeObserver = global.ResizeObserver;
+
+		const observe = jest.fn();
+		global.ResizeObserver = jest.fn(() => ({
+			observe,
+			disconnect: jest.fn()
+		}));
+
+		render(<Marquee>{ltrText}</Marquee>);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		expect(global.ResizeObserver).toHaveBeenCalled();
+		expect(observe).toHaveBeenCalled();
+
+		global.ResizeObserver = originalResizeObserver;
+	});
 });
 
 describe('MarqueeBase', () => {
