@@ -38,18 +38,6 @@ beforeEach(() => {
 			return observe;
 		}
 	};
-
-	global.ResizeObserver = class ResizeObserver {
-		constructor () {}
-
-		disconnect () {
-			return null;
-		}
-
-		observe () {
-			return observe;
-		}
-	};
 });
 
 afterEach(() => {
@@ -252,6 +240,8 @@ describe('Marquee', () => {
 	});
 
 	test('should creates and observes with ResizeObserver', () => {
+		const originalResizeObserver = global.ResizeObserver;
+
 		const observe = jest.fn();
 		global.ResizeObserver = jest.fn(() => ({
 			observe,
@@ -264,6 +254,8 @@ describe('Marquee', () => {
 
 		expect(global.ResizeObserver).toHaveBeenCalled();
 		expect(observe).toHaveBeenCalled();
+
+		global.ResizeObserver = originalResizeObserver;
 	});
 });
 
