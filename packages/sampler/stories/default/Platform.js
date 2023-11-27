@@ -33,3 +33,9 @@ export const _Platform = () => (
 		{logObject(webosPlatform)}
 	</Scroller>
 );
+
+_Platform.parameters = {
+	controls: {
+		hideNoControlsWarning: true
+	}
+};

@@ -97,5 +97,8 @@ export const _Routable = () => {
 _Routable.parameters = {
 	info: {
 		text: 'Basic usage of Routable'
+	},
+	controls: {
+		hideNoControlsWarning: true
 	}
 };
