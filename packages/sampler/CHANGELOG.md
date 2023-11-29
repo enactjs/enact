@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [unreleased]
+## [4.0.13] - 2022-11-29
 
 - Replaced the deprecated plugin `addon-knobs` with `addon-controls`
 
