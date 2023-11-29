@@ -1,6 +1,6 @@
 {
   "name": "enact-sampler",
-  "version": "4.0.12",
+  "version": "4.0.13",
   "description": "Component and QA samples for Enact",
   "private": true,
   "main": "index.js",
@@ -12,11 +12,11 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@enact/core": "^4.0.12",
-    "@enact/i18n": "^4.0.12",
-    "@enact/spotlight": "^4.0.12",
-    "@enact/ui": "^4.0.12",
-    "@enact/webos": "^4.0.12",
+    "@enact/core": "^4.0.13",
+    "@enact/i18n": "^4.0.13",
+    "@enact/spotlight": "^4.0.13",
+    "@enact/ui": "^4.0.13",
+    "@enact/webos": "^4.0.13",
     "classnames": "^2.2.6",
     "ilib": "^14.4.0",
     "prop-types": "^15.7.2",
@@ -25,11 +25,11 @@
     "react-dom": "^17.0.1"
   },
   "devDependencies": {
-    "@enact/storybook-utils": "4.0.5",
-    "@storybook/addons": "6.2.9",
-    "@storybook/react": "6.2.9",
-    "@storybook/theming": "6.2.9",
-    "babel-loader": "^8.2.2",
-    "core-js": "^3.8.1"
+    "@enact/storybook-utils": "4.2.0",
+    "@storybook/addons": "6.3.12",
+    "@storybook/react": "6.3.12",
+    "@storybook/theming": "6.3.12",
+    "babel-loader": "8.2.5",
+    "core-js": "3.23.5"
   }
 }

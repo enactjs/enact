@@ -1,6 +1,6 @@
 {
   "lerna": "4.0.0",
-  "version": "4.0.12",
+  "version": "4.0.13",
   "command": {
     "bootstrap": {
       "ci": false,

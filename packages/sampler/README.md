@@ -2,12 +2,12 @@
 
 > A sampler showing off Enact components
 
-It uses [React Storybook](https://getstorybook.io/). Component properties can be adjusted using the
-`Knobs` tab. Click the `?` in the upper right to see more information on each sample.
+It uses [Storybook](https://storybook.js.org/). Component properties can be adjusted using the
+`Controls` tab. Click the `Docs` in the upper left to see more information on each sample.
 
 ## Usage
 
-To launch the sampler using its built-in web server (on http://localhost:9001/):
+To launch the sampler using its built-in web server (on http://localhost:8080/):
 ```
 npm run serve
 ```
