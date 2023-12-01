@@ -1163,7 +1163,9 @@ const VirtualListBaseFactory = (type) => {
 			return (
 				<div className={containerClasses} data-webos-voice-focused={voiceFocused} data-webos-voice-group-label={voiceGroupLabel} ref={this.containerRef} style={style}>
 					<div {...rest} className={contentClasses} ref={this.contentRef}>
-						{itemsRenderer({cc, itemContainerRef, primary})}
+						{typeof itemsRenderer === 'function' ?
+							itemsRenderer({cc, itemContainerRef, primary}) : null
+						}
 					</div>
 				</div>
 			);

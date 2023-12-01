@@ -180,10 +180,12 @@ class ScrollbarBase extends PureComponent {
 
 		return (
 			<div {...rest} className={containerClassName} ref={this.containerRef}>
-				{childRenderer({
-					getContainerRef: this.getContainerRef,
-					thumbRef: this.thumbRef
-				})}
+				{typeof childRenderer === 'function' ?
+					childRenderer({
+						getContainerRef: this.getContainerRef,
+						thumbRef: this.thumbRef
+					}) : null
+				}
 			</div>
 		);
 	}
