@@ -49,7 +49,7 @@
   "dependencies": {
     "@enact/core": "^4.7.8",
     "prop-types": "^15.8.1",
-    "ramda": "^0.29.0",
+    "ramda": "^0.29.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "xhr": "^2.6.0"
@@ -58,7 +58,7 @@
     "ilib": "^14.18.0 || ^14.18.0-webos1"
   },
   "devDependencies": {
-    "@enact/ui-test-utils": "^1.0.4",
+    "@enact/ui-test-utils": "^1.0.5",
     "ilib": "^14.18.0"
   }
 }
