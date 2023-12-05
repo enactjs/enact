@@ -1,0 +1,24 @@
+//
+// Spotlight Mixins
+//
+
+// Spottable elements
+@function is-parent($target) {
+	@return $target == parent;
+}
+
+@mixin spottable($target) {
+	@if content-exists() and is-parent($target) {
+		:global(.spottable) {
+			@content;
+		}
+	}
+}
+
+@mixin spottable {
+	@if content-exists() {
+		&:global(.spottable) {
+			@content;
+		}
+	}
+}
