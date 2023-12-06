@@ -1,0 +1,152 @@
+@use "../styles/variables";
+
+@function default($args...) {
+  @each $arg in $args {
+    @if not variable-exists(#{$arg}) {
+      @return true;
+    }
+  }
+  @return false;
+}
+
+@function extract($val, $index) {
+  @return nth($val, $index);
+}
+
+@function is-parent($target) {
+  @return $target == parent;
+}
+
+// Disabled elements
+//@mixin disabled($target) {
+//  @if content-exists() and is-parent($target) {
+//    [disabled] {
+//      @content;
+//    }
+//  }
+//}
+@mixin disabled() {
+  @if content-exists() {
+    [disabled] {
+      @content;
+    }
+  }
+}
+
+//
+// Locale Mixins
+//
+
+// .enact-locale-line-height()
+//
+// Assign line-height rules specifically to the languages designated
+// as needing special support for tall-glyphs.
+//
+// Set line-height for normal and tallglyphs with 1 list argument
+// Ex:
+//   .enact-locale-line-height(1.4em 1.6em);
+// Or:
+//   @lineheight: 1.4em 1.6em;
+//   .enact-locale-line-height(@lineheight);
+@mixin enact-locale-line-height($both, $target: normal) {
+  @if length($both) == 2 {
+    @include enact-locale-tallglyph(line-height, $both, $target);
+  }
+}
+
+// .enact-locale-tallglyph()
+//
+// Rulename and a normal value followed by a tallglyph value (3 arguments)
+// Ex:
+//   .enact-locale-tallglyph(font-size; 1.4em; 1.6em);  ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
+@mixin enact-locale-tallglyph($rule, $normal, $tallglyph, $target) {
+  @if type-of($rule) == string {
+    #{rule}: $normal;
+    @include enact-locale-tallglyph($rule, $tallglyph, $target);
+  }
+}
+
+// Rulename and 2 value second variable (2 arguments, 2nd being a list)
+// Ex:
+//   .enact-locale-tallglyph(font-size; 1.4em 1.6em);  ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
+// Or:
+//   @fontsize: 1.4em 1.6em;
+//   .enact-locale-tallglyph(font-size, @fontsize);    ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
+@mixin enact-locale-tallglyph($rule, $val, $target: normal) {
+  @if type-of($rule) == string and length($val) == 2 {
+    #{$rule}: extract($val, 1);
+    @include enact-locale-tallglyph($rule, extract($val, 2), $target);
+  }
+}
+
+// Rulename and a tallglyph value
+// Ex:
+//   .enact-locale-tallglyph(font-size; 1.6em);  ->  tallglyphs font-size: 1.6em;
+@mixin enact-locale-tallglyph($target: normal) {
+  @if type-of($rule) == string and (default($target)) {
+    @include enact-locale-tallglyph($target) {
+      @content;
+    };
+  }
+}
+
+// Accept a ruleset and apply it to the list of tall-glyph languages
+// Ex:
+//   .enact-locale-tallglyph({
+//     font-size: 1.6em;
+//   });
+@mixin enact-locale-tallglyph($target: normal) {
+  @if content-exists() and default($target) {
+    @each $value in variables.$locale-tallglyph-languages {
+      // Take each language in the list, apply the @rules to them.
+      // @value is used to generate an appropriate selector for the @rules.
+      // Ex: `.enact-locale-th & { @rules(); }`
+      @include enact-locale($value, $target) {
+        @content;
+      };
+    }
+  }
+}
+
+// Assign rules specifically to RTL locales with a convenient shorthand.
+// Apply these rules to the current selector, not the general parent.
+@mixin enact-locale-rtl($target) {
+  @if content-exists() and $target == self {
+    @include enact-locale(right-to-left, $target) {
+      @content;
+    };
+  }
+}
+
+// Assign rules specifically to RTL locales with a convenient shorthand.
+@mixin enact-locale-rtl($target: normal) {
+  @if content-exists() and default($target) {
+    @include enact-locale(right-to-left, $target) {
+      @content;
+    };
+  }
+}
+
+// Generates an appropriate selector given the locale-target, and injects the given rules into it.
+// Apply these rules to the current selector, not the general parent.
+@mixin enact-locale($locale-target, $target) {
+  @if type-of($locale-target) == string and content-exists() and $target == self {
+    &:global(.enact-locale-#{locale-target}) {
+      @content;
+    }
+  }
+}
+// Generates an appropriate selector given the locale-target, and injects the given rules into it.
+@mixin enact-locale($locale-target, $target: normal) {
+  @if type-of($locale-target) == string and content-exists() and default($target) {
+    :global(.enact-locale-#{locale-target}) & {
+      @content;
+    }
+  }
+}
+
+@mixin locale-japanese-line-break {
+  @include enact-locale(ja) {
+    line-break: strict
+  };
+}
