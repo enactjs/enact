@@ -18,19 +18,16 @@
 }
 
 // Disabled elements
-//@mixin disabled($target) {
-//  @if content-exists() and is-parent($target) {
-//    [disabled] {
-//      @content;
-//    }
-//  }
-//}
-@mixin disabled() {
-  @if content-exists() {
-    [disabled] {
-      @content;
+@mixin disabled($parent: false) {
+    $selector: "";
+    @if $parent == false {
+        $selector: "&";
     }
-  }
+    @if content-exists() {
+        #{$selector}[disabled] {
+            @content;
+        }
+    }
 }
 
 //
