@@ -6,6 +6,14 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 No significant changes.
 
+## [4.5.6] - 2023-11-30
+
+No significant changes.
+
+## [4.0.13] - 2022-11-29
+
+No significant changes.
+
 ## [4.7.8] - 2023-11-17
 
 No significant changes.
