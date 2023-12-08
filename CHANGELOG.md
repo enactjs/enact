@@ -6,6 +6,18 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 No significant changes.
 
+## [4.5.6] - 2023-11-30
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to re-render when its size changed
+
+## [4.0.13] - 2022-11-29
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to re-render when its size changed
+
 ## [4.7.8] - 2023-11-17
 
 ### Fixed
