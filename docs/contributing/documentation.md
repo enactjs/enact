@@ -6,7 +6,7 @@ Almost all documentation for Enact is generated directly from the source code or
 
 ## Documentation Overview
 
-In-line documentation uses standard [jsDoc tags](http://usejsdoc.org/) with some additional Enact-specific tags. In-line documentation appears within comment blocks that begin with double asterisks:
+In-line documentation uses standard [jsDoc tags](https://jsdoc.app) with some additional Enact-specific tags. In-line documentation appears within comment blocks that begin with double asterisks:
 
 ```js
 /**
@@ -63,7 +63,7 @@ Below is an example block for a component:
  *
  * @class LabeledIcon
  * @memberof ui/LabeledIcon
- * @extends ui/LabeledIcon.LabeledIconBase
+ * @extends ui/LabeledIcon#LabeledIconBase
  * @mixes ui/LabeledIcon.LabeledIconDecorator
  * @omit componentRef
  * @ui

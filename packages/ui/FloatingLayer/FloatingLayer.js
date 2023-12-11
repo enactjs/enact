@@ -271,7 +271,7 @@ const handleCancel = handle(
  * @class FloatingLayer
  * @memberof ui/FloatingLayer
  * @ui
- * @extends ui/FloatingLayer.FloatingLayerBase
+ * @extends ui/FloatingLayer#FloatingLayerBase
  * @mixes ui/Cancelable.Cancelable
  * @public
  */

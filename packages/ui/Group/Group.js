@@ -214,7 +214,7 @@ const GroupDecorator = compose(
  *
  * @class Group
  * @memberof ui/Group
- * @extends ui/Group.GroupBase
+ * @extends ui/Group#GroupBase
  * @mixes ui/Group.GroupDecorator
  * @omit componentRef
  * @ui

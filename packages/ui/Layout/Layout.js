@@ -357,7 +357,7 @@ const LayoutDecorator = ForwardRef({prop: 'componentRef'});
  *
  * @class Layout
  * @memberof ui/Layout
- * @extends ui/Layout.LayoutBase
+ * @extends ui/Layout#LayoutBase
  * @mixes ui/ForwardRef.ForwardRef
  * @omit componentRef
  * @ui
@@ -378,7 +378,7 @@ const Layout = LayoutDecorator(LayoutBase);
  *
  * @class Column
  * @memberof ui/Layout
- * @extends ui/Layout.Layout
+ * @extends ui/Layout#Layout
  * @mixes ui/ForwardRef.ForwardRef
  * @ui
  * @public
@@ -402,7 +402,7 @@ Column.displayName = 'Column';
  *
  * @class Row
  * @memberof ui/Layout
- * @extends ui/Layout.Layout
+ * @extends ui/Layout#Layout
  * @mixes ui/ForwardRef.ForwardRef
  * @ui
  * @public

@@ -167,7 +167,7 @@ const HeadingDecorator = compose(
  *
  * @class Heading
  * @memberof ui/Heading
- * @extends ui/Heading.HeadingBase
+ * @extends ui/Heading#HeadingBase
  * @mixes ui/Heading.HeadingDecorator
  * @omit componentRef
  * @ui

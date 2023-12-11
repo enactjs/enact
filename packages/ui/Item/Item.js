@@ -140,7 +140,7 @@ const ItemDecorator = compose(
  *
  * @class Item
  * @memberof ui/Item
- * @extends ui/Item.ItemBase
+ * @extends ui/Item#ItemBase
  * @mixes ui/Item.ItemDecorator
  * @omit componentRef
  * @ui

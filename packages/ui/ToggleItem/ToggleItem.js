@@ -300,7 +300,7 @@ const ToggleItemDecorator = compose(
  *
  * @class ToggleItem
  * @memberof ui/ToggleItem
- * @extends ui/ToggleItem.ToggleItemBase
+ * @extends ui/ToggleItem#ToggleItemBase
  * @mixes ui/ToggleItem.ToggleItemDecorator
  * @omit componentRef
  * @ui

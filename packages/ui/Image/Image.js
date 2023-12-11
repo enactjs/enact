@@ -209,7 +209,7 @@ const ImageDecorator = compose(
  *
  * @class Image
  * @memberof ui/Image
- * @extends ui/Image.ImageBase
+ * @extends ui/Image#ImageBase
  * @mixes ui/Image.ImageDecorator
  * @omit componentRef
  * @ui

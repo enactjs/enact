@@ -1393,7 +1393,7 @@ class ScrollableBaseNative extends Component {
  *
  * @class ScrollableNative
  * @memberof ui/ScrollableNative
- * @extends ui/Scrollable.ScrollableBaseNative
+ * @extends ui/Scrollable#ScrollableBaseNative
  * @ui
  * @private
  */

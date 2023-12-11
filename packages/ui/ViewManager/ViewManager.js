@@ -313,7 +313,7 @@ const ViewManagerDecorator = ForwardRef({prop: 'componentRef'});
  *
  * @class ViewManager
  * @memberof ui/ViewManager
- * @extends ui/ViewManager.ViewManagerBase
+ * @extends ui/ViewManager#ViewManagerBase
  * @mixes ui/ViewManager.ViewManagerDecorator
  * @omit componentRef
  * @ui

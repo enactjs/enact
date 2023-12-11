@@ -225,7 +225,7 @@ const IconButtonDecorator = compose(
  * ```
  *
  * @class IconButton
- * @extends ui/IconButton.IconButtonBase
+ * @extends ui/IconButton#IconButtonBase
  * @mixes ui/IconButton.IconButtonDecorator
  * @omit componentRef
  * @memberof ui/IconButton

@@ -199,7 +199,7 @@ const SpinnerDecorator = ForwardRef({prop: 'componentRef'});
  *
  * @class Spinner
  * @memberof ui/Spinner
- * @extends ui/Spinner.SpinnerBase
+ * @extends ui/Spinner#SpinnerBase
  * @mixes ui/Spinner.SpinnerDecorator
  * @omit componentRef
  * @ui
