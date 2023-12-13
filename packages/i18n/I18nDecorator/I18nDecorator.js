@@ -151,7 +151,7 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
  */
 const contextDefaultConfig = {
 	/**
-	 * The prop name for `locale` property of context.
+	 * The prop name for `locale` property of i18nContext.
 	 *
 	 * @type {String}
 	 * @default null
@@ -161,7 +161,7 @@ const contextDefaultConfig = {
 	localeProp: null,
 
 	/**
-	 * The prop name for `rtl` property of context.
+	 * The prop name for `rtl` property of i18nContext.
 	 *
 	 * @type {String}
 	 * @default null
@@ -171,7 +171,7 @@ const contextDefaultConfig = {
 	rtlProp: null,
 
 	/**
-	 * The prop name for `updateLocale` property of context.
+	 * The prop name for `updateLocale` property of i18nContext.
 	 *
 	 * @type {String}
 	 * @default null
@@ -182,7 +182,7 @@ const contextDefaultConfig = {
 };
 
 /**
- * A higher-order component that is used to access the properties of the context via props whose names are set as config values.
+ * A higher-order component that is used to access the properties of the i18nContext via props by specifying the `localeProp`, `rtlProp` and `updateLocaleProp` configuration options respectively.
  * Set the `localeProp` to a desired prop name to access the `locale` property and set the `rtlProp` to a desired prop name to access the `rtl` property
  * and set the `updateLocaleProp` to a desired prop name to access the `updateLocale` property where the method used to update the locale is stored.
  *
