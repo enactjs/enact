@@ -33,7 +33,7 @@ function incrementAsync() {
 
 ### LS2Request Example
 
-A combination of `redux-thunk` and `LS2Request` allows us to fetch and display data in a React component. `LS2Request` is a wrapper component for `PalmServiceBridge` and is available from `@enact/webos/LS2Request`. The following example shows a simple fetch routine.
+A combination of `redux-thunk` and `LS2Request` allows us to fetch and display data in a React component. `LS2Request` is a wrapper component for `WebOSServiceBridge` and is available from `@enact/webos/LS2Request`. The following example shows a simple fetch routine.
 
 At the root level, we use `<Provider />` to pass store down the component hierarchy.
 
