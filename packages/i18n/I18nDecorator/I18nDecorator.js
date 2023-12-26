@@ -182,9 +182,12 @@ const contextDefaultConfig = {
 };
 
 /**
- * A higher-order component that is used to access the properties of the i18nContext via props by specifying the `localeProp`, `rtlProp` and `updateLocaleProp` configuration options respectively.
- * Set the `localeProp` to a desired prop name to access the `locale` property and set the `rtlProp` to a desired prop name to access the `rtl` property
- * and set the `updateLocaleProp` to a desired prop name to access the `updateLocale` property where the method used to update the locale is stored.
+ * A higher-order component that is used to access the properties of the i18nContext via props by specifying
+ * the `localeProp`, `rtlProp`, and `updateLocaleProp` configuration options respectively.
+ * Set the `localeProp` to a desired prop name to access the {@link /docs/developer-guide/i18n/#using-i18ndecorator|locale} property,
+ * set the `rtlProp` to a desired prop name to access the {@link /docs/developer-guide/i18n/#using-i18ndecorator|rtl} property,
+ * and set the `updateLocaleProp` to a desired prop name to access the {@link /docs/developer-guide/i18n/#using-i18ndecorator|updateLocale} property
+ * where the method used to update the locale is stored.
  *
  * Example:
  * ```
