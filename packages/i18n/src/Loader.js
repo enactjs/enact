@@ -55,7 +55,7 @@ const timeStampKey = 'l10n_timestamp';
 function EnyoLoader () {
 	this.base = iLibBase;
 	// TODO: full enyo.platform implementation for improved accuracy
-	if (typeof window === 'object' && typeof window.PalmSystem === 'object') {
+	if (typeof window === 'object' && typeof (window.webOSSystem ?? window.PalmSystem) === 'object') {
 		this.webos = true;
 	}
 }
@@ -260,10 +260,12 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 					getSync(this._pathjoin(_root, path), handler);
 				}
 
-				if (this.addPaths && Array.isArray(this.addPaths)) {
+				if (this.addPaths && Array.isArray(this.addPaths) && index === paths.length - 1) {
 					for (let addedRoot of this.addPaths) {
-						if (this.isAvailable(addedRoot, path)) {
-							getSync(this._pathjoin(addedRoot, path), handleAdditionalResourcesPath);
+						for (let i = 0; i <= index; i++) {
+							if (this.isAvailable(addedRoot, paths[i])) {
+								getSync(this._pathjoin(addedRoot, paths[i]), handleAdditionalResourcesPath);
+							}
 						}
 					}
 				}

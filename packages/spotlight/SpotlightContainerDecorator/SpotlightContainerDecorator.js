@@ -85,6 +85,19 @@ const defaultConfig = {
 	enterTo: null,
 
 	/**
+	 * Directs which element receives focus when the focus is leaving from the current container using 5-way direction keys.
+	 * If `{down: '#left'}`, the focus moves to the DOM element whose id value is `left` when pressing the 5-way down.
+	 * If `{left: '', right: ''}`, the focus cannot leave the current container with 5-way left and right.
+	 * If `null`, the default 5-way behavior will be applied.
+	 *
+	 * @type {Object}
+	 * @default null
+	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
+	 * @public
+	 */
+	leaveFor: null,
+
+	/**
 	 * Filter the navigable elements.
 	 *
 	 * @type {Function}

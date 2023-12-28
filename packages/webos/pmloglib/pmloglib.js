@@ -28,7 +28,7 @@ const isObject = (obj) => !!obj && (typeof obj === 'object') && (Object.prototyp
 
 // Log function stringifies and escapes keyVals, and passes to PmLogString
 const log = (level, messageId, keyVals, freeText) => {
-	if (typeof window !== 'undefined' && window.PalmSystem) {
+	if (typeof window !== 'undefined' && (window.webOSSystem || window.PalmSystem)) {
 		if (keyVals && !isObject(keyVals)) {
 			level = levelError;
 			keyVals = {msgid: messageId};
@@ -42,14 +42,15 @@ const log = (level, messageId, keyVals, freeText) => {
 		if (keyVals) {
 			keyVals = JSON.stringify(keyVals);
 		}
-		if (window.PalmSystem.PmLogString) {
+		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
+		if (webOSSystem.PmLogString) {
 			if (level === levelDebug) { // debug only accepts 2 arguments
-				window.PalmSystem.PmLogString(level, null, null, freeText);
+				webOSSystem.PmLogString(level, null, null, freeText);
 			} else {
-				window.PalmSystem.PmLogString(level, messageId, keyVals, freeText);
+				webOSSystem.PmLogString(level, messageId, keyVals, freeText);
 			}
 		} else {
-			console.error('Unable to send log: PmLogString not found in this version of PalmSystem');
+			console.error('Unable to send log: PmLogString not found in this version of webOSSystem');
 		}
 	}
 };
@@ -185,15 +186,16 @@ const debug = (freeText) => {
  * @public
  */
 const perfLog = (messageId, perfType, perfGroup) => {
-	if (typeof window !== 'undefined' && window.PalmSystem) {
+	if (typeof window !== 'undefined' && (window.webOSSystem || window.PalmSystem)) {
 		if (!messageId) {
 			console.warn('PmLogInfoWithClock called with invalid format: messageId was empty');
 		}
-		if (window.PalmSystem.PmLogInfoWithClock) {
-			window.PalmSystem.PmLogInfoWithClock(messageId, perfType ? perfType : '',
+		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
+		if (webOSSystem.PmLogInfoWithClock) {
+			webOSSystem.PmLogInfoWithClock(messageId, perfType ? perfType : '',
 				perfGroup ? perfGroup : '');
 		} else {
-			console.error('Unable to send log: PmLogInfoWithClock not found in this version of PalmSystem');
+			console.error('Unable to send log: PmLogInfoWithClock not found in this version of webOSSystem');
 		}
 	}
 };
