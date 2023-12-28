@@ -8,7 +8,7 @@ This guide details how to use some of i18n library's features. For an overview o
 
 ## Using I18nDecorator
 
-`I18nDecorator` is a higher-order component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `I18nDecorator` directly for applications using `MoonstoneDecorator`.
+`I18nDecorator` is a higher-order component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `I18nDecorator` directly for applications using `ThemeDecorator`.
 
 The HOC works by passing locale information to the app through [context](https://reactjs.org/docs/context.html) and CSS classes. It passes three properties via context:
 
@@ -16,7 +16,7 @@ The HOC works by passing locale information to the app through [context](https:/
 * `rtl` - if `true` then the locale is a right-to-left language
 * `updateLocale` - a function to update the locale of the app
 
-When not using `MoosntoneDecorator`, be sure to apply the classes passed from `I18nDecorator` to the root component.
+When not using `ThemeDecorator`, be sure to apply the classes passed from `I18nDecorator` to the root component.
 
 ### Accessing I18nDecorator context properties
 
@@ -28,7 +28,7 @@ import {I18nContextDecorator} from '@enact/i18n/I18nDecorator';
 const SomeComponent = I18nContextDecorator(
 	{rtlProp: 'rtl'},
 	(props) => (
-		<div>Hello from the {context.rtl ? 'right' : 'left'}</div>
+		<div>Hello from the {props.rtl ? 'right' : 'left'}</div>
 	)
 );
 ```
@@ -64,7 +64,7 @@ script, or region of the current UI locale:
 
 So for United States English you would see this `enact-locale-en enact-locale-en-US enact-locale-US`.
 
-Here's an example from the Moonstone package in which locale-specific CSS is
+Here's an example from the Sandstone package in which locale-specific CSS is
 used to turn on right-to-left orientation for a widget:
 
 ```css
