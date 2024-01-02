@@ -566,6 +566,7 @@ class VirtualListBasic extends Component {
 			offset = primary.clientSize - primary.itemSize - optionalOffset;
 		}
 
+		/* istanbul ignore next */
 		if (disallowNegativeOffset) {
 			offset = Math.max(0, offset);
 		}
