@@ -1,6 +1,6 @@
 {
   "name": "@enact/core",
-  "version": "4.7.4",
+  "version": "4.7.9",
   "description": "Enact is an open source JavaScript framework containing everything you need to create a fast, scalable mobile or web application.",
   "repository": {
     "type": "git",
@@ -11,6 +11,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",
+    "interlink": "echo \"No interlink\" && exit 0",
     "lint": "enact lint --strict",
     "test": "enact test",
     "test-json": "enact test --json",
@@ -34,7 +35,7 @@
     "classnames": "^2.3.2",
     "invariant": "^2.2.4",
     "prop-types": "^15.8.1",
-    "ramda": "^0.29.0",
+    "ramda": "^0.29.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-is": "^18.2.0",

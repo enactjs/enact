@@ -5,7 +5,7 @@ import warning from 'warning';
 
 import ForwardRef from '../ForwardRef';
 
-import {propTypes, stringifyRoutes, toSegments} from './util';
+import {RoutablePropTypes, stringifyRoutes, toSegments} from './util';
 
 /**
  * A Router component for use with {@link ui/ViewManager.ViewManager|ViewManager}
@@ -33,7 +33,7 @@ const RouterBase = class extends ReactComponent {
 		 * @required
 		 * @public
 		 */
-		path: propTypes.path.isRequired,
+		path: RoutablePropTypes.path.isRequired,
 
 		/**
 		 * The component wrapping the rendered path.

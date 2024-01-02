@@ -52,6 +52,20 @@ const cacheKey = cachePrefix + 'CACHE-ID';
 const cacheID = typeof ILIB_CACHE_ID === 'undefined' ? '$ILIB' : ILIB_CACHE_ID;
 const timeStampKey = 'l10n_timestamp';
 
+function setLocalStorageItem (keyName, keyValue) {
+	const regex = new RegExp(`${cachePrefix}${iLibResources}/([a-z]{2,3}/)+[a-z]+.json`);
+	try {
+		window.localStorage.setItem(keyName, keyValue);
+	} catch {
+		Object.keys(window.localStorage).forEach((key) => {
+			if (regex.test(key) && !key.includes(keyName.slice(0, keyName.lastIndexOf('/')))) {
+				window.localStorage.removeItem(key);
+			}
+		});
+		window.localStorage.setItem(keyName, keyValue);
+	}
+}
+
 function EnyoLoader () {
 	this.base = iLibBase;
 	// TODO: full enyo.platform implementation for improved accuracy
@@ -173,7 +187,7 @@ EnyoLoader.prototype._loadFilesCache = function (_root, paths) {
 EnyoLoader.prototype._storeFilesCache = function (_root, paths, data) {
 	if (typeof window !== 'undefined' && window.localStorage && paths.length > 0) {
 		let target = JSON.stringify(paths);
-		window.localStorage.setItem(cachePrefix + _root + '/' + paths[0], JSON.stringify({target: target, value: data}));
+		setLocalStorageItem(cachePrefix + _root + '/' + paths[0], JSON.stringify({target: target, value: data}));
 	}
 };
 
@@ -200,7 +214,7 @@ EnyoLoader.prototype._validateCache = function () {
 					i--;
 				}
 			}
-			window.localStorage.setItem(cacheKey, cacheID);
+			setLocalStorageItem(cacheKey, cacheID);
 		}
 	}
 	this._cacheValidated = true;
@@ -260,10 +274,12 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 					getSync(this._pathjoin(_root, path), handler);
 				}
 
-				if (this.addPaths && Array.isArray(this.addPaths)) {
+				if (this.addPaths && Array.isArray(this.addPaths) && index === paths.length - 1) {
 					for (let addedRoot of this.addPaths) {
-						if (this.isAvailable(addedRoot, path)) {
-							getSync(this._pathjoin(addedRoot, path), handleAdditionalResourcesPath);
+						for (let i = 0; i <= index; i++) {
+							if (this.isAvailable(addedRoot, paths[i])) {
+								getSync(this._pathjoin(addedRoot, paths[i]), handleAdditionalResourcesPath);
+							}
 						}
 					}
 				}
@@ -313,7 +329,7 @@ EnyoLoader.prototype._handleManifest = function (dirpath, filepath, json) {
 	// that dir
 	if (json != null) {
 		if (typeof window !== 'undefined' && window.localStorage) {
-			window.localStorage.setItem(cachePrefix + filepath, JSON.stringify(json));
+			setLocalStorageItem(cachePrefix + filepath, JSON.stringify(json));
 		}
 
 		// Need to clear string cache
@@ -325,7 +341,7 @@ EnyoLoader.prototype._handleManifest = function (dirpath, filepath, json) {
 		// so that we prevent loading everything.
 		this.manifest[dirpath] = [];
 		if (typeof window !== 'undefined' && window.localStorage) {
-			window.localStorage.setItem(cachePrefix + filepath, JSON.stringify({[timeStampKey]: new Date().getTime()}));
+			setLocalStorageItem(cachePrefix + filepath, JSON.stringify({[timeStampKey]: new Date().getTime()}));
 		}
 	} else {
 		this.manifest[dirpath] = '*';

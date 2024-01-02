@@ -2,6 +2,42 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.7.9] - 2023-12-08
+
+No significant changes.
+
+## [4.5.6] - 2023-11-30
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to re-render when its size changed
+
+## [4.0.13] - 2022-11-29
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to re-render when its size changed
+
+## [4.7.8] - 2023-11-17
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to re-render when its size changed
+
+## [4.7.7] - 2023-11-09
+
+### Fixed
+
+- `i18n` resource loader to prioritize strings from additional resources files.
+
+## [4.7.6] - 2023-09-20
+
+No significant changes.
+
+## [4.7.5] - 2023-09-12
+
+No significant changes.
+
 ## [4.7.4] - 2023-08-31
 
 ### Fixed
