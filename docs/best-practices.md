@@ -16,6 +16,9 @@ application.
 As part of the release of an application, use `npm shrinkwrap` (<a href="https://docs.npmjs.com/cli/shrinkwrap">https://docs.npmjs.com/cli/shrinkwrap</a>)
 to lock the versions of the application's dependencies (and all of those dependencies' dependencies, and so on).
 
+> <a href="https://tutorialhorizon.com/javascript/what-is-npm-shrinkwrap-and-when-is-it-needed/">https://tutorialhorizon.com/javascript/what-is-npm-shrinkwrap-and-when-is-it-needed/</a>
+presents a brief article explaining why and when to use `npm shrinkwrap`.
+
 ## Code Conventions
 
 An `enact cli`-created project also provides linting (`npm run lint`) to statically analyze your code.  Additionally, the Enact programming conventions are provided as a separate [module](https://github.com/enactjs/eslint-config-enact) (also included in `enact cli`-created projects).  Developers are encouraged to enable in-editor analysis of their code to catch potential issues as early as possible.  The module documentation details how to set up various editors.

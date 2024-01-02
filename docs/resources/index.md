@@ -8,7 +8,7 @@ The Enact framework is built atop React.
 
 *   [Official React documentation](https://react.dev/reference/react)
 *   [Official React tutorial](https://react.dev/learn/tutorial-tic-tac-toe)
-*   [Egghead tutorial - Develop Accessible Web Apps with React](https://egghead.io/courses/develop-accessible-web-apps-with-react)
+*   [Egghead tutorial - React](https://egghead.io/q?q=react)
 *   [Awesome React](https://github.com/enaqx/awesome-react) - a big collection of links (React and related tech)
 *   [Build with React](http://buildwithreact.com/tutorial) - a simple tutorial with inline editor
 *   [inflearn - React and Express](https://www.inflearn.com/course/react-%EA%B0%95%EC%A2%8C-velopert/) - Korean language course (has some Redux, too)
