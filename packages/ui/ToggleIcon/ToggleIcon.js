@@ -2,7 +2,7 @@
  * An unstyled icon component that handles interaction and toggles state between activated
  * and deactivated.
  *
- * Visually, it may be to be customized by a theme or application to represent any
+ * Visually, it may be to be customized by a theme or application to represent
  * state.
  *
  * @module ui/ToggleIcon
