@@ -27,3 +27,27 @@
 		}
 	}
 }
+
+@mixin position($value) {
+	left: $value;
+	right: $value;
+	top: $value;
+	bottom: $value;
+}
+
+//
+// Locale Mixins
+//
+
+// Generates an appropriate selector given the locale-target, and injects the given rules into it.
+@mixin enact-locale($locale-target, $target: normal) {
+	@if type-of($locale-target) == string and content-exists() and $target == self {
+		&:global(.enact-locale-#{$locale-target}) {
+			@content;
+		}
+	} @else if type-of($locale-target) == string and content-exists() and $target == normal {
+		:global(.enact-locale-#{$locale-target}) & {
+			@content;
+		}
+	}
+}
