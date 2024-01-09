@@ -1,0 +1,53 @@
+@function default($args...) {
+	@each $arg in $args {
+		@if not variable-exists(#{$arg}) {
+			@return true;
+		}
+	}
+	@return false;
+}
+
+@function extract($val, $index) {
+	@return nth($val, $index);
+}
+
+@function is-parent($target) {
+	@return $target == parent;
+}
+
+// Disabled elements
+@mixin disabled($parent: false) {
+	$selector: "";
+	@if $parent == false {
+		$selector: "&";
+	}
+	@if content-exists() {
+		#{$selector}[disabled] {
+			@content;
+		}
+	}
+}
+
+@mixin position($value) {
+	left: $value;
+	right: $value;
+	top: $value;
+	bottom: $value;
+}
+
+//
+// Locale Mixins
+//
+
+// Generates an appropriate selector given the locale-target, and injects the given rules into it.
+@mixin enact-locale($locale-target, $target: normal) {
+	@if type-of($locale-target) == string and content-exists() and $target == self {
+		&:global(.enact-locale-#{$locale-target}) {
+			@content;
+		}
+	} @else if type-of($locale-target) == string and content-exists() and $target == normal {
+		:global(.enact-locale-#{$locale-target}) & {
+			@content;
+		}
+	}
+}
