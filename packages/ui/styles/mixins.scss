@@ -34,16 +34,131 @@
 	font-kerning: $val;
 }
 
-@mixin position($value) {
-	left: $value;
-	right: $value;
-	top: $value;
-	bottom: $value;
+// Applies RTL-compatible start and end position to a selector
+// Simple "when" here just assumes that if the first argument is a list with more than 1 entry,
+// then units are correct. If it's just 1, then we varify the value is a number (measurement).
+@mixin position-start-end($values, $target: "") {
+	@if ((length($values) != 2) and (($target == parent) or ($target == self) or ($target == ""))) {
+		@include position($values);
+
+		@if ((length($values) == 4)) {
+			$top: nth($values, 1);
+			$right: nth($values, 2);
+			$bottom: nth($values, 3);
+			$left: nth($values, 4);
+
+			@include enact-locale-rtl($target) {
+				// Note: swapping left and right values
+				position: $top $left $bottom $right;
+			}
+		}
+	} @else if (length($values) == 2) {
+		$start: nth($values, 1);
+		$end: nth($values, 2);
+
+		left: $start;
+		right: $end;
+
+		@include enact-locale-rtl($target) {
+			// Note: swapping left and right values
+			left: $end;
+			right: $start;
+		}
+	}
+}
+
+// Applies RTL-compatible start and end margins to a selector
+@mixin margin-start-end($values, $target: "") {
+	@if ((length($values) != 2) and (($target == parent) or ($target == self) or ($target == ""))) {
+		margin: $values;
+
+		@if ((length($values) == 4)) {
+			$top: nth($values, 1);
+			$right: nth($values, 2);
+			$bottom: nth($values, 3);
+			$left: nth($values, 4);
+
+			@include enact-locale-rtl($target) {
+				// Note: swapping left and right values
+				margin: $top $left $bottom $right;
+			}
+		}
+	} @else if (length($values) == 2) {
+		$start: nth($values, 1);
+		$end: nth($values, 2);
+
+		margin-left: $start;
+		margin-right: $end;
+
+		@include enact-locale-rtl($target) {
+			// Note: swapping left and right values
+			margin-left: $end;
+			margin-right: $start;
+		}
+	}
+}
+
+// Applies RTL-compatible start and end padding to a selector
+@mixin padding-start-end($values, $target: "") {
+	@if ((length($values) != 2) and (($target == parent) or ($target == self) or ($target == ""))) {
+		padding: $values;
+
+		@if ((length($values) == 4)) {
+			$top: nth($values, 1);
+			$right: nth($values, 2);
+			$bottom: nth($values, 3);
+			$left: nth($values, 4);
+
+			@include enact-locale-rtl($target) {
+				// Note: swapping left and right values
+				padding: $top $left $bottom $right;
+			}
+		}
+	} @else if (length($values) == 2) {
+		$start: nth($values, 1);
+		$end: nth($values, 2);
+
+		padding-left: $start;
+		padding-right: $end;
+
+		@include enact-locale-rtl($target) {
+			// Note: swapping left and right values
+			padding-left: $end;
+			padding-right: $start;
+		}
+	}
+}
+
+// Shorthand for positioning code
+@mixin position($t, $r: null, $b: null, $l: null) {
+	top: $t;
+	right: $r;
+	bottom: $b;
+	left: $l;
+
+	@if (type-of($t) == list) {
+		@if (length($t) == 4) {
+			@include position(nth($t, 1), nth($t, 2), nth($t, 3), nth($t, 4));
+		} @else if (length($t) == 3) {
+			@include position(nth($t, 1), nth($t, 2), nth($t, 2), nth($t, 3));
+		} @else if (length($t) == 2) {
+			@include position(nth($t, 1), nth($t, 2), nth($t, 1), nth($t, 2));
+		} @else {
+			@include position(nth($t, 1), nth($t, 1), nth($t, 1), nth($t, 1));
+		}
+	}
 }
 
 //
 // Locale Mixins
 //
+
+// Assign rules specifically to RTL locales with a convenient shorthand.
+@mixin enact-locale-rtl($target) {
+	@include enact-locale(right-to-left, $target) {
+		@content;
+	}
+}
 
 // Generates an appropriate selector given the locale-target, and injects the given rules into it.
 @mixin enact-locale($locale-target, $target: normal) {
@@ -51,7 +166,7 @@
 		&:global(.enact-locale-#{$locale-target}) {
 			@content;
 		}
-	} @else if type-of($locale-target) == string and content-exists() and $target == normal {
+	} @else if type-of($locale-target) == string and content-exists() and (($target == normal) or ($target == "")) {
 		:global(.enact-locale-#{$locale-target}) & {
 			@content;
 		}
