@@ -248,7 +248,7 @@ const memoize = (fn) => {
  *
  * @returns {*}                The processed children or the value of `children` if not an array.
  * @memberof core/util
- * @see https://reactjs.org/docs/react-api.html#reactchildrenmap
+ * @see https://react.dev/reference/react/Children#children-map
  * @public
  */
 const mapAndFilterChildren = (children, callback, filter) => {

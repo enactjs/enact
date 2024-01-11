@@ -45,7 +45,7 @@ const MyIStringText = MyIString.toString();
 
 **Previous:** The `updateLocale()` method of the `enyo/i18n` library could be invoked
 
-**Current:** The `updateLocale()` method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this method as part of the [Context API](https://reactjs.org/docs/context.html). `I18nDecorator` provides easy access via the `I18nContextDecorator` HOC which can provide the locale, rtl state, and `updateLocale` method via props by specifying the `localeProp`, `rtlProp`, and `updateLocaleProp` configuration options, respectively.
+**Current:** The `updateLocale()` method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this method as part of the [Context API](https://react.dev/learn/passing-data-deeply-with-context). `I18nDecorator` provides easy access via the `I18nContextDecorator` HOC which can provide the locale, rtl state, and `updateLocale` method via props by specifying the `localeProp`, `rtlProp`, and `updateLocaleProp` configuration options, respectively.
 
 ```js
 import Button from '@enact/moonstone/Button';
@@ -78,7 +78,7 @@ const MyComponent = I18nContextDecorator(
 
 **Previous:** Components could check the value of `this.rtl`
 
-**Current:** The `rtl` state method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this value as part of the [Context API](https://reactjs.org/docs/context.html). `I18nDecorator` provides easy access via the `I18nContextDecorator` HOC which can provide the locale, rtl state, and `updateLocale` method via props by specifying the `localeProp`, `rtlProp`, and `updateLocaleProp` configuration options, respectively.
+**Current:** The `rtl` state method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this value as part of the [Context API](https://react.dev/learn/passing-data-deeply-with-context). `I18nDecorator` provides easy access via the `I18nContextDecorator` HOC which can provide the locale, rtl state, and `updateLocale` method via props by specifying the `localeProp`, `rtlProp`, and `updateLocaleProp` configuration options, respectively.
 
 ```js
 import Button from '@enact/moonstone/Button';
