@@ -22,3 +22,46 @@
 		}
 	}
 }
+
+// Focused Spottable elements
+@mixin focus($target) {
+	@if content-exists() and is-parent($target) {
+		:global(.spotlight-input-key) &,
+		:global(.spotlight-input-mouse) & {
+			@include spottable {
+				&:focus {
+					@content;
+				}
+			};
+		}
+
+		:global(.spotlight-input-touch) & {
+			@include spottable{
+				&:active {
+					@content;
+				}
+			};
+		}
+	}
+}
+
+@mixin focus {
+	@if content-exists() {
+		:global(.spotlight-input-key) &,
+		:global(.spotlight-input-mouse) & {
+			@include spottable{
+				&:focus {
+					@content;
+				}
+			}
+		}
+
+		:global(.spotlight-input-touch) & {
+			@include spottable{
+				&:active {
+					@content;
+				}
+			}
+		}
+	}
+}
