@@ -32,8 +32,8 @@ Describes what you want to see on the screen, such as a heading DOM element with
 ### event
 React (and therefore Enact) uses `SyntheticEvents` to provide a cross-browser wrapper around native browser events.  The `@enact/core/handle` module simplifies writing consistent handlers for components created with `kind()` or as ES6 classes where the event properties can be sourced differently.
 #### See also
-*   [Synthetic Events - React](https://reactjs.org/docs/events.html)
-*   [Handling Events - React](https://reactjs.org/docs/handling-events.html)
+*   [Synthetic Events - React](https://react.dev/reference/react-dom/components/common)
+*   [Handling Events - React](https://react.dev/learn/responding-to-events)
 *   [enact/core/handle](../../modules/core/handle)
 
 ### higher-order component
