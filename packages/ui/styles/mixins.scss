@@ -1,0 +1,29 @@
+@function default($args...) {
+	@each $arg in $args {
+		@if not variable-exists(#{$arg}) {
+			@return true;
+		}
+	}
+	@return false;
+}
+
+@function extract($val, $index) {
+	@return nth($val, $index);
+}
+
+@function is-parent($target) {
+	@return $target == parent;
+}
+
+// Disabled elements
+@mixin disabled($parent: false) {
+	$selector: "";
+	@if $parent == false {
+		$selector: "&";
+	}
+	@if content-exists() {
+		#{$selector}[disabled] {
+			@content;
+		}
+	}
+}
