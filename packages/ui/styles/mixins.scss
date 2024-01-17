@@ -1,3 +1,5 @@
+@use "./variables";
+
 @function default($args...) {
 	@each $arg in $args {
 		@if not variable-exists(#{$arg}) {
@@ -26,6 +28,13 @@
 			@content;
 		}
 	}
+}
+
+@mixin position($value) {
+	left: $value;
+	right: $value;
+	top: $value;
+	bottom: $value;
 }
 
 //
@@ -63,68 +72,68 @@
 //  */
 
 @mixin buildLocaleFont($fontName, $locale, $args) {
-	@if content-exists() {
-		@include buildFontFaceBase("#{$fontName} #{$locale}", $args) {
-			@content;
-		}
-		@include buildFontFaceBase($fontName, $args) {
-			@content;
-		}
-	}
+  @if content-exists() {
+    @include buildFontFaceBase("#{$fontName} #{$locale}", $args) {
+      @content;
+    }
+    @include buildFontFaceBase($fontName, $args) {
+      @content;
+    }
+  }
 
-	$src: nth($args, 1);
-	$argLast: nth($args, length($args)); // optional style value
+  $src: nth($args, 1);
+  $argLast: nth($args, length($args)); // optional style value
 
-	$styleExists: if(($argLast == italic or $argLast == oblique), true, false);  // List all valid font-style values here (except for "normal" since that is a shared keyword with font-weight)
-	$style: if($styleExists, $argLast, "");
-	$lastWeightArgIndex: if($styleExists, length($args) - 1, length($args));  // It's possible this could get confused if "normal" or "bold" is used as the last weight. Please use a number as the last weight.
+  $styleExists: if(($argLast == italic or $argLast == oblique), true, false);  // List all valid font-style values here (except for "normal" since that is a shared keyword with font-weight)
+  $style: if($styleExists, $argLast, "");
+  $lastWeightArgIndex: if($styleExists, length($args) - 1, length($args));  // It's possible this could get confused if "normal" or "bold" is used as the last weight. Please use a number as the last weight.
 
-	// Please retain the following comment for future debugging purposes. This gives insight into how the definition values are being interpreted.
-	// :global(.debug-buildLocaleFont#{$fontName}-#{$locale}) {
-	// 	fontName: $fontName;
-	// 	locale: $locale;
-	// 	args: $args;
-	// 	args-count: length($args);
-	// 	last-weight-arg-index: $lastWeightArgIndex;
-	// 	src: $src;
-	// 	styleExists: $styleExists;
-	// 	style: $style;
-	// }
+  // Please retain the following comment for future debugging purposes. This gives insight into how the definition values are being interpreted.
+  // :global(.debug-buildLocaleFont#{$fontName}-#{$locale}) {
+  // 	fontName: $fontName;
+  // 	locale: $locale;
+  // 	args: $args;
+  // 	args-count: length($args);
+  // 	last-weight-arg-index: $lastWeightArgIndex;
+  // 	src: $src;
+  // 	styleExists: $styleExists;
+  // 	style: $style;
+  // }
 
-	@if ($lastWeightArgIndex >= 2) {
-		@for $argIndex from 2 through $lastWeightArgIndex {
-			$weight: nth($args, $argIndex);
-			@include buildFontFace("#{$fontName} #{$locale}", $src, $weight, $style);
-			@include buildFontFace($fontName, $src, $weight, $style);
-		}
-	}
+  @if ($lastWeightArgIndex >= 2) {
+    @for $argIndex from 2 through $lastWeightArgIndex {
+      $weight: nth($args, $argIndex);
+      @include buildFontFace("#{$fontName} #{$locale}", $src, $weight, $style);
+      @include buildFontFace($fontName, $src, $weight, $style);
+    }
+  }
 
-	@if (length($args) <= 1) {
-		@include buildFontFaceBase("#{$fontName} #{$locale}", $src);
-		@include buildFontFace($fontName, $src);
-	}
+  @if (length($args) <= 1) {
+    @include buildFontFaceBase("#{$fontName} #{$locale}", $src);
+    @include buildFontFace($fontName, $src);
+  }
 }
 
 @mixin buildLocaleFonts($fontName, $f) {
-	@each $specs, $locale in $f {
-		// Determine if we're working with a collection of font definitions or an individual definition
-		$isCollection: if(((length($specs) > 1) and ((length(nth($specs, 1)) > 1) or (length(nth($specs, 2)) > 1))), true, false);
+  @each $specs, $locale in $f {
+    // Determine if we're working with a collection of font definitions or an individual definition
+    $isCollection: if(((length($specs) > 1) and ((length(nth($specs, 1)) > 1) or (length(nth($specs, 2)) > 1))), true, false);
 
-		// :global(.debug-buildLocaleFonts-#{$locale}) {
-		// 	is-collection: $isCollection;
-		// }
+    // :global(.debug-buildLocaleFonts-#{$locale}) {
+    // 	is-collection: $isCollection;
+    // }
 
-		@if ($isCollection) {
-			// Interpret collections of font definitions: [(set1) (set2) (set3)]
-			@each $value in $specs {
-				@include buildLocaleFont($fontName, $locale, $value);
-			}
-		} @else {
-			// Interpret individual font definitions: (set1)
-			@include buildLocaleFont($fontName, $locale, $specs);
-		}
-		// @include debugLessTypes($specs);
-	}
+    @if ($isCollection) {
+      // Interpret collections of font definitions: [(set1) (set2) (set3)]
+      @each $value in $specs {
+        @include buildLocaleFont($fontName, $locale, $value);
+      }
+    } @else {
+      // Interpret individual font definitions: (set1)
+      @include buildLocaleFont($fontName, $locale, $specs);
+    }
+    // @include debugLessTypes($specs);
+  }
 }
 
 // /**
@@ -141,29 +150,113 @@
 //  */
 
 @mixin buildFontFaceBase($name, $src) {
-	@font-face {
-		font-family: $name;
-		src: $src;
+  @font-face {
+    font-family: $name;
+    src: $src;
+    @content;
+  }
+}
+
+@mixin buildFontFace($name, $src, $weight: normal, $style: "") {
+  @if (length($weight) > 1) {
+    @each $value in $weight {
+      @include buildFontFaceBase($name, $src) {
+        font-weight: $value;
+      }
+    }
+    @include buildFontFaceBase($name, $src) {
+      font-style: $style;
+      @content;
+    }
+  } @else {
+    @include buildFontFaceBase($name, $src) {
+      font-weight: $weight;
+      font-style: $style;
+      @content;
+    }
+  }
+}
+
+//
+// Locale Mixins
+//
+
+// @mixin enact-locale-line-height
+//
+// Assign line-height rules specifically to the languages designated
+// as needing special support for tall-glyphs.
+//
+// Set line-height for normal and tallglyphs with 1 list argument
+// Ex:
+//   @include enact-locale-line-height(1.4em 1.6em);
+// Or:
+//   $lineheight: 1.4em 1.6em;
+//   @include enact-locale-line-height($lineheight);
+@mixin enact-locale-line-height($both, $target: normal) {
+	@include enact-locale-tallglyph-values(line-height, $both, $target);
+}
+
+// @mixin enact-locale-tallglyph
+//
+// Rulename and a normal value followed by a tallglyph value (3 arguments)
+// Ex:
+//   @include enact-locale-tallglyph(font-size, 1.4em; 1.6em, normal);  ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
+
+@mixin enact-locale-tallglyph($rule, $normal, $tallglyph, $target) {
+	#{$rule}: $normal;
+	@include enact-locale-tallglyph-values($rule, $tallglyph, $target);
+}
+
+@mixin enact-locale-tallglyph-values($rule, $val, $target: normal) {
+	@if (length($val) == 2) {
+		// Rulename and 2 value second variable (2 arguments, 2nd being a list)
+		// Ex:
+		//   @include enact-locale-tallglyph(font-size; 1.4em 1.6em);  ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
+		// Or:
+		//   $fontsize: 1.4em 1.6em;
+		//   @include enact-locale-tallglyph(font-size, $fontsize);    ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
+		#{$rule}: extract($val, 1);
+		@each $value in variables.$locale-tallglyph-languages {
+			@include enact-locale($value, $target) {
+				#{$rule}: extract($val, 2);
+			}
+		}
+	} @else {
+		// Rulename and a tallglyph value
+		// Ex:
+		//   @include enact-locale-tallglyph(font-size; 1.6em);  ->  tallglyphs font-size: 1.6em;
+		@each $value in variables.$locale-tallglyph-languages {
+			// Take each language in the list, apply the $rules to them.
+			// $value is used to generate an appropriate selector for the $rules.
+			@include enact-locale($value, $target) {
+				#{$rule}: $val;
+			}
+		}
+	}
+}
+
+// Assign rules specifically to RTL locales with a convenient shorthand.
+@mixin enact-locale-rtl($target) {
+	@include enact-locale(right-to-left, $target) {
 		@content;
 	}
 }
 
-@mixin buildFontFace($name, $src, $weight: normal, $style: "") {
-	@if (length($weight) > 1) {
-		@each $value in $weight {
-			@include buildFontFaceBase($name, $src) {
-				font-weight: $value;
-			}
-		}
-		@include buildFontFaceBase($name, $src) {
-			font-style: $style;
+// Generates an appropriate selector given the locale-target, and injects the given rules into it.
+@mixin enact-locale($locale-target, $target: normal) {
+	@if type-of($locale-target) == string and content-exists() and $target == self {
+		&:global(.enact-locale-#{$locale-target}) {
 			@content;
 		}
-	} @else {
-		@include buildFontFaceBase($name, $src) {
-			font-weight: $weight;
-			font-style: $style;
+	} @else if type-of($locale-target) == string and content-exists() and $target == normal {
+		:global(.enact-locale-#{$locale-target}) & {
 			@content;
 		}
+	}
+}
+
+@mixin locale-japanese-line-break {
+	@include enact-locale(ja) {
+		line-break: strict;
 	}
 }
