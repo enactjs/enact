@@ -6,8 +6,8 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Removed
 
-- `ui/IconButton`
 - `ui/GridListImageItem`
+- `ui/IconButton`
 - `ui/RadioDecorator`
 - `ui/Scrollable`
 - `ui/Scroller.ScrollerBase`
