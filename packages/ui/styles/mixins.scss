@@ -68,25 +68,37 @@
 }
 
 // Applies RTL-compatible start and end margins to a selector
-@mixin margin-start-end($values, $target: "") {
-	@if ((length($values) != 2) and (($target == parent) or ($target == self) or ($target == ""))) {
-		margin: $values;
+@mixin margin-start-end($start, $end, $target: "") {
+	@if ($start != null and $end == null and (($target == parent) or ($target == self) or ($target == ""))) {
+		margin: $start;
 
-		@if ((length($values) == 4)) {
-			$top: nth($values, 1);
-			$right: nth($values, 2);
-			$bottom: nth($values, 3);
-			$left: nth($values, 4);
+		$top: $start;
+		$left: $start;
+		$bottom: $start;
+		$right: $start;
 
-			@include enact-locale-rtl($target) {
-				// Note: swapping left and right values
-				margin: $top $left $bottom $right;
-			}
+		@if ((length($start) == 4)) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 3);
+			$left: nth($start, 4);
+		} @else if ((length($start) == 3)) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 3);
+			$left: nth($start, 2);
+		} @else if (length($start) == 2) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 1);
+			$left: nth($start, 2);
 		}
-	} @else if (length($values) == 2) {
-		$start: nth($values, 1);
-		$end: nth($values, 2);
 
+		@include enact-locale-rtl($target) {
+			// Note: swapping left and right values
+			margin: $top $left $bottom $right;
+		}
+	} @else if ($start != null and $end != null) {
 		margin-left: $start;
 		margin-right: $end;
 
@@ -99,25 +111,37 @@
 }
 
 // Applies RTL-compatible start and end padding to a selector
-@mixin padding-start-end($values, $target: "") {
-	@if ((length($values) != 2) and (($target == parent) or ($target == self) or ($target == ""))) {
-		padding: $values;
+@mixin padding-start-end($start, $end: null, $target: "") {
+	@if ($start != null and $end == null and (($target == parent) or ($target == self) or ($target == ""))) {
+		padding: $start;
 
-		@if ((length($values) == 4)) {
-			$top: nth($values, 1);
-			$right: nth($values, 2);
-			$bottom: nth($values, 3);
-			$left: nth($values, 4);
+		$top: $start;
+		$left: $start;
+		$bottom: $start;
+		$right: $start;
 
-			@include enact-locale-rtl($target) {
-				// Note: swapping left and right values
-				padding: $top $left $bottom $right;
-			}
+		@if ((length($start) == 4)) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 3);
+			$left: nth($start, 4);
+		} @else if ((length($start) == 3)) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 3);
+			$left: nth($start, 2);
+		} @else if (length($start) == 2) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 1);
+			$left: nth($start, 2);
 		}
-	} @else if (length($values) == 2) {
-		$start: nth($values, 1);
-		$end: nth($values, 2);
 
+		@include enact-locale-rtl($target) {
+			// Note: swapping left and right values
+			padding: $top $left $bottom $right;
+		}
+	} @else if ($start != null and $end != null) {
 		padding-left: $start;
 		padding-right: $end;
 
