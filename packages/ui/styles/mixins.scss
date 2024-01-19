@@ -36,26 +36,38 @@
 
 // Applies RTL-compatible start and end position to a selector
 // Simple "when" here just assumes that if the first argument is a list with more than 1 entry,
-// then units are correct. If it's just 1, then we varify the value is a number (measurement).
-@mixin position-start-end($values, $target: "") {
-	@if ((length($values) != 2) and (($target == parent) or ($target == self) or ($target == ""))) {
-		@include position($values);
+// then units are correct. If it's just 1, then we verify if the value is a number (measurement).
+@mixin position-start-end($start, $end: null, $target: "") {
+	@if ($start != null and $end == null and (($target == parent) or ($target == self) or ($target == ""))) {
+		@include position($start);
 
-		@if ((length($values) == 4)) {
-			$top: nth($values, 1);
-			$right: nth($values, 2);
-			$bottom: nth($values, 3);
-			$left: nth($values, 4);
+		$top: $start;
+		$left: $start;
+		$bottom: $start;
+		$right: $start;
 
-			@include enact-locale-rtl($target) {
-				// Note: swapping left and right values
-				position: $top $left $bottom $right;
-			}
+		@if ((length($start) == 4)) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 3);
+			$left: nth($start, 4);
+		} @else if ((length($start) == 3)) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 3);
+			$left: nth($start, 2);
+		} @else if (length($start) == 2) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 1);
+			$left: nth($start, 2);
 		}
-	} @else if (length($values) == 2) {
-		$start: nth($values, 1);
-		$end: nth($values, 2);
 
+		@include enact-locale-rtl($target) {
+			// Note: swapping left and right values
+			@include position($top, $left, $bottom, $right);
+		}
+	} @else if ($start != null and $end != null) {
 		left: $start;
 		right: $end;
 
@@ -68,7 +80,7 @@
 }
 
 // Applies RTL-compatible start and end margins to a selector
-@mixin margin-start-end($start, $end, $target: "") {
+@mixin margin-start-end($start, $end: null, $target: "") {
 	@if ($start != null and $end == null and (($target == parent) or ($target == self) or ($target == ""))) {
 		margin: $start;
 
