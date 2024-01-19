@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Removed
+
+- `ui/GridListImageItem`
+- `ui/IconButton`
+- `ui/RadioDecorator`
+- `ui/Scrollable`
+- `ui/Scroller.ScrollerBase`
+- `ui/SlotItem`
+- `ui/ToggleItem`
+- `ui/VirtualList.UiVirtualListBase`
+- `ui/VirtualList.VirtualListBase`
+
 ## [4.7.9] - 2023-12-08
 
 No significant changes.
