@@ -30,11 +30,24 @@
 	}
 }
 
-@mixin position($value) {
-	left: $value;
-	right: $value;
-	top: $value;
-	bottom: $value;
+// Shorthand for positioning code
+@mixin position($t, $r: null, $b: null, $l: null) {
+	top: $t;
+	right: $r;
+	bottom: $b;
+	left: $l;
+
+	@if (type-of($t) == list) {
+		@if (length($t) == 4) {
+			@include position(nth($t, 1), nth($t, 2), nth($t, 3), nth($t, 4));
+		} @else if (length($t) == 3) {
+			@include position(nth($t, 1), nth($t, 2), nth($t, 2), nth($t, 3));
+		} @else if (length($t) == 2) {
+			@include position(nth($t, 1), nth($t, 2), nth($t, 1), nth($t, 2));
+		} @else {
+			@include position(nth($t, 1), nth($t, 1), nth($t, 1), nth($t, 1));
+		}
+	}
 }
 
 //
