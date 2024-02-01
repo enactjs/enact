@@ -29,22 +29,22 @@
 }
 
 // Shorthand for positioning code
-@mixin position($t, $r: null, $b: null, $l: null) {
+@mixin positionBase($t, $r, $b, $l) {
 	top: $t;
 	right: $r;
 	bottom: $b;
 	left: $l;
+}
 
-	@if (type-of($t) == list) {
-		@if (length($t) == 4) {
-			@include position(nth($t, 1), nth($t, 2), nth($t, 3), nth($t, 4));
-		} @else if (length($t) == 3) {
-			@include position(nth($t, 1), nth($t, 2), nth($t, 2), nth($t, 3));
-		} @else if (length($t) == 2) {
-			@include position(nth($t, 1), nth($t, 2), nth($t, 1), nth($t, 2));
-		} @else {
-			@include position(nth($t, 1), nth($t, 1), nth($t, 1), nth($t, 1));
-		}
+@mixin position($trbl) {
+	@if (length($trbl) == 4) {
+		@include positionBase(nth($trbl, 1), nth($trbl, 2), nth($trbl, 3), nth($trbl, 4));
+	} @else if (length($trbl) == 3) {
+		@include positionBase(nth($trbl, 1), nth($trbl, 2), nth($trbl, 3), nth($trbl, 2));
+	} @else if (length($trbl) == 2) {
+		@include positionBase(nth($trbl, 1), nth($trbl, 2), nth($trbl, 1), nth($trbl, 2));
+	} @else {
+		@include positionBase(nth($trbl, 1), nth($trbl, 1), nth($trbl, 1), nth($trbl, 1));
 	}
 }
 

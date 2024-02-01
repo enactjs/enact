@@ -3,20 +3,12 @@
 //
 
 // Spottable elements
-@function is-parent($target) {
-	@return $target == parent;
-}
-
-@mixin spottable($target) {
-	@if content-exists() and is-parent($target) {
+@mixin spottable($target: '') {
+	@if ($target == parent) {
 		:global(.spottable) {
 			@content;
 		}
-	}
-}
-
-@mixin spottable {
-	@if content-exists() {
+	} @else {
 		&:global(.spottable) {
 			@content;
 		}
@@ -24,43 +16,20 @@
 }
 
 // Focused Spottable elements
-@mixin focus($target) {
-	@if content-exists() and is-parent($target) {
-		:global(.spotlight-input-key) &,
-		:global(.spotlight-input-mouse) & {
-			@include spottable {
-				&:focus {
-					@content;
-				}
-			};
-		}
-
-		:global(.spotlight-input-touch) & {
-			@include spottable{
-				&:active {
-					@content;
-				}
-			};
-		}
-	}
-}
-
-@mixin focus {
-	@if content-exists() {
-		:global(.spotlight-input-key) &,
-		:global(.spotlight-input-mouse) & {
-			@include spottable{
-				&:focus {
-					@content;
-				}
+@mixin focus($target: '') {
+	:global(.spotlight-input-key) &,
+	:global(.spotlight-input-mouse) & {
+		@include spottable($target) {
+			&:focus {
+				@content;
 			}
-		}
+		};
+	}
 
-		:global(.spotlight-input-touch) & {
-			@include spottable{
-				&:active {
-					@content;
-				}
+	:global(.spotlight-input-touch) & {
+		@include spottable($target) {
+			&:active {
+				@content;
 			}
 		}
 	}
