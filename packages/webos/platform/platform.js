@@ -8,10 +8,6 @@
 
 import deprecate from '@enact/core/internal/deprecate';
 
-function is (type) {
-	return window.navigator.userAgent.indexOf(type) > -1;
-}
-
 const webOSVersion = [
 	// Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.2.1 Chrome/38.0.2125.122 Safari/537.36 WebAppManager
 	{chrome: 38, version: 3},
@@ -38,6 +34,58 @@ const platforms = [
 	{regex: /Web0S;/}
 ];
 
+const parseUserAgent = (userAgent) => {
+	// build out our cached platform determination for future usage
+	const platformInfo = {};
+
+	if (userAgent.indexOf('SmartWatch') > -1) {
+		platformInfo.watch = true;
+	} else if (userAgent.indexOf('SmartTV') > -1) {
+		platformInfo.tv = true;
+	} else if (userAgent.indexOf('Large Screen') > -1) {
+		deprecate({
+			name: 'Detecting webOS TV by "Large Screen" from the user agent string',
+			until: '5.0.0'
+		});
+		platformInfo.tv = true;
+	} else {
+		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
+		try {
+			let legacyInfo = JSON.parse(webOSSystem.deviceInfo || '{}');
+			if (legacyInfo.platformVersionMajor && legacyInfo.platformVersionMinor) {
+				let major = parseInt(legacyInfo.platformVersionMajor);
+				let minor = parseInt(legacyInfo.platformVersionMinor);
+				if (major < 3 || (major === 3 && minor <= 0)) {
+					platformInfo.legacy = true;
+				} else {
+					platformInfo.open = true;
+				}
+			} else {
+				platformInfo.unknown = true;
+			}
+		} catch (e) {
+			platformInfo.open = true;
+		}
+	}
+
+	for (let index = 0, p, match; (p = platforms[index]); index++) {
+		match = p.regex.exec(userAgent);
+		if (match) {
+			if (p.version) {
+				platformInfo.version = p.version;
+			}
+			if (p.chrome) {
+				platformInfo.chrome = p.chrome;
+			} else if (match[1]) { // if a chrome version is detected
+				platformInfo.chrome = Number(match[1]);
+			}
+
+			break;
+		}
+	}
+
+	return platformInfo;
+};
 
 let _platform = null;
 
@@ -60,54 +108,7 @@ function detect () {
 		};
 	}
 
-	// build out our cached platform determination for future usage
-	_platform = {};
-
-	if (is('SmartWatch')) {
-		_platform.watch = true;
-	} else if (is('Large Screen')) {
-		deprecate({
-			name: 'Detecting webOS TV by "Large Screen" from the user agent string',
-			until: '5.0.0'
-		});
-		_platform.tv = true;
-	} else if (is('SmartTV')) {
-		_platform.tv = true;
-	} else {
-		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
-		try {
-			let legacyInfo = JSON.parse(webOSSystem.deviceInfo || '{}');
-			if (legacyInfo.platformVersionMajor && legacyInfo.platformVersionMinor) {
-				let major = parseInt(legacyInfo.platformVersionMajor);
-				let minor = parseInt(legacyInfo.platformVersionMinor);
-				if (major < 3 || (major === 3 && minor <= 0)) {
-					_platform.legacy = true;
-				} else {
-					_platform.open = true;
-				}
-			} else {
-				_platform.unknown = true;
-			}
-		} catch (e) {
-			_platform.open = true;
-		}
-	}
-
-	for (let index = 0, p, match; (p = platforms[index]); index++) {
-		match = p.regex.exec(window.navigator.userAgent);
-		if (match) {
-			if (p.version) {
-				_platform.version = p.version;
-			}
-			if (p.chrome) {
-				_platform.chrome = p.chrome;
-			} else if (match[1]) { // if a chrome version is detected
-				_platform.chrome = Number(match[1]);
-			}
-
-			break;
-		}
-	}
+	_platform = parseUserAgent(window.navigator.userAgent || '');
 
 	return _platform;
 }
@@ -153,5 +154,6 @@ const platform = {};
 export default platform;
 export {
 	detect,
+	parseUserAgent,
 	platform
 };
