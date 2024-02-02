@@ -1,3 +1,4 @@
+/* global globalThis */
 /**
  * Utilities for detecting basic platform capabilities.
  *
@@ -22,51 +23,6 @@ const deviceTouchScreen = () => browserEnvironment() && (
 	// check for any-pointer: coarse which mostly means touchscreen
 	globalThis.matchMedia?.("(any-pointer: coarse)")?.matches
 );
-
-// Refer https://www.whatismybrowser.com/guides/the-latest-user-agent/ for latest user agents of major browsers
-const userAgentPatterns = [
-	// Normal cases except iOS
-	{name: 'safari',  regex: /\s+Version\/(\d+)[.\d]+\s+Safari/},
-	{name: 'chrome',  regex: /\s+Chrome\/(\d+)[.\d]+/},
-	{name: 'firefox', regex: /\s+Firefox\/(\d+)[.\d]/},
-	// iOS
-	{name: 'safari',  regex: /\((?:iPhone|iPad);.+\sOS\s(\d+)_(\d+)/}
-];
-
-const parseUserAgent = (userAgent) => {
-	const detectedInfo = {
-		browserEnvironment: true,
-		name: 'unknown',
-		version: '0',
-		versionNumber: 0,
-		deviceMobile: false
-	};
-	let index;
-
-	for (index = 0; index < userAgentPatterns.length; index++) {
-		const platform = userAgentPatterns[index];
-		const match = platform.regex.exec(userAgent);
-
-		if (match) {
-			detectedInfo.name = platform.name;
-			detectedInfo.version = `${match[1]}.${match[2] || 0}`;
-			detectedInfo.versionNumber = Number(detectedInfo.version);
-			break;
-		}
-	}
-
-	if (index < userAgentPatterns.length) {
-		// Note that we don't catch 'Tablet' of Firefox as it can't be normalized with other browsers
-		if (userAgent.includes(' Mobile')) {
-			detectedInfo.deviceMobile = true;
-		}
-
-		detectedInfo[detectedInfo.name] = detectedInfo.versionNumber;
-	}
-
-	// Merge legacy platform info
-	return {...parseUserAgentLegacy(userAgent), ...detectedInfo};
-};
 
 /*
  * Legacy Code to be removed in the next major release
@@ -214,6 +170,51 @@ const parseUserAgentLegacy = (userAgent) => {
  * The end of Legacy Code to be removed in the next major release
  */
 
+// Refer https://www.whatismybrowser.com/guides/the-latest-user-agent/ for latest user agents of major browsers
+const userAgentPatterns = [
+	// Normal cases except iOS
+	{name: 'safari',  regex: /\s+Version\/(\d+)[.\d]+\s+Safari/},
+	{name: 'chrome',  regex: /\s+Chrome\/(\d+)[.\d]+/},
+	{name: 'firefox', regex: /\s+Firefox\/(\d+)[.\d]/},
+	// iOS
+	{name: 'safari',  regex: /\((?:iPhone|iPad);.+\sOS\s(\d+)_(\d+)/}
+];
+
+const parseUserAgent = (userAgent) => {
+	const detectedInfo = {
+		browserEnvironment: true,
+		name: 'unknown',
+		version: '0',
+		versionNumber: 0,
+		deviceMobile: false
+	};
+	let index;
+
+	for (index = 0; index < userAgentPatterns.length; index++) {
+		const testPlatform = userAgentPatterns[index];
+		const match = testPlatform.regex.exec(userAgent);
+
+		if (match) {
+			detectedInfo.name = testPlatform.name;
+			detectedInfo.version = `${match[1]}.${match[2] || 0}`;
+			detectedInfo.versionNumber = Number(detectedInfo.version);
+			break;
+		}
+	}
+
+	if (index < userAgentPatterns.length) {
+		// Note that we don't catch 'Tablet' of Firefox as it can't be normalized with other browsers
+		if (userAgent.includes(' Mobile')) {
+			detectedInfo.deviceMobile = true;
+		}
+
+		detectedInfo[detectedInfo.name] = detectedInfo.versionNumber;
+	}
+
+	// Merge legacy platform info
+	return {...parseUserAgentLegacy(userAgent), ...detectedInfo};
+};
+
 /**
  * @typedef {Object} PlatformDescription
  * @property {Boolean} browserEnvironment - `true` if the platform is a browser
@@ -268,7 +269,7 @@ const detect = () => {
 			version: isNode ? process?.versions?.node : '0', /* magic number for unknown */
 			versionNumber: isNode ? parseFloat(process?.versions?.node) || 0 : 0, /* magic number for unknown */
 			deviceMobile: false
-		}
+		};
 	}
 
 	// Detect features

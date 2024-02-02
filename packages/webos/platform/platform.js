@@ -94,7 +94,7 @@ function detect () {
 	}
 
 	for (let index = 0, p, match; (p = platforms[index]); index++) {
-		match = p.regex.exec(userAgent);
+		match = p.regex.exec(window.navigator.userAgent);
 		if (match) {
 			if (p.version) {
 				_platform.version = p.version;
