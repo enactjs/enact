@@ -253,7 +253,7 @@ const detect = () => {
 
 	// Parse User Agent string first
 	if (browserEnvironment()) {
-		detectedPlatform = parseUserAgentLegacy(globalThis.navigator?.userAgent || '');
+		detectedPlatform = parseUserAgent(globalThis.navigator?.userAgent || '');
 	} else {
 		const isNode = typeof process === 'object' && process?.release?.name === 'node';
 		// node environment (e.g. prerendering or snapshot runs)
