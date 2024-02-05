@@ -173,9 +173,9 @@ const parseUserAgentLegacy = (userAgent) => {
 // Refer https://www.whatismybrowser.com/guides/the-latest-user-agent/ for latest user agents of major browsers
 const userAgentPatterns = [
 	// Normal cases except iOS
-	{name: 'safari',  regex: /\s+Version\/(\d+)[.\d]+\s+Safari/},
+	{name: 'safari',  regex: /\s+Version\/(\d+)(?:\.(\d+))?\s+Safari/},
 	{name: 'chrome',  regex: /\s+Chrome\/(\d+)[.\d]+/},
-	{name: 'firefox', regex: /\s+Firefox\/(\d+)[.\d]/},
+	{name: 'firefox', regex: /\s+Firefox\/(\d+)[.\d]+/},
 	// iOS
 	{name: 'safari',  regex: /\((?:iPhone|iPad);.+\sOS\s(\d+)_(\d+)/}
 ];
@@ -184,8 +184,7 @@ const parseUserAgent = (userAgent) => {
 	const detectedInfo = {
 		browserEnvironment: true,
 		name: 'unknown',
-		version: '0',
-		versionNumber: 0,
+		version: 0,
 		deviceMobile: false
 	};
 	let index;
@@ -196,8 +195,7 @@ const parseUserAgent = (userAgent) => {
 
 		if (match) {
 			detectedInfo.name = testPlatform.name;
-			detectedInfo.version = `${match[1]}.${match[2] || 0}`;
-			detectedInfo.versionNumber = Number(detectedInfo.version);
+			detectedInfo.version = Number(`${match[1]}.${match[2] || 0}`);
 			break;
 		}
 	}
@@ -208,7 +206,7 @@ const parseUserAgent = (userAgent) => {
 			detectedInfo.deviceMobile = true;
 		}
 
-		detectedInfo[detectedInfo.name] = detectedInfo.versionNumber;
+		detectedInfo[detectedInfo.name] = detectedInfo.version;
 	}
 
 	// Merge legacy platform info
@@ -219,8 +217,7 @@ const parseUserAgent = (userAgent) => {
  * @typedef {Object} PlatformDescription
  * @property {Boolean} browserEnvironment - `true` if the platform is a browser
  * @property {String} name - The name of the platform
- * @property {String} version - The version of the platform
- * @property {Number} versionNumber - The version of the platform as a number
+ * @property {Number} version - The version of the platform
  * @property {Boolean} deviceMobile - `true` if the platform is a mobile device
  * @property {Boolean} deviceTouchScreen - `true` if the platform has a touch screen
  * @property {Boolean} featureTouchEvent - `true` if the platform has native single-finger events
@@ -266,8 +263,7 @@ const detect = () => {
 			// the following properties are new and will be available in the next major release
 			browserEnvironment: false,
 			name: isNode ? 'node' : 'unknown',
-			version: isNode ? process?.versions?.node : '0', /* magic number for unknown */
-			versionNumber: isNode ? parseFloat(process?.versions?.node) || 0 : 0, /* magic number for unknown */
+			version: isNode ? parseFloat(process?.versions?.node) || 0 : 0, /* magic number for unknown */
 			deviceMobile: false
 		};
 	}

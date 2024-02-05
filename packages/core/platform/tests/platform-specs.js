@@ -195,11 +195,135 @@ describe('platform', () => {
 		});
 	});
 
+	describe('parseUserAgent for Safari', () => {
+		test('should detect Safari browsers', () => {
+			const knownUserAgents = {
+				userAgentList: [
+					// Safari on macOS
+					'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15',
+					'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15'
+				],
+				expected: {browserEnvironment: true, name: 'safari', version: 17.3, deviceMobile: false, safari: 17.3}
+			};
+
+			for (let i = 0; i < knownUserAgents.userAgentList.length; i++) {
+				const actual = parseUserAgent(knownUserAgents.userAgentList[i]);
+				expect(actual).toMatchObject(knownUserAgents.expected);
+			}
+		});
+
+		test('should detect mobile Safari browsers', () => {
+			const knownUserAgents = {
+				//
+				userAgentList: [
+					// Safari on iPhone, iPad
+					'Mozilla/5.0 (iPhone; CPU iPhone OS 17_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Mobile/15E148 Safari/604.1',
+					'Mozilla/5.0 (iPad; CPU OS 17_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Mobile/15E148 Safari/604.1',
+					// Chrome on iPhone, iPad
+					'Mozilla/5.0 (iPhone; CPU iPhone OS 17_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/121.0.6167.138 Mobile/15E148 Safari/604.1',
+					'Mozilla/5.0 (iPad; CPU OS 17_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/121.0.6167.138 Mobile/15E148 Safari/604.1',
+					// Edge on iPhone
+					'Mozilla/5.0 (iPhone; CPU iPhone OS 17_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 EdgiOS/121.2277.99 Mobile/15E148 Safari/605.1.15',
+					// Firefox on iPhone, iPad
+					'Mozilla/5.0 (iPhone; CPU iPhone OS 17_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/122.0 Mobile/15E148 Safari/605.1.15',
+					'Mozilla/5.0 (iPad; CPU OS 17_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/122.0 Mobile/15E148 Safari/605.1.15'
+				],
+				expected: {browserEnvironment: true, name: 'safari', version: 17.3, deviceMobile: true, safari: 17.3}
+			};
+
+			for (let i = 0; i < knownUserAgents.userAgentList.length; i++) {
+				const actual = parseUserAgent(knownUserAgents.userAgentList[i]);
+				expect(actual).toMatchObject(knownUserAgents.expected);
+			}
+		});
+	});
+
+	describe('parseUserAgent for Chrome', () => {
+		test('should detect Chrome browsers', () => {
+			const knownUserAgents = {
+				// Chrome on Windows, macOS, Linux, Edge on Windows, macOS, respectively
+				userAgentList: [
+					// Chrome on Windows, macOS, Linux
+					'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+					'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+					'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+					// Edge on Windows, macOS
+					'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.2277.98',
+					'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.2277.98',
+
+				],
+				expected: {browserEnvironment: true, name: 'chrome', version: 121, deviceMobile: false, chrome: 121}
+			};
+
+			for (let i = 0; i < knownUserAgents.userAgentList.length; i++) {
+				const actual = parseUserAgent(knownUserAgents.userAgentList[i]);
+				expect(actual).toMatchObject(knownUserAgents.expected);
+			}
+		});
+
+		test('should detect mobile Chrome browsers', () => {
+			const knownUserAgents = {
+				userAgentList: [
+					// Chrome on Android
+					'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.6167.143 Mobile Safari/537.36',
+					// Edge on Android
+					'Mozilla/5.0 (Linux; Android 10; Pixel 3 XL) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.6167.143 Mobile Safari/537.36 EdgA/120.0.2210.157'
+				],
+				expected: {browserEnvironment: true, name: 'chrome', version: 121, deviceMobile: true, chrome: 121}
+			}
+
+			for (let i = 0; i < knownUserAgents.userAgentList.length; i++) {
+				const actual = parseUserAgent(knownUserAgents.userAgentList[i]);
+				expect(actual).toMatchObject(knownUserAgents.expected);
+			}
+		});
+	});
+
+	describe('parseUserAgent for Firefox', () => {
+		test('should detect Firefox browsers', () => {
+			const knownUserAgents = {
+				userAgentList: [
+					// Firefox on Windows, macOS, Linux
+					'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0',
+					'Mozilla/5.0 (Macintosh; Intel Mac OS X 14.3; rv:122.0) Gecko/20100101 Firefox/122.0',
+					'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:122.0) Gecko/20100101 Firefox/122.0'
+				],
+				expected: {browserEnvironment: true, name: 'firefox', version: 122, deviceMobile: false, firefox: 122}
+			};
+
+			for (let i = 0; i < knownUserAgents.userAgentList.length; i++) {
+				const actual = parseUserAgent(knownUserAgents.userAgentList[i]);
+				expect(actual).toMatchObject(knownUserAgents.expected);
+			}
+		});
+
+		test('should detect mobile Firefox browsers', () => {
+			const knownUserAgents = {
+				userAgentList: [
+					// Firefox on Android
+					'Mozilla/5.0 (Android 14; Mobile; rv:122.0) Gecko/122.0 Firefox/122.0'
+				],
+				expected: {browserEnvironment: true, name: 'firefox', version: 122, deviceMobile: true, firefox: 122}
+			};
+
+			for (let i = 0; i < knownUserAgents.userAgentList.length; i++) {
+				const actual = parseUserAgent(knownUserAgents.userAgentList[i]);
+				expect(actual).toMatchObject(knownUserAgents.expected);
+			}
+		});
+	});
+
 	describe('platform', () => {
 		test('should return `true` for `node` if window does not exist', () => {
 			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(() => {});
 
-			expect(platform['node']).toBe(true);
+			const expected = {
+				browserEnvironment: false,
+				name: 'node',
+				node: true, // Deprecated: will be removed in 5.0.0.
+				deviceMobile: false
+			};
+			expect(platform).toMatchObject(expected);
 
 			windowSpy.mockRestore();
 		});
