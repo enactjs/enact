@@ -42,7 +42,7 @@ class ClickAllow {
 		const {timeStamp} = ev;
 
 		// iOS Safari sends both touch and mouse events (with differing timestamps)
-		return !platform.ios && this.lastTouchEndTime !== timeStamp && shouldAllowMouseDown(ev);
+		return !(platform.name === 'safari' && platform.deviceMobile) && this.lastTouchEndTime !== timeStamp && shouldAllowMouseDown(ev);
 	}
 
 	shouldAllowTap (ev) {

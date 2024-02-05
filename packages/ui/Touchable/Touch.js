@@ -200,7 +200,7 @@ class Touch {
 			onMouseUp: handleMouseUp.bindAs(this, 'handleMouseUp')
 		};
 
-		if (platform.touch) {
+		if (platform.featureTouchEvent) {
 			Object.assign(this.handlers, {
 				onTouchStart: handleTouchStart.bindAs(this, 'handleTouchStart'),
 				onTouchMove: handleTouchMove.bindAs(this, 'handleTouchMove'),
@@ -230,7 +230,7 @@ class Touch {
 
 	addGlobalHandlers () {
 		// ensure we clean up our internal state
-		if (platform.touch) {
+		if (platform.featureTouchEvent) {
 			on('touchend', this.handleGlobalUp, document);
 		}
 		on('mouseup', this.handleGlobalUp, document);
@@ -238,7 +238,7 @@ class Touch {
 	}
 
 	removeGlobalHandlers () {
-		if (platform.touch) {
+		if (platform.featureTouchEvent) {
 			off('touchend', this.handleGlobalUp, document);
 		}
 		off('mouseup', this.handleGlobalUp, document);

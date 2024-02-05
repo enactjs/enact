@@ -36,7 +36,7 @@ const platforms = [
 
 const parseUserAgent = (userAgent) => {
 	// build out our cached platform determination for future usage
-	const platformInfo = {};
+	const platformInfo = {webos: false};
 
 	if (userAgent.indexOf('SmartWatch') > -1) {
 		platformInfo.watch = true;
@@ -71,6 +71,7 @@ const parseUserAgent = (userAgent) => {
 	for (let index = 0, p, match; (p = platforms[index]); index++) {
 		match = p.regex.exec(userAgent);
 		if (match) {
+			platformInfo.webos = true;
 			if (p.version) {
 				platformInfo.version = p.version;
 			}
@@ -119,6 +120,7 @@ function detect () {
  *
  * @readonly
  * @type {Object}
+ * @property {Boolean} webos `true` for webOS
  * @property {Boolean} [tv] `true` for LG webOS SmartTV
  * @property {Boolean} [watch] `true` for LG webOS SmartWatch. Deprecated: will be removed in 5.0.0.
  * @property {Boolean} [open] `true` for Open webOS

@@ -785,7 +785,7 @@ const useScrollBase = (props) => {
 		}
 
 		if (rtl && canScrollH) {
-			scrollLeft = (platform.ios || platform.safari || platform.chrome >= 85 || platform.androidChrome >= 85) ? -scrollLeft : bounds.maxLeft - scrollLeft;
+			scrollLeft = (platform.chrome < 85) ? bounds.maxLeft - scrollLeft : -scrollLeft;
 		}
 
 		if (scrollLeft !== mutableRef.current.scrollLeft) {
