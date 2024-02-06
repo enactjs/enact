@@ -203,7 +203,7 @@ describe('platform', () => {
 					'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15',
 					'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15'
 				],
-				expected: {browserEnvironment: true, browserName: 'safari', browserVersion: 17.3, deviceMobile: false, safari: 17.3}
+				expected: {type: 'desktop', browserName: 'safari', browserVersion: 17.3, safari: 17.3}
 			};
 
 			for (let i = 0; i < knownUserAgents.userAgentList.length; i++) {
@@ -228,7 +228,7 @@ describe('platform', () => {
 					'Mozilla/5.0 (iPhone; CPU iPhone OS 17_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/122.0 Mobile/15E148 Safari/605.1.15',
 					'Mozilla/5.0 (iPad; CPU OS 17_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/122.0 Mobile/15E148 Safari/605.1.15'
 				],
-				expected: {browserEnvironment: true, browserName: 'safari', browserVersion: 17.3, deviceMobile: true, safari: 17.3}
+				expected: {type: 'mobile', browserName: 'safari', browserVersion: 17.3, safari: 17.3}
 			};
 
 			for (let i = 0; i < knownUserAgents.userAgentList.length; i++) {
@@ -251,7 +251,7 @@ describe('platform', () => {
 					'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.2277.98',
 					'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.2277.98'
 				],
-				expected: {browserEnvironment: true, browserName: 'chrome', browserVersion: 121, deviceMobile: false, chrome: 121}
+				expected: {type: 'desktop', browserName: 'chrome', browserVersion: 121, chrome: 121}
 			};
 
 			for (let i = 0; i < knownUserAgents.userAgentList.length; i++) {
@@ -268,7 +268,7 @@ describe('platform', () => {
 					// Edge on Android
 					'Mozilla/5.0 (Linux; Android 10; Pixel 3 XL) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.6167.143 Mobile Safari/537.36 EdgA/120.0.2210.157'
 				],
-				expected: {browserEnvironment: true, browserName: 'chrome', browserVersion: 121, deviceMobile: true, chrome: 121}
+				expected: {type: 'mobile', browserName: 'chrome', browserVersion: 121, chrome: 121}
 			};
 
 			for (let i = 0; i < knownUserAgents.userAgentList.length; i++) {
@@ -287,7 +287,7 @@ describe('platform', () => {
 					'Mozilla/5.0 (Macintosh; Intel Mac OS X 14.3; rv:122.0) Gecko/20100101 Firefox/122.0',
 					'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:122.0) Gecko/20100101 Firefox/122.0'
 				],
-				expected: {browserEnvironment: true, browserName: 'firefox', browserVersion: 122, deviceMobile: false, firefox: 122}
+				expected: {type: 'desktop', browserName: 'firefox', browserVersion: 122, firefox: 122}
 			};
 
 			for (let i = 0; i < knownUserAgents.userAgentList.length; i++) {
@@ -302,7 +302,7 @@ describe('platform', () => {
 					// Firefox on Android
 					'Mozilla/5.0 (Android 14; Mobile; rv:122.0) Gecko/122.0 Firefox/122.0'
 				],
-				expected: {browserEnvironment: true, browserName: 'firefox', browserVersion: 122, deviceMobile: true, firefox: 122}
+				expected: {type: 'mobile', browserName: 'firefox', browserVersion: 122, firefox: 122}
 			};
 
 			for (let i = 0; i < knownUserAgents.userAgentList.length; i++) {
@@ -312,22 +312,31 @@ describe('platform', () => {
 		});
 	});
 
+	describe('parseUserAgent for Chrome on webOS', () => {
+		test('should detect Chrome browsers on webOS', () => {
+			const knownUserAgent = 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 WebAppManager';
+			const expected = {type: 'webos', browserName: 'chrome', browserVersion: 108, chrome: 108};
+			const actual = parseUserAgent(knownUserAgent);
+			expect(actual).toMatchObject(expected);
+		});
+	});
+
 	describe('platform', () => {
-		test('should return `true` for `node` if window does not exist', () => {
+		test('should detect node environment if \'window\' does not exist', () => {
 			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(() => {});
 
 			const expected = {
-				browserEnvironment: false,
-				browserName: 'unknown',
 				node: true, // Deprecated: will be removed in 5.0.0.
-				deviceMobile: false
+				type: 'node',
+				browserName: 'unknown',
+				browserVersion: 0
 			};
 			expect(platform).toMatchObject(expected);
 
 			windowSpy.mockRestore();
 		});
 
-		test('should return `true` for `unknown` in the testing environment', () => {
+		test('should return `true` for `unknown` in the testing environment', () => { // Deprecated: will be removed in 5.0.0
 			// The first access invokes detecting based on user agent value
 			expect(platform['unknown']).toBe(true);
 			// The second access makes the module to return already detected platform information

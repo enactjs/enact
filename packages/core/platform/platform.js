@@ -182,10 +182,10 @@ const userAgentPatterns = [
 
 const parseUserAgent = (userAgent) => {
 	const detectedInfo = {
+		type: 'unknown',
 		browserEnvironment: true,
 		browserName: 'unknown',
-		browserVersion: 0,
-		deviceMobile: false
+		browserVersion: 0
 	};
 	let index;
 
@@ -203,7 +203,11 @@ const parseUserAgent = (userAgent) => {
 	if (index < userAgentPatterns.length) {
 		// Note that we don't catch 'Tablet' of Firefox as it can't be normalized with other browsers
 		if (userAgent.includes(' Mobile')) {
-			detectedInfo.deviceMobile = true;
+			detectedInfo.type = 'mobile';
+		} else if (userAgent.includes('Web0S;')) {
+			detectedInfo.type = 'webos';
+		} else {
+			detectedInfo.type = 'desktop';
 		}
 
 		detectedInfo[detectedInfo.browserName] = detectedInfo.browserVersion;
@@ -218,7 +222,7 @@ const parseUserAgent = (userAgent) => {
  * @property {Boolean} browserEnvironment - `true` if the platform is a browser
  * @property {String} browserName - The name of the detected browser
  * @property {Number} browserVersion - The version of the detected browser
- * @property {Boolean} deviceMobile - `true` if the platform is a mobile device
+ * @property {Boolean} type - The type of the detected platform. One of 'desktop', 'mobile', 'webos', 'node', or 'unknown'
  * @property {Boolean} deviceTouchScreen - `true` if the platform has a touch screen
  * @property {Boolean} featureTouchEvent - `true` if the platform has native single-finger events
  * @property {Object} [extra] - Additional information about the detected platform. Deprecated: will be removed in 5.0.0.
@@ -260,10 +264,10 @@ const detect = () => {
 			touch: false,
 			unknown: true,
 			// the following properties are new and will be available in the next major release
+			type: 'node',
 			browserEnvironment: false,
 			browserName: 'unknown',
-			browserVersion: 0, /* magic number for unknown */
-			deviceMobile: false
+			browserVersion: 0 /* magic number for unknown */
 		};
 	}
 
@@ -298,7 +302,7 @@ const platform = {};
 	'browserName',
 	'browserVersion',
 	'featureTouchEvent',
-	'deviceMobile',
+	'type',
 	'deviceTouchScreen',
 	...(new Set(platforms.map(p => p.platform)))
 ].forEach(name => {
