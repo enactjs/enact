@@ -21,7 +21,6 @@
 import {is} from '@enact/core/keymap';
 import {isWindowReady} from '@enact/core/snapshot';
 import platform from '@enact/core/platform';
-import {platform as webosPlatform} from '@enact/webos/platform';
 import last from 'ramda/src/last';
 
 import Accelerator from '../Accelerator';
@@ -569,11 +568,11 @@ const Spotlight = (function () {
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
 
-				if (platform.featureTouchEvent) {
+				if (platform.touchEvent) {
 					window.addEventListener('touchend', onTouchEnd);
 				}
 
-				if (webosPlatform.webos) {
+				if (platform.type === 'webos') {
 					window.top.document.addEventListener('webOSMouse', handleWebOSMouseEvent);
 					window.top.document.addEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
 				}
@@ -607,11 +606,11 @@ const Spotlight = (function () {
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
 
-			if (platform.featureTouchEvent) {
+			if (platform.touchEvent) {
 				window.removeEventListener('touchend', onTouchEnd);
 			}
 
-			if (webosPlatform.webos) {
+			if (platform.type === 'webos') {
 				window.top.document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
 				window.top.document.removeEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
 			}

@@ -26,7 +26,6 @@
   },
   "dependencies": {
     "@enact/core": "^4.7.9",
-    "@enact/webos": "^4.7.9",
     "classnames": "^2.5.1",
     "prop-types": "^15.8.1",
     "ramda": "^0.29.1",
