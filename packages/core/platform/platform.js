@@ -200,11 +200,11 @@ const parseUserAgent = (userAgent) => {
 	}
 
 	if (index < userAgentPatterns.length) {
-		// Note that we don't catch 'Tablet' of Firefox as it can't be normalized with other browsers
-		if (userAgent.includes(' Mobile')) {
-			detectedInfo.type = 'mobile';
-		} else if (userAgent.includes('Web0S;')) {
+		if (userAgent.includes('Web0S;')) {
 			detectedInfo.type = 'webos';
+		} else if (userAgent.includes(' Mobile')) {
+			// Note that we don't catch 'Tablet' of Firefox as it can't be normalized with other browsers
+			detectedInfo.type = 'mobile';
 		} else {
 			detectedInfo.type = 'desktop';
 		}
