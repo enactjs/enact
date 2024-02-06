@@ -183,7 +183,6 @@ const userAgentPatterns = [
 const parseUserAgent = (userAgent) => {
 	const detectedInfo = {
 		type: 'unknown',
-		browserEnvironment: true,
 		browserName: 'unknown',
 		browserVersion: 0
 	};
@@ -219,19 +218,18 @@ const parseUserAgent = (userAgent) => {
 
 /**
  * @typedef {Object} PlatformDescription
- * @property {Boolean} browserEnvironment - `true` if the platform is a browser
  * @property {String} browserName - The name of the detected browser
  * @property {Number} browserVersion - The version of the detected browser
- * @property {Boolean} type - The type of the detected platform. One of 'desktop', 'mobile', 'webos', 'node', or 'unknown'
- * @property {Boolean} deviceTouchScreen - `true` if the platform has a touch screen
- * @property {Boolean} featureTouchEvent - `true` if the platform has native single-finger events
  * @property {Object} [extra] - Additional information about the detected platform. Deprecated: will be removed in 5.0.0.
  * @property {Boolean} gesture - `true` if the platform has native double-finger events. Deprecated: will be removed in 5.0.0.
- * @property {Boolean} node - `true` only if `window` is `undefined`. Deprecated: will be removed in 5.0.0.
- * @property {String} [platformName] - The name of the platform, if detected. Deprecated: will be removed in 5.0.0.
- * @property {Boolean} touch - `true` if the platform has native single-finger events. Deprecated: will be removed in 5.0.0.
- * @property {Boolean} touchscreen - `true` if the platform has a touch screen. Deprecated: will be removed in 5.0.0.
- * @property {Boolean} unknown - `true` for any unknown system. Deprecated: will be removed in 5.0.0.
+ * @property {Boolean} node - `true` only if `window` is `undefined`. Deprecated: will be removed in 5.0.0. Use `type` instead.
+ * @property {String} [platformName] - The name of the platform, if detected. Deprecated: will be removed in 5.0.0. Use `browserName` instead for browser names.
+ * @property {Boolean} touch - `true` if the platform has native single-finger events. Deprecated: will be removed in 5.0.0. Use `touchEvent` instead.
+ * @property {Boolean} touchEvent - `true` if the browser has native touch events
+ * @property {Boolean} touchscreen - `true` if the platform has a touch screen. Deprecated: will be removed in 5.0.0. Use `touchScreen` instead.
+ * @property {Boolean} touchScreen - `true` if the platform has a touch screen
+ * @property {String} type - The type of the detected platform. One of 'desktop', 'mobile', 'webos', 'node', or 'unknown'
+ * @property {Boolean} unknown - `true` for any unknown system. Deprecated: will be removed in 5.0.0. Use `type` instead.
  *
  * @memberof core/platform
  * @public
@@ -265,17 +263,16 @@ const detect = () => {
 			unknown: true,
 			// the following properties are new and will be available in the next major release
 			type: 'node',
-			browserEnvironment: false,
 			browserName: 'unknown',
 			browserVersion: 0 /* magic number for unknown */
 		};
 	}
 
 	// Detect features
-	detectedPlatform.featureTouchEvent = featureTouchEvent();
+	detectedPlatform.touchEvent = featureTouchEvent();
 
 	// Detect devices
-	detectedPlatform.deviceTouchScreen = deviceTouchScreen();
+	detectedPlatform.touchScreen = deviceTouchScreen();
 
 	return detectedPlatform;
 };
@@ -298,12 +295,11 @@ const platform = {};
 	'touchscreen',
 	'unknown',
 	// the following properties are new and will be available in the next major release
-	'browserEnvironment',
 	'browserName',
 	'browserVersion',
-	'featureTouchEvent',
+	'touchEvent',
+	'touchScreen',
 	'type',
-	'deviceTouchScreen',
 	...(new Set(platforms.map(p => p.platform)))
 ].forEach(name => {
 	Object.defineProperty(platform, name, {
@@ -316,16 +312,16 @@ const platform = {};
 				});
 			}
 			if (name === 'node') {
-				deprecate({name, until: '5.0.0', replacedBy: 'browserEnvironment'});
+				deprecate({name, until: '5.0.0', replacedBy: 'type'});
 			}
 			if (name === 'platformName') {
 				deprecate({name, until: '5.0.0', replacedBy: 'browserName'});
 			}
 			if (name === 'touch') {
-				deprecate({name, until: '5.0.0', replacedBy: 'featureTouchEvent'});
+				deprecate({name, until: '5.0.0', replacedBy: 'touchEvent'});
 			}
 			if (name === 'touchscreen') {
-				deprecate({name, until: '5.0.0', replacedBy: 'deviceTouchScreen'});
+				deprecate({name, until: '5.0.0', replacedBy: 'touchScreen'});
 			}
 
 			const p = detect();
