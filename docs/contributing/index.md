@@ -73,5 +73,5 @@ project. Please read this section carefully if you are interested in contributin
 ### Getting More Involved
 
 If you'd like to become more than an occasional contributor, by all means let us know by dropping by
-our [gitter channel](https://gitter.im/EnactJS/Lobby/~chat#share) and we'll figure out how to get
+our [gitter channel](https://gitter.im/EnactJS/Lobby) and we'll figure out how to get
 you more involved.

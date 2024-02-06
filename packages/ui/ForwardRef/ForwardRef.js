@@ -26,7 +26,7 @@ const defaultConfig = {
 };
 
 /**
- * A higher-order component that adapts [`React.forwardRef`](https://reactjs.org/docs/forwarding-refs.html)
+ * A higher-order component that adapts [`React.forwardRef`](https://react.dev/reference/react/forwardRef)
  * to be chainable with other HOCs.
  *
  * The following examples are equivalent:

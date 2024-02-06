@@ -45,7 +45,7 @@ const RepeaterBase = kind({
 		 * text content using the `children` key.
 		 *
 		 * > **NOTE**: When an array of objects is provided, make sure a unique `key` is assigned to each
-		 * data. See https://fb.me/react-warning-keys for more information.
+		 * data. See https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key for more information.
 		 *
 		 * @type {String[]|Array.<{key: (Number|String)}>}
 		 * @required
