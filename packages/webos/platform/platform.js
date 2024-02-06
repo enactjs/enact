@@ -138,7 +138,9 @@ const platform = {};
 	'watch',
 	'open',
 	'legacy',
-	'unknown'
+	'unknown',
+	'version',
+	'chrome'
 ].forEach(name => {
 	Object.defineProperty(platform, name, {
 		enumerable: true,

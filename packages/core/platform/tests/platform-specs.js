@@ -249,8 +249,7 @@ describe('platform', () => {
 					'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
 					// Edge on Windows, macOS
 					'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.2277.98',
-					'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.2277.98',
-
+					'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.2277.98'
 				],
 				expected: {browserEnvironment: true, name: 'chrome', version: 121, deviceMobile: false, chrome: 121}
 			};
@@ -270,7 +269,7 @@ describe('platform', () => {
 					'Mozilla/5.0 (Linux; Android 10; Pixel 3 XL) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.6167.143 Mobile Safari/537.36 EdgA/120.0.2210.157'
 				],
 				expected: {browserEnvironment: true, name: 'chrome', version: 121, deviceMobile: true, chrome: 121}
-			}
+			};
 
 			for (let i = 0; i < knownUserAgents.userAgentList.length; i++) {
 				const actual = parseUserAgent(knownUserAgents.userAgentList[i]);
