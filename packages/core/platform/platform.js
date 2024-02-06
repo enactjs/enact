@@ -173,18 +173,18 @@ const parseUserAgentLegacy = (userAgent) => {
 // Refer https://www.whatismybrowser.com/guides/the-latest-user-agent/ for latest user agents of major browsers
 const userAgentPatterns = [
 	// Normal cases except iOS
-	{name: 'safari',  regex: /\s+Version\/(\d+)(?:\.(\d+))?\s+Safari/},
-	{name: 'chrome',  regex: /\s+Chrome\/(\d+)[.\d]+/},
-	{name: 'firefox', regex: /\s+Firefox\/(\d+)[.\d]+/},
+	{browserName: 'safari',  regex: /\s+Version\/(\d+)(?:\.(\d+))?\s+Safari/},
+	{browserName: 'chrome',  regex: /\s+Chrome\/(\d+)[.\d]+/},
+	{browserName: 'firefox', regex: /\s+Firefox\/(\d+)[.\d]+/},
 	// iOS
-	{name: 'safari',  regex: /\((?:iPhone|iPad);.+\sOS\s(\d+)_(\d+)/}
+	{browserName: 'safari',  regex: /\((?:iPhone|iPad);.+\sOS\s(\d+)_(\d+)/}
 ];
 
 const parseUserAgent = (userAgent) => {
 	const detectedInfo = {
 		browserEnvironment: true,
-		name: 'unknown',
-		version: 0,
+		browserName: 'unknown',
+		browserVersion: 0,
 		deviceMobile: false
 	};
 	let index;
@@ -194,8 +194,8 @@ const parseUserAgent = (userAgent) => {
 		const match = testPlatform.regex.exec(userAgent);
 
 		if (match) {
-			detectedInfo.name = testPlatform.name;
-			detectedInfo.version = Number(`${match[1]}.${match[2] || 0}`);
+			detectedInfo.browserName = testPlatform.browserName;
+			detectedInfo.browserVersion = Number(`${match[1]}.${match[2] || 0}`);
 			break;
 		}
 	}
@@ -206,7 +206,7 @@ const parseUserAgent = (userAgent) => {
 			detectedInfo.deviceMobile = true;
 		}
 
-		detectedInfo[detectedInfo.name] = detectedInfo.version;
+		detectedInfo[detectedInfo.browserName] = detectedInfo.browserVersion;
 	}
 
 	// Merge legacy platform info
@@ -216,8 +216,8 @@ const parseUserAgent = (userAgent) => {
 /**
  * @typedef {Object} PlatformDescription
  * @property {Boolean} browserEnvironment - `true` if the platform is a browser
- * @property {String} name - The name of the platform
- * @property {Number} version - The version of the platform
+ * @property {String} browserName - The name of the detected browser
+ * @property {Number} browserVersion - The version of the detected browser
  * @property {Boolean} deviceMobile - `true` if the platform is a mobile device
  * @property {Boolean} deviceTouchScreen - `true` if the platform has a touch screen
  * @property {Boolean} featureTouchEvent - `true` if the platform has native single-finger events
@@ -252,8 +252,7 @@ const detect = () => {
 	if (browserEnvironment()) {
 		detectedPlatform = parseUserAgent(globalThis.navigator?.userAgent || '');
 	} else {
-		const isNode = typeof process === 'object' && process?.release?.name === 'node';
-		// node environment (e.g. prerendering or snapshot runs)
+		// node or compatible environment (e.g. prerendering or snapshot runs)
 		detectedPlatform = {
 			// the following properties are deprecated and will be removed in the next major release
 			gesture: false,
@@ -262,8 +261,8 @@ const detect = () => {
 			unknown: true,
 			// the following properties are new and will be available in the next major release
 			browserEnvironment: false,
-			name: isNode ? 'node' : 'unknown',
-			version: isNode ? parseFloat(process?.versions?.node) || 0 : 0, /* magic number for unknown */
+			browserName: 'unknown',
+			browserVersion: 0, /* magic number for unknown */
 			deviceMobile: false
 		};
 	}
@@ -296,11 +295,11 @@ const platform = {};
 	'unknown',
 	// the following properties are new and will be available in the next major release
 	'browserEnvironment',
+	'browserName',
+	'browserVersion',
 	'featureTouchEvent',
 	'deviceMobile',
 	'deviceTouchScreen',
-	'name',
-	'version',
 	...(new Set(platforms.map(p => p.platform)))
 ].forEach(name => {
 	Object.defineProperty(platform, name, {
@@ -316,7 +315,7 @@ const platform = {};
 				deprecate({name, until: '5.0.0', replacedBy: 'browserEnvironment'});
 			}
 			if (name === 'platformName') {
-				deprecate({name, until: '5.0.0', replacedBy: 'name'});
+				deprecate({name, until: '5.0.0', replacedBy: 'browserName'});
 			}
 			if (name === 'touch') {
 				deprecate({name, until: '5.0.0', replacedBy: 'featureTouchEvent'});
