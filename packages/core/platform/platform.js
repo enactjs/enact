@@ -180,6 +180,9 @@ const userAgentPatterns = [
 	{browserName: 'safari',  regex: /\((?:iPhone|iPad);.+\sOS\s(\d+)_(\d+)/}
 ];
 
+// The base supported versions: Used in DEPRECATED warning
+const supportedVersions = {safari: 15.6, chrome: 94, firefox: 115};
+
 const parseUserAgent = (userAgent) => {
 	const detectedInfo = {
 		type: 'unknown',
@@ -210,6 +213,11 @@ const parseUserAgent = (userAgent) => {
 		}
 
 		detectedInfo[detectedInfo.browserName] = detectedInfo.browserVersion;
+	}
+
+	// deprecation warning for browser versions older than our support policy
+	if (supportedVersions[detectedInfo.browserName] > detectedInfo.browserVersion) {
+		deprecate({name: `supporting ${detectedInfo.browserName} version before ${supportedVersions[detectedInfo.browserName]}`, until: '5.0.0'});
 	}
 
 	// Merge legacy platform info
