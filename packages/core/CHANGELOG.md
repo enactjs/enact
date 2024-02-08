@@ -16,6 +16,10 @@ The following is a curated list of changes in the Enact core module, newest chan
 - `core/platform` member `browserName` and `browserVersion` to detect the compatible major browser name and version
 - `core/platform` member `touchEvent` and `touchScreen` replacing legacy `touch` and `touchscreen` respectively
 
+## [4.8.0] - 2024-02-08
+
+No significant changes.
+
 ## [4.7.9] - 2023-12-08
 
 No significant changes.

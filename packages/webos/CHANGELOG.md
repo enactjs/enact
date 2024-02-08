@@ -14,6 +14,10 @@ The following is a curated list of changes in the Enact webos module, newest cha
 - `webos/platform` member `version` for the detected webOS version
 - `webos/platform` member `chrome` for the detected chrome version
 
+## [4.8.0] - 2024-02-08
+
+No significant changes.
+
 ## [4.7.9] - 2023-12-08
 
 No significant changes.
