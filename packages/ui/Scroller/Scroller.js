@@ -36,19 +36,20 @@ const Scroller = (props) => {
 	// Hooks
 
 	const {
-		scrollContentHandle,
-		scrollContentWrapper: ScrollContentWrapper,
-		isHorizontalScrollbarVisible,
-		isVerticalScrollbarVisible,
+		scrollContentHandle, //ref
+		scrollContentWrapper: ScrollContentWrapper, //forwardRef
+		isHorizontalScrollbarVisible, //boolean
+		isVerticalScrollbarVisible, //boolean
 
-		resizeContextProps,
-		scrollContainerProps,
-		scrollInnerContainerProps,
-		scrollContentWrapperProps,
-		scrollContentProps,
-		verticalScrollbarProps,
-		horizontalScrollbarProps
+		resizeContextProps, //function
+		scrollContainerProps, //classname
+		scrollInnerContainerProps, //classname
+		scrollContentWrapperProps, //classname and event handlers
+		scrollContentProps, //classname and props
+		verticalScrollbarProps, //booleans and ref
+		horizontalScrollbarProps //booleans and ref
 	} = useScroll(props);
+	console.log('Scroller enact render');
 
 	// Return
 

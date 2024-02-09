@@ -2,7 +2,7 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import {platform} from '@enact/core/platform';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import {Component} from 'react';
+import {Component, PureComponent} from 'react';
 
 import css from './Scroller.module.less';
 
@@ -69,6 +69,7 @@ class ScrollerBasic extends Component {
 	};
 
 	componentDidMount () {
+		// console.log('mount', this.props);
 		this.calculateMetrics();
 	}
 
@@ -78,6 +79,14 @@ class ScrollerBasic extends Component {
 			this.forceUpdate();
 		}
 	}
+
+	// shouldComponentUpdate(nextProps) {
+	// 	if (nextProps === this.props) {
+	// 		return false;
+	// 	}
+	//
+	// 	return true;
+	// }
 
 	scrollBounds = {
 		clientWidth: 0,
@@ -190,6 +199,7 @@ class ScrollerBasic extends Component {
 				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
 				overflowY: this.isVertical() ? 'auto' : 'hidden'
 			});
+		console.log('ScrollerBasic enact render');
 
 		delete rest.cbScrollTo;
 		delete rest.direction;

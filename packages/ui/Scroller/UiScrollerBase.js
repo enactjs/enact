@@ -179,6 +179,7 @@ class ScrollerBase extends Component {
 				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
 				overflowY: this.isVertical() ? 'auto' : 'hidden'
 			});
+		console.log('UiScrollerBase enact render');
 
 		delete rest.cbScrollTo;
 		delete rest.direction;
