@@ -1,4 +1,3 @@
-/* global ResizeObserver, MutationObserver */
 /**
  * A higher-order component that adds the ability to measure nodes conveniently.
  *

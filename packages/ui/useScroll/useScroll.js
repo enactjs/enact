@@ -1,4 +1,3 @@
-/* global ResizeObserver */
 /**
  * Unstyled scrollable hook and behaviors to be customized by a theme or application.
  *
