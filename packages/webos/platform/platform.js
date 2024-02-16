@@ -67,7 +67,7 @@ const parseUserAgent = (userAgent) => {
 			platformInfo.open = true;
 		}
 
-		if (webOSSystem.stageReady) webOSSystem.stageReady();
+		if (webOSSystem?.stageReady) webOSSystem.stageReady();
 	}
 
 	for (let index = 0, p, match; (p = platforms[index]); index++) {
