@@ -20,6 +20,7 @@ import navigate from './navigate';
 import {
 	contains,
 	getContainerRect,
+	getIntersectionRect,
 	getPointRect,
 	getRect,
 	getRects,
@@ -364,7 +365,8 @@ function getTargetByDirectionFromElement (direction, element) {
 		return getTargetBySelector(extSelector);
 	}
 
-	const elementRect = getRect(element);
+	const elementContainerId = getContainersForNode(element).pop();
+	const elementRect = getContainerConfig(elementContainerId)?.overflow ? getIntersectionRect(getContainerNode(elementContainerId), element) : getRect(element);
 
 	const next = getNavigableContainersForNode(element)
 		.reduceRight((result, containerId, index, elementContainerIds) => {
