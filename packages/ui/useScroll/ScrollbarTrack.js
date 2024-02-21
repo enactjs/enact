@@ -37,7 +37,7 @@ ScrollbarTrack.defaultProps = {
 	vertical: true
 };
 
-const MemoizedScrollbarTrack = memo(ScrollbarTrack)
+const MemoizedScrollbarTrack = memo(ScrollbarTrack);
 
 export default MemoizedScrollbarTrack;
 export {
