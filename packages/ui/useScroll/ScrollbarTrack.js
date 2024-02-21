@@ -16,7 +16,6 @@ const ScrollbarTrack = forwardRef((props, ref) => {
 	const
 		{vertical, ...rest} = props,
 		className = classNames(css.scrollbarTrack, vertical ? css.vertical : null);
-	console.log('ScrollbarTrack enact render', props);
 
 	return <div {...rest} className={className} ref={ref} />;
 });

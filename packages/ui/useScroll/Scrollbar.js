@@ -131,7 +131,6 @@ const Scrollbar = memo((props) => {
 		scrollbarProps,
 		scrollbarTrackProps
 	} = useScrollbar(props);
-	console.log('Scrollbar enact render');
 
 	return (
 		<div {...restProps} {...scrollbarProps}>

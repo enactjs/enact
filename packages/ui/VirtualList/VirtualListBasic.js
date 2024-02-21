@@ -5,7 +5,7 @@ import {platform} from '@enact/core/platform';
 import {clamp} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
-import {createRef, Component, PureComponent} from 'react';
+import {createRef, Component} from 'react';
 
 import css from './VirtualList.module.less';
 
@@ -446,29 +446,6 @@ class VirtualListBasic extends Component {
 			this.scrollToPositionTarget = -1;
 		}
 	}
-
-	shouldComponentUpdate(nextProps) {
-		// Iterate over the keys of the current props
-		for (const propKey in this.props) {
-			// Compare current prop value with next prop value
-			if (this.props[propKey] !== nextProps[propKey]) {
-				console.log(`Prop '${propKey}' has changed.`);
-				// You can return true or false based on your logic
-				// For simplicity, we'll return true if any prop has changed
-				return true;
-			}
-		}
-
-		// If no props have changed, return false
-		return true;
-	}
-	// shouldComponentUpdate(nextProps, nextState, nextContext) {
-	// 	if (this.props === nextProps) {
-	// 		return false;
-	// 	} else {
-	// 		return true;
-	// 	}
-	// }
 
 	scrollBounds = {
 		clientWidth: 0,
@@ -1270,7 +1247,6 @@ class VirtualListBasic extends Component {
 		if (primary) {
 			this.positionItems();
 		}
-		console.log('VirtualListBasic render', this.props);
 
 		return (
 			<div className={containerClasses} {...containerProps} ref={this.props.scrollContentRef} style={style}>

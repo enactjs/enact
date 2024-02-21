@@ -18,7 +18,6 @@ import Scrollbar from '../useScroll/Scrollbar';
 
 import {UiVirtualListBase, UiVirtualListBaseNative} from './UiVirtualListBase';
 import {gridListItemSizeShape, itemSizesShape, VirtualListBasic} from './VirtualListBasic';
-import {useMemo} from 'react';
 
 const nop = () => {};
 
@@ -50,7 +49,6 @@ const VirtualList = (props) => {
 	} = useScroll(props);
 
 	// Render
-	console.log('VirtualList render');
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
