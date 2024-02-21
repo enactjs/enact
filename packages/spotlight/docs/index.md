@@ -286,8 +286,8 @@ provided, the first selector that successfully matches a node is used.
 
 `enterTo`
 + Type: [string]
-+ Values: [`''`, `'last-focused'`, or `'default-element'`]
-+ Default: `''`
++ Values: [`null`, `'last-focused'`, or `'default-element'`]
++ Default: `null`
 
 If the focus originates from another container, you can define which element in
 this container receives focus first.
