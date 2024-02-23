@@ -122,14 +122,14 @@ function detect () {
  *
  * @readonly
  * @type {Object}
- * @property {Boolean} webos `true` for webOS
- * @property {Boolean} [tv] `true` for LG webOS SmartTV
- * @property {Boolean} [watch] `true` for LG webOS SmartWatch. Deprecated: will be removed in 5.0.0.
+ * @property {Boolean} [watch] `true` for LG webOS SmartWatch. @deprecated will be removed in 5.0.0.
+ * @property {Boolean} [legacy] `true` for legacy webOS (Palm and HP hardware). @deprecated will be removed in 5.0.0.
+ * @property {Number}  [chrome] The version of Chrome if detected
  * @property {Boolean} [open] `true` for Open webOS
- * @property {Boolean} [legacy] `true` for legacy webOS (Palm and HP hardware). Deprecated: will be removed in 5.0.0.
+ * @property {Boolean} [tv] `true` for LG webOS SmartTV
  * @property {Boolean} [unknown] `true` for any unknown system
  * @property {Number}  [version] The version of the platform if detected
- * @property {Number}  [chrome] The version of Chrome if detected
+ * @property {Boolean} webos `true` for webOS
  * @memberof webos/platform
  * @public
  */

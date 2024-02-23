@@ -226,21 +226,21 @@ const parseUserAgent = (userAgent) => {
 
 /**
  * @typedef {Object} PlatformDescription
- * @property {String} browserName - The name of the detected browser
- * @property {Number} browserVersion - The version of the detected browser
- * @property {Number} chrome - The version of the detected browser, if chrome browser is detected
  * @property {Object} [extra] - Additional information about the detected platform. Deprecated: will be removed in 5.0.0.
- * @property {Number} firefox - The version of the detected browser, if firefox browser is detected
  * @property {Boolean} gesture - `true` if the platform has native double-finger events. Deprecated: will be removed in 5.0.0.
  * @property {Boolean} node - `true` only if `window` is `undefined`. Deprecated: will be removed in 5.0.0. Use `type` instead.
  * @property {String} [platformName] - The name of the platform, if detected. Deprecated: will be removed in 5.0.0. Use `browserName` instead for browser names.
- * @property {Number} safari - The version of the detected browser, if safari browser is detected
  * @property {Boolean} touch - `true` if the platform has native single-finger events. Deprecated: will be removed in 5.0.0. Use `touchEvent` instead.
- * @property {Boolean} touchEvent - `true` if the browser has native touch events
  * @property {Boolean} touchscreen - `true` if the platform has a touch screen. Deprecated: will be removed in 5.0.0. Use `touchScreen` instead.
+ * @property {Boolean} unknown - `true` for any unknown system. Deprecated: will be removed in 5.0.0. Use `type` instead.
+ * @property {String} browserName - The name of the detected browser
+ * @property {Number} browserVersion - The version of the detected browser
+ * @property {Number} chrome - The version of the detected browser, if chrome browser is detected
+ * @property {Number} firefox - The version of the detected browser, if firefox browser is detected
+ * @property {Number} safari - The version of the detected browser, if safari browser is detected
+ * @property {Boolean} touchEvent - `true` if the browser has native touch events
  * @property {Boolean} touchScreen - `true` if the platform has a touch screen
  * @property {String} type - The type of the detected platform. One of 'desktop', 'mobile', 'webos', 'node', or 'unknown'
- * @property {Boolean} unknown - `true` for any unknown system. Deprecated: will be removed in 5.0.0. Use `type` instead.
  *
  * @memberof core/platform
  * @public
