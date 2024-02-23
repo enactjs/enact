@@ -122,8 +122,8 @@ function detect () {
  *
  * @readonly
  * @type {Object}
- * @property {Boolean} [watch] `true` for LG webOS SmartWatch. @deprecated will be removed in 5.0.0.
- * @property {Boolean} [legacy] `true` for legacy webOS (Palm and HP hardware). @deprecated will be removed in 5.0.0.
+ * @property {Boolean} [watch] `true` for LG webOS SmartWatch.
+ * @deprecated will be removed in 5.0.0.
  * @property {Number}  [chrome] The version of Chrome if detected
  * @property {Boolean} [open] `true` for Open webOS
  * @property {Boolean} [tv] `true` for LG webOS SmartTV
@@ -133,6 +133,17 @@ function detect () {
  * @memberof webos/platform
  * @public
  */
+
+/**
+ * Provides identification of webOS variants.
+ *
+ * @readonly
+ * @property {Boolean} [legacy] `true` for legacy webOS (Palm and HP hardware).
+ * @deprecated will be removed in 5.0.0.
+ * @memberof webos/platform
+ * @public
+ */
+
 const platform = {};
 
 [
