@@ -13,6 +13,7 @@ import {
 	getDefaultContainer,
 	getLastContainer,
 	getNavigableContainersForNode,
+	getScrollTargetOnDescendantsFocus,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
@@ -142,7 +143,21 @@ const scenarios = {
 			'aria-owns': 's1 n1',
 			children: spottable({id: 's2'})
 		})
-	)
+	),
+	scrollTargetOnDescendantsFocusContainer: container({
+		id: 'scrollTargetContainer',
+		[containerAttribute]: 'scrollTargetContainer',
+		children: join(
+			container({
+				[containerAttribute]: 'child',
+				id: 'spottableDefault',
+				className: 'spottable-default',
+				children: join(
+					spottable({id: 'firstChildSpottable'})
+				)
+			})
+		)
+	})
 };
 
 const setupContainers = () => {
@@ -1252,6 +1267,31 @@ describe('container', () => {
 
 					const expected = [];
 					const actual = getContainerNavigableElements('first-container');
+
+					expect(actual).toEqual(expected);
+				}
+			)
+		);
+	});
+
+	describe('#getScrollTargetOnDescendantsFocus', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		test(
+			'should return a container that has scrollTargetOnDescendantsFocus configured',
+			testScenario(
+				scenarios.scrollTargetOnDescendantsFocusContainer,
+				(root) => {
+					configureContainer('scrollTargetContainer', {
+						scrollTargetOnDescendantsFocus: true
+					});
+					configureContainer('child', {
+						enterTo: 'last-focused'
+					});
+
+					const expected = root.querySelector('#scrollTargetContainer');
+					const actual = getScrollTargetOnDescendantsFocus(root.querySelector('#firstChildSpottable'));
 
 					expect(actual).toEqual(expected);
 				}
