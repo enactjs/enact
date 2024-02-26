@@ -89,22 +89,22 @@ const contains = curry((containerRect, elementRect) => {
 function getIntersectionRect (container, element) {
 	const {
 		left: L,
-		right: R,
 		top: T,
-		bottom: B
+		width: W,
+		height: H
 	} = container.getBoundingClientRect();
 	const {
 		left: l,
-		right: r,
 		top: t,
-		bottom: b
+		width: w,
+		height: h
 	} = element.getBoundingClientRect();
 	const intersectionRect = {
 		element,
 		left: Math.max(l, L),
-		right: Math.min(r, R),
+		right: Math.min(l + w, L + W),
 		top: Math.max(t, T),
-		bottom: Math.min(b, B)
+		bottom: Math.min(t + h, T + H)
 	};
 	intersectionRect.width = intersectionRect.right - intersectionRect.left;
 	intersectionRect.height = intersectionRect.bottom - intersectionRect.top;
