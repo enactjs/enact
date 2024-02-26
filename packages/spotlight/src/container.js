@@ -70,7 +70,7 @@ let GlobalConfig = {
 	partition: false, // use the container bounds for partitioning when leaving
 	rememberSource: false,
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
-	scrollTargetOnDescendantsFocus: false,    // @private - use the container for the scroll target when its descendants get focused
+	positionTargetOnDescendantsFocus: false, // @private - use the container for the position target when its descendants get focused
 	selector: '',           // can be a valid <extSelector> except "@" syntax.
 	selectorDisabled: false,
 	straightMultiplier: 1,
@@ -1103,15 +1103,15 @@ function notifyEnterContainer (direction, previous, previousContainerIds, curren
 }
 
 /**
- * Returns a closest container that wrap the element and has scrollTargetOnDescendantsFocus configured
+ * Returns a closest container that wrap the element and has positionTargetOnDescendantsFocus configured
  *
  * @param {Node} spotItem Focused element
  * @param {String[]} containerIds Ids for containers that wrap the spotItem element
  * @private
  */
-function getScrollTargetOnDescendantsFocus (spotItem, containerIds = getContainersForNode(spotItem)) {
+function getPositionTargetOnDescendantsFocus (spotItem, containerIds = getContainersForNode(spotItem)) {
 	return containerIds.reduceRight((result, containerId) => {
-		if (getContainerConfig(containerId).scrollTargetOnDescendantsFocus) {
+		if (getContainerConfig(containerId).positionTargetOnDescendantsFocus) {
 			result = getContainerNode(containerId);
 		}
 		return result;
@@ -1144,7 +1144,7 @@ export {
 	getDefaultContainer,
 	getLastContainer,
 	getNavigableContainersForNode,
-	getScrollTargetOnDescendantsFocus,
+	getPositionTargetOnDescendantsFocus,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
