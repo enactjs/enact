@@ -1111,7 +1111,9 @@ function notifyEnterContainer (direction, previous, previousContainerIds, curren
  */
 function getPositionTargetOnFocus (spotItem, containerIds = getContainersForNode(spotItem)) {
 	return containerIds.reduce((result, containerId) => {
-		if (getContainerConfig(containerId).positionTargetOnFocus) {
+		const config = getContainerConfig(containerId);
+
+		if (config && config.positionTargetOnFocus) {
 			result = getContainerNode(containerId);
 		}
 		return result;
