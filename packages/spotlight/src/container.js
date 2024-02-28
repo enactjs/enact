@@ -68,7 +68,7 @@ let GlobalConfig = {
 	onLeaveContainerFail: null,  // @private - notify the container when failing to leave via 5-way
 	overflow: false,
 	partition: false, // use the container bounds for partitioning when leaving
-	positionTargetOnFocus: false, // @private - use the container for the position target when its descendants get focused
+	positionTargetOnFocus: false, // @private - use the container for the position target when its descendants is focused
 	rememberSource: false,
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
 	selector: '',           // can be a valid <extSelector> except "@" syntax.
@@ -1111,9 +1111,7 @@ function notifyEnterContainer (direction, previous, previousContainerIds, curren
  */
 function getPositionTargetOnFocus (spotItem, containerIds = getContainersForNode(spotItem)) {
 	return containerIds.reduce((result, containerId) => {
-		const config = getContainerConfig(containerId);
-
-		if (config && config.positionTargetOnFocus) {
+		if (getContainerConfig(containerId)?.positionTargetOnFocus) {
 			result = getContainerNode(containerId);
 		}
 		return result;
