@@ -14,7 +14,8 @@ import {
 	getLastContainer,
 	getNavigableContainersForNode,
 	isContainer,
-	isNavigable
+	isNavigable,
+	rootContainerId
 } from './container';
 import navigate from './navigate';
 import {
@@ -366,7 +367,12 @@ function getTargetByDirectionFromElement (direction, element) {
 	}
 
 	const elementContainerId = getContainersForNode(element).pop();
-	const elementRect = getContainerConfig(elementContainerId)?.overflow ? getIntersectionRect(getContainerNode(elementContainerId), element) : getRect(element);
+	let elementRect = null;
+	if (elementContainerId !== rootContainerId && getContainerConfig(elementContainerId)?.overflow) {
+		elementRect = getIntersectionRect(getContainerNode(elementContainerId), element);
+	} else {
+		elementRect = getRect(element);
+	}
 
 	const next = getNavigableContainersForNode(element)
 		.reduceRight((result, containerId, index, elementContainerIds) => {
