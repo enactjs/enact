@@ -13,7 +13,7 @@ import {
 	getDefaultContainer,
 	getLastContainer,
 	getNavigableContainersForNode,
-	getPositionTargetOnDescendantsFocus,
+	getPositionTargetOnFocus,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
@@ -144,7 +144,7 @@ const scenarios = {
 			children: spottable({id: 's2'})
 		})
 	),
-	positionTargetOnDescendantsFocusContainer: container({
+	positionTargetOnFocusContainer: container({
 		id: 'positionTargetContainer',
 		[containerAttribute]: 'positionTargetContainer',
 		children: join(
@@ -1274,24 +1274,24 @@ describe('container', () => {
 		);
 	});
 
-	describe('#getPositionTargetOnDescendantsFocus', () => {
+	describe('#getPositionTargetOnFocus', () => {
 		beforeEach(setupContainers);
 		afterEach(teardownContainers);
 
 		test(
-			'should return a container that has positionTargetOnDescendantsFocus configured',
+			'should return a container that has positionTargetOnFocus configured',
 			testScenario(
-				scenarios.positionTargetOnDescendantsFocusContainer,
+				scenarios.positionTargetOnFocusContainer,
 				(root) => {
 					configureContainer('positionTargetContainer', {
-						positionTargetOnDescendantsFocus: true
+						positionTargetOnFocus: true
 					});
 					configureContainer('child', {
 						enterTo: 'last-focused'
 					});
 
 					const expected = root.querySelector('#positionTargetContainer');
-					const actual = getPositionTargetOnDescendantsFocus(root.querySelector('#firstChildSpottable'));
+					const actual = getPositionTargetOnFocus(root.querySelector('#firstChildSpottable'));
 
 					expect(actual).toEqual(expected);
 				}
