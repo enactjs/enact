@@ -367,20 +367,14 @@ function getTargetByDirectionFromElement (direction, element) {
 	}
 
 	const elementContainerId = getContainersForNode(element).pop();
-	let elementRect = null;
-	if (elementContainerId !== rootContainerId && getContainerConfig(elementContainerId)?.overflow) {
-		elementRect = getIntersectionRect(getContainerNode(elementContainerId), element);
-	} else {
-		elementRect = getRect(element);
-	}
 
-	const next = getNavigableContainersForNode(element)
+	let next = getNavigableContainersForNode(element)
 		.reduceRight((result, containerId, index, elementContainerIds) => {
 			result = result || getTargetInContainerByDirectionFromElement(
 				direction,
 				containerId,
 				element,
-				elementRect,
+				getRect(element),
 				elementContainerIds
 			);
 
@@ -397,6 +391,32 @@ function getTargetByDirectionFromElement (direction, element) {
 
 			return result;
 		}, null);
+
+	if (next === element && elementContainerId !== rootContainerId && getContainerConfig(elementContainerId)?.overflow) {
+		next = getNavigableContainersForNode(element)
+			.reduceRight((result, containerId, index, elementContainerIds) => {
+				result = result || getTargetInContainerByDirectionFromElement(
+					direction,
+					containerId,
+					element,
+					getIntersectionRect(getContainerNode(elementContainerId), element),
+					elementContainerIds
+				);
+
+				if (!result) {
+					result = getLeaveForTarget(containerId, direction);
+
+					// To support a `leaveFor` configuration with navigation disallowed in the current
+					// `direction`, we return the current element to prevent further searches for a
+					// target in this reduction.
+					if (result === false) {
+						result = element;
+					}
+				}
+
+				return result;
+			}, null);
+	}
 
 	// if the reduce above returns the original element, it means it hit a `leaveFor` config that
 	// prevents navigation so we enforce that here by returning null.
