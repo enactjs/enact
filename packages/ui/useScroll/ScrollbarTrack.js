@@ -20,8 +20,6 @@ const ScrollbarTrack = forwardRef((props, ref) => {
 	return <div {...rest} className={className} ref={ref} />;
 });
 
-ScrollbarTrack.displayName = 'ui:ScrollbarTrack';
-
 ScrollbarTrack.propTypes = /** @lends ui/useScroll.ScrollbarTrack.prototype */ {
 	/**
 	 * If `true`, the scrollbar will be oriented vertically.
@@ -38,6 +36,8 @@ ScrollbarTrack.defaultProps = {
 };
 
 const MemoizedScrollbarTrack = memo(ScrollbarTrack);
+
+MemoizedScrollbarTrack.displayName = 'ui:ScrollbarTrack';
 
 export default MemoizedScrollbarTrack;
 export {
