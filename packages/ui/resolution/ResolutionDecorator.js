@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 
-import {init, config as riConfig, defineScreenTypes, getResolutionClasses} from './resolution';
+import {init, config as riConfig, defineScreenTypes, getResolutionClasses, updateBaseFontSize, calculateFontSize} from './resolution';
 
 /**
  * Default config for `ResolutionDecorator`.
@@ -118,6 +118,12 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillUnmount () {
 			if (config.dynamic) window.removeEventListener('resize', this.handleResize);
+		}
+
+		componentDidUpdate (prevProps) {
+			if(prevProps.fontScale !== this.props.fontScale) {
+				updateBaseFontSize(calculateFontSize(null, this.props.fontScale));
+			}
 		}
 
 		handleResize = () => {

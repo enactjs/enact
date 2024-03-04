@@ -194,18 +194,18 @@ function getScreenType (rez) {
  * @returns {String}          The calculated pixel size (with unit suffix. Ex: "24px").
  * @public
  */
-function calculateFontSize (type) {
+function calculateFontSize (type, fontScale) {
 	const scrObj = getScreenTypeObject(type);
 	const shouldScaleFontSize = (config.intermediateScreenHandling === 'scale') && (config.matchSmallerScreenType ? workspaceBounds.width > scrObj.width && workspaceBounds.height > scrObj.height :
 		workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
 	let size;
 
 	if (orientation === 'portrait' && config.orientationHandling === 'scale') {
-		size = scrObj.height / scrObj.width * scrObj.pxPerRem;
+		size = scrObj.height / scrObj.width * (scrObj.pxPerRem * fontScale);
 	} else {
-		size = scrObj.pxPerRem;
+		size = (scrObj.pxPerRem * fontScale);
 		if (orientation === 'landscape' && shouldScaleFontSize) {
-			size = parseInt(workspaceBounds.height * scrObj.pxPerRem / scrObj.height);
+			size = parseInt(workspaceBounds.height * (scrObj.pxPerRem * fontScale)/ scrObj.height);
 		}
 	}
 	return size + 'px';
@@ -215,7 +215,7 @@ function calculateFontSize (type) {
  * @function
  * @memberof ui/resolution
  * @param {String}    size     A valid CSS measurement to be applied as the base document font size.
- * @private
+ * @public
  * @returns {undefined}
  */
 function updateBaseFontSize (size) {
@@ -494,5 +494,6 @@ export {
 	scaleToRem,
 	selectSrc,
 	unit,
-	unitToPixelFactors
+	unitToPixelFactors,
+	updateBaseFontSize
 };
