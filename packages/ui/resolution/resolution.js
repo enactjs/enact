@@ -194,7 +194,7 @@ function getScreenType (rez) {
  * @returns {String}          The calculated pixel size (with unit suffix. Ex: "24px").
  * @public
  */
-function calculateFontSize (type, fontScale) {
+function calculateFontSize (type, fontScale = 1) {
 	const scrObj = getScreenTypeObject(type);
 	const shouldScaleFontSize = (config.intermediateScreenHandling === 'scale') && (config.matchSmallerScreenType ? workspaceBounds.width > scrObj.width && workspaceBounds.height > scrObj.height :
 		workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
