@@ -215,7 +215,7 @@ function calculateFontSize (type, fontScale) {
  * @function
  * @memberof ui/resolution
  * @param {String}    size     A valid CSS measurement to be applied as the base document font size.
- * @public
+ * @private
  * @returns {undefined}
  */
 function updateBaseFontSize (size) {
