@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [4.7.10] - 2024-03-05
+
+No significant changes.
+
 ## [4.7.9] - 2023-12-08
 
 No significant changes.
