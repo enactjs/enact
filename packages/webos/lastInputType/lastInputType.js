@@ -9,20 +9,20 @@ import LS2Request from '../LS2Request';
 import platform from '../platform';
 
 const requestLastInputType = ({onSuccess, onFailure}) => {
-    if (platform.tv) {
-        return new LS2Request().send({
-            service: 'luna://com.webos.surfacemanager',
-            method: 'getLastInputType',
-            subscribe: true,
-            onSuccess,
-            onFailure
-        });
-    }
+	if (platform.tv) {
+		return new LS2Request().send({
+			service: 'luna://com.webos.surfacemanager',
+			method: 'getLastInputType',
+			subscribe: true,
+			onSuccess,
+			onFailure
+		});
+	}
 
-    return null;
+	return null;
 };
 
 export default requestLastInputType;
 export {
-    requestLastInputType
+	requestLastInputType
 };
