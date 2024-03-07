@@ -5,8 +5,8 @@
  * @private
  */
 
-import platform from '../platform';
 import LS2Request from '../LS2Request';
+import platform from '../platform';
 
 const requestLastInputType = ({onSuccess, onFailure}) => {
     if (platform.tv) {
