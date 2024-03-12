@@ -97,7 +97,8 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'ResolutionDecorator';
 
 		static propTypes = /** @lends ui/resolution.ResolutionDecorator.prototype */ {
-			className: PropTypes.string
+			className: PropTypes.string,
+			fontScale: PropTypes.number
 		};
 
 		constructor (props) {
@@ -116,14 +117,14 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.rootNode = ReactDOM.findDOMNode(this);
 		}
 
-		componentWillUnmount () {
-			if (config.dynamic) window.removeEventListener('resize', this.handleResize);
-		}
-
 		componentDidUpdate (prevProps) {
-			if(prevProps.fontScale !== this.props.fontScale) {
+			if (prevProps.fontScale !== this.props.fontScale) {
 				updateBaseFontSize(calculateFontSize(null, this.props.fontScale));
 			}
+		}
+
+		componentWillUnmount () {
+			if (config.dynamic) window.removeEventListener('resize', this.handleResize);
 		}
 
 		handleResize = () => {

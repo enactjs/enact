@@ -205,7 +205,7 @@ function calculateFontSize (type, fontScale = 1) {
 	} else {
 		size = (scrObj.pxPerRem * fontScale);
 		if (orientation === 'landscape' && shouldScaleFontSize) {
-			size = parseInt(workspaceBounds.height * (scrObj.pxPerRem * fontScale)/ scrObj.height);
+			size = parseInt(workspaceBounds.height * (scrObj.pxPerRem * fontScale) / scrObj.height);
 		}
 	}
 	return size + 'px';
