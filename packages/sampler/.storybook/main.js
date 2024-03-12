@@ -17,15 +17,15 @@ module.exports = {
 		name: '@storybook/react-webpack5',
 		options: {}
 	},
-	storyIndexers: (indexers) => {
-		const indexer = async (fileName, opts) => {
+	experimental_indexers: (indexers) => {
+		const createIndex = async (fileName, opts) => {
 			const code = readFileSync(fileName, { encoding: 'utf-8' });
-			return loadCsf(code, { ...opts, fileName }).parse();
+			return loadCsf(code, { ...opts, fileName }).parse().indexInputs;
 		};
 		return [
 			{
 				test: /\.[tj]sx?$/,
-				indexer,
+				createIndex,
 			},
 			...(indexers || [])
 		]
