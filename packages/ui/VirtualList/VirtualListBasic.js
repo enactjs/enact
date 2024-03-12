@@ -550,20 +550,25 @@ class VirtualListBasic extends Component {
 		return index === 0 ? 0 : this.getItemBottomPosition(index - 1) + spacing;
 	};
 
-	getItemPosition = (index, stickTo = 'start', optionalOffset = 0) => {
+	getItemPosition = (index, stickTo = 'start', optionalOffset = 0, disallowNegativeOffset = false) => {
 		const {isPrimaryDirectionVertical, primary, scrollBounds} = this;
 		const maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 		const position = this.getGridPosition(index);
 		let offset = 0;
 
-		if (stickTo === 'start') {
+		if (stickTo === 'start') {         // 'start'
 			offset = optionalOffset;
-		} else if (this.props.itemSizes) {
+		} else if (this.props.itemSizes) { // 'end' for different item sizes
 			offset = primary.clientSize - this.props.itemSizes[index] - optionalOffset;
-		} else if (stickTo === 'center') {
+		} else if (stickTo === 'center') { // 'center'
 			offset = (primary.clientSize / 2) - (primary.gridSize / 2) - optionalOffset;
-		} else {
+		} else {                           // 'end' for same item sizes
 			offset = primary.clientSize - primary.itemSize - optionalOffset;
+		}
+
+		/* istanbul ignore next */
+		if (disallowNegativeOffset) {
+			offset = Math.max(0, offset);
 		}
 
 		position.primaryPosition = clamp(0, maxPos, position.primaryPosition - offset);
@@ -825,7 +830,7 @@ class VirtualListBasic extends Component {
 	// scrollMode 'native' only
 	getRtlPositionX = (x) => {
 		if (this.props.rtl) {
-			return (platform.ios || platform.safari || platform.chrome >= 85 || platform.androidChrome >= 85) ? -x : this.scrollBounds.maxLeft - x;
+			return (platform.chrome < 85) ? this.scrollBounds.maxLeft - x : -x;
 		}
 		return x;
 	};

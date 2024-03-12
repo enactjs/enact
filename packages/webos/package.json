@@ -1,6 +1,6 @@
 {
   "name": "@enact/webos",
-  "version": "4.7.3",
+  "version": "4.8.0",
   "description": "webOS support library",
   "repository": {
     "type": "git",
@@ -11,6 +11,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",
+    "interlink": "npm link ../core",
     "lint": "enact lint --strict",
     "test": "enact test",
     "test-json": "enact test --json",
@@ -31,7 +32,7 @@
     }
   },
   "dependencies": {
-    "@enact/core": "^4.7.3",
+    "@enact/core": "^4.8.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

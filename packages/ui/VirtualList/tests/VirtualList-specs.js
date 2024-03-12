@@ -207,6 +207,75 @@ describe('VirtualList', () => {
 			act(() => myScrollTo({index: 10, animate: false}));
 		});
 
+		test('should scroll to make the specific item of a given index stick to \'start\' position with scrollTo', (done) => {
+			const onScrollStop = handlerOnScrollStop(done, () => {
+				const expected = 900;
+				const actual = resultScrollTop;
+
+				expect(actual).toBe(expected);
+
+			});
+
+			render(
+				<VirtualList
+					cbScrollTo={getScrollTo}
+					clientSize={clientSize}
+					dataSize={dataSize}
+					itemRenderer={renderItem}
+					itemSize={itemSize}
+					onScrollStop={onScrollStop}
+				/>
+			);
+
+			act(() => myScrollTo({index: 30, animate: false, stickTo: 'start'}));
+		});
+
+		test('should scroll to make the specific item of a given index stick to \'center\' position with scrollTo', (done) => {
+			const onScrollStop = handlerOnScrollStop(done, () => {
+				const expected = 555;
+				const actual = resultScrollTop;
+
+				expect(actual).toBe(expected);
+
+			});
+
+			render(
+				<VirtualList
+					cbScrollTo={getScrollTo}
+					clientSize={clientSize}
+					dataSize={dataSize}
+					itemRenderer={renderItem}
+					itemSize={itemSize}
+					onScrollStop={onScrollStop}
+				/>
+			);
+
+			act(() => myScrollTo({index: 30, animate: false, stickTo: 'center'}));
+		});
+
+		test('should scroll to make the specific item of a given index stick to \'end\' position with scrollTo', (done) => {
+			const onScrollStop = handlerOnScrollStop(done, () => {
+				const expected = 210;
+				const actual = resultScrollTop;
+
+				expect(actual).toBe(expected);
+
+			});
+
+			render(
+				<VirtualList
+					cbScrollTo={getScrollTo}
+					clientSize={clientSize}
+					dataSize={dataSize}
+					itemRenderer={renderItem}
+					itemSize={itemSize}
+					onScrollStop={onScrollStop}
+				/>
+			);
+
+			act(() => myScrollTo({index: 30, animate: false, stickTo: 'end'}));
+		});
+
 		test('should scroll to the given \'x\' position with scrollTo', (done) => {
 			const onScrollStop = handlerOnScrollStop(done, () => {
 				const expected = 1;
