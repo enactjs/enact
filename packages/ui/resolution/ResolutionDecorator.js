@@ -29,6 +29,18 @@ const defaultConfig = {
 	dynamic: true,
 
 	/**
+	 * Font Scale for large text mode.
+	 * Use this value to set the scale of the font.
+	 * This is the value that will be multiplied by pxPerRem, which is determined by resolution.
+
+	 * @type {Number}
+	 * @default 1
+	 * @public
+	 * @memberof ui/resolution.ResolutionDecorator.defaultConfig
+	 */
+	fontScale: 1,
+
+	/**
 	 * Determines how to calculate font-size.
 	 * When set to `scale` and the screen is in `landscape` orientation,
 	 * calculates font-size linearly based on screen resolution.
@@ -152,11 +164,15 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
+			const {...rest} = this.props;
+
+			delete rest.fontScale;
+
 			// Check if the classes are different from our previous classes
 			let classes = getResolutionClasses();
 
 			if (this.props.className) classes += (classes ? ' ' : '') + this.props.className;
-			return <Wrapped {...this.props} className={classes} />;
+			return <Wrapped {...rest} className={classes} />;
 		}
 	};
 });
