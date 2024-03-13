@@ -1,5 +1,3 @@
-/* global ResizeObserver */
-
 import direction from 'direction';
 import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';

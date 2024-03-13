@@ -1,5 +1,3 @@
-/* global Element */
-
 export default function (set, remove) {
 	let polyfilled = false;
 
