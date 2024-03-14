@@ -45,7 +45,7 @@ let GlobalConfig = {
 	active: true,
 	continue5WayHold: false,
 	defaultElement: '',     // <extSelector> except "@" syntax.
-	enterTo: '',            // '', 'last-focused', 'default-element'
+	enterTo: null,            // null, 'last-focused', 'default-element'
 	isStandardFocusableMode: false,     // @private - set to true to focus standard focusable element
 	lastFocusedElement: null,
 	lastFocusedKey: null,
