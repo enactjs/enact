@@ -189,9 +189,10 @@ function getScreenType (rez) {
  *
  * @function
  * @memberof ui/resolution
- * @param {String}    type    Screen type to base size the calculation on. If no
- *                            screen type is provided, the current screen type will be used.
- * @returns {String}          The calculated pixel size (with unit suffix. Ex: "24px").
+ * @param {String}    type        Screen type to base size the calculation on. If no
+ *                                screen type is provided, the current screen type will be used.
+ * @param {Number}    fontScale   Scalue value to be multiflied by the base font size.
+ * @returns {String}              The calculated pixel size (with unit suffix. Ex: "24px").
  * @public
  */
 function calculateFontSize (type, fontScale = 1) {
@@ -456,19 +457,20 @@ function selectSrc (src) {
  * @memberof ui/resolution
  * @param {Object}    args    A hash of options. The key `measurementNode` is used to as the node,
  *                            typically the root element, to measure and use as the dimensions for
- *                            the `screenType`.
+ *                            the `screenType`. The key `fontScale` is used multiflied scale value
+ * 							  to base font size.
  *
  * @returns {undefined}
  * @public
  */
 function init (args = {}) {
-	const {measurementNode} = args;
+	const {measurementNode, fontScale} = args;
 	updateWorkspaceBounds(measurementNode);
 	screenType = getScreenType();
 	screenTypeObject = getScreenTypeObject();
 	unitToPixelFactors.rem = getUnitToPixelFactors();
 	riRatio = getRiRatio();
-	updateBaseFontSize(calculateFontSize());
+	updateBaseFontSize(calculateFontSize(null, fontScale));
 }
 
 /**

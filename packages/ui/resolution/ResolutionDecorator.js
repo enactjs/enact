@@ -29,18 +29,6 @@ const defaultConfig = {
 	dynamic: true,
 
 	/**
-	 * Font Scale for large text mode.
-	 * Use this value to set the scale of the font.
-	 * This is the value that will be multiplied by pxPerRem, which is determined by resolution.
-
-	 * @type {Number}
-	 * @default 1
-	 * @public
-	 * @memberof ui/resolution.ResolutionDecorator.defaultConfig
-	 */
-	fontScale: 1,
-
-	/**
 	 * Determines how to calculate font-size.
 	 * When set to `scale` and the screen is in `landscape` orientation,
 	 * calculates font-size linearly based on screen resolution.
@@ -110,14 +98,28 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends ui/resolution.ResolutionDecorator.prototype */ {
 			className: PropTypes.string,
+
+			/**
+			 * Font Scale for large text mode.
+	 		 * Use this value to set the scale of the font.
+	 		 * This is the value that will be multiplied by pxPerRem, which is determined by resolution.
+			 *
+			 * @type {Number}
+			 * @default 1
+			 * @public
+			 */
 			fontScale: PropTypes.number
+		};
+
+		static defaultProps = {
+			fontScale: 1
 		};
 
 		constructor (props) {
 			super(props);
 			riConfig.intermediateScreenHandling = config.intermediateScreenHandling;
 			riConfig.matchSmallerScreenType = config.matchSmallerScreenType;
-			init({measurementNode: (typeof window !== 'undefined' && window)});
+			init({measurementNode: (typeof window !== 'undefined' && window), fontScale: this.props.fontScale});
 			this.state = {
 				resolutionClasses: ''
 			};
@@ -156,7 +158,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		didClassesChange () {
 			const prevClassNames = getResolutionClasses();
-			init({measurementNode: this.rootNode});
+			init({measurementNode: this.rootNode, fontScale: this.props.fontScale});
 			const classNames = getResolutionClasses();
 			if (prevClassNames !== classNames) {
 				return classNames;
