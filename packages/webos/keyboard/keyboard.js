@@ -13,7 +13,10 @@
  * @memberof webos/keyboard
  * @public
  */
-const isShowing = () => window.PalmSystem && window.PalmSystem.isKeyboardVisible;
+const isShowing = () => {
+	const webOSSystem = window.webOSSystem ?? window.PalmSystem;
+	return webOSSystem && webOSSystem.isKeyboardVisible;
+};
 
 export {
 	isShowing

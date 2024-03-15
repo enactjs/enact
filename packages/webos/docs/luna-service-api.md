@@ -2,7 +2,7 @@
 title: Luna Service API
 ---
 
-The [Luna service API](http://webostv.developer.lge.com/api/webos-service-api/) is available on webOS platforms and allows developers to create applications that can
+The [Luna service API](https://webostv.developer.lge.com/develop/references/luna-service-introduction) is available on webOS platforms and allows developers to create applications that can
 make use of platform features, such as the `Settings Service` or the `Media Database`.
 
 ### LS2Request
