@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 
-import {init, config as riConfig, defineScreenTypes, getResolutionClasses, updateBaseFontSize, calculateFontSize} from './resolution';
+import {init, calculateFontSize, config as riConfig, defineScreenTypes, getResolutionClasses, updateBaseFontSize, updateFontScale} from './resolution';
 
 /**
  * Default config for `ResolutionDecorator`.
@@ -119,7 +119,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 			riConfig.intermediateScreenHandling = config.intermediateScreenHandling;
 			riConfig.matchSmallerScreenType = config.matchSmallerScreenType;
-			init({measurementNode: (typeof window !== 'undefined' && window), fontScale: this.props.fontScale});
+			init({measurementNode: (typeof window !== 'undefined' && window)});
 			this.state = {
 				resolutionClasses: ''
 			};
@@ -129,11 +129,14 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (config.dynamic) window.addEventListener('resize', this.handleResize);
 			// eslint-disable-next-line react/no-find-dom-node
 			this.rootNode = ReactDOM.findDOMNode(this);
+
+			updateFontScale(this.props.fontScale);
 		}
 
 		componentDidUpdate (prevProps) {
 			if (prevProps.fontScale !== this.props.fontScale) {
-				updateBaseFontSize(calculateFontSize(null, this.props.fontScale));
+				updateFontScale(this.props.fontScale);
+				updateBaseFontSize(calculateFontSize());
 			}
 		}
 
@@ -158,7 +161,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		didClassesChange () {
 			const prevClassNames = getResolutionClasses();
-			init({measurementNode: this.rootNode, fontScale: this.props.fontScale});
+			init({measurementNode: this.rootNode});
 			const classNames = getResolutionClasses();
 			if (prevClassNames !== classNames) {
 				return classNames;

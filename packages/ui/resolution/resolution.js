@@ -1,4 +1,5 @@
 let baseScreen,
+	fontScale = 1,
 	orientation,
 	riRatio,
 	screenType,
@@ -189,13 +190,12 @@ function getScreenType (rez) {
  *
  * @function
  * @memberof ui/resolution
- * @param {String}    type        Screen type to base size the calculation on. If no
- *                                screen type is provided, the current screen type will be used.
- * @param {Number}    fontScale   Scalue value to be multiflied by the base font size.
- * @returns {String}              The calculated pixel size (with unit suffix. Ex: "24px").
+ * @param {String}    type    Screen type to base size the calculation on. If no
+ *                            screen type is provided, the current screen type will be used.
+ * @returns {String}          The calculated pixel size (with unit suffix. Ex: "24px").
  * @public
  */
-function calculateFontSize (type, fontScale = 1) {
+function calculateFontSize (type) {
 	const scrObj = getScreenTypeObject(type);
 	const shouldScaleFontSize = (config.intermediateScreenHandling === 'scale') && (config.matchSmallerScreenType ? workspaceBounds.width > scrObj.width && workspaceBounds.height > scrObj.height :
 		workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
@@ -223,6 +223,17 @@ function updateBaseFontSize (size) {
 	if (typeof window === 'object') {
 		document.documentElement.style.fontSize = size;
 	}
+}
+
+/**
+ * @function
+ * @memberof ui/resolution
+ * @param {Number}    scale     A value is used multiflied scale to base font size.
+ * @returns {undefined}
+ * @private
+ */
+function updateFontScale (fontScaleValue) {
+	fontScale = fontScaleValue;
 }
 
 /**
@@ -457,20 +468,19 @@ function selectSrc (src) {
  * @memberof ui/resolution
  * @param {Object}    args    A hash of options. The key `measurementNode` is used to as the node,
  *                            typically the root element, to measure and use as the dimensions for
- *                            the `screenType`. The key `fontScale` is used multiflied scale value
- * 							  to base font size.
+ *                            the `screenType`.
  *
  * @returns {undefined}
  * @public
  */
 function init (args = {}) {
-	const {measurementNode, fontScale} = args;
+	const {measurementNode} = args;
 	updateWorkspaceBounds(measurementNode);
 	screenType = getScreenType();
 	screenTypeObject = getScreenTypeObject();
 	unitToPixelFactors.rem = getUnitToPixelFactors();
 	riRatio = getRiRatio();
-	updateBaseFontSize(calculateFontSize(null, fontScale));
+	updateBaseFontSize(calculateFontSize());
 }
 
 /**
@@ -497,5 +507,6 @@ export {
 	selectSrc,
 	unit,
 	unitToPixelFactors,
-	updateBaseFontSize
+	updateBaseFontSize,
+	updateFontScale
 };
