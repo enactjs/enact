@@ -228,7 +228,7 @@ function updateBaseFontSize (size) {
 /**
  * @function
  * @memberof ui/resolution
- * @param {Number}    scale     A value is used multiflied scale to base font size.
+ * @param {Number}    fontScaleValue     The value to scale the base font size.
  * @returns {undefined}
  * @private
  */

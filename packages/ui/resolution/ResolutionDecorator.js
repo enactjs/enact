@@ -100,9 +100,9 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			className: PropTypes.string,
 
 			/**
-			 * Font Scale for large text mode.
+			 * Font Scale value for the large screen mode.
 	 		 * Use this value to set the scale of the font.
-	 		 * This is the value that will be multiplied by pxPerRem, which is determined by resolution.
+	 		 * This is the value that will be multiplied by pxPerRem, which is determined by the resolution.
 			 *
 			 * @type {Number}
 			 * @default 1
@@ -119,6 +119,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 			riConfig.intermediateScreenHandling = config.intermediateScreenHandling;
 			riConfig.matchSmallerScreenType = config.matchSmallerScreenType;
+			updateFontScale(this.props.fontScale);
 			init({measurementNode: (typeof window !== 'undefined' && window)});
 			this.state = {
 				resolutionClasses: ''
@@ -129,8 +130,6 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (config.dynamic) window.addEventListener('resize', this.handleResize);
 			// eslint-disable-next-line react/no-find-dom-node
 			this.rootNode = ReactDOM.findDOMNode(this);
-
-			updateFontScale(this.props.fontScale);
 		}
 
 		componentDidUpdate (prevProps) {
