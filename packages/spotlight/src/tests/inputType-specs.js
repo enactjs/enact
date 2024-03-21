@@ -2,8 +2,6 @@ import {getInputType, setInputType} from '../inputType';
 
 describe('inputType', () => {
 	test('should have a default input type as \'key\'', () => {
-		setInputType('none');
-
 		const expected = 'key';
 		const actual = getInputType();
 
