@@ -1,22 +1,41 @@
 const webpack = require('@enact/storybook-utils/configs/webpack');
+const { loadCsf } = require('@storybook/csf-tools');
+const { readFileSync }  = require('fs');
 
 module.exports = {
 	core: {
-		builder: 'webpack5',
 		disableTelemetry: true
+	},
+	docs: {
+		autodocs: true,
 	},
 	features: {
 		postcss: false,
-		storyStoreV7: true,
 		warnOnLegacyHierarchySeparator: false
 	},
-	framework: '@storybook/react',
+	framework: {
+		name: '@storybook/react-webpack5',
+		options: {}
+	},
+	experimental_indexers: (indexers) => {
+		const createIndex = async (fileName, opts) => {
+			const code = readFileSync(fileName, { encoding: 'utf-8' });
+			return loadCsf(code, { ...opts, fileName }).parse().indexInputs;
+		};
+		return [
+			{
+				test: /\.[tj]sx?$/,
+				createIndex,
+			},
+			...(indexers || [])
+		]
+	},
 	stories: ['./../stories/default/*.js'],
 	addons: [
 		'@enact/storybook-utils/addons/actions',
 		'@enact/storybook-utils/addons/controls',
-		'@enact/storybook-utils/addons/docs',
-		'@enact/storybook-utils/addons/toolbars'
+		'@enact/storybook-utils/addons/toolbars',
+		'@storybook/addon-docs',
 	],
 	webpackFinal: async (config, {configType}) => {
 		return webpack(config, configType, __dirname);

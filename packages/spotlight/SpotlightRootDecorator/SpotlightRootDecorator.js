@@ -32,7 +32,17 @@ const defaultConfig = {
 	 * @public
 	 * @memberof spotlight/SpotlightRootDecorator.SpotlightRootDecorator.defaultConfig
 	 */
-	noAutoFocus: false
+	noAutoFocus: false,
+
+	/**
+	 * Specifies the id of the React DOM tree root node
+	 *
+	 * @type {String}
+	 * @default 'root'
+	 * @public
+	 * @memberof spotlight/SpotlightRootDecorator.SpotlightRootDecorator.defaultConfig
+	 */
+	rootId: 'root'
 };
 
 /**
@@ -54,7 +64,7 @@ const defaultConfig = {
  * @hoc
  */
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {noAutoFocus} = config;
+	const {noAutoFocus, rootId} = config;
 
 	return class extends Component {
 		static displayName = 'SpotlightRootDecorator';
@@ -85,7 +95,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (typeof document === 'object') {
-				this.containerNode = document.querySelector('#root');
+				this.containerNode = document.querySelector('#' + rootId);
 
 				document.addEventListener('focusin', this.handleFocusIn, {capture: true});
 				document.addEventListener('keydown', this.handleKeyDown, {capture: true});
