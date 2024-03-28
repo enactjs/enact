@@ -16,7 +16,7 @@
     "@enact/core": "^4.8.0",
     "@enact/i18n": "^4.8.0",
     "@enact/spotlight": "^4.8.0",
-    "@enact/storybook-utils": "^5.1.2",
+    "@enact/storybook-utils": "^5.1.3",
     "@enact/ui": "^4.8.0",
     "@enact/webos": "^4.8.0",
     "@storybook/addons": "^6.5.16",
@@ -26,7 +26,7 @@
     "@storybook/theming": "^6.5.16",
     "babel-loader": "^8.2.5",
     "classnames": "^2.5.1",
-    "ilib": "^14.19.0",
+    "ilib": "^14.20.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
