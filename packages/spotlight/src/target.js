@@ -360,19 +360,13 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 	return next;
 }
 
-function getTargetByDirectionFromElement (direction, element) {
+function getTargetByDirectionFromElement (direction, element, getIntersectRectOfElem = false) {
 	const extSelector = element.getAttribute('data-spot-' + direction);
 	if (typeof extSelector === 'string') {
 		return getTargetBySelector(extSelector);
 	}
 
 	const elementContainerId = getContainersForNode(element).pop();
-	let elementRect = null;
-	if (elementContainerId !== rootContainerId && getContainerConfig(elementContainerId)?.overflow) {
-		elementRect = getIntersectionRect(getContainerNode(elementContainerId), element);
-	} else {
-		elementRect = getRect(element);
-	}
 
 	const next = getNavigableContainersForNode(element)
 		.reduceRight((result, containerId, index, elementContainerIds) => {
@@ -380,7 +374,7 @@ function getTargetByDirectionFromElement (direction, element) {
 				direction,
 				containerId,
 				element,
-				elementRect,
+				getIntersectRectOfElem ? getIntersectionRect(getContainerNode(elementContainerId), element) : getRect(element),
 				elementContainerIds
 			);
 
@@ -398,9 +392,17 @@ function getTargetByDirectionFromElement (direction, element) {
 			return result;
 		}, null);
 
-	// if the reduce above returns the original element, it means it hit a `leaveFor` config that
+	// If the reduce above returns the original element,
+	// check if the element is clipped by an overflow container. If true, find the target by direction with the intersection rect of the element.
+	// If the reduce above returns the original element again, it means it hit a `leaveFor` config that
 	// prevents navigation so we enforce that here by returning null.
-	return next !== element ? next : null;
+	if (next !== element) {
+		return next;
+	} else if (elementContainerId !== rootContainerId && getContainerConfig(elementContainerId)?.overflow && !getIntersectRectOfElem) {
+		return getTargetByDirectionFromElement(direction, element, true);
+	} else {
+		return null;
+	}
 }
 
 function getTargetByDirectionFromPosition (direction, position, containerId) {
