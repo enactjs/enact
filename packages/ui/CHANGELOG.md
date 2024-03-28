@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to not error when unit tests with `direction` module. 
+
 ### Added
 
 - `ui/Layout.Cell` prop `componentCss` to support customizing the component used in `Cell`
