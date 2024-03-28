@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 
-import {init, config as riConfig, defineScreenTypes, getResolutionClasses} from './resolution';
+import {init, calculateFontSize, config as riConfig, defineScreenTypes, getResolutionClasses, updateBaseFontSize, updateFontScale} from './resolution';
 
 /**
  * Default config for `ResolutionDecorator`.
@@ -97,13 +97,29 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'ResolutionDecorator';
 
 		static propTypes = /** @lends ui/resolution.ResolutionDecorator.prototype */ {
-			className: PropTypes.string
+			className: PropTypes.string,
+
+			/**
+			 * Font Scale value for the large screen mode.
+	 		 * Use this value to set the scale of the font.
+	 		 * This is the value that will be multiplied by pxPerRem, which is determined by the resolution.
+			 *
+			 * @type {Number}
+			 * @default 1
+			 * @public
+			 */
+			fontScale: PropTypes.number
+		};
+
+		static defaultProps = {
+			fontScale: 1
 		};
 
 		constructor (props) {
 			super(props);
 			riConfig.intermediateScreenHandling = config.intermediateScreenHandling;
 			riConfig.matchSmallerScreenType = config.matchSmallerScreenType;
+			updateFontScale(this.props.fontScale);
 			init({measurementNode: (typeof window !== 'undefined' && window)});
 			this.state = {
 				resolutionClasses: ''
@@ -114,6 +130,13 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (config.dynamic) window.addEventListener('resize', this.handleResize);
 			// eslint-disable-next-line react/no-find-dom-node
 			this.rootNode = ReactDOM.findDOMNode(this);
+		}
+
+		componentDidUpdate (prevProps) {
+			if (prevProps.fontScale !== this.props.fontScale) {
+				updateFontScale(this.props.fontScale);
+				updateBaseFontSize(calculateFontSize());
+			}
 		}
 
 		componentWillUnmount () {
@@ -145,11 +168,15 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
+			const {...rest} = this.props;
+
+			delete rest.fontScale;
+
 			// Check if the classes are different from our previous classes
 			let classes = getResolutionClasses();
 
 			if (this.props.className) classes += (classes ? ' ' : '') + this.props.className;
-			return <Wrapped {...this.props} className={classes} />;
+			return <Wrapped {...rest} className={classes} />;
 		}
 	};
 });
