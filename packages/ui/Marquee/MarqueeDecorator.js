@@ -22,7 +22,7 @@ import componentCss from './Marquee.module.less';
 // The minimum number of milliseconds to wait before resetting the marquee position after it finishes.
 const MINIMUM_MARQUEE_RESET_DELAY = 40;
 
-// This regex pattern is used by the {@link ui/Marquee.MarqueeDecorator.marqueeDirection} config.
+// This regex pattern is used by the {@link ui/Marquee.MarqueeDecorator.defaultConfig.marqueeDirection} config.
 // eslint-disable-next-line no-misleading-character-class
 const rtlPattern = /^[^A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02B8\u0300-\u0590\u0800-\u1FFF\u200E\u2C00-\uFB1C\uFE00-\uFE6F\uFEFD-\uFFFF]*[\u0591-\u07FF\uFB1D-\uFDFD\uFE70-\uFEFC]/;
 
