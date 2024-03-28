@@ -344,7 +344,7 @@ function getAspectRatioName (type) {
  * @public
  */
 function scale (px) {
-	return (riRatio || getRiRatio()) * px;
+	return (riRatio || getRiRatio()) * px * fontScale;
 }
 
 /**
@@ -377,8 +377,7 @@ function unit (pixels, toUnit) {
 	if (!toUnit || !unitToPixelFactors[toUnit]) return;
 	if (typeof pixels === 'string' && pixels.substr(-2) === 'px') pixels = parseInt(pixels.substr(0, pixels.length - 2));
 	if (typeof pixels !== 'number') return;
-
-	return (pixels / unitToPixelFactors[toUnit]) + '' + toUnit;
+	return (pixels / (fontScale * unitToPixelFactors[toUnit])) + '' + toUnit;
 }
 
 /**
