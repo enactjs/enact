@@ -92,6 +92,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	if (config.screenTypes) {
 		defineScreenTypes(config.screenTypes);
 	}
+	updateFontScale(config.fontScale);
 
 	return class extends Component {
 		static displayName = 'ResolutionDecorator';
