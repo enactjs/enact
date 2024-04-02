@@ -1,9 +1,12 @@
 // UiScroller.module.less
 //
 .scroller {
+	/* hide native scrollbar */
+	scrollbar-width: none;
+
 	will-change: transform;
 
-	/* hide native scrollbar */
+	/* hide native scrollbar - to be removed after chrome version 121 */
 	&::-webkit-scrollbar {
 		display: none;
 	}
