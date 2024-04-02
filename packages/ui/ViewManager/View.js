@@ -239,7 +239,7 @@ class View extends Component {
 		const {arranger, reverseTransition} = this.props;
 		this.enteringJob.stop();
 		if (arranger) {
-			this.prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback);
+			this.prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback, false, true);
 		} else {
 			callback();
 		}
@@ -254,7 +254,7 @@ class View extends Component {
 	 * @returns {undefined}
 	 * @private
 	 */
-	prepareTransition = (arranger, callback, noAnimation) => {
+	prepareTransition = (arranger, callback, noAnimation, removeDOM) => {
 		const {duration, index, previousIndex = index, reverseTransition, rtl} = this.props;
 
 		// Need to ensure that we have a valid node reference before we animation. Sometimes, React
@@ -282,6 +282,10 @@ class View extends Component {
 			// Possible for the animation callback to still be fired after the node has been
 			// unmounted if it finished before the unmount can cancel it so we check for that.
 			if (this.node) {
+				if (removeDOM) {
+console.log(this.node);
+					this.node.style.display = 'none';
+				}
 				callback();
 			}
 		};
