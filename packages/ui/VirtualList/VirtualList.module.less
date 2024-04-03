@@ -34,6 +34,12 @@
 	will-change: transform;
 }
 
+.virtualList {
+	/* hide native scrollbar */
+	scrollbar-width: none;
+}
+
+/* to be removed after chrome version 121 */
 .virtualList::-webkit-scrollbar {
 	display: none;
 }
