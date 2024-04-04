@@ -5,6 +5,8 @@
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
+	/* hide native scrollbar */
+	scrollbar-width: none;
 
 	&.vertical {
 		overflow-y: scroll;
@@ -24,11 +26,6 @@
 	.content {
 		will-change: transform;
 	}
-}
-
-.virtualList {
-	/* hide native scrollbar */
-	scrollbar-width: none;
 }
 
 /* to be removed after chrome version 121 */

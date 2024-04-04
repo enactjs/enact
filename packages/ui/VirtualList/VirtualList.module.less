@@ -5,6 +5,8 @@
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
+	/* hide native scrollbar */
+	scrollbar-width: none;
 
 	.content {
 		will-change: transform;
@@ -32,11 +34,6 @@
 .listItem {
 	position: absolute;
 	will-change: transform;
-}
-
-.virtualList {
-	/* hide native scrollbar */
-	scrollbar-width: none;
 }
 
 /* to be removed after chrome version 121 */
