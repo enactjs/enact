@@ -568,11 +568,11 @@ const Spotlight = (function () {
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
 
-				if (platform.touch) {
+				if (platform.touchEvent) {
 					window.addEventListener('touchend', onTouchEnd);
 				}
 
-				if (platform.webos) {
+				if (platform.type === 'webos') {
 					window.top.document.addEventListener('webOSMouse', handleWebOSMouseEvent);
 					window.top.document.addEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
 				}
@@ -606,11 +606,11 @@ const Spotlight = (function () {
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
 
-			if (platform.touch) {
+			if (platform.touchEvent) {
 				window.removeEventListener('touchend', onTouchEnd);
 			}
 
-			if (platform.webos) {
+			if (platform.type === 'webos') {
 				window.top.document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
 				window.top.document.removeEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
 			}
