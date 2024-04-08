@@ -2,7 +2,7 @@ dist: focal
 language: node_js
 node_js:
     - lts/*
-    - "19"
+    - node
 sudo: false
 before_install:
     - sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
@@ -16,6 +16,7 @@ install:
     - popd
     - npm install
     - npm run bootstrap
+    - npm run interlink
 script:
     - echo -e "\x1b\x5b35;1m*** Starting tests...\x1b\x5b0m"
     - npm test -- -- --runInBand --coverage

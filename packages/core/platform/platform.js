@@ -1,3 +1,4 @@
+/* global globalThis */
 /**
  * Utilities for detecting basic platform capabilities.
  *
@@ -7,15 +8,30 @@
  * @public
  */
 
-import uniq from 'ramda/src/uniq';
-
 import deprecate from '../internal/deprecate';
 
+// Refer the following for more details: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis
+const browserEnvironment = () => !!globalThis.window;
+
+// Note: Always true for Chrome v70 or higher: https://chromestatus.com/feature/4764225348042752
+const featureTouchEvent = () => browserEnvironment() && ('TouchEvent' in globalThis);
+
+// Refer https://patrickhlauke.github.io/touch/touchscreen-detection/
+const deviceTouchScreen = () => browserEnvironment() && (
+	// check if maxTouchPoints is greater than 0 first
+	globalThis.navigator?.maxTouchPoints > 0 ||
+	// check for any-pointer: coarse which mostly means touchscreen
+	globalThis.matchMedia?.("(any-pointer: coarse)")?.matches
+);
+
+/*
+ * Legacy Code to be removed in the next major release
+ */
 const hasGesture = () => {
 	return Boolean(
-		('ongesturestart' in window) ||
-		('onmsgesturestart' in window && (
-			window.navigator.msMaxTouchPoints > 1 ||
+		('ongesturestart' in window) || // non-standard and no major browser supports gesture events
+		('onmsgesturestart' in window && ( // Internet Explorer 10 only
+			window.navigator.msMaxTouchPoints > 1 || // Internet Explorer 10 only
 			window.navigator.maxTouchPoints > 1
 		))
 	);
@@ -23,22 +39,10 @@ const hasGesture = () => {
 
 const hasTouch = () => {
 	return Boolean(
-		('TouchEvent' in window) ||
-		('ontouchstart' in window) ||
-		window.navigator.msMaxTouchPoints ||
-		(window.navigator.msManipulationViewsEnabled && window.navigator.maxTouchPoints)
-	);
-};
-
-// Adapted from https://patrickhlauke.github.io/touch/touchscreen-detection/
-// I've omitted the touch event fallback since that is covered by hasTouch and we're less concerned
-// with legacy browsers used in touchscreen environments.
-const hasTouchScreen = () => {
-	return (
-		// if Pointer Events are supported, just check maxTouchPoints
-		(window.PointerEvent && ('maxTouchPoints' in window.navigator) && window.navigator.maxTouchPoints > 0) ||
-		// check for any-pointer:coarse which mostly means touchscreen
-		(window.matchMedia && window.matchMedia('(any-pointer:coarse)').matches)
+		featureTouchEvent() ||
+		('ontouchstart' in window) || // featureTouchEvent covers recent Firefox and Safari also, so no need when we deprecate old browsers
+		window.navigator.msMaxTouchPoints || // Internet Explorer 10 only
+		(window.navigator.msManipulationViewsEnabled && window.navigator.maxTouchPoints) // Internet Explorer only
 	);
 };
 
@@ -77,7 +81,7 @@ const platforms = [
 	{platform: 'webos', regex: /Web0S;.*Safari\/537.41/, forceVersion: 1},
 	{platform: 'webos', regex: /Web0S;.*Safari\/538.2/, forceVersion: 2},
 	{platform: 'webos', regex: /Web0S;.*Chrome\/(\d+)/},
-	// LG webOS of indeterminate versionre
+	// LG webOS indeterminate versions
 	{platform: 'webos', regex: /Web0S;/, forceVersion: -1},
 	// LuneOS
 	{platform: 'webos', regex: /LuneOS/, forceVersion: -1, extra: {luneos: 1}},
@@ -104,18 +108,12 @@ const platforms = [
 	{platform: 'tizen', regex: /Tizen (\d+)/}
 ];
 
-const ua = () => {
-	return window.navigator ? window.navigator.userAgent : '';
-};
-
-let _platform;
-
-const parseUserAgent = (userAgent) => {
+const parseUserAgentLegacy = (userAgent) => {
 	let plat = {
 		gesture: hasGesture(),
 		node: false,
 		touch: hasTouch(),
-		touchscreen: hasTouchScreen(),
+		touchscreen: deviceTouchScreen(),
 		unknown: true
 	};
 
@@ -152,9 +150,15 @@ const parseUserAgent = (userAgent) => {
 		}
 	}
 
-	if (plat.platformName === 'windowsPhone') {
+	if ('webos' === plat.platformName) {
 		deprecate({
-			name: 'Windows Phone platform',
+			name: plat.platformName,
+			message: 'Refer `@enact/webos`\'s `platform` for webOS specific information.',
+			until: '5.0.0'
+		});
+	} else if (!['chrome', 'safari', 'firefox'].includes(plat.platformName)) {
+		deprecate({
+			name: plat.platformName,
 			until: '5.0.0'
 		});
 	}
@@ -162,19 +166,86 @@ const parseUserAgent = (userAgent) => {
 	return plat;
 };
 
+/*
+ * The end of Legacy Code to be removed in the next major release
+ */
+
+// Refer https://www.whatismybrowser.com/guides/the-latest-user-agent/ for latest user agents of major browsers
+const userAgentPatterns = [
+	// Normal cases except iOS
+	{browserName: 'safari',  regex: /\s+Version\/(\d+)(?:\.(\d+))?\s+Safari/},
+	{browserName: 'chrome',  regex: /\s+Chrome\/(\d+)[.\d]+/},
+	{browserName: 'firefox', regex: /\s+Firefox\/(\d+)[.\d]+/},
+	// iOS
+	{browserName: 'safari',  regex: /\((?:iPhone|iPad);.+\sOS\s(\d+)_(\d+)/}
+];
+
+// The base supported versions: Used in DEPRECATED warning
+const supportedVersions = {safari: 15.6, chrome: 94, firefox: 115};
+
+const parseUserAgent = (userAgent) => {
+	const detectedInfo = {
+		type: 'unknown',
+		browserName: 'unknown',
+		browserVersion: 0
+	};
+	let index;
+
+	for (index = 0; index < userAgentPatterns.length; index++) {
+		const testPlatform = userAgentPatterns[index];
+		const match = testPlatform.regex.exec(userAgent);
+
+		if (match) {
+			detectedInfo.browserName = testPlatform.browserName;
+			detectedInfo.browserVersion = Number(`${match[1]}.${match[2] || 0}`);
+			break;
+		}
+	}
+
+	if (index < userAgentPatterns.length) {
+		if (userAgent.includes('Web0S;')) {
+			detectedInfo.type = 'webos';
+		} else if (userAgent.includes(' Mobile')) {
+			// Note that we don't catch 'Tablet' of Firefox as it can't be normalized with other browsers
+			detectedInfo.type = 'mobile';
+		} else {
+			detectedInfo.type = 'desktop';
+		}
+
+		detectedInfo[detectedInfo.browserName] = detectedInfo.browserVersion;
+	}
+
+	// deprecation warning for browser versions older than our support policy
+	if (supportedVersions[detectedInfo.browserName] > detectedInfo.browserVersion) {
+		deprecate({name: `supporting ${detectedInfo.browserName} version before ${supportedVersions[detectedInfo.browserName]}`, until: '5.0.0'});
+	}
+
+	// Merge legacy platform info
+	return {...parseUserAgentLegacy(userAgent), ...detectedInfo};
+};
+
 /**
  * @typedef {Object} PlatformDescription
- * @property {Object} [extra] - Additional information about the detected platform
- * @property {Boolean} gesture - `true` if the platform has native double-finger events
- * @property {Boolean} node - `true` only if `window` is `undefined`
- * @property {String} [platformName] - The name of the platform, if detected
- * @property {Boolean} touch - `true` if the platform has native single-finger events
- * @property {Boolean} touchscreen - `true` if the platform has a touch screen
- * @property {Boolean} unknown - `true` for any unknown system
+ * @property {String} browserName - The name of the detected browser
+ * @property {Number} browserVersion - The version of the detected browser
+ * @property {Number} chrome - The version of the detected browser, if chrome browser is detected
+ * @property {Object} [extra] - Additional information about the detected platform. Deprecated: will be removed in 5.0.0.
+ * @property {Number} firefox - The version of the detected browser, if firefox browser is detected
+ * @property {Boolean} gesture - `true` if the platform has native double-finger events. Deprecated: will be removed in 5.0.0.
+ * @property {Boolean} node - `true` only if `window` is `undefined`. Deprecated: will be removed in 5.0.0. Use `type` instead.
+ * @property {String} [platformName] - The name of the platform, if detected. Deprecated: will be removed in 5.0.0. Use `browserName` instead for browser names.
+ * @property {Number} safari - The version of the detected browser, if safari browser is detected
+ * @property {Boolean} touch - `true` if the platform has native single-finger events. Deprecated: will be removed in 5.0.0. Use `touchEvent` instead.
+ * @property {Boolean} touchEvent - `true` if the browser has native touch events
+ * @property {Boolean} touchscreen - `true` if the platform has a touch screen. Deprecated: will be removed in 5.0.0. Use `touchScreen` instead.
+ * @property {Boolean} touchScreen - `true` if the platform has a touch screen
+ * @property {String} type - The type of the detected platform. One of 'desktop', 'mobile', 'webos', 'node', or 'unknown'
+ * @property {Boolean} unknown - `true` for any unknown system. Deprecated: will be removed in 5.0.0. Use `type` instead.
  *
  * @memberof core/platform
  * @public
  */
+let detectedPlatform = null;
 
 /**
  * Returns the {@link core/platform.platform} object.
@@ -185,21 +256,36 @@ const parseUserAgent = (userAgent) => {
  * @public
  */
 const detect = () => {
-	if (_platform) {
-		// if we've already determined the platform, we'll use that determination
-		return _platform;
-	} else if (typeof window === 'undefined') {
-		return {
+	if (detectedPlatform !== null) {
+		// once detected, don't bother detecting again
+		return detectedPlatform;
+	}
+
+	// Parse User Agent string first
+	if (browserEnvironment()) {
+		detectedPlatform = parseUserAgent(globalThis.navigator?.userAgent || '');
+	} else {
+		// node or compatible environment (e.g. prerendering or snapshot runs)
+		detectedPlatform = {
+			// the following properties are deprecated and will be removed in the next major release
 			gesture: false,
 			node: true,
 			touch: false,
-			unknown: true
+			unknown: true,
+			// the following properties are new and will be available in the next major release
+			type: 'node',
+			browserName: 'unknown',
+			browserVersion: 0 /* magic number for unknown */
 		};
 	}
 
-	const userAgent = ua();
+	// Detect features
+	detectedPlatform.touchEvent = featureTouchEvent();
 
-	return (_platform = parseUserAgent(userAgent));
+	// Detect devices
+	detectedPlatform.touchScreen = deviceTouchScreen();
+
+	return detectedPlatform;
 };
 
 /**
@@ -212,17 +298,43 @@ const detect = () => {
 const platform = {};
 
 [
+	// the following properties are deprecated and will be removed in the next major release
 	'gesture',
 	'node',
 	'platformName',
 	'touch',
 	'touchscreen',
 	'unknown',
-	...uniq(platforms.map(p => p.platform))
+	// the following properties are new and will be available in the next major release
+	'browserName',
+	'browserVersion',
+	'touchEvent',
+	'touchScreen',
+	'type',
+	...(new Set(platforms.map(p => p.platform)))
 ].forEach(name => {
 	Object.defineProperty(platform, name, {
 		enumerable: true,
 		get: () => {
+			if (name === 'gesture' || name === 'unknown') {
+				deprecate({
+					name,
+					until: '5.0.0'
+				});
+			}
+			if (name === 'node') {
+				deprecate({name, until: '5.0.0', replacedBy: 'type'});
+			}
+			if (name === 'platformName') {
+				deprecate({name, until: '5.0.0', replacedBy: 'browserName'});
+			}
+			if (name === 'touch') {
+				deprecate({name, until: '5.0.0', replacedBy: 'touchEvent'});
+			}
+			if (name === 'touchscreen') {
+				deprecate({name, until: '5.0.0', replacedBy: 'touchScreen'});
+			}
+
 			const p = detect();
 			return p[name];
 		}
