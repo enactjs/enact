@@ -7,6 +7,10 @@ import {
 	getInputType
 } from '../SpotlightRootDecorator';
 
+import {
+	getContainerConfig
+} from '../../src/container';
+
 describe('SpotlightRootDecorator', () => {
 	const AppBase = (props) => (
 		<div id="root" data-testid="root" {...props} >
@@ -38,6 +42,18 @@ describe('SpotlightRootDecorator', () => {
 
 		const expected = 'touch';
 		const actual = getInputType();
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should set spotlightRootDecorator container enterTo config to `null` by default', () => {
+		const App = SpotlightRootDecorator(AppBase);
+
+		render(<App />);
+
+		const containerConfig = getContainerConfig('spotlightRootDecorator');
+		const expected = null;
+		const actual = containerConfig.enterTo;
 
 		expect(actual).toBe(expected);
 	});

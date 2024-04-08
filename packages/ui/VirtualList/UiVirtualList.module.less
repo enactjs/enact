@@ -5,6 +5,8 @@
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
+	/* hide native scrollbar */
+	scrollbar-width: none;
 
 	&.vertical {
 		overflow-y: scroll;
@@ -26,6 +28,7 @@
 	}
 }
 
+/* NOTE: Needs to be revisited whether it can be replaced with scrollbar-width */
 .virtualList::-webkit-scrollbar {
 	display: none;
 }
