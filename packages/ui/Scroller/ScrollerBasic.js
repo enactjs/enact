@@ -97,7 +97,7 @@ class ScrollerBasic extends Component {
 
 	getRtlPositionX = (x) => {
 		if (this.props.rtl) {
-			return (platform.ios || platform.safari || platform.chrome >= 85 || platform.androidChrome >= 85) ? -x : this.scrollBounds.maxLeft - x;
+			return (platform.chrome < 85) ? this.scrollBounds.maxLeft - x : -x; // Chrome lower than 85 has a bug with RTL scrollLeft
 		}
 		return x;
 	};
