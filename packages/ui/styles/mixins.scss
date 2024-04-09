@@ -357,7 +357,7 @@
 	@include enact-locale-tallglyph-values($rule, $tallglyph, $target, $locale-tallglyph-languages);
 }
 
-@mixin enact-locale-tallglyph-values($rule, $val, $target: normal, $locale-tallglyph-languages) {
+@mixin enact-locale-tallglyph-values($rule, $val, $target: normal, $locale-tallglyph-languages: "") {
 	$locale-tallglyph-languages: if($locale-tallglyph-languages == "", variables.$locale-tallglyph-languages, $locale-tallglyph-languages);
 
 	@if (length($val) == 2) {
