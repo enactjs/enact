@@ -2,10 +2,12 @@ import classNames from 'classnames';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
-import {clamp} from '@enact/core/util';
+import {clamp, Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import {createRef, Component} from 'react';
+
+import {utilDOM} from '../useScroll/utilDOM';
 
 import css from './VirtualList.module.less';
 
@@ -152,6 +154,24 @@ class VirtualListBasic extends Component {
 		 * @public
 		 */
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
+		 * The editable feature of the list.
+		 *
+		 * @type {Object}
+		 * @property {Function} onComplete The callback function called when editing is finished.
+		 *  It has an event object contains `orders` array which app can use for repopulate items.
+		 * @property {Object} [css] Customizes the component by mapping the supplied CSS class name to the
+		 *  corresponding internal element.
+		 *  The following class is supported:
+		 *
+		 * * `selected` - The selected item class
+		 * @private
+		 */
+		editable: PropTypes.shape({
+			onComplete: PropTypes.func.isRequired,
+			css: PropTypes.object
+		}),
 
 		/**
 		 * Called to get the scroll affordance from themed component.
@@ -344,6 +364,10 @@ class VirtualListBasic extends Component {
 		} else {
 			this.setContainerSize();
 		}
+
+		if (this.props.editable) {
+			this.featureEditable.enable();
+		}
 	}
 
 	componentDidUpdate (prevProps, prevState) {
@@ -400,6 +424,8 @@ class VirtualListBasic extends Component {
 
 				this.indexToScrollIntoView = -1;
 			}
+
+			this.featureEditable.editingCancel();
 		}
 
 		if (
@@ -424,6 +450,8 @@ class VirtualListBasic extends Component {
 			}, 'instant');
 
 			deferScrollTo = true;
+
+			this.featureEditable.editingCancel();
 		} else if (this.hasDataSizeChanged) {
 			const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
 			this.setState(newState);
@@ -445,6 +473,10 @@ class VirtualListBasic extends Component {
 			this.props.cbScrollTo({position: (this.isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 			this.scrollToPositionTarget = -1;
 		}
+	}
+
+	componentWillUnmount () {
+		this.featureEditable.disable();
 	}
 
 	scrollBounds = {
@@ -502,7 +534,7 @@ class VirtualListBasic extends Component {
 
 	getCenterItemIndexFromScrollPosition = (scrollPosition) => Math.floor((scrollPosition + (this.primary.clientSize / 2)) / this.primary.gridSize) * this.dimensionToExtent + Math.floor(this.dimensionToExtent / 2);
 
-	getGridPosition (index) {
+	getGridPosition = (index) => {
 		const
 			{dataSize, itemSizes} = this.props,
 			{dimensionToExtent, itemPositions, primary, secondary} = this,
@@ -530,7 +562,7 @@ class VirtualListBasic extends Component {
 		}
 
 		return {primaryPosition, secondaryPosition};
-	}
+	};
 
 	// For individually sized item
 	getItemBottomPosition = (index) => {
@@ -958,6 +990,10 @@ class VirtualListBasic extends Component {
 		if (this.shouldUpdateBounds || firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
 		}
+
+		if (this.featureEditable.enabled) {
+			this.featureEditable.movingItemUpdate();
+		}
 	}
 
 	// For individually sized item
@@ -1111,15 +1147,94 @@ class VirtualListBasic extends Component {
 		this.cc[key] = <div key={key} ref={itemContainerRef} style={{display: 'none'}} />;
 	};
 
+	// Update 'position' and return 'indexInExtent' for the previous item of the item matching the given 'index'
+	getPrevPosition (index, position, indexInExtent) {
+		const {itemSizes} = this.props;
+		const {dimensionToExtent, itemPositions, primary, secondary} = this;
+
+		if (indexInExtent === 0) {
+			if (itemSizes) {
+				if (itemPositions[index - 1] || itemPositions[index - 1] === 0) {
+					position.primaryPosition = itemPositions[index - 1].position;
+				} else if (itemSizes[index]) {
+					position.primaryPosition -= itemSizes[index] + this.props.spacing;
+				} else {
+					position.primaryPosition -= primary.gridSize;
+				}
+			} else {
+				position.primaryPosition -= primary.gridSize;
+			}
+			position.secondaryPosition = 0;
+			return dimensionToExtent - 1;
+		} else {
+			position.secondaryPosition += secondary.gridSize;
+			return indexInExtent - 1;
+		}
+	}
+
+	// Update 'position' and return 'indexInExtent' for the next item of the item matching the given 'index'
+	getNextPosition (index, position, indexInExtent) {
+		const {itemSizes} = this.props;
+		const {dimensionToExtent, itemPositions, primary, secondary} = this;
+
+		if (indexInExtent + 1 >= dimensionToExtent) {
+			if (itemSizes) {
+				if (itemPositions[index + 1] || itemPositions[index + 1] === 0) {
+					position.primaryPosition = itemPositions[index + 1].position;
+				} else if (itemSizes[index]) {
+					position.primaryPosition += itemSizes[index] + this.props.spacing;
+				} else {
+					position.primaryPosition += primary.gridSize;
+				}
+			} else {
+				position.primaryPosition += primary.gridSize;
+			}
+			position.secondaryPosition = 0;
+			return 0;
+		} else {
+			position.secondaryPosition += secondary.gridSize;
+			return indexInExtent + 1;
+		}
+	}
+
+	// styles item to hide it, to animate it, or to make it normal during editing
+	setItemContainerStyle (node, {action, position}) {
+		if (node) {
+			const style = node.style;
+			switch (action) {
+				case 'hide':
+					style.opacity = 0;
+					style.transition = null;
+					break;
+				case 'animate':
+					style.opacity = null;
+					style.transition = `transform ${this.featureEditable.transitionTime}`;
+					break;
+				case 'reset':
+				default:
+					style.opacity = null;
+					style.transition = null;
+					break;
+			}
+			if (position) {
+				const {x, y} = this.getXY(position.primaryPosition, position.secondaryPosition);
+				style.transform = `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`;
+			}
+		}
+	}
+
 	positionItems () {
 		const
-			{dataSize, itemSizes} = this.props,
+			{dataSize} = this.props,
 			{firstIndex, numOfItems} = this.state,
-			{cc, isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, itemPositions} = this;
+			{cc, isPrimaryDirectionVertical, dimensionToExtent, primary, secondary} = this;
+		const {enabled, editingMode, editingIndex, untrackedPointer} = this.featureEditable;
+		const featureEditableEnabled = enabled && editingMode;
 		let
 			hideTo = 0,
-			updateFrom = cc.length ? this.state.updateFrom : firstIndex,
-			updateTo = cc.length ? this.state.updateTo : firstIndex + numOfItems;
+			// During editing, all visible items should be calculated for relocation
+			updateFrom = cc.length && !editingMode ? this.state.updateFrom : firstIndex,
+			updateTo = cc.length && !editingMode ? this.state.updateTo : firstIndex + numOfItems;
 
 		if (updateFrom >= updateTo) {
 			return;
@@ -1128,40 +1243,58 @@ class VirtualListBasic extends Component {
 			updateTo = dataSize;
 		}
 
-		let
-			width, height,
-			{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom);
+		let width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
+		let height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
+		let position = this.getGridPosition(updateFrom);
+		let indexInExtent = updateFrom % dimensionToExtent;
 
-		width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
-		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
-
-		// positioning items
-		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
-			this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
-
-			if (++j === dimensionToExtent) {
-				secondaryPosition = 0;
-
-				if (this.props.itemSizes) {
-					if (itemPositions[i + 1] || itemPositions[i + 1] === 0) {
-						primaryPosition = itemPositions[i + 1].position;
-					} else if (itemSizes[i]) {
-						primaryPosition += itemSizes[i] + this.props.spacing;
-					} else {
-						primaryPosition += primary.gridSize;
-					}
-				} else {
-					primaryPosition += primary.gridSize;
-				}
-
-				j = 0;
-			} else {
-				secondaryPosition += secondary.gridSize;
+		if (featureEditableEnabled) {
+			if (untrackedPointer) {
+				// move the editing item since the scrolling position is updated
+				// skip rendering by 'handleMouseMove' since 'positionItems' is called by 'render' function
+				this.featureEditable.handleMouseMove(this.featureEditable.lastPointer, true);
+			}
+			if (updateFrom > editingIndex) {
+				// the first re-rendered item should be positioned at the previous index in this case
+				indexInExtent = this.getPrevPosition(updateFrom, position, indexInExtent);
 			}
 		}
 
-		for (let i = updateTo; i < hideTo; i++) {
-			this.applyStyleToHideNode(i);
+		// positioning items
+		for (let index = updateFrom; index < updateTo; index++) {
+			const itemContainer = this.itemContainerRefs[index % this.state.numOfItems];
+
+			if (featureEditableEnabled) {
+				const {lastVisualIndex} = this.featureEditable;
+
+				if (index === editingIndex) {
+					// the original item for the moving index should be hidden since we use cloned one for moving
+					this.setItemContainerStyle(itemContainer, {action: 'hide'});
+					continue;
+				}
+
+				if (lastVisualIndex >= editingIndex && index === lastVisualIndex + 1 ||
+					lastVisualIndex < editingIndex && index === lastVisualIndex) {
+					// make a room to render the moving item
+					indexInExtent = this.getNextPosition(index, position, indexInExtent);
+				}
+
+				if (index !== this.featureEditable.getDataIndexFromNode(itemContainer)) {
+					this.setItemContainerStyle(itemContainer, {action: 'reset'});
+					this.applyStyleToNewNode(index, width, height, position.primaryPosition, position.secondaryPosition);
+				} else {
+					this.setItemContainerStyle(itemContainer, {action: 'animate', position});
+				}
+				indexInExtent = this.getNextPosition(index, position, indexInExtent);
+			} else { // normal case
+				this.setItemContainerStyle(itemContainer, {action: 'reset', position});
+				this.applyStyleToNewNode(index, width, height, position.primaryPosition, position.secondaryPosition);
+				indexInExtent = this.getNextPosition(index, position, indexInExtent);
+			}
+		}
+
+		for (let index = updateTo; index < hideTo; index++) {
+			this.applyStyleToHideNode(index);
 		}
 	}
 
@@ -1204,7 +1337,436 @@ class VirtualListBasic extends Component {
 		return false;
 	};
 
-	// render
+	/*
+	 * Edit mode
+	 */
+
+	featureEditable = {
+		/*
+		 * Core interfaces
+		 */
+
+		/* The indicator of whether editable feature is enabled or not */
+		enabled: false,
+		/* The indicator of whether editing is started or not */
+		editingMode: false,
+
+		/* Enable an editable feature */
+		/* Note that this function does not check necessary props are provided or not, therefore this function is internal use only. */
+		enable: () => {
+			const node = this.props.scrollContentRef?.current;
+			this.featureEditable.enablerJob = new Job(this.featureEditable.editingStartByPointer, this.featureEditable.enablingTime);
+			if (node) {
+				const {featureEditable} = this;
+				featureEditable.enabled = true;
+
+				// add event listeners for editing
+				node.addEventListener('mousedown',  featureEditable.handleMouseDown);
+				node.addEventListener('mousemove',  featureEditable.handleMouseMove);
+				node.addEventListener('mouseup',    featureEditable.handleMouseUp);
+				node.addEventListener('mouseenter', featureEditable.handleMouseEnter);
+				node.addEventListener('mouseleave', featureEditable.handleMouseLeave);
+
+				// prepare internal info for editing
+				const {primary, secondary, isPrimaryDirectionVertical} = this;
+				const {cachedItemSize, cachedSCrollContentBounds} = featureEditable;
+				const {clientWidth} = node;
+				const {x, y} = node.getBoundingClientRect();
+				let [xAxis, yAxis] = [primary, secondary];
+				if (isPrimaryDirectionVertical) {
+					[xAxis, yAxis] = [yAxis, xAxis];
+				}
+
+				cachedSCrollContentBounds.clientWidth = clientWidth;
+				cachedSCrollContentBounds.x = x;
+				cachedSCrollContentBounds.y = y;
+				cachedItemSize.width = xAxis.itemSize;
+				cachedItemSize.height = yAxis.itemSize;
+			}
+		},
+
+		/* Disable an editable feature */
+		/* Note that this function does not check necessary props are provided or not, therefore this function is internal use only. */
+		disable: () => {
+			const node = this.props.scrollContentRef?.current;
+			const {featureEditable} = this;
+			featureEditable.enabled = false;
+			if (node) {
+				// remove event listeners for editing
+				node.removeEventListener('mousedown',  featureEditable.handleMouseDown);
+				node.removeEventListener('mousemove',  featureEditable.handleMouseMove);
+				node.removeEventListener('mouseup',    featureEditable.handleMouseUp);
+				node.removeEventListener('mouseenter', featureEditable.handleMouseEnter);
+				node.removeEventListener('mouseleave', featureEditable.handleMouseLeave);
+			}
+		},
+
+		/* Move an item to a new position. */
+		/* FIXME: Note that this function works regardless item is selected or not but we may not need this functionality in our UX. */
+		moveItem: (fromDataIndex, toVisualIndex, {skipRendering = false, scrollIntoView = false}) => {
+			const {featureEditable} = this;
+			if (featureEditable.enabled) {
+				if (featureEditable.editingMode) { // editing by user input
+					const order = featureEditable.editingDataOrder;
+					const fromVisualIndex = order.indexOf(fromDataIndex);
+					// when items' order is updated
+					if (fromVisualIndex !== toVisualIndex) {
+						order.splice(
+							toVisualIndex,
+							0,
+							order.splice(
+								fromVisualIndex,
+								1
+							)[0]
+						);
+						featureEditable.lastVisualIndex = toVisualIndex;
+
+						if (!skipRendering) {
+							this.forceUpdate();
+							if (scrollIntoView) {
+								this.scrollIntoViewByIndex(toVisualIndex);
+							}
+						}
+					}
+				} else if (fromDataIndex !== toVisualIndex) { // editing by programmatic API call
+					const newItemsOrder = [...Array(this.props.dataSize).keys()];
+					newItemsOrder.splice(toVisualIndex, 0, newItemsOrder.splice(fromDataIndex, 1)[0]);
+					forward('onComplete', {detail: {order: newItemsOrder}}, this.props.editable);
+				}
+			}
+		},
+
+		/* Start editing with the selected item */
+		editingStart: (editingIndex, positioningType, callbackRef = nop) => {
+			const {featureEditable} = this;
+			if (featureEditable.enabled && !featureEditable.editingMode) {
+				featureEditable.editingMode = true;
+
+				featureEditable.editingDataOrder = [...Array(this.props.dataSize).keys()];
+				featureEditable.editingIndex = editingIndex;
+				featureEditable.lastVisualIndex = editingIndex;
+				featureEditable.positioningType = positioningType;
+
+				featureEditable.movingItemAdd(callbackRef);
+			}
+		},
+
+		/* Finish editing with the selected item and emit items' orders */
+		editingFinish: (cancel = false) => {
+			const {featureEditable} = this;
+			if (featureEditable.enabled && featureEditable.editingMode) {
+				featureEditable.editingMode = false;
+
+				featureEditable.movingItemRemove();
+
+				featureEditable.positioningType = null;
+				featureEditable.editingIndex = null;
+				featureEditable.editingNode = null;
+				if (!cancel) {
+					forward('onComplete', {detail: {order: featureEditable.editingDataOrder}}, this.props.editable);
+				}
+				featureEditable.editingDataOrder = null;
+				featureEditable.untrackedPointer = false;
+				featureEditable.lastVisualIndex = null;
+			}
+			featureEditable.enablerJob.stop();
+		},
+
+		/* Cancel editing */
+		editingCancel: () => this.featureEditable.editingFinish(true),
+
+		/*
+		 * Interfaces for a cloned item for moving effect
+		 * A cloned item is to display an editing item in a virtualized list.
+		 */
+
+		/* add a cloned item of the moving item for animation */
+		movingItemAdd: (callbackRef) => {
+			/* TBD: using this.itemContainerRefs[key] ? */
+			const {childProps, itemRenderer, getComponentProps} = this.props;
+			const {x, y, width, height} = this.featureEditable.calculateMovingItemXY();
+			const index = this.featureEditable.editingIndex;
+			const componentProps = getComponentProps && getComponentProps(index) || {};
+			const itemContainerRef = (ref) => {
+				this.featureEditable.editingNode = ref;
+				if (ref) {
+					callbackRef(ref);
+				}
+			};
+			const style = {
+				width: width + 'px',
+				height: height + 'px',
+				/* FIXME: RTL / this calculation only works for Chrome */
+				transform: `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`,
+				zIndex: 10
+			};
+
+			this.cc[this.state.numOfItems] = (
+				<div className={classNames(css.listItem, this.props.editable.css?.selected)} key={-1} style={style} ref={itemContainerRef}>
+					{itemRenderer({...childProps, ...componentProps, index, ['data-index']: index})}
+				</div>
+			);
+
+			this.forceUpdate();
+		},
+
+		/* move a cloned item of the moving item */
+		movingItemUpdate: () => {
+			const {featureEditable} = this;
+			if (featureEditable.editingNode) {
+				const {x, y} = featureEditable.calculateMovingItemXY();
+				featureEditable.editingNode.style.transform = `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`;
+			}
+		},
+
+		/* remove a cloned item of the moving item */
+		movingItemRemove: () => {
+			if (this.cc.length > this.state.numOfItems) {
+				this.cc.pop();
+			}
+			this.featureEditable.editingNode = null;
+
+			// do not call this.forceUpdate() here since `onComplete` will be forwarded in handleMouseUp.
+		},
+
+		/*
+		 * mouse input: move an item by drag-and-drop
+		 * Note: not working for touch for now
+		 */
+
+		editingStartByPointer: () => {
+			const {featureEditable} = this;
+			if (featureEditable.enabled) {
+				const {clientX, clientY} = featureEditable.lastPointer;
+				const editingIndex = featureEditable.getDataIndexFromClientXY(clientX, clientY);
+				featureEditable.editingStart(editingIndex, 'pointer');
+			}
+		},
+
+		// begin editing by pointer
+		handleMouseDown: ({clientX, clientY}) => {
+			const {featureEditable} = this;
+			if (featureEditable.enabled) {
+				featureEditable.lastPointer.clientX = clientX;
+				featureEditable.lastPointer.clientY = clientY;
+				featureEditable.enablerJob.start();
+			}
+		},
+
+		// move the editing item by pointer
+		handleMouseMove: ({clientX, clientY}, skipRendering = false) => {
+			const {featureEditable} = this;
+			if (featureEditable.enabled) {
+				featureEditable.lastPointer.clientX = clientX;
+				featureEditable.lastPointer.clientY = clientY;
+
+				if (!featureEditable.editingMode) {
+					featureEditable.enablerJob.stop();
+				} else {
+					const index = featureEditable.getVisualIndexFromClientXY();
+					if (index !== null) {
+						featureEditable.moveItem(featureEditable.editingIndex, index, {skipRendering});
+					}
+
+					featureEditable.movingItemUpdate();
+				}
+			}
+		},
+
+		// end editing by pointer
+		handleMouseUp: () => {
+			const {featureEditable} = this;
+			if (featureEditable.enabled) {
+				featureEditable.editingFinish(!featureEditable.editingMode);
+			}
+		},
+
+		// disable position guessing when a pointer is entering
+		handleMouseEnter: () => {
+			const {featureEditable} = this;
+			if (featureEditable.enabled) {
+				featureEditable.untrackedPointer = false;
+			}
+		},
+
+		// enable position guessing when a pointer is leaving
+		handleMouseLeave: () => {
+			const {featureEditable} = this;
+			if (featureEditable.enabled && featureEditable.editingMode) {
+				featureEditable.untrackedPointer = true;
+			}
+		},
+
+		// convert x and y of scroll bounds to clientX and clientY; a revert version of getXYFromClientXY
+		// NOTE: this function is not used for now
+		getClientXYFromXY: (x, y) => {
+			const {cachedSCrollContentBounds: {clientWidth, x: boundX, y: boundY}} = this.featureEditable;
+			let relativeX = x;
+			let relativeY = y;
+			if (this.isPrimaryDirectionVertical) {
+				relativeY -= this.scrollPosition;
+			} else {
+				relativeX -= this.scrollPosition;
+			}
+
+			return {
+				clientX: this.props.rtl ? (clientWidth - relativeX) + boundX : relativeX + boundX,
+				clientY: relativeY + boundY
+			};
+		},
+
+		// convert clientX and clientY to x and y of scroll bounds; a revert version of getClientXYFromXY
+		getXYFromClientXY: (clientX, clientY) => {
+			const {cachedSCrollContentBounds: {clientWidth, x: boundX, y: boundY}} = this.featureEditable;
+			const relativeX = this.props.rtl ? clientWidth - (clientX - boundX) : clientX - boundX;
+			const relativeY = clientY - boundY;
+			if (this.isPrimaryDirectionVertical) {
+				return {
+					x: relativeX,
+					y: relativeY + this.scrollPosition
+				};
+			} else {
+				return {
+					x: relativeX + this.scrollPosition,
+					y: relativeY
+				};
+			}
+		},
+
+		// convert x and y into primaryPosition and secondaryPosition; a counter function of getXY
+		getPositionFromXY: (x, y) => (this.isPrimaryDirectionVertical ? {primaryPosition: y, secondaryPosition: x} : {primaryPosition: x, secondaryPosition: y}),
+
+		// get a visual index from the last pointer position
+		getVisualIndexFromClientXY: () => {
+			const {dimensionToExtent, primary, secondary} = this;
+			const {clientX, clientY} = this.featureEditable.lastPointer;
+			const {x, y} = this.featureEditable.getXYFromClientXY(clientX, clientY);
+			const {primaryPosition, secondaryPosition} = this.featureEditable.getPositionFromXY(x, y);
+
+			/* TODO when props.itemSizes is defined
+			* - try to get index from the current position and currently rendered items' position
+			* - if the current position is space between items, return null
+			* getGridPosition function's implementation could be helpful to fill this logic
+			*/
+			const primaryIndex = Math.floor(primaryPosition / primary.gridSize);
+			const secondaryIndex = Math.floor(secondaryPosition / secondary.gridSize);
+
+			// return null if the coordinate points to space between items
+			if ((primaryIndex * primary.gridSize + primary.itemSize < primaryPosition) ||
+				(secondaryIndex * secondary.gridSize + secondary.itemSize < secondaryPosition)) {
+				return null;
+			}
+
+			return primaryIndex * dimensionToExtent + secondaryIndex;
+		},
+
+		// get an index from item DOM node
+		getDataIndexFromNode: (node) => {
+			const targetNode = node && node.querySelector('[data-index]');
+			if (targetNode) {
+				const index = parseInt(targetNode.dataset.index);
+				if (!isNaN(index)) {
+					return index;
+				}
+			}
+			return null;
+		},
+
+		// get an index from item DOM node at a given position
+		getDataIndexFromClientXY: (clientX, clientY) => {
+			if (typeof window !== 'undefined') {
+				const contentNode = this.contentRef.current;
+				let node = document.elementFromPoint(clientX, clientY);
+				if (utilDOM.containsDangerously(contentNode, node)) {
+					while (node.parentNode !== contentNode) {
+						if (node === document) {
+							return null;
+						}
+						node = node.parentNode;
+					}
+
+					if (node) {
+						return this.featureEditable.getDataIndexFromNode(node);
+					}
+				}
+			}
+
+			return null;
+		},
+
+		// calculate a position of moving item based on the last pointer position
+		// For now, the position is calculated to make the pointer to be a center of the item
+		calculateMovingItemXY: () => {
+			const {positioningType, cachedItemSize: {width, height}, lastPointer: {clientX, clientY}} = this.featureEditable;
+			if (positioningType === 'pointer') {
+				const {x, y} = this.featureEditable.getXYFromClientXY(
+					clientX - (this.props.rtl ? -1 : 1) * width / 2,
+					clientY - height / 2
+				);
+				return {x, y, width, height};
+			} else if (positioningType === 'index') {
+				const {left, top} = this.gridPositionToItemPosition(this.getGridPosition(this.featureEditable.lastVisualIndex));
+				return {x: left, y: top, width, height};
+			}
+		},
+
+		/*
+		 * Internal state
+		 */
+
+		// The index of the item being edited
+		editingIndex: null,
+		// The cloned DOM node that follows the pointer
+		editingNode: null,
+		// The updated data order during editing
+		editingDataOrder: null,
+
+		// The type of positioning for the moving item ('pointer' for the pointer coordinates, 'index' for the index of a position)
+		positioningType: null,
+
+		// The flag to indicate whether a list should guess the position of the pointer that is out of boundary
+		untrackedPointer: false,
+		// The last observed position of the pointer
+		lastPointer: {clientX: null, clientY: null},
+		// The last visaully positioned index of the editing item
+		lastVisualIndex: null,
+
+		// A scroll content boundaries' info to reduce calculation
+		cachedSCrollContentBounds: {clientWidth: null, x: null, y: null},
+		// An item's width and height size to reduce calculation
+		cachedItemSize: {width: null, height: null},
+
+		// The Job ID to check holding time to enter editing mode
+		enablerJob: null,
+		// The holding time of pointer input to enter editing mode
+		enablingTime: 500,
+		// The transition duration for relocating items when the editing item is moved
+		transitionTime: '100ms'
+	}; // featureEditable
+
+	// scroll into view to show an item matching the specified index
+	scrollIntoViewByIndex = (index) => {
+		const {scrollPosition, primary} = this;
+		const {primaryPosition} = this.getGridPosition(index);
+		if (primaryPosition < scrollPosition) {
+			this.props.cbScrollTo({
+				index,
+				stickTo: 'start',
+				animate: true
+			});
+		} else if (primaryPosition + primary.itemSize > scrollPosition + primary.clientSize) {
+			// TBD: affordance is not calculated for now
+			this.props.cbScrollTo({
+				index,
+				stickTo: 'end',
+				animate: true
+			});
+		}
+	};
+
+	/*
+	 * render
+	 */
 
 	render () {
 		const
@@ -1224,6 +1786,7 @@ class VirtualListBasic extends Component {
 		delete rest.clientSize;
 		delete rest.dataSize;
 		delete rest.direction;
+		delete rest.editable;
 		delete rest.getAffordance;
 		delete rest.getComponentProps;
 		delete rest.isHorizontalScrollbarVisible;
