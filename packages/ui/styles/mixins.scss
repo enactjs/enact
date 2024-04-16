@@ -28,6 +28,143 @@
 	}
 }
 
+// Assign font-kerning rules in a non-proprietary way. Default value being "normal", to enable kerning.
+@mixin font-kerning($val: normal) {
+	-webkit-font-kerning: $val;
+	font-kerning: $val;
+}
+
+// Applies RTL-compatible start and end position to a selector
+// Simple "when" here just assumes that if the first argument is a list with more than 1 entry,
+// then units are correct. If it's just 1, then we verify if the value is a number (measurement).
+@mixin position-start-end($start, $end: null, $target: "") {
+	@if ($start != null and $end == null and (($target == parent) or ($target == self) or ($target == ""))) {
+		@include position($start);
+
+		$top: $start;
+		$left: $start;
+		$bottom: $start;
+		$right: $start;
+
+		@if ((length($start) == 4)) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 3);
+			$left: nth($start, 4);
+		} @else if ((length($start) == 3)) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 3);
+			$left: nth($start, 2);
+		} @else if (length($start) == 2) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 1);
+			$left: nth($start, 2);
+		}
+
+		@include enact-locale-rtl($target) {
+			// Note: swapping left and right values
+			@include position($top, $left, $bottom, $right);
+		}
+	} @else if ($start != null and $end != null) {
+		left: $start;
+		right: $end;
+
+		@include enact-locale-rtl($target) {
+			// Note: swapping left and right values
+			left: $end;
+			right: $start;
+		}
+	}
+}
+
+// Applies RTL-compatible start and end margins to a selector
+@mixin margin-start-end($start, $end: null, $target: "") {
+	@if ($start != null and $end == null and (($target == parent) or ($target == self) or ($target == ""))) {
+		margin: $start;
+
+		$top: $start;
+		$left: $start;
+		$bottom: $start;
+		$right: $start;
+
+		@if ((length($start) == 4)) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 3);
+			$left: nth($start, 4);
+		} @else if ((length($start) == 3)) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 3);
+			$left: nth($start, 2);
+		} @else if (length($start) == 2) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 1);
+			$left: nth($start, 2);
+		}
+
+		@include enact-locale-rtl($target) {
+			// Note: swapping left and right values
+			margin: $top $left $bottom $right;
+		}
+	} @else if ($start != null and $end != null) {
+		margin-left: $start;
+		margin-right: $end;
+
+		@include enact-locale-rtl($target) {
+			// Note: swapping left and right values
+			margin-left: $end;
+			margin-right: $start;
+		}
+	}
+}
+
+// Applies RTL-compatible start and end padding to a selector
+@mixin padding-start-end($start, $end: null, $target: "") {
+	@if ($start != null and $end == null and (($target == parent) or ($target == self) or ($target == ""))) {
+		padding: $start;
+
+		$top: $start;
+		$left: $start;
+		$bottom: $start;
+		$right: $start;
+
+		@if ((length($start) == 4)) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 3);
+			$left: nth($start, 4);
+		} @else if ((length($start) == 3)) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 3);
+			$left: nth($start, 2);
+		} @else if (length($start) == 2) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 1);
+			$left: nth($start, 2);
+		}
+
+		@include enact-locale-rtl($target) {
+			// Note: swapping left and right values
+			padding: $top $left $bottom $right;
+		}
+	} @else if ($start != null and $end != null) {
+		padding-left: $start;
+		padding-right: $end;
+
+		@include enact-locale-rtl($target) {
+			// Note: swapping left and right values
+			padding-left: $end;
+			padding-right: $start;
+		}
+	}
+}
+
 // Shorthand for positioning code
 @mixin positionBase($t, $r, $b, $l) {
 	top: $t;
@@ -51,6 +188,13 @@
 //
 // Locale Mixins
 //
+
+// Assign rules specifically to RTL locales with a convenient shorthand.
+@mixin enact-locale-rtl($target) {
+	@include enact-locale(right-to-left, $target) {
+		@content;
+	}
+}
 
 // Generates an appropriate selector given the locale-target, and injects the given rules into it.
 @mixin enact-locale($locale-target, $target: normal) {
