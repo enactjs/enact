@@ -1,3 +1,5 @@
+@use "./variables";
+
 @function default($args...) {
 	@each $arg in $args {
 		@if not variable-exists(#{$arg}) {
@@ -189,6 +191,62 @@
 // Locale Mixins
 //
 
+// @mixin enact-locale-line-height
+//
+// Assign line-height rules specifically to the languages designated
+// as needing special support for tall-glyphs.
+//
+// Set line-height for normal and tallglyphs with 1 list argument
+// Ex:
+//   @include enact-locale-line-height(1.4em 1.6em);
+// Or:
+//   $lineheight: 1.4em 1.6em;
+//   @include enact-locale-line-height($lineheight);
+@mixin enact-locale-line-height($both, $target: normal) {
+	@include enact-locale-tallglyph-values(line-height, $both, $target);
+}
+
+// @mixin enact-locale-tallglyph
+//
+// Rulename and a normal value followed by a tallglyph value (3 arguments)
+// Ex:
+//   @include enact-locale-tallglyph(font-size, 1.4em; 1.6em, normal);  ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
+
+@mixin enact-locale-tallglyph($rule, $normal, $tallglyph, $target, $locale-tallglyph-languages: "") {
+	#{$rule}: $normal;
+	@include enact-locale-tallglyph-values($rule, $tallglyph, $target, $locale-tallglyph-languages);
+}
+
+@mixin enact-locale-tallglyph-values($rule, $val, $target: normal, $locale-tallglyph-languages: "") {
+	$locale-tallglyph-languages: if($locale-tallglyph-languages == "", variables.$locale-tallglyph-languages, $locale-tallglyph-languages);
+
+	@if (length($val) == 2) {
+		// Rulename and 2 value second variable (2 arguments, 2nd being a list)
+		// Ex:
+		//   @include enact-locale-tallglyph(font-size; 1.4em 1.6em);  ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
+		// Or:
+		//   $fontsize: 1.4em 1.6em;
+		//   @include enact-locale-tallglyph(font-size, $fontsize);    ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
+		#{$rule}: extract($val, 1);
+		@each $value in $locale-tallglyph-languages {
+			@include enact-locale($value, $target) {
+				#{$rule}: extract($val, 2);
+			}
+		}
+	} @else {
+		// Rulename and a tallglyph value
+		// Ex:
+		//   @include enact-locale-tallglyph(font-size; 1.6em);  ->  tallglyphs font-size: 1.6em;
+		@each $value in $locale-tallglyph-languages {
+			// Take each language in the list, apply the $rules to them.
+			// $value is used to generate an appropriate selector for the $rules.
+			@include enact-locale($value, $target) {
+				#{$rule}: $val;
+			}
+		}
+	}
+}
+
 // Assign rules specifically to RTL locales with a convenient shorthand.
 @mixin enact-locale-rtl($target) {
 	@include enact-locale(right-to-left, $target) {
@@ -206,5 +264,11 @@
 		:global(.enact-locale-#{$locale-target}) & {
 			@content;
 		}
+	}
+}
+
+@mixin locale-japanese-line-break {
+	@include enact-locale(ja) {
+		line-break: strict;
 	}
 }
