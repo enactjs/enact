@@ -2,6 +2,32 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.9.0-alpha.1] - 2024-04-09
+
+### Deprecated
+
+- `core/platform` member `windowsPhone`, `edge`, `androidChrome`, `android`, `ie`, `ios`, `webos`, `androidFirefox`, `firefoxOS`, `blackberry`, and `tizen`, to be removed in 5.0.0
+- `core/platform` member `gesture`, `node`, `platformName`, and `unknown`, to be removed in 5.0.0
+- `core/platform` member `touch` and `touchscreen`, to be removed in 5.0.0
+- `webos/platform` member `watch` and `legacy`, to be removed in 5.0.0
+
+### Added
+
+- `core/platform` member `type` to detect a platform like 'desktop', 'mobile', 'webos', and 'node'
+- `core/platform` member `browserName` and `browserVersion` to detect the compatible major browser name and version
+- `core/platform` member `touchEvent` and `touchScreen` replacing legacy `touch` and `touchscreen` respectively
+- `ui/Layout.Cell` prop `componentCss` to support customizing the component used in `Cell`
+
+### Fixed
+
+- `spotlight` navigation from the focused element clipped by an overflow container
+
+## [4.7.10] - 2024-03-05
+
+### Fixed
+
+- `spotlight` navigation from the focused element clipped by an overflow container
+
 ## [4.8.0] - 2024-02-08
 
 No significant changes.
