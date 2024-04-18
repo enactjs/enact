@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Layout.Cell` prop `componentCss` to support customizing the component used in `Cell`
+
 ## [4.8.0] - 2024-02-08
 
 No significant changes.
