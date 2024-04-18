@@ -38,26 +38,38 @@
 
 // Applies RTL-compatible start and end position to a selector
 // Simple "when" here just assumes that if the first argument is a list with more than 1 entry,
-// then units are correct. If it's just 1, then we varify the value is a number (measurement).
-@mixin position-start-end($values, $target: "") {
-	@if ((length($values) != 2) and (($target == parent) or ($target == self) or ($target == ""))) {
-		@include position($values);
+// then units are correct. If it's just 1, then we verify if the value is a number (measurement).
+@mixin position-start-end($start, $end: null, $target: "") {
+	@if ($start != null and $end == null and (($target == parent) or ($target == self) or ($target == ""))) {
+		@include position($start);
 
-		@if ((length($values) == 4)) {
-			$top: nth($values, 1);
-			$right: nth($values, 2);
-			$bottom: nth($values, 3);
-			$left: nth($values, 4);
+		$top: $start;
+		$left: $start;
+		$bottom: $start;
+		$right: $start;
 
-			@include enact-locale-rtl($target) {
-				// Note: swapping left and right values
-				position: $top $left $bottom $right;
-			}
+		@if ((length($start) == 4)) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 3);
+			$left: nth($start, 4);
+		} @else if ((length($start) == 3)) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 3);
+			$left: nth($start, 2);
+		} @else if (length($start) == 2) {
+			$top: nth($start, 1);
+			$right: nth($start, 2);
+			$bottom: nth($start, 1);
+			$left: nth($start, 2);
 		}
-	} @else if (length($values) == 2) {
-		$start: nth($values, 1);
-		$end: nth($values, 2);
 
+		@include enact-locale-rtl($target) {
+			// Note: swapping left and right values
+			@include position($top, $left, $bottom, $right);
+		}
+	} @else if ($start != null and $end != null) {
 		left: $start;
 		right: $end;
 
@@ -70,7 +82,7 @@
 }
 
 // Applies RTL-compatible start and end margins to a selector
-@mixin margin-start-end($start, $end, $target: "") {
+@mixin margin-start-end($start, $end: null, $target: "") {
 	@if ($start != null and $end == null and (($target == parent) or ($target == self) or ($target == ""))) {
 		margin: $start;
 
@@ -156,22 +168,22 @@
 }
 
 // Shorthand for positioning code
-@mixin position($t, $r: null, $b: null, $l: null) {
+@mixin positionBase($t, $r, $b, $l) {
 	top: $t;
 	right: $r;
 	bottom: $b;
 	left: $l;
+}
 
-	@if (type-of($t) == list) {
-		@if (length($t) == 4) {
-			@include position(nth($t, 1), nth($t, 2), nth($t, 3), nth($t, 4));
-		} @else if (length($t) == 3) {
-			@include position(nth($t, 1), nth($t, 2), nth($t, 2), nth($t, 3));
-		} @else if (length($t) == 2) {
-			@include position(nth($t, 1), nth($t, 2), nth($t, 1), nth($t, 2));
-		} @else {
-			@include position(nth($t, 1), nth($t, 1), nth($t, 1), nth($t, 1));
-		}
+@mixin position($trbl) {
+	@if (length($trbl) == 4) {
+		@include positionBase(nth($trbl, 1), nth($trbl, 2), nth($trbl, 3), nth($trbl, 4));
+	} @else if (length($trbl) == 3) {
+		@include positionBase(nth($trbl, 1), nth($trbl, 2), nth($trbl, 3), nth($trbl, 2));
+	} @else if (length($trbl) == 2) {
+		@include positionBase(nth($trbl, 1), nth($trbl, 2), nth($trbl, 1), nth($trbl, 2));
+	} @else {
+		@include positionBase(nth($trbl, 1), nth($trbl, 1), nth($trbl, 1), nth($trbl, 1));
 	}
 }
 
@@ -199,6 +211,7 @@
 // Rulename and a normal value followed by a tallglyph value (3 arguments)
 // Ex:
 //   @include enact-locale-tallglyph(font-size, 1.4em; 1.6em, normal);  ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
+
 @mixin enact-locale-tallglyph($rule, $normal, $tallglyph, $target, $locale-tallglyph-languages: "") {
 	#{$rule}: $normal;
 	@include enact-locale-tallglyph-values($rule, $tallglyph, $target, $locale-tallglyph-languages);
