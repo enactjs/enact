@@ -1,4 +1,4 @@
-import LocaleInfo from 'ilib/lib/LocaleInfo';
+import {LocaleInfo} from '../iLibLink';
 
 import {isNonLatinLocale, isRtlLocale} from '../locale';
 

@@ -1,5 +1,5 @@
-import IString from 'ilib/lib/IString';
-import ResBundle from 'ilib/lib/ResBundle';
+import {IString} from '../iLibLink';
+import {ResBundle} from '../iLibLink';
 
 // The ilib.ResBundle for the active locale used by $L
 let resBundle;

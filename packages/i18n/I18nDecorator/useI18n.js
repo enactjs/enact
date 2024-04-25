@@ -1,7 +1,7 @@
 import useClass from '@enact/core/useClass';
 import {useState, useEffect} from 'react';
 
-import ilib from '../src/index.js';
+import ilib from '../iLibLink';
 
 import I18n from './I18n';
 

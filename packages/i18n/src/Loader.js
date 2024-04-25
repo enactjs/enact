@@ -1,8 +1,8 @@
 /* global XMLHttpRequest, ILIB_BASE_PATH, ILIB_RESOURCES_PATH, ILIB_ADDITIONAL_RESOURCES_PATH, ILIB_CACHE_ID */
 
 import {memoize} from '@enact/core/util';
-import Loader from 'ilib/lib/Loader';
-import LocaleInfo from 'ilib/lib/LocaleInfo';
+import {Loader} from '../iLibLink';
+import {LocaleInfo} from '../iLibLink';
 import xhr from 'xhr';
 
 import ZoneInfoFile from './zoneinfo';

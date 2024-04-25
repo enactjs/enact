@@ -6,9 +6,9 @@
  * @private
  */
 
-import ilib from 'ilib';
-import LocaleInfo from 'ilib/lib/LocaleInfo';
-import ScriptInfo from 'ilib/lib/ScriptInfo';
+import {ilib} from '../iLibLink';
+import {LocaleInfo} from '../iLibLink';
+import {ScriptInfo} from '../iLibLink';
 
 import {initCaseMappers} from '../src/case';
 

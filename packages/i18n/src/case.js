@@ -1,4 +1,4 @@
-import CaseMapper from 'ilib/lib/CaseMapper';
+import {CaseMapper} from '../iLibLink';
 
 let toLowerCaseMapper, toUpperCaseMapper;
 

@@ -1,3 +1,3 @@
 import './glue';
 
-export default from 'ilib';
+export default from '../iLibLink';

@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-import ilib from 'ilib';
+import ilib from '../iLibLink';
 
 import './dates';
 

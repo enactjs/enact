@@ -7,8 +7,8 @@
  */
 
 import hoc from '@enact/core/hoc';
-import ilib from 'ilib';
-import IString from 'ilib/lib/IString';
+import {ilib} from '../iLibLink';
+import {IString} from '../iLibLink';
 import PropTypes from 'prop-types';
 import {Component} from 'react';
 
