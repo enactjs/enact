@@ -12,11 +12,11 @@ describe('Resolution Specs', () => {
 		{name: 'vga', pxPerRem: 8, width: 640, height: 480, aspectRatioName: 'standard'},
 		{name: 'xga', pxPerRem: 16, width: 1024, height: 768, aspectRatioName: 'standard'},
 		{name: 'hd', pxPerRem: 16, width: 1280, height: 720, aspectRatioName: 'hdtv'},
-		{name: 'fhd', pxPerRem: 24, width: 1920, height: 1080, aspectRatioName: 'hdtv', base: true},
+		{name: 'fhd', pxPerRem: 24, width: 1920, height: 1080, aspectRatioName: 'hdtv'},
 		{name: 'uw-uxga', pxPerRem: 24, width: 2560, height: 1080, aspectRatioName: 'cinema'},
 		{name: 'qhd', pxPerRem: 32, width: 2560, height: 1440, aspectRatioName: 'hdtv'},
 		{name: 'wqhd', pxPerRem: 32, width: 3440, height: 1440, aspectRatioName: 'cinema'},
-		{name: 'uhd', pxPerRem: 48, width: 3840, height: 2160, aspectRatioName: 'hdtv'},
+		{name: 'uhd', pxPerRem: 48, width: 3840, height: 2160, aspectRatioName: 'hdtv', base: true},
 		{name: 'uhd2', pxPerRem: 96, width: 7680, height: 4320, aspectRatioName: 'hdtv'}
 	];
 	const VGA = {height: 480, width: 640};
@@ -243,10 +243,10 @@ describe('Resolution Specs', () => {
 	);
 
 	test('should scale pixel measurements for the current screen', () => {
-		const expectedFHD = 24 / 3;
+		const expectedFHD = 24 / 6;
 		const actualFHD = scale(24);
 
-		const expectedHD = 16 / 3;
+		const expectedHD = 16 / 6;
 		const actualHD = scale(16);
 
 		expect(actualFHD).toBe(expectedFHD);
