@@ -337,6 +337,10 @@ const platform = {};
 
 			const p = detect();
 			return p[name];
+		},
+		set: (value) => {
+			const p = detect();
+			p[name] = value;
 		}
 	});
 });
