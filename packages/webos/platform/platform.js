@@ -156,7 +156,7 @@ const platform = {};
 		},
 		set: (value) => {
 			const p = detect();
-			p[name] = value;
+			if (p.unknown === true) p[name] = value;
 		}
 	});
 });
