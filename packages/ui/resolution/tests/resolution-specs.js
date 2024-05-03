@@ -231,12 +231,20 @@ describe('Resolution Specs', () => {
 	test(
 		'should calculate the base font size for the given screen type',
 		() => {
+			const expectedUHD = '48px';
+			const actualUHD = calculateFontSize('uhd');
+
+			const expectedQHD = '32px';
+			const actualQHD = calculateFontSize('qhd');
+
 			const expectedFHD = '24px';
 			const actualFHD = calculateFontSize('fhd');
 
 			const expectedHD = '16px';
 			const actualHD = calculateFontSize('hd');
 
+			expect(actualUHD).toBe(expectedUHD);
+			expect(actualQHD).toBe(expectedQHD);
 			expect(actualFHD).toBe(expectedFHD);
 			expect(actualHD).toBe(expectedHD);
 		}
