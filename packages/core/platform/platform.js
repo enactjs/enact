@@ -288,6 +288,10 @@ const detect = () => {
 	return detectedPlatform;
 };
 
+const resetDetectedPlatform = () => {
+	detectedPlatform = null;
+};
+
 /**
  * Provides basic information about the running platform.
  *
@@ -337,10 +341,6 @@ const platform = {};
 
 			const p = detect();
 			return p[name];
-		},
-		set: (value) => {
-			const p = detect();
-			if (p.unknown === true) p[name] = value;
 		}
 	});
 });
@@ -349,5 +349,6 @@ export default platform;
 export {
 	detect,
 	parseUserAgent,
-	platform
+	platform,
+	resetDetectedPlatform
 };
