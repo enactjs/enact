@@ -153,10 +153,6 @@ const platform = {};
 
 			const p = detect();
 			return p[name];
-		},
-		set: (value) => {
-			const p = detect();
-			if (p.unknown === true) p[name] = value;
 		}
 	});
 });

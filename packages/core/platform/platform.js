@@ -288,7 +288,7 @@ const detect = () => {
 	return detectedPlatform;
 };
 
-const resetDetectedPlatform = () => {
+const resetPlatformDescription = () => {
 	detectedPlatform = null;
 };
 
@@ -350,5 +350,5 @@ export {
 	detect,
 	parseUserAgent,
 	platform,
-	resetDetectedPlatform
+	resetPlatformDescription
 };
