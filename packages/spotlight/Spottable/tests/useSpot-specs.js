@@ -3,8 +3,7 @@ import useHandlers from '@enact/core/useHandlers';
 import '@testing-library/jest-dom';
 import {fireEvent, render, screen} from '@testing-library/react';
 import classNames from 'classnames';
-import {Component} from 'react';
-import ReactDOM from 'react-dom';
+import {useRef} from 'react';
 
 import Spotlight from '../../src/spotlight.js';
 import useSpottable from '../useSpottable';
@@ -47,8 +46,10 @@ const spotHandlers = {
 };
 
 describe('useSpottable', () => {
-	function SpottableBase (props) {
-		const {className, component, componentRef, disabled, emulateMouse, onSelectionCancel, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, selectionKeys, spotlightDisabled, spotlightId, ...rest} = props;
+	function SpottableComponent (props) {
+		const nodeRef = useRef();
+
+		const {className, component, disabled, emulateMouse, onSelectionCancel, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, selectionKeys, spotlightDisabled, spotlightId, ...rest} = props;
 		const spot = useSpottable({
 			disabled,
 			emulateMouse,
@@ -68,33 +69,20 @@ describe('useSpottable', () => {
 
 		const handlers = useHandlers(spotHandlers, rest, spot);
 
-		compRef = componentRef;
+		compRef = nodeRef.current?.firstElementChild;
 
 		return (
-			<Comp
-				{...rest}
-				{...spot.attributes}
-				{...handlers}
-				className={classNames(className, spot.className)}
-				disabled={disabled}
-				ref={spot.ref}
-			/>
+			<div ref={nodeRef}>
+				<Comp
+					{...rest}
+					{...spot.attributes}
+					{...handlers}
+					className={classNames(className, spot.className)}
+					disabled={disabled}
+					ref={spot.ref}
+				/>
+			</div>
 		);
-	}
-
-	class SpottableComponent extends Component {
-		componentDidMount () {
-			// eslint-disable-next-line react/no-find-dom-node
-			this.node = ReactDOM.findDOMNode(this);
-		}
-
-		get componentRef () {
-			return this.node;
-		}
-
-		render () {
-			return <SpottableBase {...this.props} componentRef={this.componentRef} />;
-		}
 	}
 
 	beforeEach(() => {
