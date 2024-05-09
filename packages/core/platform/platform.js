@@ -288,6 +288,10 @@ const detect = () => {
 	return detectedPlatform;
 };
 
+const resetPlatformDescription = () => {
+	detectedPlatform = null;
+};
+
 /**
  * Provides basic information about the running platform.
  *
@@ -345,5 +349,6 @@ export default platform;
 export {
 	detect,
 	parseUserAgent,
-	platform
+	platform,
+	resetPlatformDescription
 };
