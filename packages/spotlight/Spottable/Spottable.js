@@ -131,7 +131,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			selectionKeys,
 			spotlightDisabled,
 			spotlightId,
-			spotRef: nodeRef.current?.firstElementChild
+			spotRef: nodeRef.current?.parentElement?.firstElementChild
 		});
 
 		let tabIndex = rest.tabIndex;
@@ -145,7 +145,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		delete rest.spotlightId;
 
 		return (
-			<div ref={nodeRef}>
+			<>
 				<Wrapped
 					{...rest}
 					{...spot.attributes}
@@ -153,7 +153,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 					className={classNames(className, spot.className)}
 					disabled={disabled}
 				/>
-			</div>
+				<div style={{display: 'none'}} ref={nodeRef} />
+			</>
 		);
 	}
 
