@@ -2,11 +2,11 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
-## [unreleased]
+## [4.0.14] - 2024-05-14
 
 ### Fixed
 
-- `i18n` resource loader to prioritize strings from additional resources files 
+- `i18n` resource loader to prioritize strings from additional resources files
 
 ## [4.0.13] - 2022-11-29
 
