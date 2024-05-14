@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to use `@enact/i18n/utils.isRtlText` API.
+
 ## [4.9.0-alpha.1] - 2024-04-09
 
 ### Added
