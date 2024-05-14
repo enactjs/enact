@@ -15,7 +15,7 @@ import propEq from 'ramda/src/propEq';
 import remove from 'ramda/src/remove';
 import unionWith from 'ramda/src/unionWith';
 import useWith from 'ramda/src/useWith';
-import {Children, cloneElement, createElement, Component} from 'react';
+import {Children, cloneElement, createElement, createRef, Component} from 'react';
 
 /**
  * Returns the index of a child in an array found by `key` matching
@@ -183,6 +183,8 @@ class TransitionGroup extends Component {
 		this.keysToLeave = [];
 		this.keysToStay = [];
 		this.groupRefs = {};
+		this.nodeRef = createRef();
+		this.refNode = (<div style={{display: 'none'}} ref={this.nodeRef} />);
 	}
 
 	static getDerivedStateFromProps (props, state) {
@@ -425,15 +427,22 @@ class TransitionGroup extends Component {
 		this.groupRefs[key] = node;
 	};
 
+	getNodeRef = () => {
+		const node = this.nodeRef.current;
+		const childrenOfParent = node.parentElement.children;
+		const index = Array.prototype.indexOf.call(childrenOfParent, node);
+		return childrenOfParent[index - 1];
+	};
+
 	render () {
 		// support wrapping arbitrary children with a component that supports the necessary
 		// lifecycle methods to animate transitions
-		const childrenToRender = this.state.children.map(child => {
+		const childrenToRender = this.state.children.map((child, index) => {
 			const isLeaving = child.props['data-index'] !== this.props.currentIndex && typeof child.props['data-index'] !== 'undefined';
 
 			return cloneElement(
 				this.props.childFactory(child),
-				{key: child.key, ref: this.storeRefs(child.key), leaving: isLeaving, appearing: !this.hasMounted}
+				{key: child.key, ref: this.storeRefs(child.key), leaving: isLeaving, appearing: !this.hasMounted, getParentRef: this.getNodeRef, renderedIndex: index}
 			);
 		});
 
@@ -452,10 +461,15 @@ class TransitionGroup extends Component {
 		delete props.onWillTransition;
 		delete props.size;
 
-		return createElement(
-			this.props.component,
-			props,
-			childrenToRender
+		return (
+			<>
+				{createElement(
+					this.props.component,
+					props,
+					childrenToRender
+				)}
+				{this.refNode}
+			</>
 		);
 	}
 }
