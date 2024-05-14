@@ -1,6 +1,6 @@
 /* global ResizeObserver */
 
-import direction from 'direction';
+import {isRtlText} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
@@ -125,7 +125,7 @@ const defaultConfig = {
 	 * @kind member
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
-	marqueeDirection: (str) => direction(str) === 'rtl' ? 'rtl' : 'ltr'
+	marqueeDirection: (str) => isRtlText(str) ? 'rtl' : 'ltr'
 };
 
 /*
