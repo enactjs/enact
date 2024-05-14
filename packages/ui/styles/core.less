@@ -25,7 +25,7 @@
 
 	// Touch interaction
 	.enact-no-touch-action {
-		-ms-touch-action: none;
+		touch-action: none;
 	}
 
 	.enact-untouchable {
@@ -39,17 +39,11 @@
 	// Selection
 	.enact-unselectable {
 		cursor: default;
-		-ms-user-select: none;
-		-webkit-user-select: none;
-		-moz-user-select: -moz-none;
 		user-select: none;
 	}
 
 	.enact-selectable {
 		cursor: auto;
-		-ms-user-select: element;
-		-webkit-user-select: text;
-		-moz-user-select: text;
 		user-select: text;
 	}
 
