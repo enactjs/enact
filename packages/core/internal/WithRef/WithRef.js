@@ -10,7 +10,7 @@ const WithRef = (WrappedComponent) => {
 			const node = divRef.current;
 			const attributeSelector = `[data-withref-id="${node.getAttribute('data-withref-target')}"]`;
 			const selector = `:scope ${attributeSelector}, :scope :has(${attributeSelector})`;
-			return node.parentElement.querySelector(selector) || null;
+			return node?.parentElement?.querySelector(selector) || null;
 		}, []);
 
 		return (
