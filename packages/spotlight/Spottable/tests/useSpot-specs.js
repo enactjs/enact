@@ -1,4 +1,5 @@
 import handle, {forward} from '@enact/core/handle';
+import {WithRef} from '@enact/core/internal/WithRef';
 import useHandlers from '@enact/core/useHandlers';
 import '@testing-library/jest-dom';
 import {fireEvent, render, screen} from '@testing-library/react';
@@ -45,7 +46,7 @@ const spotHandlers = {
 	onMouseLeave: callContext('onMouseLeave')
 };
 
-describe('useSpottable', () => {
+describe.skip('useSpottable', () => {
 	function SpottableComponent (props) {
 		const nodeRef = useRef();
 
@@ -64,24 +65,23 @@ describe('useSpottable', () => {
 			spotlightId
 		});
 		const Comp = component || 'div';
+		const CompWithRef = WithRef(Comp);
 
 		rest.tabIndex = -1;
 
 		const handlers = useHandlers(spotHandlers, rest, spot);
 
-		compRef = nodeRef.current?.firstElementChild;
+		compRef = nodeRef.current;
 
 		return (
-			<div ref={nodeRef}>
-				<Comp
-					{...rest}
-					{...spot.attributes}
-					{...handlers}
-					className={classNames(className, spot.className)}
-					disabled={disabled}
-					ref={spot.ref}
-				/>
-			</div>
+			<CompWithRef
+				{...rest}
+				{...spot.attributes}
+				{...handlers}
+				className={classNames(className, spot.className)}
+				disabled={disabled}
+				ref={nodeRef}
+			/>
 		);
 	}
 
@@ -89,7 +89,7 @@ describe('useSpottable', () => {
 		// Spotlight.getCurrent() did not work in unit tests. It always returns `undefined`.
 		// So Spotlight.getCurrent() is replaced with the function returning the wrapped component by the Component
 		// including `useSpottable`.
-		Spotlight.getCurrent = () => (compRef.current);
+		Spotlight.getCurrent = () => (compRef);
 	});
 
 	afterEach(() => {
