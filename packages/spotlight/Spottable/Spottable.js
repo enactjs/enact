@@ -9,6 +9,7 @@
 import handle, {forward, returnsTrue} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
+import {WithRef} from '@enact/core/internal/WithRef';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {Component, useRef} from 'react';
@@ -103,6 +104,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 	function SpottableBase (props) {
 		const nodeRef = useRef();
+		const WrappedWithRef = WithRef(Wrapped);
 
 		const {
 			className,
@@ -131,7 +133,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			selectionKeys,
 			spotlightDisabled,
 			spotlightId,
-			spotRef: nodeRef.current?.parentElement?.firstElementChild
+			spotRef: nodeRef.current
 		});
 
 		let tabIndex = rest.tabIndex;
@@ -146,14 +148,15 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		return (
 			<>
-				<Wrapped
+				<WrappedWithRef
 					{...rest}
 					{...spot.attributes}
 					{...handlers}
 					className={classNames(className, spot.className)}
 					disabled={disabled}
+					referrerName="Spottable"
+					ref={nodeRef}
 				/>
-				<div style={{display: 'none'}} ref={nodeRef} />
 			</>
 		);
 	}
