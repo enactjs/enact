@@ -39,7 +39,7 @@ const REMOTE_OK_KEY = 16777221;
  * @property {Boolean}  [keyUp]      Handle to run when the 5-way up key is released.
  * @property {Boolean}  [mouseEnter] Handle when mouse enters.
  * @property {Boolean}  [mouseLeave] Handle when mouse leaves.
- * @property {Boolean}  [ref]        The ref for the target node.
+ * @property {Boolean}  [spotRef]    The ref for the target node.
  * @private
  */
 
