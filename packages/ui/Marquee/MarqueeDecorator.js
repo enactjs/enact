@@ -1,6 +1,6 @@
 /* global ResizeObserver */
 
-import {isRtlText} from '@enact/core/util';
+import {isRtlText} from '@enact/i18n/util';
 import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
