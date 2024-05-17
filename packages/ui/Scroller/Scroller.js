@@ -32,8 +32,36 @@ const nop = () => {};
  * @ui
  * @public
  */
-const Scroller = (props) => {
+const Scroller = ({
+	cbScrollTo = nop,
+	direction = 'both',
+	horizontalScrollbar = 'auto',
+	noScrollByDrag = false,
+	noScrollByWheel = false,
+	onScroll = nop,
+	onScrollStart = nop,
+	onScrollStop = nop,
+	overscrollEffectOn: {drag = false, pageKey = false, wheel = false} = {},
+	scrollMode = 'translate',
+	verticalScrollbar = 'auto',
+	...rest
+}) => {
 	// Hooks
+
+	const props = {
+		cbScrollTo,
+		direction,
+		horizontalScrollbar,
+		noScrollByDrag,
+		noScrollByWheel,
+		onScroll,
+		onScrollStart,
+		onScrollStop,
+		overscrollEffectOn: {drag, pageKey, wheel},
+		scrollMode,
+		verticalScrollbar,
+		...rest
+	};
 
 	const {
 		scrollContentHandle,
@@ -257,23 +285,6 @@ Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
 	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
-Scroller.defaultProps = {
-	cbScrollTo: nop,
-	direction: 'both',
-	horizontalScrollbar: 'auto',
-	noScrollByDrag: false,
-	noScrollByWheel: false,
-	onScroll: nop,
-	onScrollStart: nop,
-	onScrollStop: nop,
-	overscrollEffectOn: {
-		drag: false,
-		pageKey: false,
-		wheel: false
-	},
-	scrollMode: 'translate',
-	verticalScrollbar: 'auto'
-};
 
 export default Scroller;
 export {

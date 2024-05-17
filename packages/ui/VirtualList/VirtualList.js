@@ -30,8 +30,38 @@ const nop = () => {};
  * @ui
  * @public
  */
-const VirtualList = (props) => {
+const VirtualList = ({
+	cbScrollTo = nop,
+	direction = 'vertical',
+	horizontalScrollbar = 'auto',
+	noScrollByDrag = false,
+	noScrollByWheel = false,
+	onScroll = nop,
+	onScrollStart = nop,
+	onScrollStop = nop,
+	overscrollEffectOn: {drag = false, pageKey = false, wheel = false} = {},
+	role = 'list',
+	scrollMode = 'translate',
+	verticalScrollbar = 'auto',
+	...rest
+}) => {
 	// Hooks
+
+	const props = {
+		cbScrollTo,
+		direction,
+		horizontalScrollbar,
+		noScrollByDrag,
+		noScrollByWheel,
+		onScroll,
+		onScrollStart,
+		onScrollStop,
+		overscrollEffectOn: {drag, pageKey, wheel},
+		role,
+		scrollMode,
+		verticalScrollbar,
+		...rest
+	};
 
 	const {
 		scrollContentHandle,
@@ -276,25 +306,6 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
-VirtualList.defaultProps = {
-	cbScrollTo: nop,
-	direction: 'vertical',
-	horizontalScrollbar: 'auto',
-	noScrollByDrag: false,
-	noScrollByWheel: false,
-	onScroll: nop,
-	onScrollStart: nop,
-	onScrollStop: nop,
-	overscrollEffectOn: {
-		drag: false,
-		pageKey: false,
-		wheel: false
-	},
-	role: 'list',
-	scrollMode: 'translate',
-	verticalScrollbar: 'auto'
-};
-
 /**
  * An unstyled scrollable virtual grid list component with touch support.
  *
@@ -304,7 +315,37 @@ VirtualList.defaultProps = {
  * @ui
  * @public
  */
-const VirtualGridList = (props) => {
+const VirtualGridList = ({
+	cbScrollTo = nop,
+	direction = 'vertical',
+	horizontalScrollbar = 'auto',
+	noScrollByDrag = false,
+	noScrollByWheel = false,
+	onScroll = nop,
+	onScrollStart = nop,
+	onScrollStop = nop,
+	overscrollEffectOn: {drag = false, pageKey = false, wheel = false} = {},
+	role = 'list',
+	scrollMode = 'translate',
+	verticalScrollbar = 'auto',
+	...rest
+}) => {
+	const props = {
+		cbScrollTo,
+		direction,
+		horizontalScrollbar,
+		noScrollByDrag,
+		noScrollByWheel,
+		onScroll,
+		onScrollStart,
+		onScrollStop,
+		overscrollEffectOn: {drag, pageKey, wheel},
+		role,
+		scrollMode,
+		verticalScrollbar,
+		...rest
+	};
+
 	const {
 		scrollContentHandle,
 		scrollContentWrapper: ScrollContentWrapper,
@@ -544,25 +585,6 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 	 * @public
 	 */
 	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
-};
-
-VirtualGridList.defaultProps = {
-	cbScrollTo: nop,
-	direction: 'vertical',
-	horizontalScrollbar: 'auto',
-	noScrollByDrag: false,
-	noScrollByWheel: false,
-	onScroll: nop,
-	onScrollStart: nop,
-	onScrollStop: nop,
-	overscrollEffectOn: {
-		drag: false,
-		pageKey: false,
-		wheel: false
-	},
-	role: 'list',
-	scrollMode: 'translate',
-	verticalScrollbar: 'auto'
 };
 
 export default VirtualList;
