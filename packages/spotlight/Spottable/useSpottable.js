@@ -39,7 +39,7 @@ const REMOTE_OK_KEY = 16777221;
  * @property {Boolean}  [keyUp]      Handle to run when the 5-way up key is released.
  * @property {Boolean}  [mouseEnter] Handle when mouse enters.
  * @property {Boolean}  [mouseLeave] Handle when mouse leaves.
- * @property {Boolean}  [spotRef]    The ref for the target node.
+ * @property {Boolean}  [spotNode]   The ref for the target node.
  * @private
  */
 
@@ -54,7 +54,7 @@ const REMOTE_OK_KEY = 16777221;
  * @private
  */
 
-const useSpottable = ({spotRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
+const useSpottable = ({emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
 	const hook = useClass(SpottableCore, {emulateMouse});
 	const context = useRef({
 		prevSpotlightDisabled: spotlightDisabled,
@@ -74,12 +74,12 @@ const useSpottable = ({spotRef, emulateMouse, selectionKeys = [ENTER_KEY, REMOTE
 	hook.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context.current);
 
 	useLayoutEffect(() => {
-		hook.load(spotRef || null);
+		hook.load(getSpotRef() || null);
 
 		return () => {
 			hook.unload();
 		};
-	}, [spotRef]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [getSpotRef]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useLayoutEffect(hook.didUpdate); // eslint-disable-line react-hooks/exhaustive-deps
 

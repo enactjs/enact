@@ -12,7 +12,7 @@ import hoc from '@enact/core/hoc';
 import {WithRef} from '@enact/core/internal/WithRef';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import {Component, useRef} from 'react';
+import {Component, useCallback, useRef} from 'react';
 
 import {spottableClass, useSpottable} from './useSpottable';
 
@@ -101,10 +101,10 @@ const defaultConfig = {
  */
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const {emulateMouse} = config;
+	const WrappedWithRef = WithRef(Wrapped);
 
 	function SpottableBase (props) {
 		const nodeRef = useRef();
-		const WrappedWithRef = WithRef(Wrapped);
 
 		const {
 			className,
@@ -120,9 +120,13 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			spotlightId,
 			...rest
 		} = props;
+
+		const getSpotRef = useCallback(() => nodeRef.current, []);
+
 		const spot = useSpottable({
 			disabled,
 			emulateMouse,
+			getSpotRef,
 			handleForceUpdate,
 			onSelectionCancel: rest.onMouseUp,
 			onSpotlightDisappear,
@@ -132,8 +136,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			onSpotlightUp,
 			selectionKeys,
 			spotlightDisabled,
-			spotlightId,
-			spotRef: nodeRef.current
+			spotlightId
 		});
 
 		let tabIndex = rest.tabIndex;
@@ -147,17 +150,15 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		delete rest.spotlightId;
 
 		return (
-			<>
-				<WrappedWithRef
-					{...rest}
-					{...spot.attributes}
-					{...handlers}
-					className={classNames(className, spot.className)}
-					disabled={disabled}
-					referrerName="Spottable"
-					ref={nodeRef}
-				/>
-			</>
+			<WrappedWithRef
+				{...rest}
+				{...spot.attributes}
+				{...handlers}
+				className={classNames(className, spot.className)}
+				disabled={disabled}
+				referrerName="Spottable"
+				outermostRef={nodeRef}
+			/>
 		);
 	}
 
