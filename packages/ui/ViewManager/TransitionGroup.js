@@ -184,7 +184,8 @@ class TransitionGroup extends Component {
 		this.keysToStay = [];
 		this.groupRefs = {};
 		this.nodeRef = createRef();
-		this.refNode = (<div style={{display: 'none'}} ref={this.nodeRef} />);
+		this.refNodeId = '#transition#group#';
+		this.refNode = (<div data-transitiongroup-target={this.refNodeId} ref={this.nodeRef} style={{display: 'none'}} />);
 	}
 
 	static getDerivedStateFromProps (props, state) {
@@ -429,9 +430,9 @@ class TransitionGroup extends Component {
 
 	getNodeRef = () => {
 		const node = this.nodeRef.current;
-		const childrenOfParent = node.parentElement.children;
-		const index = Array.prototype.indexOf.call(childrenOfParent, node);
-		return childrenOfParent[index - 1];
+		const attributeSelector = `[data-transitiongroup-id="${node.getAttribute('data-transitiongroup-target')}"]`;
+		const selector = `:scope ${attributeSelector}, :scope :has(${attributeSelector})`;
+		return node?.parentElement?.querySelector(selector) || null;
 	};
 
 	render () {
@@ -448,7 +449,10 @@ class TransitionGroup extends Component {
 
 		// Do not forward TransitionGroup props to primitive DOM nodes
 		const props = Object.assign({}, this.props);
+
 		props.ref = this.props.componentRef;
+		props['data-transitiongroup-id'] = this.refNodeId;
+
 		delete props.childFactory;
 		delete props.component;
 		delete props.componentRef;
@@ -463,11 +467,7 @@ class TransitionGroup extends Component {
 
 		return (
 			<>
-				{createElement(
-					this.props.component,
-					props,
-					childrenToRender
-				)}
+				{createElement(this.props.component, props, childrenToRender)}
 				{this.refNode}
 			</>
 		);

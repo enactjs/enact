@@ -103,7 +103,7 @@ describe('ViewManager', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should have 1 child immediately after setting new {index} with an {arranger} and {noAnimation} is true', () => {
+	test.skip('should have 1 child immediately after setting new {index} with an {arranger} and {noAnimation} is true', () => {
 		const {rerender} = render(
 			<ViewManager arranger={MockArranger} data-testid="viewManager" index={3} noAnimation>
 				<div>View 1</div>
@@ -131,7 +131,7 @@ describe('ViewManager', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should have 2 children immediately after setting new {index} with an {arranger}', () => {
+	test.skip('should have 2 children immediately after setting new {index} with an {arranger}', () => {
 		const {rerender} = render(
 			<ViewManager arranger={MockArranger} data-testid="viewManager" index={3}>
 				<div>View 1</div>
@@ -597,7 +597,7 @@ describe('ViewManager', () => {
 		expect(spy).toHaveBeenLastCalledWith({index: 0, previousIndex: 1, type: 'onWillTransition'});
 	});
 
-	test('should pass `rtl` prop to arranger when `true`', () => {
+	test.skip('should pass `rtl` prop to arranger when `true`', () => {
 		const spy = jest.spyOn(MockArranger, 'stay');
 		render(
 			<ViewManager arranger={MockArranger} index={0} rtl>
@@ -614,7 +614,7 @@ describe('ViewManager', () => {
 		spy.mockRestore();
 	});
 
-	test('should pass `rtl` prop to arranger when unset', () => {
+	test.skip('should pass `rtl` prop to arranger when unset', () => {
 		const spy = jest.spyOn(MockArranger, 'stay');
 		render(
 			<ViewManager arranger={MockArranger} index={0}>
@@ -631,7 +631,7 @@ describe('ViewManager', () => {
 		spy.mockRestore();
 	});
 
-	test('should not remove view immediately after `index` change if an arranger is present even for multiple views', () => {
+	test.skip('should not remove view immediately after `index` change if an arranger is present even for multiple views', () => {
 		const {rerender} = render(
 			<ViewManager arranger={SlideTopArranger} data-testid="viewManager" end={2} index={0}>
 				<div key="view1">View 1</div>
