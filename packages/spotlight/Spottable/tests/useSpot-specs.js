@@ -80,7 +80,7 @@ describe.skip('useSpottable', () => {
 				{...handlers}
 				className={classNames(className, spot.className)}
 				disabled={disabled}
-				ref={nodeRef}
+				outermostRef={nodeRef}
 			/>
 		);
 	}
