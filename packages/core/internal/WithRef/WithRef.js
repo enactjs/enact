@@ -1,12 +1,13 @@
 import {forwardRef, useId, useImperativeHandle, useRef} from 'react';
 
 const WithRef = (WrappedComponent) => {
-	const HoC = forwardRef(function ({['data-withref-id']: givenId, referrerName, ...rest}, ref) {
+	const HoC = forwardRef(function (props, ref) {
+		const {['data-withref-id']: givenId, referrerName, outermostRef, ...rest} = props;
 		const divRef = useRef();
 		const generatedId = useId();
 		const id = givenId || generatedId;
 
-		useImperativeHandle(ref, () => {
+		useImperativeHandle(outermostRef, () => {
 			const node = divRef.current;
 			const attributeSelector = `[data-withref-id="${node.getAttribute('data-withref-target')}"]`;
 			const selector = `:scope ${attributeSelector}, :scope :has(${attributeSelector})`;
@@ -15,7 +16,7 @@ const WithRef = (WrappedComponent) => {
 
 		return (
 			<>
-				<WrappedComponent {...rest} data-withref-id={id} />
+				<WrappedComponent {...rest} data-withref-id={id} ref={ref} />
 				<div data-withref-target={id} data-withref-referrer={referrerName} ref={divRef} style={{display: 'none'}} />
 			</>
 		);
