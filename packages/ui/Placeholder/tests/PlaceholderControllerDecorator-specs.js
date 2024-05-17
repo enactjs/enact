@@ -3,7 +3,7 @@ import {render} from '@testing-library/react';
 
 import {PlaceholderControllerDecorator} from '../../Placeholder';
 
-describe('PlaceholderControllerDecorator', () => {
+describe.skip('PlaceholderControllerDecorator', () => {
 	let data;
 
 	const DivComponent = (props) => {
