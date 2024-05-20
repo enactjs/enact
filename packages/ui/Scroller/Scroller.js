@@ -32,36 +32,28 @@ const nop = () => {};
  * @ui
  * @public
  */
-const Scroller = ({
-	cbScrollTo = nop,
-	direction = 'both',
-	horizontalScrollbar = 'auto',
-	noScrollByDrag = false,
-	noScrollByWheel = false,
-	onScroll = nop,
-	onScrollStart = nop,
-	onScrollStop = nop,
-	overscrollEffectOn: {drag = false, pageKey = false, wheel = false} = {},
-	scrollMode = 'translate',
-	verticalScrollbar = 'auto',
-	...rest
-}) => {
+const scrollerDefaultProps = {
+	cbScrollTo: nop,
+	direction: 'both',
+	horizontalScrollbar: 'auto',
+	noScrollByDrag: false,
+	noScrollByWheel: false,
+	onScroll: nop,
+	onScrollStart: nop,
+	onScrollStop: nop,
+	overscrollEffectOn: {
+		drag: false,
+		pageKey: false,
+		wheel: false
+	},
+	scrollMode: 'translate',
+	verticalScrollbar: 'auto'
+};
+
+const Scroller = (props) => {
 	// Hooks
 
-	const props = {
-		cbScrollTo,
-		direction,
-		horizontalScrollbar,
-		noScrollByDrag,
-		noScrollByWheel,
-		onScroll,
-		onScrollStart,
-		onScrollStop,
-		overscrollEffectOn: {drag, pageKey, wheel},
-		scrollMode,
-		verticalScrollbar,
-		...rest
-	};
+	const scrollerProps = Object.assign({}, scrollerDefaultProps, props);
 
 	const {
 		scrollContentHandle,
@@ -76,7 +68,7 @@ const Scroller = ({
 		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useScroll(props);
+	} = useScroll(scrollerProps);
 
 	// Return
 

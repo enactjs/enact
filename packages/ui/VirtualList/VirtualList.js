@@ -30,38 +30,29 @@ const nop = () => {};
  * @ui
  * @public
  */
-const VirtualList = ({
-	cbScrollTo = nop,
-	direction = 'vertical',
-	horizontalScrollbar = 'auto',
-	noScrollByDrag = false,
-	noScrollByWheel = false,
-	onScroll = nop,
-	onScrollStart = nop,
-	onScrollStop = nop,
-	overscrollEffectOn: {drag = false, pageKey = false, wheel = false} = {},
-	role = 'list',
-	scrollMode = 'translate',
-	verticalScrollbar = 'auto',
-	...rest
-}) => {
+const virtualListDefaultProps = {
+	cbScrollTo: nop,
+	direction: 'vertical',
+	horizontalScrollbar: 'auto',
+	noScrollByDrag: false,
+	noScrollByWheel: false,
+	onScroll: nop,
+	onScrollStart: nop,
+	onScrollStop: nop,
+	overscrollEffectOn: {
+		drag: false,
+		pageKey: false,
+		wheel: false
+	},
+	role: 'list',
+	scrollMode: 'translate',
+	verticalScrollbar: 'auto'
+};
+
+const VirtualList = (props) => {
 	// Hooks
 
-	const props = {
-		cbScrollTo,
-		direction,
-		horizontalScrollbar,
-		noScrollByDrag,
-		noScrollByWheel,
-		onScroll,
-		onScrollStart,
-		onScrollStop,
-		overscrollEffectOn: {drag, pageKey, wheel},
-		role,
-		scrollMode,
-		verticalScrollbar,
-		...rest
-	};
+	const virtualListProps = Object.assign({}, virtualListDefaultProps, props);
 
 	const {
 		scrollContentHandle,
@@ -76,7 +67,7 @@ const VirtualList = ({
 		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useScroll(props);
+	} = useScroll(virtualListProps);
 
 	// Render
 
@@ -315,36 +306,27 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
  * @ui
  * @public
  */
-const VirtualGridList = ({
-	cbScrollTo = nop,
-	direction = 'vertical',
-	horizontalScrollbar = 'auto',
-	noScrollByDrag = false,
-	noScrollByWheel = false,
-	onScroll = nop,
-	onScrollStart = nop,
-	onScrollStop = nop,
-	overscrollEffectOn: {drag = false, pageKey = false, wheel = false} = {},
-	role = 'list',
-	scrollMode = 'translate',
-	verticalScrollbar = 'auto',
-	...rest
-}) => {
-	const props = {
-		cbScrollTo,
-		direction,
-		horizontalScrollbar,
-		noScrollByDrag,
-		noScrollByWheel,
-		onScroll,
-		onScrollStart,
-		onScrollStop,
-		overscrollEffectOn: {drag, pageKey, wheel},
-		role,
-		scrollMode,
-		verticalScrollbar,
-		...rest
-	};
+const virtualGridListDefaultProps = {
+	cbScrollTo: nop,
+	direction: 'vertical',
+	horizontalScrollbar: 'auto',
+	noScrollByDrag: false,
+	noScrollByWheel: false,
+	onScroll: nop,
+	onScrollStart: nop,
+	onScrollStop: nop,
+	overscrollEffectOn: {
+		drag: false,
+		pageKey: false,
+		wheel: false
+	},
+	role: 'list',
+	scrollMode: 'translate',
+	verticalScrollbar: 'auto'
+};
+
+const VirtualGridList = (props) => {
+	const virtualGridListProps = Object.assign({}, virtualGridListDefaultProps, props);
 
 	const {
 		scrollContentHandle,
@@ -359,7 +341,7 @@ const VirtualGridList = ({
 		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useScroll(props);
+	} = useScroll(virtualGridListProps);
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
