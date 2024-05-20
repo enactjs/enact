@@ -117,7 +117,7 @@ describe('View', () => {
 		});
 	});
 
-	describe.skip('imperative API with arranger', () => {
+	describe('imperative API with arranger', () => {
 		beforeEach(() => {
 			jest.useFakeTimers();
 		});
@@ -216,7 +216,7 @@ describe('View', () => {
 		});
 	});
 
-	describe.skip('arranger API', () => {
+	describe('arranger API', () => {
 		const arrangerStruct = {
 			from: expect.any(Number),
 			reverse: expect.any(Boolean),

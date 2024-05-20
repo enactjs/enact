@@ -5,7 +5,7 @@ import Spottable from '../Spottable';
 
 const id = 'test-spottable';
 
-describe.skip('Spottable', () => {
+describe('Spottable', () => {
 	test('should add the spottable class', () => {
 		const Component = Spottable('div');
 		render(<Component data-testid={id} />);

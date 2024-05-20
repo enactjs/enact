@@ -428,11 +428,20 @@ class TransitionGroup extends Component {
 		this.groupRefs[key] = node;
 	};
 
+	/* This code is the same as @enact/core/WithRef. */
 	getNodeRef = () => {
-		const node = this.nodeRef.current;
-		const attributeSelector = `[data-transitiongroup-id="${node.getAttribute('data-transitiongroup-target')}"]`;
+		const refNode = this.nodeRef.current;
+		const attributeSelector = `[data-transitiongroup-id="${refNode.getAttribute('data-transitiongroup-target')}"]`;
+		/* The intended code is to search for the referrer element via a single querySelector call. But unit tests cannot handle :has() properly.
 		const selector = `:scope ${attributeSelector}, :scope :has(${attributeSelector})`;
-		return node?.parentElement?.querySelector(selector) || null;
+		return refNode?.parentElement?.querySelector(selector) || null;
+		*/
+		const targetNode = refNode?.parentElement?.querySelector(attributeSelector) || null;
+		for (let current = targetNode; current; current = current.parentElement) {
+			if (current?.parentElement === refNode?.parentElement) {
+				return current;
+			}
+		}
 	};
 
 	render () {

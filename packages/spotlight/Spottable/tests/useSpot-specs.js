@@ -4,7 +4,7 @@ import useHandlers from '@enact/core/useHandlers';
 import '@testing-library/jest-dom';
 import {fireEvent, render, screen} from '@testing-library/react';
 import classNames from 'classnames';
-import {useRef} from 'react';
+import {useCallback, useRef} from 'react';
 
 import Spotlight from '../../src/spotlight.js';
 import useSpottable from '../useSpottable';
@@ -46,14 +46,16 @@ const spotHandlers = {
 	onMouseLeave: callContext('onMouseLeave')
 };
 
-describe.skip('useSpottable', () => {
+describe('useSpottable', () => {
 	function SpottableComponent (props) {
 		const nodeRef = useRef();
+		const getSpotRef = useCallback(() => nodeRef.current, []);
 
 		const {className, component, disabled, emulateMouse, onSelectionCancel, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, selectionKeys, spotlightDisabled, spotlightId, ...rest} = props;
 		const spot = useSpottable({
 			disabled,
 			emulateMouse,
+			getSpotRef,
 			onSelectionCancel,
 			onSpotlightDisappear,
 			onSpotlightDown,

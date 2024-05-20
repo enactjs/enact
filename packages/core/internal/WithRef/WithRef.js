@@ -8,10 +8,19 @@ const WithRef = (WrappedComponent) => {
 		const id = givenId || generatedId;
 
 		useImperativeHandle(outermostRef, () => {
-			const node = divRef.current;
-			const attributeSelector = `[data-withref-id="${node.getAttribute('data-withref-target')}"]`;
+			const refNode = divRef.current;
+			const attributeSelector = `[data-withref-id="${refNode.getAttribute('data-withref-target')}"]`;
+			/* The intended code is to search for the referrer element via a single querySelector call. But unit tests cannot handle :has() properly.
 			const selector = `:scope ${attributeSelector}, :scope :has(${attributeSelector})`;
-			return node?.parentElement?.querySelector(selector) || null;
+			return refNode?.parentElement?.querySelector(selector) || null;
+			*/
+			const targetNode = refNode?.parentElement?.querySelector(attributeSelector) || null;
+			for (let current = targetNode; current; current = current.parentElement) {
+				if (current?.parentElement === refNode?.parentElement) {
+					return current;
+				}
+			}
+			return null;
 		}, []);
 
 		return (
