@@ -173,13 +173,13 @@ const CellBase = kind({
 		}
 	},
 
-	render: ({component: Component, componentCss, componentRef, ...rest}) => {
+	render: ({component: Component, componentCss, componentRef, key, ...rest}) => {
 		delete rest.align;
 		delete rest.grow;
 		delete rest.shrink;
 		delete rest.size;
 
-		return <Component css={componentCss} ref={componentRef} {...rest} />;
+		return <Component css={componentCss} ref={componentRef} key={key} {...rest} />;
 	}
 });
 
