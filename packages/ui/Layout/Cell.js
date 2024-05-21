@@ -96,6 +96,8 @@ const CellBase = kind({
 		 */
 		grow: PropTypes.bool,
 
+		key: PropTypes.string,
+
 		/**
 		 * Sizes `Cell` to its contents.
 		 *
