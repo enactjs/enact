@@ -297,6 +297,8 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
+VirtualList.defaultPropValues = virtualListDefaultProps;
+
 /**
  * An unstyled scrollable virtual grid list component with touch support.
  *
@@ -568,6 +570,8 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 	 */
 	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
+
+VirtualGridList.defaultPropValues = virtualGridListDefaultProps;
 
 export default VirtualList;
 export {

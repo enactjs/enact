@@ -277,6 +277,7 @@ Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
 	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
+Scroller.defaultPropValues = scrollerDefaultProps;
 
 export default Scroller;
 export {
