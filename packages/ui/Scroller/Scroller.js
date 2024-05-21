@@ -18,20 +18,6 @@ import ScrollerBase from './UiScrollerBase';
 
 const nop = () => {};
 
-/**
- * An unstyled scroller.
- *
- * Example:
- * ```
- * <Scroller>Scroll me.</Scroller>
- * ```
- *
- * @class Scroller
- * @memberof ui/Scroller
- * @extends ui/Scroller.ScrollerBasic
- * @ui
- * @public
- */
 const scrollerDefaultProps = {
 	cbScrollTo: nop,
 	direction: 'both',
@@ -50,6 +36,20 @@ const scrollerDefaultProps = {
 	verticalScrollbar: 'auto'
 };
 
+/**
+ * An unstyled scroller.
+ *
+ * Example:
+ * ```
+ * <Scroller>Scroll me.</Scroller>
+ * ```
+ *
+ * @class Scroller
+ * @memberof ui/Scroller
+ * @extends ui/Scroller.ScrollerBasic
+ * @ui
+ * @public
+ */
 const Scroller = (props) => {
 	// Hooks
 

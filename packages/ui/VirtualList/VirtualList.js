@@ -21,15 +21,6 @@ import {gridListItemSizeShape, itemSizesShape, VirtualListBasic} from './Virtual
 
 const nop = () => {};
 
-/**
- * An unstyled scrollable virtual list component with touch support.
- *
- * @class VirtualList
- * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBasic
- * @ui
- * @public
- */
 const virtualListDefaultProps = {
 	cbScrollTo: nop,
 	direction: 'vertical',
@@ -49,6 +40,15 @@ const virtualListDefaultProps = {
 	verticalScrollbar: 'auto'
 };
 
+/**
+ * An unstyled scrollable virtual list component with touch support.
+ *
+ * @class VirtualList
+ * @memberof ui/VirtualList
+ * @extends ui/VirtualList.VirtualListBasic
+ * @ui
+ * @public
+ */
 const VirtualList = (props) => {
 	// Hooks
 
@@ -299,15 +299,6 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 
 VirtualList.defaultPropValues = virtualListDefaultProps;
 
-/**
- * An unstyled scrollable virtual grid list component with touch support.
- *
- * @class VirtualGridList
- * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBasic
- * @ui
- * @public
- */
 const virtualGridListDefaultProps = {
 	cbScrollTo: nop,
 	direction: 'vertical',
@@ -327,6 +318,15 @@ const virtualGridListDefaultProps = {
 	verticalScrollbar: 'auto'
 };
 
+/**
+ * An unstyled scrollable virtual grid list component with touch support.
+ *
+ * @class VirtualGridList
+ * @memberof ui/VirtualList
+ * @extends ui/VirtualList.VirtualListBasic
+ * @ui
+ * @public
+ */
 const VirtualGridList = (props) => {
 	const virtualGridListProps = Object.assign({}, virtualGridListDefaultProps, props);
 
