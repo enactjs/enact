@@ -96,6 +96,11 @@ const CellBase = kind({
 		 */
 		grow: PropTypes.bool,
 
+		/**
+		 * A unique key used by React to identify the component.
+		 * @type {String}
+		 * @public
+		 */
 		key: PropTypes.string,
 
 		/**
