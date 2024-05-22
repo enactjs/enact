@@ -99,7 +99,7 @@ const CellBase = kind({
 		/**
 		 * A unique key used by React to identify the component.
 		 * @type {String}
-		 * @public
+		 * @private
 		 */
 		key: PropTypes.string,
 
