@@ -1,7 +1,7 @@
-import {Component} from 'react';
+import {Component, createRef} from 'react';
 import PropTypes from 'prop-types';
-import {findDOMNode} from 'react-dom';
 import hoc from '@enact/core/hoc';
+import {WithRef} from '@enact/core/internal/WithRef';
 
 /**
  * VoiceControlDecorator is a higher-order component that adds a callback for voice event
@@ -69,8 +69,14 @@ const VoiceControlDecorator = hoc((config, Wrapped) => {
 			onVoice: PropTypes.func.isRequired
 		};
 
+		constructor (props) {
+			super(props);
+			this.node = null;
+			this.nodeRef = createRef();
+		}
+
 		componentDidMount () {
-			this.node = findDOMNode(this);	// eslint-disable-line
+			this.node = this.nodeRef.current;
 			if (this.node && !(this.node.hasAttribute('data-webos-voice-event-target') || this.node.hasAttribute('data-webos-voice-intent'))) {
 				this.node = this.node.querySelector('[data-webos-voice-event-target]') || this.node.querySelector('[data-webos-voice-intent]');
 			}
@@ -84,7 +90,10 @@ const VoiceControlDecorator = hoc((config, Wrapped) => {
 		render () {
 			const props = {...this.props};
 			delete props.onVoice;
-			return (<Wrapped {...props} />);
+			const WithRefComponent = WithRef(Wrapped);
+			return (
+				<WithRefComponent {...props} referrerName="VoiceControlDecorator" outermostRef={this.nodeRef} />
+			);
 		}
 	};
 });
