@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "lerna": "lerna",
-    "bootstrap": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock install",
+    "bootstrap": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock install --force",
     "bootstrap-link": "npm run link-all && npm run interlink",
     "interlink": "lerna --concurrency 1 run interlink",
     "link-all": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock link",
