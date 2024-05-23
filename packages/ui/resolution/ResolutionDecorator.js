@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 
 import {
-	init, 
+	init,
 	calculateFontSize,
 	config as riConfig,
 	defineScreenTypes,
