@@ -11,7 +11,7 @@ install:
     - npm install -g codecov
     - git clone --branch=feature/WRQ-21653 --depth 1 https://github.com/enactjs/cli ../cli
     - pushd ../cli
-    - npm install
+    - npm install --force
     - npm link
     - popd
     - npm install
