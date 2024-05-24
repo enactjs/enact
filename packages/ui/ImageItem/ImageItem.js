@@ -17,7 +17,7 @@ import ForwardRef from '../ForwardRef';
 import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
-import componentCss from './ImageItem.module.less';
+import * as componentCss from './ImageItem.module.less';
 
 // Adapts ComponentOverride to work within Cell since both use the component prop
 function ImageOverride ({imageComponent, ...rest}) {

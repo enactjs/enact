@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import {createRef, Component} from 'react';
 
-import css from './VirtualList.module.less';
+import * as css from './VirtualList.module.less';
 
 const nop = () => {};
 

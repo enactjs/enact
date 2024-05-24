@@ -73,7 +73,7 @@ const NoContext = createContext(null);
  *
  * Example:
  * ```
- *	import css from './Button.module.less';
+ *	import * as css from './Button.module.less';
  *	const Button = kind({
  *		name: 'Button',
  *		// Return a functional component

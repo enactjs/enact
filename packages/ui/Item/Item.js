@@ -15,7 +15,7 @@ import compose from 'ramda/src/compose';
 import Touchable from '../Touchable';
 import ForwardRef from '../ForwardRef';
 
-import componentCss from './Item.module.less';
+import * as componentCss from './Item.module.less';
 
 /**
  * A basic list item component structure without any behaviors applied to it.

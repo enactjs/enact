@@ -18,7 +18,7 @@ import {ResizeContext} from '../Resizable';
 import MarqueeBase from './MarqueeBase';
 import {MarqueeControllerContext} from './MarqueeController';
 
-import componentCss from './Marquee.module.less';
+import * as componentCss from './Marquee.module.less';
 
 // The minimum number of milliseconds to wait before resetting the marquee position after it finishes.
 const MINIMUM_MARQUEE_RESET_DELAY = 40;

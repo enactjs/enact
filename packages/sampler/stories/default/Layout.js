@@ -3,7 +3,7 @@ import Item from '@enact/ui/Item';
 import Layout, {Cell} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
 
-import css from './Layout.module.less';
+import * as css from './Layout.module.less';
 
 Layout.displayName = 'Layout';
 Cell.displayName = 'Cell';

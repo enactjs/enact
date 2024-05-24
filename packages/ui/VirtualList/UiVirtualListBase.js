@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import {createRef, cloneElement, Component} from 'react';
 
-import css from './UiVirtualList.module.less';
+import * as css from './UiVirtualList.module.less';
 
 const
 	nop = () => {},

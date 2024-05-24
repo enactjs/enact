@@ -15,7 +15,7 @@ import Touchable from '../Touchable';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
 
-import css from './Scrollable.module.less';
+import * as css from './Scrollable.module.less';
 
 const
 	constants = {

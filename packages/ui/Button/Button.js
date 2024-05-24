@@ -16,7 +16,7 @@ import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
 import Touchable from '../Touchable';
 
-import componentCss from './Button.module.less';
+import * as componentCss from './Button.module.less';
 
 /**
  * A basic button component structure without any behaviors applied to it.

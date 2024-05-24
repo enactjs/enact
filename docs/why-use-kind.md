@@ -145,7 +145,7 @@ Let's see:
 
 ```js
 import classNames from 'classnames';
-import css from './hooray.less';
+import * as css from './hooray.less';
 
 const Hooray = ({name, className, ...rest}) => {
 	const formattedName = name ? ', ' + name : '';
@@ -164,7 +164,7 @@ export default Hooray;
 With `kind()`:
 
 ```js
-import css from './hooray.less';
+import * as css from './hooray.less';
 
 export default kind({
 	propTypes: {

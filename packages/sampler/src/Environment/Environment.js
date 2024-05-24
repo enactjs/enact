@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import BodyText from '@enact/ui/BodyText';
 import {Column, Cell} from '@enact/ui/Layout';
 
-import css from './Environment.module.less';
+import * as css from './Environment.module.less';
 
 const PanelsBase = kind({
 	name: 'EnvironmentPanels',
