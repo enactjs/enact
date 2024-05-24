@@ -508,5 +508,6 @@ export {
 	unit,
 	unitToPixelFactors,
 	updateBaseFontSize,
-	updateScreenScale
+	updateScreenScale,
+	updateWorkspaceBounds
 };
