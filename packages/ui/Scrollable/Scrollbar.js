@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import {createRef, PureComponent, Component} from 'react';
-import ReactDOM from 'react-dom';
 
 import ri from '../resolution';
 
@@ -23,7 +22,7 @@ const
  * @param {String} variable - CSS Variable property.
  * @param {String} value - CSS Variable value.
  */
-const setCSSVariable = (element, variable, value) => {
+const setCSSVariable = (element, variable, value) => { // eslint-disable-line no-unused-vars
 	// ReactDOM.findDOMNode(element).style.setProperty(variable, value); // eslint-disable-line react/no-find-dom-node
 };
 

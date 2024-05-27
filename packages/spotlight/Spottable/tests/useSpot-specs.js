@@ -4,7 +4,6 @@ import '@testing-library/jest-dom';
 import {fireEvent, render, screen} from '@testing-library/react';
 import classNames from 'classnames';
 import {Component} from 'react';
-import ReactDOM from 'react-dom';
 
 import Spotlight from '../../src/spotlight.js';
 import useSpottable from '../useSpottable';
@@ -84,8 +83,6 @@ describe('useSpottable', () => {
 
 	class SpottableComponent extends Component {
 		componentDidMount () {
-			// eslint-disable-next-line react/no-find-dom-node
-			// this.node = ReactDOM.findDOMNode(this);
 		}
 
 		get componentRef () {

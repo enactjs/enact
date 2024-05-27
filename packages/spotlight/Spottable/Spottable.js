@@ -13,7 +13,6 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {Component} from 'react';
-import ReactDOM from 'react-dom';
 
 import {spottableClass, useSpottable} from './useSpottable';
 
@@ -268,8 +267,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	// eslint-disable-next-line no-shadow
 	class Spottable extends Component {
 		componentDidMount () {
-			// eslint-disable-next-line react/no-find-dom-node
-			// this.node = ReactDOM.findDOMNode(this);
 			this.forceUpdate();
 		}
 
