@@ -1,6 +1,6 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
-import {findDOMNode} from 'react-dom';
+// import {findDOMNode} from 'react-dom';
 import hoc from '@enact/core/hoc';
 
 /**
@@ -70,7 +70,7 @@ const VoiceControlDecorator = hoc((config, Wrapped) => {
 		};
 
 		componentDidMount () {
-			this.node = findDOMNode(this);	// eslint-disable-line
+			// this.node = findDOMNode(this);	// eslint-disable-line
 			if (this.node && !(this.node.hasAttribute('data-webos-voice-event-target') || this.node.hasAttribute('data-webos-voice-intent'))) {
 				this.node = this.node.querySelector('[data-webos-voice-event-target]') || this.node.querySelector('[data-webos-voice-intent]');
 			}

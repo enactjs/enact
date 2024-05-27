@@ -24,7 +24,7 @@ const
  * @param {String} value - CSS Variable value.
  */
 const setCSSVariable = (element, variable, value) => {
-	ReactDOM.findDOMNode(element).style.setProperty(variable, value); // eslint-disable-line react/no-find-dom-node
+	// ReactDOM.findDOMNode(element).style.setProperty(variable, value); // eslint-disable-line react/no-find-dom-node
 };
 
 /**
@@ -140,7 +140,7 @@ class ScrollbarBase extends PureComponent {
 
 	showThumb = () => {
 		this.hideThumbJob.stop();
-		ReactDOM.findDOMNode(this.thumbRef.current).classList.add(this.props.css.thumbShown); // eslint-disable-line react/no-find-dom-node
+		// ReactDOM.findDOMNode(this.thumbRef.current).classList.add(this.props.css.thumbShown); // eslint-disable-line react/no-find-dom-node
 	};
 
 	startHidingThumb = () => {
@@ -148,7 +148,7 @@ class ScrollbarBase extends PureComponent {
 	};
 
 	hideThumb = () => {
-		ReactDOM.findDOMNode(this.thumbRef.current).classList.remove(this.props.css.thumbShown); // eslint-disable-line react/no-find-dom-node
+		// ReactDOM.findDOMNode(this.thumbRef.current).classList.remove(this.props.css.thumbShown); // eslint-disable-line react/no-find-dom-node
 	};
 
 	hideThumbJob = new Job(this.hideThumb.bind(this), thumbHidingDelay);

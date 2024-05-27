@@ -269,7 +269,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	class Spottable extends Component {
 		componentDidMount () {
 			// eslint-disable-next-line react/no-find-dom-node
-			this.node = ReactDOM.findDOMNode(this);
+			// this.node = ReactDOM.findDOMNode(this);
 			this.forceUpdate();
 		}
 

@@ -86,7 +86,7 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else {
 				// Allowing findDOMNode for HOCs versus adding extra ref props
 				// eslint-disable-next-line	react/no-find-dom-node
-				this.node = ReactDOM.findDOMNode(this);
+				// this.node = ReactDOM.findDOMNode(this);
 				this.bounds = {
 					height: this.node.offsetHeight,
 					width: this.node.offsetWidth

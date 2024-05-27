@@ -260,7 +260,7 @@ class View extends Component {
 		// Need to ensure that we have a valid node reference before we animation. Sometimes, React
 		// will replace the node after mount causing a reference cached there to be invalid.
 		// eslint-disable-next-line react/no-find-dom-node
-		this.node = ReactDOM.findDOMNode(this);
+		// this.node = ReactDOM.findDOMNode(this);
 
 		if (this.animation && this.animation.playState !== 'finished' && this.changeDirection) {
 			this.animation.reverse();
