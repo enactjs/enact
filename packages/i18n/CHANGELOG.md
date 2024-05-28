@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [4.0.15] - 2024-05-28
+
+### Fixed
+
+- `i18n` resource loader to override strings where the original strings file does not exist
+
 ## [4.0.14] - 2024-05-14
 
 ### Fixed
