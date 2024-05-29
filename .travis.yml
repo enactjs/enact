@@ -9,7 +9,7 @@ before_install:
 install:
     - npm config set prefer-offline false
     - npm install -g codecov
-    - git clone --branch=feature/enact_v5 --depth 1 https://github.com/enactjs/cli ../cli
+    - git clone --branch=feature/react_19 --depth 1 https://github.com/enactjs/cli ../cli
     - pushd ../cli
     - npm install --force
     - npm link
