@@ -97,13 +97,6 @@ const CellBase = kind({
 		grow: PropTypes.bool,
 
 		/**
-		 * A unique key used by React to identify the component.
-		 * @type {String}
-		 * @private
-		 */
-		key: PropTypes.string,
-
-		/**
 		 * Sizes `Cell` to its contents.
 		 *
 		 * A `shrink`able cell will contract to its minimum size, according to the dimensions of its
@@ -180,13 +173,15 @@ const CellBase = kind({
 		}
 	},
 
-	render: ({component: Component, componentCss, componentRef, key, ...rest}) => {
+	render: ({component: Component, componentCss, componentRef, ...rest}) => {
 		delete rest.align;
 		delete rest.grow;
 		delete rest.shrink;
 		delete rest.size;
 
-		return <Component css={componentCss} ref={componentRef} key={key} {...rest} />;
+		const {key, ...restProps} = {...rest};
+
+		return <Component css={componentCss} ref={componentRef} key={key} {...restProps} />;
 	}
 });
 
