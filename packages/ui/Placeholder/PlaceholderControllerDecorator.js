@@ -3,6 +3,7 @@ import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import Registry from '@enact/core/internal/Registry';
 import {createContext, Component} from 'react';
+import ReactDOM from 'react-dom';
 
 /**
  * Default config for `PlaceholderControllerDecorator`.
@@ -84,6 +85,8 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.bounds = Object.assign({}, bounds);
 			} else {
 				// Allowing findDOMNode for HOCs versus adding extra ref props
+				// eslint-disable-next-line	react/no-find-dom-node
+				this.node = ReactDOM.findDOMNode(this);
 				this.bounds = {
 					height: this.node.offsetHeight,
 					width: this.node.offsetWidth
