@@ -1,6 +1,6 @@
 {
   "name": "@enact/webos",
-  "version": "4.9.0-alpha.1",
+  "version": "4.9.0-alpha.2",
   "description": "webOS support library",
   "repository": {
     "type": "git",
@@ -32,7 +32,7 @@
     }
   },
   "dependencies": {
-    "@enact/core": "^4.9.0-alpha.1",
+    "@enact/core": "^4.9.0-alpha.2",
     "prop-types": "^15.8.1",
     "react": "^19.0.0-rc-81c5ff2e04-20240521",
     "react-dom": "^19.0.0-rc-81c5ff2e04-20240521"
