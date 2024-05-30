@@ -1,6 +1,6 @@
 {
   "name": "@enact/ui",
-  "version": "4.7.9",
+  "version": "4.9.0-alpha.2",
   "description": "A collection of simplified unstyled cross-platform UI components for Enact",
   "repository": {
     "type": "git",
@@ -32,15 +32,15 @@
     }
   },
   "dependencies": {
-    "@enact/core": "^4.7.9",
+    "@enact/core": "^4.9.0-alpha.2",
     "classnames": "^2.5.1",
     "direction": "^1.0.4",
     "invariant": "^2.2.4",
     "prop-types": "^15.8.1",
     "ramda": "^0.29.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-is": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-is": "^18.3.1",
     "warning": "^4.0.3"
   }
 }

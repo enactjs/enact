@@ -2,6 +2,34 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
+## [4.9.0-alpha.2] - 2024-05-24
+
+No significant changes.
+
+## [4.0.14] - 2024-05-14
+
+No significant changes.
+
+## [4.7.11] - 2024-05-13
+
+No significant changes.
+
+## [4.9.0-alpha.1] - 2024-04-09
+
+### Deprecated
+
+- `webos/platform` member `watch` and `legacy`, to be removed in 5.0.0
+
+### Added
+
+- `webos/platform` member `webos` to detect if a webOS platform
+- `webos/platform` member `version` for the detected webOS version
+- `webos/platform` member `chrome` for the detected chrome version
+
+## [4.8.0] - 2024-02-08
+
+No significant changes.
+
 ## [4.7.9] - 2023-12-08
 
 No significant changes.

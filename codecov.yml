@@ -5,6 +5,7 @@ ignore:
     - "packages/i18n/Text"
     - "packages/webos/speech"
     - "packages/webos/keyboard"
+    - "packages/webos/lastInputType"
     - "packages/webos/platform"
     - "packages/webos/pmloglib"
     - "packages/webos/deviceinfo"
