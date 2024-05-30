@@ -1,9 +1,13 @@
 // UiScroller.module.less
 //
 .scroller {
-	will-change: transform;
-
 	/* hide native scrollbar */
+	scrollbar-width: none;
+
+	will-change: transform;
+	
+	/* hide native scrollbar */
+	/* NOTE: Needs to be revisited whether it can be replaced with scrollbar-width */
 	&::-webkit-scrollbar {
 		display: none;
 	}
