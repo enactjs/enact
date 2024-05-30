@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Removed
+
+- `core/platform` member `windowsPhone`, `edge`, `androidChrome`, `android`, `ie`, `ios`, `webos`, `androidFirefox`, `firefoxOS`, `blackberry`, and `tizen`
+- `core/platform` member `gesture`, `node`, `platformName`, and `unknown`
+- `core/platform` member `touch` and `touchscreen`
+
 ## [4.9.0-alpha.2] - 2024-05-24
 
 No significant changes.
@@ -13,13 +21,6 @@ No significant changes.
 ## [4.7.11] - 2024-05-13
 
 No significant changes.
-## [unreleased]
-
-### Removed
-
-- `core/platform` member `windowsPhone`, `edge`, `androidChrome`, `android`, `ie`, `ios`, `webos`, `androidFirefox`, `firefoxOS`, `blackberry`, and `tizen`
-- `core/platform` member `gesture`, `node`, `platformName`, and `unknown`
-- `core/platform` member `touch` and `touchscreen`
 
 ## [4.9.0-alpha.1] - 2024-04-09
 
