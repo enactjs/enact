@@ -15,6 +15,8 @@ const ScrollThumb = kind({
 	name: 'ui:ScrollThumb',
 
 	propTypes: /** @lends ui/Scrollable.ScrollThumb.prototype */ {
+		thumbRef: PropTypes.object,
+
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
 		 *
@@ -38,10 +40,10 @@ const ScrollThumb = kind({
 		className: ({vertical, styler}) => styler.append({vertical})
 	},
 
-	render: (props) => {
-		delete props.vertical;
+	render: ({thumbRef, ...rest}) => {
+		delete rest.vertical;
 
-		return <div {...props} />;
+		return <div {...rest} ref={thumbRef} />;
 	}
 });
 

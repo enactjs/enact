@@ -1,9 +1,9 @@
 import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import {WithRef} from '@enact/core/internal/WithRef';
 import {Job} from '@enact/core/util';
 import Registry from '@enact/core/internal/Registry';
-import {createContext, Component} from 'react';
-import ReactDOM from 'react-dom';
+import {Component, createContext, createRef} from 'react';
 
 /**
  * Default config for `PlaceholderControllerDecorator`.
@@ -65,7 +65,13 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends Component {
 		static displayName = 'PlaceholderControllerDecorator';
 
+		constructor (props) {
+			super(props);
+			this.nodeRef = createRef();
+		}
+
 		componentDidMount () {
+			this.node = this.nodeRef.current;
 			this.setBounds();
 			this.setThresholds(0, 0);
 		}
@@ -84,9 +90,7 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (bounds != null) {
 				this.bounds = Object.assign({}, bounds);
 			} else {
-				// Allowing findDOMNode for HOCs versus adding extra ref props
-				// eslint-disable-next-line	react/no-find-dom-node
-				this.node = ReactDOM.findDOMNode(this);
+				this.node = this.nodeRef.current;
 				this.bounds = {
 					height: this.node.offsetHeight,
 					width: this.node.offsetWidth
@@ -136,12 +140,13 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const props = Object.assign({}, this.props);
+			const WrappedWithRef = WithRef(Wrapped);
 
 			if (notify) props[notify] = this.handleNotify;
 
 			return (
 				<PlaceholderContext.Provider value={this.registry.register}>
-					<Wrapped {...props} />
+					<WrappedWithRef {...props} referrerName="Placeholder" outermostRef={this.nodeRef} />
 				</PlaceholderContext.Provider>
 			);
 		}
