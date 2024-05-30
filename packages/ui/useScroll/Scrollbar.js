@@ -125,7 +125,8 @@ const useScrollbar = (props) => {
  * @ui
  * @private
  */
-const Scrollbar = memo((props) => {
+const Scrollbar = memo(({corner = false, css = componentCss, minThumbSize = 18, vertical = true, ...rest}) => {
+	const props = {corner, css, minThumbSize, vertical, ...rest};
 	const {
 		restProps,
 		scrollbarProps,
@@ -195,13 +196,6 @@ Scrollbar.propTypes = /** @lends ui/useScroll.Scrollbar.prototype */ {
 	 * @public
 	 */
 	vertical: PropTypes.bool
-};
-
-Scrollbar.defaultProps = {
-	corner: false,
-	css: componentCss,
-	minThumbSize: 18,
-	vertical: true
 };
 
 export default Scrollbar;

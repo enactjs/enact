@@ -14,7 +14,7 @@ import css from './ScrollbarTrack.module.less';
  */
 const ScrollbarTrack = forwardRef((props, ref) => {
 	const
-		{vertical, ...rest} = props,
+		{vertical = true, ...rest} = props,
 		className = classNames(css.scrollbarTrack, vertical ? css.vertical : null);
 
 	return <div {...rest} className={className} ref={ref} />;
@@ -29,10 +29,6 @@ ScrollbarTrack.propTypes = /** @lends ui/useScroll.ScrollbarTrack.prototype */ {
 	 * @public
 	 */
 	vertical: PropTypes.bool
-};
-
-ScrollbarTrack.defaultProps = {
-	vertical: true
 };
 
 const MemoizedScrollbarTrack = memo(ScrollbarTrack);

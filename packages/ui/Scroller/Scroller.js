@@ -18,6 +18,24 @@ import ScrollerBase from './UiScrollerBase';
 
 const nop = () => {};
 
+const scrollerDefaultProps = {
+	cbScrollTo: nop,
+	direction: 'both',
+	horizontalScrollbar: 'auto',
+	noScrollByDrag: false,
+	noScrollByWheel: false,
+	onScroll: nop,
+	onScrollStart: nop,
+	onScrollStop: nop,
+	overscrollEffectOn: {
+		drag: false,
+		pageKey: false,
+		wheel: false
+	},
+	scrollMode: 'translate',
+	verticalScrollbar: 'auto'
+};
+
 /**
  * An unstyled scroller.
  *
@@ -35,6 +53,8 @@ const nop = () => {};
 const Scroller = (props) => {
 	// Hooks
 
+	const scrollerProps = Object.assign({}, scrollerDefaultProps, props);
+
 	const {
 		scrollContentHandle,
 		scrollContentWrapper: ScrollContentWrapper,
@@ -48,7 +68,7 @@ const Scroller = (props) => {
 		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useScroll(props);
+	} = useScroll(scrollerProps);
 
 	// Return
 
@@ -257,23 +277,7 @@ Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
 	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
-Scroller.defaultProps = {
-	cbScrollTo: nop,
-	direction: 'both',
-	horizontalScrollbar: 'auto',
-	noScrollByDrag: false,
-	noScrollByWheel: false,
-	onScroll: nop,
-	onScrollStart: nop,
-	onScrollStop: nop,
-	overscrollEffectOn: {
-		drag: false,
-		pageKey: false,
-		wheel: false
-	},
-	scrollMode: 'translate',
-	verticalScrollbar: 'auto'
-};
+Scroller.defaultPropValues = scrollerDefaultProps;
 
 export default Scroller;
 export {
