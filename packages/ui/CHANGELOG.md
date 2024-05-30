@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/GridListImageItem`
 - `ui/IconButton`
+- `ui/Marquee.MarqueeDecorator` config `className`
 - `ui/RadioDecorator`
 - `ui/Scrollable`
 - `ui/Scroller.ScrollerBase`
