@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import {createRef, PureComponent, Component} from 'react';
+import ReactDOM from 'react-dom';
 
 import ri from '../resolution';
 
@@ -23,7 +24,7 @@ const
  * @param {String} value - CSS Variable value.
  */
 const setCSSVariable = (element, variable, value) => {
-	element?.style.setProperty(variable, value);
+	ReactDOM.findDOMNode(element).style.setProperty(variable, value); // eslint-disable-line react/no-find-dom-node
 };
 
 /**
@@ -139,7 +140,7 @@ class ScrollbarBase extends PureComponent {
 
 	showThumb = () => {
 		this.hideThumbJob.stop();
-		this.thumbRef.current?.classList.add(this.props.css.thumbShown);
+		ReactDOM.findDOMNode(this.thumbRef.current).classList.add(this.props.css.thumbShown); // eslint-disable-line react/no-find-dom-node
 	};
 
 	startHidingThumb = () => {
@@ -147,7 +148,7 @@ class ScrollbarBase extends PureComponent {
 	};
 
 	hideThumb = () => {
-		this.thumbRef.current?.classList.remove(this.props.css.thumbShown);
+		ReactDOM.findDOMNode(this.thumbRef.current).classList.remove(this.props.css.thumbShown); // eslint-disable-line react/no-find-dom-node
 	};
 
 	hideThumbJob = new Job(this.hideThumb.bind(this), thumbHidingDelay);
@@ -236,7 +237,7 @@ class Scrollbar extends Component {
 					return (
 						<ScrollThumb
 							key="thumb"
-							thumbRef={thumbRef}
+							ref={thumbRef}
 							vertical={vertical}
 						/>
 					);
