@@ -8,7 +8,7 @@ describe('WithRef', () => {
 		static displayName = 'DummyComponent';
 
 		render () {
-			return (<div {...this.props} >Dummy</div>);
+			return (<div {...this.props}>Dummy</div>);
 		}
 	};
 

@@ -67,11 +67,11 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+
 			this.nodeRef = createRef();
 		}
 
 		componentDidMount () {
-			this.node = this.nodeRef.current;
 			this.setBounds();
 			this.setThresholds(0, 0);
 		}

@@ -185,7 +185,6 @@ class TransitionGroup extends Component {
 		this.groupRefs = {};
 		this.nodeRef = createRef();
 		this.refNodeId = '#transition#group#';
-		this.refNode = (<div data-transitiongroup-target={this.refNodeId} ref={this.nodeRef} style={{display: 'none'}} />);
 	}
 
 	static getDerivedStateFromProps (props, state) {
@@ -477,7 +476,7 @@ class TransitionGroup extends Component {
 		return (
 			<>
 				{createElement(this.props.component, props, childrenToRender)}
-				{this.refNode}
+				<div data-transitiongroup-target={this.refNodeId} ref={this.nodeRef} style={{display: 'none'}} />
 			</>
 		);
 	}

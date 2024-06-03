@@ -111,7 +111,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidMount () {
 			if (config.dynamic) window.addEventListener('resize', this.handleResize);
-			this.rootNode = document.getElementsByClassName(getResolutionClasses())?.[0] || (typeof window === 'object' && window) || null;
+			this.rootNode = document.getElementsByClassName(getResolutionClasses())?.[0] || null;
 		}
 
 		componentWillUnmount () {

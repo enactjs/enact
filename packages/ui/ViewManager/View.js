@@ -123,7 +123,7 @@ class View extends Component {
 		previousIndex: PropTypes.number,
 
 		/**
-		 * Index of the view node among the rendered children of the parent node.
+		 * Index of the view node among the rendered children of the parent node
 		 *
 		 * @type {Number}
 		 * @private
