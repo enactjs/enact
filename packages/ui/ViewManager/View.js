@@ -5,7 +5,6 @@
 import {Job} from '@enact/core/util';
 import {cloneElement, Children, Component} from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
 
 import {shape} from './Arranger';
 
@@ -86,6 +85,14 @@ class View extends Component {
 		enteringProp: PropTypes.string,
 
 		/**
+		 * A getter function for a DOM node of the parent element
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		getParentRef: PropTypes.func,
+
+		/**
 		 * Index of the currently 'active' view.
 		 *
 		 * @type {Number}
@@ -114,6 +121,14 @@ class View extends Component {
 		 * @type {Number}
 		 */
 		previousIndex: PropTypes.number,
+
+		/**
+		 * Index of the view node among the rendered children of the parent node
+		 *
+		 * @type {Number}
+		 * @private
+		 */
+		renderedIndex: PropTypes.number,
 
 		/**
 		 * When `true`, indicates if the transition should be reversed. The effect depends on how the provided
@@ -255,12 +270,11 @@ class View extends Component {
 	 * @private
 	 */
 	prepareTransition = (arranger, callback, noAnimation) => {
-		const {duration, index, previousIndex = index, reverseTransition, rtl} = this.props;
+		const {duration, getParentRef, index, previousIndex = index, renderedIndex = 0, reverseTransition, rtl} = this.props;
 
 		// Need to ensure that we have a valid node reference before we animation. Sometimes, React
 		// will replace the node after mount causing a reference cached there to be invalid.
-		// eslint-disable-next-line react/no-find-dom-node
-		this.node = ReactDOM.findDOMNode(this);
+		this.node = getParentRef?.()?.children?.[renderedIndex];
 
 		if (this.animation && this.animation.playState !== 'finished' && this.changeDirection) {
 			this.animation.reverse();

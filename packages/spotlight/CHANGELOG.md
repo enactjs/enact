@@ -2,6 +2,24 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `spotlight/Spottable` to have sibling DOM node as alternative to findDOMNode API which will be removed in React 19
+
+## [4.9.0-alpha.2] - 2024-05-24
+
+No significant changes.
+
+## [4.0.14] - 2024-05-14
+
+No significant changes.
+
+## [4.7.11] - 2024-05-13
+
+No significant changes.
+
 ## [4.9.0-alpha.1] - 2024-04-09
 
 ### Fixed
