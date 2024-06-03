@@ -124,7 +124,8 @@ const RepeaterBase = kind({
 				}
 				if (indexProp) props[indexProp] = index;
 
-				return <Component {...props} />;
+				const {key, ...rest} = {...props};
+				return <Component key={key} {...rest} />;
 			});
 		}
 	},
