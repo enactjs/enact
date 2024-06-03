@@ -2,7 +2,7 @@ import {forwardRef, useId, useImperativeHandle, useRef} from 'react';
 
 const WithRef = (WrappedComponent) => {
 	const HoC = forwardRef(function (props, ref) {
-		const {['data-withref-id']: givenId, referrerName, outermostRef, ...rest} = props;
+		const {['data-withref-id']: givenId, outermostRef, referrerName, ...rest} = props;
 		const divRef = useRef();
 		const generatedId = useId();
 		const id = givenId || generatedId;

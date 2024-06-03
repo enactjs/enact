@@ -94,7 +94,7 @@ const VoiceControlDecorator = hoc((config, Wrapped) => {
 			const WithRefComponent = WithRef(Wrapped);
 
 			return (
-				<WithRefComponent {...props} referrerName="VoiceControlDecorator" outermostRef={this.nodeRef} />
+				<WithRefComponent {...props} outermostRef={this.nodeRef} referrerName="VoiceControlDecorator" />
 			);
 		}
 	};

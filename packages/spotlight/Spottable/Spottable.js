@@ -156,8 +156,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				{...handlers}
 				className={classNames(className, spot.className)}
 				disabled={disabled}
-				referrerName="Spottable"
 				outermostRef={nodeRef}
+				referrerName="Spottable"
 			/>
 		);
 	}

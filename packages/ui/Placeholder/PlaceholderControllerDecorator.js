@@ -146,7 +146,7 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			return (
 				<PlaceholderContext.Provider value={this.registry.register}>
-					<WrappedWithRef {...props} referrerName="Placeholder" outermostRef={this.nodeRef} />
+					<WrappedWithRef {...props} outermostRef={this.nodeRef} referrerName="Placeholder" />
 				</PlaceholderContext.Provider>
 			);
 		}
