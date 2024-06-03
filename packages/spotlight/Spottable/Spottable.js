@@ -9,11 +9,10 @@
 import handle, {forward, returnsTrue} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import {WithRef} from '@enact/core/internal/WithRef';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import {Component} from 'react';
-import ReactDOM from 'react-dom';
+import {Component, useCallback, useRef} from 'react';
 
 import {spottableClass, useSpottable} from './useSpottable';
 
@@ -102,8 +101,11 @@ const defaultConfig = {
  */
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const {emulateMouse} = config;
+	const WrappedWithRef = WithRef(Wrapped);
 
 	function SpottableBase (props) {
+		const nodeRef = useRef();
+
 		const {
 			className,
 			disabled,
@@ -116,12 +118,15 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			selectionKeys,
 			spotlightDisabled,
 			spotlightId,
-			spotRef,
 			...rest
 		} = props;
+
+		const getSpotRef = useCallback(() => nodeRef.current, []);
+
 		const spot = useSpottable({
 			disabled,
 			emulateMouse,
+			getSpotRef,
 			handleForceUpdate,
 			onSelectionCancel: rest.onMouseUp,
 			onSpotlightDisappear,
@@ -131,8 +136,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			onSpotlightUp,
 			selectionKeys,
 			spotlightDisabled,
-			spotlightId,
-			spotRef
+			spotlightId
 		});
 
 		let tabIndex = rest.tabIndex;
@@ -146,12 +150,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		delete rest.spotlightId;
 
 		return (
-			<Wrapped
+			<WrappedWithRef
 				{...rest}
 				{...spot.attributes}
 				{...handlers}
 				className={classNames(className, spot.className)}
 				disabled={disabled}
+				outermostRef={nodeRef}
+				referrerName="Spottable"
 			/>
 		);
 	}
@@ -247,14 +253,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		spotlightId: PropTypes.string,
 
-		/*
-		 * Called with a reference to spottable component
-		 *
-		 * @type {Object|Function}
-		 * @private
-		 */
-		spotRef: EnactPropTypes.ref,
-
 		/**
 		 * The tabIndex of the component. This value will default to -1 if left
 		 * unset and the control is spottable.
@@ -268,8 +266,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	// eslint-disable-next-line no-shadow
 	class Spottable extends Component {
 		componentDidMount () {
-			// eslint-disable-next-line react/no-find-dom-node
-			this.node = ReactDOM.findDOMNode(this);
 			this.forceUpdate();
 		}
 
@@ -277,12 +273,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.forceUpdate();
 		};
 
-		get spotRef () {
-			return this.node;
-		}
-
 		render () {
-			return <SpottableBase {...this.props} handleForceUpdate={this.handleForceUpdate} spotRef={this.spotRef} />;
+			return <SpottableBase {...this.props} handleForceUpdate={this.handleForceUpdate} />;
 		}
 	}
 
