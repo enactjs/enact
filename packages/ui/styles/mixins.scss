@@ -167,6 +167,21 @@
 	}
 }
 
+@mixin input-placeholder {
+	&::-webkit-input-placeholder {
+		@content;
+	}
+	&::-moz-placeholder {
+		@content;
+	}
+}
+
+@mixin vendor-opacity($opacity) {
+	$opacity-ie: ($opacity * 100);	// Less doesn't like math inside `alpha`
+	opacity: $opacity;
+	filter: alpha(opacity=$opacity-ie);
+}
+
 // Shorthand for positioning code
 @mixin positionBase($t, $r, $b, $l) {
 	top: $t;
@@ -185,6 +200,11 @@
 	} @else {
 		@include positionBase(nth($trbl, 1), nth($trbl, 1), nth($trbl, 1), nth($trbl, 1));
 	}
+}
+
+@mixin border-box() {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }
 
 //
