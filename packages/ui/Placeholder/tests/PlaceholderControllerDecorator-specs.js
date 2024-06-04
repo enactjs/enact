@@ -9,7 +9,7 @@ describe('PlaceholderControllerDecorator', () => {
 	const DivComponent = (props) => {
 		data = props;
 
-		return <div data-testid="component" />;
+		return <div data-testid="component" {...props} />;
 	};
 
 	const Component = PlaceholderControllerDecorator(DivComponent);
