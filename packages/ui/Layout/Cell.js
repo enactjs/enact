@@ -179,7 +179,9 @@ const CellBase = kind({
 		delete rest.shrink;
 		delete rest.size;
 
-		return <Component css={componentCss} ref={componentRef} {...rest} />;
+		const {key, ...restProps} = {...rest};
+
+		return <Component css={componentCss} ref={componentRef} key={key} {...restProps} />;
 	}
 });
 

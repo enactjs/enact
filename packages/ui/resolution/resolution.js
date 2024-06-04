@@ -49,11 +49,13 @@ const configDefaults = {
  * @private
  */
 const updateWorkspaceBounds = (measurementNode) => {
-	if (measurementNode && (measurementNode.clientHeight || measurementNode.clientWidth)) {
-		workspaceBounds = {height: measurementNode.clientHeight, width: measurementNode.clientWidth};
-	} else if (measurementNode && (measurementNode.innerHeight || measurementNode.innerWidth)) {
-		// A backup for if measurementNode is actually `window` and not a normal node
-		workspaceBounds = {height: measurementNode.innerHeight, width: measurementNode.innerWidth};
+	if (measurementNode) {
+		if (measurementNode.clientHeight || measurementNode.clientWidth) {
+			workspaceBounds = {height: measurementNode.clientHeight, width: measurementNode.clientWidth};
+		} else if (measurementNode.innerHeight || measurementNode.innerWidth) {
+			// A backup for if measurementNode is actually `window` and not a normal node
+			workspaceBounds = {height: measurementNode.innerHeight, width: measurementNode.innerWidth};
+		}
 	}
 };
 
@@ -215,8 +217,8 @@ function calculateFontSize (type) {
  * @function
  * @memberof ui/resolution
  * @param {String}    size     A valid CSS measurement to be applied as the base document font size.
- * @private
  * @returns {undefined}
+ * @private
  */
 function updateBaseFontSize (size) {
 	if (typeof window === 'object') {
