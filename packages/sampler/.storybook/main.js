@@ -1,6 +1,6 @@
 const webpack = require('@enact/storybook-utils/configs/webpack');
-const { loadCsf } = require('@storybook/csf-tools');
-const { readFileSync }  = require('fs');
+const {loadCsf} = require('@storybook/csf-tools');
+const {readFileSync}  = require('fs');
 
 module.exports = {
 	core: {
@@ -11,14 +11,14 @@ module.exports = {
 		warnOnLegacyHierarchySeparator: false
 	},
 	framework: {
-		name: '@storybook/react-webpack5',
-		options: {}
+		name: '@storybook/react-webpack5'
 	},
 	experimental_indexers: (indexers) => {
 		const createIndex = async (fileName, opts) => {
-			const code = readFileSync(fileName, { encoding: 'utf-8' });
-			return loadCsf(code, { ...opts, fileName }).parse().indexInputs;
+			const code = readFileSync(fileName, {encoding: 'utf-8'});
+			return loadCsf(code, {...opts, fileName}).parse().indexInputs;
 		};
+
 		return [
 			{
 				test: /\.[tj]sx?$/,
