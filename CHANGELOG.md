@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Added
 
 - `spotlight/SpotlightRootDecorator` config `rootId` to specify React DOM tree root for global event handlers
+
 ## [4.9.0-alpha.3] - 2024-06-05
 
 ### Changed
