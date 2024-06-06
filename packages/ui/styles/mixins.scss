@@ -187,6 +187,11 @@
 	}
 }
 
+@mixin border-box() {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+
 //
 // Mixin classes supporting advanced text
 //
