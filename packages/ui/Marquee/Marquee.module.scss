@@ -1,0 +1,54 @@
+// Marquee.module.scss
+//
+
+.marquee {
+	// NOTE: Keeping this around for now to validate if we want to use box layout instead of white-space
+	// This obscure set of code implements single-line ellipsis-clipped text that doesn't interfere with layout.
+	// white-space: nowrap; interferes with may pure-css layouts.
+	// overflow: hidden;
+	// display: -webkit-box;
+	// -webkit-box-orient: block-axis;
+	// -webkit-line-clamp: 1;
+
+	--ui-marquee-spacing: 0;
+	--ui-marquee-offset: 0;
+
+	width: auto;
+	white-space: pre !important;
+	overflow: hidden;
+	text-align: left;
+
+	.text {
+		pointer-events: none;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		width: 100%;
+		margin: 0;
+		white-space: pre !important;
+		transition-property: transform;
+		transition-timing-function: linear;
+		position: relative;
+
+		& * {
+			margin: 0;
+		}
+
+		&.willAnimate {
+			will-change: opacity;
+			overflow: visible;
+		}
+
+		&.animate {
+			/* Public Class Name */
+		}
+
+		.spacing {
+			display: inline-block;
+			width: calc(1px * (var(--ui-marquee-spacing, 0) + var(--ui-marquee-offset, 0)));
+		}
+	}
+
+	:global(.enact-locale-right-to-left) & {
+		text-align: right;
+	}
+}

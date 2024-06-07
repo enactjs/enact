@@ -4,7 +4,7 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import {Children, Fragment} from 'react';
 
-import componentCss from './Marquee.module.less';
+import componentCss from './Marquee.module.scss';
 
 const isEventSource = (ev) => ev.target === ev.currentTarget;
 
