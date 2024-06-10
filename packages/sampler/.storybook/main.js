@@ -22,7 +22,7 @@ module.exports = {
 		return [
 			{
 				test: /\.[tj]sx?$/,
-				createIndex,
+				createIndex
 			},
 			...(indexers || [])
 		];
@@ -32,7 +32,7 @@ module.exports = {
 		'@enact/storybook-utils/addons/actions',
 		'@enact/storybook-utils/addons/controls',
 		'@enact/storybook-utils/addons/toolbars',
-		'@storybook/addon-docs',
+		'@storybook/addon-docs'
 	],
 	webpackFinal: async (config, {configType}) => {
 		return webpack(config, configType, __dirname);
@@ -40,4 +40,4 @@ module.exports = {
 	typescript: {
 		reactDocgen: false
 	}
-}
+};
