@@ -9,6 +9,13 @@ The following is a curated list of changes in the Enact core module, newest chan
 - `core/platform` member `windowsPhone`, `edge`, `androidChrome`, `android`, `ie`, `ios`, `webos`, `androidFirefox`, `firefoxOS`, `blackberry`, and `tizen`
 - `core/platform` member `gesture`, `node`, `platformName`, and `unknown`
 - `core/platform` member `touch` and `touchscreen`
+## [4.9.0-alpha.3] - 2024-06-05
+
+No significant changes.
+
+## [4.0.15] - 2024-05-28
+
+No significant changes.
 
 ## [4.9.0-alpha.2] - 2024-05-24
 

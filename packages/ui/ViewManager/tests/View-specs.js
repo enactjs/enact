@@ -128,8 +128,9 @@ describe('View', () => {
 
 		test('should call callback for "stay"', (done) => {
 			const ref = createRef();
+			const getParentRef = () => ({children: [{}]});
 			render(
-				<View arranger={MockArranger} duration={16} ref={ref}>
+				<View arranger={MockArranger} duration={16} ref={ref} getParentRef={getParentRef}>
 					<span />
 				</View>
 			);
@@ -147,8 +148,9 @@ describe('View', () => {
 
 		test('should call callback for "enter"', (done) => {
 			const ref = createRef();
+			const getParentRef = () => ({children: [{}]});
 			render(
-				<View arranger={MockArranger} duration={16} ref={ref}>
+				<View arranger={MockArranger} duration={16} ref={ref} getParentRef={getParentRef}>
 					<span />
 				</View>
 			);
@@ -166,8 +168,9 @@ describe('View', () => {
 
 		test('should call callback for "leave"', (done) => {
 			const ref = createRef();
+			const getParentRef = () => ({children: [{}]});
 			render(
-				<View arranger={MockArranger} duration={16} ref={ref}>
+				<View arranger={MockArranger} duration={16} ref={ref} getParentRef={getParentRef}>
 					<span />
 				</View>
 			);
@@ -186,8 +189,9 @@ describe('View', () => {
 		test('should call callback immediately when {noAnimation}', () => {
 			const spy = jest.fn();
 			const ref = createRef();
+			const getParentRef = () => ({children: [{}]});
 			render(
-				<View arranger={MockArranger} duration={16} noAnimation ref={ref}>
+				<View arranger={MockArranger} duration={16} noAnimation ref={ref} getParentRef={getParentRef}>
 					<span />
 				</View>
 			);
@@ -202,8 +206,9 @@ describe('View', () => {
 		test('should call callback immediately for "appear"', () => {
 			const spy = jest.fn();
 			const ref = createRef();
+			const getParentRef = () => ({children: [{}]});
 			render(
-				<View arranger={MockArranger} duration={16} ref={ref}>
+				<View arranger={MockArranger} duration={16} ref={ref} getParentRef={getParentRef}>
 					<span />
 				</View>
 			);
@@ -232,8 +237,9 @@ describe('View', () => {
 			};
 
 			const ref = createRef();
+			const getParentRef = () => ({children: [{}]});
 			render(
-				<View arranger={arranger} duration={1000} ref={ref} >
+				<View arranger={arranger} duration={1000} ref={ref} getParentRef={getParentRef}>
 					<span />
 				</View>
 			);
