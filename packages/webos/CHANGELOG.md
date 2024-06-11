@@ -2,11 +2,15 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
-## [unreleased]
+## [4.9.0-alpha.3] - 2024-06-05
 
 ### Changed
 
 - `webos/speech.VoiceControlDecorator` to have sibling DOM node as alternative to findDOMNode API which will be removed in React 19
+
+## [4.0.15] - 2024-05-28
+
+No significant changes.
 
 ## [4.9.0-alpha.2] - 2024-05-24
 
