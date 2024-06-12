@@ -343,7 +343,7 @@ const SliderDecorator = compose(
  * A minimally-styled slider component with touch and drag support.
  *
  * @class Slider
- * @extends ui/Slider.SliderBase
+ * @extends ui/Slider#SliderBase
  * @memberof ui/Slider
  * @mixes ui/Slider.SliderDecorator
  * @omit componentRef

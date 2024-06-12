@@ -23,7 +23,7 @@ import MarqueeDecorator from './MarqueeDecorator';
  * A minimally-styled marquee component.
  *
  * @class Marquee
- * @extends ui/Marquee.MarqueeBase
+ * @extends ui/Marquee#MarqueeBase
  * @memberof ui/Marquee
  * @mixes ui/Marquee.MarqueeDecorator
  * @ui

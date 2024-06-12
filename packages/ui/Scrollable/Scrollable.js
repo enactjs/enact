@@ -1389,7 +1389,7 @@ class ScrollableBase extends Component {
  *
  * @class Scrollable
  * @memberof ui/Scrollable
- * @extends ui/Scrollable.ScrollableBase
+ * @extends ui/Scrollable#ScrollableBase
  * @ui
  * @private
  */

@@ -217,7 +217,7 @@ const ProgressBarDecorator = compose(
  *
  * @class ProgressBar
  * @memberof ui/ProgressBar
- * @extends ui/ProgressBar.ProgressBarBase
+ * @extends ui/ProgressBar#ProgressBarBase
  * @mixes ui/ProgressBar.ProgressBarDecorator
  * @omit componentRef
  * @ui

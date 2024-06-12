@@ -155,7 +155,7 @@ const RepeaterDecorator = ForwardRef({prop: 'componentRef'});
  *
  * @class Repeater
  * @memberof ui/Repeater
- * @extends ui/Repeater.RepeaterBase
+ * @extends ui/Repeater#RepeaterBase
  * @mixes ui/Repeater.RepeaterDecorator
  * @omit componentRef
  * @ui

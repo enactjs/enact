@@ -46,7 +46,7 @@ const scrollerDefaultProps = {
  *
  * @class Scroller
  * @memberof ui/Scroller
- * @extends ui/Scroller.ScrollerBasic
+ * @extends ui/Scroller#ScrollerBasic
  * @ui
  * @public
  */

@@ -264,7 +264,7 @@ const ButtonDecorator = compose(
  *
  * @class Button
  * @memberof ui/Button
- * @extends ui/Button.ButtonBase
+ * @extends ui/Button#ButtonBase
  * @mixes ui/Button.ButtonDecorator
  * @omit componentRef
  * @ui

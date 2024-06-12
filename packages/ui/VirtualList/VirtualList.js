@@ -45,7 +45,7 @@ const virtualListDefaultProps = {
  *
  * @class VirtualList
  * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBasic
+ * @extends ui/VirtualList#VirtualListBasic
  * @ui
  * @public
  */
@@ -323,7 +323,7 @@ const virtualGridListDefaultProps = {
  *
  * @class VirtualGridList
  * @memberof ui/VirtualList
- * @extends ui/VirtualList.VirtualListBasic
+ * @extends ui/VirtualList#VirtualListBasic
  * @ui
  * @public
  */

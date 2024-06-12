@@ -246,7 +246,7 @@ const IconDecorator = compose(
  * An Icon component.
  *
  * @class Icon
- * @extends ui/Icon.IconBase
+ * @extends ui/Icon#IconBase
  * @mixes ui/Icon.IconDecorator
  * @omit componentRef
  * @memberof ui/Icon

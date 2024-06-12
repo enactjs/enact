@@ -170,7 +170,7 @@ const Linkable = hoc({navigate: 'onClick'}, (config, Wrapped) => {
  *
  * @class Link
  * @ui
- * @extends ui/Routable.LinkBase
+ * @extends ui/Routable#LinkBase
  * @mixes ui/Routable.Linkable
  * @memberof ui/Routable
  * @public
