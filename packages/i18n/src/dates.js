@@ -3,6 +3,7 @@
 // Calendar). This is only necessary for builds not using the library-mode build of i18n which
 // would have included everything
 
+/*
 require('ilib/lib/GregorianDate');   // not required (rimshot) but included for completeness
 require('ilib/lib/CopticDate');
 require('ilib/lib/EthiopicDate');
@@ -14,3 +15,4 @@ require('ilib/lib/JulianDate');
 require('ilib/lib/PersianDate');
 require('ilib/lib/PersianAlgoDate');
 require('ilib/lib/ThaiSolarDate');
+*/
