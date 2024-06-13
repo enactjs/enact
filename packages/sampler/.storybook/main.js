@@ -33,8 +33,7 @@ module.exports = {
 	addons: [
 		'@enact/storybook-utils/addons/actions',
 		'@enact/storybook-utils/addons/controls',
-		'@enact/storybook-utils/addons/toolbars',
-		'@storybook/addon-docs'
+		'@enact/storybook-utils/addons/toolbars'
 	],
 	webpackFinal: async (config, {configType}) => {
 		return webpack(config, configType, __dirname);
