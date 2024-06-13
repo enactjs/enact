@@ -4,7 +4,7 @@
 // other value - full iLib
 const ILIB_CONFIG = '';
 
-import ilib from 'ilib';
+import iLib from 'ilib';
 
 import iLibLoader from 'ilib/lib/Loader';
 import iLibResBundle from 'ilib/lib/ResBundle';
@@ -12,10 +12,23 @@ import iLibResBundle from 'ilib/lib/ResBundle';
 import iLibCaseMapper from 'ilib/lib/CaseMapper';
 import iLibDateFactory from 'ilib/lib/DateFactory';
 import iLibDateFmt from 'ilib/lib/DateFmt';
+import iLibDurationFmt from 'ilib/lib/DurationFmt';
+import iLibNumFmt from 'ilib/lib/NumFmt';
 import iLibIString from 'ilib/lib/IString';
 import iLibLocaleInfo from 'ilib/lib/LocaleInfo';
 import iLibScriptInfo from 'ilib/lib/ScriptInfo';
 
+const ilibMock = {
+	getLocale: () => ('ko-KR'),
+	setLocale: () => {},
+	setLoaderCallback: () => {},
+	getLoader: () => ({
+		addPath: () => {}
+	}),
+	data: {
+		cache: {}
+	}
+};
 
 const LoaderMock = function () {};
 const ResBundleMock = function () {};
@@ -103,6 +116,14 @@ const DateFmtMock = function ({type}) {
 		getTemplate: () => (type === 'time' ? 'H:mm' : 'yyyy년 MMMM d일 EEEE')
 	};
 };
+const DurationFmtMock = function () {
+	return () => {};
+};
+const NumFmtMock = function () {
+	return {
+		format: (v) => (v.toString())
+	};
+};
 const IStringMock = function (v) {
 	this.toString = function () {
 		return v;
@@ -114,30 +135,34 @@ const LocaleInfoMock = function () {
 	};
 };
 
+let ilib = iLib;
 let Loader = iLibLoader;
 let ResBundle = iLibResBundle;
 let CaseMapper = iLibCaseMapper;
 let DateFactory = iLibDateFactory;
 let DateFmt = iLibDateFmt;
+let DurationFmt = iLibDurationFmt;
+let NumFmt = iLibNumFmt;
 let IString = iLibIString;
 let LocaleInfo = iLibLocaleInfo;
 let ScriptInfo = iLibScriptInfo;
 
 switch (ILIB_CONFIG) {
 	case 'noFmt':
-		CaseMapper = iLibCaseMapper;
 		DateFactory = DateFactoryMock;
 		DateFmt = DateFmtMock;
-		IString = iLibIString;
-		LocaleInfo = iLibLocaleInfo;
-		ScriptInfo = iLibScriptInfo;
+		DurationFmt = DurationFmtMock;
+		NumFmt = NumFmtMock;
 		break;
 	case 'noLib':
+		ilib = ilibMock;
 		Loader = LoaderMock;
 		ResBundle = ResBundleMock;
 		CaseMapper = CaseMapperMock;
 		DateFactory = DateFactoryMock;
 		DateFmt = DateFmtMock;
+		DurationFmt = DurationFmtMock;
+		NumFmt = NumFmtMock;
 		IString = IStringMock;
 		LocaleInfo = LocaleInfoMock;
 		ScriptInfo = null;
@@ -152,6 +177,8 @@ export {
 	CaseMapper,
 	DateFactory,
 	DateFmt,
+	DurationFmt,
+	NumFmt,
 	IString,
 	LocaleInfo,
 	ScriptInfo
