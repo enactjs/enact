@@ -30,6 +30,7 @@ module.exports = {
 		];
 	},
 	stories: ['./../stories/default/*.js'],
+	staticDirs: ['../public'],
 	addons: [
 		'@enact/storybook-utils/addons/actions',
 		'@enact/storybook-utils/addons/controls',
