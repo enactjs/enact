@@ -131,7 +131,7 @@ import ForwardRef from '../ForwardRef';
 
 import {Cell, CellBase, CellDecorator, toFlexAlign} from './Cell';
 
-import css from './Layout.module.less';
+import * as css from './Layout.module.less';
 
 /**
  * A container for `Cell`s.
@@ -144,7 +144,7 @@ import css from './Layout.module.less';
  * Example:
  * ```
  * import Input from '@enact/moonstone/Input';
- * import css from './LayoutExample.less';
+ * import * as css from './LayoutExample.less';
  * ...
  * <fieldset>
  * 	<Layout align="center">
@@ -341,7 +341,7 @@ const LayoutDecorator = ForwardRef({prop: 'componentRef'});
  * Example:
  * ```
  * import Input from '@enact/moonstone/Input';
- * import css from './LayoutExample.less';
+ * import * as css from './LayoutExample.less';
  * ...
  * <fieldset>
  * 	<Layout align="center">

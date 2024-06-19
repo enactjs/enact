@@ -23,7 +23,7 @@ import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
 import Touchable from '../Touchable';
 
-import componentCss from './IconButton.module.less';
+import * as componentCss from './IconButton.module.less';
 
 /**
  * A ui-styled button without any behavior.

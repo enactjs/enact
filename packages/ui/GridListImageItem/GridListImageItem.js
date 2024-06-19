@@ -16,7 +16,7 @@ import {Column, Cell} from '../Layout';
 import Icon from '../Icon';
 import Image from '../Image';
 
-import componentCss from './GridListImageItem.module.less';
+import * as componentCss from './GridListImageItem.module.less';
 
 /**
  * A basic grid list image item without any behavior.

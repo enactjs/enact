@@ -10,7 +10,7 @@ import {arrange, SlideArranger, SlideBottomArranger, SlideLeftArranger, SlideRig
 import PropTypes from 'prop-types';
 import {useCallback, useState} from 'react';
 
-import css from './ViewManager.module.less';
+import * as css from './ViewManager.module.less';
 
 const ViewManagerConfig = mergeComponentMetadata('ViewManager', ViewManagerBase, ViewManager);
 

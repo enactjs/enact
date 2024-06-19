@@ -7,7 +7,7 @@ import {validateRangeOnce, validateSteppedOnce} from '../internal/validators';
 
 import {calcProportion} from './utils';
 
-import css from './Slider.module.less';
+import * as css from './Slider.module.less';
 
 const validateRange = validateRangeOnce((props) => props, {'component': 'PositionDecorator'});
 const validateStepValue = validateSteppedOnce((props) => props, {'component': 'PositionDecorator'});

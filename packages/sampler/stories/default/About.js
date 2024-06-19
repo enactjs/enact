@@ -6,7 +6,7 @@ import {Button as UIButton} from '@enact/ui/Button';
 import ri from '@enact/ui/resolution';
 import PropTypes from 'prop-types';
 
-import css from './About.module.less';
+import * as css from './About.module.less';
 
 const edgeDotKeepout = 6;
 

@@ -7,7 +7,7 @@ import Group from '@enact/ui/Group';
 import {SlotItem as UISlotItem} from '@enact/ui/SlotItem';
 import PropTypes from 'prop-types';
 
-import css from './Group.module.less';
+import * as css from './Group.module.less';
 
 const SlotItem = kind({
 	name: 'SlotItem',

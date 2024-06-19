@@ -196,7 +196,7 @@ pseudo-selector.
 import {Input} from '@enact/moonstone';
 import kind from '@enact/core/kind';
 
-import css from './CustomInput.less';
+import * as css from './CustomInput.less';
 
 const CustomInput = kind({
 ...
@@ -228,7 +228,7 @@ const CustomInput = kind({
 import {Input} from '@enact/moonstone';
 import kind from '@enact/core/kind';
 
-import css from './CustomInput.less';
+import * as css from './CustomInput.less';
 
 const CustomInput = kind({
 ...

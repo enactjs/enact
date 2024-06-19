@@ -187,7 +187,7 @@ Then, in our component we'll just apply the imported LESS file to the component 
 import kind from '@enact/core/kind';
 import Button from '@enact/sandstone/Button';
 
-import css from './CustomButton.less';
+import * as css from './CustomButton.less';
 
 const CustomButton = kind({
 	name: 'CustomizedButton',

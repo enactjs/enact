@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {forwardRef, memo} from 'react';
 
-import css from './ScrollbarTrack.module.less';
+import * as css from './ScrollbarTrack.module.less';
 
 /**
  * An unstyled scroll track without any behavior.

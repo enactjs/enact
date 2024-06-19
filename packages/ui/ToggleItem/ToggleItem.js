@@ -24,7 +24,7 @@ import ForwardRef from '../ForwardRef';
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
 
-import componentCss from './ToggleItem.module.less';
+import * as componentCss from './ToggleItem.module.less';
 
 // eslint-disable-next-line enact/display-name,enact/prop-types
 const iconCreator = (position) => ({disabled, icon, iconComponent, iconPosition, itemIcon, itemIconPosition, selected}) => {
