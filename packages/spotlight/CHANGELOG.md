@@ -4,9 +4,22 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Added
+
+- `spotlight/SpotlightRootDecorator` config `rootId` to specify React DOM tree root for global event handlers
+## [4.9.0-beta.1] - 2024-06-17
+
+No significant changes.
+
+## [4.9.0-alpha.3] - 2024-06-05
+
 ### Changed
 
 - `spotlight/Spottable` to have sibling DOM node as alternative to findDOMNode API which will be removed in React 19
+
+## [4.0.15] - 2024-05-28
+
+No significant changes.
 
 ## [4.9.0-alpha.2] - 2024-05-24
 

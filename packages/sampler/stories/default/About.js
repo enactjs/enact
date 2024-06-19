@@ -89,13 +89,6 @@ export const ATourOfSampler = (args) => (
 			Click me
 		</Button>
 		<HintDialog
-			style={{top: 0, left: 114}}
-			length={24}
-			pointerPosition="above"
-		>
-			Click <b>Docs</b> to see the live source code for the sample
-		</HintDialog>
-		<HintDialog
 			style={riSafe({position: 'relative', top: 60, left: 0})}
 			length={30}
 			pointerPosition="left"
