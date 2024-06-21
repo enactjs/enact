@@ -3,7 +3,6 @@
  *
  * @module ui/Scroller
  * @exports Scroller
- * @exports ScrollerBase
  * @exports ScrollerBasic
  */
 
@@ -14,7 +13,6 @@ import useScroll from '../useScroll';
 import Scrollbar from '../useScroll/Scrollbar';
 
 import ScrollerBasic from './ScrollerBasic';
-import ScrollerBase from './UiScrollerBase';
 
 const nop = () => {};
 
@@ -282,6 +280,5 @@ Scroller.defaultPropValues = scrollerDefaultProps;
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase, // to support legacy ScrollerBase
 	ScrollerBasic // to support theme libraries
 };

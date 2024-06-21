@@ -4,7 +4,6 @@ import {boolean, select} from '@enact/storybook-utils/addons/controls';
 import Button from '@enact/ui/Button';
 import Item from '@enact/ui/Item';
 import Group from '@enact/ui/Group';
-import {SlotItem as UISlotItem} from '@enact/ui/SlotItem';
 import PropTypes from 'prop-types';
 
 import css from './Group.module.less';
@@ -30,9 +29,9 @@ const SlotItem = kind({
 	},
 
 	render: ({children, ...rest}) => (
-		<UISlotItem {...rest} component={Item}>
+		<Item {...rest}>
 			{children}
-		</UISlotItem>
+		</Item>
 	)
 });
 

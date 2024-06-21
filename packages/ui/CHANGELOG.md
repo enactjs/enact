@@ -2,6 +2,19 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Removed
+
+- `ui/GridListImageItem`
+- `ui/IconButton`
+- `ui/Marquee.MarqueeDecorator` config `className`
+- `ui/RadioDecorator`
+- `ui/Scroller.ScrollerBase`
+- `ui/SlotItem`
+- `ui/ToggleItem`
+- `ui/VirtualList.VirtualListBase`
+
 ## [4.9.0-beta.1] - 2024-06-17
 
 No significant changes.

@@ -11,10 +11,5 @@ ignore:
     - "packages/webos/deviceinfo"
     - "packages/webos/application"
     - "packages/webos/LS2Request"
-    - "packages/ui/Scrollable"
-    - "packages/ui/Scroller/UiScrollerBase.js"
-    - "packages/ui/GridListImageItem"
     - "packages/ui/Touchable/Pinch.js"
-    - "packages/ui/VirtualList/VirtualListBase.js"
-    - "packages/ui/VirtualList/UiVirtualListBase.js"
 

@@ -6,7 +6,6 @@
  * @exports itemSizesShape
  * @exports VirtualGridList
  * @exports VirtualList
- * @exports VirtualListBase
  * @exports VirtualListBasic
  */
 
@@ -16,7 +15,6 @@ import {ResizeContext} from '../Resizable';
 import useScroll from '../useScroll';
 import Scrollbar from '../useScroll/Scrollbar';
 
-import {UiVirtualListBase, UiVirtualListBaseNative} from './UiVirtualListBase';
 import {gridListItemSizeShape, itemSizesShape, VirtualListBasic} from './VirtualListBasic';
 
 const nop = () => {};
@@ -577,8 +575,6 @@ export default VirtualList;
 export {
 	gridListItemSizeShape,
 	itemSizesShape,
-	UiVirtualListBase as VirtualListBase, // to support legacy VirtualListBase
-	UiVirtualListBaseNative as VirtualListBaseNative, // to support legacy VirtualListBaseNative
 	VirtualGridList,
 	VirtualList,
 	VirtualListBasic
