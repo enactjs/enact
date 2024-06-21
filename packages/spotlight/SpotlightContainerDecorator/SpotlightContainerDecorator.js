@@ -180,7 +180,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	function SpotlightContainerDecorator (props) {
-		const {spotlightDisabled, spotlightId, spotlightMuted, spotlightRestrict, ...rest} = props;
+		const {spotlightDisabled = false, spotlightId, spotlightMuted = false, spotlightRestrict = 'self-first', ...rest} = props;
 
 		const spotlightContainer = useSpotlightContainer({
 			id: spotlightId,
@@ -248,12 +248,6 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @public
 		 */
 		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
-	};
-
-	SpotlightContainerDecorator.defaultProps = {
-		spotlightDisabled: false,
-		spotlightMuted: false,
-		spotlightRestrict: 'self-first'
 	};
 
 	// Wrapping with a React.Component to maintain ref support
