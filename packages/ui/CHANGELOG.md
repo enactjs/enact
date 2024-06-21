@@ -13,8 +13,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/Scroller.ScrollerBase`
 - `ui/SlotItem`
 - `ui/ToggleItem`
-- `ui/VirtualList.UiVirtualListBase`
 - `ui/VirtualList.VirtualListBase`
+
 ## [4.9.0-beta.1] - 2024-06-17
 
 No significant changes.
