@@ -82,7 +82,6 @@ const parseUserAgent = (userAgent) => {
  * @property {String} browserName - The name of the detected browser
  * @property {Number} browserVersion - The version of the detected browser
  * @property {Number} chrome - The version of the detected browser, if chrome browser is detected
- * @property {Object} [extra] - Additional information about the detected platform. Deprecated: will be removed in 5.0.0.
  * @property {Number} firefox - The version of the detected browser, if firefox browser is detected
  * @property {Number} safari - The version of the detected browser, if safari browser is detected
  * @property {Boolean} touchEvent - `true` if the browser has native touch events
