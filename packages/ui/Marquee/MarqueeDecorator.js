@@ -428,14 +428,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.validateTextDirection();
-
-			const delay = this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay;
-			if (forceRestartMarquee) {
-				window.setTimeout(() => {
-					this.tryStartingAnimation(delay);
-				}, 100);
-			} else if (this.shouldStartMarquee()) {
-				this.tryStartingAnimation(delay);
+			if (forceRestartMarquee || this.shouldStartMarquee()) {
+				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
 		}
 
