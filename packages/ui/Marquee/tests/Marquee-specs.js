@@ -609,4 +609,24 @@ describe('MarqueeController', () => {
 		act(() => jest.advanceTimersByTime(40));
 		expect(marquee1).toHaveStyle({'transform': 'translateX(-125px)'});
 	});
+
+	test('should force restart marquee after delay when the text content changes after initial render', () => {
+		const originalSetTimeout = window.setTimeout;
+
+		const observe = jest.fn();
+		window.setTimeout = observe;
+
+		const {rerender} = render(
+			<Controller>
+				<Marquee marqueeOn="render">{ltrText}</Marquee>
+			</Controller>);
+
+		rerender(
+			<Controller>
+				<Marquee marqueeOn="render">{ltrArray[0]}</Marquee>
+			</Controller>
+		);
+		expect(observe).toHaveBeenCalledTimes(3);
+		window.setTimeout = originalSetTimeout;
+	});
 });
