@@ -374,6 +374,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.context && this.context.register) {
 				this.sync = true;
 				this.context.register(this, {
+					restartAnimation: this.restartAnimation,
 					start: this.start,
 					stop: this.stop
 				});
@@ -412,7 +413,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				);
 
 				this.invalidateMetrics();
-				this.cancelAnimation();
+				this.cancelAnimation(forceRestartMarquee);
 				if (forceRestartMarquee && marqueeOn === 'focus') {
 					this.resetAnimation();
 				}
@@ -795,9 +796,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 *
 		 * @returns {undefined}
 		 */
-		cancelAnimation = () => {
+		cancelAnimation = (retryStartingAnimation = false) => {
 			if (this.sync) {
-				this.context.cancel(this);
+				this.context.cancel(retryStartingAnimation);
 				return;
 			}
 

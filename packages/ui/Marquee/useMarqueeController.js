@@ -102,15 +102,18 @@ const useMarqueeController = (props) => {
 		}, false);
 	}, []);
 
-	const doCancel = useCallback(() => {
+	const doCancel = useCallback((retryStartingAnimation) => {
 		if (mutableRef.current.isHovered || mutableRef.current.isFocused) {
 			return;
 		}
 		markAll(STATE.inactive);
 		dispatch('stop');
+		if (retryStartingAnimation) {
+			dispatch('restartAnimation');
+		}
 	}, [dispatch, markAll]);
 
-	const cancelJob = useMemo(() => new Job(() => doCancel(), 30), [doCancel]);
+	const cancelJob = useMemo(() => new Job((retryStartingAnimation = false) => doCancel(retryStartingAnimation), 30), [doCancel]);
 
 	/*
 	 * Registers `component` with a set of handlers for `start` and `stop`.
@@ -178,9 +181,9 @@ const useMarqueeController = (props) => {
 	 *
 	 * @returns	{undefined}
 	 */
-	const handleCancel = useCallback(() => {
+	const handleCancel = useCallback((retryStartingAnimation) => {
 		if (anyRunning()) {
-			cancelJob.start();
+			cancelJob.start(retryStartingAnimation);
 		}
 	}, [anyRunning, cancelJob]);
 
