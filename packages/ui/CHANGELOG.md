@@ -4,9 +4,9 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
-### Fixed
+### Changed
 
-- `ui/Marquee.MarqueeDecorator` to use `@enact/i18n/utils.isRtlText` API.
+- `ui/Marquee.MarqueeDecorator` to use `@enact/i18n/utils.isRtlText` API to determine the text directionality
 
 ## [4.9.0-beta.1] - 2024-06-17
 
