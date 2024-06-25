@@ -1,12 +1,12 @@
 /* global ResizeObserver */
 
-import {isRtlText} from '@enact/i18n/util';
 import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import deprecate from '@enact/core/internal/deprecate';
 import {is} from '@enact/core/keymap';
 import {Job, shallowEqual} from '@enact/core/util';
+import {isRtlText} from '@enact/i18n/util';
 import PropTypes from 'prop-types';
 import {PureComponent} from 'react';
 import {flushSync} from 'react-dom';
