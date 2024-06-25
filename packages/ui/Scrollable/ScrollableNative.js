@@ -1328,7 +1328,7 @@ class ScrollableBaseNative extends Component {
 			{className, containerRenderer, noScrollByDrag, rtl, style, ...rest} = this.props,
 			{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 			scrollableClasses = classNames(css.scrollable, className),
-			contentClasses = classNames(css.content, css.contentNative),
+			contentClasses = classNames(css.content),
 			childWrapper = noScrollByDrag ? 'div' : TouchableDiv,
 			childWrapperProps = {
 				className: contentClasses,
