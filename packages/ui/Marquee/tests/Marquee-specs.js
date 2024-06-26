@@ -609,5 +609,4 @@ describe('MarqueeController', () => {
 		act(() => jest.advanceTimersByTime(40));
 		expect(marquee1).toHaveStyle({'transform': 'translateX(-125px)'});
 	});
-
 });
