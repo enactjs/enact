@@ -10,7 +10,8 @@
   },
   "homepage": "https://enactjs.com",
   "scripts": {
-    "clean": "enact clean",
+    "clean": "enact clean --all",
+    "unlink": "npm uninstall --global",
     "lint": "enact lint --strict",
     "test": "enact test",
     "test-json": "enact test --json",

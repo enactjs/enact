@@ -4,17 +4,16 @@
   "description": "Monorepo for all Enact front end libraries.",
   "private": true,
   "scripts": {
-    "lerna": "lerna",
     "bootstrap": "npm install",
     "bootstrap-link": "npm run link-all",
     "interlink": "exit 0",
     "link-all": "npm link --workspaces",
-    "unlink-all": "lerna --concurrency 1 exec -- npm uninstall --global",
+    "unlink-all": "npm run unlink --workspaces --if-present",
     "lint": "npm run lint --workspaces",
     "test": "npm test --workspaces",
     "test-ss": "npm run test-ss --workspaces --if-present",
     "test-ui": "npm run test-ui --workspaces --if-present",
-    "clean": "lerna clean",
+    "clean": "npm run clean --workspaces --if-present; enact clean --all",
     "validate-docs": "validate-docs --strict --standalone --path packages"
   },
   "license": "Apache-2.0",
@@ -31,7 +30,6 @@
   ],
   "devDependencies": {
     "@enact/docs-utils": "^0.4.8",
-    "eslint-config-enact-proxy": "^1.0.7",
-    "lerna": "^8.1.2"
+    "eslint-config-enact-proxy": "^1.0.7"
   }
 }
