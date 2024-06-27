@@ -197,7 +197,7 @@ const Spotlight = (function () {
 		}
 	}
 
-	function focusElement (elem, containerIds, fromPointer, preventScroll = false) {
+	function focusElement (elem, containerIds, fromPointer, preventScroll) {
 		if (!elem) {
 			return false;
 		}
@@ -214,8 +214,7 @@ const Spotlight = (function () {
 			return true;
 		}
 
-		const shouldPreventScroll = isWithinOverflowContainer(elem, containerIds) || preventScroll;
-        const focusOptions = shouldPreventScroll ? { preventScroll: true } : null;
+		const focusOptions = preventScroll || isWithinOverflowContainer(elem, containerIds) ? {preventScroll: true} : null;
 
 		let silentFocus = function () {
 			elem.focus(focusOptions);

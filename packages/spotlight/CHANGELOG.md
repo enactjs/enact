@@ -2,14 +2,16 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## Changed
-Added preventScroll parameter to `focusElement` for enhanced scroll control.
-Extended `focus` in `spotlight/Spotlight` with a containerOption parameter that includes preventScroll.
 ## [unreleased]
 
 ### Added
 
 - `spotlight/SpotlightRootDecorator` config `rootId` to specify React DOM tree root for global event handlers
+
+### Changed
+
+- `spotlight.Spotlight` method `focus()` to get the third optional boolean parameter to prevent scrolling by focus
+
 ## [4.9.0-beta.1] - 2024-06-17
 
 No significant changes.
