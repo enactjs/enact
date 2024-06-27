@@ -1,12 +1,12 @@
 /* global ResizeObserver */
 
-import direction from 'direction';
 import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import deprecate from '@enact/core/internal/deprecate';
 import {is} from '@enact/core/keymap';
 import {Job, shallowEqual} from '@enact/core/util';
+import {isRtlText} from '@enact/i18n/util';
 import PropTypes from 'prop-types';
 import {PureComponent} from 'react';
 import {flushSync} from 'react-dom';
@@ -125,7 +125,7 @@ const defaultConfig = {
 	 * @kind member
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
-	marqueeDirection: (str) => direction(str) === 'rtl' ? 'rtl' : 'ltr'
+	marqueeDirection: (str) => isRtlText(str) ? 'rtl' : 'ltr'
 };
 
 /*
