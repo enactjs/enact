@@ -86,6 +86,38 @@ const contains = curry((containerRect, elementRect) => {
 	return testIntersection('contains', containerRect, elementRect);
 });
 
+function getIntersectionRect (container, element) {
+	const {
+		left: L,
+		top: T,
+		width: W,
+		height: H
+	} = container.getBoundingClientRect();
+	const {
+		left: l,
+		top: t,
+		width: w,
+		height: h
+	} = element.getBoundingClientRect();
+	const intersectionRect = {
+		element,
+		left: Math.max(l, L),
+		right: Math.min(l + w, L + W),
+		top: Math.max(t, T),
+		bottom: Math.min(t + h, T + H)
+	};
+	intersectionRect.width = intersectionRect.right - intersectionRect.left;
+	intersectionRect.height = intersectionRect.bottom - intersectionRect.top;
+	intersectionRect.center = {
+		x: intersectionRect.left + Math.floor(intersectionRect.width / 2),
+		y: intersectionRect.top + Math.floor(intersectionRect.height / 2)
+	};
+	intersectionRect.center.left = intersectionRect.center.right = intersectionRect.center.x;
+	intersectionRect.center.top = intersectionRect.center.bottom = intersectionRect.center.y;
+
+	return intersectionRect;
+}
+
 function getRect (elem) {
 	const cr = elem.getBoundingClientRect();
 	const rect = {
@@ -209,6 +241,7 @@ function isElementHidden (element) {
 export {
 	contains,
 	getContainerRect,
+	getIntersectionRect,
 	getPointRect,
 	getRect,
 	getRects,

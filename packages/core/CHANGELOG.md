@@ -2,6 +2,72 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [4.9.0-beta.1] - 2024-06-17
+
+No significant changes.
+
+## [4.9.0-alpha.3] - 2024-06-05
+
+No significant changes.
+
+## [4.0.15] - 2024-05-28
+
+No significant changes.
+
+## [4.9.0-alpha.2] - 2024-05-24
+
+No significant changes.
+
+## [4.0.14] - 2024-05-14
+
+No significant changes.
+
+## [4.7.11] - 2024-05-13
+
+No significant changes.
+
+## [4.9.0-alpha.1] - 2024-04-09
+
+### Deprecated
+
+- `core/platform` member `windowsPhone`, `edge`, `androidChrome`, `android`, `ie`, `ios`, `webos`, `androidFirefox`, `firefoxOS`, `blackberry`, and `tizen`, to be removed in 5.0.0
+- `core/platform` member `gesture`, `node`, `platformName`, and `unknown`, to be removed in 5.0.0
+- `core/platform` member `touch` and `touchscreen`, to be removed in 5.0.0
+
+### Added
+
+- `core/platform` member `type` to detect a platform like 'desktop', 'mobile', 'webos', and 'node'
+- `core/platform` member `browserName` and `browserVersion` to detect the compatible major browser name and version
+- `core/platform` member `touchEvent` and `touchScreen` replacing legacy `touch` and `touchscreen` respectively
+
+## [4.8.0] - 2024-02-08
+
+No significant changes.
+
+## [4.7.9] - 2023-12-08
+
+No significant changes.
+
+## [4.5.6] - 2023-11-30
+
+No significant changes.
+
+## [4.0.13] - 2022-11-29
+
+No significant changes.
+
+## [4.7.8] - 2023-11-17
+
+No significant changes.
+
+## [4.7.7] - 2023-11-09
+
+No significant changes.
+
+## [4.7.6] - 2023-09-20
+
+No significant changes.
+
 ## [4.7.5] - 2023-09-12
 
 No significant changes.

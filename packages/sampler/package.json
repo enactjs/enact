@@ -1,33 +1,35 @@
 {
   "name": "enact-sampler",
-  "version": "4.7.5",
+  "version": "4.9.0-beta.1",
   "description": "Component and QA samples for Enact",
   "private": true,
   "main": "index.js",
   "scripts": {
+    "interlink": "npm link ../core ../i18n ../spotlight ../ui ../webos",
     "lint": "enact lint --strict",
     "test": "echo \"No test suite\" && exit 0",
-    "pack": "build-storybook -c .storybook -o dist",
-    "serve": "start-storybook -p 8080 -c .storybook --ci"
+    "pack": "storybook build -c .storybook -o dist",
+    "serve": "storybook dev -p 8080 -c .storybook --ci"
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@enact/core": "^4.7.5",
-    "@enact/i18n": "^4.7.5",
-    "@enact/spotlight": "^4.7.5",
-    "@enact/storybook-utils": "^5.1.0",
-    "@enact/ui": "^4.7.5",
-    "@enact/webos": "^4.7.5",
-    "@storybook/addons": "^6.5.16",
-    "@storybook/builder-webpack5": "^6.5.16",
-    "@storybook/manager-webpack5": "^6.5.16",
-    "@storybook/react": "^6.5.16",
-    "@storybook/theming": "^6.5.16",
+    "@enact/core": "^4.9.0-beta.1",
+    "@enact/i18n": "^4.9.0-beta.1",
+    "@enact/spotlight": "^4.9.0-beta.1",
+    "@enact/storybook-utils": "enactjs/storybook-utils#feature/enact_v5",
+    "@enact/ui": "^4.9.0-beta.1",
+    "@enact/webos": "^4.9.0-beta.1",
+    "@storybook/addon-docs": "^8.1.6",
+    "@storybook/manager-api": "^8.1.6",
+    "@storybook/react": "^8.1.6",
+    "@storybook/react-webpack5": "^8.1.6",
+    "@storybook/theming": "^8.1.6",
     "babel-loader": "^8.2.5",
-    "classnames": "^2.3.2",
-    "ilib": "^14.18.0",
+    "classnames": "^2.5.1",
+    "ilib": "14.19.0",
     "prop-types": "^15.8.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "storybook": "^8.1.6"
   }
 }
