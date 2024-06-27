@@ -24,7 +24,7 @@ const useMarqueeController = (props) => {
 	 * Invokes the `action` handler for each synchronized component except the invoking
 	 * `component`.
 	 *
-	 * @param	{String}	action		`'start'` or `'stop'`
+	 * @param	{String}	action		`'start'`, `'stop'`, or `'restartAnimation'`
 	 * @param	{Object}	component	A previously registered component
 	 *
 	 * @returns	{undefined}
@@ -116,11 +116,11 @@ const useMarqueeController = (props) => {
 	const cancelJob = useMemo(() => new Job((retryStartingAnimation = false) => doCancel(retryStartingAnimation), 30), [doCancel]);
 
 	/*
-	 * Registers `component` with a set of handlers for `start` and `stop`.
+	 * Registers `component` with a set of handlers for `start`, `stop`, and `restartAnimation`.
 	 *
 	 * @param	{Object}	component	A component, typically a React component instance, on
 	 *									which handlers will be dispatched.
-	 * @param	{Object}	handlers	An object containing `start` and `stop` functions
+	 * @param	{Object}	handlers	An object containing `start`, `stop`, and `restartAnimation` functions
 	 *
 	 * @returns {undefined}
 	 */
@@ -177,7 +177,7 @@ const useMarqueeController = (props) => {
 	/*
 	 * Handler for the `cancel` context function
 	 *
-	 * @param	{Boolean}	retryStartingAnimation	If true, restartAnimation after cancelJob completes
+	 * @param	{Boolean}	retryStartingAnimation	If true, `restartAnimation` called after `cancelJob` completes
 	 *
 	 * @returns	{undefined}
 	 */
