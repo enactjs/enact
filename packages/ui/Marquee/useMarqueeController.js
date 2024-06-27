@@ -164,7 +164,7 @@ const useMarqueeController = (props) => {
 	 *
 	 * @param	{Object}	component	A previously registered component
 	 *
-	 * @returns	{undefined}f
+	 * @returns	{undefined}
 	 */
 	const handleStart = useCallback((component) => {
 		cancelJob.stop();
@@ -177,7 +177,7 @@ const useMarqueeController = (props) => {
 	/*
 	 * Handler for the `cancel` context function
 	 *
-	 * @param	{Object}	component	A previously registered component
+	 * @param	{Boolean}	retryStartingAnimation	If true, restartAnimation after cancelJob completes
 	 *
 	 * @returns	{undefined}
 	 */
