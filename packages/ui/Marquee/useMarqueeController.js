@@ -109,7 +109,7 @@ const useMarqueeController = (props) => {
 		markAll(STATE.inactive);
 		dispatch('stop');
 		if (retryStartingAnimation) {
-			dispatch('restartAnimation');
+			dispatch('restart');
 		}
 	}, [dispatch, markAll]);
 
