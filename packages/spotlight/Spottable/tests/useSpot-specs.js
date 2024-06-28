@@ -1,10 +1,10 @@
 import handle, {forward} from '@enact/core/handle';
+import {WithRef} from '@enact/core/internal/WithRef';
 import useHandlers from '@enact/core/useHandlers';
 import '@testing-library/jest-dom';
 import {fireEvent, render, screen} from '@testing-library/react';
 import classNames from 'classnames';
-import {Component} from 'react';
-import ReactDOM from 'react-dom';
+import {useCallback, useRef} from 'react';
 
 import Spotlight from '../../src/spotlight.js';
 import useSpottable from '../useSpottable';
@@ -47,11 +47,15 @@ const spotHandlers = {
 };
 
 describe('useSpottable', () => {
-	function SpottableBase (props) {
-		const {className, component, componentRef, disabled, emulateMouse, onSelectionCancel, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, selectionKeys, spotlightDisabled, spotlightId, ...rest} = props;
+	function SpottableComponent (props) {
+		const nodeRef = useRef();
+		const getSpotRef = useCallback(() => nodeRef.current, []);
+
+		const {className, component, disabled, emulateMouse, onSelectionCancel, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, selectionKeys, spotlightDisabled, spotlightId, ...rest} = props;
 		const spot = useSpottable({
 			disabled,
 			emulateMouse,
+			getSpotRef,
 			onSelectionCancel,
 			onSpotlightDisappear,
 			onSpotlightDown,
@@ -63,45 +67,31 @@ describe('useSpottable', () => {
 			spotlightId
 		});
 		const Comp = component || 'div';
+		const CompWithRef = WithRef(Comp);
 
 		rest.tabIndex = -1;
 
 		const handlers = useHandlers(spotHandlers, rest, spot);
 
-		compRef = componentRef;
+		compRef = nodeRef.current;
 
 		return (
-			<Comp
+			<CompWithRef
 				{...rest}
 				{...spot.attributes}
 				{...handlers}
 				className={classNames(className, spot.className)}
 				disabled={disabled}
-				ref={spot.ref}
+				outermostRef={nodeRef}
 			/>
 		);
-	}
-
-	class SpottableComponent extends Component {
-		componentDidMount () {
-			// eslint-disable-next-line react/no-find-dom-node
-			this.node = ReactDOM.findDOMNode(this);
-		}
-
-		get componentRef () {
-			return this.node;
-		}
-
-		render () {
-			return <SpottableBase {...this.props} componentRef={this.componentRef} />;
-		}
 	}
 
 	beforeEach(() => {
 		// Spotlight.getCurrent() did not work in unit tests. It always returns `undefined`.
 		// So Spotlight.getCurrent() is replaced with the function returning the wrapped component by the Component
 		// including `useSpottable`.
-		Spotlight.getCurrent = () => (compRef.current);
+		Spotlight.getCurrent = () => (compRef);
 	});
 
 	afterEach(() => {
