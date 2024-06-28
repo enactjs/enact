@@ -710,8 +710,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		restart = () => {
-			this.restartAnimation()
-		}
+			this.restartAnimation();
+		};
 
 		/*
 		 * Starts marquee animation with synchronization, if not already animating and a timer is
