@@ -696,7 +696,7 @@ const Spotlight = (function () {
 		 */
 		disableSelector: function (containerId) {
 			if (isContainer(containerId)) {
-				configureContainer(containerId, {selectorDisabled: false});
+				configureContainer(containerId, {selectorDisabled: true});
 				return true;
 			}
 
