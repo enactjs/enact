@@ -14,9 +14,6 @@
 }
 
 .enact-composite() {
-	-webkit-transform: translateZ(0);
-	-ms-transform: translateZ(0);
-	-o-transform: translateZ(0);
 	transform: translateZ(0);
 	will-change: transform;
 }
@@ -103,11 +100,11 @@
 //  */
 .remove-margin-on-edge-children() {
 	> :first-child {
-		-webkit-margin-start: 0;
+		margin-inline-start: 0;
 	}
 
 	> :last-child {
-		-webkit-margin-end: 0;
+		margin-inline-end: 0;
 	}
 }
 
@@ -117,11 +114,11 @@
 //  */
 .remove-padding-on-edge-children() {
 	> :first-child {
-		-webkit-padding-start: 0;
+		padding-inline-start: 0;
 	}
 
 	> :last-child {
-		-webkit-padding-end: 0;
+		padding-inline-end: 0;
 	}
 }
 
@@ -142,26 +139,17 @@
 }
 
 .input-placeholder(@rule) {
-	&::-webkit-input-placeholder {
-		@rule();
-	}
-	&::-moz-placeholder {
+	&::placeholder {
 		@rule();
 	}
 }
 
 // Assign font-kerning rules in a non-proprietary way. Default value being "normal", to enable kerning.
 .font-kerning(@val: normal) {
-	-webkit-font-kerning: @val;
 	font-kerning: @val;
 }
 
-// Provide a set of rules to assign to each vendor-prefixed pseudo selector
 .vendor-fullscreen(@rule) {
-	&:-webkit-full-screen { @rule(); }
-	&:-moz-full-screen { @rule(); }
-	&:-ms-fullscreen { @rule(); }
-	&:-o-full-screen { @rule(); }
 	&:fullscreen { @rule(); }
 }
 
@@ -211,7 +199,6 @@
 
 .border-box() {
 	box-sizing: border-box;
-	-moz-box-sizing: border-box;
 }
 
 // Helpful debugging way to understand how LESS variables are being interpreted
