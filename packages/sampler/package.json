@@ -5,7 +5,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "interlink": "npm link ../core ../i18n ../spotlight ../ui ../webos",
+    "clean": "enact clean --all",
     "lint": "enact lint --strict",
     "test": "echo \"No test suite\" && exit 0",
     "pack": "build-storybook -c .storybook -o dist",

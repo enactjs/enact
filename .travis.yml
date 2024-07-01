@@ -15,15 +15,13 @@ install:
     - npm link
     - popd
     - npm install
-    - npm run bootstrap
-    - npm run interlink
 script:
     - echo -e "\x1b\x5b35;1m*** Starting tests...\x1b\x5b0m"
     - npm test -- -- --runInBand --coverage
     - codecov
     - echo -e "\x1b\x5b35;1m*** Tests complete\x1b\x5b0m"
     - echo -e "\x1b\x5b35;1m*** Starting eslint...\x1b\x5b0m"
-    - npm run lerna -- run lint -- -- --report-unused-disable-directives --max-warnings 0 .
+    - npm run lint -- -- --report-unused-disable-directives --max-warnings 0 .
     - echo -e "\x1b\x5b35;1m*** eslint complete\x1b\x5b0m"
     - echo -e "\x1b\x5b35;1m*** Starting docs validation...\x1b\x5b0m"
     - npm run validate-docs
