@@ -206,7 +206,7 @@ function calculateFontSize (type) {
 		size = scrObj.height / scrObj.width * scrObj.pxPerRem;
 	} else {
 		size = scrObj.pxPerRem;
-		if (orientation === 'landscape' && shouldScaleFontSize) {
+		if (shouldScaleFontSize) {
 			size = parseInt(workspaceBounds.height * scrObj.pxPerRem / scrObj.height);
 		}
 	}
@@ -261,7 +261,16 @@ function getResolutionClasses (type = screenType) {
  */
 function getRiRatio (type = screenType) {
 	if (type && baseScreen) {
-		const ratio = getUnitToPixelFactors(type) / getUnitToPixelFactors(baseScreen.name);
+		let ratio = getUnitToPixelFactors(type) / getUnitToPixelFactors(baseScreen.name);
+		const scrObj = getScreenTypeObject(type);
+		const shouldScaleFontSize = (config.intermediateScreenHandling === 'scale') && (config.matchSmallerScreenType ? workspaceBounds.width > scrObj.width && workspaceBounds.height > scrObj.height :
+		workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
+
+		if (shouldScaleFontSize) {
+			const pxPerRem = parseInt(workspaceBounds.height * scrObj.pxPerRem / scrObj.height);
+			ratio = pxPerRem / getUnitToPixelFactors(baseScreen.name);
+		}
+
 		if (type === screenType) {
 			// cache this if it's for our current screen type.
 			riRatio = ratio;
