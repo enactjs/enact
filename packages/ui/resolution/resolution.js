@@ -264,7 +264,7 @@ function getRiRatio (type = screenType) {
 		let ratio = getUnitToPixelFactors(type) / getUnitToPixelFactors(baseScreen.name);
 		const scrObj = getScreenTypeObject(type);
 		const shouldScaleFontSize = (config.intermediateScreenHandling === 'scale') && (config.matchSmallerScreenType ? workspaceBounds.width > scrObj.width && workspaceBounds.height > scrObj.height :
-		workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
+			workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
 
 		if (shouldScaleFontSize) {
 			const pxPerRem = parseInt(workspaceBounds.height * scrObj.pxPerRem / scrObj.height);
