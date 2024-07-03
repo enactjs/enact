@@ -60,6 +60,6 @@
   },
   "devDependencies": {
     "@enact/ui-test-utils": "^1.0.8",
-    "ilib": "14.20.0"
+    "ilib": "14.19.0"
   }
 }
