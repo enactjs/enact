@@ -56,10 +56,10 @@
     "xhr": "^2.6.0"
   },
   "peerDependencies": {
-    "ilib": "^14.20.0 || ^14.20.0-webos1"
+    "ilib": "^14.19.0 || ^14.19.0-webos1"
   },
   "devDependencies": {
     "@enact/ui-test-utils": "^1.0.8",
-    "ilib": "^14.20.0"
+    "ilib": "14.20.0"
   }
 }
