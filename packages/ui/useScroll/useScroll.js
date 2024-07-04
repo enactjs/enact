@@ -1518,7 +1518,7 @@ const useScrollBase = (props) => {
 	});
 
 	assignProperties('scrollContentWrapperProps', {
-		className: scrollMode === 'translate' ? [css.scrollContentWrapper] : [css.scrollContentWrapper, css.scrollContentWrapperNative], // scrollMode 'native'
+		className: [css.scrollContentWrapper],
 		...(!noScrollByDrag && {
 			flickConfig,
 			onDrag: onDrag,
