@@ -53,7 +53,7 @@ Let's look at an example, Sandstone's `Button`:
 import kind from '@enact/core/kind';
 import UiButton from '@enact/ui/Button';
 
-import componentCss from './Button.module.less';
+import * as componentCss from './Button.module.less';
 
 const Button = kind({
 	name: 'CustomizedButton',
@@ -111,7 +111,7 @@ When creating customizable components it may be helpful to understand how the th
 When a LESS or CSS file is imported, the classes are inventoried and a hash map is generated of original class names to obfuscated modularized class names: `{original: obfuscated}`. Your module now has a map of all of the class names you referenced. Normally, when using `kind()` you simply pass this into the `styles` block, and indicate which one is your base class, with the `className` key.
 
 ```js
-import css from './Button.module.less';
+import * as css from './Button.module.less';
 ...
 {
 	css,	// Via ES6, the `css` variable is converted to {'css': css}
@@ -156,7 +156,7 @@ Let's look at our combined example again.
 import kind from '@enact/core/kind';
 import UiButton from '@enact/ui/Button';
 
-import componentCss from './Button.module.less';
+import * as componentCss from './Button.module.less';
 
 const Button = kind({
 	name: 'CustomizedButton',

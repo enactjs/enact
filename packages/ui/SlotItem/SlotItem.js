@@ -19,7 +19,7 @@ import compose from 'ramda/src/compose';
 
 import Slottable from '../Slottable';
 
-import componentCss from './SlotItem.module.less';
+import * as componentCss from './SlotItem.module.less';
 import ForwardRef from '../ForwardRef';
 
 /**

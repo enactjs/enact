@@ -4,7 +4,7 @@ import {platform} from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import {createRef, Component} from 'react';
 
-import css from './UiScroller.module.less';
+import * as css from './UiScroller.module.less';
 
 /**
  * An unstyled base scroller component.

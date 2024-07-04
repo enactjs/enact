@@ -124,7 +124,7 @@ is a good reference for enabling CSS modules prior to `2.0.0`.
 import Button from '@enact/sandstone/Button';
 import ThemeDecorator from '@enact/sandstone/ThemeDecorator';
 
-import buttonCss from './Button.module.css';
+import * as buttonCss from './Button.module.css';
 
 function App() {
 	return (

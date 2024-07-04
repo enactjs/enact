@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 
 import ForwardRef from '../ForwardRef';
 
-import componentCss from './BodyText.module.less';
+import * as componentCss from './BodyText.module.less';
 
 /**
  * A simple, unstyled text block component, without

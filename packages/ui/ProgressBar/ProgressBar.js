@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import {validateRange} from '../internal/validators';
 import ForwardRef from '../ForwardRef';
 
-import componentCss from './ProgressBar.module.less';
+import * as componentCss from './ProgressBar.module.less';
 
 const progressToProportion = (value) => clamp(0, 1, value);
 const calcBarStyle = (prop, anchor, value = anchor, startProp, endProp) => {

@@ -23,7 +23,7 @@ The `factory` module has been replaced by the `css` override feature.
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 
-import componentCss from './Button.module.less';
+import * as componentCss from './Button.module.less';
 
 const ButtonFactory = factory({css: componentCss}, ({css}) => {
 	return kind({
@@ -49,7 +49,7 @@ const ButtonFactory = factory({css: componentCss}, ({css}) => {
 
 // If `buttonCss` includes a `button` class, it will be appended to the `button` class of the
 // `Button` component.
-import buttonCss from './CustomButton.less';
+import * as buttonCss from './CustomButton.less';
 const CustomizedButton = ButtonFactory({css: buttonCss});
 ...
 	render: ({...rest}) => {
@@ -68,7 +68,7 @@ import Button from '@enact/ui/Button';
 
 // If `buttonCss` includes a `button` class, it will be appended to the `button` class of the
 // `Button` component.
-import buttonCss from './CustomButton.less';
+import * as buttonCss from './CustomButton.less';
 ...
 	render: ({...rest}) => {
 		return (
