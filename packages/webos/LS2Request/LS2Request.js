@@ -183,3 +183,30 @@ export default class LS2Request {
 		}
 	}
 }
+
+export const sendLS2Request = ({
+	service = '',
+	method = '',
+	parameters = {},
+	onComplete = null,
+	onTimeout = timeoutHandler,
+	subscribe = false,
+	timeout = 0
+}) => {
+	return new Promise((resolve, reject) => {
+		new LS2Request().send({
+			service,
+			method,
+			parameters,
+			onSuccess: resolve,
+			onFailure: result => {
+				failureHandler(result);
+				reject(result);
+			},
+			onComplete,
+			onTimeout,
+			subscribe,
+			timeout
+		});
+	});
+};
