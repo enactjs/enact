@@ -14,6 +14,13 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/SlotItem`
 - `ui/ToggleItem`
 - `ui/VirtualList.VirtualListBase`
+### Changed
+
+- `ui/Marquee.MarqueeDecorator` to use `@enact/i18n/utils.isRtlText` API to determine the text directionality
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to start animation properly when synchronized by `ui/Marquee.MarqueeController` and text changed
 
 ## [4.9.0-beta.1] - 2024-06-17
 

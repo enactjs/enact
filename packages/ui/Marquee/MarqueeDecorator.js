@@ -1,11 +1,11 @@
 /* global ResizeObserver */
 
-import direction from 'direction';
 import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {Job, shallowEqual} from '@enact/core/util';
+import {isRtlText} from '@enact/i18n/util';
 import PropTypes from 'prop-types';
 import {PureComponent} from 'react';
 import {flushSync} from 'react-dom';
@@ -114,7 +114,7 @@ const defaultConfig = {
 	 * @kind member
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
-	marqueeDirection: (str) => direction(str) === 'rtl' ? 'rtl' : 'ltr'
+	marqueeDirection: (str) => isRtlText(str) ? 'rtl' : 'ltr'
 };
 
 /*
@@ -353,6 +353,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.context && this.context.register) {
 				this.sync = true;
 				this.context.register(this, {
+					restart: this.restart,
 					start: this.start,
 					stop: this.stop
 				});
@@ -391,7 +392,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				);
 
 				this.invalidateMetrics();
-				this.cancelAnimation();
+				this.cancelAnimation(forceRestartMarquee);
 				if (forceRestartMarquee && marqueeOn === 'focus') {
 					this.resetAnimation();
 				}
@@ -683,6 +684,15 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		/*
+		 * Restarts the animation
+		 *
+		 * @returns	{undefined}
+		 */
+		restart = () => {
+			this.restartAnimation();
+		};
+
+		/*
 		 * Starts marquee animation with synchronization, if not already animating and a timer is
 		 * not already active to start.
 		 *
@@ -726,7 +736,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 *
 		 * @returns {undefined}
 		 */
-		restartAnimation = (delay) => {
+		restartAnimation = (delay = MINIMUM_MARQUEE_RESET_DELAY) => {
 			flushSync(() => {
 				this.setState({
 					animating: false
@@ -774,9 +784,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 *
 		 * @returns {undefined}
 		 */
-		cancelAnimation = () => {
+		cancelAnimation = (retryStartingAnimation = false) => {
 			if (this.sync) {
-				this.context.cancel(this);
+				this.context.cancel(retryStartingAnimation);
 				return;
 			}
 
