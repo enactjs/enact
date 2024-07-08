@@ -22,10 +22,7 @@ const webOSVersion = [
 ];
 
 const platforms = [
-	// LG webOS before adapting Chrome
-	{regex: /Web0S;.*Safari\/537.41/, version: 1}, // using WebKit 537.41 for WebAppManager, using Chrome 26 for the browser app
-	{regex: /Web0S;.*Safari\/538.2/, version: 2},  // using WebKit 538.2  for WebAppManager, using Chrome 34 for the browser app
-	// LG webOS using Chrome
+	// LG webOS using Chrome (from version 3)
 	...webOSVersion.map(({chrome, version}) => ({regex: new RegExp(`Web0S;.*Chrome/${chrome}`), version, chrome})),
 	{regex: /Web0S;.*Chrome\/(\d+)/},
 	// Fallback
