@@ -184,6 +184,29 @@ export default class LS2Request {
 	}
 }
 
+/**
+ * Provides a Promise which calls LS2Request.send to give onSuccess and onFailure as callback functions of Promise methods.
+ * 
+ * Usage:
+ * ```
+ * sendLS2Request(options).then(onSuccess, onFailure);
+ * ```
+ *
+ * @function
+ * @memberof webos/LS2Request
+ * @param {Object} options Options for the LS2 Request call except onSuccess and onFailure.
+ * @param {String} options.service The name of the LS2 service.
+ * @param {String} options.method The name of the method.
+ * @param {Object} options.parameters Any parameters required by the service method.
+ * @param {Function} options.onComplete The handler to run when the request
+ *	is completed, regardless of return status.
+ * @param {Function} options.onTimeout The handler to run when the request
+ *	times out.  Used in conjunction with `timeout`.
+ * @param {Boolean} options.subscribe Subscribe to service methods that support subscription.
+ * @param {Number} options.timeout The delay in milliseconds to wait for the request to return.
+ * @returns {Promise} Promise which runs LS2Request.send
+ * @public
+ */
 export const sendLS2Request = ({
 	service = '',
 	method = '',
