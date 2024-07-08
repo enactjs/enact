@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `webos/LS2Request.sendLS2Request` to provide LS2Request.send method with Promise
+
 ## [4.9.0-beta.1] - 2024-06-17
 
 No significant changes.
