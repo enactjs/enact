@@ -186,7 +186,7 @@ export default class LS2Request {
 
 /**
  * Provides a Promise which calls LS2Request.send to give onSuccess and onFailure as callback functions of Promise methods.
- * 
+ *
  * Usage:
  * ```
  * sendLS2Request(options).then(onSuccess, onFailure);
