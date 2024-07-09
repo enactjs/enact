@@ -71,7 +71,7 @@ const parseUserAgent = (userAgent) => {
 
 	// deprecation warning for browser versions older than our support policy
 	if (supportedVersions[detectedInfo.browserName] > detectedInfo.browserVersion) {
-		deprecate({name: `supporting ${detectedInfo.browserName} version below ${supportedVersions[detectedInfo.browserName]}`});
+		deprecate({name: `supporting ${detectedInfo.browserName} version older than ${supportedVersions[detectedInfo.browserName]}`, until: '5.0.0'});
 	}
 
 	return detectedInfo;
