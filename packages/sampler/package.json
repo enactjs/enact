@@ -16,7 +16,7 @@
     "@enact/core": "^4.9.0-beta.1",
     "@enact/i18n": "^4.9.0-beta.1",
     "@enact/spotlight": "^4.9.0-beta.1",
-    "@enact/storybook-utils": "enactjs/storybook-utils#feature/enact_v5",
+    "@enact/storybook-utils": "^6.0.0-rc.1",
     "@enact/ui": "^4.9.0-beta.1",
     "@enact/webos": "^4.9.0-beta.1",
     "@storybook/addon-docs": "^8.1.6",
