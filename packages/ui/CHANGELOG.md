@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Marquee.MarqueeDecorator` to start animation properly when synchronized by `ui/Marquee.MarqueeController` and text changed
+- `ui/Placeholder.PlaceholderControllerDecorator` to not remount its children when it rendered
 
 ## [4.9.0-beta.1] - 2024-06-17
 
