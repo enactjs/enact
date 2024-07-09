@@ -2,6 +2,35 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [5.0.0-rc.1] - 2024-07-09
+
+### Added
+
+- `spotlight/SpotlightRootDecorator` config `rootId` to specify React DOM tree root for global event handlers
+
+### Changed
+
+- `ui/Marquee.MarqueeDecorator` to use `@enact/i18n/utils.isRtlText` API to determine the text directionality
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to start animation properly when synchronized by `ui/Marquee.MarqueeController` and text changed
+
+### Removed
+
+- `core/platform` member `windowsPhone`, `edge`, `androidChrome`, `android`, `ie`, `ios`, `webos`, `androidFirefox`, `firefoxOS`, `blackberry`, and `tizen`
+- `core/platform` member `gesture`, `node`, `platformName`, and `unknown`
+- `core/platform` member `touch` and `touchscreen`
+- `ui/GridListImageItem`
+- `ui/IconButton`
+- `ui/Marquee.MarqueeDecorator` config `className`
+- `ui/RadioDecorator`
+- `ui/Scroller.ScrollerBase`
+- `ui/SlotItem`
+- `ui/ToggleItem`
+- `ui/VirtualList.VirtualListBase`
+- `webos/platform` member `watch` and `legacy`
+
 ## [4.9.0-beta.1] - 2024-06-17
 
 No significant changes.
