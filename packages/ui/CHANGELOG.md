@@ -4,6 +4,17 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Removed
+
+- `ui/GridListImageItem`
+- `ui/IconButton`
+- `ui/Marquee.MarqueeDecorator` config `className`
+- `ui/RadioDecorator`
+- `ui/Scroller.ScrollerBase`
+- `ui/SlotItem`
+- `ui/ToggleItem`
+- `ui/VirtualList.VirtualListBase`
+
 ### Changed
 
 - `ui/Marquee.MarqueeDecorator` to use `@enact/i18n/utils.isRtlText` API to determine the text directionality

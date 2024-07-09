@@ -3,7 +3,6 @@
 import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import deprecate from '@enact/core/internal/deprecate';
 import {is} from '@enact/core/keymap';
 import {Job, shallowEqual} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
@@ -39,16 +38,6 @@ const defaultConfig = {
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	blur: 'onBlur',
-
-	/**
-	 * Optional CSS class name to customize the marquee `component`
-	 *
-	 * @type {String}
-	 * @default null
-	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
-	 * @deprecated Will be removed in 5.0.0. Use {@link ui/Marquee.MarqueeDecorator.defaultConfig.css} instead.
-	 */
-	className: null,
 
 	/**
 	 * The base marquee component wrapping the content.
@@ -165,17 +154,7 @@ const TimerState = {
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, component: MarqueeComponent, enter, focus, invalidateProps, leave, marqueeDirection} = config;
-
-	if (config.className) {
-		deprecate({
-			name: 'ui/MarqueeDecorator.config.className',
-			replacedBy: 'ui/MarqueeDecorator.config.css',
-			until: '5.0.0'
-		});
-	}
-
-	const css = (typeof config.css === 'object' && config.css) || {marquee: config.className};
+	const {blur, component: MarqueeComponent, css, enter, focus, invalidateProps, leave, marqueeDirection} = config;
 
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
