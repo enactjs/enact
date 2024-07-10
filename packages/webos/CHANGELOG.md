@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact webos module, newest cha
 
 ### Fixed
 
-- `webos/speech.VoiceControlDecorator` to not remount its children when it rendered
+- `webos/speech.VoiceControlDecorator` to not remount its children when it rerenders
 
 ## [4.9.0-beta.1] - 2024-06-17
 
