@@ -24,7 +24,7 @@ const useMarqueeController = (props) => {
 	 * Invokes the `action` handler for each synchronized component except the invoking
 	 * `component`.
 	 *
-	 * @param	{String}	action		`'start'` or `'stop'`
+	 * @param	{String}	action		`'start'`, `'stop'`, or `'restart'`
 	 * @param	{Object}	component	A previously registered component
 	 *
 	 * @returns	{undefined}
@@ -102,22 +102,25 @@ const useMarqueeController = (props) => {
 		}, false);
 	}, []);
 
-	const doCancel = useCallback(() => {
+	const doCancel = useCallback((retryStartingAnimation) => {
 		if (mutableRef.current.isHovered || mutableRef.current.isFocused) {
 			return;
 		}
 		markAll(STATE.inactive);
 		dispatch('stop');
+		if (retryStartingAnimation) {
+			dispatch('restart');
+		}
 	}, [dispatch, markAll]);
 
-	const cancelJob = useMemo(() => new Job(() => doCancel(), 30), [doCancel]);
+	const cancelJob = useMemo(() => new Job((retryStartingAnimation = false) => doCancel(retryStartingAnimation), 30), [doCancel]);
 
 	/*
-	 * Registers `component` with a set of handlers for `start` and `stop`.
+	 * Registers `component` with a set of handlers for `start`, `stop`, and `restart`.
 	 *
 	 * @param	{Object}	component	A component, typically a React component instance, on
 	 *									which handlers will be dispatched.
-	 * @param	{Object}	handlers	An object containing `start` and `stop` functions
+	 * @param	{Object}	handlers	An object containing `start`, `stop`, and `restart` functions
 	 *
 	 * @returns {undefined}
 	 */
@@ -161,7 +164,7 @@ const useMarqueeController = (props) => {
 	 *
 	 * @param	{Object}	component	A previously registered component
 	 *
-	 * @returns	{undefined}f
+	 * @returns	{undefined}
 	 */
 	const handleStart = useCallback((component) => {
 		cancelJob.stop();
@@ -174,13 +177,13 @@ const useMarqueeController = (props) => {
 	/*
 	 * Handler for the `cancel` context function
 	 *
-	 * @param	{Object}	component	A previously registered component
+	 * @param	{Boolean}	retryStartingAnimation	If true, `restart` called after `cancelJob` completes
 	 *
 	 * @returns	{undefined}
 	 */
-	const handleCancel = useCallback(() => {
+	const handleCancel = useCallback((retryStartingAnimation) => {
 		if (anyRunning()) {
-			cancelJob.start();
+			cancelJob.start(retryStartingAnimation);
 		}
 	}, [anyRunning, cancelJob]);
 
@@ -193,7 +196,7 @@ const useMarqueeController = (props) => {
 	 */
 	const handleComplete = useCallback((component) => {
 		const complete = markReady(component);
-		if (complete) {
+		if (complete && !component.contentFits) {
 			markAll(STATE.ready);
 			dispatch('start');
 		}
