@@ -1,0 +1,93 @@
+// Enyo base styles
+// These are generic, universal styles, independent of a visual library.
+//
+
+@mixin coreMixin {
+	:global {
+		.enact-body-fit {
+			margin: 0;
+			height: 100%;
+			// helps prevent ios page scroll
+			overflow: auto;
+			position: relative;
+		}
+
+		.enact-fit {
+			position: absolute;
+			left: 0;
+			top: 0;
+			right: 0;
+			bottom: 0;
+		}
+
+		.enact-clip {
+			overflow: hidden;
+		}
+
+		// Touch interaction
+		.enact-no-touch-action {
+			-ms-touch-action: none;
+		}
+
+		.enact-untouchable {
+			pointer-events: none;
+
+			> * {
+				pointer-events: auto;
+			}
+		}
+
+		// Selection
+		.enact-unselectable {
+			cursor: default;
+			-ms-user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: -moz-none;
+			user-select: none;
+		}
+
+		.enact-selectable {
+			cursor: auto;
+			-ms-user-select: element;
+			-webkit-user-select: text;
+			-moz-user-select: text;
+			user-select: text;
+		}
+
+		// To help visually tell what's going on
+		.debug {
+			// `.debug.aria` Add in an Aria overlay to visualize what is assigned to the aria attributes
+			&.aria {
+				[aria-label]::after,
+				[aria-valuetext]::after {
+					position: absolute;
+					font-size: small;
+					font-weight: 100;
+					background-color: #ffaa0099;
+					color: white;
+					border: 1px solid #ffaa00;
+					border-radius: 0.5em;
+					border-top-left-radius: 0;
+					bottom: 0;
+					padding: 0 1ex;
+					transform: translateY(100%);
+					line-height: 1.3em;
+					z-index: 2;
+					pointer-events: none;
+				}
+
+				[aria-label]::after {
+					content: "Aria Label:\0020" attr(aria-label);
+				}
+
+				[aria-valuetext]::after {
+					content: "Aria Value:\0020" attr(aria-valuetext);
+				}
+
+				[aria-label][aria-valuetext]::after {
+					content: "Aria Label:\0020'" attr(aria-label) "'; Aria Value:\0020'" attr(aria-valuetext) "';";
+				}
+			}
+		}
+	}
+}
