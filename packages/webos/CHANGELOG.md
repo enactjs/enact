@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
-## [5.0.0-rc.1] - 2024-07-09
+## [5.0.0-alpha.1] - 2024-07-11
 
 ### Removed
 
