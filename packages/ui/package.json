@@ -10,8 +10,8 @@
   "homepage": "https://enactjs.com",
   "main": "index.js",
   "scripts": {
-    "clean": "enact clean",
-    "interlink": "npm link ../core",
+    "clean": "enact clean --all",
+    "unlink": "npm uninstall --global",
     "lint": "enact lint --strict",
     "test": "enact test",
     "test-json": "enact test --json",
