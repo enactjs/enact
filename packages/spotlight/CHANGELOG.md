@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
+- `spotlight` to not require `less` dependency
 - `spotlight/Spotlight.disableSelector` to properly update the `selectorDisabled` container config
 
 ## [4.9.0-beta.1] - 2024-06-17
