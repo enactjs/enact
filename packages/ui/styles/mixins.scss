@@ -32,8 +32,10 @@
 
 // Assign font-kerning rules in a non-proprietary way. Default value being "normal", to enable kerning.
 @mixin font-kerning($val: normal) {
-	-webkit-font-kerning: $val;
-	font-kerning: $val;
+	& {
+		-webkit-font-kerning: $val;
+		font-kerning: $val;
+	}
 }
 
 // Applies RTL-compatible start and end position to a selector
@@ -513,7 +515,9 @@
 //   @include enact-locale-tallglyph(font-size, 1.4em; 1.6em, normal);  ->  normal font-size: 1.4em; tallglyphs font-size: 1.6em;
 
 @mixin enact-locale-tallglyph($rule, $normal, $tallglyph, $target, $locale-tallglyph-languages: "") {
-	#{$rule}: $normal;
+	& {
+		#{$rule}: $normal;
+	}
 	@include enact-locale-tallglyph-values($rule, $tallglyph, $target, $locale-tallglyph-languages);
 }
 
