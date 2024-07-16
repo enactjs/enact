@@ -348,6 +348,146 @@
 }
 
 //
+// Mixin classes supporting advanced text
+//
+
+// /**
+//  * Generate a pair of @font-face rules for a given name and "collection" of locale fonts.
+//  *
+//  * This creates two (2) referenceable font-family names, one that "stacks" onto the provided "base"
+//  * name, the other suffixed with the locale name. E.g. "FontName" and "FontName Locale".
+//  *
+//  * Example:
+//  * ```
+//  * $fonts: (
+//  * 	as: local("LG Smart UI Bengali"), // same as `bn`
+//  * 	bn: local("LG Smart UI Bengali"),
+//  * 	en-JP: local("LG Smart UI JP") local("LG Display_JP_Bold") 700, // same as `ja`
+//  * 	ja: local("LG Smart UI JP") local("LG Display_JP_Bold") 700, // Generates 2 entries, one for JP set to "normal" (default) weight and another for JP_Bold set to 700 weight
+//  * 	ur: local("LG Smart UI_Urdu") normal 300 600 700 // Generates 4 entries, one for each weight
+//  * );
+//  * ```
+//  *
+//  * List of supported "options" per locale key, in the following order:
+//  * * single font source - Typically a reference to a local() font or a url() font.
+//  * * font-weight - Optional, Numbers (100, 500, 700, etc) and keywords (normal, bold, etc) are supported.
+//  * 	Empty-string represents "null". This excludes the font-weight rule from the generated code.
+//  * 	Multiple weights can be supplied to generate multiple sets of face rules for a single source file
+//  * * font-style - Optional, Keywords (normal, italic, etc) are supported.
+//  *
+//  * OPTIONALLY: repeat the options above after a comma (,) for multiple weights/styles/options based on the same name.
+//  *
+//  * $param  {String} $baseName The name used as the basis for the generated font-family.
+//  * $param  {Object} $f        Object of keys with values detailing the font variants and options.
+//  */
+
+@mixin buildLocaleFont($fontName, $locale, $args) {
+	@if content-exists() {
+		@include buildFontFaceBase("#{$fontName} #{$locale}", $args) {
+			@content;
+		}
+		@include buildFontFaceBase($fontName, $args) {
+			@content;
+		}
+	}
+
+	$src: nth($args, 1);
+	$argLast: nth($args, length($args)); // optional style value
+
+	$styleExists: if(($argLast == italic or $argLast == oblique), true, false);  // List all valid font-style values here (except for "normal" since that is a shared keyword with font-weight)
+	$style: if($styleExists, $argLast, "");
+	$lastWeightArgIndex: if($styleExists, length($args) - 1, length($args));  // It's possible this could get confused if "normal" or "bold" is used as the last weight. Please use a number as the last weight.
+
+	// Please retain the following comment for future debugging purposes. This gives insight into how the definition values are being interpreted.
+	// :global(.debug-buildLocaleFont#{$fontName}-#{$locale}) {
+	// 	fontName: $fontName;
+	// 	locale: $locale;
+	// 	args: $args;
+	// 	args-count: length($args);
+	// 	last-weight-arg-index: $lastWeightArgIndex;
+	// 	src: $src;
+	// 	styleExists: $styleExists;
+	// 	style: $style;
+	// }
+
+	@if ($lastWeightArgIndex >= 2) {
+		@for $argIndex from 2 through $lastWeightArgIndex {
+			$weight: nth($args, $argIndex);
+			@include buildFontFace("#{$fontName} #{$locale}", $src, $weight, $style);
+			@include buildFontFace($fontName, $src, $weight, $style);
+		}
+	}
+
+	@if (length($args) <= 1) {
+		@include buildFontFaceBase("#{$fontName} #{$locale}", $src);
+		@include buildFontFace($fontName, $src);
+	}
+}
+
+@mixin buildLocaleFonts($fontName, $f) {
+	@each $specs, $locale in $f {
+		// Determine if we're working with a collection of font definitions or an individual definition
+		$isCollection: if(((length($specs) > 1) and ((length(nth($specs, 1)) > 1) or (length(nth($specs, 2)) > 1))), true, false);
+
+		// :global(.debug-buildLocaleFonts-#{$locale}) {
+		// 	is-collection: $isCollection;
+		// }
+
+		@if ($isCollection) {
+			// Interpret collections of font definitions: [(set1) (set2) (set3)]
+			@each $value in $specs {
+				@include buildLocaleFont($fontName, $locale, $value);
+			}
+		} @else {
+			// Interpret individual font definitions: (set1)
+			@include buildLocaleFont($fontName, $locale, $specs);
+		}
+		// @include debugLessTypes($specs);
+	}
+}
+
+// /**
+//  * Generate a single @font-face rule.
+//  *
+//  * List of supported "options" per locale key, in the following order:
+//  * $param  {String} font-family name   The generated font name, referenceable via
+//  *                                     `font-family: <name>;` in normal CSS.
+//  * $param  {URL} single font source    Typically a reference to a local() font or a url() font.
+//  * $param  {Number|Keyword|""} font-weight  Optional, Numbers (100, 500, 700, etc) and keywords
+//  *                                     (normal, bold, etc) are supported. Empty-string represents
+//  *                                     "null" or default. This excludes the weight rule from the generated code.
+//  * $param  {Keyword} font-style        Optional, Keywords (normal, italic, etc) are supported.
+//  */
+
+@mixin buildFontFaceBase($name, $src) {
+	@font-face {
+		font-family: $name;
+		src: $src;
+		@content;
+	}
+}
+
+@mixin buildFontFace($name, $src, $weight: normal, $style: "") {
+	@if (length($weight) > 1) {
+		@each $value in $weight {
+			@include buildFontFaceBase($name, $src) {
+				font-weight: $value;
+			}
+		}
+		@include buildFontFaceBase($name, $src) {
+			font-style: $style;
+			@content;
+		}
+	} @else {
+		@include buildFontFaceBase($name, $src) {
+			font-weight: $weight;
+			font-style: $style;
+			@content;
+		}
+	}
+}
+
+//
 // Locale Mixins
 //
 
