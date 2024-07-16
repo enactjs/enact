@@ -129,7 +129,9 @@
 // Applies RTL-compatible start and end padding to a selector
 @mixin padding-start-end($start, $end: null, $target: "") {
 	@if ($start != null and $end == null and (($target == parent) or ($target == self) or ($target == ""))) {
-		padding: $start;
+		& {
+			padding: $start;
+		}
 
 		$top: $start;
 		$left: $start;
