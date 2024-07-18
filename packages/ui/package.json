@@ -11,7 +11,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",
-    "interlink": "npm link ../core",
+    "interlink": "npm link ../core ../i18n",
     "lint": "enact lint --strict",
     "test": "enact test",
     "test-json": "enact test --json",
@@ -35,6 +35,7 @@
     "@enact/core": "^5.0.0-alpha.1",
     "@enact/i18n": "^5.0.0-alpha.1",
     "classnames": "^2.5.1",
+    "ilib": "14.19.0",
     "invariant": "^2.2.4",
     "prop-types": "^15.8.1",
     "ramda": "^0.30.1",
