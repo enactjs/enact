@@ -55,6 +55,8 @@ import {WithRef} from '@enact/core/internal/WithRef';
  * @public
  */
 const VoiceControlDecorator = hoc((config, Wrapped) => {
+	const WithRefComponent = WithRef(Wrapped);
+
 	return class extends Component {
 		static displayName = 'VoiceControlDecorator';
 
@@ -91,7 +93,6 @@ const VoiceControlDecorator = hoc((config, Wrapped) => {
 		render () {
 			const props = {...this.props};
 			delete props.onVoice;
-			const WithRefComponent = WithRef(Wrapped);
 
 			return (
 				<WithRefComponent {...props} outermostRef={this.nodeRef} referrerName="VoiceControlDecorator" />
