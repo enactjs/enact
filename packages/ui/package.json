@@ -11,7 +11,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",
-    "interlink": "npm link ../core",
+    "interlink": "npm link ../core ../i18n",
     "lint": "enact lint --strict",
     "test": "enact test",
     "test-json": "enact test --json",
