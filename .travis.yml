@@ -2,14 +2,14 @@ dist: focal
 language: node_js
 node_js:
     - lts/*
-    - node
+    - "21"
 sudo: false
 before_install:
     - sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 install:
     - npm config set prefer-offline false
     - npm install -g codecov
-    - git clone --branch=master --depth 1 https://github.com/enactjs/cli ../cli
+    - git clone --branch=develop --depth 1 https://github.com/enactjs/cli ../cli
     - pushd ../cli
     - npm install
     - npm link
