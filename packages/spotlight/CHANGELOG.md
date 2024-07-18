@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [4.9.0] - 2024-07-17
+
+### Fixed
+
+- `spotlight/Spotlight.disableSelector` to properly update the `selectorDisabled` container config
+
 ## [5.0.0-alpha.1] - 2024-07-11
 
 ### Added
@@ -145,7 +151,7 @@ No significant changes.
 ### Fixed
 
 - `spotlight` to not leave the restrict container after returning from another app
- 
+
 ## [4.5.0-rc.1] - 2022-06-23
 
 No significant changes.
@@ -155,7 +161,7 @@ No significant changes.
 ### Added
 
 - `spotlight` an optional `containerOption.toOuterContainer` parameter to `focus` function to search target recursively to outer container
- 
+
 ## [4.5.0-alpha.2] - 2022-05-09
 
 ### Changed
