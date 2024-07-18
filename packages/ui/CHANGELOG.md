@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [4.9.0] - 2024-07-17
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to start animation properly when synchronized by `ui/Marquee.MarqueeController` and text changed
+- `ui/Placeholder.PlaceholderControllerDecorator` to not remount its children when it rerenders
+
 ## [5.0.0-alpha.1] - 2024-07-11
 
 ### Removed
@@ -18,10 +25,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Changed
 
 - `ui/Marquee.MarqueeDecorator` to use `@enact/i18n/utils.isRtlText` API to determine the text directionality
-
-### Fixed
-
-- `ui/Marquee.MarqueeDecorator` to start animation properly when synchronized by `ui/Marquee.MarqueeController` and text changed
 
 ## [4.9.0-beta.1] - 2024-06-17
 

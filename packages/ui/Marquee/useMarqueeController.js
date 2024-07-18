@@ -196,7 +196,7 @@ const useMarqueeController = (props) => {
 	 */
 	const handleComplete = useCallback((component) => {
 		const complete = markReady(component);
-		if (complete && !component.contentFits) {
+		if (complete) {
 			markAll(STATE.ready);
 			dispatch('start');
 		}
