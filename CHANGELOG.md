@@ -2,6 +2,15 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.9.0] - 2024-07-17
+
+### Fixed
+
+- `spotlight/Spotlight.disableSelector` to properly update the `selectorDisabled` container config
+- `ui/Marquee.MarqueeDecorator` to start animation properly when synchronized by `ui/Marquee.MarqueeController` and text changed
+- `ui/Placeholder.PlaceholderControllerDecorator` to not remount its children when it rerenders
+- `webos/speech.VoiceControlDecorator` to not remount its children when it rerenders
+
 ## [5.0.0-alpha.1] - 2024-07-11
 
 ### Added
