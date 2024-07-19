@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Marquee.MarqueeController` to start animation properly when `marqueeOnFocus` is set to `true` and text changed
+
 ## [4.9.0] - 2024-07-17
 
 ### Fixed
