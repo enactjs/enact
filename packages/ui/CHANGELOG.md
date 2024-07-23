@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/VirtualList.VirtualListBasic` support to read the order of items when the `listitem` role is set to items
+
 ## [4.9.0] - 2024-07-17
 
 ### Fixed
