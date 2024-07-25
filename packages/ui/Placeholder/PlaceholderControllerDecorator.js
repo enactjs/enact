@@ -61,6 +61,7 @@ const PlaceholderContext = createContext();
  */
 const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {bounds, notify, thresholdFactor} = config;
+	const WrappedWithRef = WithRef(Wrapped);
 
 	return class extends Component {
 		static displayName = 'PlaceholderControllerDecorator';
@@ -140,7 +141,6 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const props = Object.assign({}, this.props);
-			const WrappedWithRef = WithRef(Wrapped);
 
 			if (notify) props[notify] = this.handleNotify;
 

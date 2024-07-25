@@ -1,7 +1,7 @@
 {
   "name": "@enact/i18n",
   "main": "./src/index.js",
-  "version": "4.9.0-beta.1",
+  "version": "5.0.0-alpha.1",
   "description": "Internationalization support for Enact using iLib",
   "repository": {
     "type": "git",
@@ -48,15 +48,15 @@
     ]
   },
   "dependencies": {
-    "@enact/core": "^4.9.0-beta.1",
+    "@enact/core": "^5.0.0-alpha.1",
     "prop-types": "^15.8.1",
-    "ramda": "^0.29.1",
+    "ramda": "^0.30.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "xhr": "^2.6.0"
   },
   "peerDependencies": {
-    "ilib": "14.19.0 || 14.19.0-webos1"
+    "ilib": "^14.19.0 || ^14.19.0-webos1"
   },
   "devDependencies": {
     "@enact/ui-test-utils": "^1.0.8",
