@@ -6,8 +6,6 @@
  * @exports platform
  */
 
-import deprecate from '@enact/core/internal/deprecate';
-
 const webOSVersion = [
 	// Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.2.1 Chrome/38.0.2125.122 Safari/537.36 WebAppManager
 	{chrome: 38, version: 3},
@@ -24,10 +22,7 @@ const webOSVersion = [
 ];
 
 const platforms = [
-	// LG webOS before adapting Chrome
-	{regex: /Web0S;.*Safari\/537.41/, version: 1}, // using WebKit 537.41 for WebAppManager, using Chrome 26 for the browser app
-	{regex: /Web0S;.*Safari\/538.2/, version: 2},  // using WebKit 538.2  for WebAppManager, using Chrome 34 for the browser app
-	// LG webOS using Chrome
+	// LG webOS using Chrome (from version 3)
 	...webOSVersion.map(({chrome, version}) => ({regex: new RegExp(`Web0S;.*Chrome/${chrome}`), version, chrome})),
 	{regex: /Web0S;.*Chrome\/(\d+)/},
 	// Fallback
@@ -38,28 +33,14 @@ const parseUserAgent = (userAgent) => {
 	// build out our cached platform determination for future usage
 	const platformInfo = {webos: false};
 
-	if (userAgent.indexOf('SmartWatch') > -1) {
-		platformInfo.watch = true;
-	} else if (userAgent.indexOf('SmartTV') > -1) {
-		platformInfo.tv = true;
-	} else if (userAgent.indexOf('Large Screen') > -1) {
-		deprecate({
-			name: 'Detecting webOS TV by "Large Screen" from the user agent string',
-			until: '5.0.0'
-		});
+	if (userAgent.indexOf('SmartTV') > -1) {
 		platformInfo.tv = true;
 	} else {
 		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
 		try {
 			let legacyInfo = JSON.parse(webOSSystem.deviceInfo || '{}');
-			if (legacyInfo.platformVersionMajor && legacyInfo.platformVersionMinor) {
-				let major = parseInt(legacyInfo.platformVersionMajor);
-				let minor = parseInt(legacyInfo.platformVersionMinor);
-				if (major < 3 || (major === 3 && minor <= 0)) {
-					platformInfo.legacy = true;
-				} else {
-					platformInfo.open = true;
-				}
+			if (typeof legacyInfo.platformVersionMajor !== 'undefined' && typeof legacyInfo.platformVersionMinor !== 'undefined') {
+				platformInfo.open = true;
 			} else {
 				platformInfo.unknown = true;
 			}
@@ -124,9 +105,7 @@ function detect () {
  * @type {Object}
  * @property {Boolean} webos `true` for webOS
  * @property {Boolean} [tv] `true` for LG webOS SmartTV
- * @property {Boolean} [watch] `true` for LG webOS SmartWatch. Deprecated: will be removed in 5.0.0.
  * @property {Boolean} [open] `true` for Open webOS
- * @property {Boolean} [legacy] `true` for legacy webOS (Palm and HP hardware). Deprecated: will be removed in 5.0.0.
  * @property {Boolean} [unknown] `true` for any unknown system
  * @property {Number}  [version] The version of the platform if detected
  * @property {Number}  [chrome] The version of Chrome if detected
@@ -137,9 +116,7 @@ const platform = {};
 
 [
 	'tv',
-	'watch',
 	'open',
-	'legacy',
 	'unknown',
 	'version',
 	'chrome'
@@ -147,10 +124,6 @@ const platform = {};
 	Object.defineProperty(platform, name, {
 		enumerable: true,
 		get: () => {
-			if (name === 'watch' || name === 'legacy') {
-				deprecate({name, until: '5.0.0'});
-			}
-
 			const p = detect();
 			return p[name];
 		}
