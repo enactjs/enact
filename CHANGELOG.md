@@ -20,6 +20,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Changed
 
 - `ui/Marquee.MarqueeDecorator` to use `@enact/i18n/utils.isRtlText` API to determine the text directionality
+- `sampler` look and feel by updating to Storybook 8
 
 ### Fixed
 

@@ -8,7 +8,9 @@ No significant changes.
 
 ## [5.0.0-alpha.1] - 2024-07-11
 
-No significant changes.
+### Changed
+
+- `sampler` look and feel by updating to Storybook 8
 
 ## [4.9.0-beta.1] - 2024-06-17
 
