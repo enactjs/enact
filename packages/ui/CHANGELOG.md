@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/VirtualList.VirtualListBasic` support to read the order of items when the `listitem` role is set to items
+
 ### Fixed
 
 - `ui/Marquee.MarqueeController` to start animation properly when `marqueeOnFocus` is set to `true` and text changed
