@@ -15,7 +15,7 @@ import {rootContainerId} from '../src/container';
 import {activateInputType, applyInputTypeToNode, getInputInfo, getInputType, setInputType} from '../src/inputType';
 import Spotlight from '../src/spotlight';
 
-import '../styles/debug.less';
+import './debug.less';
 
 /**
  * Default configuration for SpotlightRootDecorator
