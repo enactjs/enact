@@ -150,13 +150,7 @@ const parseUserAgentLegacy = (userAgent) => {
 		}
 	}
 
-	if ('webos' === plat.platformName) {
-		deprecate({
-			name: plat.platformName,
-			message: 'Refer `@enact/webos`\'s `platform` for webOS specific information.',
-			until: '5.0.0'
-		});
-	} else if (!['chrome', 'safari', 'firefox'].includes(plat.platformName)) {
+	if (!['chrome', 'safari', 'firefox'].includes(plat.platformName)) {
 		deprecate({
 			name: plat.platformName,
 			until: '5.0.0'
@@ -334,7 +328,9 @@ const platform = {};
 			if (name === 'touchscreen') {
 				deprecate({name, until: '5.0.0', replacedBy: 'touchScreen'});
 			}
-
+			if (name === 'webos') {
+				deprecate({name, message: 'Refer `@enact/webos`\'s `platform` for webOS specific information.', until: '5.0.0'});
+			}
 			const p = detect();
 			return p[name];
 		}
