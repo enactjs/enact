@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Scroller`, `ui/VirtualList.VirtualList`, and `ui/VirtualList.VirtualGridList` to set prop value to default when `undefined` is passed for the prop value
+- `ui/Scroller`, `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to set prop value to default when `undefined` is passed for the prop value
 
 ## [4.9.0] - 2024-07-17
 
