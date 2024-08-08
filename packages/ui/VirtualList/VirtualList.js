@@ -52,7 +52,12 @@ const virtualListDefaultProps = {
 const VirtualList = (props) => {
 	// Hooks
 
-	const virtualListProps = Object.assign({}, virtualListDefaultProps, props);
+	const virtualListProps = Object.assign({}, props);
+	for (const prop in virtualListDefaultProps) {
+		if (virtualListProps[prop] === undefined) {
+			virtualListProps[prop] = virtualListDefaultProps[prop];
+		}
+	}
 
 	const {
 		scrollContentHandle,
@@ -328,7 +333,12 @@ const virtualGridListDefaultProps = {
  * @public
  */
 const VirtualGridList = (props) => {
-	const virtualGridListProps = Object.assign({}, virtualGridListDefaultProps, props);
+	const virtualGridListProps = Object.assign({}, props);
+	for (const prop in virtualGridListDefaultProps) {
+		if (virtualGridListProps[prop] === undefined) {
+			virtualGridListProps[prop] = virtualGridListDefaultProps[prop];
+		}
+	}
 
 	const {
 		scrollContentHandle,
