@@ -1096,7 +1096,7 @@ class VirtualListBasic extends Component {
 			};
 
 		this.cc[key] = (
-			<div className={css.listItem} key={key} ref={itemContainerRef} style={this.composeStyle(...rest)}>
+			<div className={css.listItem} key={key} ref={itemContainerRef} role="presentation" style={this.composeStyle(...rest)}>
 				{itemRenderer({...childProps, ...componentProps, index})}
 			</div>
 		);
