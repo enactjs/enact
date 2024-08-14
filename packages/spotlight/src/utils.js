@@ -9,11 +9,6 @@ let elementMatchesSelector = function (selector) {
 };
 if (typeof window === 'object') {
 	elementMatchesSelector = window.Element.prototype.matches ||
-		window.Element.prototype.matchesSelector ||
-		window.Element.prototype.mozMatchesSelector ||
-		window.Element.prototype.webkitMatchesSelector ||
-		window.Element.prototype.msMatchesSelector ||
-		window.Element.prototype.oMatchesSelector ||
 		elementMatchesSelector;
 }
 
