@@ -15,10 +15,14 @@
 	}
 }
 
-// Focused Spottable elements
-@mixin focus($target: '') {
-	:global(.spotlight-input-key) &,
-	:global(.spotlight-input-mouse) & {
+// Focused Spottable elements !Note: $no-class is true when mixin is called outside the class
+@mixin focus($target: '', $no-class: false) {
+	$selector: '&';
+	@if($no-class == true) {
+		$selector: '';
+	}
+	:global(.spotlight-input-key) #{$selector},
+	:global(.spotlight-input-mouse) #{$selector} {
 		@include spottable($target) {
 			&:focus {
 				@content;
@@ -26,7 +30,7 @@
 		};
 	}
 
-	:global(.spotlight-input-touch) & {
+	:global(.spotlight-input-touch) #{$selector} {
 		@include spottable($target) {
 			&:active {
 				@content;
