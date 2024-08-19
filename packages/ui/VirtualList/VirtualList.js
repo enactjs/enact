@@ -10,6 +10,7 @@
  * @exports VirtualListBasic
  */
 
+import {setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
@@ -52,13 +53,7 @@ const virtualListDefaultProps = {
 const VirtualList = (props) => {
 	// Hooks
 
-	const virtualListProps = Object.assign({}, props);
-	for (const prop in virtualListDefaultProps) {
-		// eslint-disable-next-line no-undefined
-		if (virtualListProps[prop] === undefined) {
-			virtualListProps[prop] = virtualListDefaultProps[prop];
-		}
-	}
+	const virtualListProps = setDefaultProps(props, virtualListDefaultProps);
 
 	const {
 		scrollContentHandle,
@@ -334,13 +329,7 @@ const virtualGridListDefaultProps = {
  * @public
  */
 const VirtualGridList = (props) => {
-	const virtualGridListProps = Object.assign({}, props);
-	for (const prop in virtualGridListDefaultProps) {
-		// eslint-disable-next-line no-undefined
-		if (virtualGridListProps[prop] === undefined) {
-			virtualGridListProps[prop] = virtualGridListDefaultProps[prop];
-		}
-	}
+	const virtualGridListProps = setDefaultProps(props, virtualGridListDefaultProps);
 
 	const {
 		scrollContentHandle,
