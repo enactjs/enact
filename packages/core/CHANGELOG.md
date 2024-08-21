@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ### Added
 
-- `core/util` function `setDefaultProps` to set props to default values when props are missing or `undefined`
+- `core/util` function `setDefaultProps` to set props that are missing or `undefined` to default values
 
 ## [4.9.0] - 2024-07-17
 

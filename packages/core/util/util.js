@@ -267,7 +267,7 @@ const mapAndFilterChildren = (children, callback, filter) => {
 };
 
 /**
- * Set props to default values when props are missing or `undefined`
+ * Sets props that are missing or `undefined` to default values
  *
  * @function
  * @param {Obejct}        props           Props object

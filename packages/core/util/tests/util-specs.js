@@ -268,7 +268,7 @@ describe('util', () => {
 			size: 'large'
 		};
 
-		test('should set props to default values when props are missing or `undefined`', () => {
+		test('should set props that are missing or `undefined` to default values', () => {
 			const expected = {
 				direction: 'below',
 				index: 0,
