@@ -150,13 +150,6 @@ const parseUserAgentLegacy = (userAgent) => {
 		}
 	}
 
-	if (!['chrome', 'safari', 'firefox'].includes(plat.platformName)) {
-		deprecate({
-			name: plat.platformName,
-			until: '5.0.0'
-		});
-	}
-
 	return plat;
 };
 
