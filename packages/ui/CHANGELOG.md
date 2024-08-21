@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Marquee.MarqueeController` to start animation properly when `marqueeOnFocus` is set to `true` and text changed
-- `ui/Scroller`, `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to set prop value to default when `undefined` is passed for the prop value
+- `ui/Scroller` and `ui/VirtualList` to have default prop when `undefined` prop is passed
 
 ## [4.9.0] - 2024-07-17
 
