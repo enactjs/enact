@@ -5,7 +5,7 @@ import {platform} from '../platform';
 import {info} from '@enact/webos/pmloglib';
 
 let signLangEnabled = null;
-let appId = null;
+let appId = '';
 
 const checkSignLang = () => new Promise((resolve, reject) => {
 	if (signLangEnabled === null) {
