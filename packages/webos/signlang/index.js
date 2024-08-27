@@ -10,6 +10,6 @@ import signLang from './signLang';
 import SignLangDecorator from './SignLangDecorator';
 
 export {
-    signLang,
-    SignLangDecorator
+	signLang,
+	SignLangDecorator
 };
