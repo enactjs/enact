@@ -35,12 +35,6 @@ import signLang from './signLang';
  */
 
 const defaultConfig = {
-    /**
-     * Set sign language request delay in milliseconds.
-     *
-     * @type {Number}
-     * @public
-     */
     signLangDelay: 0
 }
 
