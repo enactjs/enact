@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 
+import {info} from '@enact/webos/pmloglib';
 import LS2Request from '../LS2Request';
 import {platform} from '../platform';
-import {info} from '@enact/webos/pmloglib';
 
 let signLangEnabled = null;
 let appId = '';
@@ -44,7 +44,7 @@ const checkSignLang = () => new Promise((resolve, reject) => {
 });
 
 const requestSignLang = (signLangId, focusOut, option) => () => new Promise((resolve, reject) => {
-	const parameters = {'appId': appId, 'signGuidanceId': signLangId, 'focusOut': focusOut, ...option};
+	const parameters = {appId, 'signGuidanceId': signLangId, focusOut, ...option};
 
 	info('enact_signlang_requestSignLang', parameters, '');
 
@@ -54,7 +54,7 @@ const requestSignLang = (signLangId, focusOut, option) => () => new Promise((res
 		parameters: parameters,
 		onSuccess: resolve,
 		onFailure: (err) => {
-			info('enact_signlang_requestSignLang', {"onFailure": err}, '');
+			info('enact_signlang_requestSignLang', {'onFailure': err}, '');
 
 			reject('Failed to requestSignLang: ' + JSON.stringify(err));
 		}

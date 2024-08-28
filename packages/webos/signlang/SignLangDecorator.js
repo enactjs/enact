@@ -1,19 +1,15 @@
+import {forward} from '@enact/core/handle';
+import hoc from '@enact/core/hoc';
 import {Component} from 'react';
 import PropTypes from 'prop-types';
-import hoc from '@enact/core/hoc';
-import {forward} from '@enact/core/handle';
 import signLang from './signLang';
 
 /**
- * SignLangDecorator is a higher-order component that adds feature for sign language
- * to its wrapped component.
- *
- *
  * Usage:
  * ```
  * import {Component} from 'react';
  * import Button from '@enact/sandstone/Button';
- * import { SignLangDecorator } from '@enact/webos/signlang';
+ * import {SignLangDecorator} from '@enact/webos/signlang';
  *
  * const SignLangButton = SignLangDecorator(Button);
  *
@@ -28,6 +24,9 @@ import signLang from './signLang';
  * }
  * ```
  *
+ * SignLangDecorator is a higher-order component that adds feature for sign language
+ * to its wrapped component.
+ *
  * @class SignLangDecorator
  * @memberof webos/signlang
  * @hoc
@@ -35,6 +34,12 @@ import signLang from './signLang';
  */
 
 const defaultConfig = {
+	/**
+     * Add delay to sign language api call.
+     *
+     * @type {Number}
+     * @public
+     */
 	signLangDelay: 0
 };
 
