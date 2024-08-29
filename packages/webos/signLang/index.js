@@ -2,14 +2,16 @@
  * Provides utility functions and higher-order components for working with webOS Sign Language APIs.
  *
  * @module webos/signLang
- * @exports signLang
+ * @exports startSignLang
+ * @exports stopSignLang
  * @exports SignLangDecorator
  */
 
-import signLang from './signLang';
+import {startSignLang, stopSignLang} from './signLang';
 import SignLangDecorator from './SignLangDecorator';
 
 export {
-	signLang,
-	SignLangDecorator
+	SignLangDecorator,
+	startSignLang,
+	stopSignLang
 };

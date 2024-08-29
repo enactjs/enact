@@ -1,8 +1,8 @@
+import {Component} from 'react';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {Component} from 'react';
 import PropTypes from 'prop-types';
-import signLang from './signLang';
+import {startSignLang, stopSignLang} from './signLang';
 
 /**
  * Usage:
@@ -35,7 +35,7 @@ import signLang from './signLang';
 
 const defaultConfig = {
 	/**
-     * Add delay to sign language api call.
+     * Add delay to call sign language API.
      *
      * @type {Number}
      * @public
@@ -53,7 +53,7 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends webos/signLang.SignLangDecorator.prototype */ {
 			/**
-             * Unique string used in sign language.
+             * Unique ID for request sign language.
              *
              * @type {String}
              * @public
@@ -61,7 +61,7 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			signLangId: PropTypes.string,
 
 			/**
-             * Additional option for sign language
+             * Additional option for sign language.
              *
              * @type {Object}
              * @public
@@ -75,31 +75,34 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.signLangDelayId = null;
 		}
 
-		requestSignLang = (focusOut) => {
-			const {signLangId, signLangOption = {}} = this.props;
+		requestSignLang = (active) => {
+			const {signLangId = '', signLangOption = {}} = this.props;
 
-			if (typeof signLangId == 'string' && signLangId.length > 0) signLang(signLangId, focusOut, signLangOption);
+			if (signLangId.length > 0) {
+				if (active) {
+					if (signLangDelay === 0) {
+						startSignLang(signLangId, signLangOption);
+					} else {
+						clearTimeout(this.signLangDelayId);
+						this.signLangDelayId = setTimeout(() => {
+							startSignLang(signLangId, signLangOption);
+						}, signLangDelay);
+					}
+				} else {
+					stopSignLang(signLangId, signLangOption);
+				}
+			}
 		};
 
 		onFocus = (ev) => {
 			forwardFocus(ev, this.props);
-
-			if (signLangDelay === 0) {
-				this.requestSignLang(false);
-			} else {
-				clearTimeout(this.signLangDelayId);
-				this.signLangDelayId = setTimeout(() => {
-					this.requestSignLang(false);
-				}, signLangDelay);
-			}
+			this.requestSignLang(true);
 		};
 
 		onBlur = (ev) => {
 			forwardBlur(ev, this.props);
-
 			if (signLangDelay > 0) clearTimeout(this.signLangDelayId);
-
-			this.requestSignLang(true);
+			this.requestSignLang(false);
 		};
 
 		render () {
