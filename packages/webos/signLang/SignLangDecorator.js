@@ -9,7 +9,7 @@ import signLang from './signLang';
  * ```
  * import {Component} from 'react';
  * import Button from '@enact/sandstone/Button';
- * import {SignLangDecorator} from '@enact/webos/signlang';
+ * import {SignLangDecorator} from '@enact/webos/signLang';
  *
  * const SignLangButton = SignLangDecorator(Button);
  *
@@ -28,7 +28,7 @@ import signLang from './signLang';
  * to its wrapped component.
  *
  * @class SignLangDecorator
- * @memberof webos/signlang
+ * @memberof webos/signLang
  * @hoc
  * @public
  */
@@ -51,7 +51,7 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends Component {
 		static displayName = 'SignLangDecorator';
 
-		static propTypes = /** @lends webos/signlang.SignLangDecorator.prototype */ {
+		static propTypes = /** @lends webos/signLang.SignLangDecorator.prototype */ {
 			/**
              * Unique string used in sign language.
              *

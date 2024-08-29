@@ -18,7 +18,7 @@ const checkSignLang = () => new Promise((resolve, reject) => {
 				'category': 'option'
 			},
 			onSuccess: function (res) {
-				info('enact_signlang_checkSignLang', {"onSuccess": res}, '');
+				info('enact_signLang_checkSignLang', {"onSuccess": res}, '');
 
 				if (res && res.settings.signLanguageGuidance === 'on') {
 					signLangEnabled = true;
@@ -31,7 +31,7 @@ const checkSignLang = () => new Promise((resolve, reject) => {
 				reject();
 			},
 			onFailure: function (err) {
-				info('enact_signlang_checkSignLang', {"onFailure": err}, '');
+				info('enact_signLang_checkSignLang', {"onFailure": err}, '');
 
 				reject('Failed to get sign language setting value: ' + JSON.stringify(err));
 			}
@@ -46,15 +46,15 @@ const checkSignLang = () => new Promise((resolve, reject) => {
 const requestSignLang = (signLangId, focusOut, option) => () => new Promise((resolve, reject) => {
 	const parameters = {appId, 'signGuidanceId': signLangId, focusOut, ...option};
 
-	info('enact_signlang_requestSignLang', parameters, '');
+	info('enact_signLang_requestSignLang', parameters, '');
 
 	new LS2Request().send({
 		service: 'luna://com.webos.service.signlanguageavatar',
 		method: 'play',
-		parameters: parameters,
+		parameters,
 		onSuccess: resolve,
 		onFailure: (err) => {
-			info('enact_signlang_requestSignLang', {'onFailure': err}, '');
+			info('enact_signLang_requestSignLang', {'onFailure': err}, '');
 
 			reject('Failed to requestSignLang: ' + JSON.stringify(err));
 		}
@@ -69,7 +69,7 @@ const requestSignLang = (signLangId, focusOut, option) => () => new Promise((res
  * @param {Boolean} [focusOut=false] Control the start and stop of sign language.
  * @param {Object} [option={}] Additional option in sign language.
  * @returns {undefined}
- * @memberof webos/signlang
+ * @memberof webos/signLang
  * @public
  */
 const signLang = (signLangId, focusOut = false, option = {}) => {
