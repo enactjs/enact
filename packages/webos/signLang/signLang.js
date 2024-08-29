@@ -43,10 +43,10 @@ const checkSignLang = () => new Promise((resolve, reject) => {
 	}
 });
 
-const requestSignLangAPI = (signLangId, activate, option) => () => new Promise((resolve, reject) => {
-	const parameters = {appId, 'signGuidanceId': signLangId, 'focusOut': !activate, ...option};
+const callSignLangAPI = (signLangId, active, option) => () => new Promise((resolve, reject) => {
+	const parameters = {appId, 'signGuidanceId': signLangId, 'focusOut': !active, ...option};
 
-	info('enact_signLang_requestSignLangAPI', parameters, '');
+	info('enact_signLang_callSignLangAPI', parameters, '');
 
 	new LS2Request().send({
 		service: 'luna://com.webos.service.signlanguageavatar',
@@ -54,33 +54,33 @@ const requestSignLangAPI = (signLangId, activate, option) => () => new Promise((
 		parameters,
 		onSuccess: resolve,
 		onFailure: (err) => {
-			info('enact_signLang_requestSignLangAPI', {'onFailure': err}, '');
+			info('enact_signLang_callSignLangAPI', {'onFailure': err}, '');
 
-			reject('Failed to requestSignLang: ' + JSON.stringify(err));
+			reject('Failed to callSignLangAPI: ' + JSON.stringify(err));
 		}
 	});
 });
 
-const requestSignLang = (signLangId, activate, option = {}) => {
+const requestSignLang = (signLangId, active, option = {}) => {
 	if (platform.tv) {
 		checkSignLang()
-			.then(requestSignLangAPI(signLangId, activate, option))
+			.then(callSignLangAPI(signLangId, active, option))
 			.catch(message => {
 				if (message) {
 					console.error(`Failed to requestSignLang: ${message}`);
 				}
 			});
 	} else {
-		console.warn('Platform doesn\'t support sing language api.');
+		console.warn('Platform doesn\'t support sing language.');
 	}
 };
 
 /**
- * Start sign language when sign language is enabled.
+ * Activate sign language base on singLangID.
  *
  * @function
- * @param {String} signLangId Unique ID used in sign language.
- * @param {Object} [option={}] Additional option in sign language.
+ * @param {String} [signLangId=''] signLangId Unique ID used for sign language.
+ * @param {Object} [option={}] Additional option for sign language.
  * @returns {undefined}
  * @memberof webos/signLang
  * @public
@@ -90,11 +90,11 @@ const startSignLang = (signLangId = '', option = {}) => {
 };
 
 /**
- * Stop sign language.
+ * Deactivate sign language base on signLangID.
  *
  * @function
- * @param {String} signLangId Unique ID used in sign language.
- * @param {Object} [option={}] Additional option in sign language.
+ * @param {String} [signLangId=''] signLangId Unique ID used for sign language.
+ * @param {Object} [option={}] Additional option for sign language.
  * @returns {undefined}
  * @memberof webos/signLang
  * @public

@@ -1,5 +1,5 @@
 /**
- * Provides utility functions and higher-order components for working with webOS Sign Language APIs.
+ * Provide utility functions and higher order component for sign language.
  *
  * @module webos/signLang
  * @exports startSignLang

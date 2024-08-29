@@ -1,15 +1,16 @@
-import {Component} from 'react';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
+import {Component} from 'react';
+
 import {startSignLang, stopSignLang} from './signLang';
 
 /**
  * Usage:
  * ```
- * import {Component} from 'react';
  * import Button from '@enact/sandstone/Button';
  * import {SignLangDecorator} from '@enact/webos/signLang';
+ * import {Component} from 'react';
  *
  * const SignLangButton = SignLangDecorator(Button);
  *
@@ -24,7 +25,7 @@ import {startSignLang, stopSignLang} from './signLang';
  * }
  * ```
  *
- * SignLangDecorator is a higher-order component that adds feature for sign language
+ * SignLangDecorator is a higher order component that adds feature for sign language
  * to its wrapped component.
  *
  * @class SignLangDecorator
@@ -53,7 +54,7 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends webos/signLang.SignLangDecorator.prototype */ {
 			/**
-             * Unique ID for request sign language.
+             * Unique ID for sign language.
              *
              * @type {String}
              * @public
@@ -89,6 +90,7 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						}, signLangDelay);
 					}
 				} else {
+					if (signLangDelay > 0) clearTimeout(this.signLangDelayId);
 					stopSignLang(signLangId, signLangOption);
 				}
 			}
@@ -101,7 +103,6 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		onBlur = (ev) => {
 			forwardBlur(ev, this.props);
-			if (signLangDelay > 0) clearTimeout(this.signLangDelayId);
 			this.requestSignLang(false);
 		};
 
@@ -110,14 +111,13 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.onFocus;
 			delete props.onBlur;
 			delete props.signLangId;
-			delete props.signLangDelay;
 			delete props.signLangOption;
 
 			return (
 				<Wrapped
 					{...props}
-					onFocus={this.onFocus}
 					onBlur={this.onBlur}
+					onFocus={this.onFocus}
 				/>
 			);
 		}
