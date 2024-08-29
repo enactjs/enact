@@ -1,6 +1,6 @@
 import {forwardRef, memo, lazy} from 'react';
 
-import {cap, clamp, coerceArray, coerceFunction, extractAriaProps, isRenderable, memoize, mergeClassNameMaps, mapAndFilterChildren, shallowEqual} from '../util';
+import {cap, clamp, coerceArray, coerceFunction, extractAriaProps, isRenderable, memoize, mergeClassNameMaps, mapAndFilterChildren, setDefaultProps, shallowEqual} from '../util';
 
 describe('util', () => {
 	describe('cap', () => {
@@ -250,6 +250,32 @@ describe('util', () => {
 				0 // index
 			];
 			const actual = spy.mock.calls[0];
+
+			expect(expected).toEqual(actual);
+		});
+	});
+
+	describe('setDefaultProps', () => {
+		const props = {
+			// eslint-disable-next-line no-undefined
+			direction: undefined,
+			index: 0,
+			size: 'small'
+		};
+		const defaultProps = {
+			direction: 'below',
+			selected: true,
+			size: 'large'
+		};
+
+		test('should set props that are missing or `undefined` to default values', () => {
+			const expected = {
+				direction: 'below',
+				index: 0,
+				selected: true,
+				size: 'small'
+			};
+			const actual = setDefaultProps(props, defaultProps);
 
 			expect(expected).toEqual(actual);
 		});
