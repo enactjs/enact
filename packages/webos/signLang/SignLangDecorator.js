@@ -35,14 +35,6 @@ import {startSignLang, stopSignLang} from './signLang';
  */
 
 const defaultConfig = {
-	/**
-	 * Delay in calling Sign Language API.
-	 *
-	 * @type {Number}
-	 * @default 0
-	 * @memberof webos/signLang/SignLangDecorator.defaultConfig
-	 * @public
-	 */
 	signLangDelay: 0
 };
 
