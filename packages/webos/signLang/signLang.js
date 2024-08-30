@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-
 import {info} from '@enact/webos/pmloglib';
+
 import LS2Request from '../LS2Request';
 import {platform} from '../platform';
 

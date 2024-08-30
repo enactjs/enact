@@ -36,11 +36,13 @@ import {startSignLang, stopSignLang} from './signLang';
 
 const defaultConfig = {
 	/**
-     * Add delay to call sign language API.
-     *
-     * @type {Number}
-     * @public
-     */
+	 * Delay in calling Sign Language API.
+	 *
+	 * @type {Number}
+	 * @default 0
+	 * @memberof webos/signLang/SignLangDecorator.defaultConfig
+	 * @public
+	 */
 	signLangDelay: 0
 };
 
@@ -108,8 +110,8 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const props = Object.assign({}, this.props);
-			delete props.onFocus;
 			delete props.onBlur;
+			delete props.onFocus;
 			delete props.signLangId;
 			delete props.signLangOption;
 
