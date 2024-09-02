@@ -76,7 +76,7 @@ const requestSignLang = (signLangId, active, option = {}) => {
 };
 
 /**
- * Activate sign language base on singLangID.
+ * Activates sign language base on singLangID.
  *
  * @function
  * @param {String} [signLangId=''] signLangId Unique ID used for sign language.
@@ -90,7 +90,7 @@ const startSignLang = (signLangId = '', option = {}) => {
 };
 
 /**
- * Deactivate sign language base on signLangID.
+ * Deactivates sign language base on signLangID.
  *
  * @function
  * @param {String} [signLangId=''] signLangId Unique ID used for sign language.
