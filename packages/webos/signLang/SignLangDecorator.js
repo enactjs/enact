@@ -6,6 +6,25 @@ import {Component} from 'react';
 import {startSignLang, stopSignLang} from './signLang';
 
 /**
+ * Default config for {@link webos/signLang.SignLangDecorator}
+ *
+ * @type {Object}
+ * @hocconfig
+ * @memberof webos/signLang.SignLangDecorator
+ */
+const defaultConfig = {
+	/**
+	 * Time to wait (in milliseconds) before calling Sign Language API.
+	 *
+	 * @type {Number}
+	 * @default 0
+	 * @memberof webos/signLang.SignLangDecorator.defaultConfig
+	 * @public
+	 */
+	signLangDelay: 0
+};
+
+/**
  * Usage:
  * ```
  * import Button from '@enact/sandstone/Button';
@@ -33,11 +52,6 @@ import {startSignLang, stopSignLang} from './signLang';
  * @hoc
  * @public
  */
-
-const defaultConfig = {
-	signLangDelay: 0
-};
-
 const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {signLangDelay} = config;
 	const forwardBlur = forward('onBlur');
@@ -48,19 +62,19 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends webos/signLang.SignLangDecorator.prototype */ {
 			/**
-             * Unique ID for sign language.
-             *
-             * @type {String}
-             * @public
-             */
+			 * Unique ID for sign language.
+			 *
+			 * @type {String}
+			 * @public
+			 */
 			signLangId: PropTypes.string,
 
 			/**
-             * Additional option for sign language.
-             *
-             * @type {Object}
-             * @public
-             */
+			 * Additional option for sign language.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
 			signLangOption: PropTypes.object
 		};
 
