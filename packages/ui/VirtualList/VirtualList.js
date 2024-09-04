@@ -10,6 +10,7 @@
  * @exports VirtualListBasic
  */
 
+import {setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
@@ -52,7 +53,7 @@ const virtualListDefaultProps = {
 const VirtualList = (props) => {
 	// Hooks
 
-	const virtualListProps = Object.assign({}, virtualListDefaultProps, props);
+	const virtualListProps = setDefaultProps(props, virtualListDefaultProps);
 
 	const {
 		scrollContentHandle,
@@ -328,7 +329,7 @@ const virtualGridListDefaultProps = {
  * @public
  */
 const VirtualGridList = (props) => {
-	const virtualGridListProps = Object.assign({}, virtualGridListDefaultProps, props);
+	const virtualGridListProps = setDefaultProps(props, virtualGridListDefaultProps);
 
 	const {
 		scrollContentHandle,

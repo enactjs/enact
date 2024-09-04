@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to have default prop when `undefined` prop is passed
+
 ## [4.9.0] - 2024-07-17
 
 ### Fixed
