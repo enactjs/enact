@@ -1,6 +1,6 @@
 {
   "name": "@enact/webos",
-  "version": "4.7.11",
+  "version": "4.7.12",
   "description": "webOS support library",
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
     }
   },
   "dependencies": {
-    "@enact/core": "^4.7.11",
+    "@enact/core": "^4.7.12",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
