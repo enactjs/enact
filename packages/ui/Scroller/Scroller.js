@@ -3,10 +3,10 @@
  *
  * @module ui/Scroller
  * @exports Scroller
- * @exports ScrollerBase
  * @exports ScrollerBasic
  */
 
+import {setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
@@ -14,7 +14,6 @@ import useScroll from '../useScroll';
 import Scrollbar from '../useScroll/Scrollbar';
 
 import ScrollerBasic from './ScrollerBasic';
-import ScrollerBase from './UiScrollerBase';
 
 const nop = () => {};
 
@@ -53,7 +52,7 @@ const scrollerDefaultProps = {
 const Scroller = (props) => {
 	// Hooks
 
-	const scrollerProps = Object.assign({}, scrollerDefaultProps, props);
+	const scrollerProps = setDefaultProps(props, scrollerDefaultProps);
 
 	const {
 		scrollContentHandle,
@@ -282,6 +281,5 @@ Scroller.defaultPropValues = scrollerDefaultProps;
 export default Scroller;
 export {
 	Scroller,
-	ScrollerBase, // to support legacy ScrollerBase
 	ScrollerBasic // to support theme libraries
 };

@@ -6,17 +6,16 @@
  * @exports itemSizesShape
  * @exports VirtualGridList
  * @exports VirtualList
- * @exports VirtualListBase
  * @exports VirtualListBasic
  */
 
+import {setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
 import useScroll from '../useScroll';
 import Scrollbar from '../useScroll/Scrollbar';
 
-import {UiVirtualListBase, UiVirtualListBaseNative} from './UiVirtualListBase';
 import {gridListItemSizeShape, itemSizesShape, VirtualListBasic} from './VirtualListBasic';
 
 const nop = () => {};
@@ -52,7 +51,7 @@ const virtualListDefaultProps = {
 const VirtualList = (props) => {
 	// Hooks
 
-	const virtualListProps = Object.assign({}, virtualListDefaultProps, props);
+	const virtualListProps = setDefaultProps(props, virtualListDefaultProps);
 
 	const {
 		scrollContentHandle,
@@ -328,7 +327,7 @@ const virtualGridListDefaultProps = {
  * @public
  */
 const VirtualGridList = (props) => {
-	const virtualGridListProps = Object.assign({}, virtualGridListDefaultProps, props);
+	const virtualGridListProps = setDefaultProps(props, virtualGridListDefaultProps);
 
 	const {
 		scrollContentHandle,
@@ -577,8 +576,6 @@ export default VirtualList;
 export {
 	gridListItemSizeShape,
 	itemSizesShape,
-	UiVirtualListBase as VirtualListBase, // to support legacy VirtualListBase
-	UiVirtualListBaseNative as VirtualListBaseNative, // to support legacy VirtualListBaseNative
 	VirtualGridList,
 	VirtualList,
 	VirtualListBasic

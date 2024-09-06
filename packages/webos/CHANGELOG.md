@@ -2,6 +2,28 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `webos/signLang` module with `startSignLang()`, `stopSignLang()` functions and `SignLangDecorator` Higher-order Component
+
+## [4.9.0] - 2024-07-17
+
+### Fixed
+
+- `webos/speech.VoiceControlDecorator` to not remount its children when it rerenders
+
+## [5.0.0-alpha.1] - 2024-07-11
+
+### Removed
+
+- `webos/platform` member `watch` and `legacy`
+
+## [4.9.0-beta.1] - 2024-06-17
+
+No significant changes.
+
 ## [4.9.0-alpha.3] - 2024-06-05
 
 ### Changed

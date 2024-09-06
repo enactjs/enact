@@ -2,6 +2,28 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` to not require `less` dependency
+
+## [4.9.0] - 2024-07-17
+
+### Fixed
+
+- `spotlight/Spotlight.disableSelector` to properly update the `selectorDisabled` container config
+
+## [5.0.0-alpha.1] - 2024-07-11
+
+### Added
+
+- `spotlight/SpotlightRootDecorator` config `rootId` to specify React DOM tree root for global event handlers
+
+## [4.9.0-beta.1] - 2024-06-17
+
+No significant changes.
+
 ## [4.9.0-alpha.3] - 2024-06-05
 
 ### Changed
@@ -135,7 +157,7 @@ No significant changes.
 ### Fixed
 
 - `spotlight` to not leave the restrict container after returning from another app
- 
+
 ## [4.5.0-rc.1] - 2022-06-23
 
 No significant changes.
@@ -145,7 +167,7 @@ No significant changes.
 ### Added
 
 - `spotlight` an optional `containerOption.toOuterContainer` parameter to `focus` function to search target recursively to outer container
- 
+
 ## [4.5.0-alpha.2] - 2022-05-09
 
 ### Changed
