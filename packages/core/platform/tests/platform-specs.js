@@ -1,6 +1,6 @@
 /* global globalThis */
 
-import {parseUserAgent, platform, resetPlatformDescription} from '../platform';
+import {parseUserAgent, platform} from '../platform';
 
 describe('platform', () => {
 
@@ -324,10 +324,6 @@ describe('platform', () => {
 	});
 
 	describe('platform', () => {
-		afterEach(() => {
-			resetPlatformDescription();
-		});
-
 		test('should detect node environment if \'window\' does not exist', () => {
 			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(() => {});
 

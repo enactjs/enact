@@ -256,7 +256,7 @@ let detectedPlatform = null;
  * @public
  */
 const detect = () => {
-	if (detectedPlatform !== null) {
+	if (detectedPlatform !== null && !__DEV__) {
 		// once detected, don't bother detecting again
 		return detectedPlatform;
 	}
@@ -286,10 +286,6 @@ const detect = () => {
 	detectedPlatform.touchScreen = deviceTouchScreen();
 
 	return detectedPlatform;
-};
-
-const resetPlatformDescription = () => {
-	detectedPlatform = null;
 };
 
 /**
@@ -349,6 +345,5 @@ export default platform;
 export {
 	detect,
 	parseUserAgent,
-	platform,
-	resetPlatformDescription
+	platform
 };
