@@ -1,6 +1,6 @@
 {
   "name": "enact",
-  "version": "4.9.0",
+  "version": "4.9.1",
   "description": "Monorepo for all Enact front end libraries.",
   "private": true,
   "scripts": {
@@ -23,8 +23,8 @@
     "extends": "enact-proxy/strict"
   },
   "devDependencies": {
-    "@enact/docs-utils": "^0.4.9",
-    "eslint-config-enact-proxy": "^1.0.7",
-    "lerna": "^8.1.5"
+    "@enact/docs-utils": "^0.4.10",
+    "eslint-config-enact-proxy": "^1.0.8",
+    "lerna": "^8.1.8"
   }
 }

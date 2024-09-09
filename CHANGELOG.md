@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.9.1] - 2024-09-09
+
+### Added
+
+- `core/util` function `setDefaultProps` to set props that are missing or `undefined` to default values
+- `webos/signLang` module with `startSignLang()`, `stopSignLang()` functions and `SignLangDecorator` Higher-order Component
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to have default prop when `undefined` prop is passed
+
 ## [4.9.0] - 2024-07-17
 
 ### Fixed
