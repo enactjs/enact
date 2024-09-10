@@ -2,6 +2,77 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [4.9.0] - 2024-07-17
+
+### Fixed
+
+- `spotlight/Spotlight.disableSelector` to properly update the `selectorDisabled` container config
+- `ui/Marquee.MarqueeDecorator` to start animation properly when synchronized by `ui/Marquee.MarqueeController` and text changed
+- `ui/Placeholder.PlaceholderControllerDecorator` to not remount its children when it rerenders
+- `webos/speech.VoiceControlDecorator` to not remount its children when it rerenders
+
+## [5.0.0-alpha.1] - 2024-07-11
+
+### Added
+
+- `spotlight/SpotlightRootDecorator` config `rootId` to specify React DOM tree root for global event handlers
+
+### Changed
+
+- `ui/Marquee.MarqueeDecorator` to use `@enact/i18n/utils.isRtlText` API to determine the text directionality
+- `sampler` look and feel by updating to Storybook 8
+
+### Fixed
+
+- `ui/Marquee.MarqueeDecorator` to start animation properly when synchronized by `ui/Marquee.MarqueeController` and text changed
+
+### Removed
+
+- `core/platform` member `windowsPhone`, `edge`, `androidChrome`, `android`, `ie`, `ios`, `webos`, `androidFirefox`, `firefoxOS`, `blackberry`, and `tizen`
+- `core/platform` member `gesture`, `node`, `platformName`, and `unknown`
+- `core/platform` member `touch` and `touchscreen`
+- `ui/GridListImageItem`
+- `ui/IconButton`
+- `ui/Marquee.MarqueeDecorator` config `className`
+- `ui/RadioDecorator`
+- `ui/Scroller.ScrollerBase`
+- `ui/SlotItem`
+- `ui/ToggleItem`
+- `ui/VirtualList.VirtualListBase`
+- `webos/platform` member `watch` and `legacy`
+
+## [4.9.0-beta.1] - 2024-06-17
+
+No significant changes.
+
+## [4.9.0-alpha.3] - 2024-06-05
+
+### Changed
+
+- `spotlight/Spottable` to have sibling DOM node as alternative to findDOMNode API which will be removed in React 19
+- `ui/Placeholder.PlaceholderControllerDecorator` and `ui/ViewManager` to have sibling DOM node as alternative to findDOMNode API which will be removed in React 19
+- `webos/speech.VoiceControlDecorator` to have sibling DOM node as alternative to findDOMNode API which will be removed in React 19
+
+## [4.0.15] - 2024-05-28
+
+### Fixed
+
+- `i18n` resource loader to override strings where the original strings file does not exist
+
+## [4.9.0-alpha.2] - 2024-05-24
+
+No significant changes.
+
+## [4.0.14] - 2024-05-14
+
+### Fixed
+
+- `i18n` resource loader to prioritize strings from additional resources files
+
+## [4.7.11] - 2024-05-13
+
+No significant changes.
+
 ## [4.9.0-alpha.1] - 2024-04-09
 
 ### Deprecated

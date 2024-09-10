@@ -6,20 +6,38 @@
  * @exports itemSizesShape
  * @exports VirtualGridList
  * @exports VirtualList
- * @exports VirtualListBase
  * @exports VirtualListBasic
  */
 
+import {setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
 import useScroll from '../useScroll';
 import Scrollbar from '../useScroll/Scrollbar';
 
-import {UiVirtualListBase, UiVirtualListBaseNative} from './UiVirtualListBase';
 import {gridListItemSizeShape, itemSizesShape, VirtualListBasic} from './VirtualListBasic';
 
 const nop = () => {};
+
+const virtualListDefaultProps = {
+	cbScrollTo: nop,
+	direction: 'vertical',
+	horizontalScrollbar: 'auto',
+	noScrollByDrag: false,
+	noScrollByWheel: false,
+	onScroll: nop,
+	onScrollStart: nop,
+	onScrollStop: nop,
+	overscrollEffectOn: {
+		drag: false,
+		pageKey: false,
+		wheel: false
+	},
+	role: 'list',
+	scrollMode: 'translate',
+	verticalScrollbar: 'auto'
+};
 
 /**
  * An unstyled scrollable virtual list component with touch support.
@@ -32,6 +50,8 @@ const nop = () => {};
  */
 const VirtualList = (props) => {
 	// Hooks
+
+	const virtualListProps = setDefaultProps(props, virtualListDefaultProps);
 
 	const {
 		scrollContentHandle,
@@ -46,7 +66,7 @@ const VirtualList = (props) => {
 		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useScroll(props);
+	} = useScroll(virtualListProps);
 
 	// Render
 
@@ -276,7 +296,9 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
-VirtualList.defaultProps = {
+VirtualList.defaultPropValues = virtualListDefaultProps;
+
+const virtualGridListDefaultProps = {
 	cbScrollTo: nop,
 	direction: 'vertical',
 	horizontalScrollbar: 'auto',
@@ -305,6 +327,8 @@ VirtualList.defaultProps = {
  * @public
  */
 const VirtualGridList = (props) => {
+	const virtualGridListProps = setDefaultProps(props, virtualGridListDefaultProps);
+
 	const {
 		scrollContentHandle,
 		scrollContentWrapper: ScrollContentWrapper,
@@ -318,7 +342,7 @@ const VirtualGridList = (props) => {
 		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useScroll(props);
+	} = useScroll(virtualGridListProps);
 
 	return (
 		<ResizeContext.Provider {...resizeContextProps}>
@@ -546,31 +570,12 @@ VirtualGridList.propTypes = /** @lends ui/VirtualList.VirtualGridList.prototype 
 	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
-VirtualGridList.defaultProps = {
-	cbScrollTo: nop,
-	direction: 'vertical',
-	horizontalScrollbar: 'auto',
-	noScrollByDrag: false,
-	noScrollByWheel: false,
-	onScroll: nop,
-	onScrollStart: nop,
-	onScrollStop: nop,
-	overscrollEffectOn: {
-		drag: false,
-		pageKey: false,
-		wheel: false
-	},
-	role: 'list',
-	scrollMode: 'translate',
-	verticalScrollbar: 'auto'
-};
+VirtualGridList.defaultPropValues = virtualGridListDefaultProps;
 
 export default VirtualList;
 export {
 	gridListItemSizeShape,
 	itemSizesShape,
-	UiVirtualListBase as VirtualListBase, // to support legacy VirtualListBase
-	UiVirtualListBaseNative as VirtualListBaseNative, // to support legacy VirtualListBaseNative
 	VirtualGridList,
 	VirtualList,
 	VirtualListBasic

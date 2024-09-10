@@ -267,6 +267,30 @@ const mapAndFilterChildren = (children, callback, filter) => {
 };
 
 /**
+ * Sets props that are missing or `undefined` to default values
+ *
+ * @function
+ * @param {Obejct}        props           Props object
+ * @param {Obejct}        defaultProps    Default value object
+ *
+ * @returns {Object}                      Props with default values
+ * @memberof core/util
+ * @public
+ */
+const setDefaultProps = (props, defaultProps = {}) => {
+	const result = Object.assign({}, props);
+
+	for (const prop in defaultProps) {
+		// eslint-disable-next-line no-undefined
+		if (props[prop] === undefined) {
+			result[prop] = defaultProps[prop];
+		}
+	}
+
+	return result;
+};
+
+/**
  * Performs shallow comparison for given objects.
  *
  * @function
@@ -317,5 +341,6 @@ export {
 	mergeClassNameMaps,
 	perfNow,
 	mapAndFilterChildren,
+	setDefaultProps,
 	shallowEqual
 };

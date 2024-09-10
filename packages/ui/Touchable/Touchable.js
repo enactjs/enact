@@ -109,7 +109,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	const Touchable = forwardRef((props, ref) => {
-		const {configForHook, propsForWrapped} = selectProps(props);
+		const {disabled = false, noResume = false, ...rest} = props;
+		const {configForHook, propsForWrapped} = selectProps({disabled, noResume, ...rest});
 		const hook = useTouch({getActive: !!activeProp, ...configForHook});
 
 		Object.assign(propsForWrapped, hook.handlers);
@@ -367,11 +368,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * @public
 		 */
 		pinchConfig: pinchConfigPropType
-	};
-
-	Touchable.defaultProps = {
-		disabled: false,
-		noResume: false
 	};
 
 	Touchable.displayName = 'Touchable';
