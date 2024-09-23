@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/VirtualList` to update its scroll bounds when the total size of items is changed
+
 ## [4.9.1] - 2024-09-09
 
 ### Fixed
