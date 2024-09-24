@@ -1,17 +1,19 @@
 // useScroll.module.scss
 //
-.scrollFill {
+@mixin scrollFill {
 	position: relative;
 	width: 100%;
 	height: 100%;
 }
 
 .scroll {
-	.scrollFill;
+	@include scrollFill;
 
-	display: flex;
-	box-sizing: border-box;
-	flex-direction: column;
+	& {
+		display: flex;
+		box-sizing: border-box;
+		flex-direction: column;
+	}
 
 	&[data-container-muted="true"]::before {
 		position: absolute;
