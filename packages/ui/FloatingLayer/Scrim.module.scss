@@ -1,0 +1,8 @@
+.scrim {
+	&.transparent { /* Needed to prevent global class being added in the DOM */ }
+
+	&.translucent {
+		pointer-events: auto;
+		background-color: rgba(0, 0, 0, 0.3);
+	}
+}

@@ -1,0 +1,38 @@
+// Icon.module.scss
+//
+@use "../styles/mixins";
+
+.icon {
+	display: inline-block;
+	vertical-align: middle;
+	font-weight: normal;
+	font-style: normal;
+	text-align: center;
+	position: relative;
+
+	@include mixins.font-kerning(none);
+
+	@include mixins.disabled{
+		cursor: default;
+	}
+
+	&.flipBoth {
+		transform: scale(-1);
+	}
+
+	&.flipHorizontal {
+		transform: scaleX(-1);
+	}
+
+	&.flipVertical {
+		transform: scaleY(-1);
+	}
+
+
+	&.dingbat,
+	&.large,
+	&.pressed,
+	&.small {
+		/* Public Class Names */
+	}
+}

@@ -15,7 +15,7 @@ import compose from 'ramda/src/compose';
 import ri from '../resolution';
 import ForwardRef from '../ForwardRef';
 
-import componentCss from './Icon.module.less';
+import componentCss from './Icon.module.scss';
 
 /**
  * Merges consumer styles with the image `src` resolved through the resolution independence module.

@@ -18,7 +18,7 @@ import ForwardRef from '../ForwardRef';
 import {CellBase, LayoutBase} from '../Layout';
 import Slottable from '../Slottable';
 
-import componentCss from './LabeledIcon.module.less';
+import componentCss from './LabeledIcon.module.scss';
 
 /**
  * An icon component with a label.
