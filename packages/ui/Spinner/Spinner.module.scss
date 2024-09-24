@@ -35,7 +35,9 @@
 
 	// When `blockClickOn='container'` && `centered={false}`, there is a container div that should have
 	// `display: inline-block;` to match SpinnerBase's .spinner
-	display: inline-block;
+	& {
+		display: inline-block;
+	}
 
 	// When `blockClickOn='container'` && `centered`, the container div should have 'display:block' for
 	// the spinner to be centered in the container correctly.
