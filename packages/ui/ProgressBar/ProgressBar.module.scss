@@ -1,0 +1,117 @@
+// ProgressBar.module.scss
+//
+
+@mixin radial-bar-styles {
+	height: 100%;
+	width: 100%;
+	border-radius: 50%;
+	border-style: solid;
+	box-sizing: border-box;
+}
+
+.progressBar {
+	--ui-progressbar-proportion-start: 0;
+	--ui-progressbar-proportion-start-background: 0;
+	--ui-progressbar-proportion-end: 0;
+	--ui-progressbar-proportion-end-background: 0;
+
+	position: relative;
+	direction: ltr;
+
+	.bar,
+	.fill,
+	.load {
+		position: absolute;
+	}
+
+	&.vertical {
+		display: inline-block;
+
+		.bar,
+		.fill,
+		.load {
+			height: 100%;
+			width: 100%;
+			bottom: 0;
+		}
+
+		.fill {
+			bottom: calc(var(--ui-progressbar-proportion-start) * 100%);
+			height: calc(var(--ui-progressbar-proportion-end) * 100%);
+		}
+
+		.load {
+			bottom: calc(var(--ui-progressbar-proportion-start-background) * 100%);
+			height: calc(var(--ui-progressbar-proportion-end-background) * 100%);
+		}
+	}
+
+	&.horizontal {
+		.bar,
+		.fill,
+		.load {
+			height: 100%;
+		}
+
+		.bar {
+			width: 100%;
+		}
+
+		.fill {
+			left: calc(var(--ui-progressbar-proportion-start) * 100%);
+			width: calc(var(--ui-progressbar-proportion-end) * 100%);
+		}
+
+		.load {
+			left: calc(var(--ui-progressbar-proportion-start-background) * 100%);
+			width: calc(var(--ui-progressbar-proportion-end-background) * 100%);
+		}
+	}
+
+	&.radial {
+		.bar {
+			@include radial-bar-styles;
+		}
+
+		.fill,
+		.load {
+			clip-path: inset(0 0 0 50%);  // Render these as half their width, clipping the left side
+
+			&::before,
+			&::after {
+				@include radial-bar-styles;
+
+				& {
+					position: absolute;
+					content: "";
+				}
+			}
+
+			&::before {
+				clip-path: inset(0 0 0 50%);  // Clip off the left half
+				display: none;
+			}
+
+			&::after {
+				clip-path: inset(0 50% 0 0);  // Clip off the right half
+			}
+		}
+
+		.fill::after {
+			transform: rotate(calc(var(--ui-progressbar-proportion-end) * 360deg));
+		}
+
+		.load::after {
+			transform: rotate(calc(var(--ui-progressbar-proportion-end-background) * 360deg));
+		}
+
+		&.fillOverHalf .fill,
+		&.loadOverHalf .load {
+			clip-path: initial;
+
+			&::before {
+				display: block;  // Enable the right-half of the progress circle
+			}
+		}
+	}
+}

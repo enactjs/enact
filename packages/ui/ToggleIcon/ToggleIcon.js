@@ -20,7 +20,7 @@ import ForwardRef from '../ForwardRef';
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
 
-import componentCss from './ToggleIcon.module.less';
+import componentCss from './ToggleIcon.module.scss';
 
 /**
  * Represents a Boolean state, and can accept any icon to toggle.

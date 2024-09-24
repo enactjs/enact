@@ -29,7 +29,7 @@ import ScrollAnimator from './ScrollAnimator';
 import utilDOM from './utilDOM';
 import utilEvent from './utilEvent';
 
-import css from './useScroll.module.less';
+import css from './useScroll.module.scss';
 
 const
 	constants = {

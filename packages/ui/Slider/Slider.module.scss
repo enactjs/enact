@@ -1,0 +1,20 @@
+.slider {
+	// The "end" referenced below refers to the current "max value" of the proportion. This is a
+	// forward-looking variable name to support a potential second knob at the "min value".
+	--ui-slider-proportion-end-knob: 0;
+
+	position: relative;
+	direction: ltr;
+
+	.knob {
+		top: 50%;
+		left: 50%;
+	}
+
+	&.horizontal,
+	&.pressed,
+	&.noFill,
+	&.vertical {
+		/* CSS Override */
+	}
+}

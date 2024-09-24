@@ -7,7 +7,7 @@ import ri from '../resolution';
 
 import ScrollbarTrack from './ScrollbarTrack';
 
-import componentCss from './Scrollbar.module.less';
+import componentCss from './Scrollbar.module.scss';
 
 const scrollbarTrackHidingDelay = 900; // 900ms + 100ms(fade out duration) = 1000ms.
 
