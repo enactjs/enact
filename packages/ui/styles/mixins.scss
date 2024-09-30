@@ -20,9 +20,11 @@
 // Disabled elements
 @mixin disabled($parent: false) {
 	$selector: "";
+
 	@if $parent == false {
 		$selector: "&";
 	}
+
 	@if content-exists() {
 		#{$selector}[disabled] {
 			@content;
@@ -30,12 +32,9 @@
 	}
 }
 
-// Assign font-kerning rules in a non-proprietary way. Default value being "normal", to enable kerning.
-@mixin font-kerning($val: normal) {
-	& {
-		-webkit-font-kerning: $val;
-		font-kerning: $val;
-	}
+@mixin enact-composite {
+	transform: translateZ(0);
+	will-change: transform;
 }
 
 // Applies RTL-compatible start and end position to a selector
@@ -171,11 +170,70 @@
 	}
 }
 
+// NOTE: Until we are able to automatically remove these JSDoc-style comments, they should remain SCSS-commented
+// /**
+//  * Removes the margin from the appropriate side of the child components that touch the edges of the
+//  * component this is applied to. This respects both LTR and RTL modes.
+//  */
+@mixin remove-margin-on-edge-children {
+	> :first-child {
+		margin-inline-start: 0;
+	}
+
+	> :last-child {
+		margin-inline-end: 0;
+	}
+}
+
+// /**
+//  * Removes the padding from the appropriate side of the child components that touch the edges of the
+//  * component this is applied to. This respects both LTR and RTL modes.
+//  */
+@mixin remove-padding-on-edge-children {
+	> :first-child {
+		padding-inline-start: 0;
+	}
+
+	> :last-child {
+		padding-inline-end: 0;
+	}
+}
+
+@mixin full-screen-video-player {
+	position: static !important;
+	display: block !important;
+	margin: 0;
+}
+
+@mixin hide-full-screen-ancestor {
+	position: absolute !important;
+	overflow: visible !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+}
+
 @mixin input-placeholder {
 	&::-webkit-input-placeholder {
 		@content;
 	}
+
 	&::-moz-placeholder {
+		@content;
+	}
+}
+
+// Assign font-kerning rules in a non-proprietary way. Default value being "normal", to enable kerning.
+@mixin font-kerning($val: normal) {
+	& {
+		-webkit-font-kerning: $val;
+		font-kerning: $val;
+	}
+}
+
+@mixin vendor-fullscreen {
+	&:fullscreen {
 		@content;
 	}
 }
@@ -206,7 +264,7 @@
 	}
 }
 
-@mixin border-box() {
+@mixin border-box {
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 }
