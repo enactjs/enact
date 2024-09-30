@@ -1,0 +1,44 @@
+// VirtualList.module.scss
+//
+.virtualList {
+	position: relative;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	/* hide native scrollbar */
+	scrollbar-width: none;
+
+	.content {
+		will-change: transform;
+	}
+}
+
+.vertical {
+	&.native {
+		overflow-y: scroll;
+	}
+
+	.listItem {
+		width: 100%;
+	}
+}
+
+.horizontal {
+	&.native {
+		overflow-x: scroll;
+	}
+
+	.listItem {
+		height: 100%;
+	}
+}
+
+.listItem {
+	position: absolute;
+	will-change: transform;
+}
+
+/* NOTE: Needs to be revisited whether it can be replaced with scrollbar-width */
+.virtualList::-webkit-scrollbar {
+	display: none;
+}

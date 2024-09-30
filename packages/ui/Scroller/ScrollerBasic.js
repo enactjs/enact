@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {Component} from 'react';
 
-import css from './Scroller.module.less';
+import css from './Scroller.module.scss';
 
 /**
  * An unstyled base scroller component.

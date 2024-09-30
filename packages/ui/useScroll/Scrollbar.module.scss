@@ -1,0 +1,34 @@
+// Scrollbar.module.scss
+//
+.scrollbar {
+	background: inherit;
+	display: flex;
+	border-color: transparent;
+	visibility: visible;
+	opacity: 1;
+	flex: none;
+
+	transform: translateZ(0);
+	transition: opacity 0.1s linear;
+
+	&.vertical {
+		flex-direction: column;
+	}
+
+	&.horizontal {
+		:global(.enact-locale-right-to-left) & {
+			// Flip the entire bar horizontally in RTL mode, and force it to remain in LTR.
+			direction: ltr;
+			transform: scaleX(-1);
+		}
+	}
+
+	&.corner {
+		padding-inline-end: 3px;
+	}
+
+	/* ScrollbarTrack */
+	.scrollbarTrackShown {
+		opacity: 1;
+	}
+}

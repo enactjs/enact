@@ -25,7 +25,7 @@ import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
 
-import componentCss from './Transition.module.less';
+import componentCss from './Transition.module.scss';
 
 const formatter = (duration) => (typeof duration === 'number' ? duration + 'ms' : duration);
 /**
