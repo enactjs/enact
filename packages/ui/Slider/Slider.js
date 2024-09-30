@@ -21,7 +21,7 @@ import Touchable from '../Touchable';
 import Knob from './Knob';
 import PositionDecorator from './PositionDecorator';
 
-import componentCss from './Slider.module.less';
+import componentCss from './Slider.module.scss';
 
 import {calcProportion} from './utils';
 

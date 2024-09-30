@@ -1,0 +1,46 @@
+// ScrollbarTrack.module.scss
+//
+.scrollbarTrack {
+	/* Set these to reasonable default values */
+	--scrollbar-thumb-size-ratio: 1;
+	--scrollbar-thumb-progress-ratio: 0;
+	--scrollbar-thumb-size: calc(100% * var(--scrollbar-thumb-size-ratio));
+	--scrollbar-thumb-progress: calc(((1 - var(--scrollbar-thumb-size-ratio)) * var(--scrollbar-thumb-progress-ratio)) * 100%);
+
+	position: relative;
+	width: 3px;
+	height: 3px;
+	margin: auto;
+	opacity: 0;
+	flex: auto;
+
+	transition: opacity 100ms linear;
+
+	will-change: transform, top, left, right;
+
+	&::before {
+		background: fade-out(#666, 0.25);
+		display: block;
+		position: absolute;
+		content: "";
+		width: 100%;
+		height: 100%;
+		will-change: transform, top, left, right;
+	}
+
+	&.vertical {
+		&::before {
+			height: var(--scrollbar-thumb-size);
+			top: var(--scrollbar-thumb-progress);
+		}
+	}
+
+	&:not(.vertical) {
+		&::before {
+			width: var(--scrollbar-thumb-size);
+			left: var(--scrollbar-thumb-progress);
+			top: 50%;
+			transform: translateY(-50%);
+		}
+	}
+}
