@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import ForwardRef from '../ForwardRef';
 import ri from '../resolution';
 
-import css from './Layout.module.less';
+import css from './Layout.module.scss';
 
 const toFlexAlign = (align) => (
 	align === 'end' && 'flex-end' ||

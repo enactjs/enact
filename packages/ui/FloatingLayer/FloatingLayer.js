@@ -11,7 +11,7 @@ import Cancelable from '../Cancelable';
 import {FloatingLayerContext} from './FloatingLayerDecorator';
 import Scrim from './Scrim';
 
-import css from './FloatingLayer.module.less';
+import css from './FloatingLayer.module.scss';
 
 /**
  * A component that creates an entry point to the new render tree.

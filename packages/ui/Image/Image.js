@@ -16,7 +16,7 @@ import warning from 'warning';
 import {selectSrc} from '../resolution';
 import ForwardRef from '../ForwardRef';
 
-import componentCss from './Image.module.less';
+import componentCss from './Image.module.scss';
 
 /**
  * A basic image component designed to display images conditionally based on screen size.

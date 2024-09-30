@@ -19,7 +19,7 @@ import compose from 'ramda/src/compose';
 
 import ForwardRef from '../ForwardRef';
 
-import css from './Heading.module.less';
+import css from './Heading.module.scss';
 
 /**
  * A labeled Heading component.

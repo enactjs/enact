@@ -131,7 +131,7 @@ import ForwardRef from '../ForwardRef';
 
 import {Cell, CellBase, CellDecorator, toFlexAlign} from './Cell';
 
-import css from './Layout.module.less';
+import css from './Layout.module.scss';
 
 /**
  * A container for `Cell`s.
