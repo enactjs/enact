@@ -269,6 +269,19 @@
 	-moz-box-sizing: border-box;
 }
 
+// Helpful debugging way to understand how SCSS variables are being interpreted
+@mixin debugScssTypes($value) {
+	:global(.debugScssTypes) {
+		value: $value;
+		isnumber: type-of($value) == number;
+		isstring: type-of($value) == string;
+		iscolor: type-of($value) == color;
+		islist: type-of($value) == list;
+		isbool: type-of($value) == bool;
+		isnull: type-of($value) == null;
+	}
+}
+
 //
 // Mixin classes supporting advanced text
 //
