@@ -279,6 +279,9 @@
 		islist: type-of($value) == list;
 		isbool: type-of($value) == bool;
 		isnull: type-of($value) == null;
+		ispixel: type-of($value) == number and unit($value) == "px";
+		isem: type-of($value) == number and unit($value) == "em";
+		ispercentage: type-of($value) == number and unit($value) == "%";
 	}
 }
 
