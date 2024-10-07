@@ -38,3 +38,16 @@
 		}
 	}
 }
+
+// Muted elements
+@mixin muted($target: '') {
+	@if ($target == parent) {
+		[data-spotlight-container-muted="true"] {
+			@content;
+		}
+	} @else {
+		&[data-spotlight-container-muted="true"] {
+			@content;
+		}
+	}
+}

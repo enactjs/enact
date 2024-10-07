@@ -1,0 +1,44 @@
+//
+// Computational mixins that return values
+//
+
+// Normalizes a list of values, using the logic from padding and margin short-hand, and expands it up
+// to the full long-hand representation, giving a consistent list length to extract from.
+// Supports 1, 2, 3, or 4 values in a space separated list.
+// Always returns a list of 4.
+// normalize-shorthand(11px 21px 31px 41px)  -->  11px 21px 31px 41px
+// normalize-shorthand(11px 21px 31px)       -->  11px 21px 31px 21px
+// normalize-shorthand(11px 21px)            -->  11px 21px 11px 21px
+// normalize-shorthand(11px)                 -->  11px 11px 11px 11px
+//
+@function normalize-shorthand($trbl) {
+	@if ((length($trbl) >= 1) and (length($trbl) <= 4)) {
+		@return
+				nth($trbl, 1)
+				nth($trbl, if((length($trbl) >= 2), 2, 1))
+				nth($trbl, if((length($trbl) >= 3), 3, 1))
+				nth($trbl, if((length($trbl) >= 4), 4, if((length($trbl) >= 2), 2, 1)));
+	}
+}
+
+// Extracts one or all short-hand values out of a list (See `normalize-shorthand`), returning all
+// values or a requested value.
+// padding-left: extract(11px 21px 31px 41px, left)  -->  41px
+// padding-left: extract(11px 21px 31px, left)       -->  21px
+// padding-left: extract(11px 21px, left)        m   -->  21px
+// padding-left: extract(11px, left)                 -->  11px
+// padding: extract(11px 21px 31px 41px)             -->  11px 21px 31px 41px
+//
+@function extract($trbl, $position) {
+	@if ($position == top or $position == 1) {
+		@return nth(normalize-shorthand($trbl), 1);
+	} @else if ($position == right or $position == 2) {
+		@return nth(normalize-shorthand($trbl), 2);
+	} @else if ($position == bottom or $position == 3) {
+		@return nth(normalize-shorthand($trbl), 3);
+	} @else if ($position == left or $position == 4) {
+		@return nth(normalize-shorthand($trbl), 4);
+	} @else {
+		@return normalize-shorthand($trbl);
+	}
+}
