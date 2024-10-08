@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [5.0.0-alpha.2] - 2024-10-08
 
 ### Added
 
@@ -13,6 +13,22 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/Marquee.MarqueeController` to start animation properly when `marqueeOnFocus` is set to `true` and text changed
 - `ui/Scroller` and `ui/VirtualList` to have default prop when `undefined` prop is passed
 - `ui/VirtualList` to update its scroll bounds when the total size of items is changed
+
+## [4.9.2] - 2024-09-26
+
+### Fixed
+
+- `ui/VirtualList` to update its scroll bounds when the total size of items is changed
+
+## [4.9.1] - 2024-09-09
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to have default prop when `undefined` prop is passed
+
+## [4.7.12] - 2024-09-05
+
+No significant changes.
 
 ## [4.9.0] - 2024-07-17
 
