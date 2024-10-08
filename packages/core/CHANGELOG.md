@@ -2,9 +2,37 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [5.0.0-alpha.2] - 2024-10-08
+
+### Added
+
+- `core/util` function `setDefaultProps` to set props that are missing or `undefined` to default values
+
+## [4.9.2] - 2024-09-26
+
+No significant changes.
+
+## [4.9.1] - 2024-09-09
+
+### Added
+
+- `core/util` function `setDefaultProps` to set props that are missing or `undefined` to default values
+
+## [4.7.12] - 2024-09-05
+
+No significant changes.
+
 ## [4.9.0] - 2024-07-17
 
 No significant changes.
+
+## [5.0.0-alpha.1] - 2024-07-11
+
+### Removed
+
+- `core/platform` member `windowsPhone`, `edge`, `androidChrome`, `android`, `ie`, `ios`, `webos`, `androidFirefox`, `firefoxOS`, `blackberry`, and `tizen`
+- `core/platform` member `gesture`, `node`, `platformName`, and `unknown`
+- `core/platform` member `touch` and `touchscreen`
 
 ## [4.9.0-beta.1] - 2024-06-17
 

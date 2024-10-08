@@ -2,9 +2,31 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [5.0.0-alpha.2] - 2024-10-08
+
+No significant changes.
+
+## [4.9.2] - 2024-09-26
+
+No significant changes.
+
+## [4.9.1] - 2024-09-09
+
+No significant changes.
+
+## [4.7.12] - 2024-09-05
+
+No significant changes.
+
 ## [4.9.0] - 2024-07-17
 
 No significant changes.
+
+## [5.0.0-alpha.1] - 2024-07-11
+
+### Changed
+
+- `sampler` look and feel by updating to Storybook 8
 
 ## [4.9.0-beta.1] - 2024-06-17
 

@@ -406,7 +406,8 @@ class VirtualListBasic extends Component {
 			prevProps.direction !== this.props.direction ||
 			prevProps.overhang !== this.props.overhang ||
 			prevProps.spacing !== this.props.spacing ||
-			!equals(prevProps.itemSize, this.props.itemSize)
+			!equals(prevProps.itemSize, this.props.itemSize) ||
+			prevProps.itemSizes?.reduce((acc, cur) => acc + cur, 0) !== this.props.itemSizes?.reduce((acc, cur) => acc + cur, 0)
 		) {
 			const {x, y} = this.getXY(this.scrollPosition, 0);
 
@@ -1096,7 +1097,7 @@ class VirtualListBasic extends Component {
 			};
 
 		this.cc[key] = (
-			<div className={css.listItem} key={key} ref={itemContainerRef} style={this.composeStyle(...rest)}>
+			<div className={css.listItem} key={key} ref={itemContainerRef} role="presentation" style={this.composeStyle(...rest)}>
 				{itemRenderer({...childProps, ...componentProps, index})}
 			</div>
 		);

@@ -2,12 +2,57 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [5.0.0-alpha.2] - 2024-10-08
+
+### Added
+
+- `ui/VirtualList.VirtualListBasic` support to read the order of items when the `listitem` role is set to items
+
+### Fixed
+
+- `ui/Marquee.MarqueeController` to start animation properly when `marqueeOnFocus` is set to `true` and text changed
+- `ui/Scroller` and `ui/VirtualList` to have default prop when `undefined` prop is passed
+- `ui/VirtualList` to update its scroll bounds when the total size of items is changed
+
+## [4.9.2] - 2024-09-26
+
+### Fixed
+
+- `ui/VirtualList` to update its scroll bounds when the total size of items is changed
+
+## [4.9.1] - 2024-09-09
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to have default prop when `undefined` prop is passed
+
+## [4.7.12] - 2024-09-05
+
+No significant changes.
+
 ## [4.9.0] - 2024-07-17
 
 ### Fixed
 
 - `ui/Marquee.MarqueeDecorator` to start animation properly when synchronized by `ui/Marquee.MarqueeController` and text changed
 - `ui/Placeholder.PlaceholderControllerDecorator` to not remount its children when it rerenders
+
+## [5.0.0-alpha.1] - 2024-07-11
+
+### Removed
+
+- `ui/GridListImageItem`
+- `ui/IconButton`
+- `ui/Marquee.MarqueeDecorator` config `className`
+- `ui/RadioDecorator`
+- `ui/Scroller.ScrollerBase`
+- `ui/SlotItem`
+- `ui/ToggleItem`
+- `ui/VirtualList.VirtualListBase`
+
+### Changed
+
+- `ui/Marquee.MarqueeDecorator` to use `@enact/i18n/utils.isRtlText` API to determine the text directionality
 
 ## [4.9.0-beta.1] - 2024-06-17
 
