@@ -2,11 +2,23 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
+## [5.0.0-alpha.2] - 2024-10-08
 
 ### Fixed
 
 - `spotlight` to not require `less` dependency
+
+## [4.9.2] - 2024-09-26
+
+No significant changes.
+
+## [4.9.1] - 2024-09-09
+
+No significant changes.
+
+## [4.7.12] - 2024-09-05
+
+No significant changes.
 
 ## [4.9.0] - 2024-07-17
 
