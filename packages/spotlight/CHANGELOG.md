@@ -4,6 +4,14 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [5.0.0-alpha.2] - 2024-10-08
 
+### Added
+
+- `spotlight` an optional `options.preventScroll` parameter to `focus` function to prevent scrolling by focus
+
+### Changed
+
+- Renamed `spotlight` an optional `containerOption` parameter of `focus` function to `options` to avoid misunderstandings
+
 ### Fixed
 
 - `spotlight` to not require `less` dependency
