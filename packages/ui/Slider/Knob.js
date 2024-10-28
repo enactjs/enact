@@ -43,7 +43,7 @@ const Knob = kind({
 		 * * `orientation` - The value of the `orientation` prop from the slider
 		 * * `proportion` - The value of the `proportion` prop from the knob
 		 *
-		 * This prop accepts either a Component (e.g. `MyTooltip`} which will be instantiated with
+		 * This prop accepts either a Component (e.g. `MyTooltip`) which will be instantiated with
 		 * the above props or a component instance (e.g. `<MyTooltip customProp="value" />`) which
 		 * will have its props merged with the above props.
 		 *

@@ -532,7 +532,7 @@ describe('container', () => {
 		// FIXME: This is testing a previously supported feature (setting a node as defaultElement)
 		// which was never documented and should be removed in a future release.
 		test(
-			'should return the default spottable element when enterTo is "default-element" and defaultElement contains an array of selectors wiht a node reference',
+			'should return the default spottable element when enterTo is "default-element" and defaultElement contains an array of selectors with a node reference',
 			testScenario(
 				scenarios.containerWithDefaultAndLastFocused,
 				(root) => {
@@ -1160,7 +1160,7 @@ describe('container', () => {
 		beforeEach(setupContainers);
 		afterEach(teardownContainers);
 
-		test('should not include inacive containers', testScenario(
+		test('should not include inactive containers', testScenario(
 			scenarios.onlyContainers,
 			(root) => {
 				const {containerId} = root.querySelector('[data-spotlight-id]').dataset;

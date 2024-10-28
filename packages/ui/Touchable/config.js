@@ -19,7 +19,7 @@ let config = {};
 // map-friendly clone method
 const clone = o => Object.assign({}, o);
 
-// Merges two configuation objects while retaining only the allowed keys
+// Merges two configuration objects while retaining only the allowed keys
 const mergeGestureConfig = (current, update, allowed) => {
 	const cfg = {...current, ...update};
 

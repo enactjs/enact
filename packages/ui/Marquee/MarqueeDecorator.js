@@ -630,7 +630,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * Calculates if the marquee should animate
 		 *
 		 * @param	{Number}	distance	Amount of overflow in pixels
-		 * @returns	{Boolean}				`true` if it should animated
+		 * @returns	{Boolean}				`true` if it should animate
 		 */
 		shouldAnimate (distance) {
 			return distance > 0;

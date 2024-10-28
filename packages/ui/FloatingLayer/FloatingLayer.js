@@ -128,7 +128,7 @@ class FloatingLayerBase extends Component {
 	}
 
 	componentDidMount () {
-		// Must register first in order to obtain the floating layer node reference before tryinging
+		// Must register first in order to obtain the floating layer node reference before trying
 		// to render into it
 		if (this.context && typeof this.context === 'function') {
 			this.controller = this.context(this.handleNotify.bind(this));
