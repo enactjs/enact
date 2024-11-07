@@ -308,7 +308,7 @@ ZoneInfoFile.prototype.usesDST = function (date) {
  * Return the raw offset from UTC that this zone uses at the given time.
  *
  * @param {Date} date the Gregorian date to test
- * @returns {number} offset from from UTC in number of minutes. Negative
+ * @returns {number} offset from UTC in number of minutes. Negative
  * numbers are west of Greenwich, positive are east of Greenwich
  */
 ZoneInfoFile.prototype.getRawOffset = function (date) {

@@ -26,7 +26,7 @@ const cancelHandlers = [
 const forCancel = function (ev) {
 	let ok = false;
 	cancelHandlers.forEach(fn => {
-		// if any handler returns true, we don't need to call any more
+		// if any handler returns true, we don't need to call anymore
 		ok = ok || fn(ev);
 	});
 

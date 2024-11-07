@@ -210,7 +210,7 @@ function isStandardFocusable (element) {
 		// If the element is actually disabled, it is not focusable
 		return false;
 	} else if (element.tagName === 'A' && element.getAttribute('href') !== null) {
-		// Anchor element that has an href attribute is focusable
+		// Anchor element that has a href attribute is focusable
 		return true;
 	} else if (element.tagName === 'INPUT' && element.type !== 'hidden') {
 		// Input element whose type attribute is not hidden is focusable

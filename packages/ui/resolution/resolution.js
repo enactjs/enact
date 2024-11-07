@@ -18,7 +18,7 @@ let baseScreen,
 	config;
 
 /**
- * Object that stores all of the pixel conversion factors to each keyed unit.
+ * Object that stores all the pixel conversion factors to each keyed unit.
  *
  * @type {Object}
  * @memberof ui/resolution

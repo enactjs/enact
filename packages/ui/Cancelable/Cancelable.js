@@ -50,7 +50,7 @@ const defaultConfig = {
 	 * innermost instance (in terms of the component hierarchy) have the first opportunity to handle
 	 * the event before its container components.
 	 *
-	 * @type {String}
+	 * @type {Boolean}
 	 * @default false
 	 * @memberof ui/Cancelable.Cancelable.defaultConfig
 	 */
@@ -96,7 +96,7 @@ add('cancel', 27);
  *     // to handle the event (e.g. invoking an event handler from `props`).
  *
  *     // Stop upstream instances of Cancelable from handling the event
- *     ev.stopPropagaion();
+ *     ev.stopPropagation();
  *   }},
  *   MyComponent
  * );

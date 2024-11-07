@@ -68,7 +68,7 @@ const RepeaterBase = kind({
 		childProp: PropTypes.string,
 
 		/**
-		 * Component type to wrap around all of the repeated elements.
+		 * Component type to wrap around all the repeated elements.
 		 *
 		 * This can be a string describing a DOM node or React component (e.g. `'div'` or `Layout`).
 		 *

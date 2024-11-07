@@ -2,7 +2,7 @@ import {platform} from '@enact/core/platform';
 
 // It's possible that emitting `onTap` will cause a DOM change before the mousedown fires resulting
 // in multiple tap/click events for the same user action. To avoid this, we store the last touchend
-// target and timestamp to compare against the next mouse down. If the timestamp is different (e.g
+// target and timestamp to compare against the next mouse down. If the timestamp is different (e.g.
 // we're on a hybrid device that emitted a touch event but the next was a mouse event) or the target
 // is the same (or no previous target was set if no touch events have been emitted), we allow the
 // mousedown *across Touchable instances*.
