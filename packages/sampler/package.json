@@ -19,18 +19,18 @@
     "@enact/storybook-utils": "^6.0.0-rc.1",
     "@enact/ui": "^5.0.0-alpha.2",
     "@enact/webos": "^5.0.0-alpha.2",
-    "@storybook/addon-docs": "^8.2.4",
-    "@storybook/csf-tools": "^8.2.4",
-    "@storybook/manager-api": "^8.2.4",
-    "@storybook/react": "^8.2.4",
-    "@storybook/react-webpack5": "^8.2.4",
-    "@storybook/theming": "^8.2.4",
+    "@storybook/addon-docs": "^8.4.2",
+    "@storybook/csf-tools": "^8.4.2",
+    "@storybook/manager-api": "^8.4.2",
+    "@storybook/react": "^8.4.2",
+    "@storybook/react-webpack5": "^8.4.2",
+    "@storybook/theming": "^8.4.2",
     "babel-loader": "^9.2.1",
     "classnames": "^2.5.1",
     "ilib": "^14.20.0",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "storybook": "^8.2.4"
+    "storybook": "^8.4.2"
   }
 }
