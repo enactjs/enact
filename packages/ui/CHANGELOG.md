@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/VirtualList` to update its item position when the size of each item is changed
+- `ui/VirtualList` to re-render when the each size of variable sized items changed
 
 ## [4.9.3] - 2024-10-29
 
