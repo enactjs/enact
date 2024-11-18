@@ -20,7 +20,7 @@
 
 // Applies RTL-compatible start and end position to a selector
 // Simple "when" here just assumes that if the first argument is a list with more than 1 entry,
-// then units are correct. If it's just 1, then we varify the value is a number (measurement).
+// then units are correct. If it's just 1, then we verify the value is a number (measurement).
 .position-start-end (@trbl; @target: "") when (length(@trbl) > 1) or (@target = parent) or (@target = self) or (@target = "") {
 	.position(@trbl);
 
@@ -305,13 +305,13 @@
 				.buildLocaleFont(@fontName; @locale; @value);
 			});
 		}
-		// Interpret individual font defiintions: (set1)
+		// Interpret individual font definitions: (set1)
 		& when (not(@isCollection)) {
 			.buildLocaleFont(@fontName; @locale; @specs);
 		}
 		// .debugLessTypes(@specs);
 
-		// Note: The above `when` code will ignore defiintions like the following, because the way
+		// Note: The above `when` code will ignore definitions like the following, because the way
 		// LESS works, it can't (at this time) differentiate between a space separated list and a
 		// comma separated list, making it impossible to differentiate a single set of font rules
 		// with multiple values vs multiple sets with a single value in each.

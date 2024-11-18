@@ -8,7 +8,7 @@ import {mergeClassNameMaps} from '../util';
  * @param   {Object.<string, string>}    [customCss]        The supplied collection of CSS class names to the
  *                                                          corresponding internal elements and states of the component
  * @param   {Boolean|String|String[]}    [publicClassNames] The keys of public class names of the component
- *                                                          If this value is `true`, all of the keys from the component
+ *                                                          If this value is `true`, all the keys from the component
  *                                                          CSS will become public class names.
  * @returns {Object}                                        A merged CSS
  * @private

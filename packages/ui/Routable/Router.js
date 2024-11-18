@@ -56,7 +56,7 @@ const RouterBase = class extends ReactComponent {
 		 * Routes defined as an object rather than via JSX.
 		 *
 		 * If specified, `routes` will take
-		 * precendence over a JSX definition.
+		 * precedence over a JSX definition.
 		 *
 		 * ```JavaScript
 		 * const routes = {
