@@ -3,6 +3,13 @@
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
 ## [4.9.4] - 2024-11-19
+## [unreleased]
+
+### Changed
+
+- `core/platform` to support `safari` 16.4, `chrome` 119, and `firefox` 128 or later
+
+## [5.0.0-alpha.2] - 2024-10-08
 
 No significant changes.
 
