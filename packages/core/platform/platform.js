@@ -102,7 +102,7 @@ let detectedPlatform = null;
  * @public
  */
 const detect = () => {
-	if (detectedPlatform !== null) {
+	if (detectedPlatform !== null && !__DEV__) {
 		// once detected, don't bother detecting again
 		return detectedPlatform;
 	}

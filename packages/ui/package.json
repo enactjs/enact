@@ -1,6 +1,6 @@
 {
   "name": "@enact/ui",
-  "version": "5.0.0-alpha.1",
+  "version": "5.0.0-alpha.2",
   "description": "A collection of simplified unstyled cross-platform UI components for Enact",
   "repository": {
     "type": "git",
@@ -32,10 +32,10 @@
     }
   },
   "dependencies": {
-    "@enact/core": "^5.0.0-alpha.1",
-    "@enact/i18n": "^5.0.0-alpha.1",
+    "@enact/core": "^5.0.0-alpha.2",
+    "@enact/i18n": "^5.0.0-alpha.2",
     "classnames": "^2.5.1",
-    "ilib": "14.19.0",
+    "ilib": "^14.20.0",
     "invariant": "^2.2.4",
     "prop-types": "^15.8.1",
     "ramda": "^0.30.1",

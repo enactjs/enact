@@ -1,3 +1,5 @@
+/* global globalThis */
+
 import {parseUserAgent, platform} from '../platform';
 
 describe('platform', () => {
@@ -161,6 +163,17 @@ describe('platform', () => {
 			expect(platform).toMatchObject(expected);
 
 			windowSpy.mockRestore();
+		});
+
+		test('should return `webos` for `type` in webOS environment', () => {
+			Object.defineProperty(globalThis.navigator, 'userAgent', {
+				value: 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.5359.211 Safari/537.36 WebAppManager',
+				configurable: true
+			});
+
+			expect(platform.type).toBe('webos');
+
+			delete globalThis.navigator.userAgent;
 		});
 	});
 });
