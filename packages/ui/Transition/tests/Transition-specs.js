@@ -80,7 +80,7 @@ describe('Transition Specs', () => {
 		expect(actual).toHaveClass(expected);
 	});
 
-	test('should fire \'onShow\' event with type when \'visible\' prop bacomes true', () => {
+	test('should fire \'onShow\' event with type when \'visible\' prop becomes true', () => {
 		const handleShow = jest.fn();
 		const ChildNode = (props) => <div {...props}>Body</div>;
 
@@ -104,7 +104,7 @@ describe('Transition Specs', () => {
 		expect(actual).toMatchObject(expectedType);
 	});
 
-	test('should fire \'onHide\' event with type when \'visible\' prop bacomes false', () => {
+	test('should fire \'onHide\' event with type when \'visible\' prop becomes false', () => {
 		const handleHide = jest.fn();
 		const ChildNode = (props) => <div {...props}>Body</div>;
 

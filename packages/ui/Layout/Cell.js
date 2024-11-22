@@ -118,7 +118,7 @@ const CellBase = kind({
 		 * the maximum size, shrinking as necessary, to fit the content.
 		 *
 		 * When used in conjunction with {@link ui/Layout.CellBase.grow|grow}, the size will be the
-		 * minimunm size, growing as necessary, to fit the container.
+		 * minimum size, growing as necessary, to fit the container.
 		 *
 		 * E.g.
 		 * * `size="400px"` -> cell will be 400px, regardless of the dimensions of your content
@@ -167,7 +167,7 @@ const CellBase = kind({
 				...style,
 				alignSelf: toFlexAlign(align),
 				flexBasis: (shrink ? null : size),
-				// Setting 100% below in the presence of `shrink`` and absense of `size` prevents overflow
+				// Setting 100% below in the presence of `shrink`` and absence of `size` prevents overflow
 				'--cell-size': cellSize
 			};
 		}
