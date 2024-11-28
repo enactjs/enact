@@ -133,6 +133,7 @@ const useScrollBase = (props) => {
 	delete rest.onScrollStart;
 	delete rest.onScrollStop;
 	delete rest.onWheel;
+	delete rest.preventScroll;
 	delete rest.removeEventListeners;
 	delete rest.scrollStopOnScroll; // scrollMode 'native'
 	delete rest.scrollTo;
@@ -813,10 +814,7 @@ const useScrollBase = (props) => {
 				scrollByPage(ev.keyCode);
 			}
 		} else {
-			if (Spotlight.isPaused() && getDirection(ev.keyCode)) {
-				ev.preventDefault();
-				ev.stopPropagation();
-			}
+			props.preventScroll(ev);
 			forward('onKeyDown', ev, props);
 		}
 	}
