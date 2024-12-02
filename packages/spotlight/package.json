@@ -1,6 +1,6 @@
 {
   "name": "@enact/spotlight",
-  "version": "5.0.0-alpha.2",
+  "version": "5.0.0-alpha.3",
   "description": "A focus management library",
   "repository": {
     "type": "git",
@@ -25,7 +25,7 @@
     }
   },
   "dependencies": {
-    "@enact/core": "^5.0.0-alpha.2",
+    "@enact/core": "^5.0.0-alpha.3",
     "classnames": "^2.5.1",
     "prop-types": "^15.8.1",
     "ramda": "^0.30.1",

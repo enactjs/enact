@@ -2,7 +2,7 @@
  * A convenient tool for laying-out content using `Layout`, `Cell`, `Row`, and `Column`.
  *
  * Layout is a powerful and versatile tool used for arranging content on the screen. On a conceptual
- * level, it mixes the best parts of HTML tables wtih the best parts of HTML framesets, both of
+ * level, it mixes the best parts of HTML tables with the best parts of HTML framesets, both of
  * which were largely abandoned for their drawbacks, ignoring their strengths. A `Layout` is simply
  * a container for `Cell`, the only "legal" child. Conversely, `Cell` may only be used in a
  * `Layout`. Cells in a Layout can either be positioned next to each other (horizontally) or
@@ -11,7 +11,7 @@
  *
  * The `Row` and `Column` layout presets describe the direction of layout for their children. This
  * can sometimes cause confusion. A `Row` of children naturally forms a _layout_ whose children can
- * have the _appearance_ of columns. To keep things clear, think about the layout rather than the
+ * have the _appearance_ of columns. To keep things clear, think about the layout rather than
  * what the children themselves represent.
  *
  * `Layout` is an implementation of flex-box, but with built-in rails, properties, and features to

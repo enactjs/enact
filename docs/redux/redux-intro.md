@@ -230,7 +230,7 @@ Back in the days, we had [connect()](https://github.com/reduxjs/react-redux/blob
 
 Also, we use [useDispatch()](https://github.com/reduxjs/react-redux/blob/master/docs/api/hooks.md#usedispatch) hook to dispatch actions. It gives you the store's `dispatch` method as its result so that you can call it with some `action` to dispatch.
 
-Our components need access to the Redux store so they can subscribe to it. This can be cumbersome as your number of components grows and you have to manually pass store around. `react-redux` incorporates [context](https://react.dev/learn/passing-data-deeply-with-context) in React and provides a [`<Provider />`](https://github.com/reduxjs/react-redux/blob/master/docs/api/Provider.md) component to make store available to all components without passings stores around by hand. You only need to use it once at the `render()` of root component.
+Our components need access to the Redux store so they can subscribe to it. This can be cumbersome as your number of components grows and you have to manually pass store around. `react-redux` incorporates [context](https://react.dev/learn/passing-data-deeply-with-context) in React and provides a [`<Provider />`](https://github.com/reduxjs/react-redux/blob/master/docs/api/Provider.md) component to make store available to all components without passing stores around by hand. You only need to use it once at the `render()` of root component.
 
 #### Example
 

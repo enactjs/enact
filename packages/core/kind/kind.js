@@ -50,7 +50,7 @@ const NoContext = createContext(null);
  * @property {Object.<string, string>} css The CSS of the component
  * @property {String} [className] The className of the component
  * @property {Boolean|String|String[]} [publicClassNames] Specifies which class names are overridable.
- * If this value is `true`, all of the class names of the component CSS will become public.
+ * If this value is `true`, all the class names of the component CSS will become public.
  */
 
 /**
