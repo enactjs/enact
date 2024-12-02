@@ -2,6 +2,22 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [5.0.0-alpha.3] - 2024-12-02
+
+### Fixed
+
+- `ui/VirtualList` to re-render when the each size of variable sized items changed
+
+## [4.9.4] - 2024-11-19
+
+### Fixed
+
+- `ui/VirtualList` to re-render when the each size of variable sized items changed
+
+## [4.9.3] - 2024-10-29
+
+No significant changes.
+
 ## [5.0.0-alpha.2] - 2024-10-08
 
 ### Added
