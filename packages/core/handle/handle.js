@@ -616,7 +616,7 @@ const log = handle.log = curry((message, ev, ...args) => {
 /**
  * Invokes a method by name on the component to which {@link core/handle.handle} is bound.
  *
- * If the methods exists on the object, it is called with the event, props, and context and its
+ * If the methods exist on the object, it is called with the event, props, and context and its
  * return value is returned.
  *
  * If the method does not exist or handle isn't bound to an instance, it returns `false`.

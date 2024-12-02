@@ -102,7 +102,7 @@ const defaultConfig = {
  *
  * Example:
  * ```
- * const MyApp = ({skinName, ...rest) => (<div {...props}>{skinName}</div>);
+ * const MyApp = ({skinName, ...rest}) => (<div {...props}>{skinName}</div>);
  * ...
  * App = Skinnable({
  * 	prop: 'skinName',

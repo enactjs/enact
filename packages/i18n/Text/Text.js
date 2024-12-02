@@ -84,7 +84,7 @@ const defaultConfig = {
  * when appropriate.
  *
  * If translations are not available yet and all props do not include a default value,
- * `TextDecorator` will render nothing. Once translations are avaiable, the component will update
+ * `TextDecorator` will render nothing. Once translations are available, the component will update
  * with the translated strings.
  *
  * ```
@@ -175,7 +175,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					}
 					createResBundle({locale, sync: false, onLoad: resolve});
 				}),
-				// ResBundle.getString will try to synchronously fetch the plurals resouce so need
+				// ResBundle.getString will try to synchronously fetch the plurals resource so need
 				// to proactively fetch it to avoid the sync XHR
 				new Promise(resolve => IString.loadPlurals(false, null, null, resolve))
 			]).then(([resBundle]) => {
@@ -251,7 +251,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
  * Translates its child string value in the current locale.
  *
  * If translations are not available yet, `Text` will render nothing. Once translations are
- * avaiable, the component will update with the translated string.
+ * available, the component will update with the translated string.
  *
  * ```
  * <Text>Go</Text>
