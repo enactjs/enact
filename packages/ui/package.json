@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@enact/core": "^4.9.4",
-    "@enact/spotlight": "^4.9.4",
     "classnames": "^2.5.1",
     "direction": "^1.0.4",
     "invariant": "^2.2.4",

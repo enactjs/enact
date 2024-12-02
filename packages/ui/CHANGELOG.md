@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
-
-### Fixed
-
-- `ui/Scroller` to prevent the native scrolling behavior caused by keydown events when the popup is opened
-
 ## [4.9.4] - 2024-11-19
 
 ### Fixed
