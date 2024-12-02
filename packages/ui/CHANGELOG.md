@@ -6,7 +6,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Scroller` to prevent the native scrolling behavior caused by keydown events when the popup is opened
 - `ui/VirtualList` to re-render when the each size of variable sized items changed
 
 ## [5.0.0-alpha.2] - 2024-10-08
