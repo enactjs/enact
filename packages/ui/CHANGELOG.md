@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/VirtualList` to not abnoramlly scroll when `dataSize` and `itemSizes` changed
+
 ## [5.0.0-alpha.3] - 2024-12-02
 
 ### Fixed
