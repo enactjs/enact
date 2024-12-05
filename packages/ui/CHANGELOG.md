@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/VirtualList` to not abnoramlly scroll when `dataSize` and `itemSizes` changed
+- `ui/VirtualList` to not abnormally scroll when `dataSize` and `itemSizes` changed
 
 ## [4.9.4] - 2024-11-19
 
