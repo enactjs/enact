@@ -813,7 +813,7 @@ const useScrollBase = (props) => {
 				scrollByPage(ev.keyCode);
 			}
 		} else {
-			props.preventScroll(ev);
+			props.preventScroll?.(ev);
 			forward('onKeyDown', ev, props);
 		}
 	}
