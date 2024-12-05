@@ -153,12 +153,6 @@
 	&:fullscreen { @rule(); }
 }
 
-.vendor-opacity(@opacity) {
-	@opacity-ie: (@opacity * 100);	// Less doesn't like math inside `alpha`
-	opacity: @opacity;
-	filter: alpha(opacity=@opacity-ie);
-}
-
 // Shorthand for positioning code
 .position (@t, @r, @b, @l) {
 	top: @t;
