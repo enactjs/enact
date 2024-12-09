@@ -9,7 +9,7 @@
     "lint": "enact lint --strict",
     "test": "echo \"No test suite\" && exit 0",
     "pack": "storybook build -c .storybook -o dist",
-    "serve": "storybook dev -p 8080 -c .storybook --ci "
+    "serve": "storybook dev -p 8080 -c .storybook --ci"
   },
   "license": "Apache-2.0",
   "dependencies": {
