@@ -20,6 +20,15 @@ about: File a bug report
 
 **Enact version:**
 
+### Application Information
+[//]: # (Please provide detailed information about your application. This includes the application name, type, and any other relevant context. Detailed information about your application will help us better understand your situation and assist you more effectively.)
+
+### Reproduction Code
+[//]: # (Provide source code that demonstrates the bug.)
+
+### Comments and Screen Shots
+
+
 ### Reproduction Code
 [//]: # (Provide source code that demonstrates the bug.)
 
