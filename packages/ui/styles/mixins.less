@@ -149,12 +149,12 @@
 	font-kerning: @val;
 }
 
-.vendor-opacity(@opacity) {
-	opacity: @opacity;
-}
-
 .vendor-fullscreen(@rule) {
 	&:fullscreen { @rule(); }
+}
+
+.vendor-opacity(@opacity) {
+	opacity: @opacity;
 }
 
 // Shorthand for positioning code
