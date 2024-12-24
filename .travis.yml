@@ -14,7 +14,7 @@ install:
     - npm install
     - npm link
     - popd
-    - npm uninstall @enact/ui-test-utils -C packages/i18n
+    - npm uninstall @enact/ui-test-utils --prefix packages/i18n
     - npm install
     - npm run bootstrap
     - npm run interlink
