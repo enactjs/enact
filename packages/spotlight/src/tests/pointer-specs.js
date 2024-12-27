@@ -113,7 +113,7 @@ describe('pointer', () => {
 			expect(actual).toBe(expected);
 		});
 
-		test('should enable pointer mode if the pointer positionchanges', () => {
+		test('should enable pointer mode if the pointer position changes', () => {
 			setPointerMode(false);
 			notifyPointerMove(null, null, 5, 5);
 

@@ -2,6 +2,60 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [5.0.0-alpha.3] - 2024-12-02
+
+### Fixed
+
+- `ui/VirtualList` to re-render when the each size of variable sized items changed
+
+## [4.9.4] - 2024-11-19
+
+### Fixed
+
+- `ui/VirtualList` to re-render when the each size of variable sized items changed
+
+## [4.9.3] - 2024-10-29
+
+No significant changes.
+
+## [5.0.0-alpha.2] - 2024-10-08
+
+### Added
+
+- `core/util` function `setDefaultProps` to set props that are missing or `undefined` to default values
+- `ui/VirtualList.VirtualListBasic` support to read the order of items when the `listitem` role is set to items
+- `webos/signLang` module with `startSignLang()`, `stopSignLang()` functions and `SignLangDecorator` Higher-order Component
+
+### Fixed
+
+- `spotlight` to not require `less` dependency
+- `ui/Marquee.MarqueeController` to start animation properly when `marqueeOnFocus` is set to `true` and text changed
+- `ui/Scroller` and `ui/VirtualList` to have default prop when `undefined` prop is passed
+- `ui/VirtualList` to update its scroll bounds when the total size of items is changed
+
+## [4.9.2] - 2024-09-26
+
+### Fixed
+
+- `ui/VirtualList` to update its scroll bounds when the total size of items is changed
+
+## [4.9.1] - 2024-09-09
+
+### Added
+
+- `core/util` function `setDefaultProps` to set props that are missing or `undefined` to default values
+- `webos/signLang` module with `startSignLang()`, `stopSignLang()` functions and `SignLangDecorator` Higher-order Component
+
+### Fixed
+
+- `ui/Scroller` and `ui/VirtualList` to have default prop when `undefined` prop is passed
+
+## [4.7.12] - 2024-09-05
+
+### Added
+
+- `webos/signLang` module with `startSignLang()`, `stopSignLang()` functions and `SignLangDecorator` Higher-order Component
+
 ## [4.9.0] - 2024-07-17
 
 ### Fixed

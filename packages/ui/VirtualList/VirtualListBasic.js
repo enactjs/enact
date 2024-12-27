@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
-import {clamp} from '@enact/core/util';
+import {clamp, shallowEqual} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import {createRef, Component} from 'react';
@@ -406,7 +406,8 @@ class VirtualListBasic extends Component {
 			prevProps.direction !== this.props.direction ||
 			prevProps.overhang !== this.props.overhang ||
 			prevProps.spacing !== this.props.spacing ||
-			!equals(prevProps.itemSize, this.props.itemSize)
+			!equals(prevProps.itemSize, this.props.itemSize) ||
+			(!this.hasDataSizeChanged && !shallowEqual(prevProps.itemSizes, this.props.itemSizes))
 		) {
 			const {x, y} = this.getXY(this.scrollPosition, 0);
 

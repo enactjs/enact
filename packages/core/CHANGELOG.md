@@ -2,11 +2,37 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
-## [unreleased]
+## [5.0.0-alpha.3] - 2024-12-02
+
+No significant changes.
+
+## [4.9.4] - 2024-11-19
+
+No significant changes.
+
+## [4.9.3] - 2024-10-29
+
+No significant changes.
+
+## [5.0.0-alpha.2] - 2024-10-08
 
 ### Added
 
 - `core/util` function `setDefaultProps` to set props that are missing or `undefined` to default values
+
+## [4.9.2] - 2024-09-26
+
+No significant changes.
+
+## [4.9.1] - 2024-09-09
+
+### Added
+
+- `core/util` function `setDefaultProps` to set props that are missing or `undefined` to default values
+
+## [4.7.12] - 2024-09-05
+
+No significant changes.
 
 ## [4.9.0] - 2024-07-17
 

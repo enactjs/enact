@@ -270,8 +270,8 @@ const mapAndFilterChildren = (children, callback, filter) => {
  * Sets props that are missing or `undefined` to default values
  *
  * @function
- * @param {Obejct}        props           Props object
- * @param {Obejct}        defaultProps    Default value object
+ * @param {Object}        props           Props object
+ * @param {Object}        defaultProps    Default value object
  *
  * @returns {Object}                      Props with default values
  * @memberof core/util
@@ -294,8 +294,8 @@ const setDefaultProps = (props, defaultProps = {}) => {
  * Performs shallow comparison for given objects.
  *
  * @function
- * @param {Obejct}        a    An object to compare.
- * @param {Obejct}        b    An object to compare.
+ * @param {Object}        a    An object to compare.
+ * @param {Object}        b    An object to compare.
  *
  * @returns {Boolean}          `true` if the values of all keys are strictly equal.
  * @memberof core/util
