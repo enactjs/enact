@@ -1452,7 +1452,6 @@ libraries.
 
 - Renamed `ui/Group` prop `select` to `childSelect` and added prop `select` to support selection types
 
-
 ## [1.0.0-alpha.2] - 2016-10-21
 
 This version includes a lot of refactoring from the previous release. Developers need to switch to the new enact-dev command-line tool.
