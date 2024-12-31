@@ -17,4 +17,7 @@ about: Request a new feature or modification of an existing one
 ### Alternative Approaches
 [//]: # (Are there any other solutions you considered?  Why were those not acceptable?)
 
+### Application Information
+[//]: # (Please provide detailed information about your application. This includes the application name, type, and any other relevant context. Detailed information about your application will help us better understand your situation and assist you more effectively.)
+
 ### Comments
