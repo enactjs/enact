@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+- Update dependencies including React 19.0.0
+
 ## [5.0.0-alpha.3] - 2024-12-02
 
 ### Fixed
