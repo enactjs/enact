@@ -9,9 +9,9 @@ before_install:
 install:
     - npm config set prefer-offline false
     - npm install -g codecov
-    - git clone --branch=feature/react19 --depth 1 https://github.com/enactjs/cli ../cli
+    - git clone --branch=develop --depth 1 https://github.com/enactjs/cli ../cli
     - pushd ../cli
-    - npm install --force
+    - npm install
     - npm link
     - popd
     - npm uninstall @enact/ui-test-utils --prefix packages/i18n
