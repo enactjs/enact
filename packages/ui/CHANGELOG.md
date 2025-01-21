@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [5.0.0-alpha.4] - 2025-01-21
+
+### Fixed
+
+- `ui/VirtualList` to not abnormally scroll when `dataSize` and `itemSizes` changed
+
+## [4.9.5] - 2024-12-11
+
+### Fixed
+
+- `ui/VirtualList` to not abnormally scroll when `dataSize` and `itemSizes` changed
+
 ## [5.0.0-alpha.3] - 2024-12-02
 
 ### Fixed
@@ -1445,7 +1457,6 @@ libraries.
 ### Changed
 
 - Renamed `ui/Group` prop `select` to `childSelect` and added prop `select` to support selection types
-
 
 ## [1.0.0-alpha.2] - 2016-10-21
 

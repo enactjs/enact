@@ -2,6 +2,28 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [5.0.0-alpha.4] - 2025-01-21
+
+- Update dependencies including React 19.0.0
+
+### Added
+
+- `spotlight` an optional `options.preventScroll` parameter to `focus` function to prevent scrolling by focus
+
+### Changed
+
+- `core/platform` to support `safari` 16.4, `chrome` 119, and `firefox` 128 or later
+
+### Fixed
+
+- `ui/VirtualList` to not abnormally scroll when `dataSize` and `itemSizes` changed
+
+## [4.9.5] - 2024-12-11
+
+### Fixed
+
+- `ui/VirtualList` to not abnormally scroll when `dataSize` and `itemSizes` changed
+
 ## [5.0.0-alpha.3] - 2024-12-02
 
 ### Fixed
