@@ -16,7 +16,7 @@
     "@enact/core": "^5.0.0-alpha.4",
     "@enact/i18n": "^5.0.0-alpha.4",
     "@enact/spotlight": "^5.0.0-alpha.4",
-    "@enact/storybook-utils": "^6.0.0-rc.3",
+    "@enact/storybook-utils": "enactjs/storybook-utils#feature/eslint9",
     "@enact/ui": "^5.0.0-alpha.4",
     "@enact/webos": "^5.0.0-alpha.4",
     "@storybook/addon-docs": "^8.4.5",
