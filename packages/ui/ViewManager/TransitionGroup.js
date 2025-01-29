@@ -15,7 +15,7 @@ import propEq from 'ramda/src/propEq';
 import remove from 'ramda/src/remove';
 import unionWith from 'ramda/src/unionWith';
 import useWith from 'ramda/src/useWith';
-import {Children, cloneElement, createElement, createRef, Component} from 'react';
+import {Children, cloneElement, createElement, Component} from 'react';
 
 /**
  * Returns the index of a child in an array found by `key` matching
@@ -94,7 +94,7 @@ class TransitionGroup extends Component {
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to {@link ui/ViewManager.TransitionGroup.component|component}
+		 * Called with a reference to [component]{@link ui/ViewManager.TransitionGroup#component}
 		 *
 		 * @type {Object|Function}
 		 * @private
@@ -183,8 +183,6 @@ class TransitionGroup extends Component {
 		this.keysToLeave = [];
 		this.keysToStay = [];
 		this.groupRefs = {};
-		this.nodeRef = createRef();
-		this.refNodeId = '#transition#group#';
 	}
 
 	static getDerivedStateFromProps (props, state) {
@@ -427,40 +425,21 @@ class TransitionGroup extends Component {
 		this.groupRefs[key] = node;
 	};
 
-	/* This code is the same as @enact/core/WithRef. */
-	getNodeRef = () => {
-		const refNode = this.nodeRef.current;
-		const attributeSelector = `[data-transitiongroup-id="${refNode.getAttribute('data-transitiongroup-target')}"]`;
-		/* The intended code is to search for the referrer element via a single querySelector call. But unit tests cannot handle :has() properly.
-		const selector = `:scope ${attributeSelector}, :scope :has(${attributeSelector})`;
-		return refNode?.parentElement?.querySelector(selector) || null;
-		*/
-		const targetNode = refNode?.parentElement?.querySelector(attributeSelector) || null;
-		for (let current = targetNode; current; current = current.parentElement) {
-			if (current?.parentElement === refNode?.parentElement) {
-				return current;
-			}
-		}
-	};
-
 	render () {
 		// support wrapping arbitrary children with a component that supports the necessary
 		// lifecycle methods to animate transitions
-		const childrenToRender = this.state.children.map((child, index) => {
+		const childrenToRender = this.state.children.map(child => {
 			const isLeaving = child.props['data-index'] !== this.props.currentIndex && typeof child.props['data-index'] !== 'undefined';
 
 			return cloneElement(
 				this.props.childFactory(child),
-				{key: child.key, ref: this.storeRefs(child.key), leaving: isLeaving, appearing: !this.hasMounted, getParentRef: this.getNodeRef, renderedIndex: index}
+				{key: child.key, ref: this.storeRefs(child.key), leaving: isLeaving, appearing: !this.hasMounted}
 			);
 		});
 
 		// Do not forward TransitionGroup props to primitive DOM nodes
 		const props = Object.assign({}, this.props);
-
 		props.ref = this.props.componentRef;
-		props['data-transitiongroup-id'] = this.refNodeId;
-
 		delete props.childFactory;
 		delete props.component;
 		delete props.componentRef;
@@ -473,11 +452,10 @@ class TransitionGroup extends Component {
 		delete props.onWillTransition;
 		delete props.size;
 
-		return (
-			<>
-				{createElement(this.props.component, props, childrenToRender)}
-				<div data-transitiongroup-target={this.refNodeId} ref={this.nodeRef} style={{display: 'none'}} />
-			</>
+		return createElement(
+			this.props.component,
+			props,
+			childrenToRender
 		);
 	}
 }

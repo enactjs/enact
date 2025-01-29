@@ -143,7 +143,6 @@ const extractAriaProps = function (props) {
  * @memberof core/util
  * @public
  */
-/* istanbul ignore next */
 const perfNow = function () {
 	if (typeof window === 'object') {
 		return window.performance.now();
@@ -248,7 +247,7 @@ const memoize = (fn) => {
  *
  * @returns {*}                The processed children or the value of `children` if not an array.
  * @memberof core/util
- * @see https://react.dev/reference/react/Children#children-map
+ * @see https://reactjs.org/docs/react-api.html#reactchildrenmap
  * @public
  */
 const mapAndFilterChildren = (children, callback, filter) => {
@@ -267,35 +266,11 @@ const mapAndFilterChildren = (children, callback, filter) => {
 };
 
 /**
- * Sets props that are missing or `undefined` to default values
- *
- * @function
- * @param {Object}        props           Props object
- * @param {Object}        defaultProps    Default value object
- *
- * @returns {Object}                      Props with default values
- * @memberof core/util
- * @public
- */
-const setDefaultProps = (props, defaultProps = {}) => {
-	const result = Object.assign({}, props);
-
-	for (const prop in defaultProps) {
-		// eslint-disable-next-line no-undefined
-		if (props[prop] === undefined) {
-			result[prop] = defaultProps[prop];
-		}
-	}
-
-	return result;
-};
-
-/**
  * Performs shallow comparison for given objects.
  *
  * @function
- * @param {Object}        a    An object to compare.
- * @param {Object}        b    An object to compare.
+ * @param {Obejct}        a    An object to compare.
+ * @param {Obejct}        b    An object to compare.
  *
  * @returns {Boolean}          `true` if the values of all keys are strictly equal.
  * @memberof core/util
@@ -341,6 +316,5 @@ export {
 	mergeClassNameMaps,
 	perfNow,
 	mapAndFilterChildren,
-	setDefaultProps,
 	shallowEqual
 };

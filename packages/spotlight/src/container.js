@@ -12,7 +12,7 @@ import {coerceArray} from '@enact/core/util';
 import intersection from 'ramda/src/intersection';
 import last from 'ramda/src/last';
 
-import {contains, matchSelector, getContainerRect, getRect, intersects, isStandardFocusable} from './utils';
+import {contains, matchSelector, getContainerRect, getRect, intersects} from './utils';
 
 const containerAttribute = 'data-spotlight-id';
 const containerConfigs   = new Map();
@@ -45,8 +45,7 @@ let GlobalConfig = {
 	active: true,
 	continue5WayHold: false,
 	defaultElement: '',     // <extSelector> except "@" syntax.
-	enterTo: null,            // null, 'last-focused', 'default-element'
-	isStandardFocusableMode: false,     // @private - set to true to focus standard focusable element
+	enterTo: '',            // '', 'last-focused', 'default-element'
 	lastFocusedElement: null,
 	lastFocusedKey: null,
 	lastFocusedPersist: (node, all) => {
@@ -68,7 +67,6 @@ let GlobalConfig = {
 	onLeaveContainerFail: null,  // @private - notify the container when failing to leave via 5-way
 	overflow: false,
 	partition: false, // use the container bounds for partitioning when leaving
-	positionTargetOnFocus: false, // @private - use the container for the position target when its descendants is focused
 	rememberSource: false,
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
 	selector: '',           // can be a valid <extSelector> except "@" syntax.
@@ -91,9 +89,7 @@ let GlobalConfig = {
  * @private
  */
 const querySelector = (node, includeSelector, excludeSelector) => {
-	const focusables = GlobalConfig.isStandardFocusableMode ? Array.prototype.filter.call(node.getElementsByTagName('*'), isStandardFocusable) : [];
-	const include = new Set([...node.querySelectorAll(includeSelector), ...focusables]);
-
+	const include = new Set(node.querySelectorAll(includeSelector));
 	const exclude = node.querySelectorAll(excludeSelector);
 
 	for (let i = 0; i < exclude.length; i++) {
@@ -599,7 +595,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const config = getContainerConfig(containerId);
-	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node) && !(GlobalConfig.isStandardFocusableMode && isStandardFocusable(node))) {
+	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
 		return false;
 	}
 
@@ -1102,22 +1098,6 @@ function notifyEnterContainer (direction, previous, previousContainerIds, curren
 	});
 }
 
-/**
- * Returns the closest container that wrap the element and has positionTargetOnFocus configured
- *
- * @param {Node} spotItem Focused element
- * @param {String[]} containerIds Ids for containers that wrap the spotItem element
- * @private
- */
-function getPositionTargetOnFocus (spotItem, containerIds = getContainersForNode(spotItem)) {
-	return containerIds.reduce((result, containerId) => {
-		if (getContainerConfig(containerId)?.positionTargetOnFocus) {
-			result = getContainerNode(containerId);
-		}
-		return result;
-	}, spotItem);
-}
-
 export {
 	// Remove
 	getAllContainerIds,
@@ -1144,7 +1124,6 @@ export {
 	getDefaultContainer,
 	getLastContainer,
 	getNavigableContainersForNode,
-	getPositionTargetOnFocus,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,

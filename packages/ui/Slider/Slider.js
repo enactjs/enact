@@ -47,7 +47,7 @@ const SliderBase = kind({
 		 * * progress           - The `value` as a proportion between `min` and `max`
 		 * * progressAnchor     - The value of `progressAnchor`
 		 *
-		 * This prop accepts either a Component (e.g. `MyProgress`) which will be instantiated with
+		 * This prop accepts either a Component (e.g. `MyProgress`} which will be instantiated with
 		 * the above props or a component instance (e.g. `<MyProgress customProp="value" />`) which
 		 * will have its props merged with the above props.
 		 *
@@ -118,7 +118,7 @@ const SliderBase = kind({
 		 * * `tooltipComponent` - The value of `tooltipComponent`
 		 * * `value`            - The value of `value`
 		 *
-		 * This prop accepts either a Component (e.g. `MyKnob`) which will be instantiated with
+		 * This prop accepts either a Component (e.g. `MyKnob`} which will be instantiated with
 		 * the above props or a component instance (e.g. `<MyKnob customProp="value" />`) which
 		 * will have its props merged with the above props.
 		 *
@@ -134,7 +134,7 @@ const SliderBase = kind({
 		 * The maximum value of the slider.
 		 *
 		 * The range between `min` and `max` should be evenly divisible by
-		 * {@link ui/Slider.SliderBase.step|step}.
+		 * [step]{@link ui/Slider.SliderBase.step}.
 		 *
 		 * @type {Number}
 		 * @default 100
@@ -146,7 +146,7 @@ const SliderBase = kind({
 		 * The minimum value of the slider.
 		 *
 		 * The range between `min` and `max` should be evenly divisible by
-		 * {@link ui/Slider.SliderBase.step|step}.
+		 * [step]{@link ui/Slider.SliderBase.step}.
 		 *
 		 * @type {Number}
 		 * @default 0
@@ -219,7 +219,7 @@ const SliderBase = kind({
 		 * * `orientation` - The value of the `orientation` prop from the slider
 		 * * `proportion`  - The `value` as a proportion between `min` and `max`
 		 *
-		 * This prop accepts either a Component (e.g. `MyTooltip`) which will be instantiated with
+		 * This prop accepts either a Component (e.g. `MyTooltip`} which will be instantiated with
 		 * the above props or a component instance (e.g. `<MyTooltip customProp="value" />`) which
 		 * will have its props merged with the above props.
 		 *
@@ -324,7 +324,7 @@ const SliderBase = kind({
 });
 
 /**
- * Adds touch and drag support to a {@link ui/Slider.SliderBase|SliderBase}.
+ * Adds touch and drag support to a [SliderBase]{@link ui/Slider.SliderBase}.
  *
  * @hoc
  * @memberof ui/Slider

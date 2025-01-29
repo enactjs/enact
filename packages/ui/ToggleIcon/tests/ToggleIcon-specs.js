@@ -21,13 +21,12 @@ describe('ToggleIcon Specs', () => {
 		expect(handleToggle).toHaveBeenCalledTimes(expected);
 	});
 
-	test('should call onClick when clicked', async () => {
+	test('should call onClick when clicked', () => {
 		const handleClick = jest.fn();
-		const user = userEvent.setup();
 		render(<ToggleIcon onClick={handleClick}>star</ToggleIcon>);
 		const toggleIcon = screen.getByText('star');
 
-		await user.click(toggleIcon);
+		userEvent.click(toggleIcon);
 
 		const expected = 1;
 

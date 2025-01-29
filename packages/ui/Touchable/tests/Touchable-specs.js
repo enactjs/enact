@@ -168,69 +168,6 @@ describe('Touchable', () => {
 			done();
 		});
 
-		test('should update state configurations onPinchStart events', (done) => {
-			const pinchConfig = {
-				global: true,
-				moveTolerance: 0
-			};
-
-			const Component = Touchable(DivComponent);
-			const handler = jest.fn();
-			const {rerender} = render(<Component pinchConfig={pinchConfig} onPinch={() => {}} />);
-			const component = screen.getByTestId('component');
-
-			const touchEvent = {
-				timeStamp: 1,
-				type: 'touch',
-				clientX: 0, clientY: 0,
-				changedTouches: [{clientX: 0, clientY: 0}, {clientX: 10, clientY: 10}],
-				targetTouches: [{clientX: 0, clientY: 0}, {clientX: 10, clientY: 10}]
-			};
-
-			rerender(<Component pinchConfig={pinchConfig} onPinch={() => {}} onPinchStart={handler} />);
-
-			fireEvent.touchStart(component, touchEvent);
-			fireEvent.mouseDown(component, touchEvent);
-
-			jest.runOnlyPendingTimers();
-
-			expect(handler).toHaveBeenCalled();
-			done();
-		});
-
-		test('should update state configurations onPinchEnd events', (done) => {
-			const pinchConfig = {
-				global: true,
-				moveTolerance: 0
-			};
-
-			const Component = Touchable(DivComponent);
-			const handler = jest.fn();
-			const {rerender} = render(<Component pinchConfig={pinchConfig} onPinch={() => {}} />);
-			const component = screen.getByTestId('component');
-
-			const touchEvent = {
-				timeStamp: 1,
-				type: 'touch',
-				clientX: 0, clientY: 0,
-				changedTouches: [{clientX: 0, clientY: 0}, {clientX: 10, clientY: 10}],
-				targetTouches: [{clientX: 0, clientY: 0}, {clientX: 10, clientY: 10}]
-			};
-
-			fireEvent.touchStart(component, touchEvent);
-			fireEvent.mouseDown(component, touchEvent);
-
-			rerender(<Component pinchConfig={pinchConfig} onPinch={() => {}} onPinchEnd={handler} />);
-
-			jest.runOnlyPendingTimers();
-
-			fireEvent.touchEnd(component, touchEvent);
-			fireEvent.mouseUp(component, touchEvent);
-
-			expect(handler).toHaveBeenCalled();
-			done();
-		});
-
 		test('should merge configurations', () => {
 			configure({
 				flick: {

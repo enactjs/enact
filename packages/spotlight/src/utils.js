@@ -9,6 +9,11 @@ let elementMatchesSelector = function (selector) {
 };
 if (typeof window === 'object') {
 	elementMatchesSelector = window.Element.prototype.matches ||
+		window.Element.prototype.matchesSelector ||
+		window.Element.prototype.mozMatchesSelector ||
+		window.Element.prototype.webkitMatchesSelector ||
+		window.Element.prototype.msMatchesSelector ||
+		window.Element.prototype.oMatchesSelector ||
 		elementMatchesSelector;
 }
 
@@ -80,38 +85,6 @@ const intersects = curry((containerRect, elementRect) => {
 const contains = curry((containerRect, elementRect) => {
 	return testIntersection('contains', containerRect, elementRect);
 });
-
-function getIntersectionRect (container, element) {
-	const {
-		left: L,
-		top: T,
-		width: W,
-		height: H
-	} = container.getBoundingClientRect();
-	const {
-		left: l,
-		top: t,
-		width: w,
-		height: h
-	} = element.getBoundingClientRect();
-	const intersectionRect = {
-		element,
-		left: Math.max(l, L),
-		right: Math.min(l + w, L + W),
-		top: Math.max(t, T),
-		bottom: Math.min(t + h, T + H)
-	};
-	intersectionRect.width = intersectionRect.right - intersectionRect.left;
-	intersectionRect.height = intersectionRect.bottom - intersectionRect.top;
-	intersectionRect.center = {
-		x: intersectionRect.left + Math.floor(intersectionRect.width / 2),
-		y: intersectionRect.top + Math.floor(intersectionRect.height / 2)
-	};
-	intersectionRect.center.left = intersectionRect.center.right = intersectionRect.center.x;
-	intersectionRect.center.top = intersectionRect.center.bottom = intersectionRect.center.y;
-
-	return intersectionRect;
-}
 
 function getRect (elem) {
 	const cr = elem.getBoundingClientRect();
@@ -199,49 +172,13 @@ function getContainerRect (containerId) {
 	return getRect(containerNode);
 }
 
-// For details see: https://html.spec.whatwg.org/multipage/interaction.html#focusable-area
-function isStandardFocusable (element) {
-	if (element.tabIndex < 0) {
-		// If the tabIndex value is negative, it is not focusable
-		return false;
-	} else if (isElementHidden(element)) {
-		return false;
-	} else if (['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'OPTGROUP', 'OPTION', 'FIELDSET'].includes(element.tagName) && element.disabled) {
-		// If the element is actually disabled, it is not focusable
-		return false;
-	} else if (element.tagName === 'A' && element.getAttribute('href') !== null) {
-		// Anchor element that has a href attribute is focusable
-		return true;
-	} else if (element.tagName === 'INPUT' && element.type !== 'hidden') {
-		// Input element whose type attribute is not hidden is focusable
-		return true;
-	} else if (element.tabIndex >= 0 || !element.parentElement) {
-		// If the tabIndex value is more than 0, it is focusable
-		// If element is document or iframe, it is focusable
-		return true;
-	} else {
-		return false;
-	}
-}
-
-function isElementHidden (element) {
-	const elemRect = element.getBoundingClientRect();
-	if ((elemRect.width <= 1 && elemRect.height <= 1) || elemRect.x < -3840 || elemRect.y < -2160 || element.getAttribute('hidden')) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
 export {
 	contains,
 	getContainerRect,
-	getIntersectionRect,
 	getPointRect,
 	getRect,
 	getRects,
 	intersects,
-	isStandardFocusable,
 	matchSelector,
 	parseSelector
 };

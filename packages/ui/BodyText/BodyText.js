@@ -15,7 +15,7 @@ import componentCss from './BodyText.module.less';
 
 /**
  * A simple, unstyled text block component, without
- * {@link ui/BodyText.BodyTextDecorator|BodyTextDecorator} applied.
+ * [BodyTextDecorator](ui/BodyText.BodyTextDecorator) applied.
  *
  * @class BodyTextBase
  * @memberof ui/BodyText
@@ -30,7 +30,7 @@ const BodyTextBase = kind({
 		 * Centers the contents.
 		 *
 		 * Applies the `centered` CSS class which can be customized by
-		 * {@link /docs/developer-guide/theming/|theming}.
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default false

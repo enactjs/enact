@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
-import {clamp, shallowEqual} from '@enact/core/util';
+import {clamp} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import {createRef, Component} from 'react';
@@ -13,7 +13,7 @@ const nop = () => {};
 
 /**
  * The shape for the grid list item size
- * in a list for {@link ui/VirtualList.VirtualGridList|VirtualGridList}.
+ * in a list for [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
  *
  * @typedef {Object} gridListItemSizeShape
  * @memberof ui/VirtualList
@@ -28,7 +28,7 @@ const gridListItemSizeShape = PropTypes.shape({
 
 /**
  * The shape for the list different item size
- * in a list for {@link ui/VirtualList.VirtualList|VirtualList}.
+ * in a list for [VirtualList]{@link ui/VirtualList.VirtualList}.
  *
  * @typedef {Object} itemSizesShape
  * @memberof ui/VirtualList
@@ -43,7 +43,7 @@ const itemSizesShape = PropTypes.shape({
 
 /**
  * A basic base component for
- * {@link ui/VirtualList.VirtualList|VirtualList} and {@link ui/VirtualList.VirtualGridList|VirtualGridList}.
+ * [VirtualList]{@link ui/VirtualList.VirtualList} and [VirtualGridList]{@link ui/VirtualList.VirtualGridList}.
  *
  * @class VirtualListBasic
  * @memberof ui/VirtualList
@@ -292,10 +292,17 @@ class VirtualListBasic extends Component {
 	};
 
 	constructor (props) {
+		let nextState = null;
+
 		super(props);
 
 		this.contentRef = createRef();
 		this.itemContainerRefs = [];
+
+		if (props.clientSize) {
+			this.calculateMetrics(props);
+			nextState = this.getStatesAndUpdateBounds(props);
+		}
 
 		this.state = {
 			firstIndex: 0,
@@ -303,13 +310,9 @@ class VirtualListBasic extends Component {
 			prevChildProps: null,
 			prevFirstIndex: 0,
 			updateFrom: 0,
-			updateTo: 0
+			updateTo: 0,
+			...nextState
 		};
-
-		if (props.clientSize) {
-			this.calculateMetrics(props);
-			Object.assign(this.state, this.getStatesAndUpdateBounds(props));
-		}
 	}
 
 	static getDerivedStateFromProps (props, state) {
@@ -406,8 +409,7 @@ class VirtualListBasic extends Component {
 			prevProps.direction !== this.props.direction ||
 			prevProps.overhang !== this.props.overhang ||
 			prevProps.spacing !== this.props.spacing ||
-			!equals(prevProps.itemSize, this.props.itemSize) ||
-			(!this.hasDataSizeChanged && !shallowEqual(prevProps.itemSizes, this.props.itemSizes))
+			!equals(prevProps.itemSize, this.props.itemSize)
 		) {
 			const {x, y} = this.getXY(this.scrollPosition, 0);
 
@@ -551,25 +553,20 @@ class VirtualListBasic extends Component {
 		return index === 0 ? 0 : this.getItemBottomPosition(index - 1) + spacing;
 	};
 
-	getItemPosition = (index, stickTo = 'start', optionalOffset = 0, disallowNegativeOffset = false) => {
+	getItemPosition = (index, stickTo = 'start', optionalOffset = 0) => {
 		const {isPrimaryDirectionVertical, primary, scrollBounds} = this;
 		const maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 		const position = this.getGridPosition(index);
 		let offset = 0;
 
-		if (stickTo === 'start') {         // 'start'
+		if (stickTo === 'start') {
 			offset = optionalOffset;
-		} else if (this.props.itemSizes) { // 'end' for different item sizes
+		} else if (this.props.itemSizes) {
 			offset = primary.clientSize - this.props.itemSizes[index] - optionalOffset;
-		} else if (stickTo === 'center') { // 'center'
+		} else if (stickTo === 'center') {
 			offset = (primary.clientSize / 2) - (primary.gridSize / 2) - optionalOffset;
-		} else {                           // 'end' for same item sizes
+		} else {
 			offset = primary.clientSize - primary.itemSize - optionalOffset;
-		}
-
-		/* istanbul ignore next */
-		if (disallowNegativeOffset) {
-			offset = Math.max(0, offset);
 		}
 
 		position.primaryPosition = clamp(0, maxPos, position.primaryPosition - offset);
@@ -831,7 +828,7 @@ class VirtualListBasic extends Component {
 	// scrollMode 'native' only
 	getRtlPositionX = (x) => {
 		if (this.props.rtl) {
-			return (platform.chrome < 85) ? this.scrollBounds.maxLeft - x : -x;
+			return (platform.ios || platform.safari || platform.chrome >= 85 || platform.androidChrome >= 85) ? -x : this.scrollBounds.maxLeft - x;
 		}
 		return x;
 	};
@@ -1097,7 +1094,7 @@ class VirtualListBasic extends Component {
 			};
 
 		this.cc[key] = (
-			<div className={css.listItem} key={key} ref={itemContainerRef} role="presentation" style={this.composeStyle(...rest)}>
+			<div className={css.listItem} key={key} ref={itemContainerRef} style={this.composeStyle(...rest)}>
 				{itemRenderer({...childProps, ...componentProps, index})}
 			</div>
 		);

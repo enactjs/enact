@@ -69,7 +69,7 @@ describe('FloatingLayer Specs', () => {
 		expect(actual).toMatchObject(expectedType);
 	});
 
-	test('should fire onDismiss event with type and detail info when FloatingLayer is closed', () => {
+	test('should fire onDimiss event with type and detail info when FloatingLayer is closed', () => {
 		const handleDismiss = jest.fn();
 
 		render(

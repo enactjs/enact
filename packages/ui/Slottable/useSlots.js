@@ -105,8 +105,8 @@ function distribute ({children, ...slots}) {
 /**
  * Distributes `children` into the configured `slots`.
  *
- * `useSlots` iterates over all the `children` in `props` and distributes any children based on
- * the following rules:
+ * `useSlots` iterates over all of the `children` in `props` and distributes any children based on
+ * the followig rules:
  *
  * * If the child has a `slot` property matching a valid slot, or
  * * If the component for the child has the `defaultSlot` static member matching a valid slot, or

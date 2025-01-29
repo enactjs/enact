@@ -2,167 +2,13 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [5.0.0-alpha.4] - 2025-01-21
-
-### Fixed
-
-- `ui/VirtualList` to not abnormally scroll when `dataSize` and `itemSizes` changed
-
-## [4.9.5] - 2024-12-11
-
-### Fixed
-
-- `ui/VirtualList` to not abnormally scroll when `dataSize` and `itemSizes` changed
-
-## [5.0.0-alpha.3] - 2024-12-02
-
-### Fixed
-
-- `ui/VirtualList` to re-render when the each size of variable sized items changed
-
-## [4.9.4] - 2024-11-19
-
-### Fixed
-
-- `ui/VirtualList` to re-render when the each size of variable sized items changed
-
-## [4.9.3] - 2024-10-29
-
-No significant changes.
-
-## [5.0.0-alpha.2] - 2024-10-08
-
-### Added
-
-- `ui/VirtualList.VirtualListBasic` support to read the order of items when the `listitem` role is set to items
-
-### Fixed
-
-- `ui/Marquee.MarqueeController` to start animation properly when `marqueeOnFocus` is set to `true` and text changed
-- `ui/Scroller` and `ui/VirtualList` to have default prop when `undefined` prop is passed
-- `ui/VirtualList` to update its scroll bounds when the total size of items is changed
-
-## [4.9.2] - 2024-09-26
-
-### Fixed
-
-- `ui/VirtualList` to update its scroll bounds when the total size of items is changed
-
-## [4.9.1] - 2024-09-09
-
-### Fixed
-
-- `ui/Scroller` and `ui/VirtualList` to have default prop when `undefined` prop is passed
-
-## [4.7.12] - 2024-09-05
-
-No significant changes.
-
-## [4.9.0] - 2024-07-17
-
-### Fixed
-
-- `ui/Marquee.MarqueeDecorator` to start animation properly when synchronized by `ui/Marquee.MarqueeController` and text changed
-- `ui/Placeholder.PlaceholderControllerDecorator` to not remount its children when it rerenders
-
-## [5.0.0-alpha.1] - 2024-07-11
-
-### Removed
-
-- `ui/GridListImageItem`
-- `ui/IconButton`
-- `ui/Marquee.MarqueeDecorator` config `className`
-- `ui/RadioDecorator`
-- `ui/Scroller.ScrollerBase`
-- `ui/SlotItem`
-- `ui/ToggleItem`
-- `ui/VirtualList.VirtualListBase`
-
-### Changed
-
-- `ui/Marquee.MarqueeDecorator` to use `@enact/i18n/utils.isRtlText` API to determine the text directionality
-
-## [4.9.0-beta.1] - 2024-06-17
-
-No significant changes.
-
-## [4.9.0-alpha.3] - 2024-06-05
-
-### Changed
-
-- `ui/Placeholder.PlaceholderControllerDecorator` and `ui/ViewManager` to have sibling DOM node as alternative to findDOMNode API which will be removed in React 19
-
-## [4.0.15] - 2024-05-28
-
-No significant changes.
-
-## [4.9.0-alpha.2] - 2024-05-24
-
-No significant changes.
-
-## [4.0.14] - 2024-05-14
-
-No significant changes.
-
-## [4.7.11] - 2024-05-13
-
-No significant changes.
-
-## [4.9.0-alpha.1] - 2024-04-09
-
-### Added
-
-- `ui/Layout.Cell` prop `componentCss` to support customizing the component used in `Cell`
-
-## [4.8.0] - 2024-02-08
-
-No significant changes.
-
-## [4.7.9] - 2023-12-08
-
-No significant changes.
-
 ## [4.5.6] - 2023-11-30
 
 ### Fixed
 
 - `ui/Marquee.MarqueeDecorator` to re-render when its size changed
 
-## [4.0.13] - 2022-11-29
-
-### Fixed
-
-- `ui/Marquee.MarqueeDecorator` to re-render when its size changed
-
-## [4.7.8] - 2023-11-17
-
-### Fixed
-
-- `ui/Marquee.MarqueeDecorator` to re-render when its size changed
-
-## [4.7.7] - 2023-11-09
-
-No significant changes.
-
-## [4.7.6] - 2023-09-20
-
-No significant changes.
-
-## [4.7.5] - 2023-09-12
-
-No significant changes.
-
-## [4.7.4] - 2023-08-31
-
-### Fixed
-
-- `ui/Marquee` style to avoid letters being cut off
-
-## [4.7.3] - 2023-08-10
-
-No significant changes.
-
-## [4.7.2] - 2023-07-14
+## [4.5.5] - 2023-11-08
 
 No significant changes.
 
@@ -172,54 +18,9 @@ No significant changes.
 
 - `ui/Scroller` and `ui/VirtualList` to pass scrolling state properly to UI libraries
 
-## [4.7.1] - 2023-06-02
-
-No significant changes.
-
 ## [4.5.3] - 2023-04-06
 
 No significant changes.
-
-## [4.7.0] - 2023-04-25
-
-### Added
-
-- `ui/Layout.Cell` prop `grow` to expand its size to the container
-
-### Fixed
-
-- `ui/ViewManager` to set index prop properly when reverseTransition prop is given
-
-## [4.6.2] - 2023-03-09
-
-No significant changes.
-
-## [4.6.1] - 2023-02-03
-
-### Added
-
-- `ui/Touchable` events `onPinch`, `onPinchStart`, `onPinchEnd`, and config `pinchConfig` to support pinch gesture
-
-### Deprecated
-
-- `ui/IconButton` to be removed in 5.0.0, use `ui/Button` instead
-- `ui/RadioDecorator` to be removed in 5.0.0
-- `ui/Scroller.ScrollerBase` to be removed in 5.0.0
-- `ui/SlotItem` to be removed in 5.0.0
-- `ui/ToggleItem` to be removed in 5.0.0
-- `ui/VirtualList.VirtualListBase` to be removed 5.0.0
-
-## [4.6.0] - 2022-12-05
-
-### Fixed
-
-- `ui/Marquee.MarqueeDecorator` to restart animation properly when `marqueeDelay` is 0
-
-## [4.0.12] - 2022-09-16
-
-### Fixed
-
-- `ui/Marquee.MarqueeDecorator` to have proper spacing for bidirectional text
 
 ## [4.5.2] - 2022-08-17
 
@@ -268,19 +69,11 @@ No significant changes.
 
 - `ui/Marquee.MarqueeDecorator` config `css` to support customizing the marquee styles
 
-## [4.0.11] - 2022-04-25
-
-No significant changes.
-
 ## [4.5.0-alpha.1] - 2022-04-15
 
 ### Fixed
 
 - `ui/FloatingLayer` to stack popups always in the order in which they were opened
-
-## [4.0.10] - 2022-04-05
-
-No significant changes.
 
 ## [4.1.4] - 2022-03-24
 
@@ -301,20 +94,12 @@ No significant changes.
 
 - Updated to use `forwardCustom` and add `type` when forwarding custom events
 
-## [3.2.7] - 2022-01-17
-
-No significant changes.
-
 ## [4.1.2] - 2021-12-22
 
 ### Fixed
 
 - `ui/Scroller` and `ui/VirtualList` to avoid stuttering of content on drag in mobile devices
 - `ui/Scroller` and `ui/VirtualList` to scroll correctly on Android platform for RTL locales
-
-## [4.0.9] - 2021-12-15
-
-No significant changes.
 
 ## [4.1.1] - 2021-11-30
 
@@ -611,8 +396,6 @@ No significant changes.
 
 ### Fixed
 
-- `ui/VirtualList.VirtualGridList` and `ui/VirtualList.VirtualList` to show items properly when reducing data size by updating `firstIndex` correctly
-- `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` not to suddenly jump when pressing directional keys after wheeling
 - `ui/VirtualList.VirtualList` and `ui/VirtualList.VirtualGridList` to show items properly when reducing data size
 
 ## [3.2.5] - 2019-11-14
@@ -1457,6 +1240,7 @@ libraries.
 ### Changed
 
 - Renamed `ui/Group` prop `select` to `childSelect` and added prop `select` to support selection types
+
 
 ## [1.0.0-alpha.2] - 2016-10-21
 

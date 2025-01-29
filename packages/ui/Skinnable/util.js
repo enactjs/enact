@@ -58,7 +58,7 @@ function determineVariants (defaultVariants, allowedVariants, authorVariants, pa
 	authorVariants = objectify(authorVariants);
 	parentVariants = objectify(parentVariants);
 
-	// Merge all the variants objects, preferring values in objects from left to right.
+	// Merge all of the variants objects, preferring values in objects from left to right.
 	const mergedObj = [defaultVariants, parentVariants, authorVariants].reduce(
 		(obj, a) => {
 			if (a) {

@@ -64,7 +64,7 @@ const resolve = (base = '/', path) => {
 	return `/${base.concat(path).join('/')}`;
 };
 
-const RoutablePropTypes = {
+const propTypes = {
 	path: PropTypes.oneOfType([
 		PropTypes.arrayOf(PropTypes.string),	// array of path segments
 		PropTypes.string						// URI-style path
@@ -72,7 +72,7 @@ const RoutablePropTypes = {
 };
 
 export {
-	RoutablePropTypes,
+	propTypes,
 	resolve,
 	stringifyRoutes,
 	toSegments,

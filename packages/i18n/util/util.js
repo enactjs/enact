@@ -12,7 +12,7 @@ import '../src/glue';
 import {toLowerCase, toUpperCase} from '../src/case';
 
 /*
- * This regex pattern is used by the {@link i18n/utils.isRtlText|isRtlText()} function.
+ * This regex pattern is used by the [isRtlText()]{@link i18n/utils.isRtlText} function.
  *
  * Arabic: \u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFE
  * Hebrew: \u0590-\u05FF\uFB1D-\uFB4F
@@ -22,11 +22,11 @@ import {toLowerCase, toUpperCase} from '../src/case';
 const rtlPattern = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFE\u0590-\u05FF\uFB1D-\uFB4F]/;
 
 /**
- * Takes content `str` and determines whether or not it is {@link /docs/developer-guide/glossary/#rtl|RTL}.
+ * Takes content `str` and determines whether or not it is [RTL]{@link /docs/developer-guide/glossary/#rtl}.
  *
  * @function
  * @memberof i18n/util
- * @param {String} str - A string to check the {@link /docs/developer-guide/glossary/#rtl|RTL}-ness of.
+ * @param {String} str - A string to check the [RTL]{@link /docs/developer-guide/glossary/#rtl}-ness of.
  * @returns {Boolean} `true` if `str` should be RTL; `false` if not.
  * @public
  */

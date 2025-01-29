@@ -59,10 +59,10 @@ const LinkBase = kind({
 });
 
 /**
- * A higher-order component adds support to a component to handle `navigate` from {@link ui/Routable.Routable|Routable}.
+ * A higher-order component adds support to a component to handle `navigate` from [`Routable`]{@link ui/Routable.Routable}.
  * It has configuration placed in the first argument to define which event will be used to navigate.
  * `onClick` event is used by default. Thus, if you don't configure it, the component should forward `onClick` event
- * to make {@link ui/Routable.Routable|Routable} know when navigation is triggered.
+ * to make [`Routable`]{@link ui/Routable.Routable} know when navigation is triggered.
  *
  * Example:
  * ```
@@ -131,7 +131,7 @@ const Linkable = hoc({navigate: 'onClick'}, (config, Wrapped) => {
 });
 
 /**
- * A component that is used to make a link to navigate among {@link ui/Routable.Route|Route} components.
+ * A component that is used to make a link to navigate among [`Route`]{@link ui/Routable.Route} components.
  *
  * In the following example, `Sample` would render `Main` with two Links for `About` and `FAQ`.
  * If `About` is clicked, the content of `About` would be displayed under `Main`.

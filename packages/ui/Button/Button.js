@@ -105,10 +105,10 @@ const ButtonBase = kind({
 		icon: PropTypes.oneOfType([PropTypes.node, PropTypes.bool]),
 
 		/**
-		 * The component used to render the {@link ui/Button.ButtonBase.icon|icon}.
+		 * The component used to render the [icon]{@link ui/Button.ButtonBase.icon}.
 		 *
 		 * This component will receive the `icon` class to customize its styling.
-		 * If {@link ui/Button.ButtonBase.icon|icon} is not assigned or is false, this component
+		 * If [icon]{@link ui/Button.ButtonBase.icon} is not assigned or is false, this component
 		 * will not be rendered.
 		 *
 		 * If this is a component rather than an HTML element string, this component will also
@@ -123,7 +123,7 @@ const ButtonBase = kind({
 		/**
 		 * Flips the icon.
 		 *
-		 * @see {@link ui/Icon.IconBase.flip}
+		 * @see {@link ui/Icon.Icon#flip}
 		 * @type {String}
 		 * @public
 		 */
@@ -133,7 +133,7 @@ const ButtonBase = kind({
 		 * Enforces a minimum width for the component.
 		 *
 		 * Applies the `minWidth` CSS class which can be customized by
-		 * {@link /docs/developer-guide/theming/|theming}.
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default true
@@ -145,7 +145,7 @@ const ButtonBase = kind({
 		 * Indicates the component is depressed.
 		 *
 		 * Applies the `pressed` CSS class which can be customized by
-		 * {@link /docs/developer-guide/theming/|theming}.
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -157,7 +157,7 @@ const ButtonBase = kind({
 		 * Indicates the component is selected.
 		 *
 		 * Applies the `selected` CSS class which can be customized by
-		 * {@link /docs/developer-guide/theming/|theming}.
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -169,7 +169,7 @@ const ButtonBase = kind({
 		 * The size of the button.
 		 *
 		 * Applies the CSS class which can be customized by
-		 * {@link /docs/developer-guide/theming/|theming}.
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
 		 * @public
@@ -247,7 +247,7 @@ const ButtonBase = kind({
 });
 
 /**
- * A higher-order component that adds touch support to a {@link ui/Button.ButtonBase|ButtonBase}.
+ * A higher-order component that adds touch support to a [ButtonBase]{@link ui/Button.ButtonBase}.
  *
  * @hoc
  * @memberof ui/Button

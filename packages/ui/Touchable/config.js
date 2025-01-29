@@ -1,12 +1,10 @@
 import {defaultDragConfig} from './Drag.js';
 import {defaultFlickConfig} from './Flick.js';
 import {defaultHoldConfig} from './Hold.js';
-import {defaultPinchConfig} from './Pinch';
 
 const allowedDragKeys = Object.keys(defaultDragConfig);
 const allowedFlickKeys = Object.keys(defaultFlickConfig);
 const allowedHoldKeys = Object.keys(defaultHoldConfig);
-const allowedPinchKeys = Object.keys(defaultPinchConfig);
 
 /**
  * The Global Gesture Configuration Object
@@ -19,7 +17,7 @@ let config = {};
 // map-friendly clone method
 const clone = o => Object.assign({}, o);
 
-// Merges two configuration objects while retaining only the allowed keys
+// Merges two configuation objects while retaining only the allowed keys
 const mergeGestureConfig = (current, update, allowed) => {
 	const cfg = {...current, ...update};
 
@@ -37,8 +35,7 @@ const mergeConfig = (cfg) => {
 	const merged = {
 		drag: mergeGestureConfig(config.drag, cfg.drag, allowedDragKeys),
 		flick: mergeGestureConfig(config.flick, cfg.flick, allowedFlickKeys),
-		hold: mergeGestureConfig(config.hold, cfg.hold, allowedHoldKeys),
-		pinch: mergeGestureConfig(config.pinch, cfg.pinch, allowedPinchKeys)
+		hold: mergeGestureConfig(config.hold, cfg.hold, allowedHoldKeys)
 	};
 
 	merged.hold.events = merged.hold.events.map(clone);
@@ -101,19 +98,6 @@ const mergeConfig = (cfg) => {
  *     controls the amount of time that must pass before this `onHoldStart` event is fired and should
  *     be a multiple of `frequency`.
  *
- * `pinch`
- *
- *   * `boxSizing` - The part of the component's box model is used as the bounds of the constraint.
- *     Only applies when `global` is `false`.
- *     * `'border-box'` - the default, includes the padding and border but excludes the margin.
- *     * `'content-box'` - excludes the padding, border, and margin.
- *   * `global` - When `true`, pinch gestures will continue when leaving the bounds of the component
- *      or blurring the component.
- *   * `maxScale` - The maximum scale value. Defaults to `4`.
- *   * `minScale` - The minimum scale value. Defaults to `0.5`.
- *   * `moveTolerance` - The distance difference from the previous distance that the pointer may move
- *     before cancelling the scaling. Defaults to `16`.
- *
  * @function
  * @param   {Object}     cfg  A partial or complete configuration object
  *
@@ -129,9 +113,8 @@ const getConfig = () => config;
 
 const resetDefaultConfig = () => configure({
 	drag: defaultDragConfig,
-	flick: defaultFlickConfig,
 	hold: defaultHoldConfig,
-	pinch: defaultPinchConfig
+	flick: defaultFlickConfig
 });
 
 resetDefaultConfig();

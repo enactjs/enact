@@ -2,7 +2,7 @@
  * Exports the {@link ui/Placeholder.PlaceholderControllerDecorator} and
  * {@link ui/Placeholder.PlaceholderDecorator} higher-order components.
  *
- * The default export is {@link ui/Placeholder.PlaceholderDecorator|PlaceholderDecorator}.
+ * The default export is [PlaceholderDecorator]{@link ui/Placeholder.PlaceholderDecorator}.
  *
  * @module ui/Placeholder
  * @exports PlaceholderControllerDecorator

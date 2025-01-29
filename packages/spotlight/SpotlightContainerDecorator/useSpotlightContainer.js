@@ -57,10 +57,10 @@ import SpotlightContainer from './SpotlightContainer';
  *
  * @typedef {Object} useSpotlightContainerInterface
  * @memberof spotlight/SpotlightContainerDecorator
- * @property {Function} onBlurCapture    Callback to notify hook when a node was blurred within the
+ * @property {Function} onBlurCapture    Callback to notify hook when an node was blurred within the
  *                                       container. Must be called during the capture phase of the
  *                                       event flow.
- * @property {Function} onFocusCapture   Callback to notify hook when a node was focused within the
+ * @property {Function} onFocusCapture   Callback to notify hook when an node was focused within the
  *                                       container. Must be called during the capture phase of the
  *                                       event flow.
  * @property {String}   attributes       An object of DOM attributes of representing the current

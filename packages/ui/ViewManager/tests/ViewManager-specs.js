@@ -3,8 +3,6 @@ import {act, render, screen, waitFor} from '@testing-library/react';
 import {Component} from 'react';
 
 import ViewManager from '../';
-import {SlideTopArranger} from '../Arranger';
-
 import {MockArranger} from './test-utils';
 
 describe('ViewManager', () => {
@@ -629,37 +627,5 @@ describe('ViewManager', () => {
 		expect(actual).toMatchObject(expected);
 
 		spy.mockRestore();
-	});
-
-	test('should not remove view immediately after `index` change if an arranger is present even for multiple views', () => {
-		const {rerender} = render(
-			<ViewManager arranger={SlideTopArranger} data-testid="viewManager" end={2} index={0}>
-				<div key="view1">View 1</div>
-				<div key="view2">View 2</div>
-				<div key="view3">View 3</div>
-				<div key="view4">View 4</div>
-				<div key="view5">View 5</div>
-			</ViewManager>
-		);
-
-		let actual = screen.getByTestId('viewManager').children.length;
-		let expected = 3;
-
-		expect(actual).toBe(expected);
-
-		rerender(
-			<ViewManager arranger={SlideTopArranger} data-testid="viewManager" end={3} index={1}>
-				<div key="view1">View 1</div>
-				<div key="view2">View 2</div>
-				<div key="view3">View 3</div>
-				<div key="view4">View 4</div>
-				<div key="view5">View 5</div>
-			</ViewManager>
-		);
-
-		actual = screen.getByTestId('viewManager').children.length;
-		expected = 4;
-
-		expect(actual).toBe(expected);
 	});
 });

@@ -10,12 +10,41 @@ import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {Component} from 'react';
 
-import {spottableClass} from '../Spottable';
-import {rootContainerId} from '../src/container';
-import {activateInputType, applyInputTypeToNode, getInputInfo, getInputType, setInputType} from '../src/inputType';
 import Spotlight from '../src/spotlight';
+import {spottableClass} from '../Spottable';
 
-import './debug.less';
+import {rootContainerId} from '../src/container';
+
+import '../styles/debug.less';
+
+const input = {
+	activated: false,
+	applied: false,
+	types: {
+		key: true,
+		mouse: false,
+		touch: false
+	}
+};
+
+const activateInputType = (activated) => {
+	input.activated = activated;
+};
+
+const getInputType = () => {
+	return Object.keys(input.types).find(type => input.types[type]);
+};
+
+const setInputType = (inputType) => {
+	if (Object.prototype.hasOwnProperty.call(input.types, inputType) && !input.types[inputType]) {
+		Object.keys(input.types).map((type) => {
+			input.types[type] = false;
+		});
+		input.types[inputType] = true;
+
+		input.applied = false;
+	}
+};
 
 /**
  * Default configuration for SpotlightRootDecorator
@@ -32,17 +61,7 @@ const defaultConfig = {
 	 * @public
 	 * @memberof spotlight/SpotlightRootDecorator.SpotlightRootDecorator.defaultConfig
 	 */
-	noAutoFocus: false,
-
-	/**
-	 * Specifies the id of the React DOM tree root node
-	 *
-	 * @type {String}
-	 * @default 'root'
-	 * @public
-	 * @memberof spotlight/SpotlightRootDecorator.SpotlightRootDecorator.defaultConfig
-	 */
-	rootId: 'root'
+	noAutoFocus: false
 };
 
 /**
@@ -64,7 +83,7 @@ const defaultConfig = {
  * @hoc
  */
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {noAutoFocus, rootId} = config;
+	const {noAutoFocus} = config;
 
 	return class extends Component {
 		static displayName = 'SpotlightRootDecorator';
@@ -95,7 +114,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (typeof document === 'object') {
-				this.containerNode = document.querySelector('#' + rootId);
+				this.containerNode = document.querySelector('#root');
 
 				document.addEventListener('focusin', this.handleFocusIn, {capture: true});
 				document.addEventListener('keydown', this.handleKeyDown, {capture: true});
@@ -123,7 +142,10 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		applyInputType = () => {
 			if (this && this.containerNode) {
-				applyInputTypeToNode(this.containerNode);
+				Object.keys(input.types).map((type) => {
+					this.containerNode.classList.toggle('spotlight-input-' + type, input.types[type]);
+				});
+				input.applied = true;
 			}
 		};
 
@@ -132,7 +154,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		handleFocusIn = () => {
-			if (!getInputInfo().applied) {
+			if (!input.applied) {
 				this.applyInputType();
 			}
 		};
@@ -146,7 +168,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			setTimeout(() => {
-				if (!getInputInfo().activated) {
+				if (!input.activated) {
 					setInputType('key');
 				}
 				this.applyInputType();

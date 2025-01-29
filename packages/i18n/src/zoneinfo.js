@@ -46,7 +46,7 @@
 const
 	PackedBuffer = require('./packedbuffer.js');
 
-const _platform = (typeof window !== 'undefined' && (window.webOSSystem || window.PalmSystem)) ? 'webos' : 'browser';
+const _platform = (typeof PalmSystem !== 'undefined') ? 'webos' : 'browser';
 
 /**
  * Represents a binary zone info file of the sort that the Unix Zone Info Compiler
@@ -308,7 +308,7 @@ ZoneInfoFile.prototype.usesDST = function (date) {
  * Return the raw offset from UTC that this zone uses at the given time.
  *
  * @param {Date} date the Gregorian date to test
- * @returns {number} offset from UTC in number of minutes. Negative
+ * @returns {number} offset from from UTC in number of minutes. Negative
  * numbers are west of Greenwich, positive are east of Greenwich
  */
 ZoneInfoFile.prototype.getRawOffset = function (date) {

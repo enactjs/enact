@@ -68,7 +68,7 @@ const IconBase = kind({
 		 *
 		 * May be specified as either:
 		 *
-		 * * A string that represents an icon from the {@link ui/Icon.IconBase.iconList|iconList},
+		 * * A string that represents an icon from the [iconList]{@link ui/Icon.IconBase.iconList},
 		 * * An HTML entity string, Unicode reference or hex value (in the form '0x...'),
 		 * * A URL specifying path to an icon image, or
 		 * * An object representing a resolution independent resource (See {@link ui/resolution}).
@@ -96,8 +96,8 @@ const IconBase = kind({
 		 * The following classes are supported:
 		 *
 		 * * `icon` - The root component class
-		 * * `dingbat` - Applied when the value of {@link ui/Icon.IconBase.icon|icon} is not
-		 *   found in {@link ui/Icon.IconBase.iconList|iconList}
+		 * * `dingbat` - Applied when the value of [`icon`]{@link ui/Icon.IconBase.icon} is not
+		 *   found in [iconList]{@link ui/Icon.IconBase.iconList}
 		 * * `large` - Applied when `size` prop is `'large'`
 		 * * `pressed` - Applied when `pressed` prop is `true`
 		 * * `small` - Applied when `size` prop is `'small'`
@@ -142,7 +142,7 @@ const IconBase = kind({
 		 * The size of the button.
 		 *
 		 * Applies the CSS class which can be customized by
-		 * {@link /docs/developer-guide/theming/|theming}.
+		 * [theming]{@link /docs/developer-guide/theming/}.
 		 *
 		 * @type {String}
 		 * @public
@@ -231,7 +231,7 @@ const IconBase = kind({
 });
 
 /**
- * A higher-order component that adds behavior to {@link ui/Icon.IconBase|Icon}.
+ * A higher-order component that adds behavior to [Icon]{@link ui/Icon.IconBase}.
  *
  * @hoc
  * @memberof ui/Icon

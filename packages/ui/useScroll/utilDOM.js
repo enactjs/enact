@@ -8,11 +8,11 @@ const utilDOM = (function () {
 	function containsDangerously (ref, target) {
 		if (!target) {
 			return false;
-		} else if (typeof ref?.current?.contains === 'function') {
+		} else if (ref.current) {
 			warning(ref.current.contains, 'The `contains` function of the Ref is not supported.');
 
 			return ref.current.contains(target);
-		} else if (typeof ref?.contains === 'function') {
+		} else if (ref) {
 			warning(ref.contains, 'The `contains` function of the Ref is not supported.');
 
 			return ref.contains(target);

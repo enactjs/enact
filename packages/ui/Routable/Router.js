@@ -5,10 +5,10 @@ import warning from 'warning';
 
 import ForwardRef from '../ForwardRef';
 
-import {RoutablePropTypes, stringifyRoutes, toSegments} from './util';
+import {propTypes, stringifyRoutes, toSegments} from './util';
 
 /**
- * A Router component for use with {@link ui/ViewManager.ViewManager|ViewManager}
+ * A Router component for use with [`ViewManager`]{@link ui/ViewManager.ViewManager}
  *
  * @class Router
  * @memberof ui/Routable
@@ -33,7 +33,7 @@ const RouterBase = class extends ReactComponent {
 		 * @required
 		 * @public
 		 */
-		path: RoutablePropTypes.path.isRequired,
+		path: propTypes.path.isRequired,
 
 		/**
 		 * The component wrapping the rendered path.
@@ -45,7 +45,7 @@ const RouterBase = class extends ReactComponent {
 		component: EnactPropTypes.renderable,
 
 		/**
-		 * Called with a reference to {@link ui/Routable.RouterBase.component|component}.
+		 * Called with a reference to [component]{@link ui/Routable.Router#component}.
 		 *
 		 * @type {Object|Function}
 		 * @private
@@ -56,7 +56,7 @@ const RouterBase = class extends ReactComponent {
 		 * Routes defined as an object rather than via JSX.
 		 *
 		 * If specified, `routes` will take
-		 * precedence over a JSX definition.
+		 * precendence over a JSX definition.
 		 *
 		 * ```JavaScript
 		 * const routes = {

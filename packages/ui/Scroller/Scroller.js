@@ -3,10 +3,10 @@
  *
  * @module ui/Scroller
  * @exports Scroller
+ * @exports ScrollerBase
  * @exports ScrollerBasic
  */
 
-import {setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
@@ -16,24 +16,6 @@ import Scrollbar from '../useScroll/Scrollbar';
 import ScrollerBasic from './ScrollerBasic';
 
 const nop = () => {};
-
-const scrollerDefaultProps = {
-	cbScrollTo: nop,
-	direction: 'both',
-	horizontalScrollbar: 'auto',
-	noScrollByDrag: false,
-	noScrollByWheel: false,
-	onScroll: nop,
-	onScrollStart: nop,
-	onScrollStop: nop,
-	overscrollEffectOn: {
-		drag: false,
-		pageKey: false,
-		wheel: false
-	},
-	scrollMode: 'translate',
-	verticalScrollbar: 'auto'
-};
 
 /**
  * An unstyled scroller.
@@ -52,8 +34,6 @@ const scrollerDefaultProps = {
 const Scroller = (props) => {
 	// Hooks
 
-	const scrollerProps = setDefaultProps(props, scrollerDefaultProps);
-
 	const {
 		scrollContentHandle,
 		scrollContentWrapper: ScrollContentWrapper,
@@ -67,7 +47,7 @@ const Scroller = (props) => {
 		scrollContentProps,
 		verticalScrollbarProps,
 		horizontalScrollbarProps
-	} = useScroll(scrollerProps);
+	} = useScroll(props);
 
 	// Return
 
@@ -276,7 +256,23 @@ Scroller.propTypes = /** @lends ui/Scroller.Scroller.prototype */ {
 	verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 };
 
-Scroller.defaultPropValues = scrollerDefaultProps;
+Scroller.defaultProps = {
+	cbScrollTo: nop,
+	direction: 'both',
+	horizontalScrollbar: 'auto',
+	noScrollByDrag: false,
+	noScrollByWheel: false,
+	onScroll: nop,
+	onScrollStart: nop,
+	onScrollStop: nop,
+	overscrollEffectOn: {
+		drag: false,
+		pageKey: false,
+		wheel: false
+	},
+	scrollMode: 'translate',
+	verticalScrollbar: 'auto'
+};
 
 export default Scroller;
 export {

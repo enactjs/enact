@@ -37,15 +37,10 @@ const coerceProps = (v) => {
 const node = (props) => {
 	let children = '';
 	let attributes = '';
-	let tag = 'div';
 
 	Object.keys(props).forEach(key => {
 		if (key === 'children') {
 			children = props.children;
-		} else if (key === 'tag') {
-			tag = props[key];
-		} else if (key === 'valueOnlyAttribute') {
-			attributes += `${props[key]} `;
 		} else {
 			const value = props[key];
 			if (key === 'className') key = 'class';
@@ -53,7 +48,7 @@ const node = (props) => {
 		}
 	});
 
-	return `<${tag} ${attributes}>${children}</${tag}>`;
+	return `<div ${attributes}>${children}</div>`;
 };
 
 const spottable = (props) => node({

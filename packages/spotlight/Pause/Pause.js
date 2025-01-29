@@ -3,8 +3,8 @@
  * another consumer's pause.
  *
  * When multiple components attempt to pause and resume spotlight at overlapping times using
- * {@link spotlight.Spotlight.pause|Spotlight.pause()} and
- * {@link spotlight.Spotlight.resume|Spotlight.resume()}, one component might resume spotlight when
+ * [Spotlight.pause()]{@link spotlight.Spotlight.pause} and
+ * [Spotlight.resume()]{@link spotlight.Spotlight.resume}, one component might resume spotlight when
  * another expected it to still be paused.
  *
  * `Pause` helps to address this by setting a "soft lock" on the pause which informs other instances
@@ -12,8 +12,8 @@
  * by the instance that locked it. Subsequent calls to `pause` and `resume` on another instance of
  * `Pause` have no effect.
  *
- * *Note:* The top-level {@link spotlight.Spotlight.pause|Spotlight.pause()} and
- * {@link spotlight.Spotlight.resume|Spotlight.resume()} do not respect the pause locks and act as
+ * *Note:* The top-level [Spotlight.pause()]{@link spotlight.Spotlight.pause} and
+ * [Spotlight.resume()]{@link spotlight.Spotlight.resume} do not respect the pause locks and act as
  * a user-space escape hatch.
  *
  * ```

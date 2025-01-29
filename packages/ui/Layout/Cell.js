@@ -15,7 +15,7 @@ const toFlexAlign = (align) => (
 
 /**
  * A stateless component that provides a space for your content in a
- * {@link ui/Layout.Layout|Layout}, without {@link ui/Layout.CellDecorator|CellDecorator} applied.
+ * [Layout]{@link ui/Layout.Layout}, without [CellDecorator](ui/Layout.CellDecorator) applied.
  *
  * @class CellBase
  * @memberof ui/Layout
@@ -42,7 +42,7 @@ const CellBase = kind({
 		align: PropTypes.string,
 
 		/**
-		 * Any valid {@link /docs/developer-guide/glossary/#node|Node} that should be positioned in this `Cell`.
+		 * Any valid [Node]{@link /docs/developer-guide/glossary/#node} that should be positioned in this `Cell`.
 		 *
 		 * @type {Any}
 		 * @public
@@ -60,20 +60,9 @@ const CellBase = kind({
 		component:  EnactPropTypes.renderable,
 
 		/**
-		 * Customizes `Cell` together with `component` prop.
-		 *
-		 * When using {@link ui/Layout.Cell}, the `componentCss` prop is passed to the rendered component
-		 * as `css`.
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		componentCss: PropTypes.object,
-
-		/**
 		 * Called with a reference to the root component.
 		 *
-		 * When using {@link ui/Layout.Cell}, the `ref` prop is forwarded to the rendered component
+		 * When using {@link ui/Layout.Cell}, the `ref` prop is forwarded to this component
 		 * as `componentRef`.
 		 *
 		 * @type {Object|Function}
@@ -82,27 +71,12 @@ const CellBase = kind({
 		componentRef: EnactPropTypes.ref,
 
 		/**
-		 * Sizes `Cell` to its container.
-		 *
-		 * A `grow`able cell will expand to its maximum size, according to the remaining space of the
-		 * container. This is used when you want to grow the size of this Cell so that it fills the
-		 * container. See the {@link ui/Layout.CellBase.size|size} property for more details.
-		 *
-		 * When combined with {@link ui/Layout.CellBase.shrink|shrink}, `shrink` prop takes precedence over
-		 * `grow` prop and `grow` prop is simply ignored.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		grow: PropTypes.bool,
-
-		/**
 		 * Sizes `Cell` to its contents.
 		 *
 		 * A `shrink`able cell will contract to its minimum size, according to the dimensions of its
 		 * contents. This is used when you want the size of this Cell's content to influence the
 		 * dimensions of this cell. `shrink` will not allow the contents of the Layout to be pushed
-		 * beyond its boundaries (overflowing). See the {@link ui/Layout.CellBase.size|size} property
+		 * beyond its boundaries (overflowing). See the [size]{@link ui/Layout.Cell#size} property
 		 * for more details.
 		 *
 		 * @type {Boolean}
@@ -114,24 +88,18 @@ const CellBase = kind({
 		/**
 		 * Sets the desired size of the Cell using any valid CSS measurement value.
 		 *
-		 * When used in conjunction with {@link ui/Layout.CellBase.shrink|shrink}, the size will be
+		 * When used in conjunction with [shrink]{@link ui/Layout.Cell#shrink}, the size will be
 		 * the maximum size, shrinking as necessary, to fit the content.
-		 *
-		 * When used in conjunction with {@link ui/Layout.CellBase.grow|grow}, the size will be the
-		 * minimum size, growing as necessary, to fit the container.
 		 *
 		 * E.g.
 		 * * `size="400px"` -> cell will be 400px, regardless of the dimensions of your content
 		 * * `size="400px" shrink` -> cell will be 400px if your content is greater than 400px,
 		 *   and will match your contents size if it's smaller
-		 * * `size="400px" grow` -> cell will be 400px if the container has no remaining space.
-		 *   Cell can grow larger than `size` to fill the container if there is remaining space
-		 *   in the container.
 		 *
 		 * This accepts any valid CSS measurement value string. If a numeric value is used, it will
 		 * be treated as a pixel value and converted to a
-		 * {@link ui/resolution.unit|relative unit} based on the rules of
-		 * {@link ui/resolution|resolution independence}.
+		 * [relative unit]{@link ui/resolution.unit} based on the rules of
+		 * [resolution independence]{@link ui/resolution}.
 		 *
 		 * @type {String|Number}
 		 * @public
@@ -150,7 +118,7 @@ const CellBase = kind({
 	},
 
 	computed: {
-		className: ({grow, shrink, size, styler}) => styler.append({shrink, grow: !shrink && (grow || !size), size}),
+		className: ({shrink, size, styler}) => styler.append({shrink, grow: (!shrink && !size)}),
 		style: ({align, shrink, size, style}) => {
 			if (typeof size === 'number') size = ri.unit(ri.scale(size), 'rem');
 
@@ -167,21 +135,18 @@ const CellBase = kind({
 				...style,
 				alignSelf: toFlexAlign(align),
 				flexBasis: (shrink ? null : size),
-				// Setting 100% below in the presence of `shrink`` and absence of `size` prevents overflow
+				// Setting 100% below in the presence of `shrink`` and absense of `size` prevents overflow
 				'--cell-size': cellSize
 			};
 		}
 	},
 
-	render: ({component: Component, componentCss, componentRef, ...rest}) => {
+	render: ({component: Component, componentRef, ...rest}) => {
 		delete rest.align;
-		delete rest.grow;
 		delete rest.shrink;
 		delete rest.size;
 
-		const {key, ...restProps} = {...rest};
-
-		return <Component css={componentCss} ref={componentRef} key={key} {...restProps} />;
+		return <Component ref={componentRef} {...rest} />;
 	}
 });
 
@@ -197,7 +162,7 @@ const CellDecorator = ForwardRef({prop: 'componentRef'});
 
 /**
  * A stateless component that provides a space for your content in a
- * {@link ui/Layout.Layout|Layout}.
+ * [Layout]{@link ui/Layout.Layout}.
  *
  * @class Cell
  * @memberof ui/Layout

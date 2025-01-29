@@ -81,7 +81,7 @@ const HeadingBase = kind({
 		 * * `'title'` and `'subtitle'` are generally considered to be used only once on a given screen.
 		 * * `'large'`, `'medium'`, `'small'`, and `'tiny'` are typically used as section headings
 		 * for content on a screen, starting with `'large'` for the first tier of information
-		 * followed by `'medium'` for the next, and so forth.
+		 * followed by `'medium'` for the next, and so fourth.
 		 *
 		 * If the `spacing` prop is not set (defaulting to "auto"), these values automatically set
 		 * the spacing to the correlated names.
@@ -151,7 +151,7 @@ const HeadingBase = kind({
 });
 
 /**
- * A higher-order component that adds behavior to {@link ui/Heading.HeadingBase|Heading}.
+ * A higher-order component that adds behavior to [Heading]{@link ui/Heading.HeadingBase}.
  *
  * @hoc
  * @memberof ui/Heading

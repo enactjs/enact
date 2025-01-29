@@ -152,14 +152,13 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		)
 	};
 
-	function Toggleable ({disabled = false, ...rest}) {
-		const props = {disabled, ...rest};
+	function Toggleable (props) {
 		const updated = {...props};
 		const propSelected = props[prop];
 
 		const hook = useToggle({
 			defaultSelected: props[defaultPropKey],
-			disabled,
+			disabled: props.disabled,
 			onToggle: (ev) => forwardCustom(toggle, adapter)(ev, props),
 			prop,
 
@@ -252,6 +251,10 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		 * @public
 		 */
 		[toggle]: PropTypes.func
+	};
+
+	Toggleable.defaultProps = {
+		disabled: false
 	};
 
 	return Toggleable;

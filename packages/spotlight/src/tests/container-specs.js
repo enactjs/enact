@@ -13,7 +13,6 @@ import {
 	getDefaultContainer,
 	getLastContainer,
 	getNavigableContainersForNode,
-	getPositionTargetOnFocus,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
@@ -143,21 +142,7 @@ const scenarios = {
 			'aria-owns': 's1 n1',
 			children: spottable({id: 's2'})
 		})
-	),
-	positionTargetOnFocusContainer: container({
-		id: 'positionTargetContainer',
-		[containerAttribute]: 'positionTargetContainer',
-		children: join(
-			container({
-				[containerAttribute]: 'child',
-				id: 'spottableDefault',
-				className: 'spottable-default',
-				children: join(
-					spottable({id: 'firstChildSpottable'})
-				)
-			})
-		)
-	})
+	)
 };
 
 const setupContainers = () => {
@@ -532,7 +517,7 @@ describe('container', () => {
 		// FIXME: This is testing a previously supported feature (setting a node as defaultElement)
 		// which was never documented and should be removed in a future release.
 		test(
-			'should return the default spottable element when enterTo is "default-element" and defaultElement contains an array of selectors with a node reference',
+			'should return the default spottable element when enterTo is "default-element" and defaultElement contains an array of selectors wiht a node reference',
 			testScenario(
 				scenarios.containerWithDefaultAndLastFocused,
 				(root) => {
@@ -1160,7 +1145,7 @@ describe('container', () => {
 		beforeEach(setupContainers);
 		afterEach(teardownContainers);
 
-		test('should not include inactive containers', testScenario(
+		test('should not include inacive containers', testScenario(
 			scenarios.onlyContainers,
 			(root) => {
 				const {containerId} = root.querySelector('[data-spotlight-id]').dataset;
@@ -1267,31 +1252,6 @@ describe('container', () => {
 
 					const expected = [];
 					const actual = getContainerNavigableElements('first-container');
-
-					expect(actual).toEqual(expected);
-				}
-			)
-		);
-	});
-
-	describe('#getPositionTargetOnFocus', () => {
-		beforeEach(setupContainers);
-		afterEach(teardownContainers);
-
-		test(
-			'should return a container that has positionTargetOnFocus configured',
-			testScenario(
-				scenarios.positionTargetOnFocusContainer,
-				(root) => {
-					configureContainer('positionTargetContainer', {
-						positionTargetOnFocus: true
-					});
-					configureContainer('child', {
-						enterTo: 'last-focused'
-					});
-
-					const expected = root.querySelector('#positionTargetContainer');
-					const actual = getPositionTargetOnFocus(root.querySelector('#firstChildSpottable'));
 
 					expect(actual).toEqual(expected);
 				}

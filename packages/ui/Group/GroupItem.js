@@ -10,7 +10,7 @@ import kind from '@enact/core/kind';
 import {isSelected, select as selectItem} from '../internal/selection';
 
 /**
- * Pick the `GroupItem`-specific props into a {@link /developer-guide/glossary/#private|private} `itemProps` key to be extracted by
+ * Pick the `GroupItem`-specific props into a [private]{@link /developer-guide/glossary/#private} `itemProps` key to be extracted by
  * `GroupItem` before passing the remaining on to the repeated `childComponent`
  *
  * @function

@@ -201,7 +201,7 @@ const ProgressBarBase = kind({
 
 /**
  * A higher-order component that adds behavior to
- * {@link ui/ProgressBar.ProgressBarBase|ProgressBar}.
+ * [ProgressBar]{@link ui/ProgressBar.ProgressBarBase}.
  *
  * @hoc
  * @memberof ui/ProgressBar

@@ -64,7 +64,7 @@ describe('kind', () => {
 		expect(minimalDiv).toBeInTheDocument();
 	});
 
-	test.skip('should default {label} property', () => {
+	test('should default {label} property', () => {
 		const subject = <Kind prop={1} />;
 
 		const expected = 'Label';
@@ -73,7 +73,7 @@ describe('kind', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test.skip('should default {label} property when explicitly undefined', () => {
+	test('should default {label} property when explicitly undefined', () => {
 		// Explicitly testing for undefined
 		// eslint-disable-next-line no-undefined
 		const subject = <Kind label={undefined} prop={1} />;
@@ -102,13 +102,12 @@ describe('kind', () => {
 		expect(kindDiv).toHaveTextContent(expected);
 	});
 
-	test('should support contextType in handlers', async () => {
+	test('should support contextType in handlers', () => {
 		const onClick = jest.fn();
-		const user = userEvent.setup();
 		render(<Kind onClick={onClick} prop={1} />);
 
 		const kindDiv = screen.getByTitle('Label');
-		await user.click(kindDiv);
+		userEvent.click(kindDiv);
 
 		const expected = 'initial';
 		const actual = onClick.mock.calls[0][0];
@@ -125,8 +124,7 @@ describe('kind', () => {
 		expect(kindDiv).toHaveAttribute('data-context', expected);
 	});
 
-	test('support using hooks within kind instances', async () => {
-		const user = userEvent.setup();
+	test('support using hooks within kind instances', () => {
 		const Comp = kind({
 			name: 'Comp',
 			functional: true,
@@ -141,7 +139,7 @@ describe('kind', () => {
 		render(<Comp />);
 
 		const button = screen.getByTestId('button');
-		await user.click(button);
+		userEvent.click(button);
 
 		const expected = '1';
 

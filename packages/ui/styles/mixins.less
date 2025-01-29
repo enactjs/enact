@@ -14,13 +14,16 @@
 }
 
 .enact-composite() {
+	-webkit-transform: translateZ(0);
+	-ms-transform: translateZ(0);
+	-o-transform: translateZ(0);
 	transform: translateZ(0);
 	will-change: transform;
 }
 
 // Applies RTL-compatible start and end position to a selector
 // Simple "when" here just assumes that if the first argument is a list with more than 1 entry,
-// then units are correct. If it's just 1, then we verify the value is a number (measurement).
+// then units are correct. If it's just 1, then we varify the value is a number (measurement).
 .position-start-end (@trbl; @target: "") when (length(@trbl) > 1) or (@target = parent) or (@target = self) or (@target = "") {
 	.position(@trbl);
 
@@ -100,11 +103,11 @@
 //  */
 .remove-margin-on-edge-children() {
 	> :first-child {
-		margin-inline-start: 0;
+		-webkit-margin-start: 0;
 	}
 
 	> :last-child {
-		margin-inline-end: 0;
+		-webkit-margin-end: 0;
 	}
 }
 
@@ -114,11 +117,11 @@
 //  */
 .remove-padding-on-edge-children() {
 	> :first-child {
-		padding-inline-start: 0;
+		-webkit-padding-start: 0;
 	}
 
 	> :last-child {
-		padding-inline-end: 0;
+		-webkit-padding-end: 0;
 	}
 }
 
@@ -139,22 +142,33 @@
 }
 
 .input-placeholder(@rule) {
-	&::placeholder {
+	&::-webkit-input-placeholder {
+		@rule();
+	}
+	&::-moz-placeholder {
 		@rule();
 	}
 }
 
 // Assign font-kerning rules in a non-proprietary way. Default value being "normal", to enable kerning.
 .font-kerning(@val: normal) {
+	-webkit-font-kerning: @val;
 	font-kerning: @val;
 }
 
+// Provide a set of rules to assign to each vendor-prefixed pseudo selector
 .vendor-fullscreen(@rule) {
+	&:-webkit-full-screen { @rule(); }
+	&:-moz-full-screen { @rule(); }
+	&:-ms-fullscreen { @rule(); }
+	&:-o-full-screen { @rule(); }
 	&:fullscreen { @rule(); }
 }
 
 .vendor-opacity(@opacity) {
+	@opacity-ie: (@opacity * 100);	// Less doesn't like math inside `alpha`
 	opacity: @opacity;
+	filter: alpha(opacity=@opacity-ie);
 }
 
 // Shorthand for positioning code
@@ -197,6 +211,7 @@
 
 .border-box() {
 	box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }
 
 // Helpful debugging way to understand how LESS variables are being interpreted
@@ -303,13 +318,13 @@
 				.buildLocaleFont(@fontName; @locale; @value);
 			});
 		}
-		// Interpret individual font definitions: (set1)
+		// Interpret individual font defiintions: (set1)
 		& when (not(@isCollection)) {
 			.buildLocaleFont(@fontName; @locale; @specs);
 		}
 		// .debugLessTypes(@specs);
 
-		// Note: The above `when` code will ignore definitions like the following, because the way
+		// Note: The above `when` code will ignore defiintions like the following, because the way
 		// LESS works, it can't (at this time) differentiate between a space separated list and a
 		// comma separated list, making it impossible to differentiate a single set of font rules
 		// with multiple values vs multiple sets with a single value in each.

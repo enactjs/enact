@@ -47,25 +47,23 @@ const NoContext = createContext(null);
  *
  * @typedef {Object} StylesBlock
  * @memberof core/kind
- * @property {Object.<string, string>} css The CSS of the component
- * @property {String} [className] The className of the component
- * @property {Boolean|String|String[]} [publicClassNames] Specifies which class names are overridable.
- * If this value is `true`, all the class names of the component CSS will become public.
+ * @property {Object.<string, string>} css
+ * @property {String} [className]
+ * @property {Boolean|String|String[]} [publicClassNames]
  */
 
 /**
  * @typedef {Object} KindConfig
  * @memberof core/kind
- * @property {String} [name] The name of the component
- * @property {Boolean} [functional] Boolean controlling whether the returned component should be a functional component
- * @property {Object.<string, Function>} [propTypes] Specifies expected props
- * @property {Object.<string, any>} [defaultProps] Sets the default props
- * @property {Object} [contextType] Specifies context type
- * @property {StylesBlock} [styles] Configures styles with the static className to merge with user className
- * @property {Object.<string, HandlerFunction>} [handlers]  Adds event handlers that are cached between calls to prevent recreating each call.
- * Any handlers are added to the props passed to `render()`. See {@link core/handle.handle}.
- * @property {Object.<string, ComputedPropFunction>} [computed] Adds some computed properties, these are added to props passed to `render()`
- * @property {RenderFunction} render The render function
+ * @property {String} [name]
+ * @property {Boolean} [functional]
+ * @property {Object.<string, Function>} [propTypes]
+ * @property {Object.<string, any>} [defaultProps]
+ * @property {Object} [contextType]
+ * @property {StylesBlock} [styles]
+ * @property {Object.<string, HandlerFunction>} [handlers]
+ * @property {Object.<string, ComputedPropFunction>} [computed]
+ * @property {RenderFunction} render
  */
 
 /**
@@ -76,7 +74,7 @@ const NoContext = createContext(null);
  *	import css from './Button.module.less';
  *	const Button = kind({
  *		name: 'Button',
- *		// Return a functional component
+ *		// Return a functional component suitable for use with React hooks
  *		functional: true,
  *		// expect color and onClick properties but neither required
  *		propTypes: {

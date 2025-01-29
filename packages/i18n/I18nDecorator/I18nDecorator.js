@@ -76,7 +76,7 @@ const defaultConfig = {
 	resources: null,
 
 	/**
-	 * Retrieve i18n resource files synchronously.
+	 * Retrieve i18n resource files synchronously
 	 *
 	 * @type {Boolean}
 	 * @default false
@@ -143,73 +143,12 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return I18nDecorator;
 });
 
-/**
- * Default config for `I18nContextDecorator`.
- *
- * @memberof i18n/I18nDecorator.I18nContextDecorator
- * @hocconfig
- */
 const contextDefaultConfig = {
-	/**
-	 * The prop name for `locale` property of i18nContext.
-	 *
-	 * @type {String}
-	 * @default null
-	 * @public
-	 * @memberof i18n/I18nDecorator.I18nContextDecorator.contextDefaultConfig
-	 */
 	localeProp: null,
-
-	/**
-	 * The prop name for `rtl` property of i18nContext.
-	 *
-	 * @type {String}
-	 * @default null
-	 * @public
-	 * @memberof i18n/I18nDecorator.I18nContextDecorator.contextDefaultConfig
-	 */
 	rtlProp: null,
-
-	/**
-	 * The prop name for `updateLocale` property of i18nContext.
-	 *
-	 * @type {String}
-	 * @default null
-	 * @public
-	 * @memberof i18n/I18nDecorator.I18nContextDecorator.contextDefaultConfig
-	 */
 	updateLocaleProp: null
 };
 
-/**
- * A higher-order component that provides access to the properties of the i18nContext via props.
- * This is achieved by specifying the `localeProp`, `rtlProp`, and `updateLocaleProp` configuration options.
- * Set the `localeProp` to a desired prop name to access the {@link /docs/developer-guide/i18n/#using-i18ndecorator|locale} property,
- * set the `rtlProp` to a desired prop name to access the {@link /docs/developer-guide/i18n/#using-i18ndecorator|rtl} property,
- * and set the `updateLocaleProp` to a desired prop name to access the {@link /docs/developer-guide/i18n/#using-i18ndecorator|updateLocale} function,
- * which is used to update the current locale.
- *
- * Example:
- * ```
- *	const Component = ({rtl, _updateLocale}) => {
- *		const handleClick = () => _updateLocale('ar-SA');
- *		return (
- *			<button onClick={handleClick}>{rtl ? 'rtl' : 'ltr'}</button>
- *		);
- *	};
- *
- *	const SomeComponent = I18nContextDecorator(
- *			{rtlProp: 'rtl', updateLocaleProp: '_updateLocale'},
- *			Component
- *	)
- *
- * ```
- *
- * @class I18nContextDecorator
- * @memberof i18n/I18nDecorator
- * @hoc
- * @public
- */
 const I18nContextDecorator = hoc(contextDefaultConfig, (config, Wrapped) => {
 	const {loadedProp, localeProp, rtlProp, updateLocaleProp} = config;
 

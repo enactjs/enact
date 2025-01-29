@@ -52,24 +52,10 @@ const cacheKey = cachePrefix + 'CACHE-ID';
 const cacheID = typeof ILIB_CACHE_ID === 'undefined' ? '$ILIB' : ILIB_CACHE_ID;
 const timeStampKey = 'l10n_timestamp';
 
-function setLocalStorageItem (keyName, keyValue) {
-	const regex = new RegExp(`${cachePrefix}${iLibResources}/([a-z]{2,3}/)+[a-z]+.json`);
-	try {
-		window.localStorage.setItem(keyName, keyValue);
-	} catch {
-		Object.keys(window.localStorage).forEach((key) => {
-			if (regex.test(key) && !key.includes(keyName.slice(0, keyName.lastIndexOf('/')))) {
-				window.localStorage.removeItem(key);
-			}
-		});
-		window.localStorage.setItem(keyName, keyValue);
-	}
-}
-
 function EnyoLoader () {
 	this.base = iLibBase;
 	// TODO: full enyo.platform implementation for improved accuracy
-	if (typeof window === 'object' && typeof (window.webOSSystem ?? window.PalmSystem) === 'object') {
+	if (typeof window === 'object' && typeof window.PalmSystem === 'object') {
 		this.webos = true;
 	}
 }
@@ -187,7 +173,7 @@ EnyoLoader.prototype._loadFilesCache = function (_root, paths) {
 EnyoLoader.prototype._storeFilesCache = function (_root, paths, data) {
 	if (typeof window !== 'undefined' && window.localStorage && paths.length > 0) {
 		let target = JSON.stringify(paths);
-		setLocalStorageItem(cachePrefix + _root + '/' + paths[0], JSON.stringify({target: target, value: data}));
+		window.localStorage.setItem(cachePrefix + _root + '/' + paths[0], JSON.stringify({target: target, value: data}));
 	}
 };
 
@@ -214,7 +200,7 @@ EnyoLoader.prototype._validateCache = function () {
 					i--;
 				}
 			}
-			setLocalStorageItem(cacheKey, cacheID);
+			window.localStorage.setItem(cacheKey, cacheID);
 		}
 	}
 	this._cacheValidated = true;
@@ -312,7 +298,7 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback, rootPa
 		// asynchronous
 		let cache = {data: this._loadFilesCache(_root, paths)};
 
-		Promise.all(paths.map(path => this._loadFilesAsync(path, params, cache, rootPath))).then(results => {
+		Promise.all(paths.map(path => this._loadFilesAsync(path, params, cache))).then(results => {
 			if (cache.update) {
 				this._storeFilesCache(_root, paths, results);
 			}
@@ -329,7 +315,7 @@ EnyoLoader.prototype._handleManifest = function (dirpath, filepath, json) {
 	// that dir
 	if (json != null) {
 		if (typeof window !== 'undefined' && window.localStorage) {
-			setLocalStorageItem(cachePrefix + filepath, JSON.stringify(json));
+			window.localStorage.setItem(cachePrefix + filepath, JSON.stringify(json));
 		}
 
 		// Need to clear string cache
@@ -341,7 +327,7 @@ EnyoLoader.prototype._handleManifest = function (dirpath, filepath, json) {
 		// so that we prevent loading everything.
 		this.manifest[dirpath] = [];
 		if (typeof window !== 'undefined' && window.localStorage) {
-			setLocalStorageItem(cachePrefix + filepath, JSON.stringify({[timeStampKey]: new Date().getTime()}));
+			window.localStorage.setItem(cachePrefix + filepath, JSON.stringify({[timeStampKey]: new Date().getTime()}));
 		}
 	} else {
 		this.manifest[dirpath] = '*';

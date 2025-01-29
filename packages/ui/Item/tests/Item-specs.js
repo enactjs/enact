@@ -56,26 +56,24 @@ describe('Item', () => {
 			expect(handleClick).not.toHaveBeenCalled();
 		});
 
-		test('should call onClick when clicked', async () => {
+		test('should call onClick when clicked', () => {
 			const handleClick = jest.fn();
-			const user = userEvent.setup();
 			render(<Item onClick={handleClick}>I am a normal Item</Item>);
 			const item = screen.getByText('I am a normal Item');
 
-			await user.click(item);
+			userEvent.click(item);
 
 			const expected = 1;
 
 			expect(handleClick).toHaveBeenCalledTimes(expected);
 		});
 
-		test('should not call onClick when clicked and disabled', async () => {
+		test('should not call onClick when clicked and disabled', () => {
 			const handleClick = jest.fn();
-			const user = userEvent.setup();
 			render(<Item disabled onClick={handleClick}>I am a disabled Item</Item>);
 			const item = screen.getByText('I am a disabled Item');
 
-			await user.click(item);
+			userEvent.click(item);
 
 			expect(handleClick).not.toHaveBeenCalled();
 		});

@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import {forwardRef, memo} from 'react';
+import {forwardRef} from 'react';
 
 import css from './ScrollbarTrack.module.less';
 
@@ -14,11 +14,13 @@ import css from './ScrollbarTrack.module.less';
  */
 const ScrollbarTrack = forwardRef((props, ref) => {
 	const
-		{vertical = true, ...rest} = props,
+		{vertical, ...rest} = props,
 		className = classNames(css.scrollbarTrack, vertical ? css.vertical : null);
 
 	return <div {...rest} className={className} ref={ref} />;
 });
+
+ScrollbarTrack.displayName = 'ui:ScrollbarTrack';
 
 ScrollbarTrack.propTypes = /** @lends ui/useScroll.ScrollbarTrack.prototype */ {
 	/**
@@ -31,12 +33,12 @@ ScrollbarTrack.propTypes = /** @lends ui/useScroll.ScrollbarTrack.prototype */ {
 	vertical: PropTypes.bool
 };
 
-const MemoizedScrollbarTrack = memo(ScrollbarTrack);
+ScrollbarTrack.defaultProps = {
+	vertical: true
+};
 
-MemoizedScrollbarTrack.displayName = 'ui:ScrollbarTrack';
-
-export default MemoizedScrollbarTrack;
+export default ScrollbarTrack;
 export {
-	MemoizedScrollbarTrack,
-	MemoizedScrollbarTrack as ScrollbarTrackBase
+	ScrollbarTrack,
+	ScrollbarTrack as ScrollbarTrackBase
 };

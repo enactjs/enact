@@ -6,7 +6,7 @@
  * screen, and hooks into the interaction blocking code and scrim management.
  *
  * The theme using this component must supply a `component` element which follows the requirements
- * listed by the {@link ui/Spinner.Spinner.component|component} prop documentation.
+ * listed by the [component]{@link ui/Spinner.Spinner.component} prop documentation.
  *
  * @module ui/Spinner
  * @exports Spinner
@@ -61,7 +61,7 @@ const SpinnerBase = kind({
 		 * * 'container' blocks up to the nearest ancestor with absolute or relative positioning
 		 *
 		 * When `blockClickOn` is either `'screen'` or `'container'`, a translucent scrim can be added
-		 * by setting {@link ui/Spinner.SpinnerBase.scrim|scrim} prop to `true`.
+		 * by setting [scrim]{@link ui/Spinner.Spinner#scrim} prop to `true`.
 		 *
 		 * @type {String|null}
 		 * @public

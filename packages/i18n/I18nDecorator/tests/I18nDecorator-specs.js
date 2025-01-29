@@ -56,8 +56,7 @@ describe('I18nDecorator', () => {
 		expect(i18nDiv).toHaveTextContent(expected);
 	});
 
-	test('should update the current locale when updateLocale is called', async () => {
-		const user = userEvent.setup();
+	test('should update the current locale when updateLocale is called', () => {
 		const Component = ({_updateLocale}) => {
 			const handleClick = () => _updateLocale('ar-SA');
 
@@ -75,7 +74,7 @@ describe('I18nDecorator', () => {
 		);
 		render(<Wrapped />);
 
-		await user.click(screen.getByRole('button'));
+		userEvent.click(screen.getByRole('button'));
 
 		const expected = 'ar-SA';
 		const actual = ilib.getLocale();
@@ -83,8 +82,7 @@ describe('I18nDecorator', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should update the rtl context parameter when RTL changes', async () => {
-		const user = userEvent.setup();
+	test('should update the rtl context parameter when RTL changes', () => {
 		const Component = ({rtl, _updateLocale}) => {
 			const handleClick = () => _updateLocale('ar-SA');
 
@@ -103,7 +101,7 @@ describe('I18nDecorator', () => {
 		render(<Wrapped />);
 
 		const button = screen.getByRole('button');
-		await user.click(button);
+		userEvent.click(button);
 
 		const expected = 'rtl';
 

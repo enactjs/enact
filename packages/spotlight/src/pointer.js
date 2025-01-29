@@ -144,7 +144,7 @@ const notifyPointerMove = (current, target, x, y) => {
  * @private
  */
 const notifyKeyDown = (keyCode, callback) => {
-	const webOSSystem = window.webOSSystem ?? window.PalmSystem;
+	const palmSystem = window.PalmSystem;
 
 	// for hide/show pointer events, handle them and return true
 	if (is('pointerHide', keyCode)) {
@@ -156,7 +156,7 @@ const notifyKeyDown = (keyCode, callback) => {
 	} else if (
 		!is('nonModal', keyCode) &&
 		!is('cancel', keyCode) &&
-		!(is('enter', keyCode) && webOSSystem && webOSSystem.cursor && webOSSystem.cursor.visibility)
+		!(is('enter', keyCode) && palmSystem && palmSystem.cursor && palmSystem.cursor.visibility)
 	) {
 		setPointerMode(false);
 	}

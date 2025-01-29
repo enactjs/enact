@@ -8,7 +8,7 @@ import Routable from '../Routable';
 import Route from '../Route';
 
 describe('Routable', () => {
-	test('should render nothing for a partially valid path', async () => {
+	test('should render nothing for a partially valid path', () => {
 		const App = () => {
 			return (
 				<div>
@@ -37,19 +37,18 @@ describe('Routable', () => {
 				</Views>
 			);
 		}
-		const user = userEvent.setup();
 
 		render(<Sample />);
 		const linkToSecondPage = screen.getByText('Page 2');
 
 		// click once to navigate to new path
-		await user.click(linkToSecondPage);
+		userEvent.click(linkToSecondPage);
 
 		let secondPage = screen.getByTestId('page2');
 		expect(secondPage).toBeInTheDocument();
 
 		// clicking again should use the same base path "/app" for the same result
-		await user.click(linkToSecondPage);
+		userEvent.click(linkToSecondPage);
 
 		secondPage = screen.getByTestId('page2');
 		expect(secondPage).toBeInTheDocument();

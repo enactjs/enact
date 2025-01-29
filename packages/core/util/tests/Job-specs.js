@@ -47,21 +47,6 @@ describe('Job', () => {
 
 			if (!ran) done();
 		});
-
-		test('should stop requestAnimationFrame job', done => {
-			let ran = false;
-			const j = new Job(function () {
-				ran = true;
-				done(new Error('job wasn\'t stopped'));
-			}, 10);
-
-			j.startRaf();
-			j.stop();
-
-			act(() => jest.advanceTimersByTime(30));
-
-			if (!ran) done();
-		});
 	});
 
 	describe('#throttle', () => {
@@ -157,50 +142,6 @@ describe('Job', () => {
 			j.idle('first');
 			j.idle('second');
 			jest.runAllTimers();
-		});
-
-		test('should start job when it cannot request idle callback', done => {
-			const backup = window.requestIdleCallback;
-			window.requestIdleCallback = null;
-
-			const j = new Job(done, 0);
-			j.idle();
-			jest.runAllTimers();
-
-			window.requestIdleCallback = backup;
-		});
-	});
-
-	describe('#startRaf', () => {
-		test('should start job', done => {
-			const j = new Job(done, 10);
-			j.startRaf();
-			jest.runAllTimers();
-		});
-
-		test('should pass args to fn', done => {
-			const value = 'argument';
-			const fn = function (arg) {
-				if (arg === value) {
-					done();
-				} else {
-					done(new Error('fn did not receive argument'));
-				}
-			};
-
-			const j = new Job(fn, 10);
-			j.startRaf(value);
-			jest.runAllTimers();
-		});
-
-		test('should start job immediately when window is not defined', done => {
-			function returnsUndefined () {}
-			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(returnsUndefined);
-
-			const j = new Job(done, 0);
-			j.startRaf();
-
-			windowSpy.mockRestore();
 		});
 	});
 

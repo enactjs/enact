@@ -7,16 +7,15 @@ import Group, {GroupBase} from '../Group';
 describe('Group', () => {
 	const stringItems = ['One', 'Two', 'Three'];
 
-	test('should call handler with selected on select', async () => {
+	test('should call handler with selected on select', () => {
 		const handleClick = jest.fn();
-		const user = userEvent.setup();
 		render(
 			<GroupBase childComponent="div" onSelect={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
 		const selected = screen.getByText('Two');
-		await user.click(selected);
+		userEvent.click(selected);
 
 		const expected = 1;
 		const actual = handleClick.mock.calls[0][0].selected;
@@ -24,16 +23,15 @@ describe('Group', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should call handler with data on select', async () => {
+	test('should call handler with data on select', () => {
 		const handleClick = jest.fn();
-		const user = userEvent.setup();
 		render(
 			<GroupBase childComponent="div" onSelect={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
 		const selected = screen.getByText('Two');
-		await user.click(selected);
+		userEvent.click(selected);
 
 		const expected = stringItems[1];
 		const actual = handleClick.mock.calls[0][0].data;
@@ -41,16 +39,15 @@ describe('Group', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should call handler with data on select stored in the key specified by `selectedEventProp`', async () => {
+	test('should call handler with data on select stored in the key specified by `selectedEventProp`', () => {
 		const handleClick = jest.fn();
-		const user = userEvent.setup();
 		render(
 			<GroupBase childComponent="div" onSelect={handleClick} selectedEventProp="value">
 				{stringItems}
 			</GroupBase>
 		);
 		const selected = screen.getByText('Two');
-		await user.click(selected);
+		userEvent.click(selected);
 
 		const expected = stringItems[1];
 		const actual = handleClick.mock.calls[0][0].value;

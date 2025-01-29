@@ -132,7 +132,6 @@ const useScrollBase = (props) => {
 	delete rest.onScrollStart;
 	delete rest.onScrollStop;
 	delete rest.onWheel;
-	delete rest.preventScroll; // scrollMode 'native'
 	delete rest.removeEventListeners;
 	delete rest.scrollStopOnScroll; // scrollMode 'native'
 	delete rest.scrollTo;
@@ -163,7 +162,6 @@ const useScrollBase = (props) => {
 		// status
 		deferScrollTo: true,
 		isScrollAnimationTargetAccumulated: false,
-		rtl,
 
 		// overscroll
 		lastInputType: null,
@@ -243,7 +241,7 @@ const useScrollBase = (props) => {
 			mutableRef.current.lastInputType = val;
 		},
 		get rtl () {
-			return mutableRef.current.rtl;
+			return rtl;
 		},
 		get scrollBounds () {
 			return getScrollBounds();
@@ -273,10 +271,6 @@ const useScrollBase = (props) => {
 
 	if (mutableRef.current.animator == null) {
 		mutableRef.current.animator = new ScrollAnimator();
-	}
-
-	if (mutableRef.current.rtl !== rtl) {
-		mutableRef.current.rtl = rtl;
 	}
 
 	useLayoutEffect(() => {
@@ -786,7 +780,7 @@ const useScrollBase = (props) => {
 		}
 
 		if (rtl && canScrollH) {
-			scrollLeft = (platform.chrome < 85) ? bounds.maxLeft - scrollLeft : -scrollLeft;
+			scrollLeft = (platform.ios || platform.safari || platform.chrome >= 85 || platform.androidChrome >= 85) ? -scrollLeft : bounds.maxLeft - scrollLeft;
 		}
 
 		if (scrollLeft !== mutableRef.current.scrollLeft) {
@@ -813,7 +807,6 @@ const useScrollBase = (props) => {
 				scrollByPage(ev.keyCode);
 			}
 		} else {
-			props.preventScroll?.(ev);
 			forward('onKeyDown', ev, props);
 		}
 	}
@@ -1298,7 +1291,7 @@ const useScrollBase = (props) => {
 				}
 			} else {
 				if (typeof opt.index === 'number' && typeof scrollContentHandle.current.getItemPosition === 'function') {
-					itemPos = scrollContentHandle.current.getItemPosition(opt.index, opt.stickTo, opt.offset, opt.disallowNegativeOffset);
+					itemPos = scrollContentHandle.current.getItemPosition(opt.index, opt.stickTo, opt.offset);
 				} else if (opt.node instanceof Object) {
 					if (opt.node.nodeType === 1 && typeof scrollContentHandle.current.getNodePosition === 'function') {
 						itemPos = scrollContentHandle.current.getNodePosition(opt.node);
@@ -1520,7 +1513,7 @@ const useScrollBase = (props) => {
 	});
 
 	assignProperties('scrollContentWrapperProps', {
-		className: [css.scrollContentWrapper],
+		className: scrollMode === 'translate' ? [css.scrollContentWrapper] : [css.scrollContentWrapper, css.scrollContentWrapperNative], // scrollMode 'native'
 		...(!noScrollByDrag && {
 			flickConfig,
 			onDrag: onDrag,

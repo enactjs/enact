@@ -17,10 +17,10 @@ import warning from 'warning';
 import {Link, Linkable} from './Link';
 import Route from './Route';
 import Router from './Router';
-import {RoutablePropTypes, toSegments, RouteContext, resolve} from './util';
+import {propTypes, toSegments, RouteContext, resolve} from './util';
 
 /**
- * Default config for {@link ui/Routable.Routable|Routable}.
+ * Default config for [`Routable`]{@link ui/Routable.Routable}.
  *
  * @memberof ui/Routable.Routable
  * @hocconfig
@@ -29,7 +29,7 @@ const defaultConfig = {
 	/**
 	 * The event to listen to for path changes.
 	 *
-	 * This defines the actual name of the {@link ui/Routable.Routable.navigate|navigate}
+	 * This defines the actual name of the [navigate]{@link ui/Routable.Routable#navigate}
 	 * property.
 	 *
 	 * @type {String}
@@ -69,7 +69,7 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @required
 			 * @public
 			 */
-			path: RoutablePropTypes.path.isRequired,
+			path: propTypes.path.isRequired,
 
 			/**
 			 * Called when navigating.

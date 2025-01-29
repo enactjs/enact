@@ -1,62 +1,8 @@
 import {forwardRef, memo, lazy} from 'react';
 
-import {cap, clamp, coerceArray, coerceFunction, extractAriaProps, isRenderable, memoize, mergeClassNameMaps, mapAndFilterChildren, setDefaultProps, shallowEqual} from '../util';
+import {mapAndFilterChildren, memoize, isRenderable} from '../util';
 
 describe('util', () => {
-	describe('cap', () => {
-		test('should return a capitalized string', () => {
-			expect(cap('abc')).toBe('Abc');
-		});
-	});
-
-	describe('clamp', () => {
-		test('should return a value between a min value and a max value', () => {
-			expect(clamp(10, 20, 15)).toBe(15);
-			expect(clamp(10, 20, 0)).toBe(10);
-			expect(clamp(10, 20, 30)).toBe(20);
-			expect(clamp(10, 20, 10)).toBe(10);
-			expect(clamp(10, 20, 20)).toBe(20);
-			expect(clamp(20, 10, 10)).toBe(20); // special case
-		});
-	});
-
-	describe('coerceArray', () => {
-		test('should return an array', () => {
-			expect(coerceArray(['a'])).toEqual(['a']);
-			expect(coerceArray('a')).toEqual(['a']);
-		});
-	});
-
-	describe('coerceFunction', () => {
-		test('should return a function', () => {
-			expect(typeof coerceFunction(() => 'function')).toEqual('function');
-			expect(typeof coerceFunction('value')).toEqual('function');
-			expect(coerceFunction('value')?.()).toEqual('value');
-		});
-	});
-
-	describe('extractAriaProps', () => {
-		test('should extract aria-related props as a return object', () => {
-			const testProps = {
-				role: 'button',
-				'aria-hidden': true,
-				value: 'value'
-			};
-			const expected = {
-				role: 'button',
-				'aria-hidden': true
-			};
-			const remaining = {
-				value: 'value'
-			};
-
-			const actual = extractAriaProps(testProps);
-
-			expect(actual).toMatchObject(expected);
-			expect(testProps).toMatchObject(remaining);
-		});
-	});
-
 	describe('isRenderable', () => {
 		test('should return {true} for function', () => {
 			const expected = true;
@@ -119,63 +65,6 @@ describe('util', () => {
 			const actual = spy.mock.calls[0];
 
 			expect(expected).toEqual(actual);
-		});
-	});
-
-	describe('mergeClassNameMaps', () => {
-		const baseMap = {
-			'class-base-only': 'real-class-base-only',
-			'class-shared': 'real-class-shared-base',
-			'class-shared-another': 'real-class-shared-another-base'
-		};
-		const additiveMap = {
-			'class-shared': 'real-class-shared-additive',
-			'class-shared-another': 'real-class-shared-another-additive',
-			'class-additive-only': 'real-class-additive-only'
-		};
-
-		// Helper function to get an object from the proxy object that has only getters for properties to make testing easier
-		const getResultFromProxy = (proxy) => {
-			const keys = ['class-base-only', 'class-shared', 'class-shared-another', 'class-additive-only'];
-			const obj = {};
-
-			for (let i = 0; i < keys.length; i++) {
-				if (keys[i] !== proxy[keys[i]]) {
-					obj[keys[i]] = proxy[keys[i]];
-				}
-			}
-
-			return obj;
-		};
-
-		test('should return a base map if an additive map is not given', () => {
-			const actual = mergeClassNameMaps(baseMap);
-
-			expect(actual).toEqual(baseMap);
-		});
-
-		test('should return a merged map containing shared class names', () => {
-			const expected = {
-				'class-base-only': 'real-class-base-only',
-				'class-shared': 'real-class-shared-base real-class-shared-additive',
-				'class-shared-another': 'real-class-shared-another-base real-class-shared-another-additive'
-			};
-
-			const actual = getResultFromProxy(mergeClassNameMaps(baseMap, additiveMap));
-
-			expect(actual).toEqual(expected);
-		});
-
-		test('should return a merged map containing allowed matching class names', () => {
-			const expected = {
-				'class-base-only': 'real-class-base-only',
-				'class-shared': 'real-class-shared-base real-class-shared-additive',
-				'class-shared-another': 'real-class-shared-another-base'
-			};
-
-			const actual = getResultFromProxy(mergeClassNameMaps(baseMap, additiveMap, ['class-shared']));
-
-			expect(actual).toEqual(expected);
 		});
 	});
 
@@ -252,58 +141,6 @@ describe('util', () => {
 			const actual = spy.mock.calls[0];
 
 			expect(expected).toEqual(actual);
-		});
-	});
-
-	describe('setDefaultProps', () => {
-		const props = {
-			// eslint-disable-next-line no-undefined
-			direction: undefined,
-			index: 0,
-			size: 'small'
-		};
-		const defaultProps = {
-			direction: 'below',
-			selected: true,
-			size: 'large'
-		};
-
-		test('should set props that are missing or `undefined` to default values', () => {
-			const expected = {
-				direction: 'below',
-				index: 0,
-				selected: true,
-				size: 'small'
-			};
-			const actual = setDefaultProps(props, defaultProps);
-
-			expect(expected).toEqual(actual);
-		});
-	});
-
-	describe('shallowEqual', () => {
-		const child = {
-			name: 'child'
-		};
-
-		test('should return `true` if the values of all keys are strictly equal', () => {
-			expect(shallowEqual(child, child)).toBe(true);
-
-			expect(shallowEqual(child, null)).toBe(false);
-
-			const fakeChild = {
-				name: 'fake'
-			};
-
-			expect(shallowEqual(child, fakeChild)).toBe(false);
-
-			fakeChild.name = 'child';
-			expect(shallowEqual(child, fakeChild)).toBe(true);
-
-			child.toString = (...args) => {
-				child.toString(...args);
-			};
-			expect(shallowEqual(child, fakeChild)).toBe(false);
 		});
 	});
 });

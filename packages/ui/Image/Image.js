@@ -193,7 +193,7 @@ const ImageBase = kind({
 });
 
 /**
- * A higher-order component that adds behaviors to an {@link ui/Image.ImageBase|ImageBase}.
+ * A higher-order component that adds behaviors to an [ImageBase]{@link ui/Image.ImageBase}.
  *
  * @hoc
  * @memberof ui/Image

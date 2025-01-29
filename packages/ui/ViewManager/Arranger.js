@@ -102,7 +102,7 @@ export const SlideArranger = ({amount = 100, direction}) => ({
 export const SlideRightArranger = SlideArranger({direction: 'right'});
 
 /**
- * An arranger that enters from the right and leaves to the left.
+ * An arranger that enters from the right and leaves to the left..
  *
  * @type {Arranger}
  * @memberof ui/ViewManager
@@ -111,7 +111,7 @@ export const SlideRightArranger = SlideArranger({direction: 'right'});
 export const SlideLeftArranger = SlideArranger({direction: 'left'});
 
 /**
- * An arranger that enters from the bottom and leaves to the top.
+ * An arranger that enters from the bottom and leaves to the top..
  *
  * @type {Arranger}
  * @memberof ui/ViewManager
@@ -120,7 +120,7 @@ export const SlideLeftArranger = SlideArranger({direction: 'left'});
 export const SlideTopArranger = SlideArranger({direction: 'top'});
 
 /**
- * An arranger that enters from the top and leaves to the bottom.
+ * An arranger that enters from the top and leaves to the bottom..
  *
  * @type {Arranger}
  * @memberof ui/ViewManager

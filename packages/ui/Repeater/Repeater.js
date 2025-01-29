@@ -45,7 +45,7 @@ const RepeaterBase = kind({
 		 * text content using the `children` key.
 		 *
 		 * > **NOTE**: When an array of objects is provided, make sure a unique `key` is assigned to each
-		 * data. See https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key for more information.
+		 * data. See https://fb.me/react-warning-keys for more information.
 		 *
 		 * @type {String[]|Array.<{key: (Number|String)}>}
 		 * @required
@@ -68,7 +68,7 @@ const RepeaterBase = kind({
 		childProp: PropTypes.string,
 
 		/**
-		 * Component type to wrap around all the repeated elements.
+		 * Component type to wrap around all of the repeated elements.
 		 *
 		 * This can be a string describing a DOM node or React component (e.g. `'div'` or `Layout`).
 		 *
@@ -124,8 +124,7 @@ const RepeaterBase = kind({
 				}
 				if (indexProp) props[indexProp] = index;
 
-				const {key, ...rest} = {...props};
-				return <Component key={key} {...rest} />;
+				return <Component {...props} />;
 			});
 		}
 	},

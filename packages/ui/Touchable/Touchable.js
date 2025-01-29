@@ -15,13 +15,12 @@ import {configure} from './config';
 import {dragConfigPropType} from './Drag';
 import {flickConfigPropType} from './Flick';
 import {holdConfigPropType} from './Hold';
-import {pinchConfigPropType} from './Pinch';
 import useTouch from './useTouch';
 
 const selectProps = (props) => {
 	const {
 		/* configs */
-		dragConfig, flickConfig, holdConfig, pinchConfig,
+		dragConfig, flickConfig, holdConfig,
 		/* general props */
 		disabled,
 		noResume,
@@ -36,7 +35,6 @@ const selectProps = (props) => {
 		onFlick,
 		onHold, onHoldEnd, onHoldStart,
 		onMove,
-		onPinch, onPinchEnd, onPinchStart,
 		onTap,
 		onUp,
 		/* rest */
@@ -46,7 +44,7 @@ const selectProps = (props) => {
 	return {
 		configForHook: {
 			/* configs */
-			dragConfig, flickConfig, holdConfig, pinchConfig,
+			dragConfig, flickConfig, holdConfig,
 			/* general props */
 			disabled,
 			noResume,
@@ -61,7 +59,6 @@ const selectProps = (props) => {
 			onFlick,
 			onHold, onHoldEnd, onHoldStart,
 			onMove,
-			onPinch, onPinchEnd, onPinchStart,
 			onTap,
 			onUp
 		},
@@ -92,8 +89,8 @@ const defaultConfig = {
 /**
  * A higher-order component that provides a consistent set of pointer events -- `onDown`, `onUp`,
  * and `onTap` -- across mouse and touch interfaces along with support for common gestures including
- * `onFlick`, `onDragStart`, `onDrag`, `onDragEnd`, `onHoldStart`, `onHold`, `onHoldEnd`,
- * `onPinchStart`, `onPinch`, and `onPinchEnd`.
+ * `onFlick`, `onDrag`, `onHoldStart`, `onHold`, and `onHoldEnd`.
+ *
  * Note: This HoC passes a number of props to the wrapped component that should be passed to the
  * main DOM node or consumed by the wrapped component.
  *
@@ -109,8 +106,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	const Touchable = forwardRef((props, ref) => {
-		const {disabled = false, noResume = false, ...rest} = props;
-		const {configForHook, propsForWrapped} = selectProps({disabled, noResume, ...rest});
+		const {configForHook, propsForWrapped} = selectProps(props);
 		const hook = useTouch({getActive: !!activeProp, ...configForHook});
 
 		Object.assign(propsForWrapped, hook.handlers);
@@ -298,50 +294,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		onMove: PropTypes.func,
 
 		/**
-		 * Event handler for a pinch gesture.
-		 *
-		 * Event payload includes:
-		 *
-		 * * `type` - Type of event, `'onPinch'`
-		 * * `scale` - The scale factor, calculated from the distance while pinching.
-		 *             The default value is 1.0. The value would be a number between
-		 *             pinchConfig.minScale and pinchConfig.maxScale.
-		 * * `coords` - The coordinates array of the touch point, relative to the viewport
-		 *
-		 * @memberof ui/Touchable.Touchable.prototype
-		 * @type {Function}
-		 * @public
-		 */
-		onPinch: PropTypes.func,
-
-		/**
-		  * Event handler for the end of a pinch gesture.
-		  *
-		  * Event payload includes:
-		  *
-		  * * `type` - Type of event, `'onPinchEnd'`
-		  *
-		  * @memberof ui/Touchable.Touchable.prototype
-		  * @type {Function}
-		  * @public
-		  */
-		onPinchEnd: PropTypes.func,
-
-		/**
-		  * Event handler for the start of a pinch gesture.
-		  *
-		  * Event payload includes:
-		  *
-		  * * `type` - Type of event, `'onPinchStart'`
-		  * * `coords` - The coordinates array of the touch point, relative to the viewport
-		  *
-		  * @memberof ui/Touchable.Touchable.prototype
-		  * @type {Function}
-		  * @public
-		  */
-		onPinchStart: PropTypes.func,
-
-		/**
 		 * Event handler for 'tap' pointer events.
 		 *
 		 * @memberof ui/Touchable.Touchable.prototype
@@ -357,17 +309,12 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		 * @type {Function}
 		 * @public
 		 */
-		onUp: PropTypes.func,
+		onUp: PropTypes.func
+	};
 
-		/**
-		 * Instance-specific overrides of the pinch configuration.
-		 *
-		 * @see {@link ui/Touchable.configure}
-		 * @memberof ui/Touchable.Touchable.prototype
-		 * @type {Object}
-		 * @public
-		 */
-		pinchConfig: pinchConfigPropType
+	Touchable.defaultProps = {
+		disabled: false,
+		noResume: false
 	};
 
 	Touchable.displayName = 'Touchable';

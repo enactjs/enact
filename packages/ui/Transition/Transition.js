@@ -184,7 +184,7 @@ const TransitionBase = kind({
 		 *  	screen.
 		 *  * `'clip'` - This is useful for showing a component that transitions-in from a location
 		 *  	that is already on the screen. Examples would be an expanding header or an
-		 *  	accordion. This type does affect layout, its current size will push other sibling
+		 *  	accordion. This type does affects layout, its current size will push other sibling
 		 *  	elements to make room for itself. Because of this, repainting the layout does happen
 		 *  	during transition.
 		 *  * `'fade'` - Fade the components onto the screen, from 0 opacity (completely invisible)
@@ -236,7 +236,7 @@ const TransitionBase = kind({
 			if (type === 'clip' && (direction === 'left' || direction === 'right')) {
 				style.width = clipWidth;
 			} else if ((type === 'fade' || type === 'slide') && duration && !css[duration]) {
-				// If it's a number, assume it's milliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
+				// If it's a number, assume it's miliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
 				style.transitionDuration = formatter(duration);
 			}
 
@@ -254,7 +254,7 @@ const TransitionBase = kind({
 				}
 				// If duration isn't a known named string, assume it is a CSS duration value
 				if (duration && !css[duration]) {
-					// If it's a number, assume it's milliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
+					// If it's a number, assume it's miliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
 					style.transitionDuration = formatter(duration);
 				}
 			}
@@ -329,7 +329,7 @@ class Transition extends Component {
 		 * `'medium'` (500ms) is default when no others are specified.
 		 *
 		 * Any valid CSS duration value is also accepted, e.g. "200ms" or "3s". Pure numeric values
-		 * are also supported and treated as milliseconds.
+		 * are also supported and treated as miliseconds.
 		 *
 		 * @type {String|Number}
 		 * @default 'medium'
@@ -397,7 +397,7 @@ class Transition extends Component {
 		 *  	screen.
 		 *  * `'clip'` - This is useful for showing a component that transitions-in from a location
 		 *  	that is already on the screen. Examples would be an expanding header or an
-		 *  	accordion. This type does affect layout, its current size will push other sibling
+		 *  	accordion. This type does affects layout, its current size will push other sibling
 		 *  	elements to make room for itself. Because of this, repainting the layout does happen
 		 *  	during transition.
 		 *  * `'fade'` - Fade the components onto the screen, from 0 opacity (completely invisible)
@@ -490,9 +490,9 @@ class Transition extends Component {
 
 		if (noAnimation) {
 			if (!prevProps.visible && visible) {
-				forwardCustom('onShow')(null, this.props);
+				forwardCustom('onShow')({}, this.props);
 			} else if (prevProps.visible && !visible) {
-				forwardCustom('onHide')(null, this.props);
+				forwardCustom('onHide')({}, this.props);
 			}
 		}
 	}

@@ -26,8 +26,6 @@ import last from 'ramda/src/last';
 import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
 import {isPaused, pause, resume} from '../Pause';
-
-import {getInputType} from './inputType';
 import {contains} from './utils';
 
 import {
@@ -138,7 +136,6 @@ const Spotlight = (function () {
 	*/
 	let _initialized = false;
 	let _duringFocusChange = false;
-	let _focusRingElement = null;
 
 	/*
 	 * Whether a 5-way directional key is being held.
@@ -191,19 +188,18 @@ const Spotlight = (function () {
 	// An extension point for updating pointer mode based on the current platform.
 	// Currently only webOS
 	function setPlatformPointerMode () {
-		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
-		if (webOSSystem && webOSSystem.cursor) {
-			setPointerMode(webOSSystem.cursor.visibility);
+		const palmSystem = window.PalmSystem;
+		if (palmSystem && palmSystem.cursor) {
+			setPointerMode(palmSystem.cursor.visibility);
 		}
 	}
 
-	function focusElement (elem, containerIds, fromPointer, preventScroll) {
+	function focusElement (elem, containerIds, fromPointer) {
 		if (!elem) {
 			return false;
 		}
 
-		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
-		if ((getPointerMode() && !fromPointer) && (getInputType() === 'touch' || (typeof window !== 'undefined' && (!webOSSystem || webOSSystem.cursor?.visibility)))) {
+		if ((getPointerMode() && !fromPointer) && (typeof window !== 'undefined' && (!window.PalmSystem || window.PalmSystem.cursor?.visibility))) {
 			setContainerLastFocusedElement(elem, containerIds);
 			return false;
 		}
@@ -214,7 +210,7 @@ const Spotlight = (function () {
 			return true;
 		}
 
-		const focusOptions = preventScroll || isWithinOverflowContainer(elem, containerIds) ? {preventScroll: true} : null;
+		const focusOptions = isWithinOverflowContainer(elem, containerIds) ? {preventScroll: true} : null;
 
 		let silentFocus = function () {
 			elem.focus(focusOptions);
@@ -235,16 +231,6 @@ const Spotlight = (function () {
 		}
 
 		elem.focus(focusOptions);
-
-		/* istanbul ignore next */
-		if (_focusRingElement) {
-			const elemRect = elem.getBoundingClientRect();
-
-			_focusRingElement.style.left = `${elemRect.x + window.scrollX}px`;
-			_focusRingElement.style.top = `${elemRect.y + window.scrollY}px`;
-			_focusRingElement.style.width = `${elemRect.width}px`;
-			_focusRingElement.style.height = `${elemRect.height}px`;
-		}
 
 		_duringFocusChange = false;
 
@@ -568,11 +554,11 @@ const Spotlight = (function () {
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
 
-				if (platform.touchEvent) {
+				if (platform.touch) {
 					window.addEventListener('touchend', onTouchEnd);
 				}
 
-				if (platform.type === 'webos') {
+				if (platform.webos) {
 					window.top.document.addEventListener('webOSMouse', handleWebOSMouseEvent);
 					window.top.document.addEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
 				}
@@ -583,12 +569,6 @@ const Spotlight = (function () {
 				// by default, pointer mode is off but the platform's current state will override that
 				setPointerMode(false);
 				setPlatformPointerMode();
-
-				/* istanbul ignore next */
-				if (getContainerConfig('spotlightRootDecorator')?.isStandardFocusableMode) {
-					_focusRingElement = document.querySelector('#spotlightFocusRing');
-				}
-
 				_initialized = true;
 			}
 		},
@@ -606,11 +586,11 @@ const Spotlight = (function () {
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
 
-			if (platform.touchEvent) {
+			if (platform.touch) {
 				window.removeEventListener('touchend', onTouchEnd);
 			}
 
-			if (platform.type === 'webos') {
+			if (platform.webos) {
 				window.top.document.removeEventListener('webOSMouse', handleWebOSMouseEvent);
 				window.top.document.removeEventListener('keyboardStateChange', handleKeyboardStateChangeEvent);
 			}
@@ -696,7 +676,7 @@ const Spotlight = (function () {
 		 */
 		disableSelector: function (containerId) {
 			if (isContainer(containerId)) {
-				configureContainer(containerId, {selectorDisabled: true});
+				configureContainer(containerId, {selectorDisabled: false});
 				return true;
 			}
 
@@ -750,19 +730,16 @@ const Spotlight = (function () {
 		 * @param {String|Node} [elem] The spotlight ID or selector for either a spottable
 		 *  component or a spotlight container, or spottable node. If not supplied, the default
 		 *  container will be focused.
-		 * @param {Object} [options] The object including `enterTo`, `toOuterContainer`, and `preventScroll`.
-		 *  `enterTo` and `toOuterContainer` work when the first parameter `elem` is either
-		 *  a spotlight container ID or a spotlight container node.
-		 * @param {('last-focused'|'default-element'|'topmost')} [options.enterTo] Specifies preferred
+		 * @param {Object} [containerOption] The object including `enterTo` and `toOuterContainer`.
+		 *  It works when the first parameter `elem` is either a spotlight container ID or a spotlight container node.
+		 * @param {('last-focused'|'default-element'|'topmost')} [containerOption.enterTo] Specifies preferred
 		 *  `enterTo` configuration.
-		 * @param {Boolean} [options.toOuterContainer] If the proper target is not found, search one
+		 * @param {Boolean} [containerOption.toOuterContainer] If the proper target is not found, search one
 		 *  recursively to outer container.
-		 * @param {Boolean} [options.preventScroll] Prevents the focused element from an automatic scrolling
-		 *  into view after focusing the element.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
 		 */
-		focus: function (elem, options = {}) {
+		focus: function (elem, containerOption = {}) {
 			let target = elem;
 			let wasContainerId = false;
 			let currentContainerNode = null;
@@ -771,7 +748,7 @@ const Spotlight = (function () {
 				target = getTargetByContainer();
 			} else if (typeof elem === 'string') {
 				if (getContainerConfig(elem)) {
-					target = getTargetByContainer(elem, options.enterTo);
+					target = getTargetByContainer(elem, containerOption.enterTo);
 					wasContainerId = true;
 					currentContainerNode = getContainerNode(elem);
 				} else if (/^[\w\d-]+$/.test(elem)) {
@@ -781,14 +758,14 @@ const Spotlight = (function () {
 					target = getTargetBySelector(elem);
 				}
 			} else if (isContainer(elem)) {
-				target = getTargetByContainer(getContainerId(elem), options.enterTo);
+				target = getTargetByContainer(getContainerId(elem), containerOption.enterTo);
 				currentContainerNode = elem;
 			}
 
 			const nextContainerIds = getContainersForNode(target);
 			const nextContainerId = last(nextContainerIds);
 			if (isNavigable(target, nextContainerId, true)) {
-				const focused = focusElement(target, nextContainerIds, false, options.preventScroll);
+				const focused = focusElement(target, nextContainerIds);
 
 				if (!focused && wasContainerId) {
 					setLastContainer(elem);
@@ -801,11 +778,11 @@ const Spotlight = (function () {
 				setLastContainer(elem);
 			}
 
-			if (options.toOuterContainer && currentContainerNode) {
+			if (containerOption.toOuterContainer && currentContainerNode) {
 				const outerContainer = getContainersForNode(currentContainerNode.parentElement).pop();
 
 				if (outerContainer) {
-					return this.focus(outerContainer, options);
+					return this.focus(outerContainer, containerOption);
 				}
 			}
 

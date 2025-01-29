@@ -240,13 +240,17 @@ describe('Slottable Specs', () => {
 	});
 
 	test('should allow downstream component to have default value for unset slot', () => {
-		function ComponentBase ({a = 'Default A'}) {
+		function ComponentBase ({a}) {
 			return (
 				<div data-testid="slottable">
 					{a}
 				</div>
 			);
 		}
+
+		ComponentBase.defaultProps = {
+			a: 'Default A'
+		};
 
 		const Component = Slottable({slots: ['a']}, ComponentBase);
 
