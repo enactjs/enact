@@ -141,7 +141,7 @@ class FloatingLayerBase extends Component {
 
 	componentDidUpdate (prevProps, prevState) {
 		const {open, scrimType} = this.props;
-
+		console.log(open);
 		if (prevProps.open && !open) {
 			// when open changes to false, forward close
 			forwardCustom('onClose')(null, this.props);
