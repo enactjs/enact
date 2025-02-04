@@ -1,3 +1,5 @@
+/* global globalThis */
+
 import {parseUserAgent, platform} from '../platform';
 
 describe('platform', () => {

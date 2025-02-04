@@ -1,3 +1,4 @@
+/* global globalThis */
 /**
  * Utilities for detecting basic platform capabilities.
  *
