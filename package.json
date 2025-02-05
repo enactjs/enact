@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@enact/docs-utils": "^0.4.10",
-    "eslint-config-enact-proxy": "^1.0.8",
+    "eslint-config-enact-proxy": "enactjs/eslint-config-enact-proxy#feature/WRR-12625",
     "lerna": "^8.1.8"
   }
 }
