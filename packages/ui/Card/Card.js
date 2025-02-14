@@ -175,6 +175,17 @@ const CardDecorator = compose(
 	ForwardRef({prop: 'componentRef'})
 );
 
+/**
+ * A minimally styled Card read for customization by a theme.
+ *
+ * @class Card
+ * @memberof ui/Card
+ * @extends ui/Card.CardBase
+ * @mixes ui/Card.CardDecorator
+ * @omit componentRef
+ * @ui
+ * @public
+ */
 const Card = CardDecorator(CardBase);
 
 export default Card;
