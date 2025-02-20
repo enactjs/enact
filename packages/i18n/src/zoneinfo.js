@@ -1,4 +1,4 @@
-/* eslint-env browser,es6 */
+/* global XMLHttpRequest */
 /*
  * zoneinfo.js - represent a binary zone info file
  *
@@ -85,7 +85,7 @@ let ZoneInfoFile = function (path) {
 		default: {
 			// use normal web techniques for sync binary data fetching
 			// see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Sending_and_Receiving_Binary_Data
-			let req = new XMLHttpRequest(); // eslint-disable-line no-undef
+			let req = new XMLHttpRequest();
 			req.open('GET', 'file:' + path, false);
 			req.overrideMimeType('text/plain; charset=x-user-defined');
 			req.onload = function () {
