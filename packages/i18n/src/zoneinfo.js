@@ -1,4 +1,4 @@
-/* eslint-env browser,es6 */
+/* global XMLHttpRequest */
 /*
  * zoneinfo.js - represent a binary zone info file
  *
