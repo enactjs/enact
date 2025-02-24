@@ -6,7 +6,6 @@
  */
 
 import hoc from '@enact/core/hoc';
-import {forwardRef} from 'react';
 
 /**
  * Default config for {@link ui/ForwardRef.ForwardRef}.
@@ -49,7 +48,9 @@ const defaultConfig = {
 const ForwardRef = hoc(defaultConfig, (config, Wrapped) => {
 	const {prop} = config;
 
-	return forwardRef((props, ref) => {
+	return (props) => {
+		const {ref} = props;
+
 		const withRef = {
 			...props,
 			[prop]: ref
@@ -58,7 +59,7 @@ const ForwardRef = hoc(defaultConfig, (config, Wrapped) => {
 		return (
 			<Wrapped {...withRef} />
 		);
-	});
+	};
 });
 
 export default ForwardRef;
