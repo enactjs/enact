@@ -51,7 +51,7 @@ const ForwardRef = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	const ForwardRef = (props) => {
-		const {ref, ...rest} = props;
+		const {ref = null, ...rest} = props;
 
 		const withRef = {
 			...rest,
