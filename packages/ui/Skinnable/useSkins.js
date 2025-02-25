@@ -91,9 +91,9 @@ function useSkins (config) {
 
 	const provideSkins = useCallback((children) => {
 		return (
-			<SkinContext.Provider value={value}>
+			<SkinContext value={value}>
 				{children}
-			</SkinContext.Provider>
+			</SkinContext>
 		);
 	}, [value]);
 
