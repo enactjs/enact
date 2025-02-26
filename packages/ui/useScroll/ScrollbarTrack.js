@@ -14,7 +14,7 @@ import css from './ScrollbarTrack.module.less';
  */
 const ScrollbarTrack = (props) => {
 	const
-		{ref, vertical = true, ...rest} = props,
+		{ref = null, vertical = true, ...rest} = props,
 		className = classNames(css.scrollbarTrack, vertical ? css.vertical : null);
 
 	return <div {...rest} className={className} ref={ref} />;

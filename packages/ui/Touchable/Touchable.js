@@ -108,7 +108,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	const Touchable = (props) => {
-		const {disabled = false, noResume = false, ref, ...rest} = props;
+		const {disabled = false, noResume = false, ref = null, ...rest} = props;
 		const {configForHook, propsForWrapped} = selectProps({disabled, noResume, ...rest});
 		const hook = useTouch({getActive: !!activeProp, ...configForHook});
 
