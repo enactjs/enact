@@ -369,12 +369,12 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		pinchConfig: pinchConfigPropType,
 
 		/**
-		 * Forwards a reference to this component.
+		 * Forwards a reference to the DOM element.
 		 *
 		 * @type {Object}
 		 * @public
 		 */
-		ref: PropTypes.object
+		ref: PropTypes.shape({current: PropTypes.any}),
 	};
 
 	Touchable.displayName = 'Touchable';

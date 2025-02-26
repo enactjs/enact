@@ -22,12 +22,12 @@ const ScrollbarTrack = (props) => {
 
 ScrollbarTrack.propTypes = /** @lends ui/useScroll.ScrollbarTrack.prototype */ {
 	/**
-	 * Forwards a reference to this component.
+	 * Forwards a reference to the DOM element.
 	 *
 	 * @type {Object}
 	 * @public
 	 */
-	ref: PropTypes.object,
+	ref: PropTypes.shape({current: PropTypes.any}),
 
 	/**
 	 * If `true`, the scrollbar will be oriented vertically.
