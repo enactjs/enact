@@ -68,9 +68,9 @@ const ForwardRef = hoc(defaultConfig, (config, Wrapped) => {
 		 * Forwards a reference to the DOM element.
 		 *
 		 * @type {Object}
-		 * @public
+		 * @private
 		 */
-		ref: PropTypes.shape({current: PropTypes.any}),
+		ref: PropTypes.shape({current: PropTypes.any})
 	};
 
 	ForwardRef.displayName = 'ForwardRef';
