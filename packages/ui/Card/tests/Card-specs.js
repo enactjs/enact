@@ -4,18 +4,18 @@ import {render, screen} from '@testing-library/react';
 import Card, {CardBase} from '../Card';
 
 const src = {
-	'hd': 'http://lorempixel.com/64/64/city/1/',
-	'fhd': 'http://lorempixel.com/128/128/city/1/',
-	'uhd': 'http://lorempixel.com/256/256/city/1/'
+	'hd': 'https://placehold.co/200x200/000000/ffffff/png',
+	'fhd': 'https://placehold.co/300x300/000000/ffffff/png',
+	'uhd': 'https://placehold.co/600x600/000000/ffffff/png'
 };
 
 describe('Card', () => {
 	test('should support `children` prop', () => {
 		const children = 'children';
-		render(<CardBase data-testid="card" src={src.hd}>{children}</CardBase>);
+		render(<CardBase src={src.hd}>{children}</CardBase>);
 
 		const expected = children;
-		const card = screen.getByTestId('card');
+		const card = screen.getByText(children);
 
 		expect(card).toHaveTextContent(expected);
 	});

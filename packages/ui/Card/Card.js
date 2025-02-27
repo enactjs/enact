@@ -9,8 +9,8 @@
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 
 import ForwardRef from '../ForwardRef';
 import Image from '../Image';
@@ -31,8 +31,8 @@ const CardBase = kind({
 
 	propTypes: /** @lends ui/Card.CardBase.prototype */ {
 		/**
-		 * The caption displayed with the image.
-		 *
+		 * The caption node to be displayed with the image.
+
 		 * @type {Node}
 		 * @public
 		 */
