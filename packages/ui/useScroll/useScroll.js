@@ -66,9 +66,7 @@ const
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
 
-const TouchableDiv = ForwardRef({prop: 'componentRef'}, Touchable(
-	({componentRef, ...rest}) => (<div {...rest} ref={componentRef} />)
-));
+const TouchableDiv = ({ref, ...rest}) => (<div {...rest} ref={ref} />);
 
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
 
