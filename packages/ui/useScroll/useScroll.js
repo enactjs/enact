@@ -20,7 +20,6 @@ import clamp from 'ramda/src/clamp';
 import {useCallback, useContext, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
 import warning from 'warning';
 
-import ForwardRef from '../ForwardRef';
 import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
@@ -66,7 +65,7 @@ const
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
 
-const TouchableDiv = ({ref, ...rest}) => (<div {...rest} ref={ref} />);
+const TouchableDiv = Touchable(({ref, ...rest}) => (<div {...rest} ref={ref} />));
 
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
 
