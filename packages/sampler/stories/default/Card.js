@@ -19,7 +19,7 @@ export const _Card = (args) => (
 			height: ri.scaleToRem(120)
 		}}
 	>
-		{'Card'}
+		Card
 	</Card>
 );
 
