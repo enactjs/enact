@@ -19,10 +19,11 @@ export const _Card = (args) => (
 			height: ri.scaleToRem(120)
 		}}
 	>
-		Card
+		{args['children']}
 	</Card>
 );
 
+text('children', _Card, Card, 'Card');
 select('orientation', _Card, ['horizontal', 'vertical'], Card, 'vertical');
 boolean('textOverlay', _Card, Card);
 text('src', _Card, Card, "https://placehold.co/300x300/69cdff/ffffff/png?text=Image");

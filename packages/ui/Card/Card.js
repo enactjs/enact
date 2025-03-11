@@ -12,11 +12,19 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
+import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
 import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
 import componentCss from './Card.module.less';
+
+function ImageOverride ({imageComponent, ...rest}) {
+	return ComponentOverride({
+		component: imageComponent,
+		...rest
+	});
+}
 
 /**
  * A basic card without any behavior.
@@ -59,6 +67,15 @@ const CardBase = kind({
 		 * @public
 		 */
 		css: PropTypes.object,
+
+		/**
+		 * The component used to render the image component.
+		 *
+		 * @type {Component|Element}
+		 * @default {@link ui/Image.Image}
+		 * @public
+		 */
+		imageComponent: EnactPropTypes.componentOverride,
 
 		/**
 		 * The layout orientation of the component.
@@ -106,6 +123,7 @@ const CardBase = kind({
 	},
 
 	defaultProps: {
+		imageComponent: Image,
 		orientation: 'vertical'
 	},
 
@@ -124,7 +142,7 @@ const CardBase = kind({
 		})
 	},
 
-	render: ({children, componentRef, css, orientation, placeholder, src, textOverlay, ...rest}) => {
+	render: ({children, componentRef, css, imageComponent, orientation, placeholder, src, textOverlay, ...rest}) => {
 		const isHorizontal = orientation === 'horizontal';
 		const istextOverlay = textOverlay && !isHorizontal;
 		const Component = isHorizontal ? Row : Column;
@@ -133,7 +151,8 @@ const CardBase = kind({
 			<>
 				<Cell
 					className={css.image}
-					component={Image}
+					component={ImageOverride}
+					imageComponent={imageComponent}
 					placeholder={placeholder}
 					shrink={isHorizontal}
 					src={src}
