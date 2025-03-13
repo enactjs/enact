@@ -101,7 +101,7 @@ function getScreenTypeObject (type) {
  * 	{name: 'vga',     pxPerRem: 8,  width: 640,  height: 480,  aspectRatioName: 'standard'},
  * 	{name: 'xga',     pxPerRem: 16, width: 1024, height: 768,  aspectRatioName: 'standard'},
  * 	{name: 'hd',      pxPerRem: 16, width: 1280, height: 720,  aspectRatioName: 'hdtv'},
- * 	{name: 'uw-fhd',  pxPerRem: 24, width: 1920, height: 804,  aspectRatioName: 'cinema'},
+ * 	{name: 'uw-hd',   pxPerRem: 16, width: 1920, height: 804,  aspectRatioName: 'cinema'},
  * 	{name: 'fhd',     pxPerRem: 24, width: 1920, height: 1080, aspectRatioName: 'hdtv', base: true},
  * 	{name: 'uw-uxga', pxPerRem: 24, width: 2560, height: 1080, aspectRatioName: 'cinema'},
  * 	{name: 'qhd',     pxPerRem: 32, width: 2560, height: 1440, aspectRatioName: 'hdtv'},
