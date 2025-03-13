@@ -39,6 +39,15 @@ const CardBase = kind({
 
 	propTypes: /** @lends ui/Card.CardBase.prototype */ {
 		/**
+		 * Determines whether the caption will be placed over the image or not.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		captionOverlay: PropTypes.bool,
+
+		/**
 		 * The caption node to be displayed with the image.
 
 		 * @type {Node}
@@ -50,7 +59,7 @@ const CardBase = kind({
 		 * Called with a reference to the root component.
 		 *
 		 * When using {@link ui/Card.Card}, the `ref` prop is forwarded to this component
-		 * as `componentRef`
+		 * as `componentRef`.
 		 *
 		 * @type {Object|Function}
 		 * @public
@@ -110,16 +119,7 @@ const CardBase = kind({
 		 * @type {String|Object}
 		 * @public
 		 */
-		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-
-		/**
-		 * Determines whether the text will be placed over the image.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		textOverlay: PropTypes.bool
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	defaultProps: {
@@ -134,17 +134,17 @@ const CardBase = kind({
 	},
 
 	computed: {
-		className: ({orientation, selected, styler, textOverlay}) => styler.append({
+		className: ({captionOverlay, orientation, selected, styler}) => styler.append({
+			captionOverlay: captionOverlay && orientation === 'vertical',
 			selected,
-			textOverlay: textOverlay && orientation === 'vertical',
 			horizontal: orientation === 'horizontal',
 			vertical: orientation === 'vertical'
 		})
 	},
 
-	render: ({children, componentRef, css, imageComponent, orientation, placeholder, src, textOverlay, ...rest}) => {
+	render: ({captionOverlay, children, componentRef, css, imageComponent, orientation, placeholder, src, ...rest}) => {
 		const isHorizontal = orientation === 'horizontal';
-		const istextOverlay = textOverlay && !isHorizontal;
+		const isCaptionOverlay = captionOverlay && !isHorizontal;
 		const Component = isHorizontal ? Row : Column;
 
 		const Wrapped = (
@@ -172,7 +172,7 @@ const CardBase = kind({
 
 		return (
 			<Component {...rest} ref={componentRef}>
-				{istextOverlay ?
+				{isCaptionOverlay ?
 					<div className={css.imageContainer}>
 						{Wrapped}
 					</div> : Wrapped
@@ -195,7 +195,7 @@ const CardDecorator = compose(
 );
 
 /**
- * A minimally styled Card read for customization by a theme.
+ * A minimally styled Card ready for customization by a theme.
  *
  * @class Card
  * @memberof ui/Card
