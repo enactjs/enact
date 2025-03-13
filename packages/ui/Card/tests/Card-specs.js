@@ -47,10 +47,10 @@ describe('Card', () => {
 		expect(card).toHaveClass(expected);
 	});
 
-	test('should apply `.textOverlay` when `textOverlay`', () => {
-		render(<CardBase data-testid="card" textOverlay src={src} />);
+	test('should apply `.captionOverlay` when `captionOverlay`', () => {
+		render(<CardBase data-testid="card" captionOverlay src={src} />);
 
-		const expected = 'textOverlay';
+		const expected = 'captionOverlay';
 		const card = screen.getByTestId('card');
 
 		expect(card).toHaveClass(expected);
