@@ -9,6 +9,7 @@
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
+import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
@@ -203,7 +204,7 @@ const ButtonBase = kind({
 			// Establish the base collection of props for the most basic `iconComponent` type, an
 			// HTML element string.
 			const props = {
-				className: css.icon,
+				className: classnames(css.icon, css.iconColor),
 				component: iconComponent
 			};
 
