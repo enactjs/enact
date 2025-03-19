@@ -9,7 +9,7 @@ before_install:
 install:
     - npm config set prefer-offline false
     - npm install -g codecov
-    - git clone --branch=develop --depth 1 https://github.com/enactjs/cli ../cli
+    - git clone --branch=release/4.9.x.develop --depth 1 https://github.com/enactjs/cli ../cli
     - pushd ../cli
     - npm install
     - npm link
