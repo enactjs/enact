@@ -2,12 +2,12 @@ import {forwardRef, useId, useImperativeHandle, useRef} from 'react';
 
 const WithRef = (WrappedComponent) => {
 	const HoC = forwardRef(function (props, ref) {
-		const {['data-withref-id']: givenId, outermostRef, referrerName, ...rest} = props;
+		const {['data-withref-id']: givenId, outermostRef, referrerName, findOutermostRef, ...rest} = props;
 		const divRef = useRef();
 		const generatedId = useId();
 		const id = givenId || generatedId;
-
-		useImperativeHandle(outermostRef, () => {
+		
+		const findOutermostNode = () => {
 			const refNode = divRef.current;
 			const attributeSelector = `[data-withref-id="${refNode.getAttribute('data-withref-target')}"]`;
 			/* The intended code is to search for the referrer element via a single querySelector call. But unit tests cannot handle :has() properly.
@@ -21,6 +21,14 @@ const WithRef = (WrappedComponent) => {
 				}
 			}
 			return null;
+		}
+
+		useImperativeHandle(outermostRef, () => {
+			return findOutermostNode();
+		}, []);
+		
+		useImperativeHandle(findOutermostRef, () => {
+			return findOutermostNode;
 		}, []);
 
 		return (
