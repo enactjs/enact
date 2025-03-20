@@ -6,7 +6,7 @@
  */
 
 import hoc from '@enact/core/hoc';
-import {forwardRef} from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Default config for {@link ui/ForwardRef.ForwardRef}.
@@ -49,16 +49,33 @@ const defaultConfig = {
 const ForwardRef = hoc(defaultConfig, (config, Wrapped) => {
 	const {prop} = config;
 
-	return forwardRef((props, ref) => {
+	// eslint-disable-next-line no-shadow
+	const ForwardRef = (props) => {
+		const {ref = null, ...rest} = props;
+
 		const withRef = {
-			...props,
+			...rest,
 			[prop]: ref
 		};
 
 		return (
 			<Wrapped {...withRef} />
 		);
-	});
+	};
+
+	ForwardRef.propTypes = {
+		/**
+		 * Forwards a reference to the DOM element.
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		ref: PropTypes.shape({current: PropTypes.any})
+	};
+
+	ForwardRef.displayName = 'ForwardRef';
+
+	return ForwardRef;
 });
 
 export default ForwardRef;
