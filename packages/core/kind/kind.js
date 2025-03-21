@@ -5,7 +5,7 @@
  * @exports kind
  */
 
-import {createContext, use, Component as ReactComponent} from 'react';
+import {createContext, useContext, Component as ReactComponent} from 'react';
 
 import useHandlers from '../useHandlers';
 import Handlers from '../useHandlers/Handlers';
@@ -155,7 +155,7 @@ const kind = (config) => {
 	// removed.
 	if (functional) {
 		Component = function (props) {
-			const ctx = use(contextType);
+			const ctx = useContext(contextType);
 			const boundHandlers = useHandlers(handlers, props, ctx);
 
 			const merged = {

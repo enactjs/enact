@@ -40,12 +40,12 @@ function useFloatingLayerDecorator (config = {}) {
 
 	const provideFloatingLayer = useCallback((children) => {
 		return (
-			<FloatingLayerContext value={floating.registry.register}>
+			<FloatingLayerContext.Provider value={floating.registry.register}>
 				<div className={className}>
 					{children}
 					<div id={floatLayerId} key="floatLayer" ref={floating.setFloatingLayer} />
 				</div>
-			</FloatingLayerContext>
+			</FloatingLayerContext.Provider>
 		);
 	}, [className, floating, floatLayerId]);
 
