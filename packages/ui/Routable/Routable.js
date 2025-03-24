@@ -112,11 +112,11 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 
 		render: ({children, handleNavigate, index, path, ...rest}) => {
 			return (
-				<RouteContext value={{navigate: handleNavigate, path}}>
+				<RouteContext.Provider value={{navigate: handleNavigate, path}}>
 					<Router {...rest} path={path} component={Wrapped} index={index}>
 						{children}
 					</Router>
-				</RouteContext>
+				</RouteContext.Provider>
 			);
 		}
 	});

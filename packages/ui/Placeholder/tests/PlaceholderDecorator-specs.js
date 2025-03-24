@@ -12,11 +12,11 @@ describe('PlaceholderDecorator', () => {
 		test('should configure the default style of the placeholder element', () => {
 			const controllerRegistry = Registry.create();
 			render(
-				<PlaceholderContext value={controllerRegistry.register}>
+				<PlaceholderContext.Provider value={controllerRegistry.register}>
 					<div data-testid="wrapper">
 						<Component />
 					</div>
-				</PlaceholderContext>
+				</PlaceholderContext.Provider>
 			);
 
 			const expectedAttribute = 'style';
