@@ -1,4 +1,4 @@
-import {createContext, use} from 'react';
+import {createContext, useContext} from 'react';
 
 const I18nContext = createContext(null);
 
@@ -23,7 +23,7 @@ const I18nContext = createContext(null);
 function useI18nContext () {
 	// This isn't adding much value but does allow a layer of abstraction so we don't have to export
 	// the I18nContext object and can add private API if needed later.
-	return use(I18nContext);
+	return useContext(I18nContext);
 }
 
 export default useI18nContext;
