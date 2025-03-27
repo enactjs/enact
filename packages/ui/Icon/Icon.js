@@ -215,6 +215,7 @@ const IconBase = kind({
 	},
 
 	render: ({componentRef, iconProps, ...rest}) => {
+		delete rest.flip;
 		delete rest.iconList;
 		delete rest.pressed;
 		delete rest.size;
