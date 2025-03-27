@@ -2,17 +2,19 @@ dist: jammy
 language: node_js
 node_js:
     - lts/*
+    - node
 sudo: false
 before_install:
     - sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 install:
     - npm config set prefer-offline false
     - npm install -g codecov
-    - git clone --branch=develop --depth 1 https://github.com/enactjs/cli ../cli
+    - git clone --branch=release/6.1.x.develop --depth 1 https://github.com/enactjs/cli ../cli
     - pushd ../cli
     - npm install
     - npm link
     - popd
+    - npm uninstall @enact/ui-test-utils --prefix packages/i18n
     - npm install
     - npm run bootstrap
     - npm run interlink
