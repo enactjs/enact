@@ -22,9 +22,9 @@ describe('useResize', () => {
 		test('should pass \'onClick\' handler to the wrapped component', () => {
 			const resizeRegistry = Registry.create();
 			render(
-				<ResizeContext.Provider value={resizeRegistry.register}>
+				<ResizeContext value={resizeRegistry.register}>
 					<ResizeButtonWithHook />
-				</ResizeContext.Provider>
+				</ResizeContext>
 			);
 
 			expect(data).toHaveProperty('onClick');
