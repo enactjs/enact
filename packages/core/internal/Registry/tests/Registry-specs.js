@@ -32,10 +32,10 @@ describe('Registry', () => {
 
 		render () {
 			return (
-				<SomeContext.Provider value={this.registry.register}>
+				<SomeContext value={this.registry.register}>
 					<button {...this.props} onClick={this.handleClick}>Notify!</button>
 					{this.props.children}
-				</SomeContext.Provider>
+				</SomeContext>
 			);
 		}
 	}

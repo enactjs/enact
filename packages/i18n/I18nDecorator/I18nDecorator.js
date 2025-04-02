@@ -113,9 +113,9 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		const className = join(i18nClassName, props.className);
 
 		return (
-			<I18nContext.Provider value={i18n}>
+			<I18nContext value={i18n}>
 				<Wrapped {...rest} className={className} />
-			</I18nContext.Provider>
+			</I18nContext>
 		);
 	}
 

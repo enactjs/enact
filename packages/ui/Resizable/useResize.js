@@ -1,5 +1,5 @@
 import {forward} from '@enact/core/handle';
-import {useCallback, useContext, useEffect, useRef} from 'react';
+import {useCallback, use, useEffect, useRef} from 'react';
 
 import ResizeContext from './ResizeContext';
 
@@ -26,7 +26,7 @@ const useResize = (props, config) => {
 	// `resize` is the name of the event on the component to listen for size changes.
 	const {filter = null, resize = null} = config;
 
-	const resizeContextValue = useContext(ResizeContext);
+	const resizeContextValue = use(ResizeContext);
 	const mutableRef = useRef({
 		resizeRegistry: null
 	});
