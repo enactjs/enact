@@ -77,7 +77,7 @@ function App({children}) {
 
 ### cli
 
-### WebOS TV
+### webOS TV
 
 ## limestone
 
