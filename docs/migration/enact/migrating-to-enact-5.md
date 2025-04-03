@@ -97,7 +97,12 @@ For more details, please refer to [React 19 Upgrade Guide](https://react.dev/blo
 npm install -g @enact/cli@next
 ```
 
+`@enact/cli` updates the `eslint` to `9.x`, `jest` to `29.x`, and `react`, `react-dom` to `19.x`.
+Developers should ensure their code does not rely on features that are no longer available in these versions.
 
+As `@enact/cli` updates the minimum version of `Node` to `20.5.0`, please check your development environment before installing `@enact/cli`.
+
+As we update to `eslint 9`, some of the lint rules could be changed. If you run into unknown lint warnings or errors, don't be afraid, and please proceed to fix them. They are likely to be the rules from [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react), so refer to the console message and look up which rule is related.
 
 ### webOS TV
 
