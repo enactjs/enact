@@ -64,7 +64,7 @@ export default {
 	title: 'UI/Routable'
 };
 
-export const _Routable = () => {
+export const Routable_ = () => {
 	let [path, setPath] = useState('/app');
 	const handleNavigate = (ev) => {
 		action('onNavigate')(ev);
@@ -94,7 +94,7 @@ export const _Routable = () => {
 	);
 };
 
-_Routable.parameters = {
+Routable_.parameters = {
 	info: {
 		text: 'Basic usage of Routable'
 	},
