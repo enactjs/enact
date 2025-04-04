@@ -229,7 +229,7 @@ The table below shows which less variables in sandstone match which variable or 
 
 ##### Changed
 |Sandstone|Limestone|
-|:---------:|:---------:|
+|:---------|:---------|
 |`@lime-bg-color`|`var(--alias-color-surface-full)`|
 |`@lime-text-color`|`var(--alias-color-on-surface-main)`|
 |`@lime-text-sub-color`|`var(--alias-color-on-surface-sub)`|
