@@ -249,9 +249,9 @@ const useMarqueeController = (props) => {
 
 	const provideMarqueeControllerContext = useCallback((children) => {
 		return (
-			<MarqueeControllerContext.Provider value={value}>
+			<MarqueeControllerContext value={value}>
 				{children}
-			</MarqueeControllerContext.Provider>
+			</MarqueeControllerContext>
 		);
 	}, [value]);
 
