@@ -967,7 +967,16 @@ const Spotlight = (function () {
 		 * @param {Object} position `x` and `y` coordinates for the pointer
 		 * @private
 		 */
-		focusNextFromPoint: spotNextFromPoint
+		focusNextFromPoint: spotNextFromPoint,
+
+		/**
+		 * Resets spotlight accelerator
+		 *
+		 * @private
+		 */
+		resetSpotlightAccelerator: function () {
+			SpotlightAccelerator.reset();
+		}
 	};
 
 	return exports;
