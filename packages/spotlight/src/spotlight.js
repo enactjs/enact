@@ -970,7 +970,7 @@ const Spotlight = (function () {
 		focusNextFromPoint: spotNextFromPoint,
 
 		/**
-		 * Resets spotlight accelerate
+		 * Resets spotlight accelerator
 		 *
 		 * @private
 		 */
