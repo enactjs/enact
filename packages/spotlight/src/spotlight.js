@@ -974,7 +974,7 @@ const Spotlight = (function () {
 		 *
 		 * @private
 		 */
-		resetSpotlightAccelerate: function () {
+		resetSpotlightAccelerator: function () {
 			SpotlightAccelerator.reset();
 		}
 	};
