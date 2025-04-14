@@ -59,7 +59,6 @@ const ViewManagerLayout = (props) => {
 		setSelected(ev.selected);
 	}, [setSelected]);
 
-	// eslint-disable-next-line enact/prop-types
 	const {args, selectedEnd, selectedStart, ...rest} = props;
 	const endRange = [selected, selected + 1, selected + 2];
 	const startRange = [selected, selected - 1, selected - 2];
