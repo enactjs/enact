@@ -1,6 +1,6 @@
 {
   "name": "enact",
-  "version": "5.0.0-alpha.4",
+  "version": "5.0.0-alpha.5",
   "description": "Monorepo for all Enact front end libraries.",
   "private": true,
   "scripts": {
@@ -22,9 +22,13 @@
   "eslintConfig": {
     "extends": "enact-proxy/strict"
   },
+  "overrides": {
+    "autolinker": "^4.0.0",
+    "vue-template-compiler": "@vue/compiler-sfc@3.4.31"
+  },
   "devDependencies": {
-    "@enact/docs-utils": "^0.4.10",
-    "eslint-config-enact-proxy": "^1.0.8",
-    "lerna": "^8.1.8"
+    "@enact/docs-utils": "^0.4.11",
+    "eslint-config-enact-proxy": "^1.0.9",
+    "lerna": "^8.2.1"
   }
 }

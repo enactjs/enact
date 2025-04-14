@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [5.0.0-alpha.5] - 2025-04-04
+
+### Added
+
+- `ui/Card` component
+
+## [4.9.6] - 2025-03-27
+
+No significant changes.
+
 ## [5.0.0-alpha.4] - 2025-01-21
 
 ### Fixed
