@@ -970,13 +970,14 @@ const Spotlight = (function () {
 		focusNextFromPoint: spotNextFromPoint,
 
 		/**
-		 * Resets spotlight accelerator
+		 * Resets spotlight accelerator and 5way key hold value
 		 *
 		 * @private
 		 */
-		resetSpotlightAccelerator: function () {
+		resetSpotlightAcceleratorAndHoldKey: function () {
 			SpotlightAccelerator.reset();
-		}
+			_5WayKeyHold = false;
+		},
 	};
 
 	return exports;
