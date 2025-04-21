@@ -977,7 +977,7 @@ const Spotlight = (function () {
 		resetSpotlightAcceleratorAndHoldKey: function () {
 			SpotlightAccelerator.reset();
 			_5WayKeyHold = false;
-		},
+		}
 	};
 
 	return exports;
