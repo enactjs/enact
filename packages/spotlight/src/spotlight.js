@@ -974,7 +974,7 @@ const Spotlight = (function () {
 		 *
 		 * @private
 		 */
-		resetSpotlightAcceleratorAndHoldKey: function () {
+		resetKeyHoldState: function () {
 			SpotlightAccelerator.reset();
 			_5WayKeyHold = false;
 		}
