@@ -230,79 +230,80 @@ The table below shows which less variables in sandstone match which variable or 
 ##### Changed
 |Sandstone|Limestone|
 |:---------|:---------|
-|`@sand-bg-color`|`var(--alias-color-surface-full)`|
-|`@sand-text-color`|`var(--alias-color-on-surface-main)`|
-|`@sand-text-sub-color`|`var(--alias-color-on-surface-sub)`|
-|`@sand-shadow-base-color`|`var(--alias-color-shadow)`|
-|`@sand-component-text-color`|`var(--alias-color-on-container)`|
-|`@sand-component-text-sub-color`|`var(--alias-color-on-container-sub)`|
-|`@sand-component-bg-color`|`var(--alias-color-on-container-normal)`|
-|`@sand-component-active-indicator-bg-color`|`var(--alias-color-indicator-icon-active)`|
-|`@sand-component-inactive-indicator-bg-color`|`var(--alias-color-indicator-icon-inactive)`|
-|`@sand-focus-text-color`|`var(--lime-alias-color-on-surface-main)`|
-|`@sand-focus-bg-color`|`var(--lime-alias-color-container-focused)`|
-|`@sand-component-focus-text-color`|`var(--lime-alias-color-on-focused)`|
-|`@sand-component-focus-active-indicator-bg-color`|`var(--lime-alias-color-indicator-icon-active-focused)`|
-|`@sand-component-focus-inactive-indicator-bg-color`|`var(--lime-alias-color-indicator-icon-inactive-focused)`|
-|`@sand-selected-color`|`var(--lime-alias-color-on-selected)`|
-|`@sand-selected-text-color`|`var(--lime-alias-color-on-selected)`|
-|`@sand-selected-bg-color`|`var(--lime-alias-color-container-selected)`|
-|`@sand-disabled-focus-bg-color`|`var(--lime-alias-color-container-disabled-focused)`|
-|`@sand-disabled-selected-color`|`var(--lime-alias-color-on-selection-icon-selected-disabled)`|
-|`@sand-disabled-selected-bg-color`|`var(--lime-alias-color-on-selection-bg-active-disabled)`|
-|`@sand-disabled-selected-focus-color`|`var(--lime-alias-color-on-selection-icon-selected-disabled-focused)`|
-|`@sand-disabled-selected-focus-bg-color`|`var(--lime-alias-color-on-selection-bg-active-disabled-focused)`|
-|`@sand-fullscreen-bg-color`|`var(--lime-alias-color-surface-full)`|
-|`@sand-overlay-text-shadow`|`0 4px 4px var(--lime-alias-color-shadow)`|
-|`@sand-overlay-bg-color`|`var(--lime-alias-color-surface-overlay)`|
+|`@sand-bg-color`|`var(--semantic-color-background-full-default)`|
+|`@sand-text-color`|`var(--semantic-color-on-background-main)`|
+|`@sand-text-sub-color`|`var(--semantic-color-on-background-sub)`|
+|`@sand-shadow-base-color`|`var(--semantic-color-on-background-black)` with opacity 0.35|
+|`@sand-component-text-color`|`var(--semantic-color-on-surface-main)`|
+|`@sand-component-text-sub-color`|`var(--semantic-color-on-surface-sub)`|
+|`@sand-component-bg-color`|`var(--semantic-color-surface-default)`|
+|`@sand-component-active-indicator-bg-color`|`var(--semantic-color-surface-indicator)`|
+|`@sand-component-inactive-indicator-bg-color`|`var(--semantic-color-surface-indicator)` with opacity 0.4|
+|`@sand-focus-text-color`|`var(--semantic-color-on-surface-main-focused)`|
+|`@sand-focus-bg-color`|`var(--semantic-color-surface-default-focused)`|
+|`@sand-component-focus-text-color`|`var(--semantic-color-on-surface-main-focused)`|
+|`@sand-component-focus-active-indicator-bg-color`|`var(--semantic-color-on-surface-main-focused)`|
+|`@sand-component-focus-inactive-indicator-bg-color`|`var(--semantic-color-on-surface-main-focused)` with opacity 0.4|
+|`@sand-selected-color`|`var(--semantic-color-on-surface-main-selected)`|
+|`@sand-selected-text-color`|`var(--semantic-color-on-surface-main-selected)`|
+|`@sand-selected-bg-color`|`var(--semantic-color-surface-default-selected)`|
+|`@sand-disabled-focus-bg-color`|`var(--semantic-color-surface-default-disabled-focused)`|
+|`@sand-disabled-selected-color`|`var(--semantic-color-on-surface-main-selected)`|
+|`@sand-disabled-selected-bg-color`|`var(--semantic-color-surface-accent)`|
+|`@sand-disabled-selected-focus-color`|`var(--semantic-color-on-surface-main-selected)`|
+|`@sand-disabled-selected-focus-bg-color`|`var(--semantic-color-surface-accent)`|
+|`@sand-fullscreen-bg-color`|`var(--semantic-color-background-full-default)`|
+|`@sand-overlay-text-shadow`|`0 4px 4px var(--semantic-color-on-background-black)` with opacity 0.35`|
+|`@sand-overlay-bg-color`|`var(--semantic-color-background-overlay-default)`|
 |`@sand-selection-color`|`@lime-input-selection-color`|
 |`@sand-selection-bg-color`|`@lime-input-selection-bg-color`|
 |`@sand-toggle-off-color`|`@lime-switch-icon-bg-color`|
 |`@sand-toggle-off-bg-color`|`@lime-switch-bg-color`|
 |`@sand-toggle-on-color`|`@lime-switch-selected-icon-bg-color`|
 |`@sand-toggle-on-bg-color`|`@lime-switch-selected-bg-color`|
-|`@sand-progress-color`|`var(--lime-alias-color-progress-bar)`|
-|`@sand-progress-bg-color`|`var(--lime-alias-color-progress-bg)`|
+|`@sand-progress-color`|`var(--semantic-color-on-surface-accent)`|
+|`@sand-progress-bg-color`|`var(--semantic-color-surface-default-track)`|
 |`@sand-progress-bg-color-opacity`|`1`|
 |`@sand-progress-highlighted-color`|`@lime-progressbar-highlighted-fill-bg-color`|
-|`@sand-progress-slider-color`|`var(--lime-alias-color-progress-bar)`|
-|`@sand-invalid-sub-color`|`var(--lime-alias-color-invalid)`|
-|`@sand-checkbox-color`|`var(--lime-alias-color-on-surface-main)`|
-|`@sand-keyguide-bg-base-color`|`var(--lime-alias-color-surface-overlay)`|
+|`@sand-progress-slider-color`|`var(--semantic-color-on-surface-accent)`|
+|`@sand-invalid-sub-color`|`var(--semantic-color-on-background-error)`|
+|`@sand-checkbox-color`|`var(--semantic-color-on-background-main)`|
+|`@sand-keyguide-bg-base-color`|`var(--semantic-color-background-overlay-default)`|
 |`@sand-keyguide-bg-color-opacity`|`1`|
-|`@sand-checkbox-text-color`|`@lime-checkbox-icon`|
-|`@sand-checkbox-bg-color`|`@lime-checkbox-bg`|
-|`@sand-checkbox-border-color`|`@lime-checkbox-border`|
-|`@sand-checkbox-disabled-selected-text-color`|`@lime-checkbox-icon-selected-disabled`|
-|`@sand-checkbox-disabled-selected-bg-color`|`@lime-checkbox-bg-selected-disabled`|
-|`@sand-checkbox-disabled-selected-border-color`|`@lime-checkbox-border-selected-disabled`|
-|`@sand-checkbox-focus-disabled-selected-text-color`|`@lime-checkbox-icon-selected-disabled-focused`|
-|`@sand-checkbox-focus-disabled-selected-bg-color`|`@lime-checkbox-bg-selected-disabled-focused`|
-|`@sand-checkbox-focus-disabled-selected-border-color`|`@lime-checkbox-border-selected-disabled-focused`|
-|`@sand-checkbox-focus-text-color`|`@lime-checkbox-icon-focused`|
-|`@sand-checkbox-focus-bg-color`|`@lime-checkbox-bg-focused`|
-|`@sand-checkbox-focus-border-color`|`@lime-checkbox-border-focused`|
-|`@sand-checkbox-selected-text-color`|`@lime-checkbox-icon-selected`|
-|`@sand-checkbox-selected-bg-color`|`@lime-checkbox-bg-selected`|
-|`@sand-checkbox-selected-border-color`|`@lime-checkbox-border-selected`|
-|`@sand-checkbox-selected-focus-text-color`|`@lime-checkbox-icon-selected-focused`|
-|`@sand-checkbox-selected-focus-bg-color`|`@lime-checkbox-bg-selected-focused`|
-|`@sand-checkbox-selected-focus-border-color`|`@lime-checkbox-border-selected-focused`|
-|`@sand-checkbox-indeterminate-text-color`|`@lime-checkbox-icon-indeterminate`|
-|`@sand-checkbox-indeterminate-bg-color`|`@lime-checkbox-bg-indeterminate`|
-|`@sand-checkbox-indeterminate-border-color`|`@lime-checkbox-border-indeterminate`|
-|`@sand-checkbox-indeterminate-focus-text-color`|`@lime-checkbox-icon-indeterminate-focused`|
-|`@sand-checkbox-indeterminate-focus-bg-color`|`@lime-checkbox-bg-indeterminate-focused`|
-|`@sand-checkbox-indeterminate-focus-border-color`|`@lime-checkbox-border-indeterminate-focused`|
-|`@sand-checkbox-standalone-bg-disabled-focus-bg-color`|`@lime-checkbox-bg-standalone-disabled-focused`|
-|`@sand-item-label-color`|`@lime-item-text-sub`|
-|`@sand-item-focus-label-color`|`@lime-item-text-sub-focused`|
-|`@sand-item-focus-background`|Removed|
-|`@sand-item-disabled-focus-bg-color`|`@lime-item-bg-disabled-focused`|
+|`@sand-checkbox-text-color`|`@lime-checkbox-icon-color`|
+|`@sand-checkbox-bg-color`|`@lime-checkbox-container-color`|
+|`@sand-checkbox-border-color`|`@lime-checkbox-border-color`|
+|`@sand-checkbox-disabled-selected-text-color`|`@lime-checkbox-icon-selected-disabled-color`|
+|`@sand-checkbox-disabled-selected-bg-color`|`@lime-checkbox-container-selected-disabled-color`|
+|`@sand-checkbox-disabled-selected-border-color`|`@lime-checkbox-border-selected-disabled-color`|
+|`@sand-checkbox-focus-disabled-selected-text-color`|`@lime-checkbox-icon-selected-disabled-focused-color`|
+|`@sand-checkbox-focus-disabled-selected-bg-color`|`@lime-checkbox-container-selected-disabled-focused-color`|
+|`@sand-checkbox-focus-disabled-selected-border-color`|`@lime-checkbox-border-selected-disabled-focused-color`|
+|`@sand-checkbox-focus-text-color`|`@lime-checkbox-icon-focused-color`|
+|`@sand-checkbox-focus-bg-color`|`@lime-checkbox-container-focused-color`|
+|`@sand-checkbox-focus-border-color`|`@lime-checkbox-border-focused-color`|
+|`@sand-checkbox-selected-text-color`|`@lime-checkbox-icon-selected-color`|
+|`@sand-checkbox-selected-bg-color`|`@lime-checkbox-container-selected-color`|
+|`@sand-checkbox-selected-border-color`|`@lime-checkbox-border-selected-color`|
+|`@sand-checkbox-selected-focus-text-color`|`@lime-checkbox-icon-selected-focused-color`|
+|`@sand-checkbox-selected-focus-bg-color`|`@lime-checkbox-container-selected-focused-color`|
+|`@sand-checkbox-selected-focus-border-color`|`@lime-checkbox-border-selected-focused-color`|
+|`@sand-checkbox-indeterminate-text-color`|`@lime-checkbox-icon-indeterminate-color`|
+|`@sand-checkbox-indeterminate-bg-color`|`@lime-checkbox-container-indeterminate-color`|
+|`@sand-checkbox-indeterminate-border-color`|`@lime-checkbox-border-indeterminate-color`|
+|`@sand-checkbox-indeterminate-focus-text-color`|`@lime-checkbox-icon-indeterminate-focused-color`|
+|`@sand-checkbox-indeterminate-focus-bg-color`|`@lime-checkbox-container-indeterminate-focused-color`|
+|`@sand-checkbox-indeterminate-focus-border-color`|`@lime-checkbox-border-indeterminate-focused-color`|
+|`@sand-checkbox-standalone-bg-disabled-focus-bg-color`|`@lime-checkbox-container-standalone-disabled-focused-color`|
+|`@sand-item-label-color`|`@lime-item-label-sub-color`|
+|`@sand-item-focus-label-color`|`@lime-item-label-sub-focused-color`|
+|`@sand-item-disabled-focus-bg-color`|`@lime-item-container-disabled-focused-color`|
 
 ##### Added
-`@lime-item-text-focused`, `@lime-item-text-selected`, `@lime-item-text-sub-selected`, `@lime-item-bg-focused`, `@lime-item-bg-selected`.
+`@lime-item-label-main-selected-color`, `@lime-item-label-sub-selected-color`, `@lime-item-container-selected-color`.
 
+#### Removed
+`@sand-item-focus-background` is removed.
 
 ## ui
 
