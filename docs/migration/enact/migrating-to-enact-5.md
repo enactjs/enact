@@ -149,7 +149,7 @@ $ npm shrinkwrap
 ```
 
 
-Limestone now uses the design-tokens system to style its components, importing [alias tokens](https://github.com/enactjs/design-tokens/blob/master/packages/webos-tokens/css/alias.css) from the [design-tokens](https://github.com/enactjs/design-tokens). This enables consistent and customizable styling across all components. *Note that the names of the design tokens have not been determined yet so they can be changed in the future.*
+Limestone now uses the design-tokens system to style its components, importing [semantic tokens](https://github.com/enactjs/design-tokens/blob/master/packages/webos-tokens/css/color-semantic.css) from the [design-tokens](https://github.com/enactjs/design-tokens). This enables consistent and customizable styling across all components. *Note that the names of the design tokens have not been determined yet so they can be changed in the future.*
 
 With the removal of the `ReactDOM.findDOMNode` API, `ContextualPopupDecorator` and `Dropdown` have been changed to include a sibling DOM node by using `@enact/core/internal/WithRef` to access DOM nodes.
 
@@ -236,17 +236,17 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-bg-color`|`var(--semantic-color-background-full-default)`|
 |`@sand-text-color`|`var(--semantic-color-on-background-main)`|
 |`@sand-text-sub-color`|`var(--semantic-color-on-background-sub)`|
-|`@sand-shadow-base-color`|`var(--semantic-color-on-background-black)` with opacity 0.35|
+|`@sand-shadow-base-color`|`var(--semantic-color-on-background-black)` with alpha 0.35|
 |`@sand-component-text-color`|`var(--semantic-color-on-surface-main)`|
 |`@sand-component-text-sub-color`|`var(--semantic-color-on-surface-sub)`|
 |`@sand-component-bg-color`|`var(--semantic-color-surface-default)`|
 |`@sand-component-active-indicator-bg-color`|`var(--semantic-color-surface-indicator)`|
-|`@sand-component-inactive-indicator-bg-color`|`var(--semantic-color-surface-indicator)` with opacity 0.4|
+|`@sand-component-inactive-indicator-bg-color`|`var(--semantic-color-surface-indicator)` with alpha 0.4|
 |`@sand-focus-text-color`|`var(--semantic-color-on-surface-main-focused)`|
 |`@sand-focus-bg-color`|`var(--semantic-color-surface-default-focused)`|
 |`@sand-component-focus-text-color`|`var(--semantic-color-on-surface-main-focused)`|
 |`@sand-component-focus-active-indicator-bg-color`|`var(--semantic-color-on-surface-main-focused)`|
-|`@sand-component-focus-inactive-indicator-bg-color`|`var(--semantic-color-on-surface-main-focused)` with opacity 0.4|
+|`@sand-component-focus-inactive-indicator-bg-color`|`var(--semantic-color-on-surface-main-focused)` with alpha 0.4|
 |`@sand-selected-color`|`var(--semantic-color-on-surface-main-selected)`|
 |`@sand-selected-text-color`|`var(--semantic-color-on-surface-main-selected)`|
 |`@sand-selected-bg-color`|`var(--semantic-color-surface-default-selected)`|
@@ -256,7 +256,7 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-disabled-selected-focus-color`|`var(--semantic-color-on-surface-main-selected)`|
 |`@sand-disabled-selected-focus-bg-color`|`var(--semantic-color-surface-accent)`|
 |`@sand-fullscreen-bg-color`|`var(--semantic-color-background-full-default)`|
-|`@sand-overlay-text-shadow`|`0 4px 4px var(--semantic-color-on-background-black)` with opacity 0.35|
+|`@sand-overlay-text-shadow`|`0 4px 4px var(--semantic-color-on-background-black)` with alpha 0.35|
 |`@sand-overlay-bg-color`|`var(--semantic-color-background-overlay-default)`|
 |`@sand-selection-color`|`@lime-input-selection-color`|
 |`@sand-selection-bg-color`|`@lime-input-selection-bg-color`|
@@ -326,8 +326,8 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-picker-text-color`|`@lime-picker-label-color`|
 |`@sand-picker-indicator-active-bg-color`|`@lime-picker-indicator-color`|
 |`@sand-picker-indicator-active-focus-bg-color`|`@lime-picker-indicator-focused-color`|
-|`@sand-picker-indicator-inactive-bg-color`|`@lime-picker-indicator-color` with opacity 0.4|
-|`@sand-picker-indicator-inactive-focus-bg-color`|`@lime-picker-indicator-focused-color` with opacity 0.4|
+|`@sand-picker-indicator-inactive-bg-color`|`@lime-picker-indicator-color` with alpha 0.4|
+|`@sand-picker-indicator-inactive-focus-bg-color`|`@lime-picker-indicator-focused-color` with alpha 0.4|
 |`@sand-picker-joined-horizontal-text-color`|`@lime-picker-joined-label-color`|
 |`@sand-picker-joined-horizontal-bg-color`|`@lime-picker-container-color`|
 |`@sand-progressbar-bar-bg-color`|`@lime-progressbar-track-color`|
@@ -337,7 +337,7 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-radiitem-indicator-color`|`@lime-radioitem-icon-color`|
 |`@sand-radiitem-indicator-bg-color`|`@lime-radioitem-container-color`|
 |`@sand-radioitem-indicator-border-color`|`@lime-radioitem-border-color`|
-|`@sand-radioitem-focus-indciator-color`|`@lime-radioitem-icon-focused-color`|
+|`@sand-radioitem-focus-indicator-color`|`@lime-radioitem-icon-focused-color`|
 |`@sand-radioitem-focus-indicator-bg-color`|`@lime-radioitem-container-focused-color`|
 |`@sand-radioitem-focus-indicator-border-color`|`@lime-radioitem-border-focused-color`|
 |`@sand-radioitem-selected-indicator-color`|`@lime-radioitem-icon-selected-color`|
