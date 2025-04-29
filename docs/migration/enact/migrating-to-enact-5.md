@@ -353,17 +353,17 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-scrollbar-thumb-focus-box-shadow-color`|`@lime-scrollbar-thumb-focus-box-shadow-color`|
 
 ##### Added
-`@lime-button-outline-container-color`, `@lime-button-outline-border-selected-color`.
-`@lime-inputfield-container-color`, `@lime-inputfield-container-disabled-focused-color`, `@lime-inputfield-cursor-color`.
-`@lime-item-label-main-selected-color`, `@lime-item-label-sub-selected-color`, `@lime-item-container-selected-color`, @lime-item-container-disabled-focused-color.
-`@lime-tablayout-tab-container-selected-color`, `@lime-tablayout-tab-group-container-color`.
-`@lime-virtuallist-container-color`.
+- `@lime-button-outline-container-color`, `@lime-button-outline-border-selected-color`.
+- `@lime-inputfield-container-color`, `@lime-inputfield-container-disabled-focused-color`, `@lime-inputfield-cursor-color`.
+- `@lime-item-label-main-selected-color`, `@lime-item-label-sub-selected-color`, `@lime-item-container-selected-color`, `@lime-item-container-disabled-focused-color`.
+- `@lime-tablayout-tab-container-selected-color`, `@lime-tablayout-tab-group-container-color`.
+- `@lime-virtuallist-container-color`.
 
 #### Removed
-`@sand-item-focus-background` is removed.
-`@sand-picker-joined-text-color`, `@sand-picker-joined-incrementer-color`, `@sand-picker-joined-focus-incrementer-color`, `@sand-picker-joined-focus-disabled-indicator-bg-color`, `@sand-picker-joined-focus-disabled-indicator-opacity`, `@sand-picker-joined-focus-disabled-indicator-active-opacity` are removed.
-`@sand-radioitem-disabled-selected-color`, `@sand-radioitem-disabled-selected-bg-color`, `@sand-radioitem-disabled-selected-border-color`, `@sand-radioitem-focus-disabled-selected-color`, `@sand-radioitem-focus-disabled-selected-bg-color`, `@sand-radioitem-focus-disabled-selected-border-color` are removed.
-`@sand-tablayout-tab-horizontal-border-color`, `@sand-tablayout-tab-horizontal-selected-border-color` are removed.
+- `@sand-item-focus-background`.
+- `@sand-picker-joined-text-color`, `@sand-picker-joined-incrementer-color`, `@sand-picker-joined-focus-incrementer-color`, `@sand-picker-joined-focus-disabled-indicator-bg-color`, `@sand-picker-joined-focus-disabled-indicator-opacity`, `@sand-picker-joined-focus-disabled-indicator-active-opacity`.
+- `@sand-radioitem-disabled-selected-color`, `@sand-radioitem-disabled-selected-bg-color`, `@sand-radioitem-disabled-selected-border-color`, `@sand-radioitem-focus-disabled-selected-color`, `@sand-radioitem-focus-disabled-selected-bg-color`, `@sand-radioitem-focus-disabled-selected-border-color`.
+- `@sand-tablayout-tab-horizontal-border-color`, `@sand-tablayout-tab-horizontal-selected-border-color`.
 
 ## ui
 
