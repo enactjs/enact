@@ -221,6 +221,9 @@ The Switch icon is now drawn using CSS instead of an icon font.
 ### `TabLayout`
 Tabs in horizontal `TabLayout` now support scrolling.
 
+### `WizardPanels`
+The subtitle of `WizardPanels` now supports a marquee effect.
+
 ### Style
 Various styling changes have been made to support new UI/UX designs for the webOS TV platform.
 
