@@ -211,8 +211,6 @@ const ButtonBase = kind({
 			// configured to handle.
 			if (typeof iconComponent !== 'string') {
 				props.size = size;
-				// the following inadvertently triggers a linting rule
-				// eslint-disable-next-line enact/prop-types
 				props.flip = iconFlip;
 			}
 

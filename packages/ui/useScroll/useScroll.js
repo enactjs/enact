@@ -17,10 +17,9 @@ import {platform} from '@enact/core/platform'; // scrollMode 'native'
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
-import {useCallback, useContext, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
+import {useCallback, use, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
 import warning from 'warning';
 
-import ForwardRef from '../ForwardRef';
 import {ResizeContext} from '../Resizable';
 import ri from '../resolution';
 import Touchable from '../Touchable';
@@ -66,9 +65,7 @@ const
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
 
-const TouchableDiv = ForwardRef({prop: 'componentRef'}, Touchable(
-	({componentRef, ...rest}) => (<div {...rest} ref={componentRef} />)
-));
+const TouchableDiv = Touchable(({ref, ...rest}) => (<div {...rest} ref={ref} />));
 
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
 
@@ -143,7 +140,7 @@ const useScrollBase = (props) => {
 
 	const [, forceUpdate] = useForceUpdate();
 
-	const context = useContext(ResizeContext);
+	const context = use(ResizeContext);
 
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');

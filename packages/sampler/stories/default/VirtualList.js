@@ -12,7 +12,7 @@ const
 	},
 	items = [],
 	defaultDataSize = 1000,
-	// eslint-disable-next-line enact/prop-types, enact/display-name
+	// eslint-disable-next-line enact/display-name
 	uiRenderItem = (size) => ({index, ...rest}) => {
 		const itemStyle = {
 			borderBottom: ri.unit(3, 'rem') + ' solid #202328',
