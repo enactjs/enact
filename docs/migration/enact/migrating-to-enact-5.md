@@ -334,8 +334,8 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-progressbar-load-bg-color`|`@lime-progressbar-track-buffer-color`|
 |`@sand-progressbar-fill-bg-color`|`@lime-progressbar-track-active-color`|
 |`@sand-progressbar-highlighted-fill-bg-color`|`@lime-progressbar-track-active-focused-color`|
-|`@sand-radiitem-indicator-color`|`@lime-radioitem-icon-color`|
-|`@sand-radiitem-indicator-bg-color`|`@lime-radioitem-container-color`|
+|`@sand-radioitem-indicator-color`|`@lime-radioitem-icon-color`|
+|`@sand-radioitem-indicator-bg-color`|`@lime-radioitem-container-color`|
 |`@sand-radioitem-indicator-border-color`|`@lime-radioitem-border-color`|
 |`@sand-radioitem-focus-indicator-color`|`@lime-radioitem-icon-focused-color`|
 |`@sand-radioitem-focus-indicator-bg-color`|`@lime-radioitem-container-focused-color`|
