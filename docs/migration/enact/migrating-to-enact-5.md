@@ -270,6 +270,17 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-checkbox-color`|`var(--semantic-color-on-background-main)`|
 |`@sand-keyguide-bg-base-color`|`var(--semantic-color-background-overlay-default)`|
 |`@sand-keyguide-bg-color-opacity`|`1`|
+|`@sand-button-text-color`|`@lime-button-fill-label-color`|
+|`@sand-button-bg-color`|`@lime-button-fill-container-color`|
+|`@sand-button-border-color`|`@lime-button-outline-border-color`|
+|`@sand-button-focus-bg-color`|`@lime-button-fill-container-focused-color`|
+|`@sand-button-selected-text-color`|`@lime-button-fill-label-selected-color`|
+|`@sand-button-selected-bg-color`|`@lime-button-fill-container-selected-color`|
+|`@sand-button-focus-filter`|`@lime-button-filter-focused`|
+|`@sand-button-selected-filter`|`@lime-button-filter-selected`|
+|`@sand-button-transparent-text-color`|`@lime-button-transparent-fill-text-color`|
+|`@sand-button-focus-icononly-bg-color`|`@lime-button-icononly-bg-focused-color`|
+|`@sand-button-text-shadow`|`@lime-button-text-shadow`|
 |`@sand-checkbox-text-color`|`@lime-checkbox-icon-color`|
 |`@sand-checkbox-bg-color`|`@lime-checkbox-container-color`|
 |`@sand-checkbox-border-color`|`@lime-checkbox-border-color`|
@@ -295,15 +306,61 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-checkbox-indeterminate-focus-bg-color`|`@lime-checkbox-container-indeterminate-focused-color`|
 |`@sand-checkbox-indeterminate-focus-border-color`|`@lime-checkbox-border-indeterminate-focused-color`|
 |`@sand-checkbox-standalone-bg-disabled-focus-bg-color`|`@lime-checkbox-container-standalone-disabled-focused-color`|
+|`@sand-dropdown-title-color`|`@lime-dropdown-title-text-color`|
+|`@sand-dropdown-selected-text-color`|`@lime-dropdown-label-selected-color`|
 |`@sand-item-label-color`|`@lime-item-label-sub-color`|
 |`@sand-item-focus-label-color`|`@lime-item-label-sub-focused-color`|
 |`@sand-item-disabled-focus-bg-color`|`@lime-item-container-disabled-focused-color`|
+|`@sand-inputfield-text-color`|`@lime-inputfield-label-inactive-color`|
+|`@sand-inputfield-placeholder-color`|`@lime-inputfield-label-inactive-color`|
+|`@sand-inputfield-placeholder-active-color`|`@lime-inputfield-label-inactive-focused-color`|
+|`@sand-inputfield-focus-text-color`|`@lime-inputfield-label-active-color`|
+|`@sand-inputfield-disabled-text-color`|`@lime-inputfield-label-inactive-color`|
+|`@sand-inputfield-invalid-color`|`@lime-inputfield-invalid-color`|
+|`@sand-inputfield-invalid-tooltip-color`|`@lime-inputfield-invalid-tooltip-color`|
+|`@sand-item-label-color`|`@lime-item-label-sub-color`|
+|`@sand-item-focus-label-color`|`@lime-item-label-sub-focused-color`|
+|`@sand-picker-text-color`|`@lime-picker-label-color`|
+|`@sand-picker-indicator-active-bg-color`|`@lime-picker-indicator-color`|
+|`@sand-picker-indicator-active-focus-bg-color`|`@lime-picker-indicator-focused-color`|
+|`@sand-picker-indicator-inactive-bg-color`|`@lime-picker-indicator-color` with opacity 0.4|
+|`@sand-picker-indicator-inactive-focus-bg-color`|`@lime-picker-indicator-focused-color` with opacity 0.4|
+|`@sand-picker-joined-horizontal-text-color`|`@lime-picker-joined-label-color`|
+|`@sand-picker-joined-horizontal-bg-color`|`@lime-picker-container-color`|
+|`@sand-progressbar-bar-bg-color`|`@lime-progressbar-track-color`|
+|`@sand-progressbar-load-bg-color`|`@lime-progressbar-track-buffer-color`|
+|`@sand-progressbar-fill-bg-color`|`@lime-progressbar-track-active-color`|
+|`@sand-progressbar-highlighted-fill-bg-color`|`@lime-progressbar-track-active-focused-color`|
+|`@sand-radiitem-indicator-color`|`@lime-radioitem-icon-color`|
+|`@sand-radiitem-indicator-bg-color`|`@lime-radioitem-container-color`|
+|`@sand-radioitem-indicator-border-color`|`@lime-radioitem-border-color`|
+|`@sand-radioitem-focus-indciator-color`|`@lime-radioitem-icon-focused-color`|
+|`@sand-radioitem-focus-indicator-bg-color`|`@lime-radioitem-container-focused-color`|
+|`@sand-radioitem-focus-indicator-border-color`|`@lime-radioitem-border-focused-color`|
+|`@sand-radioitem-selected-indicator-color`|`@lime-radioitem-icon-selected-color`|
+|`@sand-radioitem-selected-indicator-bg-color`|`@lime-radioitem-container-selected-color`|
+|`@sand-radioitem-selected-indicator-border-color`|`@lime-radioitem-border-selected-color`|
+|`@sand-radioitem-selected-focus-indicator-color`|`@lime-radioitem-icon-selected-focused-color`|
+|`@sand-radioitem-selected-focus-indicator-bg-color`|`@lime-radioitem-container-selected-focused-color`|
+|`@sand-radioitem-selected-focus-indicator-border-color`|`@lime-radioitem-border-selected-focused-color`|
+|`@sand-scrollbar-track-bg-color`|`@lime-scroll-track-color`|
+|`@sand-scrollbar-thumb-bg-color`|`@lime-scroll-handle-color`|
+|`@sand-scrollbar-thumb-focus-bg-color`|`@lime-scroll-handle-focused-color`|
+|`@sand-scrollbar-thumb-focus-direction-indicator-color`|`@lime-scroll-arrow-color`|
+|`@sand-scrollbar-thumb-focus-box-shadow-color`|`@lime-scrollbar-thumb-focus-box-shadow-color`|
 
 ##### Added
-`@lime-item-label-main-selected-color`, `@lime-item-label-sub-selected-color`, `@lime-item-container-selected-color`.
+`@lime-button-outline-container-color`, `@lime-button-outline-border-selected-color`.
+`@lime-inputfield-container-color`, `@lime-inputfield-container-disabled-focused-color`, `@lime-inputfield-cursor-color`.
+`@lime-item-label-main-selected-color`, `@lime-item-label-sub-selected-color`, `@lime-item-container-selected-color`, @lime-item-container-disabled-focused-color.
+`@lime-tablayout-tab-container-selected-color`, `@lime-tablayout-tab-group-container-color`.
+`@lime-virtuallist-container-color`.
 
 #### Removed
 `@sand-item-focus-background` is removed.
+`@sand-picker-joined-text-color`, `@sand-picker-joined-incrementer-color`, `@sand-picker-joined-focus-incrementer-color`, `@sand-picker-joined-focus-disabled-indicator-bg-color`, `@sand-picker-joined-focus-disabled-indicator-opacity`, `@sand-picker-joined-focus-disabled-indicator-active-opacity` are removed.
+`@sand-radioitem-disabled-selected-color`, `@sand-radioitem-disabled-selected-bg-color`, `@sand-radioitem-disabled-selected-border-color`, `@sand-radioitem-focus-disabled-selected-color`, `@sand-radioitem-focus-disabled-selected-bg-color`, `@sand-radioitem-focus-disabled-selected-border-color` are removed.
+`@sand-tablayout-tab-horizontal-border-color`, `@sand-tablayout-tab-horizontal-selected-border-color` are removed.
 
 ## ui
 
