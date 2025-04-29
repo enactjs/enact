@@ -256,7 +256,7 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-disabled-selected-focus-color`|`var(--semantic-color-on-surface-main-selected)`|
 |`@sand-disabled-selected-focus-bg-color`|`var(--semantic-color-surface-accent)`|
 |`@sand-fullscreen-bg-color`|`var(--semantic-color-background-full-default)`|
-|`@sand-overlay-text-shadow`|`0 4px 4px var(--semantic-color-on-background-black)` with opacity 0.35`|
+|`@sand-overlay-text-shadow`|`0 4px 4px var(--semantic-color-on-background-black)` with opacity 0.35|
 |`@sand-overlay-bg-color`|`var(--semantic-color-background-overlay-default)`|
 |`@sand-selection-color`|`@lime-input-selection-color`|
 |`@sand-selection-bg-color`|`@lime-input-selection-bg-color`|
