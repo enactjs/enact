@@ -970,7 +970,17 @@ const Spotlight = (function () {
 		 * @param {Object} position `x` and `y` coordinates for the pointer
 		 * @private
 		 */
-		focusNextFromPoint: spotNextFromPoint
+		focusNextFromPoint: spotNextFromPoint,
+
+		/**
+		 * Resets spotlight accelerator and 5way key hold value
+		 *
+		 * @private
+		 */
+		resetKeyHoldState: function () {
+			SpotlightAccelerator.reset();
+			_5WayKeyHold = false;
+		}
 	};
 
 	return exports;
