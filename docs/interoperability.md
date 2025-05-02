@@ -31,13 +31,7 @@ const App = kind({
 });
 ```
 
-For libraries like bootstrap, you can also import the css in your `App.less` file.
-
-```css
-@global-import 'bootstrap/dist/css/bootstrap.css';
-```
-
-For bootstrap 4 or above, you need to import bootstrap's source Sass files in your `custom.scss`. Make sure you are using Enact CLI 5.0.0 or above.
+For libraries like bootstrap, you can also import bootstrap's source Sass files in your `custom.scss`.
 
 ```scss
 @import '~bootstrap/scss/bootstrap.scss';
