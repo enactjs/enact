@@ -91,7 +91,7 @@ function App({children}) {
 For more details, please refer to [React 19 Upgrade Guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) and [React v19](https://react.dev/blog/2024/12/05/react-19) from React Blog.
 
 ### cli
-`@enact/cli` must be upgraded to version `7.0.0-alpha.6` or newer, as shown below.
+`@enact/cli` must be upgraded to version `7.0.0-rc.1` or newer, as shown below.
 
 ```sh
 npm install -g @enact/cli@next
@@ -100,7 +100,7 @@ npm install -g @enact/cli@next
 `@enact/cli` updates the `eslint` to `9.x`, `jest` to `29.x`, and `react`, `react-dom` to `19.x`.
 Developers should ensure their code does not rely on features that are no longer available in these versions.
 
-As `@enact/cli` updates the minimum version of `Node` to `20.5.0`, please check your development environment before installing `@enact/cli`.
+As `@enact/cli` updates the minimum version of `Node` to `20.10.0`, please check your development environment before installing `@enact/cli`.
 
 As we update to `eslint 9`, some of the lint rules could be changed. If you run into unknown lint warnings or errors, don't be afraid, and please proceed to fix them. They are likely to be the rules from [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react), so refer to the console message and look up which rule is related.
 
@@ -122,11 +122,11 @@ please follow the steps below.
   },
   ...
   "dependenceis": {
-    "@enact/core": "^5.0.0-alpha.5",
-    "@enact/i18n": "^5.0.0-alpha.5",
-    "@enact/limestone": "git+ssh://git@github.com/enactjs/limestone.git#1.0.0-alpha.1",
-    "@enact/spotlight": "^5.0.0-alpha.5",
-    "@enact/ui": "^5.0.0-alpha.5",
+    "@enact/core": "^5.0.0-rc.1",
+    "@enact/i18n": "^5.0.0-rc.1",
+    "@enact/limestone": "git+ssh://git@github.com/enactjs/limestone.git#1.0.0-rc.1",
+    "@enact/spotlight": "^5.0.0-rc.1",
+    "@enact/ui": "^5.0.0-rc.1",
     ...
   }
 ```
@@ -212,6 +212,12 @@ The new component `Card` is added.
 ### `Chip`
 The new component `Chip` is added.
 
+### `Heading`
+The prop `size` has default value of `tiny`.
+
+### `Icon`
+New icons are added.
+
 ### `KeyGuide`
 The image-based `keyGuide` is added.
 
@@ -220,6 +226,7 @@ The Switch icon is now drawn using CSS instead of an icon font.
 
 ### `TabLayout`
 Tabs in horizontal `TabLayout` now support scrolling.
+The prop `primaryIndex` is added to focus primary tab when pressing back key from other tabs or initial rendering
 
 ### `WizardPanels`
 The subtitle of `WizardPanels` now supports a marquee effect.
