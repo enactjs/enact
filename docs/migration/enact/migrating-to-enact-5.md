@@ -226,7 +226,7 @@ The Switch icon is now drawn using CSS instead of an icon font.
 
 ### `TabLayout`
 Tabs in horizontal `TabLayout` now support scrolling.
-The prop `primaryIndex` is added to focus primary tab when pressing back key from other tabs or initial rendering
+The prop `primaryIndex` is added to focus primary tab when pressing back key from other tabs or initial rendering.
 
 ### `WizardPanels`
 The subtitle of `WizardPanels` now supports a marquee effect.
