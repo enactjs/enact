@@ -382,7 +382,7 @@ The table below shows which less variables in sandstone match which variable or 
 - `@lime-inputfield-container-color`, `@lime-inputfield-container-disabled-focused-color`, `@lime-inputfield-cursor-color`.
 - `@lime-item-label-main-selected-color`, `@lime-item-label-sub-selected-color`, `@lime-item-container-selected-color`, `@lime-item-container-disabled-focused-color`.
 - `@lime-pageviews-bg-color`.
-- `@lime-progressbutton-track-active-color`, @lime-progressbutton-track-focused-color.
+- `@lime-progressbutton-track-active-color`, `@lime-progressbutton-track-focused-color`.
 - `@lime-steps-indicator-icon-inactive-color`, `@lime-steps-step-icon-success-color`, `@lime-steps-step-label-active-color`, `@lime-steps-step-label-inactive-color`.
 - `@lime-switchitem-item-selected-container-color`.
 - `@lime-tablayout-tab-container-selected-color`, `@lime-tablayout-tab-group-container-color`.
