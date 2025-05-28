@@ -213,7 +213,7 @@ The new component `Card` is added.
 The new component `Chip` is added.
 
 ### `Heading`
-The prop `size` has default value of `tiny`.
+The default value of the `size` prop is `tiny`.
 
 ### `Icon`
 New icons are added.
