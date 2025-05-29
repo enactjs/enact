@@ -91,7 +91,7 @@ function App({children}) {
 For more details, please refer to [React 19 Upgrade Guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) and [React v19](https://react.dev/blog/2024/12/05/react-19) from React Blog.
 
 ### cli
-`@enact/cli` must be upgraded to version `7.0.0-alpha.6` or newer, as shown below.
+`@enact/cli` must be upgraded to version `7.0.0-rc.1` or newer, as shown below.
 
 ```sh
 npm install -g @enact/cli@next
@@ -100,7 +100,7 @@ npm install -g @enact/cli@next
 `@enact/cli` updates the `eslint` to `9.x`, `jest` to `29.x`, and `react`, `react-dom` to `19.x`.
 Developers should ensure their code does not rely on features that are no longer available in these versions.
 
-As `@enact/cli` updates the minimum version of `Node` to `20.5.0`, please check your development environment before installing `@enact/cli`.
+As `@enact/cli` updates the minimum version of `Node` to `20.10.0`, please check your development environment before installing `@enact/cli`.
 
 As we update to `eslint 9`, some of the lint rules could be changed. If you run into unknown lint warnings or errors, don't be afraid, and please proceed to fix them. They are likely to be the rules from [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react), so refer to the console message and look up which rule is related.
 
@@ -122,11 +122,11 @@ please follow the steps below.
   },
   ...
   "dependenceis": {
-    "@enact/core": "^5.0.0-alpha.5",
-    "@enact/i18n": "^5.0.0-alpha.5",
-    "@enact/limestone": "git+ssh://git@github.com/enactjs/limestone.git#1.0.0-alpha.1",
-    "@enact/spotlight": "^5.0.0-alpha.5",
-    "@enact/ui": "^5.0.0-alpha.5",
+    "@enact/core": "^5.0.0-rc.1",
+    "@enact/i18n": "^5.0.0-rc.1",
+    "@enact/limestone": "git+ssh://git@github.com/enactjs/limestone.git#1.0.0-rc.1",
+    "@enact/spotlight": "^5.0.0-rc.1",
+    "@enact/ui": "^5.0.0-rc.1",
     ...
   }
 ```
@@ -212,6 +212,12 @@ The new component `Card` is added.
 ### `Chip`
 The new component `Chip` is added.
 
+### `Heading`
+The default value of the `size` prop is `tiny`.
+
+### `Icon`
+New icons are added.
+
 ### `KeyGuide`
 The image-based `keyGuide` is added.
 
@@ -220,6 +226,7 @@ The Switch icon is now drawn using CSS instead of an icon font.
 
 ### `TabLayout`
 Tabs in horizontal `TabLayout` now support scrolling.
+The prop `primaryIndex` is added to focus primary tab when pressing back key from other tabs or initial rendering.
 
 ### `WizardPanels`
 The subtitle of `WizardPanels` now supports a marquee effect.
@@ -311,6 +318,9 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-checkbox-standalone-bg-disabled-focus-bg-color`|`@lime-checkbox-container-standalone-disabled-focused-color`|
 |`@sand-dropdown-title-color`|`@lime-dropdown-title-text-color`|
 |`@sand-dropdown-selected-text-color`|`@lime-dropdown-label-selected-color`|
+|`@sand-heading-text-color`|`@lime-heading-label-main-color`|
+|`@sand-heading-subtitle-text-color`|`@lime-heading-label-sub-color`|
+|`@sand-heading-border-color`|`@lime-heading-border-color`|
 |`@sand-item-label-color`|`@lime-item-label-sub-color`|
 |`@sand-item-focus-label-color`|`@lime-item-label-sub-focused-color`|
 |`@sand-item-disabled-focus-bg-color`|`@lime-item-container-disabled-focused-color`|
@@ -330,10 +340,14 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-picker-indicator-inactive-focus-bg-color`|`@lime-picker-indicator-focused-color` with alpha 0.4|
 |`@sand-picker-joined-horizontal-text-color`|`@lime-picker-joined-label-color`|
 |`@sand-picker-joined-horizontal-bg-color`|`@lime-picker-container-color`|
+|`@sand-popuptablayout-bg-color`|`@lime-popuptablayout-content-background-color`|
+|`@sand-popuptablayout-shadow`|`@lime-popuptablayout-shadow`|
 |`@sand-progressbar-bar-bg-color`|`@lime-progressbar-track-color`|
 |`@sand-progressbar-load-bg-color`|`@lime-progressbar-track-buffer-color`|
 |`@sand-progressbar-fill-bg-color`|`@lime-progressbar-track-active-color`|
 |`@sand-progressbar-highlighted-fill-bg-color`|`@lime-progressbar-track-active-focused-color`|
+|`@sand-progressbutton-bar-color`|`@lime-progressbutton-track-color`|
+|`@sand-progressbutton-focus-fill-color`|`@lime-progressbutton-track-active-focused-color`|
 |`@sand-radioitem-indicator-color`|`@lime-radioitem-icon-color`|
 |`@sand-radioitem-indicator-bg-color`|`@lime-radioitem-container-color`|
 |`@sand-radioitem-indicator-border-color`|`@lime-radioitem-border-color`|
@@ -346,6 +360,15 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-radioitem-selected-focus-indicator-color`|`@lime-radioitem-icon-selected-focused-color`|
 |`@sand-radioitem-selected-focus-indicator-bg-color`|`@lime-radioitem-container-selected-focused-color`|
 |`@sand-radioitem-selected-focus-indicator-border-color`|`@lime-radioitem-border-selected-focused-color`|
+|`@sand-steps-pageindicator-current-bg-color`|`@lime-steps-indicator-icon-active-color`|
+|`@sand-switch-color`|`@lime-switch-handle-inactive-color`|
+|`@sand-switch-bg-color`|`@lime-switch-container-inactive-color`|
+|`@sand-switch-focus-color`|`@lime-switch-handle-inactive-focused-color`|
+|`@sand-switch-selected-color`|`@lime-switch-handle-active-color`|
+|`@sand-switch-selected-bg-color`|`@lime-switch-container-active-color`|
+|`@sand-switch-selected-focus-color`|`@lime-switch-handle-active-focused-color`|
+|`@sand-switch-disabled-selected-color`|`@lime-switch-handle-active-disabled-color`|
+|`@sand-switch-disabled-selected-bg-color`|`@lime-switch-container-active-disabled-color`|
 |`@sand-scrollbar-track-bg-color`|`@lime-scroll-track-color`|
 |`@sand-scrollbar-thumb-bg-color`|`@lime-scroll-handle-color`|
 |`@sand-scrollbar-thumb-focus-bg-color`|`@lime-scroll-handle-focused-color`|
@@ -354,14 +377,21 @@ The table below shows which less variables in sandstone match which variable or 
 
 ##### Added
 - `@lime-button-outline-container-color`, `@lime-button-outline-border-selected-color`.
+- `@lime-datetime-label-color`.
+- `@lime-heading-label-tiny-color`.
 - `@lime-inputfield-container-color`, `@lime-inputfield-container-disabled-focused-color`, `@lime-inputfield-cursor-color`.
 - `@lime-item-label-main-selected-color`, `@lime-item-label-sub-selected-color`, `@lime-item-container-selected-color`, `@lime-item-container-disabled-focused-color`.
+- `@lime-pageviews-bg-color`.
+- `@lime-progressbutton-track-active-color`, `@lime-progressbutton-track-focused-color`.
+- `@lime-steps-indicator-icon-inactive-color`, `@lime-steps-step-icon-success-color`, `@lime-steps-step-label-active-color`, `@lime-steps-step-label-inactive-color`.
+- `@lime-switchitem-item-selected-container-color`.
 - `@lime-tablayout-tab-container-selected-color`, `@lime-tablayout-tab-group-container-color`.
 - `@lime-virtuallist-container-color`.
 
 #### Removed
 - `@sand-item-focus-background`.
 - `@sand-picker-joined-text-color`, `@sand-picker-joined-incrementer-color`, `@sand-picker-joined-focus-incrementer-color`, `@sand-picker-joined-focus-disabled-indicator-bg-color`, `@sand-picker-joined-focus-disabled-indicator-opacity`, `@sand-picker-joined-focus-disabled-indicator-active-opacity`.
+- `@sand-popuptablayout-scrimtransparent-bg-color`.
 - `@sand-radioitem-disabled-selected-color`, `@sand-radioitem-disabled-selected-bg-color`, `@sand-radioitem-disabled-selected-border-color`, `@sand-radioitem-focus-disabled-selected-color`, `@sand-radioitem-focus-disabled-selected-bg-color`, `@sand-radioitem-focus-disabled-selected-border-color`.
 - `@sand-tablayout-tab-horizontal-border-color`, `@sand-tablayout-tab-horizontal-selected-border-color`.
 
