@@ -271,7 +271,6 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 
 	let elementRects = filterRects(getRects(elements), boundingRect);
 
-	elementRects = elementRects.filter((elem) => elem.left !== 0 && elem.top !== 0 && elem.width !== 0 && elem.height !== 0);
 	let next = null;
 
 	while (elementRects.length > 0) {
