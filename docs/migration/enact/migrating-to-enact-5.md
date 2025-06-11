@@ -212,6 +212,9 @@ The new component `Card` is added.
 ### `Chip`
 The new component `Chip` is added.
 
+### `Chips`
+The new component `Chips` is added.
+
 ### `Heading`
 The default value of the `size` prop is `tiny`.
 
@@ -322,6 +325,8 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-heading-text-color`|`@lime-heading-label-main-color`|
 |`@sand-heading-subtitle-text-color`|`@lime-heading-label-sub-color`|
 |`@sand-heading-border-color`|`@lime-heading-border-color`|
+|`@sand-fixedpopuppanels-bg-color`|`@lime-fixedpopuppanels-background-color`|
+|`@sand-fixedpopuppanels-shadow`|`@lime-overlay-shadow`|
 |`@sand-item-label-color`|`@lime-item-label-sub-color`|
 |`@sand-item-focus-label-color`|`@lime-item-label-sub-focused-color`|
 |`@sand-item-disabled-focus-bg-color`|`@lime-item-container-disabled-focused-color`|
@@ -392,7 +397,7 @@ The table below shows which less variables in sandstone match which variable or 
 - `@lime-virtuallist-container-color`.
 
 #### Removed
-- `@sand-fixedpopuppanels-bg-color`, `@sand-fixedpopuppanels-scrimtransparent-bg-color`.
+- `@sand-fixedpopuppanels-scrimtransparent-bg-color`.
 - `@sand-item-focus-background`.
 - `@sand-picker-joined-text-color`, `@sand-picker-joined-incrementer-color`, `@sand-picker-joined-focus-incrementer-color`, `@sand-picker-joined-focus-disabled-indicator-bg-color`, `@sand-picker-joined-focus-disabled-indicator-opacity`, `@sand-picker-joined-focus-disabled-indicator-active-opacity`.
 - `@sand-popuptablayout-shadow`, `@sand-popuptablayout-scrimtransparent-bg-color`.
