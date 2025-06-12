@@ -250,8 +250,8 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-component-text-color`|`var(--semantic-color-on-surface-main)`|
 |`@sand-component-text-sub-color`|`var(--semantic-color-on-surface-sub)`|
 |`@sand-component-bg-color`|`var(--semantic-color-surface-default)`|
-|`@sand-component-active-indicator-bg-color`|`var(--semantic-color-surface-indicator)`|
-|`@sand-component-inactive-indicator-bg-color`|`var(--semantic-color-surface-indicator)` with alpha 0.4|
+|`@sand-component-active-indicator-bg-color`|`var(--semantic-color-surface-default-indicator)`|
+|`@sand-component-inactive-indicator-bg-color`|`var(--semantic-color-surface-default-indicator)` with alpha 0.4|
 |`@sand-focus-text-color`|`var(--semantic-color-on-surface-main-focused)`|
 |`@sand-focus-bg-color`|`var(--semantic-color-surface-default-focused)`|
 |`@sand-component-focus-text-color`|`var(--semantic-color-on-surface-main-focused)`|
@@ -279,7 +279,7 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-progress-bg-color-opacity`|`1`|
 |`@sand-progress-highlighted-color`|`@lime-progressbar-highlighted-fill-bg-color`|
 |`@sand-progress-slider-color`|`var(--semantic-color-on-surface-accent)`|
-|`@sand-invalid-sub-color`|`var(--semantic-color-on-background-error)`|
+|`@sand-invalid-sub-color`|`var(--semantic-color-on-background-default-error)`|
 |`@sand-checkbox-color`|`var(--semantic-color-on-background-main)`|
 |`@sand-keyguide-bg-base-color`|`var(--semantic-color-background-overlay-default)`|
 |`@sand-keyguide-bg-color-opacity`|`1`|
@@ -385,7 +385,6 @@ The table below shows which less variables in sandstone match which variable or 
 - `@lime-contextGroup-border-color`.
 - `@lime-datetime-label-color`.
 - `@lime-heading-label-tiny-color`.
-- `@lime-contextGroup-border-color`.
 - `@lime-inputfield-container-color`, `@lime-inputfield-container-disabled-focused-color`, `@lime-inputfield-cursor-color`.
 - `@lime-item-label-main-selected-color`, `@lime-item-label-sub-selected-color`, `@lime-item-container-selected-color`, `@lime-item-container-disabled-focused-color`.
 - `@lime-overlay-shadow`.
