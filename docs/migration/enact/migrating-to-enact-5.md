@@ -149,7 +149,7 @@ $ npm shrinkwrap
 ```
 
 
-Limestone now uses the design-tokens system to style its components, importing [semantic tokens](https://github.com/enactjs/design-tokens/blob/master/packages/webos-tokens/css/color-semantic.css) from the [design-tokens](https://github.com/enactjs/design-tokens). This enables consistent and customizable styling across all components. *Note that the names of the design tokens have not been determined yet so they can be changed in the future.*
+Limestone now uses the Enova design-tokens system to style its components, importing semantic tokens from [@enovaui/webos-tokens](https://github.com/enovaui/design-tokens/blob/master/packages/webos-tokens) in the [Enova design-tokens](https://github.com/enovaui/design-tokens) repository. This enables consistent and customizable styling across all components.
 
 With the removal of the `ReactDOM.findDOMNode` API, `ContextualPopupDecorator` and `Dropdown` have been changed to include a sibling DOM node by using `@enact/core/internal/WithRef` to access DOM nodes.
 
