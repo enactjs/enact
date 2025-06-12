@@ -124,7 +124,7 @@ please follow the steps below.
   "dependenceis": {
     "@enact/core": "^5.0.0",
     "@enact/i18n": "^5.0.0",
-    "@enact/limestone": "git+ssh://git@github.com/enactjs/limestone.git#1.0.0",
+    "@enact/limestone": "enactjs/limestone#1.0.0",
     "@enact/spotlight": "^5.0.0",
     "@enact/ui": "^5.0.0",
     ...
