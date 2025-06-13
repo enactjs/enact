@@ -16,7 +16,7 @@
     "@enact/core": "^5.0.0-rc.1",
     "@enact/i18n": "^5.0.0-rc.1",
     "@enact/spotlight": "^5.0.0-rc.1",
-    "@enact/storybook-utils": "^6.0.0-rc.5",
+    "@enact/storybook-utils": "^6.0.0",
     "@enact/ui": "^5.0.0-rc.1",
     "@enact/webos": "^5.0.0-rc.1",
     "@storybook/addon-docs": "^8.6.12",

@@ -12,7 +12,7 @@
         "@enact/core": "^5.0.0-rc.1",
         "@enact/i18n": "^5.0.0-rc.1",
         "@enact/spotlight": "^5.0.0-rc.1",
-        "@enact/storybook-utils": "^6.0.0-rc.5",
+        "@enact/storybook-utils": "^6.0.0",
         "@enact/ui": "^5.0.0-rc.1",
         "@enact/webos": "^5.0.0-rc.1",
         "@storybook/addon-docs": "^8.6.12",
@@ -323,13 +323,13 @@
       }
     },
     "node_modules/@enact/storybook-utils": {
-      "version": "6.0.0-rc.5",
-      "resolved": "https://registry.npmjs.org/@enact/storybook-utils/-/storybook-utils-6.0.0-rc.5.tgz",
-      "integrity": "sha512-xtuzoBqjNGPCN2Scy/11U52zfFBMsgjcWP/+7oLSl4StsZ0cnS3SXFUcWG/FYYmBmChHSPTcC2Bwvrej2TNt2g==",
+      "version": "6.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/storybook-utils/-/storybook-utils-6.0.0.tgz",
+      "integrity": "sha512-RhADNm1iSqbWdxqB6Ft1vFzO6RvthYdbvVuFTbU+ihj6W9W9/OzDYnn1778SpS02p2X/Ds3J6HxwaFY4JMhLCg==",
       "hasShrinkwrap": true,
       "license": "Apache-2.0",
       "dependencies": {
-        "@enact/dev-utils": "^7.0.0-rc.1",
+        "@enact/dev-utils": "^7.0.0",
         "@storybook/addon-actions": "^8.5.8",
         "@storybook/addon-controls": "^8.5.8",
         "@storybook/addon-toolbars": "^8.5.8",
@@ -3033,9 +3033,9 @@
       }
     },
     "node_modules/@enact/storybook-utils/node_modules/@enact/dev-utils": {
-      "version": "7.0.0-rc.1",
-      "resolved": "https://registry.npmjs.org/@enact/dev-utils/-/dev-utils-7.0.0-rc.1.tgz",
-      "integrity": "sha512-rqbnYyTNP6VCPJbgIJYWOasCvKeYsxgDruPwlmgi91FJQMofLkOnednnTm++vI3Fs0DvnE5nxgnZrdFCbtpMzg==",
+      "version": "7.0.0",
+      "resolved": "https://registry.npmjs.org/@enact/dev-utils/-/dev-utils-7.0.0.tgz",
+      "integrity": "sha512-NJQvr+RDplBoeRf+3XXjiSJAR4dEnIRXiZ6R6k68OIoHeff7wv7mG+SXHMj2P9LE+n6FsT43xcc3FvvJk7xfpw==",
       "hasShrinkwrap": true,
       "license": "Apache-2.0",
       "dependencies": {
@@ -4962,9 +4962,9 @@
       }
     },
     "node_modules/@enact/storybook-utils/node_modules/@enact/dev-utils/node_modules/eslint-config-enact": {
-      "version": "5.0.0-rc.1",
-      "resolved": "https://registry.npmjs.org/eslint-config-enact/-/eslint-config-enact-5.0.0-rc.1.tgz",
-      "integrity": "sha512-MtDmLkBqUjT37mWX2sfJ2e4AYzlrYAV6OY2qqq0mlmLJEX+Oh/dDQ9nTW+COPhRUx8P+dr9eDv0AFh8EvCVwNw==",
+      "version": "5.0.0",
+      "resolved": "https://registry.npmjs.org/eslint-config-enact/-/eslint-config-enact-5.0.0.tgz",
+      "integrity": "sha512-dGv96nXjbS9Ay8hs2Dms3EuYnpot7jvqYFcjTuW3b0HXiDpi0lNYQRzRDZkH+NYupbo2fYmHUya1a/wJUZlaKg==",
       "dev": true,
       "hasShrinkwrap": true,
       "license": "Apache-2.0",
@@ -4978,7 +4978,7 @@
         "@typescript-eslint/parser": "^8.24.0",
         "babel-preset-enact": "^0.1.12",
         "eslint": "^9.20.0",
-        "eslint-plugin-enact": "^2.0.0-beta.1",
+        "eslint-plugin-enact": "^2.0.0",
         "eslint-plugin-jest": "^28.11.0",
         "eslint-plugin-jsx-a11y": "^6.10.2",
         "eslint-plugin-react": "^7.37.4",
@@ -8862,9 +8862,9 @@
       }
     },
     "node_modules/@enact/storybook-utils/node_modules/@enact/dev-utils/node_modules/eslint-config-enact/node_modules/eslint-plugin-enact": {
-      "version": "2.0.0-beta.1",
-      "resolved": "https://registry.npmjs.org/eslint-plugin-enact/-/eslint-plugin-enact-2.0.0-beta.1.tgz",
-      "integrity": "sha512-TEba9YDbb8j286XBETlbclFFp5nFIrp2W2A+BAEfx5MDFSlYUQnS0LTCIA3J5NOsLQZq5ELjjkNZwKZaklMBSA==",
+      "version": "2.0.0",
+      "resolved": "https://registry.npmjs.org/eslint-plugin-enact/-/eslint-plugin-enact-2.0.0.tgz",
+      "integrity": "sha512-jFOgtwOuSAlQQAHvEwmqOe/7AY3reYfMZYhDXCAyOUHZjkmmr6xXgLTq3pGG37b7ip+hhnNU26kYPYJDpCMAdg==",
       "dev": true,
       "license": "Apache-2.0",
       "optional": true,
@@ -19521,9 +19521,9 @@
       }
     },
     "node_modules/@enact/storybook-utils/node_modules/eslint-config-enact": {
-      "version": "5.0.0-rc.1",
-      "resolved": "https://registry.npmjs.org/eslint-config-enact/-/eslint-config-enact-5.0.0-rc.1.tgz",
-      "integrity": "sha512-MtDmLkBqUjT37mWX2sfJ2e4AYzlrYAV6OY2qqq0mlmLJEX+Oh/dDQ9nTW+COPhRUx8P+dr9eDv0AFh8EvCVwNw==",
+      "version": "5.0.0",
+      "resolved": "https://registry.npmjs.org/eslint-config-enact/-/eslint-config-enact-5.0.0.tgz",
+      "integrity": "sha512-dGv96nXjbS9Ay8hs2Dms3EuYnpot7jvqYFcjTuW3b0HXiDpi0lNYQRzRDZkH+NYupbo2fYmHUya1a/wJUZlaKg==",
       "dev": true,
       "hasShrinkwrap": true,
       "license": "Apache-2.0",
@@ -19537,7 +19537,7 @@
         "@typescript-eslint/parser": "^8.24.0",
         "babel-preset-enact": "^0.1.12",
         "eslint": "^9.20.0",
-        "eslint-plugin-enact": "^2.0.0-beta.1",
+        "eslint-plugin-enact": "^2.0.0",
         "eslint-plugin-jest": "^28.11.0",
         "eslint-plugin-jsx-a11y": "^6.10.2",
         "eslint-plugin-react": "^7.37.4",
@@ -23421,9 +23421,9 @@
       }
     },
     "node_modules/@enact/storybook-utils/node_modules/eslint-config-enact/node_modules/eslint-plugin-enact": {
-      "version": "2.0.0-beta.1",
-      "resolved": "https://registry.npmjs.org/eslint-plugin-enact/-/eslint-plugin-enact-2.0.0-beta.1.tgz",
-      "integrity": "sha512-TEba9YDbb8j286XBETlbclFFp5nFIrp2W2A+BAEfx5MDFSlYUQnS0LTCIA3J5NOsLQZq5ELjjkNZwKZaklMBSA==",
+      "version": "2.0.0",
+      "resolved": "https://registry.npmjs.org/eslint-plugin-enact/-/eslint-plugin-enact-2.0.0.tgz",
+      "integrity": "sha512-jFOgtwOuSAlQQAHvEwmqOe/7AY3reYfMZYhDXCAyOUHZjkmmr6xXgLTq3pGG37b7ip+hhnNU26kYPYJDpCMAdg==",
       "dev": true,
       "license": "Apache-2.0",
       "optional": true,
@@ -33096,9 +33096,9 @@
       "license": "ISC"
     },
     "node_modules/brace-expansion": {
-      "version": "1.1.11",
-      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.11.tgz",
-      "integrity": "sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==",
+      "version": "1.1.12",
+      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.12.tgz",
+      "integrity": "sha512-9T9UjW3r0UW5c1Q7GTwllptXwhvYmEzFhzMfZ9H7FQWt+uZePjZPjBP/W1ZEyZ1twGWom5/56TF4lPcqjnDHcg==",
       "license": "MIT",
       "dependencies": {
         "balanced-match": "^1.0.0",
