@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [5.0.0] - 2025-06-13
+
+No significant changes.
+
 ## [5.0.0-rc.1] - 2025-05-29
 
 No significant changes.

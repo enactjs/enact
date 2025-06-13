@@ -91,7 +91,7 @@ function App({children}) {
 For more details, please refer to [React 19 Upgrade Guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide) and [React v19](https://react.dev/blog/2024/12/05/react-19) from React Blog.
 
 ### cli
-`@enact/cli` must be upgraded to version `7.0.0-rc.1` or newer, as shown below.
+`@enact/cli` must be upgraded to version `7.0.0` or newer, as shown below.
 
 ```sh
 npm install -g @enact/cli@next
@@ -122,11 +122,11 @@ please follow the steps below.
   },
   ...
   "dependenceis": {
-    "@enact/core": "^5.0.0-rc.1",
-    "@enact/i18n": "^5.0.0-rc.1",
-    "@enact/limestone": "git+ssh://git@github.com/enactjs/limestone.git#1.0.0-rc.1",
-    "@enact/spotlight": "^5.0.0-rc.1",
-    "@enact/ui": "^5.0.0-rc.1",
+    "@enact/core": "^5.0.0",
+    "@enact/i18n": "^5.0.0",
+    "@enact/limestone": "enactjs/limestone#1.0.0",
+    "@enact/spotlight": "^5.0.0",
+    "@enact/ui": "^5.0.0",
     ...
   }
 ```
@@ -149,7 +149,7 @@ $ npm shrinkwrap
 ```
 
 
-Limestone now uses the design-tokens system to style its components, importing [semantic tokens](https://github.com/enactjs/design-tokens/blob/master/packages/webos-tokens/css/color-semantic.css) from the [design-tokens](https://github.com/enactjs/design-tokens). This enables consistent and customizable styling across all components. *Note that the names of the design tokens have not been determined yet so they can be changed in the future.*
+Limestone now uses the Enova design-tokens system to style its components, importing semantic tokens from [@enovaui/webos-tokens](https://github.com/enovaui/design-tokens/blob/master/packages/webos-tokens) in the [Enova design-tokens](https://github.com/enovaui/design-tokens) repository. This enables consistent and customizable styling across all components.
 
 With the removal of the `ReactDOM.findDOMNode` API, `ContextualPopupDecorator` and `Dropdown` have been changed to include a sibling DOM node by using `@enact/core/internal/WithRef` to access DOM nodes.
 
@@ -212,6 +212,9 @@ The new component `Card` is added.
 ### `Chip`
 The new component `Chip` is added.
 
+### `Chips`
+The new component `Chips` is added.
+
 ### `Heading`
 The default value of the `size` prop is `tiny`.
 
@@ -247,8 +250,8 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-component-text-color`|`var(--semantic-color-on-surface-main)`|
 |`@sand-component-text-sub-color`|`var(--semantic-color-on-surface-sub)`|
 |`@sand-component-bg-color`|`var(--semantic-color-surface-default)`|
-|`@sand-component-active-indicator-bg-color`|`var(--semantic-color-surface-indicator)`|
-|`@sand-component-inactive-indicator-bg-color`|`var(--semantic-color-surface-indicator)` with alpha 0.4|
+|`@sand-component-active-indicator-bg-color`|`var(--semantic-color-surface-default-indicator)`|
+|`@sand-component-inactive-indicator-bg-color`|`var(--semantic-color-surface-default-indicator)` with alpha 0.4|
 |`@sand-focus-text-color`|`var(--semantic-color-on-surface-main-focused)`|
 |`@sand-focus-bg-color`|`var(--semantic-color-surface-default-focused)`|
 |`@sand-component-focus-text-color`|`var(--semantic-color-on-surface-main-focused)`|
@@ -276,7 +279,7 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-progress-bg-color-opacity`|`1`|
 |`@sand-progress-highlighted-color`|`@lime-progressbar-highlighted-fill-bg-color`|
 |`@sand-progress-slider-color`|`var(--semantic-color-on-surface-accent)`|
-|`@sand-invalid-sub-color`|`var(--semantic-color-on-background-error)`|
+|`@sand-invalid-sub-color`|`var(--semantic-color-on-background-default-error)`|
 |`@sand-checkbox-color`|`var(--semantic-color-on-background-main)`|
 |`@sand-keyguide-bg-base-color`|`var(--semantic-color-background-overlay-default)`|
 |`@sand-keyguide-bg-color-opacity`|`1`|
@@ -316,11 +319,14 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-checkbox-indeterminate-focus-bg-color`|`@lime-checkbox-container-indeterminate-focused-color`|
 |`@sand-checkbox-indeterminate-focus-border-color`|`@lime-checkbox-border-indeterminate-focused-color`|
 |`@sand-checkbox-standalone-bg-disabled-focus-bg-color`|`@lime-checkbox-container-standalone-disabled-focused-color`|
+|`@sand-contextualpopup-bg-color`|`@lime-contextGroup-container-color`|
 |`@sand-dropdown-title-color`|`@lime-dropdown-title-text-color`|
 |`@sand-dropdown-selected-text-color`|`@lime-dropdown-label-selected-color`|
 |`@sand-heading-text-color`|`@lime-heading-label-main-color`|
 |`@sand-heading-subtitle-text-color`|`@lime-heading-label-sub-color`|
 |`@sand-heading-border-color`|`@lime-heading-border-color`|
+|`@sand-fixedpopuppanels-bg-color`|`@lime-fixedpopuppanels-background-color`|
+|`@sand-fixedpopuppanels-shadow`|`@lime-overlay-shadow`|
 |`@sand-item-label-color`|`@lime-item-label-sub-color`|
 |`@sand-item-focus-label-color`|`@lime-item-label-sub-focused-color`|
 |`@sand-item-disabled-focus-bg-color`|`@lime-item-container-disabled-focused-color`|
@@ -341,7 +347,6 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-picker-joined-horizontal-text-color`|`@lime-picker-joined-label-color`|
 |`@sand-picker-joined-horizontal-bg-color`|`@lime-picker-container-color`|
 |`@sand-popuptablayout-bg-color`|`@lime-popuptablayout-content-background-color`|
-|`@sand-popuptablayout-shadow`|`@lime-popuptablayout-shadow`|
 |`@sand-progressbar-bar-bg-color`|`@lime-progressbar-track-color`|
 |`@sand-progressbar-load-bg-color`|`@lime-progressbar-track-buffer-color`|
 |`@sand-progressbar-fill-bg-color`|`@lime-progressbar-track-active-color`|
@@ -377,10 +382,12 @@ The table below shows which less variables in sandstone match which variable or 
 
 ##### Added
 - `@lime-button-outline-container-color`, `@lime-button-outline-border-selected-color`.
+- `@lime-contextGroup-border-color`.
 - `@lime-datetime-label-color`.
 - `@lime-heading-label-tiny-color`.
 - `@lime-inputfield-container-color`, `@lime-inputfield-container-disabled-focused-color`, `@lime-inputfield-cursor-color`.
 - `@lime-item-label-main-selected-color`, `@lime-item-label-sub-selected-color`, `@lime-item-container-selected-color`, `@lime-item-container-disabled-focused-color`.
+- `@lime-overlay-shadow`.
 - `@lime-pageviews-bg-color`.
 - `@lime-progressbutton-track-active-color`, `@lime-progressbutton-track-focused-color`.
 - `@lime-steps-indicator-icon-inactive-color`, `@lime-steps-step-icon-success-color`, `@lime-steps-step-label-active-color`, `@lime-steps-step-label-inactive-color`.
@@ -389,9 +396,10 @@ The table below shows which less variables in sandstone match which variable or 
 - `@lime-virtuallist-container-color`.
 
 #### Removed
+- `@sand-fixedpopuppanels-scrimtransparent-bg-color`.
 - `@sand-item-focus-background`.
 - `@sand-picker-joined-text-color`, `@sand-picker-joined-incrementer-color`, `@sand-picker-joined-focus-incrementer-color`, `@sand-picker-joined-focus-disabled-indicator-bg-color`, `@sand-picker-joined-focus-disabled-indicator-opacity`, `@sand-picker-joined-focus-disabled-indicator-active-opacity`.
-- `@sand-popuptablayout-scrimtransparent-bg-color`.
+- `@sand-popuptablayout-shadow`, `@sand-popuptablayout-scrimtransparent-bg-color`.
 - `@sand-radioitem-disabled-selected-color`, `@sand-radioitem-disabled-selected-bg-color`, `@sand-radioitem-disabled-selected-border-color`, `@sand-radioitem-focus-disabled-selected-color`, `@sand-radioitem-focus-disabled-selected-bg-color`, `@sand-radioitem-focus-disabled-selected-border-color`.
 - `@sand-tablayout-tab-horizontal-border-color`, `@sand-tablayout-tab-horizontal-selected-border-color`.
 
