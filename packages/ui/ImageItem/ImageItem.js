@@ -111,6 +111,18 @@ const ImageItemBase = kind({
 		selected: PropTypes.bool,
 
 		/**
+		 * Nodes to be inserted before `children` and `label`.
+		 *
+		 * For LTR locales, the nodes are inserted to the left of the primary content. For RTL
+		 * locales, the nodes are inserted to the right. If nothing is specified, nothing, not even
+		 * an empty container, is rendered in this place.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		slotBefore: PropTypes.node,
+
+		/**
 		 * String value or Object of values used to determine which image will appear on a specific
 		 * screenSize.
 		 *
@@ -140,7 +152,7 @@ const ImageItemBase = kind({
 		})
 	},
 
-	render: ({children, componentRef, css, imageComponent, orientation, placeholder, src, ...rest}) => {
+	render: ({children, componentRef, css, imageComponent, orientation, placeholder, slotBefore, src, ...rest}) => {
 		delete rest.selected;
 
 		const isHorizontal = orientation === 'horizontal';
@@ -148,6 +160,11 @@ const ImageItemBase = kind({
 
 		return (
 			<Component {...rest} ref={componentRef}>
+				{slotBefore ? (
+					<Cell className={css.slotBefore} shrink>
+						{slotBefore}
+					</Cell>
+				) : null}
 				<Cell
 					className={css.image}
 					component={ImageOverride}
