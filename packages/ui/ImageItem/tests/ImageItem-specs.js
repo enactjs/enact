@@ -11,7 +11,7 @@ const src = {
 
 const slotBefore = () => {
 	return null;
-}
+};
 
 describe('ImageItem', () => {
 	let data;
