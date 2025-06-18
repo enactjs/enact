@@ -111,9 +111,9 @@ const ImageItemBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Nodes to be inserted before `children` and `label`.
+		 * Nodes to be inserted before `image`.
 		 *
-		 * For LTR locales, the nodes are inserted to the left of the primary content. For RTL
+		 * For LTR locales, the nodes are inserted to the left of the image. For RTL
 		 * locales, the nodes are inserted to the right. If nothing is specified, nothing, not even
 		 * an empty container, is rendered in this place.
 		 *

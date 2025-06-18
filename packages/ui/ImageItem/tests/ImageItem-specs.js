@@ -68,7 +68,7 @@ describe('ImageItem', () => {
 	});
 
 	test('should apply `.slotBefore` when `slotBefore`', () => {
-		render(<ImageItemBase data-testid="imageItem" slotBefore={slotBefore} selected src={src} />);
+		render(<ImageItemBase data-testid="imageItem" slotBefore={<div>slotBefore</div>} selected src={src} />);
 
 		const expected = 'slotBefore';
 		const imageItem = screen.getByTestId('imageItem').firstElementChild;
