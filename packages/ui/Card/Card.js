@@ -149,14 +149,16 @@ const CardBase = kind({
 
 		const Wrapped = (
 			<>
-				<Cell
-					className={css.image}
-					component={ImageOverride}
-					imageComponent={imageComponent}
-					placeholder={placeholder}
-					shrink={isHorizontal}
-					src={src}
-				/>
+				<div className={css.imageCell}>
+					<Cell
+						className={css.image}
+						component={ImageOverride}
+						imageComponent={imageComponent}
+						placeholder={placeholder}
+						shrink={isHorizontal}
+						src={src}
+					/>
+				</div>
 				{children ? (
 					<Cell
 						className={css.children}
