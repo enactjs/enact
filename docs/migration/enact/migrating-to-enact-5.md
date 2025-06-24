@@ -215,11 +215,21 @@ The new component `Chip` is added.
 ### `Chips`
 The new component `Chips` is added.
 
+### `ContextualMenuDecorator`
+`Offset` prop now accepts a `large` value.
+
+### `ContextualPopupDecorator`
+`Offset` prop now accepts a `large` value.
+
 ### `Heading`
 The default value of the `size` prop is `tiny`.
 
 ### `Icon`
 New icons are added.
+
+### `ImageItem`
+The prop `wideImage` is added.
+The children `chuldren` and `label` accept a `Node` type value.
 
 ### `KeyGuide`
 The image-based `keyGuide` is added.
@@ -291,7 +301,7 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-button-selected-bg-color`|`@lime-button-fill-container-selected-color`|
 |`@sand-button-focus-filter`|`@lime-button-filter-focused`|
 |`@sand-button-selected-filter`|`@lime-button-filter-selected`|
-|`@sand-button-transparent-text-color`|`@lime-button-transparent-fill-text-color`|
+|`@sand-button-transparent-text-color`|`@lime-button-transparent-label-color`|
 |`@sand-button-focus-icononly-bg-color`|`@lime-button-icononly-bg-focused-color`|
 |`@sand-button-text-shadow`|`@lime-button-text-shadow`|
 |`@sand-checkbox-text-color`|`@lime-checkbox-icon-color`|
@@ -319,14 +329,17 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-checkbox-indeterminate-focus-bg-color`|`@lime-checkbox-container-indeterminate-focused-color`|
 |`@sand-checkbox-indeterminate-focus-border-color`|`@lime-checkbox-border-indeterminate-focused-color`|
 |`@sand-checkbox-standalone-bg-disabled-focus-bg-color`|`@lime-checkbox-container-standalone-disabled-focused-color`|
-|`@sand-contextualpopup-bg-color`|`@lime-contextGroup-container-color`|
-|`@sand-dropdown-title-color`|`@lime-dropdown-title-text-color`|
+|`@sand-contextualpopup-bg-color`|`@lime-contextualpopup-container-color`|
 |`@sand-dropdown-selected-text-color`|`@lime-dropdown-label-selected-color`|
 |`@sand-heading-text-color`|`@lime-heading-label-main-color`|
 |`@sand-heading-subtitle-text-color`|`@lime-heading-label-sub-color`|
 |`@sand-heading-border-color`|`@lime-heading-border-color`|
 |`@sand-fixedpopuppanels-bg-color`|`@lime-fixedpopuppanels-background-color`|
 |`@sand-fixedpopuppanels-shadow`|`@lime-overlay-shadow`|
+|`@sand-imageitem-caption-color`|`@lime-imageitem-label-main-color`|
+|`@sand-imageitem-label-color`|`lime-imageitem-label-sub-color`|
+|`@sand-imageitem-selected-selection-icon-bg-color`|`@lime-imageitem-selection-container-selected-color`|
+|`@sand-imageitem-selected-selection-icon-color`|`@lime-imageitem-selection-icon-selected-color`|
 |`@sand-item-label-color`|`@lime-item-label-sub-color`|
 |`@sand-item-focus-label-color`|`@lime-item-label-sub-focused-color`|
 |`@sand-item-disabled-focus-bg-color`|`@lime-item-container-disabled-focused-color`|
@@ -381,14 +394,17 @@ The table below shows which less variables in sandstone match which variable or 
 |`@sand-scrollbar-thumb-focus-box-shadow-color`|`@lime-scrollbar-thumb-focus-box-shadow-color`|
 
 ##### Added
-- `@lime-button-outline-container-color`, `@lime-button-outline-border-selected-color`.
-- `@lime-contextGroup-border-color`.
+- `@lime-alert-full-bg-color`
+- `@lime-button-fill-container-disabled-focused-color`, `@lime-button-fill-icon-color`, `@lime-button-fill-icon-selected-color`, `@lime-button-fill-label-focused-color`, `@lime-button-outline-container-color`, `@lime-button-outline-container-focused-color`, `@lime-button-outline-container-selected-color`, `@lime-button-outline-border-selected-color`, `@lime-button-outline-label-color`, `@lime-button-outline-label-focused-color`, `@lime-button-outline-label-selected-color`, `@lime-button-transparent-container-focused-color`, `@lime-button-transparent-container-selected-color`, `@lime-button-transparent-label-focused-color`, `@lime-button-transparent-icon-color`, `@lime-button-transparent-icon-focused-color`, `@lime-button-transparent-icon-selected-color`, `@lime-button-transparent-label-selected-color`.
+- `@lime-contextualpopup-border-color`.
 - `@lime-datetime-label-color`.
 - `@lime-heading-label-tiny-color`.
-- `@lime-inputfield-container-color`, `@lime-inputfield-container-disabled-focused-color`, `@lime-inputfield-cursor-color`.
+- `@lime-input-button-popup-transparent-label-color`, `@lime-input-button-popup-transparent-icon-color`, `@lime-input-fullscreen-dot-color`, `@lime-input-header-popup-label-main-color`, `@lime-input-header-popup-label-sub-color`, `@lime-input-inputfield-popup-container-color`, `@lime-input-inputfield-popup-label-inactive-color`, `@lime-input-overlay-dot-color`.
+- `@lime-inputfield-container-color`, `@lime-inputfield-container-disabled-focused-color`, `@lime-inputfield-cursor-color`, `@lime-inputfield-label-success-color`.
+- `@lime-imageitem-full-image-border-color`,`@lime-imageitem-label-main-focused-color`, `@lime-imageitem-label-main-selected-color`,`@lime-imageitem-label-sub-focused-color`, `@lime-imageitem-label-sub-selected-color`.
 - `@lime-item-label-main-selected-color`, `@lime-item-label-sub-selected-color`, `@lime-item-container-selected-color`, `@lime-item-container-disabled-focused-color`.
 - `@lime-overlay-shadow`.
-- `@lime-pageviews-bg-color`.
+- `@lime-pageviews-bg-color`, `@lime-pageviews-indicator-icon-active`, `@lime-pageviews-indicator-icon-inactive`.
 - `@lime-progressbutton-track-active-color`, `@lime-progressbutton-track-focused-color`.
 - `@lime-steps-indicator-icon-inactive-color`, `@lime-steps-step-icon-success-color`, `@lime-steps-step-label-active-color`, `@lime-steps-step-label-inactive-color`.
 - `@lime-switchitem-item-selected-container-color`.
@@ -396,6 +412,7 @@ The table below shows which less variables in sandstone match which variable or 
 - `@lime-virtuallist-container-color`.
 
 #### Removed
+- `@sand-dropdown-title-color`,
 - `@sand-fixedpopuppanels-scrimtransparent-bg-color`.
 - `@sand-item-focus-background`.
 - `@sand-picker-joined-text-color`, `@sand-picker-joined-incrementer-color`, `@sand-picker-joined-focus-incrementer-color`, `@sand-picker-joined-focus-disabled-indicator-bg-color`, `@sand-picker-joined-focus-disabled-indicator-opacity`, `@sand-picker-joined-focus-disabled-indicator-active-opacity`.
