@@ -216,10 +216,10 @@ The new component `Chip` is added.
 The new component `Chips` is added.
 
 ### `ContextualMenuDecorator`
-`Offset` prop now accepts a `large` value.
+`offset` prop now accepts a `large` value.
 
 ### `ContextualPopupDecorator`
-`Offset` prop now accepts a `large` value.
+`offset` prop now accepts a `large` value.
 
 ### `Heading`
 The default value of the `size` prop is `tiny`.
@@ -229,7 +229,7 @@ New icons are added.
 
 ### `ImageItem`
 The prop `wideImage` is added.
-The children `chuldren` and `label` accept a `Node` type value.
+The props `children` and `label` accept a `Node` type value.
 
 ### `KeyGuide`
 The image-based `keyGuide` is added.
