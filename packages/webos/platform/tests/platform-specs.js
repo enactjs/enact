@@ -56,18 +56,18 @@ describe('platform', () => {
 
 			expect(actual).toMatchObject(expected);
 		});
-		
+
 		test('should detect webOS 24', () => {
 			const expected = {version: 24, chrome: 108};
 			const actual = parseUserAgent(webOSTV24);
-			
+
 			expect(actual).toMatchObject(expected);
 		});
-		
+
 		test('should detect webOS 25', () => {
 			const expected = {version: 25, chrome: 120};
 			const actual = parseUserAgent(webOSTV25);
-			
+
 			expect(actual).toMatchObject(expected);
 		});
 
