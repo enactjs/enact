@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/ImageItem` prop `slotBefore` to support new design for component
+- `ui/ImageItem` prop `slotBefore` to add a node before the image
 
 ## [5.0.0] - 2025-06-13
 
