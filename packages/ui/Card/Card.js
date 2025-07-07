@@ -154,7 +154,7 @@ const CardBase = kind({
 					component={ImageOverride}
 					imageComponent={imageComponent}
 					placeholder={placeholder}
-					shrink={isHorizontal}
+					shrink
 					src={src}
 				/>
 				{children ? (
