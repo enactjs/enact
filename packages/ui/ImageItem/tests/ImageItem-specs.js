@@ -9,6 +9,8 @@ const src = {
 	'uhd': 'http://lorempixel.com/256/256/city/1/'
 };
 
+const slotBefore = <div />;
+
 describe('ImageItem', () => {
 	let data;
 
@@ -59,6 +61,15 @@ describe('ImageItem', () => {
 
 		const expected = 'selected';
 		const imageItem = screen.getByTestId('imageItem');
+
+		expect(imageItem).toHaveClass(expected);
+	});
+
+	test('should apply `.slotBefore` when `slotBefore`', () => {
+		render(<ImageItemBase data-testid="imageItem" slotBefore={slotBefore} selected src={src} />);
+
+		const expected = 'slotBefore';
+		const imageItem = screen.getByTestId('imageItem').firstElementChild;
 
 		expect(imageItem).toHaveClass(expected);
 	});
