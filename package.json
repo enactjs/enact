@@ -24,7 +24,7 @@
     "vue-template-compiler": "@vue/compiler-sfc@3.4.31"
   },
   "devDependencies": {
-    "@enact/docs-utils": "^0.4.12",
+    "@enact/docs-utils": "^0.4.13",
     "lerna": "^8.2.2"
   }
 }
