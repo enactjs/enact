@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Card` to properly set imageSize in vertical orientation
+- `ui/Card` to properly set image size in vertical orientation
 
 ## [5.1.0] - 2025-07-11
 
