@@ -25,6 +25,6 @@
   },
   "devDependencies": {
     "@enact/docs-utils": "^0.4.13",
-    "lerna": "^8.2.2"
+    "lerna": "^8.2.3"
   }
 }
