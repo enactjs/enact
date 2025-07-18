@@ -33,6 +33,7 @@ script:
     - git clone --branch=feature/WRR-28014 --depth 1 https://github.com/enactjs/storybook-utils ../storybook-utils
     - pushd ../storybook-utils
     - npm install
+    - npm link
     - popd
     - cd packages/sampler
     - enact link
