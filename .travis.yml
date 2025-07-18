@@ -30,7 +30,12 @@ script:
     - npm run validate-docs
     - echo -e "\x1b\x5b35;1m*** Docs validation complete\x1b\x5b0m"
     - echo -e "\x1b\x5b35;1m*** Starting sampler builds...\x1b\x5b0m"
+    - git clone --branch=feature/WRR-28014 --depth 1 https://github.com/enactjs/storybook-utils ../storybook-utils
+    - pushd ../storybook-utils
+    - npm install
+    - popd
     - cd packages/sampler
+    - enact link
     - npm run pack
     - echo -e "\x1b\x5b35;1m*** sampler build complete\x1b\x5b0m"
 
