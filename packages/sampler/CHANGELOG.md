@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `sampler` look and feel by updating to Storybook 9
+
 ## [5.1.0] - 2025-07-11
 
 No significant changes.
