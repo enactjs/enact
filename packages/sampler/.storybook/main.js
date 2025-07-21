@@ -1,7 +1,7 @@
 /* global __dirname */
 
 const webpack = require('@enact/storybook-utils/configs/webpack');
-const {loadCsf} = require('@storybook/csf-tools');
+const {loadCsf} = require('storybook/internal/csf-tools');
 const {readFileSync}  = require('fs');
 
 module.exports = {
@@ -9,7 +9,10 @@ module.exports = {
 		disableTelemetry: true
 	},
 	features: {
+		backgrounds: false,
+		interactions: false,
 		postcss: false,
+		viewport: false,
 		warnOnLegacyHierarchySeparator: false
 	},
 	framework: {
@@ -34,7 +37,6 @@ module.exports = {
 	addons: [
 		'@enact/storybook-utils/addons/actions',
 		'@enact/storybook-utils/addons/controls',
-		'@enact/storybook-utils/addons/toolbars',
 		'@storybook/addon-docs'
 	],
 	webpackFinal: async (config, {configType}) => {
