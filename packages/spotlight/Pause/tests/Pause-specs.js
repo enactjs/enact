@@ -1,4 +1,4 @@
-import Pause, {isPaused, pause, resume} from '../Pause';
+import Pause, {getPausedInstance, isPaused, pause, resume} from '../Pause';
 
 const PAUSED = 'Paused';
 const NOT_PAUSED = 'Not Paused';
@@ -94,11 +94,12 @@ describe('Pause', () => {
 		expect(actual).toBe(expected);
 	});
 
-	test('should return name of the pause instance', () => {
+	test('should return the name of the pause instance when Spotlight is paused', () => {
 		const subject = new Pause('paused');
+		subject.pause();
 
-		const expected = 'Pause<paused>';
-		const actual = subject.toString();
+		const expected = 'paused';
+		const actual = getPausedInstance();
 
 		expect(actual).toBe(expected);
 	});
