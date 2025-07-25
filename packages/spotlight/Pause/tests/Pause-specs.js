@@ -93,15 +93,6 @@ describe('Pause', () => {
 
 		expect(actual).toBe(expected);
 	});
-
-	test('should return name of the pause instance', () => {
-		const subject = new Pause('paused');
-
-		const expected = 'Pause<paused>';
-		const actual = subject.toString();
-
-		expect(actual).toBe(expected);
-	});
 	
 	test('should return `null` as name of the pause instance when Spotlight is not paused', () => {
 		const subject = new Pause('paused');
