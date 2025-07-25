@@ -98,7 +98,7 @@ describe('Pause', () => {
 		const subject = new Pause('paused');
 		
 		const expected = null;
-		const actual = subject.getPausedInstance();
+		const actual = getPausedInstance();
 		
 		expect(actual).toBe(expected);
 	});
