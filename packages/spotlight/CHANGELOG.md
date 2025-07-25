@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+- `spotlight` methods `getPausedInstance` to get the name of the paused instance
+
 ## [5.1.0] - 2025-07-11
 
 No significant changes.
