@@ -59,6 +59,10 @@ function isPaused () {
 	return paused !== false;
 }
 
+function getPausedInstance () {
+	return paused === false ? false : paused.name;
+}
+
 /**
  * Acts as a semaphore for Spotlight pause state ensuring that only the last Pause instance can
  * resume Spotlight.
@@ -137,6 +141,7 @@ export default Pause;
 export {
 	Pause,
 	isPaused,
+	getPausedInstance,
 	pause,
 	resume
 };

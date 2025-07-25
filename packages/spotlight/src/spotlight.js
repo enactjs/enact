@@ -25,7 +25,7 @@ import last from 'ramda/src/last';
 
 import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
-import {isPaused, pause, resume} from '../Pause';
+import {isPaused, pause, resume, getPausedInstance} from '../Pause';
 
 import {getInputType} from './inputType';
 import {contains} from './utils';
@@ -922,6 +922,8 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		isPaused,
+
+		getPausedInstance,
 
 		/**
 		 * Determines whether an element is spottable.
