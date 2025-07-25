@@ -25,7 +25,7 @@ import last from 'ramda/src/last';
 
 import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
-import {isPaused, pause, resume} from '../Pause';
+import {getPausedInstance, isPaused, pause, resume} from '../Pause';
 
 import {getInputType} from './inputType';
 import {contains} from './utils';
@@ -876,6 +876,15 @@ const Spotlight = (function () {
 				setLastContainer(containerId || rootContainerId);
 			}
 		},
+
+		/**
+		 * Get the name of the instance.
+		 *
+		 * @function
+		 * @returns {String} the name of the instance.
+		 * @public
+		 */
+		getPausedInstance,
 
 		/**
 		 * Gets the current pointer mode
