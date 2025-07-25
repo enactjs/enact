@@ -96,7 +96,7 @@ describe('Pause', () => {
 
 	test('should return name of the pause instance', () => {
 		const subject = new Pause('paused');
-		
+
 		const expected = 'Pause<paused>';
 		const actual = subject.toString();
 		
