@@ -48,7 +48,7 @@ describe('Spottable', () => {
 		const expected = 1;
 
 		expect(spy).toHaveBeenCalledTimes(expected);
-		expect(spy).toBeCalledWith({type: 'onSpotlightDisappear'});
+		expect(spy).toHaveBeenCalledWith({type: 'onSpotlightDisappear'});
 	});
 
 	describe('shouldComponentUpdate', () => {
