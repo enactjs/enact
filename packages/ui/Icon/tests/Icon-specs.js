@@ -82,12 +82,23 @@ describe('Icon', () => {
 		render(<IconBase data-testid="icon" style={{color: 'green'}}>{src}</IconBase>);
 		const icon = screen.getByTestId('icon');
 
-		const expected = {
+		const expected1 = {
 			color: 'green',
 			backgroundImage: `url(${src})`
 		};
 
-		expect(icon).toHaveStyle(expected);
+		const expected2 = {
+			color: 'rgb(0, 128, 0)',
+			backgroundImage: `url(${src})`
+		};
+
+		try {
+			expect(icon).toHaveStyle(expected1);
+		} catch (error) {
+			// Fix and adjust for known toHaveStyle issues
+			// https://github.com/testing-library/jest-dom/issues/350
+			expect(icon).toHaveStyle(expected2);
+		}
 	});
 
 	test('should return a DOM node reference for `componentRef`', () => {
