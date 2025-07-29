@@ -12,7 +12,7 @@ import {
 	getDeepSpottableDescendants,
 	getDefaultContainer,
 	getLastContainer,
-	getNavigableContainersForNode, getSpottableDescendants,
+	getNavigableContainersForNode,
 	isContainer,
 	isNavigable,
 	rootContainerId
@@ -250,7 +250,7 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 
 
 function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds, boundingRect) {
-	const elements = getDeepSpottableDescendants(containerId)
+	const elements = getDeepSpottableDescendants(containerId);
 
 	// shortcut for previous target from element if it were saved
 	const previous = getContainerPreviousTarget(containerId, direction, element);
