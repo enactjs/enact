@@ -358,7 +358,7 @@ const getDeepSpottableDescendants = (containerId, excludedContainers) => {
 				const config = getContainerConfig(id);
 				if (excludedContainers && excludedContainers.indexOf(id) >= 0) {
 					return [];
-				} else if (config && !config.enterTo) {
+				} else if (config && !config.enterTo && !config.overflow) {
 					return getDeepSpottableDescendants(id, excludedContainers);
 				}
 			}

@@ -99,12 +99,6 @@ function getTargetBySelector (selector) {
 	return null;
 }
 
-function getSpottableDescendantsWithoutContainers (containerId, containerIds) {
-	return getSpottableDescendants(containerId).filter(n => {
-		return !isContainer(n) || containerIds.indexOf(n.dataset.spotlightId) === -1;
-	});
-}
-
 function isRestrictedContainer (containerId) {
 	const config = getContainerConfig(containerId);
 	return config && (config.enterTo === 'last-focused' || config.enterTo === 'default-element');
@@ -185,7 +179,7 @@ function getOverflowContainerRect (containerId) {
 }
 
 function getTargetInContainerByDirectionFromPosition (direction, containerId, positionRect, elementContainerIds, boundingRect) {
-	const elements = direction === 'left' || direction === 'right' ? getDeepSpottableDescendants(containerId) : getSpottableDescendantsWithoutContainers(containerId, elementContainerIds);
+	const elements = getDeepSpottableDescendants(containerId);
 	let elementRects = filterRects(getRects(elements), boundingRect);
 
 	let next = null;
@@ -256,7 +250,7 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 
 
 function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds, boundingRect) {
-	const elements = direction === 'left' || direction === 'right' ? getDeepSpottableDescendants(containerId) : getSpottableDescendantsWithoutContainers(containerId, elementContainerIds);
+	const elements = getDeepSpottableDescendants(containerId)
 
 	// shortcut for previous target from element if it were saved
 	const previous = getContainerPreviousTarget(containerId, direction, element);
