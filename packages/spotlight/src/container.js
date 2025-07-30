@@ -341,7 +341,7 @@ const getSpottableDescendants = (containerId) => {
 
 /**
  * Recursively get spottable descendants by including elements within sub-containers that do not
- * have `enterTo` configured or which are not hidden because of overflow
+ * have `enterTo` configured or which are not hidden due  of overflow
  *
  * @param   {String}    containerId          ID of container
  * @param   {String[]}  [excludedContainers] IDs of containers to exclude from result set
