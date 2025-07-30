@@ -75,7 +75,7 @@ describe('Spotlight', () => {
 				const fn = mockFocus(root.querySelector('[data-spotlight-id="s1"]'));
 				Spotlight.focus('s1');
 
-				expect(fn).toBeCalled();
+				expect(fn).toHaveBeenCalled();
 			}
 		));
 
@@ -87,7 +87,7 @@ describe('Spotlight', () => {
 				const fn = mockFocus(root.querySelector('[data-spotlight-id="first-container"] > .spottable'));
 				Spotlight.focus('first-container');
 
-				expect(fn).toBeCalled();
+				expect(fn).toHaveBeenCalled();
 			}
 		));
 
@@ -98,7 +98,7 @@ describe('Spotlight', () => {
 				const fn = mockFocus(n);
 				Spotlight.focus(n);
 
-				expect(fn).toBeCalled();
+				expect(fn).toHaveBeenCalled();
 			}
 		));
 
@@ -111,7 +111,7 @@ describe('Spotlight', () => {
 				const fn = mockFocus(n.querySelector('.spottable'));
 				Spotlight.focus(n);
 
-				expect(fn).toBeCalled();
+				expect(fn).toHaveBeenCalled();
 			}
 		));
 
@@ -122,7 +122,7 @@ describe('Spotlight', () => {
 				const fn = mockFocus(n);
 				Spotlight.focus('[data-spotlight-id="s1"]');
 
-				expect(fn).toBeCalled();
+				expect(fn).toHaveBeenCalled();
 			}
 		));
 
@@ -135,7 +135,7 @@ describe('Spotlight', () => {
 				const fn = mockFocus(n.querySelector('.spottable'));
 				Spotlight.focus('[data-spotlight-id="first-container"]');
 
-				expect(fn).toBeCalled();
+				expect(fn).toHaveBeenCalled();
 			}
 		));
 
@@ -174,12 +174,12 @@ describe('Spotlight', () => {
 		test('should register event listener of several event types', () => {
 			Spotlight.initialize();
 
-			expect(window.addEventListener).toBeCalledWith('blur', expect.any(Function));
-			expect(window.addEventListener).toBeCalledWith('focus', expect.any(Function));
-			expect(window.addEventListener).toBeCalledWith('keydown', expect.any(Function));
-			expect(window.addEventListener).toBeCalledWith('keyup', expect.any(Function));
-			expect(window.addEventListener).toBeCalledWith('mouseover', expect.any(Function));
-			expect(window.addEventListener).toBeCalledWith('mousemove', expect.any(Function));
+			expect(window.addEventListener).toHaveBeenCalledWith('blur', expect.any(Function));
+			expect(window.addEventListener).toHaveBeenCalledWith('focus', expect.any(Function));
+			expect(window.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
+			expect(window.addEventListener).toHaveBeenCalledWith('keyup', expect.any(Function));
+			expect(window.addEventListener).toHaveBeenCalledWith('mouseover', expect.any(Function));
+			expect(window.addEventListener).toHaveBeenCalledWith('mousemove', expect.any(Function));
 		});
 	});
 
@@ -194,12 +194,12 @@ describe('Spotlight', () => {
 		test('should remove event listener of several event types', () => {
 			Spotlight.terminate();
 
-			expect(window.removeEventListener).toBeCalledWith('blur', expect.any(Function));
-			expect(window.removeEventListener).toBeCalledWith('focus', expect.any(Function));
-			expect(window.removeEventListener).toBeCalledWith('keydown', expect.any(Function));
-			expect(window.removeEventListener).toBeCalledWith('keyup', expect.any(Function));
-			expect(window.removeEventListener).toBeCalledWith('mouseover', expect.any(Function));
-			expect(window.removeEventListener).toBeCalledWith('mousemove', expect.any(Function));
+			expect(window.removeEventListener).toHaveBeenCalledWith('blur', expect.any(Function));
+			expect(window.removeEventListener).toHaveBeenCalledWith('focus', expect.any(Function));
+			expect(window.removeEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
+			expect(window.removeEventListener).toHaveBeenCalledWith('keyup', expect.any(Function));
+			expect(window.removeEventListener).toHaveBeenCalledWith('mouseover', expect.any(Function));
+			expect(window.removeEventListener).toHaveBeenCalledWith('mousemove', expect.any(Function));
 		});
 	});
 });
