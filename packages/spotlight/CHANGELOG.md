@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 - `spotlight` to not prioritize elements which are invisible due to overflow as next spottable elements
+- `spotlight` methods `getPausedInstance` to get the name of the paused instance
 
 ## [5.1.0] - 2025-07-11
 
