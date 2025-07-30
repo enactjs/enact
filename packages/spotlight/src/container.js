@@ -357,7 +357,7 @@ const getDeepSpottableDescendants = (containerId, excludedContainers) => {
 				const id = getContainerId(n);
 				const config = getContainerConfig(id);
 				const hasSpottedControl = getContainerLastFocusedElement(id);
-				
+
 				if (excludedContainers && excludedContainers.indexOf(id) >= 0) {
 					return [];
 				} else if (config && !config.enterTo && (!hasSpottedControl || (hasSpottedControl && !config.overflow))) {
