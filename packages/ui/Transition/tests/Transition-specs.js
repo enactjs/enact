@@ -100,7 +100,7 @@ describe('Transition Specs', () => {
 		const expectedType = {type: 'onShow'};
 		const actual = handleShow.mock.calls.length && handleShow.mock.calls[0][0];
 
-		expect(handleShow).toBeCalledTimes(expected);
+		expect(handleShow).toHaveBeenCalledTimes(expected);
 		expect(actual).toMatchObject(expectedType);
 	});
 
@@ -124,7 +124,7 @@ describe('Transition Specs', () => {
 		const expectedType = {type: 'onHide'};
 		const actual = handleHide.mock.calls.length && handleHide.mock.calls[0][0];
 
-		expect(handleHide).toBeCalledTimes(expected);
+		expect(handleHide).toHaveBeenCalledTimes(expected);
 		expect(actual).toMatchObject(expectedType);
 	});
 
