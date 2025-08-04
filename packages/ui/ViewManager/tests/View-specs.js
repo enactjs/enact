@@ -245,7 +245,7 @@ describe('View', () => {
 			);
 
 			act(() => ref.current.componentWillEnter());
-			expect(arranger.enter).toBeCalledWith(arrangerStruct);
+			expect(arranger.enter).toHaveBeenCalledWith(arrangerStruct);
 		});
 	});
 });

@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Card` to properly set image size in vertical orientation
+
+## [5.1.0] - 2025-07-11
+
+### Added
+
+- `ui/ImageItem` prop `slotBefore` to add a node before the image
+
 ## [5.0.0] - 2025-06-13
 
 No significant changes.

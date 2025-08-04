@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+[unreleased]
+
+### Fixed
+
+- `spotlight` to not prioritize elements which are invisible due to overflow as next spottable elements
+
+## [5.1.0] - 2025-07-11
+
+### Added
+
+- `ui/ImageItem` prop `slotBefore` to add a node before the image
+
 ## [5.0.0] - 2025-06-13
 
 No significant changes.
