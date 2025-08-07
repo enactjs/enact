@@ -1,8 +1,7 @@
 /* eslint-disable no-console */
-import {info} from '@enact/webos/pmloglib';
-
-import LS2Request from '../LS2Request';
-import {platform} from '../platform';
+import { info } from '@enact/webos/pmloglib';
+import LS2Request from '@enact/webos/LS2Request';
+import { platform } from '@enact/webos/platform';
 
 let signLangEnabled = null;
 let appId = '';
@@ -18,7 +17,7 @@ const checkSignLang = () => new Promise((resolve, reject) => {
 				'category': 'option'
 			},
 			onSuccess: function (res) {
-				info('enact_signLang_checkSignLang', {'onSuccess': res}, '');
+				info('enact_signLang_checkSignLang', { 'onSuccess': res }, '');
 
 				if (res && res.settings.signLanguageGuidance === 'on') {
 					signLangEnabled = true;
@@ -31,7 +30,7 @@ const checkSignLang = () => new Promise((resolve, reject) => {
 				reject();
 			},
 			onFailure: function (err) {
-				info('enact_signLang_checkSignLang', {'onFailure': err}, '');
+				info('enact_signLang_checkSignLang', { 'onFailure': err }, '');
 
 				reject('Failed to get sign language setting value: ' + JSON.stringify(err));
 			}
@@ -44,7 +43,7 @@ const checkSignLang = () => new Promise((resolve, reject) => {
 });
 
 const callSignLangAPI = (signLangId, active, option) => () => new Promise((resolve, reject) => {
-	const parameters = {appId, 'signGuidanceId': signLangId, 'focusOut': !active, ...option};
+	const parameters = { appId, 'signGuidanceId': signLangId, 'focusOut': !active, ...option };
 
 	info('enact_signLang_callSignLangAPI', parameters, '');
 
@@ -52,9 +51,12 @@ const callSignLangAPI = (signLangId, active, option) => () => new Promise((resol
 		service: 'luna://com.webos.service.signlanguageavatar',
 		method: 'play',
 		parameters,
-		onSuccess: resolve,
+		onSuccess: () => {
+			option.onSuccess && option.onSuccess();
+			resolve();
+		},
 		onFailure: (err) => {
-			info('enact_signLang_callSignLangAPI', {'onFailure': err}, '');
+			info('enact_signLang_callSignLangAPI', { 'onFailure': err }, '');
 
 			reject('Failed to callSignLangAPI: ' + JSON.stringify(err));
 		}
