@@ -44,7 +44,7 @@ describe('FloatingLayer Specs', () => {
 		const expectedType = {type: 'onOpen'};
 		const actual = handleOpen.mock.calls.length && handleOpen.mock.calls[0][0];
 
-		expect(handleOpen).toBeCalledTimes(expected);
+		expect(handleOpen).toHaveBeenCalledTimes(expected);
 		expect(actual).toMatchObject(expectedType);
 	});
 

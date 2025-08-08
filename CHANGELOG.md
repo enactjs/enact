@@ -2,6 +2,21 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [5.2.0] - 2025-08-08
+
+### Added
+
+- `spotlight` methods `getPausedInstance` to get the name of the paused instance
+
+### Changed
+
+- `sampler` look and feel by updating to Storybook 9
+
+### Fixed
+
+- `spotlight` to not prioritize elements which are invisible due to overflow as next spottable elements
+- `ui/Card` to properly set image size in vertical orientation
+
 ## [5.1.0] - 2025-07-11
 
 ### Added

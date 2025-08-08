@@ -61,7 +61,7 @@ describe('Media', () => {
 		const canPlayEvent = createEvent('canplay', video);
 		fireEvent(video, canPlayEvent);
 
-		expect(handleCanPlay).toBeCalled();
+		expect(handleCanPlay).toHaveBeenCalled();
 	});
 
 	test('should fire `onCustom` when custom event is fired', () => {
@@ -75,7 +75,7 @@ describe('Media', () => {
 		const customEvent = createEvent('custom', video);
 		fireEvent(video, customEvent);
 
-		expect(handleCustom).toBeCalled();
+		expect(handleCustom).toHaveBeenCalled();
 	});
 
 	test('should call load', () => {
