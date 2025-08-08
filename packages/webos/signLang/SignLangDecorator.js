@@ -1,9 +1,9 @@
-import {forward} from '@enact/core/handle';
+import { forward } from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
-import {Component} from 'react';
+import { Component } from 'react';
 
-import {startSignLang, stopSignLang} from './signLang';
+import { startSignLang, stopSignLang } from './signLang';
 
 /**
  * Default config for {@link webos/signLang.SignLangDecorator}
@@ -53,7 +53,7 @@ const defaultConfig = {
  * @public
  */
 const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {signLangDelay} = config;
+	const { signLangDelay } = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
 
@@ -78,14 +78,14 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			signLangOption: PropTypes.object
 		};
 
-		constructor (props) {
+		constructor(props) {
 			super(props);
 
 			this.signLangDelayId = null;
 		}
 
 		requestSignLang = (active) => {
-			const {signLangId = '', signLangOption = {}} = this.props;
+			const { signLangId = '', signLangOption = {} } = this.props;
 
 			if (signLangId.length > 0) {
 				if (active) {
@@ -114,7 +114,7 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.requestSignLang(false);
 		};
 
-		render () {
+		render() {
 			const props = Object.assign({}, this.props);
 			delete props.onBlur;
 			delete props.onFocus;
@@ -133,4 +133,4 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default SignLangDecorator;
-export {SignLangDecorator};
+export { SignLangDecorator };
