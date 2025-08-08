@@ -52,7 +52,7 @@ const callSignLangAPI = (signLangId, active, option) => () => new Promise((resol
 		method: 'play',
 		parameters,
 		onSuccess: () => {
-			option.onSuccess && option.onSuccess();
+			option.onSuccess && option.onSuccess(parameters);
 			resolve();
 		},
 		onFailure: (err) => {
@@ -88,7 +88,7 @@ const requestSignLang = (signLangId, active, option = {}) => {
  * @public
  */
 const startSignLang = (signLangId = '', option = {}) => {
-	requestSignLang(signLangId, true, option);
+	if (signLangId && signLangId.length > 0) requestSignLang(signLangId, true, option);
 };
 
 /**
@@ -102,7 +102,7 @@ const startSignLang = (signLangId = '', option = {}) => {
  * @public
  */
 const stopSignLang = (signLangId = '', option = {}) => {
-	requestSignLang(signLangId, false, option);
+	if (signLangId && signLangId.length > 0) requestSignLang(signLangId, false, option);
 };
 
 export {

@@ -6,7 +6,7 @@ describe('singLang', () => {
         jest.clearAllMocks();
     });
 
-    test('Activate Sign Language with ID', async () => {
+    test('FR.05.​TC.001: Execute startSignLang when signLangId has a value.', async () => {
         const test_id = 'test_id';
         const onSuccess = jest.fn();
 
@@ -15,20 +15,29 @@ describe('singLang', () => {
         expect(onSuccess).toHaveBeenCalled();
     });
 
-    test('Activate Sign Language with null ID', async () => {
+    test('FR.05.​TC.002: Execute startSignLang when signLangId is null.', async () => {
         const onSuccess = jest.fn();
 
         await signLang.startSignLang(null, { onSuccess: onSuccess });
 
-        expect(onSuccess).toHaveBeenCalled();
+        expect(onSuccess).not.toHaveBeenCalled();
     });
 
-    test('Deactivate Sign Language', async () => {
+    test('FR.06.​TC.001: Execute stopSignLang when signLangId has a value.', async () => {
         const test_id = 'test_id';
         const onSuccess = jest.fn();
 
         await signLang.stopSignLang(test_id, { onSuccess: onSuccess });
 
         expect(onSuccess).toHaveBeenCalled();
+    });
+
+    test('FR.06.​TC.002: Execute stopSignLang when signLangId is null.', async () => {
+        const test_id = 'test_id';
+        const onSuccess = jest.fn();
+
+        await signLang.stopSignLang(null, { onSuccess: onSuccess });
+
+        expect(onSuccess).not.toHaveBeenCalled();
     });
 });

@@ -51,7 +51,7 @@ describe('Button', () => {
         expect(onSuccess).toHaveBeenCalled()
     });
 
-    test('FR.01.​TC.004: When signLangId is declared and the element loses focus, the Sign Language API is called.', async () => {
+    test('FR.02.​TC.001: When signLangId is declared and the element loses focus, the Sign Language API is called.', async () => {
         const SignLangButton = SignLangDecorator('button');
         const onSuccess = jest.fn();
 
@@ -64,7 +64,7 @@ describe('Button', () => {
         expect(onSuccess).toHaveBeenCalledTimes(2)
     });
 
-    test('FR.01.​TC.005: If no attribute value is declared, the Sign Language API is not called on focus out.', async () => {
+    test('FR.02.​TC.002: If no attribute value is declared, the Sign Language API is not called on focus out.', async () => {
         const SignLangButton = SignLangDecorator('button');
         const onSuccess = jest.fn();
 
@@ -77,7 +77,7 @@ describe('Button', () => {
         expect(onSuccess).not.toHaveBeenCalled()
     });
 
-    test('FR.01.​TC.006: When signLangDelay is declared and the element loses focus, the Sign Language API is called immediately.', async () => {
+    test('FR.02.​TC.003: When signLangDelay is declared and the element loses focus, the Sign Language API is called immediately.', async () => {
         const SignLangButton = SignLangDecorator({ signLangDelay: 1000 }, 'button');
         const onSuccess = jest.fn();
 
@@ -92,7 +92,24 @@ describe('Button', () => {
         expect(onSuccess).toHaveBeenCalledTimes(2)
     });
 
-    test('FR.01.​TC.007: When a custom attribute is declared on a component with SignLangDecorator, it is reflected on the node.', () => {
+    test('FR.03.​TC.001: Pass the option value to the Sign Language API upon declaration.', async () => {
+        let result = null;
+        const SignLangButton = SignLangDecorator({ signLangDelay: 1000 }, 'button');
+        const onSuccess = jest.fn().mockImplementation((parameters) => {
+            result = parameters;
+        });
+
+        render(<SignLangButton signLangId='test_id' signLangOption={{ 'signLanguageGuidanceSpeed': 'fast', 'onSuccess': onSuccess }} />);
+
+        const button = screen.getByRole('button');
+
+        await button.focus();
+        await delay(1000);
+
+        expect(result).toHaveProperty('signLanguageGuidanceSpeed', 'fast');
+    });
+
+    test('FR.04.​TC.001: When a custom attribute is declared on a component with SignLangDecorator, it is reflected on the node.', () => {
         const SignLangButton = SignLangDecorator('button');
 
         render(<SignLangButton data-custom-attribute />);
