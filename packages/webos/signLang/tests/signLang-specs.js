@@ -15,26 +15,20 @@ describe('singLang', () => {
         expect(onSuccess).toHaveBeenCalled();
     });
 
-    // test('Activate Sign Language with null ID', async () => {
-    //     const onSuccess = jest.fn();
+    test('Activate Sign Language with null ID', async () => {
+        const onSuccess = jest.fn();
 
-    //     await signLang.startSignLang(null, { onSuccess: onSuccess });
+        await signLang.startSignLang(null, { onSuccess: onSuccess });
 
-    //     expect(onSuccess).toHaveBeenCalled();
-    // });
+        expect(onSuccess).toHaveBeenCalled();
+    });
 
-    // test('Deactivate Sign Language', async () => {
-    //     const test_id = 'test_id';
-    //     const onSuccess = jest.fn();
+    test('Deactivate Sign Language', async () => {
+        const test_id = 'test_id';
+        const onSuccess = jest.fn();
 
-    //     await signLang.stopSignLang(test_id, { onSuccess: onSuccess });
+        await signLang.stopSignLang(test_id, { onSuccess: onSuccess });
 
-    //     expect(onSuccess).toHaveBeenCalled();
-    // });
+        expect(onSuccess).toHaveBeenCalled();
+    });
 });
-
-// describe('SignLangDecorator', () => {
-//     it('should render correctly', () => {
-//         expect(true).toBe(true); // 기본 테스트 추가
-//     });
-// });
