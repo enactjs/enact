@@ -1,6 +1,5 @@
 class LS2Request {
     async send(config) {
-        // Get usetID from supplied url string
         let { service, method, onSuccess, onFailure, onComplete, parameters } = config;
         const matches = /luna:\/\/(.*)/.exec(service);
 
