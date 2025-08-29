@@ -1,5 +1,6 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {platform} from '@enact/core/platform';
+import {perfNow} from '@enact/core/util';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {Component} from 'react';
@@ -79,6 +80,8 @@ class ScrollerBasic extends Component {
 		}
 	}
 
+	scrollAnimationId = null;
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
@@ -116,9 +119,50 @@ class ScrollerBasic extends Component {
 		}
 	}
 
+	startTime = 0;
+
 	// scrollMode 'native'
 	scrollToPosition (left, top, behavior) {
-		this.props.scrollContentRef.current.scrollTo({left: this.getRtlPositionX(left), top, behavior});
+		const node = this.props.scrollContentRef.current;
+		const targetX = this.getRtlPositionX(left);
+		const targetY = top;
+
+		if (platform.chrome && behavior === 'smooth') {
+			this.animateScroll(targetX, targetY, node);
+		}
+
+		node.scrollTo({left: targetX, top: targetY, behavior});
+	}
+
+	// scrollMode 'native'
+	animateScroll (left, top, node) {
+		if (this.scrollAnimationId) {
+			window.cancelAnimationFrame(this.scrollAnimationId);
+			this.scrollAnimationId = null;
+		}
+
+		const startX = node.scrollLeft;
+		const startY = node.scrollTop;
+
+		const duration = 300;
+		const startTime = perfNow();
+
+		const animateScroll = (now) => {
+			const elapsed = (now - startTime) / duration;
+			const time = Math.min(1, elapsed);
+
+			const currX = Math.round(startX + (left - startX) * elapsed);
+			const currY = Math.round(startY + (top - startY) * elapsed);
+
+			if (time < 1) {
+				node.scrollTo({left: currX, top: currY});
+				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+			}
+		}
+
+		if (this.scrollBounds.maxTop === startY) return;
+
+		this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 	}
 
 	// scrollMode 'native'
