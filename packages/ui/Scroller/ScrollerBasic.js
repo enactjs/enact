@@ -119,48 +119,46 @@ class ScrollerBasic extends Component {
 		}
 	}
 
-	startTime = 0;
-
 	// scrollMode 'native'
 	scrollToPosition (left, top, behavior) {
 		const node = this.props.scrollContentRef.current;
-		const targetX = this.getRtlPositionX(left);
-		const targetY = top;
 
 		if (platform.chrome && behavior === 'smooth') {
-			this.animateScroll(targetX, targetY, node);
+			this.animateScroll(this.getRtlPositionX(left), top, node);
 		}
 
-		node.scrollTo({left: targetX, top: targetY, behavior});
+		node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
 	}
 
 	// scrollMode 'native'
 	animateScroll (left, top, node) {
+		const {scrollLeft, scrollTop} = node;
+
 		if (this.scrollAnimationId) {
 			window.cancelAnimationFrame(this.scrollAnimationId);
 			this.scrollAnimationId = null;
 		}
 
-		const startX = node.scrollLeft;
-		const startY = node.scrollTop;
+		if (this.scrollBounds.maxTop === scrollTop) return;
 
-		const duration = 300;
+		const animationDuration = 1000;
 		const startTime = perfNow();
+		const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
 
 		const animateScroll = (now) => {
-			const elapsed = (now - startTime) / duration;
-			const time = Math.min(1, elapsed);
+			const elapsed = (now - startTime);
+			const time = Math.min(animationDuration, elapsed);
+			const e = easeOutQuart(time / animationDuration);
 
-			const currX = Math.round(startX + (left - startX) * elapsed);
-			const currY = Math.round(startY + (top - startY) * elapsed);
+			const currX = Math.round(scrollLeft + (left - scrollLeft) * e);
+			const currY = Math.round(scrollTop + (top - scrollTop) * e);
 
-			if (time < 1) {
-				node.scrollTo({left: currX, top: currY});
+			node.scrollTo({left: currX, top: currY});
+
+			if (time < animationDuration) {
 				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 			}
 		}
-
-		if (this.scrollBounds.maxTop === startY) return;
 
 		this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 	}
