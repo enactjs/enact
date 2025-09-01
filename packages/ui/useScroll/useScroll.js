@@ -1453,7 +1453,7 @@ const useScrollBase = (props) => {
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function addEventListeners () {
 		utilEvent('wheel').addEventListener(scrollContainerRef, onWheel);
-		utilEvent('keydown').addEventListener(document, onKeyDown);
+		utilEvent('keydown').addEventListener(scrollContainerRef, onKeyDown);
 		utilEvent('mousedown').addEventListener(scrollContainerRef, onMouseDown);
 
 		// scrollMode 'native' [[
@@ -1474,7 +1474,7 @@ const useScrollBase = (props) => {
 	// FIXME setting event handlers directly to work on the V8 snapshot.
 	function removeEventListeners () {
 		utilEvent('wheel').removeEventListener(scrollContainerRef, onWheel);
-		utilEvent('keydown').removeEventListener(document, onKeyDown);
+		utilEvent('keydown').removeEventListener(scrollContainerRef, onKeyDown);
 		utilEvent('mousedown').removeEventListener(scrollContainerRef, onMouseDown);
 
 		// scrollMode 'native' [[
