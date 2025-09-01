@@ -158,7 +158,7 @@ class ScrollerBasic extends Component {
 			if (time < animationDuration) {
 				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 			}
-		}
+		};
 
 		this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 	}
