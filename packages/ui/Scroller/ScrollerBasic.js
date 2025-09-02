@@ -133,13 +133,12 @@ class ScrollerBasic extends Component {
 	// scrollMode 'native'
 	animateScroll (left, top, node) {
 		const {scrollLeft, scrollTop} = node;
+		const {maxLeft, maxTop} = this.scrollBounds;
 
 		if (this.scrollAnimationId) {
 			window.cancelAnimationFrame(this.scrollAnimationId);
 			this.scrollAnimationId = null;
 		}
-
-		if (this.scrollBounds.maxTop === scrollTop) return;
 
 		const animationDuration = 1000;
 		const startTime = perfNow();
@@ -153,9 +152,10 @@ class ScrollerBasic extends Component {
 			const currX = Math.round(scrollLeft + (left - scrollLeft) * e);
 			const currY = Math.round(scrollTop + (top - scrollTop) * e);
 
-			node.scrollTo({left: currX, top: currY});
-
-			if (time < animationDuration) {
+			if ((left < 0 || top < 0 || (maxLeft > 0 && left > maxLeft) || (maxTop > 0 && top > maxTop))) {
+				window.cancelAnimationFrame(this.scrollAnimationId);
+			} else if (time < animationDuration) {
+				node.scrollTo({left: currX, top: currY});
 				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 			}
 		};
