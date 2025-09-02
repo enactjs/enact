@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [5.2.1] - 2025-09-02
+
+### Fixed
+
+- `spotlight` to preserve the last focused element on component unmount
+
 ## [5.2.0] - 2025-08-08
 
 ### Added

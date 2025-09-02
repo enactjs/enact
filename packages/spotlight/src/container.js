@@ -343,14 +343,15 @@ const getSpottableDescendants = (containerId) => {
  * Recursively get spottable descendants by including elements within sub-containers that do not
  * have `enterTo` configured or which are not hidden due to overflow
  *
- * @param   {String}    containerId          ID of container
- * @param   {String[]}  [excludedContainers] IDs of containers to exclude from result set
+ * @param   {String}    containerId          	ID of container
+ * @param   {String[]}  [excludedContainers] 	IDs of containers to exclude from result set
+ * @param	{Boolean}	useLastFocusedElement	Determines whether to use the last focused element
  *
- * @returns {Node[]}                         Array of spottable elements and containers
+ * @returns {Node[]}                         	Array of spottable elements and containers
  * @memberof spotlight/container
  * @private
  */
-const getDeepSpottableDescendants = (containerId, excludedContainers) => {
+const getDeepSpottableDescendants = (containerId, excludedContainers, useLastFocusedElement) => {
 	return getSpottableDescendants(containerId)
 		.map(n => {
 			if (isContainer(n)) {
@@ -360,7 +361,7 @@ const getDeepSpottableDescendants = (containerId, excludedContainers) => {
 
 				if (excludedContainers && excludedContainers.indexOf(id) >= 0) {
 					return [];
-				} else if (config && !config.enterTo && (!hasSpottedControl || (hasSpottedControl && !config.overflow))) {
+				} else if (config && !config.enterTo && (useLastFocusedElement || !hasSpottedControl || (hasSpottedControl && !config.overflow))) {
 					return getDeepSpottableDescendants(id, excludedContainers);
 				}
 			}
@@ -864,7 +865,7 @@ function persistLastFocusedElement (containerId) {
 	if (cfg) {
 		const {lastFocusedElement} = cfg;
 		if (lastFocusedElement) {
-			const all = getDeepSpottableDescendants(containerId);
+			const all = getDeepSpottableDescendants(containerId, [], true);
 			const lastFocusedKey = cfg.lastFocusedPersist(lastFocusedElement, all);
 
 			// store lastFocusedKey and release node reference to lastFocusedElement
@@ -887,7 +888,7 @@ function persistLastFocusedElement (containerId) {
 function restoreLastFocusedElement (containerId) {
 	const cfg = getContainerConfig(containerId);
 	if (cfg && cfg.lastFocusedKey) {
-		const all = getDeepSpottableDescendants(containerId);
+		const all = getDeepSpottableDescendants(containerId, [], true);
 		const lastFocusedElement = cfg.lastFocusedRestore(cfg.lastFocusedKey, all);
 
 		// restore lastFocusedElement and release lastFocusedKey
