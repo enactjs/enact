@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [5.2.1] - 2025-09-02
 
 ### Fixed
 
