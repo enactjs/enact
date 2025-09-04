@@ -31,10 +31,11 @@ describe('ScrollBasic', () => {
 	test(
 		'should call requestAnimationFrame on animateScroll',
 		async () => {
-			const requestAnimationFrame = jest.spyOn(window, 'requestAnimationFrame').mockImplementation(() => {});
+			const requestAnimationFrame = jest.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 1);
 			const instance = new ScrollerBasic({scrollContentRef, direction: 'both'});
 
-			instance.animateScroll(30, 40, scrollContentRef.current);
+			instance.animateScroll(0, 100, scrollContentRef.current);
+			instance.animateScroll(0, 200, scrollContentRef.current);
 			expect(requestAnimationFrame).toHaveBeenCalled();
 		}
 	);
