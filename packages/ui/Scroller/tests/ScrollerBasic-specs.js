@@ -17,7 +17,7 @@ describe('ScrollBasic', () => {
 
 	test(
 		'should call scrollTo on scrollToPosition',
-		async () => {
+		() => {
 			const instance = new ScrollerBasic({scrollContentRef, direction: 'both'});
 
 			instance.scrollToPosition(30, 40, 'smooth');
@@ -29,14 +29,46 @@ describe('ScrollBasic', () => {
 	);
 
 	test(
-		'should call requestAnimationFrame on animateScroll',
-		async () => {
-			const requestAnimationFrame = jest.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 1);
+		'should call scrollTo with animated values during animateScroll',
+		() => {
+			let now = 0;
+			let rafCallback;
 			const instance = new ScrollerBasic({scrollContentRef, direction: 'both'});
 
-			instance.animateScroll(0, 100, scrollContentRef.current);
-			instance.animateScroll(0, 200, scrollContentRef.current);
-			expect(requestAnimationFrame).toHaveBeenCalled();
+			jest.useFakeTimers();
+			jest.spyOn(require('@enact/core/util'), 'perfNow').mockImplementation(() => now);
+			window.requestAnimationFrame = jest.fn((cb) => {
+				rafCallback = cb;
+				return 1;
+			});
+			window.cancelAnimationFrame = jest.fn();
+
+			instance.animateScroll(100, 200, scrollContentRef.current);
+
+			now = 500;
+			rafCallback();
+			expect(scrollContentRef.current.scrollTo).toHaveBeenCalled();
+
+			now = 1001;
+			rafCallback();
+			expect(window.cancelAnimationFrame).toHaveBeenCalled();
+
+			jest.useRealTimers();
+		}
+	);
+
+	test(
+		'should cancel previous animation frame if one exists',
+		() => {
+			const instance = new ScrollerBasic({scrollContentRef, direction: 'both'});
+			instance.scrollAnimationId = 1;
+			window.cancelAnimationFrame = jest.fn();
+			window.requestAnimationFrame = jest.fn(() => 2);
+
+			instance.animateScroll(100, 200, scrollContentRef.current);
+
+			expect(window.cancelAnimationFrame).toHaveBeenCalledWith(1);
+			expect(instance.scrollAnimationId).toBe(2);
 		}
 	);
 });
