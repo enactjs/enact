@@ -125,15 +125,14 @@ class ScrollerBasic extends Component {
 
 		if (platform.chrome && behavior === 'smooth') {
 			this.animateScroll(this.getRtlPositionX(left), top, node);
+		} else {
+			node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
 		}
-
-		node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
 	}
 
 	// scrollMode 'native'
 	animateScroll (left, top, node) {
 		const {scrollLeft, scrollTop} = node;
-		const {maxLeft, maxTop} = this.scrollBounds;
 
 		if (this.scrollAnimationId) {
 			window.cancelAnimationFrame(this.scrollAnimationId);
@@ -144,19 +143,18 @@ class ScrollerBasic extends Component {
 		const startTime = perfNow();
 		const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
 
-		const animateScroll = (now) => {
-			const elapsed = (now - startTime);
-			const time = Math.min(animationDuration, elapsed);
-			const e = easeOutQuart(time / animationDuration);
+		const animateScroll = () => {
+			const elapsed = Math.max(15, perfNow() - startTime);
+			const e = easeOutQuart(elapsed / animationDuration);
 
 			const currX = Math.round(scrollLeft + (left - scrollLeft) * e);
 			const currY = Math.round(scrollTop + (top - scrollTop) * e);
 
-			if ((left < 0 || top < 0 || (maxLeft > 0 && left > maxLeft) || (maxTop > 0 && top > maxTop))) {
-				window.cancelAnimationFrame(this.scrollAnimationId);
-			} else if (time < animationDuration) {
-				node.scrollTo({left: currX, top: currY});
+			if (elapsed < animationDuration) {
+				node.scrollTo({top: currY, left: currX});
 				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+			} else {
+				window.cancelAnimationFrame(this.scrollAnimationId);
 			}
 		};
 
