@@ -351,17 +351,16 @@ const getSpottableDescendants = (containerId) => {
  * @memberof spotlight/container
  * @private
  */
-const getDeepSpottableDescendants = (containerId, excludedContainers, useLastFocusedElement) => {
+const getDeepSpottableDescendants = (containerId, excludedContainers) => {
 	return getSpottableDescendants(containerId)
 		.map(n => {
 			if (isContainer(n)) {
 				const id = getContainerId(n);
 				const config = getContainerConfig(id);
-				const hasSpottedControl = getContainerLastFocusedElement(id);
 
 				if (excludedContainers && excludedContainers.indexOf(id) >= 0) {
 					return [];
-				} else if (config && !config.enterTo && (useLastFocusedElement || !hasSpottedControl || (hasSpottedControl && !config.overflow))) {
+				} else if (config && !config.enterTo) {
 					return getDeepSpottableDescendants(id, excludedContainers);
 				}
 			}
