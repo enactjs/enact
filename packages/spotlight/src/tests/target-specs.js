@@ -974,4 +974,42 @@ describe('target', () => {
 			}
 		));
 	});
+
+	describe('#directional visibility across containers', () => {
+		test('should skip invisible target in another container and select a visible one', testScenario(
+			scenarios.overflow,
+			(root) => {
+				configureContainer('overflow-container', {overflow: true});
+
+				const overflowContainer = root.querySelector(`[${containerAttribute}='overflow-container']`);
+				const outside = root.querySelector('#outside-overflow');
+				const above = root.querySelector('#overflow-above');
+				const within = root.querySelector('#overflow-within');
+				const below = root.querySelector('#overflow-below');
+
+				overflowContainer.getBoundingClientRect = () => ({top: 0, left: 0, bottom: 30, right: 30, width: 30, height: 30});
+				outside.getBoundingClientRect = () => ({top: -20, left: 0, bottom: -10, right: 10, width: 10, height: 10});
+				above.getBoundingClientRect = () => ({top: -10, left: 0, bottom: -5, right: 10, width: 10, height: 10});
+				within.getBoundingClientRect = () => ({top: 0, left: 0, bottom: 10, right: 10, width: 10, height: 10});
+				below.getBoundingClientRect = () => ({top: 30, left: 0, bottom: 40, right: 10, width: 10, height: 10});
+
+				const {left, right, top, bottom} = outside.getBoundingClientRect();
+				const x = (left + right) / 2;
+				const y = (top + bottom) / 2;
+
+				const expected = 'overflow-within';
+				const actualFromPosition = safeTarget(
+					getTargetByDirectionFromPosition('down', {x, y}, rootContainerId),
+					t => t.id
+				);
+				const actualFromElement = safeTarget(
+					getTargetByDirectionFromElement('down', outside),
+					t => t.id
+				);
+
+				expect(actualFromPosition).toBe(expected);
+				expect(actualFromElement).toBe(expected);
+			}
+		));
+	});
 });

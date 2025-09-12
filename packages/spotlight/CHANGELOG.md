@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` to not prioritize elements which are invisible due to overflow as next spottable elements
+
 ## [5.2.1] - 2025-09-02
 
 ### Fixed
