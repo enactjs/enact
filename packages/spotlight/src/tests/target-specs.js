@@ -974,4 +974,62 @@ describe('target', () => {
 			}
 		));
 	});
+
+	describe('#directional visibility across containers', () => {
+		test('should navigate into another container when target is visible', testScenario(
+			scenarios.overlap,
+			(root) => {
+				configureContainer('grid', {
+					enterTo: 'default-element',
+					defaultElement: '#bottom-right'
+				});
+
+				const overlap = root.querySelector('#over-middle-center');
+				const middleCenter = root.querySelector('#middle-center');
+				const gridNode = root.querySelector(`[${containerAttribute}='grid']`);
+
+				gridNode.getBoundingClientRect = () => ({top: 0, left: 0, bottom: 30, right: 30, width: 30, height: 30});
+				middleCenter.getBoundingClientRect = () => ({top: 10, left: 10, bottom: 20, right: 20, width: 10, height: 10});
+				overlap.getBoundingClientRect = () => ({top: 12, left: 15, bottom: 13, right: 16, width: 1, height: 1});
+
+				const expected = 'middle-center';
+				const actual = safeTarget(
+					getTargetByDirectionFromElement('down', overlap),
+					t => t.id
+				);
+
+				expect(actual).toBe(expected);
+			}
+		));
+
+		test('should skip invisible target in another container and select a visible one', testScenario(
+			scenarios.overflow,
+			(root) => {
+				configureContainer('overflow-container', {overflow: true});
+
+				const container = root.querySelector(`[${containerAttribute}='overflow-container']`);
+				const outside = root.querySelector('#outside-overflow');
+				const above = root.querySelector('#overflow-above');
+				const within = root.querySelector('#overflow-within');
+				const below = root.querySelector('#overflow-below');
+
+				container.getBoundingClientRect = () => ({top: 0, left: 0, bottom: 30, right: 30, width: 30, height: 30});
+				outside.getBoundingClientRect = () => ({top: -20, left: 0, bottom: -10, right: 10, width: 10, height: 10});
+				above.getBoundingClientRect = () => ({top: -10, left: 0, bottom: -5, right: 10, width: 10, height: 10});
+				within.getBoundingClientRect = () => ({top: 0, left: 0, bottom: 10, right: 10, width: 10, height: 10});
+				below.getBoundingClientRect = () => ({top: 30, left: 0, bottom: 40, right: 10, width: 10, height: 10});
+
+				const {left, right, top, bottom} = outside.getBoundingClientRect();
+				const position = {x: (left + right) / 2, y: (top + bottom) / 2};
+
+				const expected = 'overflow-within';
+				const actual = safeTarget(
+					getTargetByDirectionFromPosition('down', position, rootContainerId),
+					t => t.id
+				);
+
+				expect(actual).toBe(expected);
+			}
+		));
+	});
 });
