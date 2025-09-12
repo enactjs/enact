@@ -976,32 +976,6 @@ describe('target', () => {
 	});
 
 	describe('#directional visibility across containers', () => {
-		test('should navigate into another container when target is visible', testScenario(
-			scenarios.overlap,
-			(root) => {
-				configureContainer('grid', {
-					enterTo: 'default-element',
-					defaultElement: '#bottom-right'
-				});
-
-				const overlap = root.querySelector('#over-middle-center');
-				const middleCenter = root.querySelector('#middle-center');
-				const gridNode = root.querySelector(`[${containerAttribute}='grid']`);
-
-				gridNode.getBoundingClientRect = () => ({top: 0, left: 0, bottom: 30, right: 30, width: 30, height: 30});
-				middleCenter.getBoundingClientRect = () => ({top: 10, left: 10, bottom: 20, right: 20, width: 10, height: 10});
-				overlap.getBoundingClientRect = () => ({top: 12, left: 15, bottom: 13, right: 16, width: 1, height: 1});
-
-				const expected = 'middle-center';
-				const actual = safeTarget(
-					getTargetByDirectionFromElement('down', overlap),
-					t => t.id
-				);
-
-				expect(actual).toBe(expected);
-			}
-		));
-
 		test('should skip invisible target in another container and select a visible one', testScenario(
 			scenarios.overflow,
 			(root) => {
@@ -1024,12 +998,17 @@ describe('target', () => {
 				const y = (top + bottom) / 2;
 
 				const expected = 'overflow-within';
-				const actual = safeTarget(
+				const actualFromPosition = safeTarget(
 					getTargetByDirectionFromPosition('down', {x, y}, rootContainerId),
 					t => t.id
 				);
+				const actualFromElement = safeTarget(
+					getTargetByDirectionFromElement('down', outside),
+					t => t.id
+				);
 
-				expect(actual).toBe(expected);
+				expect(actualFromPosition).toBe(expected);
+				expect(actualFromElement).toBe(expected);
 			}
 		));
 	});
