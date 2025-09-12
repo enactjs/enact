@@ -341,27 +341,25 @@ const getSpottableDescendants = (containerId) => {
 
 /**
  * Recursively get spottable descendants by including elements within sub-containers that do not
- * have `enterTo` configured or which are not hidden due to overflow
+ * have `enterTo` configured
  *
  * @param   {String}    containerId          	ID of container
  * @param   {String[]}  [excludedContainers] 	IDs of containers to exclude from result set
- * @param	{Boolean}	useLastFocusedElement	Determines whether to use the last focused element
  *
  * @returns {Node[]}                         	Array of spottable elements and containers
  * @memberof spotlight/container
  * @private
  */
-const getDeepSpottableDescendants = (containerId, excludedContainers, useLastFocusedElement) => {
+const getDeepSpottableDescendants = (containerId, excludedContainers) => {
 	return getSpottableDescendants(containerId)
 		.map(n => {
 			if (isContainer(n)) {
 				const id = getContainerId(n);
 				const config = getContainerConfig(id);
-				const hasSpottedControl = getContainerLastFocusedElement(id);
 
 				if (excludedContainers && excludedContainers.indexOf(id) >= 0) {
 					return [];
-				} else if (config && !config.enterTo && (useLastFocusedElement || !hasSpottedControl || (hasSpottedControl && !config.overflow))) {
+				} else if (config && !config.enterTo) {
 					return getDeepSpottableDescendants(id, excludedContainers);
 				}
 			}
