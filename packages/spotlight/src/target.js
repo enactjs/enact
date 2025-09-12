@@ -251,7 +251,7 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 				// otherwise, recurse into it but only through the elements that are visible
 				next = getTargetInContainerByDirectionFromPosition(
 					direction,
-					overlappingContainerId,
+					containerId,
 					positionRect,
 					elementContainerIds,
 					boundingRect,
@@ -270,8 +270,7 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 
 
 function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds, boundingRect, visibleElements) {
-	const spottableDescendants = getDeepSpottableDescendants(containerId);
-	const elements = visibleElements ? getVisibleElementsFromContainer(spottableDescendants) : spottableDescendants;
+	const elements = visibleElements ? getSpottableDescendants(containerId) : getDeepSpottableDescendants(containerId);
 
 	// shortcut for previous target from element if it were saved
 	const previous = getContainerPreviousTarget(containerId, direction, element);
@@ -380,15 +379,16 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 			if (isElementVisibleInContainer(next, nextContainerId)) {
 				return next;
 			} else {
-				// otherwise, recurse into it but only through the elements that are visible
-				next = getTargetInContainerByDirectionFromElement(
-					direction,
-					containerId,
-					element,
+				// otherwise, try to navigate to an element that is visible in its container
+				next = navigate(
 					elementRect,
-					elementContainerIds,
-					boundingRect,
-					true
+					direction,
+					elementRects.filter(({element}) => {
+						const containerId = getContainersForNode(element).pop();
+						return isElementVisibleInContainer(element, containerId);
+					}),
+					getContainerConfig(containerId),
+					partitionRect
 				);
 			}
 		}
