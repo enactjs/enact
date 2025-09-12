@@ -1007,24 +1007,25 @@ describe('target', () => {
 			(root) => {
 				configureContainer('overflow-container', {overflow: true});
 
-				const container = root.querySelector(`[${containerAttribute}='overflow-container']`);
+				const overflowContainer = root.querySelector(`[${containerAttribute}='overflow-container']`);
 				const outside = root.querySelector('#outside-overflow');
 				const above = root.querySelector('#overflow-above');
 				const within = root.querySelector('#overflow-within');
 				const below = root.querySelector('#overflow-below');
 
-				container.getBoundingClientRect = () => ({top: 0, left: 0, bottom: 30, right: 30, width: 30, height: 30});
+				overflowContainer.getBoundingClientRect = () => ({top: 0, left: 0, bottom: 30, right: 30, width: 30, height: 30});
 				outside.getBoundingClientRect = () => ({top: -20, left: 0, bottom: -10, right: 10, width: 10, height: 10});
 				above.getBoundingClientRect = () => ({top: -10, left: 0, bottom: -5, right: 10, width: 10, height: 10});
 				within.getBoundingClientRect = () => ({top: 0, left: 0, bottom: 10, right: 10, width: 10, height: 10});
 				below.getBoundingClientRect = () => ({top: 30, left: 0, bottom: 40, right: 10, width: 10, height: 10});
 
 				const {left, right, top, bottom} = outside.getBoundingClientRect();
-				const position = {x: (left + right) / 2, y: (top + bottom) / 2};
+				const x = (left + right) / 2;
+				const y = (top + bottom) / 2;
 
 				const expected = 'overflow-within';
 				const actual = safeTarget(
-					getTargetByDirectionFromPosition('down', position, rootContainerId),
+					getTargetByDirectionFromPosition('down', {x, y}, rootContainerId),
 					t => t.id
 				);
 
