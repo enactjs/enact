@@ -341,11 +341,10 @@ const getSpottableDescendants = (containerId) => {
 
 /**
  * Recursively get spottable descendants by including elements within sub-containers that do not
- * have `enterTo` configured or which are not hidden due to overflow
+ * have `enterTo` configured
  *
  * @param   {String}    containerId          	ID of container
  * @param   {String[]}  [excludedContainers] 	IDs of containers to exclude from result set
- * @param	{Boolean}	useLastFocusedElement	Determines whether to use the last focused element
  *
  * @returns {Node[]}                         	Array of spottable elements and containers
  * @memberof spotlight/container

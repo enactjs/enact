@@ -12,7 +12,7 @@ import {
 	getDeepSpottableDescendants,
 	getDefaultContainer,
 	getLastContainer,
-	getNavigableContainersForNode, getSpottableDescendants,
+	getNavigableContainersForNode,
 	isContainer,
 	isNavigable,
 	rootContainerId
@@ -178,9 +178,8 @@ function getOverflowContainerRect (containerId) {
 	}
 }
 
-function getTargetInContainerByDirectionFromPosition (direction, containerId, positionRect, elementContainerIds, boundingRect, visibleElements) {
-	const spottableDescendants = getDeepSpottableDescendants(containerId);
-	const elements = visibleElements ? getVisibleElementsFromContainer(spottableDescendants) : spottableDescendants;
+function getTargetInContainerByDirectionFromPosition (direction, containerId, positionRect, elementContainerIds, boundingRect) {
+	const elements = getDeepSpottableDescendants(containerId);
 	let elementRects = filterRects(getRects(elements), boundingRect);
 
 	let next = null;
@@ -248,14 +247,15 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 			if (isElementVisibleInContainer(next, nextContainerId)) {
 				return next;
 			} else {
-				// otherwise, recurse into it but only through the elements that are visible
-				next = getTargetInContainerByDirectionFromPosition(
-					direction,
-					containerId,
+				// otherwise, try to navigate to an element that is visible in its container
+				next = navigate(
 					positionRect,
-					elementContainerIds,
-					boundingRect,
-					true
+					direction,
+					elementRects.filter(({element}) => {
+						const containerId = getContainersForNode(element).pop();
+						return isElementVisibleInContainer(element, containerId);
+					}),
+					getContainerConfig(containerId)
 				);
 			}
 		}
@@ -269,8 +269,8 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 }
 
 
-function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds, boundingRect, visibleElements) {
-	const elements = visibleElements ? getSpottableDescendants(containerId) : getDeepSpottableDescendants(containerId);
+function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds, boundingRect) {
+	const elements = getDeepSpottableDescendants(containerId);
 
 	// shortcut for previous target from element if it were saved
 	const previous = getContainerPreviousTarget(containerId, direction, element);
@@ -572,13 +572,6 @@ const getNearestTargetFromPosition = (position, containerId) => (
 	getNavigableTarget(document.elementFromPoint(position.x, position.y)) ||
 	getNearestTargetInContainerFromPosition(position, containerId)
 );
-
-const getVisibleElementsFromContainer = (elements) => {
-	return elements.filter((element) => {
-		const containerId = getContainersForNode(element).pop();
-		return isElementVisibleInContainer(element, containerId);
-	});
-}
 
 const isElementVisibleInContainer = (element, containerId) => {
 	const {
