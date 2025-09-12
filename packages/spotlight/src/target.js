@@ -240,20 +240,20 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 			}
 		}
 
-		const nextContainerId = getContainersForNode(next).pop();
+		const nextCandidateContainerId = getContainersForNode(next).pop();
 		// check if we want to navigate to another container
-		if (next && containerId !== nextContainerId) {
+		if (next && containerId !== nextCandidateContainerId) {
 			// verify is the element from another container is visible
-			if (isElementVisibleInContainer(next, nextContainerId)) {
+			if (isElementVisibleInContainer(next, nextCandidateContainerId)) {
 				return next;
 			} else {
 				// otherwise, try to navigate to an element that is visible in its container
 				next = navigate(
 					positionRect,
 					direction,
-					elementRects.filter(({element}) => {
-						const containerId = getContainersForNode(element).pop();
-						return isElementVisibleInContainer(element, containerId);
+					elementRects.filter((rect) => {
+						const elementContainerId = getContainersForNode(rect.element).pop();
+						return isElementVisibleInContainer(rect.element, elementContainerId);
 					}),
 					getContainerConfig(containerId)
 				);
@@ -267,7 +267,6 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 
 	return next;
 }
-
 
 function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds, boundingRect) {
 	const elements = getDeepSpottableDescendants(containerId);
@@ -372,20 +371,20 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 			}
 		}
 
-		const nextContainerId = getContainersForNode(next).pop();
+		const nextCandidateContainerId = getContainersForNode(next).pop();
 		// check if we want to navigate to another container
-		if (next && containerId !== nextContainerId) {
+		if (next && containerId !== nextCandidateContainerId) {
 			// verify is the element from another container is visible
-			if (isElementVisibleInContainer(next, nextContainerId)) {
+			if (isElementVisibleInContainer(next, nextCandidateContainerId)) {
 				return next;
 			} else {
 				// otherwise, try to navigate to an element that is visible in its container
 				next = navigate(
 					elementRect,
 					direction,
-					elementRects.filter(({element}) => {
-						const containerId = getContainersForNode(element).pop();
-						return isElementVisibleInContainer(element, containerId);
+					elementRects.filter((rect) => {
+						const elementContainerId = getContainersForNode(rect.element).pop();
+						return isElementVisibleInContainer(rect.element, elementContainerId);
 					}),
 					getContainerConfig(containerId),
 					partitionRect
@@ -504,6 +503,26 @@ function getNavigableTarget (target) {
 	return target;
 }
 
+function isElementVisibleInContainer (element, containerId) {
+	const {
+		top: containerTop,
+		right: containerRight,
+		bottom: containerBottom,
+		left: containerLeft
+	} = getContainerRect(containerId);
+	const {
+		top: elementTop,
+		right: elementRight,
+		bottom: elementBottom,
+		left: elementLeft
+	} = element.getBoundingClientRect();
+
+	const isVerticallyVisible = elementBottom >= containerTop && elementTop <= containerBottom;
+	const isHorizontallyVisible = elementRight >= containerLeft && elementLeft <= containerRight;
+
+	return isVerticallyVisible && isHorizontallyVisible;
+}
+
 const getOffsetDistanceToTargetFromPosition = (distance, direction, {x, y}, {left, right, top, bottom}) => {
 	if (direction === 'left' || direction === 'right') {
 		if (y > bottom) {
@@ -572,26 +591,6 @@ const getNearestTargetFromPosition = (position, containerId) => (
 	getNavigableTarget(document.elementFromPoint(position.x, position.y)) ||
 	getNearestTargetInContainerFromPosition(position, containerId)
 );
-
-const isElementVisibleInContainer = (element, containerId) => {
-	const {
-		top: containerTop,
-		right: containerRight,
-		bottom: containerBottom,
-		left: containerLeft
-	} = getContainerRect(containerId);
-	const {
-		top: elementTop,
-		right: elementRight,
-		bottom: elementBottom,
-		left: elementLeft
-	} = element.getBoundingClientRect();
-
-	const isVerticallyVisible = elementBottom >= containerTop && elementTop <= containerBottom;
-	const isHorizontallyVisible = elementRight >= containerLeft && elementLeft <= containerRight;
-
-	return isVerticallyVisible && isHorizontallyVisible;
-};
 
 export {
 	getNavigableTarget,
