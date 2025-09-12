@@ -390,7 +390,7 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 					partitionRect
 				);
 			}
-		}7
+		}
 
 		// If we've met every condition and haven't explicitly retried the search via `continue`,
 		// break out and return
