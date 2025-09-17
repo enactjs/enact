@@ -134,15 +134,18 @@ const CardBase = kind({
 	},
 
 	computed: {
-		className: ({captionOverlay, orientation, selected, styler}) => styler.append({
+		className: ({captionOverlay, centeredImage, orientation, selected, styler}) => styler.append({
 			captionOverlay: captionOverlay && orientation === 'vertical',
 			selected,
+			centeredImage,
 			horizontal: orientation === 'horizontal',
 			vertical: orientation === 'vertical'
 		})
 	},
 
 	render: ({captionOverlay, children, componentRef, css, imageComponent, orientation, placeholder, src, ...rest}) => {
+		delete rest.centeredImage;
+
 		const isHorizontal = orientation === 'horizontal';
 		const isCaptionOverlay = captionOverlay && !isHorizontal;
 		const Component = isHorizontal ? Row : Column;
