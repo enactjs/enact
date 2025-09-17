@@ -1154,7 +1154,7 @@ const useScrollBase = (props) => {
 			}
 		} else { // scrollMode 'native'
 			if (animate) {
-				scrollContentHandle.current.scrollToPosition(targetX, targetY, 'smooth');
+				scrollContentHandle.current.scrollToPosition(targetX, targetY, 'smooth', mutableRef.current.lastInputType);
 			} else {
 				scrollContentHandle.current.scrollToPosition(targetX, targetY, 'instant');
 			}
