@@ -810,14 +810,18 @@ const useScrollBase = (props) => {
 				scrollByPage(ev.keyCode);
 			}
 		} else {
-			if (ev.repeat) return;
 			props.preventScroll?.(ev);
-			forward('onKeyDown', ev, props);
+			if (!ev.repeat) {
+				forward('onKeyDown', ev, props);
+			}
 		}
 	}
 
-	function onKeyUp () {
-		scrollContentHandle.current.stopAnimatedScroll();
+	function onKeyUp (ev) {
+		if (scrollContentHandle.current?.stopAnimatedScroll && scrollMode === 'native') {
+			scrollContentHandle.current?.stopAnimatedScroll();
+		}
+		forward('onKeyUp', ev, props);
 	}
 
 	function scrollToAccumulatedTarget (delta, vertical, overscrollEffect) {

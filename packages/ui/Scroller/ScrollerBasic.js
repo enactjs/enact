@@ -1,5 +1,6 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {platform} from '@enact/core/platform';
+import {perfNow} from '@enact/core/util';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {Component} from 'react';
@@ -82,10 +83,8 @@ class ScrollerBasic extends Component {
 	scrollAnimation = {
 		id: null,
 		isAnimating: false,
-		previousPosition: {
-			top: 0,
-			left:  0
-		},
+		distance: 20,
+		startTime: null
 	};
 
 	scrollBounds = {
@@ -140,11 +139,18 @@ class ScrollerBasic extends Component {
 	animateScroll (left, top, node) {
 		const animateScroll = () => {
 			this.scrollAnimation.isAnimating = true;
-			node.scrollBy({top: 20, left: 0, behavior: 'auto'});
+			const duration = (perfNow() - this.scrollAnimation.startTime) / 1000;
+			const multiplier = duration < 1 ? 1 : duration;
+
+			const dy = Math.sign(top - node.scrollTop) * (this.scrollAnimation.distance * multiplier);
+			const dx = Math.sign(left - node.scrollLeft) * (this.scrollAnimation.distance * multiplier);
+
+			node.scrollBy({top: dy, left: dx, behavior: 'auto'});
 			this.scrollAnimation.id = window.requestAnimationFrame(animateScroll);
 		};
 
 		if (!this.scrollAnimation.isAnimating) {
+			this.scrollAnimation.startTime = perfNow();
 			this.scrollAnimation.id = window.requestAnimationFrame(animateScroll);
 		}
 	}
