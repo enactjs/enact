@@ -1,11 +1,8 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {platform} from '@enact/core/platform';
-import {perfNow} from '@enact/core/util';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {Component} from 'react';
-import Lenis from 'lenis';
-import {ReactLenis} from 'lenis/react';
 
 import css from './Scroller.module.less';
 
@@ -71,12 +68,6 @@ class ScrollerBasic extends Component {
 		scrollContentRef: EnactPropTypes.ref
 	};
 
-	constructor(props) {
-		super(props);
-
-		this.state = {animating: false};
-	}
-
 	componentDidMount () {
 		this.calculateMetrics();
 	}
@@ -91,8 +82,7 @@ class ScrollerBasic extends Component {
 	scrollAnimation = {
 		id: null,
 		isAnimating: false
-	}
-	scrollAnimationId = null;
+	};
 
 	scrollBounds = {
 		clientWidth: 0,
@@ -107,8 +97,6 @@ class ScrollerBasic extends Component {
 		top: 0,
 		left: 0
 	};
-
-	scrollAnimating = false;
 
 	getScrollBounds = () => this.scrollBounds;
 
@@ -243,14 +231,12 @@ class ScrollerBasic extends Component {
 		delete rest.setThemeScrollContentHandle;
 
 		return (
-			<ReactLenis root>
-				<div
-					{...rest}
-					className={classNames(className, css.scroller)}
-					ref={this.props.scrollContentRef}
-					style={mergedStyle}
-				/>
-			</ReactLenis>
+			<div
+				{...rest}
+				className={classNames(className, css.scroller)}
+				ref={this.props.scrollContentRef}
+				style={mergedStyle}
+			/>
 		);
 	}
 }
