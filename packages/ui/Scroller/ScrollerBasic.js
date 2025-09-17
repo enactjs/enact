@@ -4,6 +4,8 @@ import {perfNow} from '@enact/core/util';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {Component} from 'react';
+import Lenis from 'lenis';
+import {ReactLenis} from 'lenis/react';
 
 import css from './Scroller.module.less';
 
@@ -69,6 +71,12 @@ class ScrollerBasic extends Component {
 		scrollContentRef: EnactPropTypes.ref
 	};
 
+	constructor(props) {
+		super(props);
+
+		this.state = {animating: false};
+	}
+
 	componentDidMount () {
 		this.calculateMetrics();
 	}
@@ -80,6 +88,10 @@ class ScrollerBasic extends Component {
 		}
 	}
 
+	scrollAnimation = {
+		id: null,
+		isAnimating: false
+	}
 	scrollAnimationId = null;
 
 	scrollBounds = {
@@ -95,6 +107,8 @@ class ScrollerBasic extends Component {
 		top: 0,
 		left: 0
 	};
+
+	scrollAnimating = false;
 
 	getScrollBounds = () => this.scrollBounds;
 
@@ -132,33 +146,20 @@ class ScrollerBasic extends Component {
 
 	// scrollMode 'native'
 	animateScroll (left, top, node) {
-		const {scrollLeft, scrollTop} = node;
-
-		if (this.scrollAnimationId) {
-			window.cancelAnimationFrame(this.scrollAnimationId);
-			this.scrollAnimationId = null;
-		}
-
-		const animationDuration = 1000;
-		const startTime = perfNow();
-		const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
-
 		const animateScroll = () => {
-			const elapsed = Math.max(15, perfNow() - startTime);
-			const e = easeOutQuart(elapsed / animationDuration);
-
-			const currX = Math.round(scrollLeft + (left - scrollLeft) * e);
-			const currY = Math.round(scrollTop + (top - scrollTop) * e);
-
-			if (elapsed < animationDuration) {
-				node.scrollTo({top: currY, left: currX});
-				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
-			} else {
-				window.cancelAnimationFrame(this.scrollAnimationId);
-			}
+			this.scrollAnimation.isAnimating = true;
+			node.scrollBy({top: 20, left: 0});
+			this.scrollAnimation.id = window.requestAnimationFrame(animateScroll);
 		};
 
-		this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+		if (!this.scrollAnimation.isAnimating) {
+			this.scrollAnimation.id = window.requestAnimationFrame(animateScroll);
+		}
+	}
+
+	stopAnimatedScroll () {
+		this.scrollAnimation.isAnimating = false;
+		window.cancelAnimationFrame(this.scrollAnimation.id);
 	}
 
 	// scrollMode 'native'
@@ -242,12 +243,14 @@ class ScrollerBasic extends Component {
 		delete rest.setThemeScrollContentHandle;
 
 		return (
-			<div
-				{...rest}
-				className={classNames(className, css.scroller)}
-				ref={this.props.scrollContentRef}
-				style={mergedStyle}
-			/>
+			<ReactLenis root>
+				<div
+					{...rest}
+					className={classNames(className, css.scroller)}
+					ref={this.props.scrollContentRef}
+					style={mergedStyle}
+				/>
+			</ReactLenis>
 		);
 	}
 }

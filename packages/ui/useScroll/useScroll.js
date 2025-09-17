@@ -810,9 +810,14 @@ const useScrollBase = (props) => {
 				scrollByPage(ev.keyCode);
 			}
 		} else {
+			if (ev.repeat) return;
 			props.preventScroll?.(ev);
 			forward('onKeyDown', ev, props);
 		}
+	}
+
+	function onKeyUp () {
+		scrollContentHandle.current.stopAnimatedScroll();
 	}
 
 	function scrollToAccumulatedTarget (delta, vertical, overscrollEffect) {
@@ -1454,6 +1459,7 @@ const useScrollBase = (props) => {
 	function addEventListeners () {
 		utilEvent('wheel').addEventListener(scrollContainerRef, onWheel);
 		utilEvent('keydown').addEventListener(scrollContainerRef, onKeyDown);
+		utilEvent('keyup').addEventListener(scrollContainerRef, onKeyUp);
 		utilEvent('mousedown').addEventListener(scrollContainerRef, onMouseDown);
 
 		// scrollMode 'native' [[
