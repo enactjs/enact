@@ -137,13 +137,16 @@ class ScrollerBasic extends Component {
 
 	// scrollMode 'native'
 	animateScroll (left, top, node) {
+		const deltaX = left - node.scrollLeft;
+		const deltaY = top - node.scrollTop;
+
 		const animateScroll = () => {
 			this.scrollAnimation.isAnimating = true;
 			const duration = (perfNow() - this.scrollAnimation.startTime) / 1000;
-			const multiplier = duration < 1 ? 1 : duration;
+			const multiplier = (duration > 1 || duration <= 3) ? duration : 1;
 
-			const dy = Math.sign(top - node.scrollTop) * (this.scrollAnimation.distance * multiplier);
-			const dx = Math.sign(left - node.scrollLeft) * (this.scrollAnimation.distance * multiplier);
+			const dx = Math.sign(deltaX) * (this.scrollAnimation.distance * multiplier);
+			const dy = Math.sign(deltaY) * (this.scrollAnimation.distance * multiplier);
 
 			node.scrollBy({top: dy, left: dx, behavior: 'auto'});
 			this.scrollAnimation.id = window.requestAnimationFrame(animateScroll);
