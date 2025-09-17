@@ -81,7 +81,11 @@ class ScrollerBasic extends Component {
 
 	scrollAnimation = {
 		id: null,
-		isAnimating: false
+		isAnimating: false,
+		previousPosition: {
+			top: 0,
+			left:  0
+		},
 	};
 
 	scrollBounds = {
@@ -136,7 +140,7 @@ class ScrollerBasic extends Component {
 	animateScroll (left, top, node) {
 		const animateScroll = () => {
 			this.scrollAnimation.isAnimating = true;
-			node.scrollBy({top: 20, left: 0});
+			node.scrollBy({top: 20, left: 0, behavior: 'auto'});
 			this.scrollAnimation.id = window.requestAnimationFrame(animateScroll);
 		};
 

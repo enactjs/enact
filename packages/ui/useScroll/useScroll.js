@@ -1459,12 +1459,12 @@ const useScrollBase = (props) => {
 	function addEventListeners () {
 		utilEvent('wheel').addEventListener(scrollContainerRef, onWheel);
 		utilEvent('keydown').addEventListener(scrollContainerRef, onKeyDown);
-		utilEvent('keyup').addEventListener(scrollContainerRef, onKeyUp);
 		utilEvent('mousedown').addEventListener(scrollContainerRef, onMouseDown);
 
 		// scrollMode 'native' [[
 		if (scrollMode === 'native' && scrollContentRef.current) {
 			utilEvent('scroll').addEventListener(scrollContentRef, onScroll, {passive: true});
+			utilEvent('keyup').addEventListener(scrollContainerRef, onKeyUp);
 		}
 		// scrollMode 'native' ]]
 
@@ -1485,6 +1485,7 @@ const useScrollBase = (props) => {
 
 		// scrollMode 'native' [[
 		utilEvent('scroll').removeEventListener(scrollContentRef, onScroll, {passive: true});
+		utilEvent('keyup').addEventListener(scrollContainerRef, onKeyUp);
 		// scrollMode 'native' ]]
 
 		if (props.removeEventListeners) {
