@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/Card` `centeredimage` prop to allow developers to center the image
+- `ui/Card` `fitImage` prop to allow developers to center the image
 
 ## [5.2.1] - 2025-09-02
 

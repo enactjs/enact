@@ -48,14 +48,6 @@ const CardBase = kind({
 		captionOverlay: PropTypes.bool,
 
 		/**
-		 * Centers the image
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		centeredImage: PropTypes.bool,
-
-		/**
 		 * The caption node to be displayed with the image.
 
 		 * @type {Node}
@@ -84,6 +76,14 @@ const CardBase = kind({
 		 * @public
 		 */
 		css: PropTypes.object,
+
+		/**
+		 * Centers the image
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		fitImage: PropTypes.bool,
 
 		/**
 		 * The component used to render the image component.
@@ -142,17 +142,17 @@ const CardBase = kind({
 	},
 
 	computed: {
-		className: ({captionOverlay, centeredImage, orientation, selected, styler}) => styler.append({
+		className: ({captionOverlay, fitImage, orientation, selected, styler}) => styler.append({
 			captionOverlay: captionOverlay && orientation === 'vertical',
 			selected,
-			centeredImage,
+			fitImage,
 			horizontal: orientation === 'horizontal',
 			vertical: orientation === 'vertical'
 		})
 	},
 
 	render: ({captionOverlay, children, componentRef, css, imageComponent, orientation, placeholder, src, ...rest}) => {
-		delete rest.centeredImage;
+		delete rest.fitImage;
 
 		const isHorizontal = orientation === 'horizontal';
 		const isCaptionOverlay = captionOverlay && !isHorizontal;
