@@ -48,6 +48,14 @@ const CardBase = kind({
 		captionOverlay: PropTypes.bool,
 
 		/**
+		 * Centers the image
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		centeredImage: PropTypes.bool,
+
+		/**
 		 * The caption node to be displayed with the image.
 
 		 * @type {Node}
