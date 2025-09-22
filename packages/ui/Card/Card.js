@@ -78,6 +78,14 @@ const CardBase = kind({
 		css: PropTypes.object,
 
 		/**
+		 * Fits the image to its height and width and positions it on the center of the Card
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		fitImage: PropTypes.bool,
+
+		/**
 		 * The component used to render the image component.
 		 *
 		 * @type {Component|Element}
@@ -134,15 +142,18 @@ const CardBase = kind({
 	},
 
 	computed: {
-		className: ({captionOverlay, orientation, selected, styler}) => styler.append({
+		className: ({captionOverlay, fitImage, orientation, selected, styler}) => styler.append({
 			captionOverlay: captionOverlay && orientation === 'vertical',
 			selected,
+			fitImage,
 			horizontal: orientation === 'horizontal',
 			vertical: orientation === 'vertical'
 		})
 	},
 
 	render: ({captionOverlay, children, componentRef, css, imageComponent, orientation, placeholder, src, ...rest}) => {
+		delete rest.fitImage;
+
 		const isHorizontal = orientation === 'horizontal';
 		const isCaptionOverlay = captionOverlay && !isHorizontal;
 		const Component = isHorizontal ? Row : Column;
