@@ -240,6 +240,26 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 			}
 		}
 
+		const nextCandidateContainerId = getContainersForNode(next).pop();
+		// check if we want to navigate to another container
+		if (next && containerId !== nextCandidateContainerId) {
+			// verify is the element from another container is visible
+			if (isElementVisibleInContainer(next, nextCandidateContainerId)) {
+				return next;
+			} else {
+				// otherwise, try to navigate to an element that is visible in its container
+				next = navigate(
+					positionRect,
+					direction,
+					elementRects.filter((rect) => {
+						const elementContainerId = getContainersForNode(rect.element).pop();
+						return isElementVisibleInContainer(rect.element, elementContainerId);
+					}),
+					getContainerConfig(containerId)
+				);
+			}
+		}
+
 		// If we've met every condition and haven't explicitly retried the search via `continue`,
 		// break out and return
 		break;
@@ -247,7 +267,6 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 
 	return next;
 }
-
 
 function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds, boundingRect) {
 	const elements = getDeepSpottableDescendants(containerId);
@@ -349,6 +368,27 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 			if (!next) {
 				elementRects = elementRects.filter(rect => rect.element !== lastNavigated);
 				continue;
+			}
+		}
+
+		const nextCandidateContainerId = getContainersForNode(next).pop();
+		// check if we want to navigate to another container
+		if (next && containerId !== nextCandidateContainerId) {
+			// verify is the element from another container is visible
+			if (isElementVisibleInContainer(next, nextCandidateContainerId)) {
+				return next;
+			} else {
+				// otherwise, try to navigate to an element that is visible in its container
+				next = navigate(
+					elementRect,
+					direction,
+					elementRects.filter((rect) => {
+						const elementContainerId = getContainersForNode(rect.element).pop();
+						return isElementVisibleInContainer(rect.element, elementContainerId);
+					}),
+					getContainerConfig(containerId),
+					partitionRect
+				);
 			}
 		}
 
@@ -461,6 +501,26 @@ function getNavigableTarget (target) {
 		target = parent === document ? null : parent; // calling isNavigable on document is problematic
 	}
 	return target;
+}
+
+function isElementVisibleInContainer (element, containerId) {
+	const {
+		top: containerTop,
+		right: containerRight,
+		bottom: containerBottom,
+		left: containerLeft
+	} = getContainerRect(containerId);
+	const {
+		top: elementTop,
+		right: elementRight,
+		bottom: elementBottom,
+		left: elementLeft
+	} = element.getBoundingClientRect();
+
+	const isVerticallyVisible = elementBottom >= containerTop && elementTop <= containerBottom;
+	const isHorizontallyVisible = elementRight >= containerLeft && elementLeft <= containerRight;
+
+	return isVerticallyVisible && isHorizontallyVisible;
 }
 
 const getOffsetDistanceToTargetFromPosition = (distance, direction, {x, y}, {left, right, top, bottom}) => {
