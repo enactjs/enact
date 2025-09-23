@@ -127,8 +127,10 @@ class ScrollerBasic extends Component {
 	// scrollMode 'native'
 	scrollToPosition (left, top, behavior, type) {
 		const node = this.props.scrollContentRef.current;
+		const scrollByKeys = type === 'arrowKey' || type === 'pageKey';
+		const smoothBehavior = behavior === 'smooth';
 
-		if (platform.chrome && behavior === 'smooth' && type !== 'wheel') {
+		if (platform.chrome && smoothBehavior && scrollByKeys) {
 			this.animateScroll(this.getRtlPositionX(left), top, node);
 		} else {
 			node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
@@ -148,7 +150,7 @@ class ScrollerBasic extends Component {
 			const dx = Math.sign(deltaX) * (this.scrollAnimation.distance * multiplier);
 			const dy = Math.sign(deltaY) * (this.scrollAnimation.distance * multiplier);
 
-			node.scrollBy({top: dy, left: dx, behavior: 'auto'});
+			node.scrollBy({top: dy, left: dx, behavior: 'instant'});
 			this.scrollAnimation.id = window.requestAnimationFrame(animateScroll);
 		};
 
