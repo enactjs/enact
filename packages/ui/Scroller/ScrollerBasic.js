@@ -139,8 +139,8 @@ class ScrollerBasic extends Component {
 
 	// scrollMode 'native'
 	animateScroll (left, top, node) {
-		const deltaX = left - node.scrollLeft;
-		const deltaY = top - node.scrollTop;
+		const deltaX = left - this.scrollPos.left;
+		const deltaY = top - this.scrollPos.top;
 
 		const animateScroll = () => {
 			this.scrollAnimation.isAnimating = true;
