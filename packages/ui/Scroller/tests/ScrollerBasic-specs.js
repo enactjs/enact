@@ -41,7 +41,9 @@ describe('ScrollBasic', () => {
 			let rafCallback;
 			const instance = new ScrollerBasic({scrollContentRef, direction: 'both'});
 
-			window.requestAnimationFrame = jest.fn((cb) => {rafCallback = cb});
+			window.requestAnimationFrame = jest.fn((cb) => {
+				rafCallback = cb;
+			});
 			window.cancelAnimationFrame = jest.fn();
 
 			instance.animateScroll(100, 200, scrollContentRef.current);
