@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [5.3.0] - 2025-09-24
+
+### Added
+
+- `ui/Card` `fitImage` prop to allow developers to center the image
+
+### Fixed
+
+- `spotlight` to not prioritize elements which are invisible due to overflow as next spottable elements
+
 ## [5.2.1] - 2025-09-02
 
 ### Fixed
