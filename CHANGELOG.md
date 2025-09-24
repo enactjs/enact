@@ -2,7 +2,11 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [5.3.0] - 2025-09-24
+
+### Added
+
+- `ui/Card` `fitImage` prop to allow developers to center the image
 
 ### Fixed
 
