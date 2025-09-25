@@ -811,8 +811,17 @@ const useScrollBase = (props) => {
 			}
 		} else {
 			props.preventScroll?.(ev);
-			forward('onKeyDown', ev, props);
+			if (!ev.repeat) {
+				forward('onKeyDown', ev, props);
+			}
 		}
+	}
+
+	function onKeyUp (ev) {
+		if (scrollContentHandle.current?.stopAnimatedScroll && scrollMode === 'native') {
+			scrollContentHandle.current?.stopAnimatedScroll();
+		}
+		forward('onKeyUp', ev, props);
 	}
 
 	function scrollToAccumulatedTarget (delta, vertical, overscrollEffect) {
@@ -1145,7 +1154,7 @@ const useScrollBase = (props) => {
 			}
 		} else { // scrollMode 'native'
 			if (animate) {
-				scrollContentHandle.current.scrollToPosition(targetX, targetY, 'smooth');
+				scrollContentHandle.current.scrollToPosition(targetX, targetY, 'smooth', mutableRef.current.lastInputType);
 			} else {
 				scrollContentHandle.current.scrollToPosition(targetX, targetY, 'instant');
 			}
@@ -1459,6 +1468,7 @@ const useScrollBase = (props) => {
 		// scrollMode 'native' [[
 		if (scrollMode === 'native' && scrollContentRef.current) {
 			utilEvent('scroll').addEventListener(scrollContentRef, onScroll, {passive: true});
+			utilEvent('keyup').addEventListener(scrollContainerRef, onKeyUp);
 		}
 		// scrollMode 'native' ]]
 
@@ -1479,6 +1489,7 @@ const useScrollBase = (props) => {
 
 		// scrollMode 'native' [[
 		utilEvent('scroll').removeEventListener(scrollContentRef, onScroll, {passive: true});
+		utilEvent('keyup').removeEventListener(scrollContainerRef, onKeyUp);
 		// scrollMode 'native' ]]
 
 		if (props.removeEventListeners) {

@@ -1,5 +1,6 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {platform} from '@enact/core/platform';
+import {perfNow} from '@enact/core/util';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {Component} from 'react';
@@ -79,6 +80,15 @@ class ScrollerBasic extends Component {
 		}
 	}
 
+	scrollAnimation = {
+		id: null,
+		timeoutId: null,
+		timeoutDelay: 600,
+		isAnimating: false,
+		distance: 20,
+		startTime: null
+	};
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
@@ -117,8 +127,54 @@ class ScrollerBasic extends Component {
 	}
 
 	// scrollMode 'native'
-	scrollToPosition (left, top, behavior) {
-		this.props.scrollContentRef.current.scrollTo({left: this.getRtlPositionX(left), top, behavior});
+	scrollToPosition (left, top, behavior, type) {
+		const node = this.props.scrollContentRef.current;
+		const scrollByKeys = type === 'arrowKey' || type === 'pageKey';
+		const smoothBehavior = behavior === 'smooth';
+
+		if (platform.chrome && smoothBehavior && scrollByKeys) {
+			this.animateScroll(this.getRtlPositionX(left), top, node);
+			this.stopAnimatedScrollLoop(this.scrollAnimation.timeoutDelay);
+		} else {
+			node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
+		}
+	}
+
+	// scrollMode 'native'
+	animateScroll (left, top, node) {
+		const deltaX = left - this.scrollPos.left;
+		const deltaY = top - this.scrollPos.top;
+
+		const animateScroll = () => {
+			const duration = (perfNow() - this.scrollAnimation.startTime) / 1000;
+			const multiplier = (duration > 1 || duration <= 3) ? duration : 1;
+
+			const dx = Math.sign(deltaX) * (this.scrollAnimation.distance * multiplier);
+			const dy = Math.sign(deltaY) * (this.scrollAnimation.distance * multiplier);
+
+			node.scrollBy({top: dy, left: dx, behavior: 'instant'});
+			this.scrollAnimation.id = window.requestAnimationFrame(animateScroll);
+		};
+
+		if (!this.scrollAnimation.isAnimating) {
+			this.scrollAnimation.isAnimating = true;
+			this.scrollAnimation.startTime = perfNow();
+			this.scrollAnimation.id = window.requestAnimationFrame(animateScroll);
+		} else {
+			this.stopAnimatedScrollLoop(this.scrollAnimation.timeoutDelay / 2);
+		}
+	}
+
+	stopAnimatedScroll () {
+		this.scrollAnimation.isAnimating = false;
+		window.cancelAnimationFrame(this.scrollAnimation.id);
+	}
+
+	stopAnimatedScrollLoop (timeout) {
+		clearTimeout(this.scrollAnimation.timeoutId);
+		this.scrollAnimation.timeoutId = setTimeout(() => {
+			this.stopAnimatedScroll();
+		}, timeout);
 	}
 
 	// scrollMode 'native'
