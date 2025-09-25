@@ -82,6 +82,8 @@ class ScrollerBasic extends Component {
 
 	scrollAnimation = {
 		id: null,
+		timeoutId: null,
+		timeoutDelay: 600,
 		isAnimating: false,
 		distance: 20,
 		startTime: null
@@ -132,6 +134,7 @@ class ScrollerBasic extends Component {
 
 		if (platform.chrome && smoothBehavior && scrollByKeys) {
 			this.animateScroll(this.getRtlPositionX(left), top, node);
+			this.stopAnimatedScrollLoop(this.scrollAnimation.timeoutDelay);
 		} else {
 			node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
 		}
@@ -143,7 +146,6 @@ class ScrollerBasic extends Component {
 		const deltaY = top - this.scrollPos.top;
 
 		const animateScroll = () => {
-			this.scrollAnimation.isAnimating = true;
 			const duration = (perfNow() - this.scrollAnimation.startTime) / 1000;
 			const multiplier = (duration > 1 || duration <= 3) ? duration : 1;
 
@@ -155,14 +157,24 @@ class ScrollerBasic extends Component {
 		};
 
 		if (!this.scrollAnimation.isAnimating) {
+			this.scrollAnimation.isAnimating = true;
 			this.scrollAnimation.startTime = perfNow();
 			this.scrollAnimation.id = window.requestAnimationFrame(animateScroll);
+		} else {
+			this.stopAnimatedScrollLoop(this.scrollAnimation.timeoutDelay / 2);
 		}
 	}
 
 	stopAnimatedScroll () {
 		this.scrollAnimation.isAnimating = false;
 		window.cancelAnimationFrame(this.scrollAnimation.id);
+	}
+
+	stopAnimatedScrollLoop (timeout) {
+		clearTimeout(this.scrollAnimation.timeoutId);
+		this.scrollAnimation.timeoutId = setTimeout(() => {
+			this.stopAnimatedScroll();
+		}, timeout);
 	}
 
 	// scrollMode 'native'

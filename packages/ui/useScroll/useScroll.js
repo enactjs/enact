@@ -1489,7 +1489,7 @@ const useScrollBase = (props) => {
 
 		// scrollMode 'native' [[
 		utilEvent('scroll').removeEventListener(scrollContentRef, onScroll, {passive: true});
-		utilEvent('keyup').addEventListener(scrollContainerRef, onKeyUp);
+		utilEvent('keyup').removeEventListener(scrollContainerRef, onKeyUp);
 		// scrollMode 'native' ]]
 
 		if (props.removeEventListeners) {
