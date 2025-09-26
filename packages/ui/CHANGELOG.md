@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+- `ui/Scroller` to calculate correctly targetX and targetY when scrolling to a position
+
 ## [4.9.8] - 2025-04-24
 
 No significant changes.
