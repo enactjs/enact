@@ -1148,9 +1148,9 @@ const useScrollBase = (props) => {
 			const roundedTargetY = scrollContentHandle.current.scrollPos.top < targetY ? Math.ceil(targetY) : Math.floor(targetY);
 
 			if (animate) {
-				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth');
+				platform.chrome <= 120 ? scrollContentHandle.current.scrollToPosition(targetX, targetY, 'smooth') : scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth');
 			} else {
-				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
+				platform.chrome <= 120 ? scrollContentHandle.current.scrollToPosition(targetX, targetY, 'instant') : scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
 			}
 
 			if (props.start) {
