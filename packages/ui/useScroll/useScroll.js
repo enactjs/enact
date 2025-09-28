@@ -1153,7 +1153,7 @@ const useScrollBase = (props) => {
 			if (animate) {
 				platform.chrome <= 120 ? scrollContentHandle.current.scrollToPosition(targetX, targetY, 'smooth') : scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth');
 			} else {
-				scrollContentHandle.current.scrollToPosition(targetX, targetY, 'instant');
+				platform.chrome <= 120 ? scrollContentHandle.current.scrollToPosition(targetX, targetY, 'instant') : scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
 			}
 
 			if (props.start) {
