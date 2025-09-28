@@ -1146,7 +1146,7 @@ const useScrollBase = (props) => {
 		} else { // scrollMode 'native'
 			let roundedTargetX, roundedTargetY;
 
-			if (scrollContentHandle.current.scrollPos) {
+			if (scrollContentHandle.current?.scrollPos) {
 				roundedTargetX = scrollContentHandle.current?.scrollPos?.left < targetX ? Math.ceil(targetX) : Math.floor(targetX);
 				roundedTargetY = scrollContentHandle.current?.scrollPos?.top < targetY ? Math.ceil(targetY) : Math.floor(targetY);
 			} else {
