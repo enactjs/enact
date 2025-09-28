@@ -1147,8 +1147,15 @@ const useScrollBase = (props) => {
 				stop();
 			}
 		} else { // scrollMode 'native'
-			const roundedTargetX = scrollContentHandle.current.scrollPos.left < targetX ? Math.ceil(targetX) : Math.floor(targetX);
-			const roundedTargetY = scrollContentHandle.current.scrollPos.top < targetY ? Math.ceil(targetY) : Math.floor(targetY);
+			let roundedTargetX, roundedTargetY;
+
+			if (scrollContentHandle.current?.scrollPos) {
+				roundedTargetX = scrollContentHandle.current?.scrollPos?.left < targetX ? Math.ceil(targetX) : Math.floor(targetX);
+				roundedTargetY = scrollContentHandle.current?.scrollPos?.top < targetY ? Math.ceil(targetY) : Math.floor(targetY);
+			} else {
+				roundedTargetX = targetX;
+				roundedTargetY = targetY;
+			}
 
 			if (animate) {
 				platform.chrome <= 120 ? scrollContentHandle.current.scrollToPosition(targetX, targetY, 'smooth') : scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth');
