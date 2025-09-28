@@ -1149,7 +1149,7 @@ const useScrollBase = (props) => {
 		} else { // scrollMode 'native'
 			let roundedTargetX, roundedTargetY;
 
-			if (scrollContentHandle.current?.scrollPos) {
+			if (scrollContentHandle.current?.scrollPos && platform.chrome > 120) {
 				roundedTargetX = scrollContentHandle.current?.scrollPos?.left < targetX ? Math.ceil(targetX) : Math.floor(targetX);
 				roundedTargetY = scrollContentHandle.current?.scrollPos?.top < targetY ? Math.ceil(targetY) : Math.floor(targetY);
 			} else {
@@ -1158,9 +1158,9 @@ const useScrollBase = (props) => {
 			}
 
 			if (animate) {
-				platform.chrome <= 120 ? scrollContentHandle.current.scrollToPosition(targetX, targetY, 'smooth') : scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth');
+				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth');
 			} else {
-				platform.chrome <= 120 ? scrollContentHandle.current.scrollToPosition(targetX, targetY, 'instant') : scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
+				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
 			}
 
 			if (props.start) {
