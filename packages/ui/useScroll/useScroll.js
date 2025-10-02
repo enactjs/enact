@@ -69,6 +69,20 @@ const TouchableDiv = Touchable(({ref, ...rest}) => (<div {...rest} ref={ref} />)
 
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
 
+function roundTarget (currentPosition, targetX, targetY) {
+	let roundedTargetX, roundedTargetY;
+
+	if (currentPosition?.scrollPos && platform.chrome > 120) {
+		roundedTargetX = currentPosition?.scrollPos?.left < targetX ? Math.ceil(targetX) : Math.floor(targetX);
+		roundedTargetY = currentPosition?.scrollPos?.top < targetY ? Math.ceil(targetY) : Math.floor(targetY);
+	} else {
+		roundedTargetX = targetX;
+		roundedTargetY = targetY;
+	}
+
+	return {roundedTargetX, roundedTargetY};
+}
+
 /**
  * A custom hook that passes scrollable behavior information as its render prop.
  *
@@ -1144,15 +1158,7 @@ const useScrollBase = (props) => {
 				stop();
 			}
 		} else { // scrollMode 'native'
-			let roundedTargetX, roundedTargetY;
-
-			if (scrollContentHandle.current?.scrollPos && platform.chrome > 120) {
-				roundedTargetX = scrollContentHandle.current?.scrollPos?.left < targetX ? Math.ceil(targetX) : Math.floor(targetX);
-				roundedTargetY = scrollContentHandle.current?.scrollPos?.top < targetY ? Math.ceil(targetY) : Math.floor(targetY);
-			} else {
-				roundedTargetX = targetX;
-				roundedTargetY = targetY;
-			}
+			let {roundedTargetX, roundedTargetY} = roundTarget(scrollContentHandle.current, targetX, targetY);
 
 			if (animate) {
 				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth');
@@ -1685,6 +1691,7 @@ export default useScroll;
 export {
 	assignPropertiesOf,
 	constants,
+	roundTarget,
 	useScroll,
 	useScrollBase
 };
