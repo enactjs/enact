@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `spotlight` to not prioritize elements which are invisible due to overflow as next spottable elements
 - `spotlight` to preserve the last focused element on component unmount
+- `ui/Scroller` to calculate correctly targetX and targetY when scrolling to a position
 
 ## [4.9.8] - 2025-04-24
 

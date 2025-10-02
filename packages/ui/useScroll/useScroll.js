@@ -1147,10 +1147,20 @@ const useScrollBase = (props) => {
 				stop();
 			}
 		} else { // scrollMode 'native'
-			if (animate) {
-				scrollContentHandle.current.scrollToPosition(targetX, targetY, 'smooth');
+			let roundedTargetX, roundedTargetY;
+
+			if (scrollContentHandle.current?.scrollPos && platform.chrome > 120) {
+				roundedTargetX = scrollContentHandle.current?.scrollPos?.left < targetX ? Math.ceil(targetX) : Math.floor(targetX);
+				roundedTargetY = scrollContentHandle.current?.scrollPos?.top < targetY ? Math.ceil(targetY) : Math.floor(targetY);
 			} else {
-				scrollContentHandle.current.scrollToPosition(targetX, targetY, 'instant');
+				roundedTargetX = targetX;
+				roundedTargetY = targetY;
+			}
+
+			if (animate) {
+				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth');
+			} else {
+				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
 			}
 
 			if (props.start) {
