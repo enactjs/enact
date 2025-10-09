@@ -352,7 +352,7 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 
 			// and it is restricted, return its target
 			if (isRestrictedContainer(nextContainerId)) {
-				next = getTargetByContainer(nextContainerId);
+				return getTargetByContainer(nextContainerId);
 			} else {
 				// otherwise, recurse into it
 				next = getTargetInContainerByDirectionFromElement(
