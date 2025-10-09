@@ -222,10 +222,13 @@ const MarqueeBase = kind({
 			if (animating) {
 				const duration = distance / speed;
 
-				style.transform = `translateX(${distance * rtlDirectionMultiplier}px)`;
+				style.transform = `translate3d(${distance * rtlDirectionMultiplier}px, 0 , 0)`;
 				style.transitionDuration = `${duration}s`;
+				style.willChange= 'transform'; /* optional: helps the browser prepare the layer */
+				style.backfaceVisibility= 'hidden'; /* small rendering hint */
+				style.contain = 'layout style';
 			} else {
-				style.transform = 'translateX(0)';
+				style.transform = 'translate3d(0, 0, 0)';
 			}
 
 			return style;

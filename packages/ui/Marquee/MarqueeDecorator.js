@@ -914,6 +914,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.remeasure;
 			delete rest.rtl;
 
+			const style = {
+				...rest.style,
+				transform: rest.style?.transform || 'translateZ(0)', // ensure layer promotion
+				willChange: 'transform'
+			};
+
 			return (
 				<Wrapped {...rest} onBlur={this.handleBlur} disabled={disabled}>
 					<MarqueeComponent
@@ -928,6 +934,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						rtl={this.state.rtl}
 						speed={marqueeSpeed}
 						willAnimate={this.state.promoted}
+						style={style}
 					>
 						{children}
 					</MarqueeComponent>
