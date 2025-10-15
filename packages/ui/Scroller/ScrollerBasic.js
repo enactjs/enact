@@ -79,8 +79,6 @@ class ScrollerBasic extends Component {
 		}
 	}
 
-	scrollAnimationId = null;
-
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
@@ -142,11 +140,11 @@ class ScrollerBasic extends Component {
 			node.scrollBy({top: directionY * 10, left: directionX * 10, behavior: 'instant'});
 
 			if (scrollTop || scrollLeft) {
-				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+				window.requestAnimationFrame(animateScroll);
 			}
 		};
 
-		this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+		window.requestAnimationFrame(animateScroll);
 	}
 
 	// scrollMode 'native'
