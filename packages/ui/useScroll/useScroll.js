@@ -69,6 +69,20 @@ const TouchableDiv = Touchable(({ref, ...rest}) => (<div {...rest} ref={ref} />)
 
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
 
+function roundTarget (currentPosition, targetX, targetY) {
+	let roundedTargetX, roundedTargetY;
+
+	if (currentPosition?.scrollPos && platform.chrome > 120) {
+		roundedTargetX = currentPosition?.scrollPos?.left < targetX ? Math.ceil(targetX) : Math.floor(targetX);
+		roundedTargetY = currentPosition?.scrollPos?.top < targetY ? Math.ceil(targetY) : Math.floor(targetY);
+	} else {
+		roundedTargetX = targetX;
+		roundedTargetY = targetY;
+	}
+
+	return {roundedTargetX, roundedTargetY};
+}
+
 /**
  * A custom hook that passes scrollable behavior information as its render prop.
  *
@@ -817,13 +831,6 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	function onKeyUp (ev) {
-		if (scrollContentHandle.current?.stopAnimatedScroll && scrollMode === 'native') {
-			scrollContentHandle.current?.stopAnimatedScroll();
-		}
-		forward('onKeyUp', ev, props);
-	}
-
 	function scrollToAccumulatedTarget (delta, vertical, overscrollEffect) {
 		if (!mutableRef.current.isScrollAnimationTargetAccumulated) {
 			mutableRef.current.accumulatedTargetX = mutableRef.current.scrollLeft;
@@ -1153,10 +1160,12 @@ const useScrollBase = (props) => {
 				stop();
 			}
 		} else { // scrollMode 'native'
+			let {roundedTargetX, roundedTargetY} = roundTarget(scrollContentHandle.current, targetX, targetY);
+
 			if (animate) {
-				scrollContentHandle.current.scrollToPosition(targetX, targetY, 'smooth', mutableRef.current.lastInputType);
+				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth');
 			} else {
-				scrollContentHandle.current.scrollToPosition(targetX, targetY, 'instant');
+				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
 			}
 
 			if (props.start) {
@@ -1468,7 +1477,6 @@ const useScrollBase = (props) => {
 		// scrollMode 'native' [[
 		if (scrollMode === 'native' && scrollContentRef.current) {
 			utilEvent('scroll').addEventListener(scrollContentRef, onScroll, {passive: true});
-			utilEvent('keyup').addEventListener(scrollContainerRef, onKeyUp);
 		}
 		// scrollMode 'native' ]]
 
@@ -1489,7 +1497,6 @@ const useScrollBase = (props) => {
 
 		// scrollMode 'native' [[
 		utilEvent('scroll').removeEventListener(scrollContentRef, onScroll, {passive: true});
-		utilEvent('keyup').removeEventListener(scrollContainerRef, onKeyUp);
 		// scrollMode 'native' ]]
 
 		if (props.removeEventListeners) {
@@ -1686,6 +1693,7 @@ export default useScroll;
 export {
 	assignPropertiesOf,
 	constants,
+	roundTarget,
 	useScroll,
 	useScrollBase
 };

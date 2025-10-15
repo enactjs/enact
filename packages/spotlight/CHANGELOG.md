@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [5.3.1] - 2025-10-14
+
+### Fixed
+
+- `spotlight` navigation from an element to a different container
+
 ## [5.3.0] - 2025-09-24
 
 ### Fixed

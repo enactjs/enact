@@ -1,6 +1,5 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {platform} from '@enact/core/platform';
-import {perfNow} from '@enact/core/util';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {Component} from 'react';
@@ -80,14 +79,7 @@ class ScrollerBasic extends Component {
 		}
 	}
 
-	scrollAnimation = {
-		id: null,
-		timeoutId: null,
-		timeoutDelay: 600,
-		isAnimating: false,
-		distance: 20,
-		startTime: null
-	};
+	scrollAnimationId = null;
 
 	scrollBounds = {
 		clientWidth: 0,
@@ -127,14 +119,12 @@ class ScrollerBasic extends Component {
 	}
 
 	// scrollMode 'native'
-	scrollToPosition (left, top, behavior, type) {
+	scrollToPosition (left, top, behavior) {
 		const node = this.props.scrollContentRef.current;
-		const scrollByKeys = type === 'arrowKey' || type === 'pageKey';
 		const smoothBehavior = behavior === 'smooth';
 
-		if (platform.chrome && smoothBehavior && scrollByKeys) {
+		if (platform.chrome && smoothBehavior) {
 			this.animateScroll(this.getRtlPositionX(left), top, node);
-			this.stopAnimatedScrollLoop(this.scrollAnimation.timeoutDelay);
 		} else {
 			node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
 		}
@@ -142,39 +132,21 @@ class ScrollerBasic extends Component {
 
 	// scrollMode 'native'
 	animateScroll (left, top, node) {
-		const deltaX = left - this.scrollPos.left;
-		const deltaY = top - this.scrollPos.top;
+		const directionX = Math.sign(left - node.scrollLeft);
+		const directionY = Math.sign(top - node.scrollTop);
 
 		const animateScroll = () => {
-			const duration = (perfNow() - this.scrollAnimation.startTime) / 1000;
-			const multiplier = (duration > 1 || duration <= 3) ? duration : 1;
+			const scrollLeft = directionX > 0 ? node.scrollLeft < left : node.scrollLeft > left;
+			const scrollTop = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
 
-			const dx = Math.sign(deltaX) * (this.scrollAnimation.distance * multiplier);
-			const dy = Math.sign(deltaY) * (this.scrollAnimation.distance * multiplier);
+			node.scrollBy({top: directionY * 10, left: directionX * 10, behavior: 'instant'});
 
-			node.scrollBy({top: dy, left: dx, behavior: 'instant'});
-			this.scrollAnimation.id = window.requestAnimationFrame(animateScroll);
+			if (scrollTop || scrollLeft) {
+				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+			}
 		};
 
-		if (!this.scrollAnimation.isAnimating) {
-			this.scrollAnimation.isAnimating = true;
-			this.scrollAnimation.startTime = perfNow();
-			this.scrollAnimation.id = window.requestAnimationFrame(animateScroll);
-		} else {
-			this.stopAnimatedScrollLoop(this.scrollAnimation.timeoutDelay / 2);
-		}
-	}
-
-	stopAnimatedScroll () {
-		this.scrollAnimation.isAnimating = false;
-		window.cancelAnimationFrame(this.scrollAnimation.id);
-	}
-
-	stopAnimatedScrollLoop (timeout) {
-		clearTimeout(this.scrollAnimation.timeoutId);
-		this.scrollAnimation.timeoutId = setTimeout(() => {
-			this.stopAnimatedScroll();
-		}, timeout);
+		this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 	}
 
 	// scrollMode 'native'
