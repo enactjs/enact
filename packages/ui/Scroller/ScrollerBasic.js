@@ -140,11 +140,12 @@ class ScrollerBasic extends Component {
 			const scrollTop = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
 
 			// Check if we reached the scroll bounds and cancel the animation
-			if (top > this.scrollBounds.maxTop && node.scrollTop === this.scrollBounds.maxTop ||
+			if (
+				top > this.scrollBounds.maxTop && node.scrollTop === this.scrollBounds.maxTop ||
 				left > this.scrollBounds.maxLeft && node.scrollLeft === this.scrollBounds.maxLeft ||
 				top < 0 && node.scrollTop === 0 ||
-				left < 0 && node.scrollLeft === 0)
-			{
+				left < 0 && node.scrollLeft === 0
+			) {
 				window.cancelAnimationFrame(this.scrollAnimationId);
 				return;
 			}
