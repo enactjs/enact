@@ -825,9 +825,8 @@ const useScrollBase = (props) => {
 			}
 		} else {
 			props.preventScroll?.(ev);
-			if (!ev.repeat) {
-				forward('onKeyDown', ev, props);
-			}
+			if (ev.repeat && mutableRef.current.lastInputType === 'arrowKey') return;
+			forward('onKeyDown', ev, props);
 		}
 	}
 
