@@ -27,7 +27,7 @@ describe('ScrollBasic', () => {
 		() => {
 			const instance = new ScrollerBasic({scrollContentRef, direction: 'both'});
 
-			instance.scrollToPosition(100, 200, 'smooth', 'arrowKey');
+			instance.scrollToPosition(100, 200, 'smooth');
 			expect(scrollContentRef.current.scrollTo).toHaveBeenCalledWith({left: 100, top: 200, behavior: 'smooth'});
 
 			instance.scrollToPosition(100, 200, 'instant');
@@ -40,6 +40,8 @@ describe('ScrollBasic', () => {
 		() => {
 			let rafCallback;
 			const instance = new ScrollerBasic({scrollContentRef, direction: 'both'});
+			instance.scrollBounds.maxTop = 500;
+			instance.scrollBounds.maxLeft = 500;
 
 			window.requestAnimationFrame = jest.fn((cb) => {
 				rafCallback = cb;
@@ -50,7 +52,9 @@ describe('ScrollBasic', () => {
 			rafCallback();
 			expect(scrollContentRef.current.scrollBy).toHaveBeenCalled();
 
-			instance.stopAnimatedScroll();
+			scrollContentRef.current.scrollTop = 500;
+			instance.animateScroll(550, 550, scrollContentRef.current);
+			rafCallback();
 			expect(window.cancelAnimationFrame).toHaveBeenCalled();
 		}
 	);
