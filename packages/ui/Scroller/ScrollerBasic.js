@@ -79,6 +79,8 @@ class ScrollerBasic extends Component {
 		}
 	}
 
+	scrollAnimationId = null;
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
@@ -137,14 +139,22 @@ class ScrollerBasic extends Component {
 			const scrollLeft = directionX > 0 ? node.scrollLeft < left : node.scrollLeft > left;
 			const scrollTop = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
 
-			node.scrollBy({top: directionY * 10, left: directionX * 10, behavior: 'instant'});
+			if (top > this.scrollBounds.maxTop && node.scrollTop === this.scrollBounds.maxTop ||
+				left > this.scrollBounds.maxLeft && node.scrollLeft === this.scrollBounds.maxLeft ||
+				top < 0 && node.scrollTop === 0 ||
+				left < 0 && node.scrollLeft === 0)
+			{
+				window.cancelAnimationFrame(this.scrollAnimationId);
+				return;
+			}
 
 			if (scrollTop || scrollLeft) {
-				window.requestAnimationFrame(animateScroll);
+				node.scrollBy({top: directionY * 10, left: directionX * 10, behavior: 'instant'});
+				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 			}
 		};
 
-		window.requestAnimationFrame(animateScroll);
+		this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 	}
 
 	// scrollMode 'native'
