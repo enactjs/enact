@@ -119,11 +119,11 @@ class ScrollerBasic extends Component {
 	}
 
 	// scrollMode 'native'
-	scrollToPosition (left, top, behavior) {
+	scrollToPosition (left, top, behavior, repeat) {
 		const node = this.props.scrollContentRef.current;
 		const smoothBehavior = behavior === 'smooth';
 
-		if (platform.chrome && smoothBehavior) {
+		if (platform.chrome && smoothBehavior && repeat) {
 			this.animateScroll(this.getRtlPositionX(left), top, node);
 		} else {
 			node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
@@ -151,7 +151,7 @@ class ScrollerBasic extends Component {
 			}
 
 			if (scrollTop || scrollLeft) {
-				node.scrollBy({top: directionY * 10, left: directionX * 10, behavior: 'instant'});
+				node.scrollBy({top: directionY * 18, left: directionX * 18, behavior: 'instant'});
 				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 			}
 		};

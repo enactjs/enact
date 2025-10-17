@@ -825,6 +825,7 @@ const useScrollBase = (props) => {
 			}
 		} else {
 			props.preventScroll?.(ev);
+			mutableRef.current.repeat = ev.repeat;
 			if (ev.repeat && mutableRef.current.lastInputType === 'arrowKey') return;
 			forward('onKeyDown', ev, props);
 		}
@@ -1162,7 +1163,7 @@ const useScrollBase = (props) => {
 			let {roundedTargetX, roundedTargetY} = roundTarget(scrollContentHandle.current, targetX, targetY);
 
 			if (animate) {
-				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth');
+				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth', mutableRef.current.repeat);
 			} else {
 				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
 			}
