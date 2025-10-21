@@ -130,7 +130,12 @@ class ScrollerBasic extends Component {
 		}
 	}
 
-	// scrollMode 'native'
+	/**
+	 * Programmatically animates the native scroll position of `node` toward the target `left`/`top`
+	 * offsets using `requestAnimationFrame`. It computes the scroll direction on each axis, then repeatedly
+	 * calls `scrollBy` in small 18px steps (instant behavior) until the target is reached or a scroll bound
+	 * is hit. Used as a Chrome fallback when repeating a smooth scroll.
+	 */
 	animateScroll (left, top, node) {
 		const directionX = Math.sign(left - node.scrollLeft);
 		const directionY = Math.sign(top - node.scrollTop);
