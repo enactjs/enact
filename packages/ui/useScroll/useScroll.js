@@ -69,6 +69,16 @@ const TouchableDiv = Touchable(({ref, ...rest}) => (<div {...rest} ref={ref} />)
 
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
 
+/*
+ * Rounds the target positions based on scroll direction, if Chrome version is > 120
+ * Chrome 121+ introduced a new way to calculate target pixel position, based on the subunit value of target position
+ *
+ * @function
+ *
+ * @returns {Object}
+ * @memberof ui/useScroll
+ * @private
+ */
 function roundTarget (currentPosition, targetX, targetY) {
 	let roundedTargetX, roundedTargetY;
 
