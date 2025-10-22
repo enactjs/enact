@@ -74,6 +74,9 @@ const useForceUpdate = () => (useReducer(x => x + 1, 0));
  * Chrome 121+ introduced a new way to calculate target pixel position, based on the subunit value of target position
  *
  * @function
+ * @param {Object} currentPosition		current scroll position
+ * @param {Number} targetX				target X axis position
+ * @param {Number} targetY				target Y axis position
  *
  * @returns {Object}
  * @memberof ui/useScroll
