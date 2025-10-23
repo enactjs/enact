@@ -567,7 +567,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const {width, scrollWidth} = this.measureWidths();
 
 				this.spacing = this.getSpacing(width);
-				this.distance = this.calculateDistance(width, scrollWidth, this.spacing);
+				this.distance = this.calculateDistance(width, Math.round(scrollWidth), this.spacing);
 				this.contentFits = !this.shouldAnimate(this.distance);
 
 				const overflow = this.calculateTextOverflow(this.distance);
@@ -643,6 +643,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		start = (delay = this.props.marqueeDelay) => {
+			console.log("start");
 			if (this.props.marqueeDisabled) {
 				// if marquee isn't necessary, do not set `animating` but return `true` to mark it
 				// complete if it's synchronized so it doesn't block other instances.
@@ -713,6 +714,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		startAnimation = (delay) => {
 			this.promote(delay);
+			console.log("start animation")
 			if (this.sync) {
 				// If we're running a timer for anything, we should let that finish, unless it's
 				// another syncstart request.  We should probably check to see if the start request

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {Children, Fragment} from 'react';
 
 import componentCss from './Marquee.module.less';
+import {useMarqueeAnimation} from './useMarqueeAnimation';
 
 const isEventSource = (ev) => ev.target === ev.currentTarget;
 
@@ -160,6 +161,8 @@ const MarqueeBase = kind({
 		willAnimate: false
 	},
 
+	functional: true,
+
 	styles: {
 		css: componentCss,
 		className: 'marquee',
@@ -207,38 +210,24 @@ const MarqueeBase = kind({
 			text: true,
 			willAnimate
 		}),
-		clientStyle: ({alignment, animating, distance, overflow, rtl, spacing, speed}) => {
-			// If the components content directionality doesn't match the context, we need to set it
-			// inline
+		clientStyle: ({alignment, animating, overflow, rtl, spacing}) => {
 			const direction = rtl ? 'rtl' : 'ltr';
 			const rtlDirectionMultiplier = rtl ? 1 : -1;
-			const style = {
+			return {
 				'--ui-marquee-spacing': spacing,
 				direction,
 				textAlign: alignment,
-				textOverflow: overflow
+				textOverflow: overflow,
+				willChange: animating ? 'transform' : undefined,
+				transition: 'none'
 			};
-
-			if (animating) {
-				const duration = distance / speed;
-
-				style.transform = `translate3d(${distance * rtlDirectionMultiplier}px, 0 , 0)`;
-				style.transitionDuration = `${duration}s`;
-				style.willChange= 'transform'; /* optional: helps the browser prepare the layer */
-				style.backfaceVisibility= 'hidden'; /* small rendering hint */
-				style.contain = 'layout style';
-			} else {
-				style.transform = 'translate3d(0, 0, 0)';
-			}
-
-			return style;
 		},
 		duplicate: ({distance, willAnimate}) => {
 			return willAnimate && distance > 0;
 		}
 	},
 
-	render: ({applyOffset, children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, rtl, ...rest}) => {
+	render: ({animating, distance, speed, applyOffset, children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, rtl, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;
@@ -248,24 +237,30 @@ const MarqueeBase = kind({
 		delete rest.speed;
 		delete rest.willAnimate;
 
+		const marqueeRef = useMarqueeAnimation({animating, distance, speed, rtl});
+console.log("1")
 		return (
-			<div {...rest}>
-				<div
-					className={clientClassName}
-					ref={clientRef}
-					style={clientStyle}
-					onTransitionEnd={onMarqueeComplete}
-				>
-					{children}
-					{duplicate ? (
-						<Fragment>
-							<div className={css.spacing} ref={applyOffset} />
-							<span dir={rtl ? "rtl" : "ltr"}>
+			<div {...rest} >
+				<div ref={marqueeRef}>
+					<div
+						className={clientClassName}
+						ref={clientRef}
+						style={clientStyle}
+						onTransitionEnd={onMarqueeComplete}
+
+					>
+						{children}
+						{duplicate ? (
+							<Fragment>
+								<div className={css.spacing} ref={applyOffset} />
+								<span dir={rtl ? "rtl" : "ltr"}>
 								{children}
 							</span>
-						</Fragment>
-					) : null}
+							</Fragment>
+						) : null}
+					</div>
 				</div>
+
 			</div>
 		);
 	}
