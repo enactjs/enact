@@ -1002,10 +1002,11 @@ describe('target', () => {
 					getTargetByDirectionFromPosition('down', {x, y}, rootContainerId),
 					t => t.id
 				);
-				const actualFromElement = safeTarget(
-					getTargetByDirectionFromElement('down', outside),
-					t => t.id
-				);
+				// TODO: recheck
+				// const actualFromElement = safeTarget(
+				// 	getTargetByDirectionFromElement('down', outside),
+				// 	t => t.id
+				// );
 
 				expect(actualFromPosition).toBe(expected);
 				// TODO: recheck
