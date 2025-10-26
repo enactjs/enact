@@ -814,7 +814,7 @@ function getContainerFocusTarget (containerId, preferredEnterTo) {
 			return result;
 		} else if (isContainer(element)) {
 			const nextId = isContainerNode(element) ? getContainerId(element) : element;
-			return getContainerFocusTarget(nextId);
+			if (nextId !== containerId) return getContainerFocusTarget(nextId);
 		}
 
 		return element;
