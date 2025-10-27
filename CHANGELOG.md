@@ -4,6 +4,9 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [unreleased]
 
+### Changed
+
+- `ui/Scroller` scroll animation method for `scrollMode: native`
 ### Fixed
 
 - `spotlight` navigation from an element to a different container on page load.

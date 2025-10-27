@@ -2,6 +2,11 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/Scroller` scroll animation method for `scrollMode: native`
 ## [5.3.1] - 2025-10-14
 
 ### Fixed
