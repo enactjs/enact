@@ -156,7 +156,7 @@ class ScrollerBasic extends Component {
 			}
 
 			if (scrollTop || scrollLeft) {
-				node.scrollBy({top: directionY * 18, left: directionX * 18, behavior: 'instant'});
+				node.scrollBy({top: directionY * 8, left: directionX * 8, behavior: 'instant'});
 				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 			}
 		};
