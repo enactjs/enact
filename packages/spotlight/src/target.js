@@ -352,7 +352,7 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 
 			// and it is restricted, return its target
 			if (isRestrictedContainer(nextContainerId)) {
-				return getTargetByContainer(nextContainerId);
+				next = getTargetByContainer(nextContainerId);
 			} else {
 				// otherwise, recurse into it
 				next = getTargetInContainerByDirectionFromElement(
@@ -374,22 +374,8 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 		const nextCandidateContainerId = getContainersForNode(next).pop();
 		// check if we want to navigate to another container
 		if (next && containerId !== nextCandidateContainerId) {
-			// verify is the element from another container is visible
-			if (isElementVisibleInContainer(next, nextCandidateContainerId)) {
-				return next;
-			} else {
-				// otherwise, try to navigate to an element that is visible in its container
-				next = navigate(
-					elementRect,
-					direction,
-					elementRects.filter((rect) => {
-						const elementContainerId = getContainersForNode(rect.element).pop();
-						return isElementVisibleInContainer(rect.element, elementContainerId);
-					}),
-					getContainerConfig(containerId),
-					partitionRect
-				);
-			}
+			// TODO: to be revisited
+			return next;
 		}
 
 		// If we've met every condition and haven't explicitly retried the search via `continue`,
