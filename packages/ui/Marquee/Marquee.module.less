@@ -17,6 +17,9 @@
 	white-space: pre !important;
 	overflow: hidden;
 	text-align: left;
+	/* Force hardware compositing on the container */
+	transform: translateZ(0);
+
 
 	.text {
 		pointer-events: none;
@@ -25,9 +28,21 @@
 		width: 100%;
 		margin: 0;
 		white-space: pre !important;
-		transition-property: transform;
-		transition-timing-function: linear;
-		position: relative;
+		display: inline-block;
+		white-space: nowrap;
+		vertical-align: top;
+
+		/* Critical: Force GPU acceleration and create own compositing layer */
+		transform: translate3d(0, 0, 0);
+		backface-visibility: hidden;
+		perspective: 1000px;
+
+		/* Optimize text rendering */
+		-webkit-font-smoothing: subpixel-antialiased;
+		-moz-osx-font-smoothing: auto;
+
+		/* Prevent any layout recalculations */
+		contain: layout style paint;
 
 		& * {
 			margin: 0;
@@ -36,15 +51,35 @@
 		&.willAnimate {
 			will-change: opacity;
 			overflow: visible;
+			/* Prepare for animation */
+			will-change: transform;
+			/* Ensure it's on its own layer before animation starts */
+			transform: translate3d(0, 0, 0);
 		}
 
 		&.animate {
-			/* Public Class Name */
+			/* Use CSS custom properties for dynamic values */
+			transform: translate3d(var(--ui-marquee-distance, 0), 0, 0);
+
+			/* Linear timing with explicit duration */
+			transition-property: transform;
+			transition-duration: var(--ui-marquee-duration, 3000ms);
+			transition-timing-function: linear;
+
+			/* Keep on GPU */
+			will-change: transform;
+
+			/* Additional performance hints */
+			backface-visibility: hidden;
 		}
 
 		.spacing {
 			display: inline-block;
 			width: calc(1px * (var(--ui-marquee-spacing, 0) + var(--ui-marquee-offset, 0)));
+			vertical-align: top;
+			flex-shrink: 0;
+			/* Prevent layout shifts */
+			contain: size layout style;
 		}
 	}
 

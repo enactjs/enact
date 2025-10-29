@@ -207,7 +207,7 @@ const MarqueeBase = kind({
 			text: true,
 			willAnimate
 		}),
-		clientStyle: ({alignment, animating, distance, overflow, rtl, spacing, speed}) => {
+		clientStyle: ({alignment, animating, distance, overflow, rtl, spacing, speed, willAnimate}) => {
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
 			const direction = rtl ? 'rtl' : 'ltr';
@@ -220,12 +220,19 @@ const MarqueeBase = kind({
 			};
 
 			if (animating) {
-				const duration = distance / speed;
-
-				style.transform = `translateX(${distance * rtlDirectionMultiplier}px)`;
-				style.transitionDuration = `${duration}s`;
+				style['--ui-marquee-distance']= `${Math.round(distance) * rtlDirectionMultiplier}px`;
+				style['--ui-marquee-duration'] =  `${Math.round((distance / speed) * 1000)}ms`;
 			} else {
-				style.transform = 'translateX(0)';
+				style['--ui-marquee-distance']= 0;
+				style['--ui-marquee-duration'] =  0;
+			}
+
+			// Key optimization: Let CSS handle everything with custom properties
+			if (willAnimate || animating) {
+				style.willChange = 'transform';
+			} else {
+				style.willChange = 'auto';
+
 			}
 
 			return style;
