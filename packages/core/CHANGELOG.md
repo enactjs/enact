@@ -2,6 +2,50 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [5.3.2] - 2025-10-28
+
+No significant changes.
+
+## [5.3.1] - 2025-10-14
+
+No significant changes.
+
+## [5.3.0] - 2025-09-24
+
+No significant changes.
+
+## [5.2.1] - 2025-09-02
+
+No significant changes.
+
+## [5.2.0] - 2025-08-08
+
+No significant changes.
+
+## [5.1.0] - 2025-07-11
+
+No significant changes.
+
+## [5.0.0] - 2025-06-13
+
+No significant changes.
+
+## [5.0.0-rc.1] - 2025-05-29
+
+No significant changes.
+
+## [5.0.0-beta.1] - 2025-04-29
+
+No significant changes.
+
+## [4.9.8] - 2025-04-24
+
+No significant changes.
+
+## [4.9.7] - 2025-04-16
+
+No significant changes.
+
 ## [5.0.0-alpha.5] - 2025-04-04
 
 No significant changes.
