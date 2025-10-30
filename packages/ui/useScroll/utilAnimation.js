@@ -1,4 +1,4 @@
-/**
+/*
  * Create a cubic-bezier easing function evaluator.
  */
 const utilAnimation = (x1, y1, x2, y2) => {
