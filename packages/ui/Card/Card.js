@@ -121,6 +121,16 @@ const CardBase = kind({
 		selected: PropTypes.bool,
 
 		/**
+		 * Splits the captions in two sections. This prop is only used when
+		 * `captionOverlayOnFocus` or `captionOverlay` is `true` and `orientation` is `'vertical'`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		splitCaption: PropTypes.bool,
+
+		/**
 		 * String value or object of values used to determine which image will appear on a specific
 		 * screenSize.
 		 *
@@ -142,22 +152,25 @@ const CardBase = kind({
 	},
 
 	computed: {
-		className: ({captionOverlay, fitImage, orientation, selected, styler}) => styler.append({
+		className: ({captionOverlay, fitImage, orientation, splitCaption, selected, styler}) => styler.append({
 			captionOverlay: captionOverlay && orientation === 'vertical',
 			selected,
 			fitImage,
 			horizontal: orientation === 'horizontal',
+			splitCaption: splitCaption && orientation === 'vertical',
 			vertical: orientation === 'vertical'
 		})
 	},
 
-	render: ({captionOverlay, children, componentRef, css, imageComponent, orientation, placeholder, src, ...rest}) => {
+	render: ({captionOverlay, children, componentRef, css, imageComponent, orientation, placeholder, splitCaption, src, ...rest}) => {
 		delete rest.fitImage;
 
 		const isHorizontal = orientation === 'horizontal';
 		const isCaptionOverlay = captionOverlay && !isHorizontal;
+		const isSplitCaption = splitCaption && !isHorizontal;
 		const Component = isHorizontal ? Row : Column;
 
+		console.log(isSplitCaption);
 		const Wrapped = (
 			<>
 				<Cell
