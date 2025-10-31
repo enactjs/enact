@@ -1,6 +1,8 @@
 import {perfNow} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
 
+import utilAnimation from './utilAnimation';
+
 const
 	// Use eases library
 	timingFunctions = {
@@ -16,6 +18,15 @@ const
 			curTime /= duration;
 			curTime--;
 			return (target - source) * (curTime * curTime * curTime * curTime * curTime + 1) + source;
+		},
+		'ease-out-cubic': function (source, target, duration, curTime, keyPressed) {
+			if (keyPressed) {
+				curTime /= duration;
+				return (target - source) * curTime + source;
+			}
+
+			curTime /= duration;
+			return (target - source) * utilAnimation(0.1, 0.6, 0.15, 1).cubicBezier(curTime) + source;
 		},
 		'ease-in-out': function (source, target, duration, curTime) {
 			curTime /= duration / 2;
@@ -44,11 +55,11 @@ const
  */
 class ScrollAnimator {
 	rAFId = null;
-	type = 'ease-out';
+	type = 'ease-out-cubic';
 
 	/**
 	 * @param {String|null} type - Timing function type for list scroll animation.  Must be one of
-	 *	`'linear'`, `'ease-in'`, `'ease-out'`, or `'ease-in-out'`, or null. If `null`, defaults to
+	 *	`'linear'`, `'ease-in'`, `'ease-out'`, `'ease-out-cubic'`, or `'ease-in-out'`, or null. If `null`, defaults to
 	 *	`'ease-out'`.
 	 * @constructor
 	 * @memberof ui/useScroll.ScrollAnimator
