@@ -162,15 +162,14 @@ const CardBase = kind({
 		})
 	},
 
-	render: ({captionOverlay, children, componentRef, css, imageComponent, orientation, placeholder, splitCaption, src, ...rest}) => {
+	render: ({captionOverlay, children, componentRef, css, imageComponent, orientation, placeholder, src, ...rest}) => {
 		delete rest.fitImage;
+		delete rest.splitCaption;
 
 		const isHorizontal = orientation === 'horizontal';
 		const isCaptionOverlay = captionOverlay && !isHorizontal;
-		const isSplitCaption = splitCaption && !isHorizontal;
 		const Component = isHorizontal ? Row : Column;
 
-		console.log(isSplitCaption);
 		const Wrapped = (
 			<>
 				<Cell
