@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/useScroll.ScrollAnimator` `oase-out-cubic` animation function
+
+### Changed
+
+- `ui/useScroll.ScrollAnimator` default animation function
+
 ## [5.3.2] - 2025-10-28
 
 No significant changes.
