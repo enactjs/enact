@@ -374,8 +374,32 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 		const nextCandidateContainerId = getContainersForNode(next).pop();
 		// check if we want to navigate to another container
 		if (next && containerId !== nextCandidateContainerId) {
-			// TODO: to be revisited
-			return next;
+			console.log(containerId, nextCandidateContainerId)
+			// verify is the element from another container is visible
+			if (isElementVisibleInContainer(next, nextCandidateContainerId)) {
+				return next;
+			} else {
+
+				console.log("targetRect" ,elementRect);
+				console.log("direction", direction);
+				console.log("rects", 					elementRects.filter((rect) => {
+					const elementContainerId = getContainersForNode(rect.element).pop();
+					return isElementVisibleInContainer(rect.element, elementContainerId);
+				}));
+				console.log("config", getContainerConfig(containerId));
+				console.log("partitionRect", partitionRect);
+				// otherwise, try to navigate to an element that is visible in its container
+				next = navigate(
+					elementRect,
+					direction,
+					elementRects.filter((rect) => {
+						const elementContainerId = getContainersForNode(rect.element).pop();
+						return isElementVisibleInContainer(rect.element, elementContainerId);
+					}),
+					getContainerConfig(containerId),
+					partitionRect
+				);
+			}
 		}
 
 		// If we've met every condition and haven't explicitly retried the search via `continue`,
@@ -490,6 +514,7 @@ function getNavigableTarget (target) {
 }
 
 function isElementVisibleInContainer (element, containerId) {
+	console.log(element, containerId);
 	const {
 		top: containerTop,
 		right: containerRight,

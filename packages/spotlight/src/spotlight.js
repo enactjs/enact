@@ -321,6 +321,7 @@ const Spotlight = (function () {
 		directions.forEach((dir) => {
 			const nextElem = getTargetByDirectionFromElement(dir, elem);
 			if (nextElem) {
+				//console.log(nextElem)
 				nextElem.classList.add(nextClassBase + dir);
 			}
 		});
@@ -435,8 +436,16 @@ const Spotlight = (function () {
 			// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
 			// to the last focused element of the last active containerId, so we use rootContainerId instead
 			let lastFocusedElement = getContainerLastFocusedElement(rootContainerId);
+
+			// NEW: Add safety check before destructuring
 			while (isContainer(lastFocusedElement)) {
-				({lastFocusedElement} = getContainerConfig(lastFocusedElement));
+				const config = getContainerConfig(lastFocusedElement);
+				if (config && config.lastFocusedElement) {
+					lastFocusedElement = config.lastFocusedElement;
+				} else {
+					// If config is undefined or has no lastFocusedElement, break the loop
+					break;
+				}
 			}
 
 			if (!Spotlight.focus(lastFocusedElement)) {
