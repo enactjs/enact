@@ -514,7 +514,6 @@ function getNavigableTarget (target) {
 }
 
 function isElementVisibleInContainer (element, containerId) {
-	console.log(element, containerId);
 	const {
 		top: containerTop,
 		right: containerRight,

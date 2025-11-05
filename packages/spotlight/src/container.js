@@ -736,10 +736,10 @@ function getContainerLastFocusedElement (containerId) {
 		return null;
 	}
 
+	// lastFocusedElement may be a container ID so try to convert it to a node to test navigability
 	const {lastFocusedElement} = config;
 	let node = lastFocusedElement;
 
-	// If lastFocusedElement is a string, it could be a container ID or a spotlightId
 	if (typeof node === 'string') {
 		// First try as a container ID
 		const containerNode = getContainerNode(lastFocusedElement);
@@ -756,9 +756,6 @@ function getContainerLastFocusedElement (containerId) {
 		return node;
 	}
 
-	// DON'T try restoration here - it will be called too often
-	// Restoration should only happen when actually focusing into the container
-
 	return null;
 }
 
@@ -774,7 +771,6 @@ function getContainerLastFocusedElement (containerId) {
  */
 function setContainerLastFocusedElement (node, containerIds) {
 	let lastFocusedElement = node;
-
 
 	// Store spotlightId instead of node reference for restorable containers
 	if (node && node.dataset && node.dataset.spotlightId) {

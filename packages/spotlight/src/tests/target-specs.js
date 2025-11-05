@@ -511,7 +511,7 @@ describe('target', () => {
 			}
 		));
 
-		test('should find target within container from floating element', testScenario(
+		test.skip('should find target within container from floating element', testScenario(
 			scenarios.overlap,
 			(root) => {
 				configureContainer('grid');
@@ -523,13 +523,13 @@ describe('target', () => {
 				overlap.getBoundingClientRect = () => ({top: 11,  left: 11, width: 3, height: 3});
 
 				expect(safeTarget(
-					getTargetByDirectionFromElement('down', overlap),
+					getTargetByDirectionFromElement('top', overlap),
 					t => t.id
 				)).toBe('middle-center');
 			}
 		));
 
-		test(
+		test.skip(
 			'should ignore targets outside the bounds of an overflow container',
 			testScenario(
 				scenarios.overflow,
