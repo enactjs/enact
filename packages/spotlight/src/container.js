@@ -434,53 +434,6 @@ function getNavigableContainersForNode (node) {
 }
 
 /**
- * Attempts to restore focus to an element via container's restoration callback
- *
- * @param   {String}  containerId        Container ID
- * @param   {String|Node}  lastFocusedElement Last focused element or spotlightId
- *
- * @returns {Node|null}                  Restored element or null
- * @private
- */
-function tryRestoreLastFocusedElement(containerId, lastFocusedElement) {
-	const containerNode = getContainerNode(containerId);
-
-	if (containerNode && typeof containerNode.restoreSpotlightChild === 'function') {
-		let spotlightId = null;
-
-		if (typeof lastFocusedElement === 'string') {
-			if (!getContainerConfig(lastFocusedElement)) {
-				spotlightId = lastFocusedElement;
-			}
-		} else if (lastFocusedElement && lastFocusedElement.dataset) {
-			spotlightId = lastFocusedElement.dataset.spotlightId;
-		}
-
-		if (spotlightId) {
-			// Check if already in DOM (might have been rendered since last check)
-			let restoredElement = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
-			if (restoredElement && isNavigable(restoredElement, containerId, true)) {
-				return restoredElement;
-			}
-
-			// Not in DOM, ask container to restore
-			const restored = containerNode.restoreSpotlightChild(spotlightId);
-
-			if (restored) {
-				// Try to find the element immediately after restoration
-				restoredElement = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
-
-				if (restoredElement && isNavigable(restoredElement, containerId, true)) {
-					return restoredElement;
-				}
-			}
-		}
-	}
-
-	return null;
-}
-
-/**
  * Generates a new unique identifier for a container
  *
  * @returns {String} Container ID
@@ -863,6 +816,53 @@ function getContainerNavigableElements (containerId, preferredEnterTo) {
 	}
 
 	return next ? coerceArray(next) : [];
+}
+
+/**
+ * Attempts to restore focus to an element via container's restoration callback
+ *
+ * @param   {String}  containerId        Container ID
+ * @param   {String|Node}  lastFocusedElement Last focused element or spotlightId
+ *
+ * @returns {Node|null}                  Restored element or null
+ * @private
+ */
+function tryRestoreLastFocusedElement (containerId, lastFocusedElement) {
+	const containerNode = getContainerNode(containerId);
+
+	if (containerNode && typeof containerNode.restoreSpotlightChild === 'function') {
+		let spotlightId = null;
+
+		if (typeof lastFocusedElement === 'string') {
+			if (!getContainerConfig(lastFocusedElement)) {
+				spotlightId = lastFocusedElement;
+			}
+		} else if (lastFocusedElement && lastFocusedElement.dataset) {
+			spotlightId = lastFocusedElement.dataset.spotlightId;
+		}
+
+		if (spotlightId) {
+			// Check if already in DOM (might have been rendered since last check)
+			let restoredElement = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
+			if (restoredElement && isNavigable(restoredElement, containerId, true)) {
+				return restoredElement;
+			}
+
+			// Not in DOM, ask container to restore
+			const restored = containerNode.restoreSpotlightChild(spotlightId);
+
+			if (restored) {
+				// Try to find the element immediately after restoration
+				restoredElement = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
+
+				if (restoredElement && isNavigable(restoredElement, containerId, true)) {
+					return restoredElement;
+				}
+			}
+		}
+	}
+
+	return null;
 }
 
 /**
