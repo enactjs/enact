@@ -1209,7 +1209,7 @@ describe('target', () => {
 			)
 		);
 
-		test.skip(
+		test(
 			'should find target within container larger than overflow container',
 			testScenario(
 				scenarios.overflowLargeSubContainer,
@@ -1228,16 +1228,16 @@ describe('target', () => {
 					const belowLargeContainer = root.querySelector('#below-large-container');
 
 					// Mock all bounding rects
-					overflowContainer.getBoundingClientRect = () => ({top: 110, left: 10, width: 10, height: 10});
-					insideContainer.getBoundingClientRect = () => ({top: 100, left: 10, width: 10, height: 10});
-					element.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10});
-					inLargeContainer.getBoundingClientRect = () => ({top: 110, left: 10, width: 10, height: 10});
-					belowLargeContainer.getBoundingClientRect = () => ({top: 150, left: 10, width: 10, height: 10});
+					overflowContainer.getBoundingClientRect = () => ({top: 50, left: 10, width: 40, height: 40, right: 50, bottom: 90});
+					insideContainer.getBoundingClientRect = () => ({top: 40, left: 15, width: 30, height: 60, right: 45, bottom: 100});
+					element.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+					inLargeContainer.getBoundingClientRect = () => ({top: 60, left: 20, width: 10, height: 10, right: 30, bottom: 70});
+					belowLargeContainer.getBoundingClientRect = () => ({top: 110, left: 10, width: 10, height: 10, right: 20, bottom: 120});
 
 					const {left: x, top: y} = element.getBoundingClientRect();
 
 					expect(safeTarget(
-						getTargetByDirectionFromPosition('down', {x: x + 5, y:y + 5}, rootContainerId),
+						getTargetByDirectionFromPosition('down', {x: x + 5, y: y + 5}, rootContainerId), // position is inside #outside-overflow
 						t => t.id
 					)).toBe('in-large-container');
 				}
