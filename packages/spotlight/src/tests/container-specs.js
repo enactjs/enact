@@ -23,7 +23,8 @@ import {
 	rootContainerId,
 	setContainerLastFocusedElement,
 	setLastContainer,
-	setLastContainerFromTarget
+	setLastContainerFromTarget,
+	tryRestoreLastFocusedElement
 } from '../container';
 
 import {
@@ -1297,5 +1298,49 @@ describe('container', () => {
 				}
 			)
 		);
+	});
+
+	describe('#tryRestoreLastFocusedElement', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		test('should handle non-existent spotlight ids', async () => {
+			configureContainer('test-container');
+
+			const result = await tryRestoreLastFocusedElement('test-container', 'nonexistent-id');
+
+			expect(result).toBeNull();
+		});
+
+		test('should find elements already in DOM', async () => {
+			const containerNode = document.createElement('div');
+			containerNode.dataset.spotlightId = 'test-container';
+			containerNode.setAttribute('data-spotlight-container', 'container');
+			let restoreCalled = false;
+			containerNode.restoreSpotlightChild = jest.fn((spotlightId) => {
+				restoreCalled = true;
+				return true;
+			});
+
+			const spottableNode = document.createElement('button');
+			spottableNode.className = 'spottable';
+			spottableNode.dataset.spotlightId = 'test-spottable';
+			spottableNode.setAttribute('data-spotlight-container', 'button');
+			containerNode.appendChild(spottableNode);
+			document.body.appendChild(containerNode);
+
+			configureContainer('test-container', {selector: '.spottable'});
+			configureContainer(rootContainerId);
+
+			const result = await tryRestoreLastFocusedElement('test-container', 'test-spottable');
+
+			expect(result).toBe(spottableNode);
+		});
+
+		test('should return null when container is not found', async () => {
+			const result = await tryRestoreLastFocusedElement('nonexistent-container', 'test-spottable');
+
+			expect(result).toBeNull();
+		});
 	});
 });
