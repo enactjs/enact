@@ -1316,9 +1316,7 @@ describe('container', () => {
 			const containerNode = document.createElement('div');
 			containerNode.dataset.spotlightId = 'test-container';
 			containerNode.setAttribute('data-spotlight-container', 'container');
-			let restoreCalled = false;
-			containerNode.restoreSpotlightChild = jest.fn((spotlightId) => {
-				restoreCalled = true;
+			containerNode.restoreSpotlightChild = jest.fn(() => {
 				return true;
 			});
 
