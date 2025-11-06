@@ -689,24 +689,47 @@ function getContainerLastFocusedElement (containerId) {
 		return null;
 	}
 
-	// lastFocusedElement may be a container ID so try to convert it to a node to test navigability
 	const {lastFocusedElement} = config;
 	let node = lastFocusedElement;
 
+	// If lastFocusedElement is a string, it could be a container ID or a spotlightId
 	if (typeof node === 'string') {
 		// First try as a container ID
 		const containerNode = getContainerNode(lastFocusedElement);
 		if (containerNode) {
 			node = containerNode;
 		} else {
-			// Try to find it as a spotlightId in the DOM
-			node = document.querySelector(`[data-spotlight-id="${lastFocusedElement}"]`);
+			// Not a container, try to find it as a spotlightId in the DOM
+			const elementBySpotlightId = document.querySelector(`[data-spotlight-id="${lastFocusedElement}"]`);
+			if (elementBySpotlightId) {
+				node = elementBySpotlightId;
+			} else {
+				// Try it as a regular CSS selector
+				try {
+					const elementBySelector = document.querySelector(lastFocusedElement);
+					if (elementBySelector) {
+						node = elementBySelector;
+					}
+				} catch (e) {
+					// Invalid selector, node will remain as string
+				}
+			}
 		}
 	}
 
 	// Check if the node is currently navigable
-	if (node && isNavigable(node, containerId, true)) {
+	if (node && typeof node !== 'string' && isNavigable(node, containerId, true)) {
 		return node;
+	}
+
+	// Only try restoration if node is still a string (spotlightId) and not in DOM
+	if (typeof node === 'string' || !node) {
+		tryRestoreLastFocusedElement(containerId, lastFocusedElement)
+			.then(restored => {
+				if (restored) {
+					return restored;
+				}
+			});
 	}
 
 	return null;
@@ -827,7 +850,7 @@ function getContainerNavigableElements (containerId, preferredEnterTo) {
  * @returns {Node|null}                  Restored element or null
  * @private
  */
-function tryRestoreLastFocusedElement (containerId, lastFocusedElement) {
+async function tryRestoreLastFocusedElement (containerId, lastFocusedElement) {
 	const containerNode = getContainerNode(containerId);
 
 	if (containerNode && typeof containerNode.restoreSpotlightChild === 'function') {
@@ -852,7 +875,9 @@ function tryRestoreLastFocusedElement (containerId, lastFocusedElement) {
 			const restored = containerNode.restoreSpotlightChild(spotlightId);
 
 			if (restored) {
-				// Try to find the element immediately after restoration
+				// Wait for DOM to update
+				await new Promise(resolve => setTimeout(resolve, 200));
+				// Try to find the element after restoration
 				restoredElement = document.querySelector(`[data-spotlight-id="${spotlightId}"]`);
 
 				if (restoredElement && isNavigable(restoredElement, containerId, true)) {
