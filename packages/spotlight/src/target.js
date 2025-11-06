@@ -374,20 +374,10 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 		const nextCandidateContainerId = getContainersForNode(next).pop();
 		// check if we want to navigate to another container
 		if (next && containerId !== nextCandidateContainerId) {
-			// console.log(containerId, nextCandidateContainerId);
 			// verify is the element from another container is visible
 			if (isElementVisibleInContainer(next, nextCandidateContainerId)) {
 				return next;
 			} else {
-
-				// console.log("targetRect", elementRect);
-				// console.log("direction", direction);
-				// console.log("rects", 					elementRects.filter((rect) => {
-				// 	const elementContainerId = getContainersForNode(rect.element).pop();
-				// 	return isElementVisibleInContainer(rect.element, elementContainerId);
-				// }));
-				// console.log("config", getContainerConfig(containerId));
-				// console.log("partitionRect", partitionRect);
 				// otherwise, try to navigate to an element that is visible in its container
 				next = navigate(
 					elementRect,
