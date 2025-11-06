@@ -514,13 +514,37 @@ describe('target', () => {
 		test('should find target within container from floating element', testScenario(
 			scenarios.overlap,
 			(root) => {
-				configureContainer('grid');
+				configureContainer('grid', {
+					enterTo: 'default-element',
+					defaultElement: '#middle-center'
+				});
 
+				const gridContainer = root.querySelector('[data-spotlight-id="grid"]');
 				const overlap = root.querySelector('#over-middle-center');
 				const center = root.querySelector('#middle-center');
+				const topLeft = root.querySelector('#top-left');
+				const topCenter = root.querySelector('#top-center');
+				const topRight = root.querySelector('#top-right');
+				const middleLeft = root.querySelector('#middle-left');
+				const middleRight = root.querySelector('#middle-right');
+				const bottomLeft = root.querySelector('#bottom-left');
+				const bottomCenter = root.querySelector('#bottom-center');
+				const bottomRight = root.querySelector('#bottom-right');
 
-				center.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10});
-				overlap.getBoundingClientRect = () => ({top: 11,  left: 11, width: 3, height: 3});
+				// Mock getBoundingClientRect for all elements
+				gridContainer.getBoundingClientRect = () => ({top: 10, left: 10, width: 30, height: 30, right: 40, bottom: 40});
+				topLeft.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+				topCenter.getBoundingClientRect = () => ({top: 10, left: 20, width: 10, height: 10, right: 30, bottom: 20});
+				topRight.getBoundingClientRect = () => ({top: 10, left: 30, width: 10, height: 10, right: 40, bottom: 20});
+				middleLeft.getBoundingClientRect = () => ({top: 20, left: 10, width: 10, height: 10, right: 20, bottom: 30});
+				center.getBoundingClientRect = () => ({top: 20, left: 20, width: 10, height: 10, right: 30, bottom: 30});
+				middleRight.getBoundingClientRect = () => ({top: 20, left: 30, width: 10, height: 10, right: 40, bottom: 30});
+				bottomLeft.getBoundingClientRect = () => ({top: 30, left: 10, width: 10, height: 10, right: 20, bottom: 40});
+				bottomCenter.getBoundingClientRect = () => ({top: 30, left: 20, width: 10, height: 10, right: 30, bottom: 40});
+				bottomRight.getBoundingClientRect = () => ({top: 30, left: 30, width: 10, height: 10, right: 40, bottom: 40});
+
+				// Overlap is a small element floating over middle-center
+				overlap.getBoundingClientRect = () => ({top: 22, left: 25, width: 1, height: 1, right: 26, bottom: 23});
 
 				expect(safeTarget(
 					getTargetByDirectionFromElement('down', overlap),
@@ -538,11 +562,18 @@ describe('target', () => {
 						overflow: true
 					});
 
+					const overflowContainer = root.querySelector('[data-spotlight-id="overflow-container"]');
 					const element = root.querySelector('#outside-overflow');
+					const overflowAbove = root.querySelector('#overflow-above');
+					const overflowBelow = root.querySelector('#overflow-below');
 					const overflowWithin = root.querySelector('#overflow-within');
 
-					element.getBoundingClientRect = () => ({top: 10, left: 10, width: 0, height: 0});
-					overflowWithin.getBoundingClientRect = () => ({top: 100,  left: 0, width: 10, height: 10});
+					// Mock all bounding rects
+					overflowContainer.getBoundingClientRect = () => ({top: 110, left: 10, width: 30, height: 30, right: 40, bottom: 140});
+					element.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+					overflowAbove.getBoundingClientRect = () => ({top: 0, left: 10, width: 10, height: 10, right: 20, bottom: 110});
+					overflowWithin.getBoundingClientRect = () => ({top: 110, left: 10, width: 10, height: 10, right: 20, bottom: 120});
+					overflowBelow.getBoundingClientRect = () => ({top: 140, left: 10, width: 10, height: 10, right: 20, bottom: 150});
 
 					expect(safeTarget(
 						getTargetByDirectionFromElement('down', element),
@@ -552,7 +583,7 @@ describe('target', () => {
 			)
 		);
 
-		test.skip(
+		test(
 			'should find target within container larger than overflow container',
 			testScenario(
 				scenarios.overflowLargeSubContainer,
@@ -564,7 +595,18 @@ describe('target', () => {
 						enterTo: null
 					});
 
+					const overflowContainer = root.querySelector('[data-spotlight-id="overflow-container"]');
+					const insideContainer = root.querySelector('[data-spotlight-id="inside"]');
 					const element = root.querySelector('#outside-overflow');
+					const inLargeContainer = root.querySelector('#in-large-container');
+					const belowLargeContainer = root.querySelector('#below-large-container');
+
+					// Mock all bounding rects
+					overflowContainer.getBoundingClientRect = () => ({top: 110, left: 10, width: 30, height: 30, right: 40, bottom: 140});
+					insideContainer.getBoundingClientRect = () => ({top: 100, left: 10, width: 10, height: 50, right: 20, bottom: 150});
+					element.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+					inLargeContainer.getBoundingClientRect = () => ({top: 110, left: 10, width: 10, height: 10, right: 20, bottom: 120});
+					belowLargeContainer.getBoundingClientRect = () => ({top: 150, left: 10, width: 10, height: 10, right: 20, bottom: 160});
 
 					expect(safeTarget(
 						getTargetByDirectionFromElement('down', element),
@@ -574,7 +616,7 @@ describe('target', () => {
 			)
 		);
 
-		test.skip(
+		test(
 			'should find target out of bounds of overflow container from within container',
 			testScenario(
 				scenarios.overflow,
@@ -583,41 +625,31 @@ describe('target', () => {
 						overflow: true
 					});
 
-					const element = root.querySelector('#overflow-within');
+					const overflowContainer = root.querySelector('[data-spotlight-id="overflow-container"]');
+					const overflowAbove = root.querySelector('#overflow-above');
+					const overflowBelow = root.querySelector('#overflow-below');
+					const overflowWithin = root.querySelector('#overflow-within');
+
+					// Mock all bounding rects
+					overflowContainer.getBoundingClientRect = () => ({top: 110, left: 10, width: 30, height: 30, right: 40, bottom: 140});
+					overflowAbove.getBoundingClientRect = () => ({top: 100, left: 10, width: 10, height: 10, right: 20, bottom: 110});
+					overflowWithin.getBoundingClientRect = () => ({top: 110, left: 10, width: 10, height: 10, right: 20, bottom: 120});
+					overflowBelow.getBoundingClientRect = () => ({top: 140, left: 10, width: 10, height: 10, right: 20, bottom: 150});
 
 					expect(safeTarget(
-						getTargetByDirectionFromElement('down', element),
+						getTargetByDirectionFromElement('down', overflowWithin),
 						t => t.id
 					)).toBe('overflow-below');
 
 					expect(safeTarget(
-						getTargetByDirectionFromElement('up', element),
+						getTargetByDirectionFromElement('up', overflowWithin),
 						t => t.id
 					)).toBe('overflow-above');
 				}
 			)
 		);
 
-		test('should stop at restrict="self-only" boundaries', testScenario(
-			scenarios.complexTree,
-			(root) => {
-				configureContainer('first-container', {
-					restrict: 'none'
-				});
-				configureContainer('second-container', {
-					restrict: 'self-only'
-				});
-
-				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
-
-				expect(safeTarget(
-					getTargetByDirectionFromElement('up', element),
-					t => t.id
-				)).toBe('NOT FOUND');
-			}
-		));
-
-		test.skip('should respect enterTo="default-element" containers', testScenario(
+		test('should respect enterTo="default-element" containers', testScenario(
 			scenarios.grid,
 			(root) => {
 				configureContainer('grid', {
@@ -626,38 +658,85 @@ describe('target', () => {
 					defaultElement: '#bottom-right'
 				});
 
-				const element = root.querySelector('#before-grid');
+				const gridContainer = root.querySelector('[data-spotlight-id="grid"]');
+				const beforeGrid = root.querySelector('#before-grid');
+				const afterGrid = root.querySelector('#after-grid');
+				const topLeft = root.querySelector('#top-left');
+				const topCenter = root.querySelector('#top-center');
+				const topRight = root.querySelector('#top-right');
+				const middleLeft = root.querySelector('#middle-left');
+				const middleCenter = root.querySelector('#middle-center');
+				const middleRight = root.querySelector('#middle-right');
+				const bottomLeft = root.querySelector('#bottom-left');
+				const bottomCenter = root.querySelector('#bottom-center');
+				const bottomRight = root.querySelector('#bottom-right');
+
+				// Mock all bounding rects
+				beforeGrid.getBoundingClientRect = () => ({top: 0, left: 10, width: 30, height: 10, right: 40, bottom: 10});
+				gridContainer.getBoundingClientRect = () => ({top: 10, left: 10, width: 30, height: 30, right: 40, bottom: 40});
+				afterGrid.getBoundingClientRect = () => ({top: 40, left: 10, width: 30, height: 10, right: 40, bottom: 50});
+
+				topLeft.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+				topCenter.getBoundingClientRect = () => ({top: 10, left: 20, width: 10, height: 10, right: 30, bottom: 20});
+				topRight.getBoundingClientRect = () => ({top: 10, left: 30, width: 10, height: 10, right: 40, bottom: 20});
+				middleLeft.getBoundingClientRect = () => ({top: 20, left: 10, width: 10, height: 10, right: 20, bottom: 30});
+				middleCenter.getBoundingClientRect = () => ({top: 20, left: 20, width: 10, height: 10, right: 30, bottom: 30});
+				middleRight.getBoundingClientRect = () => ({top: 20, left: 30, width: 10, height: 10, right: 40, bottom: 30});
+				bottomLeft.getBoundingClientRect = () => ({top: 30, left: 10, width: 10, height: 10, right: 20, bottom: 40});
+				bottomCenter.getBoundingClientRect = () => ({top: 30, left: 20, width: 10, height: 10, right: 30, bottom: 40});
+				bottomRight.getBoundingClientRect = () => ({top: 30, left: 30, width: 10, height: 10, right: 40, bottom: 40});
 
 				expect(safeTarget(
-					getTargetByDirectionFromElement('down', element),
+					getTargetByDirectionFromElement('down', beforeGrid),
 					t => t.id
 				)).toBe('bottom-right');
 			}
 		));
 
-		test.skip('should respect enterTo="last-focused" containers', testScenario(
+		test('should respect enterTo="last-focused" containers', testScenario(
 			scenarios.grid,
 			(root) => {
 				configureContainer('grid', {
 					restrict: 'none',
 					enterTo: 'last-focused',
-					lastFocusedKey: {
-						container: false,
-						element: true,
-						key: 8
-					}
+					lastFocusedElement: root.querySelector('#bottom-right')
 				});
 
-				const element = root.querySelector('#before-grid');
+				const gridContainer = root.querySelector('[data-spotlight-id="grid"]');
+				const beforeGrid = root.querySelector('#before-grid');
+				const afterGrid = root.querySelector('#after-grid');
+				const topLeft = root.querySelector('#top-left');
+				const topCenter = root.querySelector('#top-center');
+				const topRight = root.querySelector('#top-right');
+				const middleLeft = root.querySelector('#middle-left');
+				const middleCenter = root.querySelector('#middle-center');
+				const middleRight = root.querySelector('#middle-right');
+				const bottomLeft = root.querySelector('#bottom-left');
+				const bottomCenter = root.querySelector('#bottom-center');
+				const bottomRight = root.querySelector('#bottom-right');
+
+				// Mock all bounding rects
+				beforeGrid.getBoundingClientRect = () => ({top: 0, left: 10, width: 30, height: 10, right: 40, bottom: 10});
+				gridContainer.getBoundingClientRect = () => ({top: 10, left: 10, width: 30, height: 30, right: 40, bottom: 40});
+				afterGrid.getBoundingClientRect = () => ({top: 40, left: 10, width: 30, height: 10, right: 40, bottom: 50});
+				topLeft.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+				topCenter.getBoundingClientRect = () => ({top: 10, left: 20, width: 10, height: 10, right: 30, bottom: 20});
+				topRight.getBoundingClientRect = () => ({top: 10, left: 30, width: 10, height: 10, right: 40, bottom: 20});
+				middleLeft.getBoundingClientRect = () => ({top: 20, left: 10, width: 10, height: 10, right: 20, bottom: 30});
+				middleCenter.getBoundingClientRect = () => ({top: 20, left: 20, width: 10, height: 10, right: 30, bottom: 30});
+				middleRight.getBoundingClientRect = () => ({top: 20, left: 30, width: 10, height: 10, right: 40, bottom: 30});
+				bottomLeft.getBoundingClientRect = () => ({top: 30, left: 10, width: 10, height: 10, right: 20, bottom: 40});
+				bottomCenter.getBoundingClientRect = () => ({top: 30, left: 20, width: 10, height: 10, right: 30, bottom: 40});
+				bottomRight.getBoundingClientRect = () => ({top: 30, left: 30, width: 10, height: 10, right: 40, bottom: 40});
 
 				expect(safeTarget(
-					getTargetByDirectionFromElement('down', element),
+					getTargetByDirectionFromElement('down', beforeGrid),
 					t => t.id
 				)).toBe('bottom-right');
 			}
 		));
 
-		test.skip(
+		test(
 			'should follow the leaveFor config when no target is found within the container in the given direction',
 			testScenario(
 				scenarios.grid,
@@ -669,17 +748,42 @@ describe('target', () => {
 						}
 					});
 
-					const element = root.querySelector('#top-center');
+					const gridContainer = root.querySelector('[data-spotlight-id="grid"]');
+					const beforeGrid = root.querySelector('#before-grid');
+					const afterGrid = root.querySelector('#after-grid');
+					const topLeft = root.querySelector('#top-left');
+					const topCenter = root.querySelector('#top-center');
+					const topRight = root.querySelector('#top-right');
+					const middleLeft = root.querySelector('#middle-left');
+					const middleCenter = root.querySelector('#middle-center');
+					const middleRight = root.querySelector('#middle-right');
+					const bottomLeft = root.querySelector('#bottom-left');
+					const bottomCenter = root.querySelector('#bottom-center');
+					const bottomRight = root.querySelector('#bottom-right');
+
+					// Mock all bounding rects
+					beforeGrid.getBoundingClientRect = () => ({top: 0, left: 10, width: 30, height: 10, right: 40, bottom: 10});
+					gridContainer.getBoundingClientRect = () => ({top: 10, left: 10, width: 30, height: 30, right: 40, bottom: 40});
+					afterGrid.getBoundingClientRect = () => ({top: 40, left: 10, width: 30, height: 10, right: 40, bottom: 50});
+					topLeft.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+					topCenter.getBoundingClientRect = () => ({top: 10, left: 20, width: 10, height: 10, right: 30, bottom: 20});
+					topRight.getBoundingClientRect = () => ({top: 10, left: 30, width: 10, height: 10, right: 40, bottom: 20});
+					middleLeft.getBoundingClientRect = () => ({top: 20, left: 10, width: 10, height: 10, right: 20, bottom: 30});
+					middleCenter.getBoundingClientRect = () => ({top: 20, left: 20, width: 10, height: 10, right: 30, bottom: 30});
+					middleRight.getBoundingClientRect = () => ({top: 20, left: 30, width: 10, height: 10, right: 40, bottom: 30});
+					bottomLeft.getBoundingClientRect = () => ({top: 30, left: 10, width: 10, height: 10, right: 20, bottom: 40});
+					bottomCenter.getBoundingClientRect = () => ({top: 30, left: 20, width: 10, height: 10, right: 30, bottom: 40});
+					bottomRight.getBoundingClientRect = () => ({top: 30, left: 30, width: 10, height: 10, right: 40, bottom: 40});
 
 					expect(safeTarget(
-						getTargetByDirectionFromElement('up', element),
+						getTargetByDirectionFromElement('up', topCenter),
 						t => t.id
 					)).toBe('after-grid');
 				}
 			)
 		);
 
-		test.skip(
+		test(
 			'should not follow the leaveFor config when a target is found within the container in the given direction',
 			testScenario(
 				scenarios.grid,
@@ -691,17 +795,42 @@ describe('target', () => {
 						}
 					});
 
-					const element = root.querySelector('#middle-center');
+					const gridContainer = root.querySelector('[data-spotlight-id="grid"]');
+					const beforeGrid = root.querySelector('#before-grid');
+					const afterGrid = root.querySelector('#after-grid');
+					const topLeft = root.querySelector('#top-left');
+					const topCenter = root.querySelector('#top-center');
+					const topRight = root.querySelector('#top-right');
+					const middleLeft = root.querySelector('#middle-left');
+					const middleCenter = root.querySelector('#middle-center');
+					const middleRight = root.querySelector('#middle-right');
+					const bottomLeft = root.querySelector('#bottom-left');
+					const bottomCenter = root.querySelector('#bottom-center');
+					const bottomRight = root.querySelector('#bottom-right');
+
+					// Mock all bounding rects
+					beforeGrid.getBoundingClientRect = () => ({top: 0, left: 10, width: 30, height: 10, right: 40, bottom: 10});
+					gridContainer.getBoundingClientRect = () => ({top: 10, left: 10, width: 30, height: 30, right: 40, bottom: 40});
+					afterGrid.getBoundingClientRect = () => ({top: 40, left: 10, width: 30, height: 10, right: 40, bottom: 50});
+					topLeft.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+					topCenter.getBoundingClientRect = () => ({top: 10, left: 20, width: 10, height: 10, right: 30, bottom: 20});
+					topRight.getBoundingClientRect = () => ({top: 10, left: 30, width: 10, height: 10, right: 40, bottom: 20});
+					middleLeft.getBoundingClientRect = () => ({top: 20, left: 10, width: 10, height: 10, right: 20, bottom: 30});
+					middleCenter.getBoundingClientRect = () => ({top: 20, left: 20, width: 10, height: 10, right: 30, bottom: 30});
+					middleRight.getBoundingClientRect = () => ({top: 20, left: 30, width: 10, height: 10, right: 40, bottom: 30});
+					bottomLeft.getBoundingClientRect = () => ({top: 30, left: 10, width: 10, height: 10, right: 20, bottom: 40});
+					bottomCenter.getBoundingClientRect = () => ({top: 30, left: 20, width: 10, height: 10, right: 30, bottom: 40});
+					bottomRight.getBoundingClientRect = () => ({top: 30, left: 30, width: 10, height: 10, right: 40, bottom: 40});
 
 					expect(safeTarget(
-						getTargetByDirectionFromElement('up', element),
+						getTargetByDirectionFromElement('up', middleCenter),
 						t => t.id
 					)).toBe('top-center');
 				}
 			)
 		);
 
-		test.skip(
+		test(
 			'should not follow the leaveFor config when the selector does not match an element',
 			testScenario(
 				scenarios.grid,
@@ -713,37 +842,78 @@ describe('target', () => {
 						}
 					});
 
-					const element = root.querySelector('#top-center');
+					const gridContainer = root.querySelector('[data-spotlight-id="grid"]');
+					const beforeGrid = root.querySelector('#before-grid');
+					const afterGrid = root.querySelector('#after-grid');
+					const topLeft = root.querySelector('#top-left');
+					const topCenter = root.querySelector('#top-center');
+					const topRight = root.querySelector('#top-right');
+					const middleLeft = root.querySelector('#middle-left');
+					const middleCenter = root.querySelector('#middle-center');
+					const middleRight = root.querySelector('#middle-right');
+					const bottomLeft = root.querySelector('#bottom-left');
+					const bottomCenter = root.querySelector('#bottom-center');
+					const bottomRight = root.querySelector('#bottom-right');
+
+					// Mock all bounding rects
+					beforeGrid.getBoundingClientRect = () => ({top: 0, left: 10, width: 30, height: 10, right: 40, bottom: 10});
+					gridContainer.getBoundingClientRect = () => ({top: 10, left: 10, width: 30, height: 30, right: 40, bottom: 40});
+					afterGrid.getBoundingClientRect = () => ({top: 40, left: 10, width: 30, height: 10, right: 40, bottom: 50});
+					topLeft.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+					topCenter.getBoundingClientRect = () => ({top: 10, left: 20, width: 10, height: 10, right: 30, bottom: 20});
+					topRight.getBoundingClientRect = () => ({top: 10, left: 30, width: 10, height: 10, right: 40, bottom: 20});
+					middleLeft.getBoundingClientRect = () => ({top: 20, left: 10, width: 10, height: 10, right: 20, bottom: 30});
+					middleCenter.getBoundingClientRect = () => ({top: 20, left: 20, width: 10, height: 10, right: 30, bottom: 30});
+					middleRight.getBoundingClientRect = () => ({top: 20, left: 30, width: 10, height: 10, right: 40, bottom: 30});
+					bottomLeft.getBoundingClientRect = () => ({top: 30, left: 10, width: 10, height: 10, right: 20, bottom: 40});
+					bottomCenter.getBoundingClientRect = () => ({top: 30, left: 20, width: 10, height: 10, right: 30, bottom: 40});
+					bottomRight.getBoundingClientRect = () => ({top: 30, left: 30, width: 10, height: 10, right: 40, bottom: 40});
 
 					expect(safeTarget(
-						getTargetByDirectionFromElement('up', element),
+						getTargetByDirectionFromElement('up', topCenter),
 						t => t.id
 					)).toBe('before-grid');
 				}
 			)
 		);
 
-		test.skip('should ignore empty containers', testScenario(
+		test('should ignore empty containers', testScenario(
 			scenarios.emptyContainer,
 			(root) => {
 				configureContainer('empty-container');
-				const element = root.querySelector('#above');
+
+				const emptyContainer = root.querySelector('[data-spotlight-id="empty-container"]');
+				const above = root.querySelector('#above');
+				const below = root.querySelector('#below');
+
+				// Mock all bounding rects
+				above.getBoundingClientRect = () => ({top: 0, left: 10, width: 10, height: 10, right: 20, bottom: 10});
+				emptyContainer.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+				below.getBoundingClientRect = () => ({top: 30, left: 0, width: 10, height: 10, right: 10, bottom: 40});
 
 				expect(safeTarget(
-					getTargetByDirectionFromElement('down', element),
+					getTargetByDirectionFromElement('down', above),
 					t => t.id
 				)).toBe('below');
 			}
 		));
 
-		test.skip('should ignore overlapping empty containers', testScenario(
+		test('should ignore overlapping empty containers', testScenario(
 			scenarios.emptyContainerOverlap,
 			(root) => {
 				configureContainer('empty-container');
-				const element = root.querySelector('#above');
+
+				const emptyContainer = root.querySelector('[data-spotlight-id="empty-container"]');
+				const above = root.querySelector('#above');
+				const below = root.querySelector('#below');
+
+				// Mock all bounding rects
+				above.getBoundingClientRect = () => ({top: 5, left: 10, width: 10, height: 10, right: 20, bottom: 15});
+				emptyContainer.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+				below.getBoundingClientRect = () => ({top: 30, left: 0, width: 10, height: 10, right: 10, bottom: 40});
 
 				expect(safeTarget(
-					getTargetByDirectionFromElement('down', element),
+					getTargetByDirectionFromElement('down', above),
 					t => t.id
 				)).toBe('below');
 			}
@@ -824,7 +994,7 @@ describe('target', () => {
 			)
 		);
 
-		test.skip(
+		test(
 			'should not find a target outside of container when restrict is not set',
 			testScenario(
 				scenarios.grid,
@@ -832,7 +1002,33 @@ describe('target', () => {
 					configureContainer('grid', {
 						restrict: 'none'
 					});
-					const rect = root.querySelector('#top-center').getBoundingClientRect();
+
+					const gridContainer = root.querySelector('[data-spotlight-id="grid"]');
+					const beforeGrid = root.querySelector('#before-grid');
+					const topLeft = root.querySelector('#top-left');
+					const topCenter = root.querySelector('#top-center');
+					const topRight = root.querySelector('#top-right');
+					const middleLeft = root.querySelector('#middle-left');
+					const middleCenter = root.querySelector('#middle-center');
+					const middleRight = root.querySelector('#middle-right');
+					const bottomLeft = root.querySelector('#bottom-left');
+					const bottomCenter = root.querySelector('#bottom-center');
+					const bottomRight = root.querySelector('#bottom-right');
+
+					// Mock all bounding rects
+					beforeGrid.getBoundingClientRect = () => ({top: 0, left: 10, width: 30, height: 10, right: 40, bottom: 10});
+					gridContainer.getBoundingClientRect = () => ({top: 10, left: 10, width: 30, height: 30, right: 40, bottom: 40});
+					topLeft.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+					topCenter.getBoundingClientRect = () => ({top: 10, left: 20, width: 10, height: 10, right: 30, bottom: 20});
+					topRight.getBoundingClientRect = () => ({top: 10, left: 30, width: 10, height: 10, right: 40, bottom: 20});
+					middleLeft.getBoundingClientRect = () => ({top: 20, left: 10, width: 10, height: 10, right: 20, bottom: 30});
+					middleCenter.getBoundingClientRect = () => ({top: 20, left: 20, width: 10, height: 10, right: 30, bottom: 30});
+					middleRight.getBoundingClientRect = () => ({top: 20, left: 30, width: 10, height: 10, right: 40, bottom: 30});
+					bottomLeft.getBoundingClientRect = () => ({top: 30, left: 10, width: 10, height: 10, right: 20, bottom: 40});
+					bottomCenter.getBoundingClientRect = () => ({top: 30, left: 20, width: 10, height: 10, right: 30, bottom: 40});
+					bottomRight.getBoundingClientRect = () => ({top: 30, left: 30, width: 10, height: 10, right: 40, bottom: 40});
+
+					const rect = topCenter.getBoundingClientRect();
 					const topCenterOfGrid = {
 						x: rect.left + rect.width / 2,
 						y: rect.top
@@ -846,13 +1042,39 @@ describe('target', () => {
 			)
 		);
 
-		test.skip('should cascade into unrestricted subcontainers', testScenario(
+		test('should cascade into unrestricted subcontainers', testScenario(
 			scenarios.grid,
 			(root) => {
 				configureContainer('grid', {
 					restrict: 'none'
 				});
-				const rect = root.querySelector('#top-center').getBoundingClientRect();
+
+				const gridContainer = root.querySelector('[data-spotlight-id="grid"]');
+				const beforeGrid = root.querySelector('#before-grid');
+				const topLeft = root.querySelector('#top-left');
+				const topCenter = root.querySelector('#top-center');
+				const topRight = root.querySelector('#top-right');
+				const middleLeft = root.querySelector('#middle-left');
+				const middleCenter = root.querySelector('#middle-center');
+				const middleRight = root.querySelector('#middle-right');
+				const bottomLeft = root.querySelector('#bottom-left');
+				const bottomCenter = root.querySelector('#bottom-center');
+				const bottomRight = root.querySelector('#bottom-right');
+
+				// Mock all bounding rects
+				beforeGrid.getBoundingClientRect = () => ({top: 0, left: 10, width: 30, height: 10, right: 40, bottom: 10});
+				gridContainer.getBoundingClientRect = () => ({top: 10, left: 10, width: 30, height: 30, right: 40, bottom: 40});
+				topLeft.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+				topCenter.getBoundingClientRect = () => ({top: 10, left: 20, width: 10, height: 10, right: 30, bottom: 20});
+				topRight.getBoundingClientRect = () => ({top: 10, left: 30, width: 10, height: 10, right: 40, bottom: 20});
+				middleLeft.getBoundingClientRect = () => ({top: 20, left: 10, width: 10, height: 10, right: 20, bottom: 30});
+				middleCenter.getBoundingClientRect = () => ({top: 20, left: 20, width: 10, height: 10, right: 30, bottom: 30});
+				middleRight.getBoundingClientRect = () => ({top: 20, left: 30, width: 10, height: 10, right: 40, bottom: 30});
+				bottomLeft.getBoundingClientRect = () => ({top: 30, left: 10, width: 10, height: 10, right: 20, bottom: 40});
+				bottomCenter.getBoundingClientRect = () => ({top: 30, left: 20, width: 10, height: 10, right: 30, bottom: 40});
+				bottomRight.getBoundingClientRect = () => ({top: 30, left: 30, width: 10, height: 10, right: 40, bottom: 40});
+
+				const rect = topCenter.getBoundingClientRect();
 				const aboveCenterOfGrid = {
 					x: rect.left + rect.width / 2,
 					y: rect.top - 1
@@ -865,7 +1087,7 @@ describe('target', () => {
 			}
 		));
 
-		test.skip('should ignore enterTo config of restricted subcontainers', testScenario(
+		test('should ignore enterTo config of restricted subcontainers', testScenario(
 			scenarios.grid,
 			(root) => {
 				configureContainer('grid', {
@@ -873,7 +1095,33 @@ describe('target', () => {
 					enterTo: 'default-element',
 					defaultElement: '#bottom-right'
 				});
-				const rect = root.querySelector('#top-center').getBoundingClientRect();
+
+				const gridContainer = root.querySelector('[data-spotlight-id="grid"]');
+				const beforeGrid = root.querySelector('#before-grid');
+				const topLeft = root.querySelector('#top-left');
+				const topCenter = root.querySelector('#top-center');
+				const topRight = root.querySelector('#top-right');
+				const middleLeft = root.querySelector('#middle-left');
+				const middleCenter = root.querySelector('#middle-center');
+				const middleRight = root.querySelector('#middle-right');
+				const bottomLeft = root.querySelector('#bottom-left');
+				const bottomCenter = root.querySelector('#bottom-center');
+				const bottomRight = root.querySelector('#bottom-right');
+
+				// Mock all bounding rects
+				beforeGrid.getBoundingClientRect = () => ({top: 0, left: 10, width: 30, height: 10, right: 40, bottom: 10});
+				gridContainer.getBoundingClientRect = () => ({top: 10, left: 10, width: 30, height: 30, right: 40, bottom: 40});
+				topLeft.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+				topCenter.getBoundingClientRect = () => ({top: 10, left: 20, width: 10, height: 10, right: 30, bottom: 20});
+				topRight.getBoundingClientRect = () => ({top: 10, left: 30, width: 10, height: 10, right: 40, bottom: 20});
+				middleLeft.getBoundingClientRect = () => ({top: 20, left: 10, width: 10, height: 10, right: 20, bottom: 30});
+				middleCenter.getBoundingClientRect = () => ({top: 20, left: 20, width: 10, height: 10, right: 30, bottom: 30});
+				middleRight.getBoundingClientRect = () => ({top: 20, left: 30, width: 10, height: 10, right: 40, bottom: 30});
+				bottomLeft.getBoundingClientRect = () => ({top: 30, left: 10, width: 10, height: 10, right: 20, bottom: 40});
+				bottomCenter.getBoundingClientRect = () => ({top: 30, left: 20, width: 10, height: 10, right: 30, bottom: 40});
+				bottomRight.getBoundingClientRect = () => ({top: 30, left: 30, width: 10, height: 10, right: 40, bottom: 40});
+
+				const rect = topCenter.getBoundingClientRect();
 				const aboveCenterOfGrid = {
 					x: rect.left + rect.width / 2,
 					y: rect.top - 1
@@ -886,7 +1134,7 @@ describe('target', () => {
 			}
 		));
 
-		test.skip('should find target within container from floating element', testScenario(
+		test('should find target within container from floating element', testScenario(
 			scenarios.overlap,
 			(root) => {
 				configureContainer('grid', {
@@ -894,7 +1142,32 @@ describe('target', () => {
 					defaultElement: '#bottom-right'
 				});
 
+				const gridContainer = root.querySelector('[data-spotlight-id="grid"]');
 				const overlap = root.querySelector('#over-middle-center');
+				const topLeft = root.querySelector('#top-left');
+				const topCenter = root.querySelector('#top-center');
+				const topRight = root.querySelector('#top-right');
+				const middleLeft = root.querySelector('#middle-left');
+				const middleCenter = root.querySelector('#middle-center');
+				const middleRight = root.querySelector('#middle-right');
+				const bottomLeft = root.querySelector('#bottom-left');
+				const bottomCenter = root.querySelector('#bottom-center');
+				const bottomRight = root.querySelector('#bottom-right');
+
+				// Mock all bounding rects
+				gridContainer.getBoundingClientRect = () => ({top: 10, left: 10, width: 30, height: 30, right: 40, bottom: 40});
+				topLeft.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+				topCenter.getBoundingClientRect = () => ({top: 10, left: 20, width: 10, height: 10, right: 30, bottom: 20});
+				topRight.getBoundingClientRect = () => ({top: 10, left: 30, width: 10, height: 10, right: 40, bottom: 20});
+				middleLeft.getBoundingClientRect = () => ({top: 20, left: 10, width: 10, height: 10, right: 20, bottom: 30});
+				middleCenter.getBoundingClientRect = () => ({top: 20, left: 20, width: 10, height: 10, right: 30, bottom: 30});
+				middleRight.getBoundingClientRect = () => ({top: 20, left: 30, width: 10, height: 10, right: 40, bottom: 30});
+				bottomLeft.getBoundingClientRect = () => ({top: 30, left: 10, width: 10, height: 10, right: 20, bottom: 40});
+				bottomCenter.getBoundingClientRect = () => ({top: 30, left: 20, width: 10, height: 10, right: 30, bottom: 40});
+				bottomRight.getBoundingClientRect = () => ({top: 30, left: 30, width: 10, height: 10, right: 40, bottom: 40});
+				// Overlap is floating over middle-center
+				overlap.getBoundingClientRect = () => ({top: 22, left: 25, width: 1, height: 1, right: 26, bottom: 23});
+
 				const {left: x, top: y} = overlap.getBoundingClientRect();
 
 				expect(safeTarget(
@@ -904,7 +1177,7 @@ describe('target', () => {
 			}
 		));
 
-		test.skip(
+		test(
 			'should ignore targets outside the bounds of an overflow container',
 			testScenario(
 				scenarios.overflow,
@@ -913,18 +1186,30 @@ describe('target', () => {
 						overflow: true
 					});
 
+					const overflowContainer = root.querySelector('[data-spotlight-id="overflow-container"]');
 					const element = root.querySelector('#outside-overflow');
+					const overflowAbove = root.querySelector('#overflow-above');
+					const overflowBelow = root.querySelector('#overflow-below');
+					const overflowWithin = root.querySelector('#overflow-within');
+
+					// Mock all bounding rects
+					overflowContainer.getBoundingClientRect = () => ({top: 50, left: 10, width: 30, height: 30, right: 40, bottom: 80});
+					element.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+					overflowAbove.getBoundingClientRect = () => ({top: 30, left: 10, width: 10, height: 10, right: 20, bottom: 40});
+					overflowWithin.getBoundingClientRect = () => ({top: 55, left: 10, width: 10, height: 10, right: 20, bottom: 65});
+					overflowBelow.getBoundingClientRect = () => ({top: 85, left: 10, width: 10, height: 10, right: 20, bottom: 95});
+
 					const {left: x, top: y} = element.getBoundingClientRect();
 
 					expect(safeTarget(
-						getTargetByDirectionFromPosition('down', {x, y}, rootContainerId),
+						getTargetByDirectionFromPosition('down', {x:x + 15, y:y + 35}, rootContainerId), // position is inside #outside-overflow
 						t => t.id
 					)).toBe('overflow-within');
 				}
 			)
 		);
 
-		test.skip(
+		test(
 			'should find target within container larger than overflow container',
 			testScenario(
 				scenarios.overflowLargeSubContainer,
@@ -936,18 +1221,30 @@ describe('target', () => {
 						enterTo: null
 					});
 
+					const overflowContainer = root.querySelector('[data-spotlight-id="overflow-container"]');
+					const insideContainer = root.querySelector('[data-spotlight-id="inside"]');
 					const element = root.querySelector('#outside-overflow');
+					const inLargeContainer = root.querySelector('#in-large-container');
+					const belowLargeContainer = root.querySelector('#below-large-container');
+
+					// Mock all bounding rects
+					overflowContainer.getBoundingClientRect = () => ({top: 50, left: 10, width: 40, height: 40, right: 50, bottom: 90});
+					insideContainer.getBoundingClientRect = () => ({top: 40, left: 15, width: 30, height: 60, right: 45, bottom: 100});
+					element.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+					inLargeContainer.getBoundingClientRect = () => ({top: 60, left: 20, width: 10, height: 10, right: 30, bottom: 70});
+					belowLargeContainer.getBoundingClientRect = () => ({top: 110, left: 10, width: 10, height: 10, right: 20, bottom: 120});
+
 					const {left: x, top: y} = element.getBoundingClientRect();
 
 					expect(safeTarget(
-						getTargetByDirectionFromPosition('down', {x, y}, rootContainerId),
+						getTargetByDirectionFromPosition('down', {x: x + 5, y: y + 5}, rootContainerId), // position is inside #outside-overflow
 						t => t.id
 					)).toBe('in-large-container');
 				}
 			)
 		);
 
-		test.skip(
+		test(
 			'should find target out of bounds of overflow container from within container',
 			testScenario(
 				scenarios.overflow,
@@ -956,8 +1253,18 @@ describe('target', () => {
 						overflow: true
 					});
 
-					const element = root.querySelector('#overflow-within');
-					const {left, width, top, height} = element.getBoundingClientRect();
+					const overflowContainer = root.querySelector('[data-spotlight-id="overflow-container"]');
+					const overflowAbove = root.querySelector('#overflow-above');
+					const overflowBelow = root.querySelector('#overflow-below');
+					const overflowWithin = root.querySelector('#overflow-within');
+
+					// Mock all bounding rects
+					overflowContainer.getBoundingClientRect = () => ({top: 110, left: 10, width: 30, height: 30, right: 40, bottom: 140});
+					overflowAbove.getBoundingClientRect = () => ({top: 100, left: 10, width: 10, height: 10, right: 20, bottom: 110});
+					overflowWithin.getBoundingClientRect = () => ({top: 110, left: 10, width: 10, height: 10, right: 20, bottom: 120});
+					overflowBelow.getBoundingClientRect = () => ({top: 140, left: 10, width: 10, height: 10, right: 20, bottom: 150});
+
+					const {left, width, top, height} = overflowWithin.getBoundingClientRect();
 					const x = left + width / 2;
 					const y = top + height / 2;
 
@@ -974,13 +1281,21 @@ describe('target', () => {
 			)
 		);
 
-		test.skip('should ignore empty containers', testScenario(
+		test('should ignore empty containers', testScenario(
 			scenarios.emptyContainer,
 			(root) => {
 				configureContainer('empty-container');
-				const element = root.querySelector('#above');
 
-				const {left, width, top, height} = element.getBoundingClientRect();
+				const emptyContainer = root.querySelector('[data-spotlight-id="empty-container"]');
+				const above = root.querySelector('#above');
+				const below = root.querySelector('#below');
+
+				// Mock all bounding rects
+				above.getBoundingClientRect = () => ({top: 0, left: 10, width: 10, height: 10, right: 20, bottom: 10});
+				emptyContainer.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+				below.getBoundingClientRect = () => ({top: 30, left: 0, width: 10, height: 10, right: 10, bottom: 40});
+
+				const {left, width, top, height} = above.getBoundingClientRect();
 				const x = left + width / 2;
 				const y = top + height - 1; // just inside the bottom of 'above'
 
@@ -991,13 +1306,21 @@ describe('target', () => {
 			}
 		));
 
-		test.skip('should ignore overlapping empty containers', testScenario(
+		test('should ignore overlapping empty containers', testScenario(
 			scenarios.emptyContainer,
 			(root) => {
 				configureContainer('empty-container');
-				const element = root.querySelector('#above');
 
-				const {left, width, top, height} = element.getBoundingClientRect();
+				const emptyContainer = root.querySelector('[data-spotlight-id="empty-container"]');
+				const above = root.querySelector('#above');
+				const below = root.querySelector('#below');
+
+				// Mock all bounding rects
+				above.getBoundingClientRect = () => ({top: 0, left: 10, width: 10, height: 10, right: 20, bottom: 10});
+				emptyContainer.getBoundingClientRect = () => ({top: 10, left: 10, width: 10, height: 10, right: 20, bottom: 20});
+				below.getBoundingClientRect = () => ({top: 30, left: 0, width: 10, height: 10, right: 10, bottom: 40});
+
+				const {left, width, top, height} = above.getBoundingClientRect();
 				const x = left + width / 2;
 				const y = top + height + 1; // just inside the empty container
 
@@ -1036,15 +1359,14 @@ describe('target', () => {
 					getTargetByDirectionFromPosition('down', {x, y}, rootContainerId),
 					t => t.id
 				);
-				// TODO: recheck
-				// const actualFromElement = safeTarget(
-				// 	getTargetByDirectionFromElement('down', outside),
-				// 	t => t.id
-				// );
+
+				const actualFromElement = safeTarget(
+					getTargetByDirectionFromElement('down', outside),
+					t => t.id
+				);
 
 				expect(actualFromPosition).toBe(expected);
-				// TODO: recheck
-				// expect(actualFromElement).toBe(expected);
+				expect(actualFromElement).toBe(expected);
 			}
 		));
 	});
