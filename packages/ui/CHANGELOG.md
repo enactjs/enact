@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `limestone/Card` `splitCaption` prop to allow user to split the content for the captions
 - `ui/useScroll.ScrollAnimator` `oase-out-cubic` animation function
 
 ### Changed
