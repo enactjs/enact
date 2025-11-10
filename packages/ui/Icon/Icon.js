@@ -208,7 +208,7 @@ const IconBase = kind({
 			}
 
 			return {
-				children: icon,
+				children: <span style={{position: 'relative', left: ri.scaleToRem(-1), top: ri.scaleToRem(-1)}}>{icon}</span>,
 				style
 			};
 		}
