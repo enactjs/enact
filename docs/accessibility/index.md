@@ -104,7 +104,7 @@ If click the `debug aria` tab located at the top of the page of the sampler and 
 This debug feature is designed to work if a class `debug aria` is given to any enact app.
 So just add `debug aria` to className prop in your enact app to see the applied ARIA properties.
 
-The following example demonstrates the usage of `debug aira` className.
+The following example demonstrates the usage of `debug aria` className.
 
 ```js
 import ThemeDecorator from '@enact/sandstone/ThemeDecorator';
