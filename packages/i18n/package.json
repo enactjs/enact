@@ -50,16 +50,16 @@
   "dependencies": {
     "@enact/core": "^5.3.2",
     "prop-types": "^15.8.1",
-    "ramda": "^0.31.3",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "ramda": "^0.32.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "xhr": "^2.6.0"
   },
   "peerDependencies": {
     "ilib": "^14.21.0 || ^14.21.0-webos1"
   },
   "devDependencies": {
-    "@enact/ui-test-utils": "^3.0.0",
-    "ilib": "^14.21.1"
+    "@enact/ui-test-utils": "^4.0.0",
+    "ilib": "^14.21.2"
   }
 }
