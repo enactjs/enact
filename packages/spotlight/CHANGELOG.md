@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
-- `spotlight` to navigate to an element that is visible in its container
+- `spotlight` to skip visibility check when entering a restricted container or choose a visible container as next target
 
 ## [5.3.2] - 2025-10-28
 
