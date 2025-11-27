@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` to skip visibility check when entering a restricted container or choose a visible container as next target
+
 ## [5.3.2] - 2025-10-28
 
 ### Fixed
