@@ -50,7 +50,7 @@
   "dependencies": {
     "@enact/core": "^5.3.2",
     "prop-types": "^15.8.1",
-    "ramda": "^0.32.0",
+    "ramda": "^0.31.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "xhr": "^2.6.0"
