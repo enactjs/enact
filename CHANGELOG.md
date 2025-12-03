@@ -7,6 +7,13 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Fixed
 
 - `spotlight` to skip visibility check when entering a restricted container or choose a visible container as next target
+### Added
+
+- `ui/useScroll.ScrollAnimator` `oase-out-cubic` animation function
+
+### Changed
+
+- `ui/useScroll.ScrollAnimator` default animation function
 
 ## [5.3.2] - 2025-10-28
 

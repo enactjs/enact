@@ -155,6 +155,16 @@ const SliderBase = kind({
 		min: PropTypes.number,
 
 		/**
+		 * Adds a child component to the slider which should show the min and max values.
+		 *
+		 * @see {@link ui/ComponentOverride}
+		 *
+		 * @type {Component|Element}
+		 * @public
+		 */
+		minMaxComponent: EnactPropTypes.componentOverride,
+
+		/**
 		 * Applies the style where the slider bar does not display filled.
 		 *
 		 * @type {Boolean}
@@ -285,7 +295,9 @@ const SliderBase = kind({
 		css,
 		disabled,
 		knobComponent,
+		max,
 		min,
+		minMaxComponent,
 		orientation,
 		percent,
 		progressBarComponent,
@@ -294,7 +306,6 @@ const SliderBase = kind({
 		value = min,
 		...rest
 	}) => {
-		delete rest.max;
 		delete rest.noFill;
 		delete rest.pressed;
 		delete rest.step;
@@ -318,6 +329,13 @@ const SliderBase = kind({
 						value={value}
 					/>
 				</ComponentOverride>
+				<ComponentOverride
+					className={css.minMax}
+					component={minMaxComponent}
+					orientation={orientation}
+					max={max}
+					min={min}
+				/>
 			</div>
 		);
 	}
