@@ -21,7 +21,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Fixed
 
-- `spotlight` navigation from an element to a different container on page load.
+- `spotlight` navigation from an element to a different container on page load
 
 ## [5.3.1] - 2025-10-14
 
