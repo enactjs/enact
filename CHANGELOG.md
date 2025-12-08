@@ -2,18 +2,20 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [5.4.0] - 2025-12-08
 
-### Fixed
-
-- `spotlight` to skip visibility check when entering a restricted container or choose a visible container as next target
 ### Added
 
+- `limestone/Card` `splitCaption` prop to allow user to split the content for the captions
 - `ui/useScroll.ScrollAnimator` `oase-out-cubic` animation function
 
 ### Changed
 
 - `ui/useScroll.ScrollAnimator` default animation function
+
+### Fixed
+
+- `spotlight` to skip visibility check when entering a restricted container or choose a visible container as next target
 
 ## [5.3.2] - 2025-10-28
 
