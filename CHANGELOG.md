@@ -2,7 +2,16 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [5.4.0] - 2025-12-08
+
+### Added
+
+- `limestone/Card` `splitCaption` prop to allow user to split the content for the captions
+- `ui/useScroll.ScrollAnimator` `oase-out-cubic` animation function
+
+### Changed
+
+- `ui/useScroll.ScrollAnimator` default animation function
 
 ### Fixed
 
@@ -12,7 +21,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Fixed
 
-- `spotlight` navigation from an element to a different container on page load.
+- `spotlight` navigation from an element to a different container on page load
 
 ## [5.3.1] - 2025-10-14
 
