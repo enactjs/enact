@@ -1,10 +1,13 @@
-/* global __dirname */
+import webpack from '@enact/storybook-utils/configs/webpack.js';
+import {loadCsf} from 'storybook/internal/csf-tools';
+import {readFileSync} from 'fs';
+import {fileURLToPath} from 'url';
+import {dirname} from 'path';
 
-const webpack = require('@enact/storybook-utils/configs/webpack');
-const {loadCsf} = require('storybook/internal/csf-tools');
-const {readFileSync}  = require('fs');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-module.exports = {
+export default {
 	core: {
 		disableTelemetry: true
 	},
