@@ -413,20 +413,20 @@ class VirtualListBasic extends Component {
 
 			if (this.scrollPosition === 0 && this.moreInfo.firstVisibleIndex !== 0) {
 				this.scrollPosition = this.prevScrollPosition;
-				this.state.firstIndex = prevState.firstIndex;
+				this.setState({firstIndex: prevState.firstIndex});
 				this.updateMoreInfo(this.props.dataSize, this.scrollPosition);
-				
-				for (let i = this.state.firstIndex; i < this.state.firstIndex + this.state.numOfItems; i++) {
+
+				for (let i = firstIndex; i < firstIndex + this.state.numOfItems; i++) {
 					const size = this.isPrimaryDirectionVertical ? clientHeight : clientWidth;
 
-					if (this.itemPositions[i+1]?.position > this.prevItemPositions[i+1]?.position) {
+					if (this.itemPositions[i + 1]?.position > this.prevItemPositions[i + 1]?.position) {
 						if (i === this.moreInfo.lastVisibleIndex && this.getItemBottomPosition(i) > this.scrollPosition + size) {
 							this.scrollPosition = this.getItemBottomPosition(i) - size;
 						}
 						break;
 					}
 
-					if (this.itemPositions[i+1]?.position < this.prevItemPositions[i+1]?.position) {
+					if (this.itemPositions[i + 1]?.position < this.prevItemPositions[i + 1]?.position) {
 						if (this.itemPositions[i].position < this.scrollPosition) {
 							this.scrollPosition = this.itemPositions[i].position;
 						}
@@ -438,7 +438,7 @@ class VirtualListBasic extends Component {
 			const {x, y} = this.getXY(this.scrollPosition, 0);
 
 			this.calculateMetrics(this.props);
-			this.setState(this.getStatesAndUpdateBounds(this.props, this.state.firstIndex));
+			this.setState(this.getStatesAndUpdateBounds(this.props, firstIndex));
 			this.setContainerSize();
 
 			const xMax = scrollWidth - clientWidth;
