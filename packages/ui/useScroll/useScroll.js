@@ -67,6 +67,9 @@ const
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
 
+const initRiRatio = ri.scale(1);
+let riRatio = initRiRatio;
+
 const TouchableDiv = Touchable(({ref, ...rest}) => (<div {...rest} ref={ref} />));
 
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
@@ -397,6 +400,21 @@ const useScrollBase = (props) => {
 	}, [forceUpdate, scrollContentHandle]);
 	// scrollMode 'translate' ]]
 
+	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
+		{
+			childProps,
+			clientSize,
+			dataSize,
+			itemRenderer,
+			itemSize,
+			itemSizes,
+			overhang,
+			pageScroll,
+			spacing,
+			wrap
+		} :
+		{children};
+
 	function handleResizeWindow () {
 		const propsHandleResizeWindow = props.handleResizeWindow;
 
@@ -409,6 +427,15 @@ const useScrollBase = (props) => {
 					scrollTo({position: {x: 0, y: 0}, animate: false});
 				} else {
 					scrollContentHandle.current.scrollToPosition(0, 0, 'instant');
+				}
+				if (ri.scale(1) !== riRatio) {
+					if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
+						scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
+						scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
+					} else {
+						scrollContentProps.itemSize *= ri.scale(1) / riRatio;
+					}
+					riRatio = ri.scale(1);
 				}
 			}
 
@@ -1576,21 +1603,6 @@ const useScrollBase = (props) => {
 			onTouchStart: scrollMode === 'native' ? onTouchStart : null // scrollMode 'native'
 		})
 	});
-
-	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
-		{
-			childProps,
-			clientSize,
-			dataSize,
-			itemRenderer,
-			itemSize,
-			itemSizes,
-			overhang,
-			pageScroll,
-			spacing,
-			wrap
-		} :
-		{children};
 
 	assignProperties('scrollContentProps', {
 		...scrollContentProps,
