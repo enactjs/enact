@@ -432,10 +432,8 @@ const useScrollBase = (props) => {
 					if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
 						scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
 						scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
-					} else {
-						scrollContentProps.itemSize *= ri.scale(1) / riRatio;
+						riRatio = ri.scale(1);
 					}
-					riRatio = ri.scale(1);
 				}
 			}
 
