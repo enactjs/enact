@@ -416,6 +416,14 @@ const useScrollBase = (props) => {
 	function handleResizeWindow () {
 		const propsHandleResizeWindow = props.handleResizeWindow;
 
+		if (ri.scale(1) !== riRatio) {
+			if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
+				scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
+				scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
+				setRiRatio(ri.scale(1));
+			}
+		}
+
 		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
 		setTimeout(() => {
 			const handleResizeResult = propsHandleResizeWindow?.();
@@ -426,15 +434,7 @@ const useScrollBase = (props) => {
 				} else {
 					scrollContentHandle.current.scrollToPosition(0, 0, 'instant');
 				}
-				if (ri.scale(1) !== riRatio) {
-					if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
-						scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
-						scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
-						setRiRatio(ri.scale(1));
-					}
-				}
 			}
-
 			enqueueForceUpdate();
 		});
 	}
