@@ -67,9 +67,6 @@ const
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
 
-const initRiRatio = ri.scale(1);
-let riRatio = initRiRatio;
-
 const TouchableDiv = Touchable(({ref, ...rest}) => (<div {...rest} ref={ref} />));
 
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
@@ -176,6 +173,7 @@ const useScrollBase = (props) => {
 
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
+	const [riRatio, setRiRatio] = useState(ri.scale(1));
 
 	const mutableRef = useRef({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
@@ -432,7 +430,7 @@ const useScrollBase = (props) => {
 					if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
 						scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
 						scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
-						riRatio = ri.scale(1);
+						setRiRatio(ri.scale(1));
 					}
 				}
 			}
