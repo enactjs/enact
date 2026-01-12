@@ -8,7 +8,7 @@ let mockPlatform;
 jest.mock('../../resolution', () => ({
 	__esModule: true,
 	default: {
-		get scale() {
+		get scale () {
 			return mockRiScale || ((val) => val);
 		}
 	}
@@ -16,23 +16,23 @@ jest.mock('../../resolution', () => ({
 
 jest.mock('@enact/core/platform', () => ({
 	__esModule: true,
-	get platform() {
+	get platform () {
 		return mockPlatform || {chrome: 120};
 	}
 }));
 
 global.ResizeObserver = class ResizeObserver {
-	constructor() {}
-	observe() {}
-	unobserve() {}
-	disconnect() {}
+	constructor () {}
+	observe () {}
+	unobserve () {}
+	disconnect () {}
 };
 
 // Import AFTER all mocks
 import {useScrollBase} from '../useScroll';
 
 // Helper function to create complete mock refs
-function createMockRefs() {
+function createMockRefs () {
 	return {
 		scrollContentHandle: {
 			current: {
@@ -112,6 +112,7 @@ describe('useScroll', () => {
 
 			mockRiScale = jest.fn(() => 2);
 
+			// eslint-disable-next-line testing-library/no-unnecessary-act
 			act(() => {
 				fireEvent(window, new Event('resize'));
 				jest.runAllTimers();
@@ -144,6 +145,7 @@ describe('useScroll', () => {
 
 			renderHook(() => useScrollBase(props));
 
+			// eslint-disable-next-line testing-library/no-unnecessary-act
 			act(() => {
 				fireEvent(window, new Event('resize'));
 				jest.runAllTimers();
@@ -177,6 +179,7 @@ describe('useScroll', () => {
 
 			mockRiScale = jest.fn(() => 2);
 
+			// eslint-disable-next-line testing-library/no-unnecessary-act
 			act(() => {
 				fireEvent(window, new Event('resize'));
 				jest.runAllTimers();
@@ -210,6 +213,7 @@ describe('useScroll', () => {
 
 			mockRiScale = jest.fn(() => 2);
 
+			// eslint-disable-next-line testing-library/no-unnecessary-act
 			act(() => {
 				fireEvent(window, new Event('resize'));
 				jest.runAllTimers();
