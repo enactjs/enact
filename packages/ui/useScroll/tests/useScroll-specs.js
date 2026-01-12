@@ -274,6 +274,7 @@ describe('useScroll', () => {
 			};
 
 			const {roundedTargetX, roundedTargetY} = roundTarget(currentPosition, 90.4, 80.8);
+
 			expect(roundedTargetX).toEqual(90.4);
 			expect(roundedTargetY).toEqual(80.8);
 		});
