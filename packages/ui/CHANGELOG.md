@@ -7,6 +7,9 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/VirtualList` not to jump to the top when item size was changed
+## [5.4.1] - 2025-12-30
+
+No significant changes.
 
 ## [5.4.0] - 2025-12-08
 
