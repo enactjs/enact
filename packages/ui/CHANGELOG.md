@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/VirtualList` not to jump to the top when item size was changed
  
+- `ui/VirtualList.VirtualGridList` to adjust itemSize properly when resizing window 
+
 ## [5.4.1] - 2025-12-30
 
 No significant changes.
