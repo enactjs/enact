@@ -34,7 +34,7 @@ const userAgentPatterns = [
 ];
 
 // The base supported versions: Used in DEPRECATED warning
-const supportedVersions = {safari: 16.4, chrome: 119, firefox: 128};
+const supportedVersions = {safari: 16.6, chrome: 119, firefox: 128};
 
 const parseUserAgent = (userAgent) => {
 	const detectedInfo = {
@@ -70,7 +70,7 @@ const parseUserAgent = (userAgent) => {
 
 	// deprecation warning for browser versions older than our support policy
 	if (supportedVersions[detectedInfo.browserName] > detectedInfo.browserVersion) {
-		deprecate({name: `supporting ${detectedInfo.browserName} version older than ${supportedVersions[detectedInfo.browserName]}`, until: '5.0.0'});
+		deprecate({name: `supporting ${detectedInfo.browserName} version older than ${supportedVersions[detectedInfo.browserName]}`, until: '6.0.0'});
 	}
 
 	return detectedInfo;
