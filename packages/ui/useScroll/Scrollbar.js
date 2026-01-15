@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import {memo, useEffect, useRef} from 'react';
+import {memo, useCallback, useEffect, useRef} from 'react';
 
 import ri from '../resolution';
 
@@ -44,38 +44,30 @@ const setCSSVariable = (element, variable, value) => {
  * @private
  */
 const useScrollbar = (props) => {
-	const {className, clientSize, corner, css, minThumbSize, scrollbarHandle, vertical, ...rest} = props;
+	const {className, clientSize, corner, css, minThumbSize, scrollbarHandle: scrollbarHandleRef, vertical, ...rest} = props;
 	// Refs
 	const scrollbarContainerRef = useRef();
 	const scrollbarTrackRef = useRef();
 	const hideScrollbarTrackJob = useRef(null);
 
-	hideScrollbarTrackJob.current = hideScrollbarTrackJob.current || new Job(hideScrollbarTrack, scrollbarTrackHidingDelay);
-
-	function hideScrollbarTrack () {
+	const hideScrollbarTrack = useCallback(() => {
 		removeClass(scrollbarTrackRef.current, css.scrollbarTrackShown);
-	}
+	}, [css.scrollbarTrackShown]);
 
-	useEffect(() => {
-		return () => {
-			hideScrollbarTrackJob.current.stop();
-		};
-	}, []);
-
-	function getContainerRef () {
+	const getContainerRef = () => {
 		return scrollbarContainerRef;
-	}
+	};
 
-	function showScrollbarTrack () {
+	const showScrollbarTrack = useCallback(() => {
 		hideScrollbarTrackJob.current.stop();
 		addClass(scrollbarTrackRef.current, css.scrollbarTrackShown);
-	}
+	}, [css.scrollbarTrackShown]);
 
-	function startHidingScrollbarTrack () {
+	const startHidingScrollbarTrack = () => {
 		hideScrollbarTrackJob.current.start();
-	}
+	};
 
-	function update (bounds) {
+	const update = useCallback((bounds) => {
 		const
 			primaryDimension = vertical ? 'clientHeight' : 'clientWidth',
 			trackSize = clientSize ? clientSize[primaryDimension] : scrollbarContainerRef.current[primaryDimension],
@@ -88,16 +80,28 @@ const useScrollbar = (props) => {
 
 		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-size-ratio', scrollbarThumbSizeRatio);
 		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-progress-ratio', scrollbarThumbProgressRatio);
-	}
+	}, [clientSize, minThumbSize, vertical]);
 
-	if (scrollbarHandle) {
-		scrollbarHandle.current = {
-			getContainerRef,
-			showScrollbarTrack,
-			startHidingScrollbarTrack,
-			update
+	useEffect(() => {
+		if (scrollbarHandleRef) {
+			scrollbarHandleRef.current = {
+				getContainerRef,
+				showScrollbarTrack,
+				startHidingScrollbarTrack,
+				update
+			};
+		}
+	}, [scrollbarHandleRef, showScrollbarTrack, update]);
+
+	useEffect(() => {
+		hideScrollbarTrackJob.current = hideScrollbarTrackJob.current || new Job(hideScrollbarTrack, scrollbarTrackHidingDelay);
+	}, [css.scrollbarTrackShown, hideScrollbarTrack]);
+
+	useEffect(() => {
+		return () => {
+			hideScrollbarTrackJob.current.stop();
 		};
-	}
+	}, []);
 
 	return {
 		restProps: rest,

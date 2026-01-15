@@ -11,7 +11,7 @@ import useHandlers from '@enact/core/useHandlers';
 import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import pick from 'ramda/src/pick';
-import {useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import warning from 'warning';
 
 import {useToggle} from './useToggle';
@@ -179,9 +179,13 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		// FIXME: Current behavior is to use `false` when switching from a truthy value to
 		// either null or undefined. The ternary below enforces that but we don't want to
 		// continue this exception in the future and should sunset it with this HOC.
-		const {current: instance} = useRef({selected: null});
-		const selected = (instance.selected && propSelected == null) ? false : hook.selected;
-		instance.selected = propSelected;
+		const [selected, setSelected] = useState(false);
+		const instanceRef = useRef({selected: null});
+
+		useEffect(() => {
+			setSelected((instanceRef.current.selected && propSelected == null) ? false : hook.selected);
+			instanceRef.current.selected = propSelected;
+		}, [hook.selected, propSelected]);
 
 		if (prop) {
 			updated[prop] = selected;

@@ -1709,13 +1709,13 @@ const useScroll = (props) => {
 		verticalScrollbarHandle
 	});
 
-	assignProperties('scrollContainerProps', {ref: scrollContainerRef});
-	assignProperties('scrollContentProps', {
+	assignProperties('scrollContainerProps', {ref: scrollContainerRef}); // eslint-disable-line react-hooks/refs
+	assignProperties('scrollContentProps', { // eslint-disable-line react-hooks/refs
 		...(props.itemRenderer ? {itemRefs} : {}),
 		scrollContentRef
 	});
-	assignProperties('verticalScrollbarProps', {scrollbarHandle: verticalScrollbarHandle});
-	assignProperties('horizontalScrollbarProps', {scrollbarHandle: horizontalScrollbarHandle});
+	assignProperties('verticalScrollbarProps', {scrollbarHandle: verticalScrollbarHandle}); // eslint-disable-line react-hooks/refs
+	assignProperties('horizontalScrollbarProps', {scrollbarHandle: horizontalScrollbarHandle}); // eslint-disable-line react-hooks/refs
 
 	// Return
 

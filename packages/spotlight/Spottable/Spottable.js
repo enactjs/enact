@@ -145,9 +145,9 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 		rest.tabIndex = tabIndex;
 
-		const handlers = useHandlers(spotHandlers, rest, spot);
-
 		delete rest.spotlightId;
+
+		const handlers = useHandlers(spotHandlers, rest, spot);
 
 		return (
 			<WrappedWithRef

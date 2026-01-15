@@ -76,9 +76,11 @@ export const Routable_ = () => {
 			<Route path="app" component={AppView}>
 				<Route path="settings" component={SettingsView}>
 					{['wifi', 'wired', 'bluetooth'].map((settingModule) => {
-						SettingModuleComponents[settingModule] =
-							SettingModuleComponents[settingModule] ||
-							SettingModuleView(settingModule);
+						Object.assign(SettingModuleComponents, {
+							[settingModule]:
+								SettingModuleComponents[settingModule] ||
+								SettingModuleView(settingModule)
+						});
 						return (
 							<Route
 								key={settingModule}
