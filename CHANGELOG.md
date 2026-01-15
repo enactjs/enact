@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Fixed
 
+- `ui/VirtulList` not to cut off focused item when scroll by pressing key
 - `ui/VirtualList.VirtualGridList` to adjust itemSize properly when resizing window
 
 ## [5.4.1] - 2025-12-30
