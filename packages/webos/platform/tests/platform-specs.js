@@ -12,6 +12,7 @@ describe('platform', () => {
 		const webOSTV23 = 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.128 Safari/537.36 WebAppManager';
 		const webOSTV24 = 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.5359.211 Safari/537.36 WebAppManager';
 		const webOSTV25 = 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.270 Safari/537.36 WebAppManager';
+		const webOSTV26 = 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.6834.159 Safari/537.36 WebAppManager';
 		const webOSTVChrome = 'Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 WebAppManager';
 		const webOSOther = 'Mozilla/5.0 (Web0S; Linux) AppleWebKit/537.36 (KHTML, like Gecko) Safari/537.36 WebAppManager';
 
@@ -67,6 +68,13 @@ describe('platform', () => {
 		test('should detect webOS 25', () => {
 			const expected = {version: 25, chrome: 120};
 			const actual = parseUserAgent(webOSTV25);
+
+			expect(actual).toMatchObject(expected);
+		});
+
+		test('should detect webOS 26', () => {
+			const expected = {version: 26, chrome: 132};
+			const actual = parseUserAgent(webOSTV26);
 
 			expect(actual).toMatchObject(expected);
 		});
