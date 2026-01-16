@@ -22,7 +22,9 @@ const webOSVersion = [
 	// Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.5359.211 Safari/537.36 WebAppManager
 	{chrome: 108, version: 24},
 	// Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.270 Safari/537.36 WebAppManager
-	{chrome: 120, version: 25}
+	{chrome: 120, version: 25},
+	// Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.6834.159 Safari/537.36 WebAppManager
+	{chrome: 132, version: 26}
 ];
 
 const platforms = [
