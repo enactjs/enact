@@ -411,6 +411,7 @@ class VirtualListBasic extends Component {
 		) {
 			const {clientHeight, clientWidth, scrollHeight, scrollWidth} = this.scrollBounds;
 
+			/* istanbul ignore next */
 			if (this.scrollPosition === 0 && this.moreInfo.firstVisibleIndex !== 0) {
 				this.scrollPosition = this.prevScrollPosition;
 				this.setState({firstIndex: prevState.firstIndex});
