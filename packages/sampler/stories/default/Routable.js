@@ -45,7 +45,6 @@ const HomeView = () => (
 	<Heading style={viewStyle}>/app/home</Heading>
 );
 
-const SettingModuleComponents = {};
 // eslint-disable-next-line enact/display-name
 const SettingModuleView = (settingModuleName) => () => (
 	<div style={viewStyle}>
@@ -65,6 +64,7 @@ export default {
 };
 
 export const Routable_ = () => {
+	const SettingModuleComponents = {};
 	let [path, setPath] = useState('/app');
 	const handleNavigate = (ev) => {
 		action('onNavigate')(ev);
@@ -76,11 +76,9 @@ export const Routable_ = () => {
 			<Route path="app" component={AppView}>
 				<Route path="settings" component={SettingsView}>
 					{['wifi', 'wired', 'bluetooth'].map((settingModule) => {
-						Object.assign(SettingModuleComponents, {
-							[settingModule]:
-								SettingModuleComponents[settingModule] ||
-								SettingModuleView(settingModule)
-						});
+						SettingModuleComponents[settingModule] =
+							SettingModuleComponents[settingModule] ||
+							SettingModuleView(settingModule);
 						return (
 							<Route
 								key={settingModule}

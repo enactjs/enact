@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import {memo, useEffect, useRef} from 'react';
+import {memo, useEffect, useLayoutEffect, useRef} from 'react';
 
 import ri from '../resolution';
 
@@ -44,13 +44,11 @@ const setCSSVariable = (element, variable, value) => {
  * @private
  */
 const useScrollbar = (props) => {
-	const {className, clientSize, corner, css, minThumbSize, scrollbarHandle, vertical, ...rest} = props;
+	const {className, clientSize, corner, css, minThumbSize, scrollbarHandle: scrollbarHandleRef, vertical, ...rest} = props;
 	// Refs
 	const scrollbarContainerRef = useRef();
 	const scrollbarTrackRef = useRef();
 	const hideScrollbarTrackJob = useRef(null);
-
-	hideScrollbarTrackJob.current = hideScrollbarTrackJob.current || new Job(hideScrollbarTrack, scrollbarTrackHidingDelay);
 
 	function hideScrollbarTrack () {
 		removeClass(scrollbarTrackRef.current, css.scrollbarTrackShown);
@@ -90,14 +88,18 @@ const useScrollbar = (props) => {
 		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-progress-ratio', scrollbarThumbProgressRatio);
 	}
 
-	if (scrollbarHandle) {
-		scrollbarHandle.current = {
-			getContainerRef,
-			showScrollbarTrack,
-			startHidingScrollbarTrack,
-			update
-		};
-	}
+	useLayoutEffect(() => {
+		if (scrollbarHandleRef) {
+			scrollbarHandleRef.current = {
+				getContainerRef,
+				showScrollbarTrack,
+				startHidingScrollbarTrack,
+				update
+			};
+		}
+
+		hideScrollbarTrackJob.current = hideScrollbarTrackJob.current || new Job(hideScrollbarTrack, scrollbarTrackHidingDelay);
+	});
 
 	return {
 		restProps: rest,

@@ -1,4 +1,4 @@
-import {createContext, use, useCallback, useMemo} from 'react';
+import {createContext, use, useCallback, useMemo, useState} from 'react';
 
 import {determineSkin, determineVariants, getClassName} from './util';
 
@@ -84,8 +84,14 @@ function useSkins (config) {
 
 	const {parentSkin, parentVariants} = use(SkinContext) || {};
 
+	const [currentParentVariants, setCurrentParentVariants] = useState(parentVariants);
+
+	if (parentVariants !== currentParentVariants) {
+		setCurrentParentVariants(parentVariants);
+	}
+
 	const effectiveSkin = determineSkin(defaultSkin, skin, parentSkin);
-	const effectiveVariants = useMemo(() => determineVariants(defaultVariants, variants, skinVariants, parentVariants), [defaultVariants, variants, skinVariants, parentVariants]);
+	const effectiveVariants = useMemo(() => determineVariants(defaultVariants, variants, skinVariants, currentParentVariants), [currentParentVariants, defaultVariants, skinVariants, variants]);
 	const className = getClassName(skins, effectiveSkin, effectiveVariants);
 	const value = useMemo(() => ({parentSkin: effectiveSkin, parentVariants: effectiveVariants}), [effectiveSkin, effectiveVariants]);
 

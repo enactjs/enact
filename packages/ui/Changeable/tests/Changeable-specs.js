@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import {act, render, screen} from '@testing-library/react';
+import {useEffect} from 'react';
 
 import Changeable from '../Changeable';
 
@@ -8,7 +9,10 @@ describe('Changeable', () => {
 	const testValue = 3;
 
 	const DivComponent = (props) => {
-		data = props;
+		useEffect(() => {
+			data = props;
+		}, [props]);
+
 		return <div data-testid="changeable">{props.value?.toString()}</div>;
 	};
 
