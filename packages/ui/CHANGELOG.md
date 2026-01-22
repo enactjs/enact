@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Changed
+
+- `ui/Scroller` scroll animation method for `scrollMode: native`
+
 ### Fixed
 
 - `ui/VirtulList` not to cut off focused item when scroll by pressing key
