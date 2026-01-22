@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [unreleased]
 
+### Changed
+
+- `core/platform` to support `safari` 16.6, `chrome` 119, and `firefox` 128 or later
+
 ### Fixed
 
 - `ui/VirtulList` not to cut off focused item when scroll by pressing key
