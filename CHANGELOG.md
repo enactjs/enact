@@ -6,8 +6,8 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Changed
 
-- `ui/Scroller` scroll animation method for `scrollMode: native`
 - `core/platform` to support `safari` 16.6, `chrome` 119, and `firefox` 128 or later
+- `ui/Scroller` scroll animation method for `scrollMode: native`
 
 ### Fixed
 
@@ -23,7 +23,7 @@ No significant changes.
 
 ### Added
 
-- `limestone/Card` `splitCaption` prop to allow user to split the content for the captions
+- `ui/Card` `splitCaption` prop to allow user to split the content for the captions
 - `ui/useScroll.ScrollAnimator` `oase-out-cubic` animation function
 
 ### Changed
