@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Changed
 
 - `ui/Scroller` scroll animation method for `scrollMode: native`
+- `core/platform` to support `safari` 16.6, `chrome` 119, and `firefox` 128 or later
 
 ### Fixed
 
