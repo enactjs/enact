@@ -33,6 +33,7 @@ import css from './useScroll.module.less';
 const
 	constants = {
 		animationDuration: 1000,
+		minAnimationDuration: 100,
 		epsilon: 1,
 		flickConfig: {maxDuration: null},
 		isPageDown: is('pageDown'),
@@ -50,6 +51,7 @@ const
 	},
 	{
 		animationDuration,
+		minAnimationDuration,
 		epsilon,
 		flickConfig,
 		isPageDown,
@@ -171,6 +173,7 @@ const useScrollBase = (props) => {
 
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
+	const [riRatio, setRiRatio] = useState(ri.scale(1));
 
 	const mutableRef = useRef({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
@@ -395,8 +398,31 @@ const useScrollBase = (props) => {
 	}, [forceUpdate, scrollContentHandle]);
 	// scrollMode 'translate' ]]
 
+	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
+		{
+			childProps,
+			clientSize,
+			dataSize,
+			itemRenderer,
+			itemSize,
+			itemSizes,
+			overhang,
+			pageScroll,
+			spacing,
+			wrap
+		} :
+		{children};
+
 	function handleResizeWindow () {
 		const propsHandleResizeWindow = props.handleResizeWindow;
+
+		if (ri.scale(1) !== riRatio) {
+			if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
+				scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
+				scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
+				setRiRatio(ri.scale(1));
+			}
+		}
 
 		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
 		setTimeout(() => {
@@ -409,7 +435,6 @@ const useScrollBase = (props) => {
 					scrollContentHandle.current.scrollToPosition(0, 0, 'instant');
 				}
 			}
-
 			enqueueForceUpdate();
 		});
 	}
@@ -830,6 +855,8 @@ const useScrollBase = (props) => {
 	// scrollMode 'native' ]]
 
 	function onKeyDown (ev) {
+		mutableRef.current.keyPressed = ev.repeat;
+
 		if (scrollMode === 'translate') {
 			if (props.onKeyDown) {
 				forward('onKeyDown', ev, props);
@@ -842,6 +869,11 @@ const useScrollBase = (props) => {
 			if (ev.repeat && mutableRef.current.lastInputType === 'arrowKey') return;
 			forward('onKeyDown', ev, props);
 		}
+	}
+
+	function onKeyUp (ev) {
+		mutableRef.current.keyPressed = false;
+		forward('onKeyUp', ev, props);
 	}
 
 	function scrollToAccumulatedTarget (delta, vertical, overscrollEffect) {
@@ -1192,16 +1224,24 @@ const useScrollBase = (props) => {
 		return (curTime) => {
 			const
 				{sourceX, sourceY, targetX, targetY, duration} = animationInfo,
-				bounds = getScrollBounds();
+				bounds = getScrollBounds(),
+				scrollAnimationDuration = mutableRef.current.keyPressed ? minAnimationDuration : duration;
 
-			if (curTime < duration) {
+			const dynamicScrollDuration = (target, source) => {
+				const customDuration = Math.max(minAnimationDuration, Math.abs(target - source));
+				if (mutableRef.current.keyPressed) return minAnimationDuration;
+				return animationDuration !== duration ? duration : Math.min(customDuration, duration);
+			};
+
+			if (curTime < scrollAnimationDuration) {
 				let
 					toBeContinued = false,
 					curTargetX = sourceX,
 					curTargetY = sourceY;
 
 				if (canScrollHorizontally(bounds)) {
-					curTargetX = mutableRef.current.animator.timingFunction(sourceX, targetX, duration, curTime);
+					const scrollDuration = dynamicScrollDuration(sourceX, targetX);
+					curTargetX = mutableRef.current.animator.timingFunction(sourceX, targetX, scrollDuration, curTime, mutableRef.current.keyPressed);
 
 					if (Math.abs(curTargetX - targetX) < epsilon) {
 						curTargetX = targetX;
@@ -1211,7 +1251,8 @@ const useScrollBase = (props) => {
 				}
 
 				if (canScrollVertically(bounds)) {
-					curTargetY = mutableRef.current.animator.timingFunction(sourceY, targetY, duration, curTime);
+					const scrollDuration = dynamicScrollDuration(sourceY, targetY);
+					curTargetY = mutableRef.current.animator.timingFunction(sourceY, targetY, scrollDuration, curTime, mutableRef.current.keyPressed);
 
 					if (Math.abs(curTargetY - targetY) < epsilon) {
 						curTargetY = targetY;
@@ -1485,6 +1526,7 @@ const useScrollBase = (props) => {
 	function addEventListeners () {
 		utilEvent('wheel').addEventListener(scrollContainerRef, onWheel);
 		utilEvent('keydown').addEventListener(scrollContainerRef, onKeyDown);
+		utilEvent('keyup').addEventListener(scrollContainerRef, onKeyUp);
 		utilEvent('mousedown').addEventListener(scrollContainerRef, onMouseDown);
 
 		// scrollMode 'native' [[
@@ -1506,6 +1548,7 @@ const useScrollBase = (props) => {
 	function removeEventListeners () {
 		utilEvent('wheel').removeEventListener(scrollContainerRef, onWheel);
 		utilEvent('keydown').removeEventListener(scrollContainerRef, onKeyDown);
+		utilEvent('keyup').removeEventListener(scrollContainerRef, onKeyUp);
 		utilEvent('mousedown').removeEventListener(scrollContainerRef, onMouseDown);
 
 		// scrollMode 'native' [[
@@ -1558,21 +1601,6 @@ const useScrollBase = (props) => {
 			onTouchStart: scrollMode === 'native' ? onTouchStart : null // scrollMode 'native'
 		})
 	});
-
-	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
-		{
-			childProps,
-			clientSize,
-			dataSize,
-			itemRenderer,
-			itemSize,
-			itemSizes,
-			overhang,
-			pageScroll,
-			spacing,
-			wrap
-		} :
-		{children};
 
 	assignProperties('scrollContentProps', {
 		...scrollContentProps,

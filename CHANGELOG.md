@@ -9,7 +9,34 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `ui/Scroller` scroll animation method for `scrollMode: native`
 ### Fixed
 
-- `spotlight` navigation from an element to a different container on page load.
+- `ui/VirtulList` not to cut off focused item when scroll by pressing key
+- `ui/VirtualList` not to jump to the top when item size was changed
+- `ui/VirtualList.VirtualGridList` to adjust itemSize properly when resizing window
+
+## [5.4.1] - 2025-12-30
+
+No significant changes.
+
+## [5.4.0] - 2025-12-08
+
+### Added
+
+- `limestone/Card` `splitCaption` prop to allow user to split the content for the captions
+- `ui/useScroll.ScrollAnimator` `oase-out-cubic` animation function
+
+### Changed
+
+- `ui/useScroll.ScrollAnimator` default animation function
+
+### Fixed
+
+- `spotlight` to skip visibility check when entering a restricted container or choose a visible container as next target
+
+## [5.3.2] - 2025-10-28
+
+### Fixed
+
+- `spotlight` navigation from an element to a different container on page load
 
 ## [5.3.1] - 2025-10-14
 

@@ -243,8 +243,9 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 		const nextCandidateContainerId = getContainersForNode(next).pop();
 		// check if we want to navigate to another container
 		if (next && containerId !== nextCandidateContainerId) {
-			// verify is the element from another container is visible
-			if (isElementVisibleInContainer(next, nextCandidateContainerId)) {
+			// Don't apply visibility check when entering a restricted container. The container's own enterTo logic (last-focused, default-element) handles entry
+			// OR verify if the element from another container is visible (only for non-restricted)
+			if (isRestrictedContainer(nextCandidateContainerId) || isElementVisibleInContainer(next, nextCandidateContainerId)) {
 				return next;
 			} else {
 				// otherwise, try to navigate to an element that is visible in its container
@@ -374,8 +375,23 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 		const nextCandidateContainerId = getContainersForNode(next).pop();
 		// check if we want to navigate to another container
 		if (next && containerId !== nextCandidateContainerId) {
-			// TODO: to be revisited
-			return next;
+			// Don't apply visibility check when entering a restricted container. The container's own enterTo logic (last-focused, default-element) handles entry
+			// OR verify if the element from another container is visible
+			if (isRestrictedContainer(nextCandidateContainerId) || isElementVisibleInContainer(next, nextCandidateContainerId)) {
+				return next;
+			} else {
+				// otherwise, try to navigate to an element that is visible in its container
+				next = navigate(
+					elementRect,
+					direction,
+					elementRects.filter((rect) => {
+						const elementContainerId = getContainersForNode(rect.element).pop();
+						return isElementVisibleInContainer(rect.element, elementContainerId);
+					}),
+					getContainerConfig(containerId),
+					partitionRect
+				);
+			}
 		}
 
 		// If we've met every condition and haven't explicitly retried the search via `continue`,
