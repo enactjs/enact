@@ -12,7 +12,6 @@ import Handlers from '../useHandlers/Handlers';
 
 import computed from './computed';
 import styles from './styles';
-import {checkPropTypes} from 'prop-types';
 
 // Because contextType is optional and hooks must be called in the same order, we need a fallback
 // context when none is specified. This likely has some overhead so we may want to deprecate and
