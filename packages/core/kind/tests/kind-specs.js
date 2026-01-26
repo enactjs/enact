@@ -64,22 +64,22 @@ describe('kind', () => {
 		expect(minimalDiv).toBeInTheDocument();
 	});
 
-	test.skip('should default {label} property', () => {
-		const subject = <Kind prop={1} />;
+	test('should default {label} property', () => {
+		render(<Kind prop={1} data-testid="unlabeled" />);
 
 		const expected = 'Label';
-		const actual = subject.props.label;
+		const actual = screen.queryByTestId('unlabeled').getAttribute('title');
 
 		expect(actual).toBe(expected);
 	});
 
-	test.skip('should default {label} property when explicitly undefined', () => {
+	test('should default {label} property when explicitly undefined', () => {
 		// Explicitly testing for undefined
 		// eslint-disable-next-line no-undefined
-		const subject = <Kind label={undefined} prop={1} />;
+		render(<Kind label={undefined} data-testid="unlabeled" prop={1} />);
 
 		const expected = 'Label';
-		const actual = subject.props.label;
+		const actual = screen.queryByTestId('unlabeled').getAttribute('title');
 
 		expect(actual).toBe(expected);
 	});

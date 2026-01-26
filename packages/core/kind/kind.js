@@ -12,6 +12,7 @@ import Handlers from '../useHandlers/Handlers';
 
 import computed from './computed';
 import styles from './styles';
+import {checkPropTypes} from 'prop-types';
 
 // Because contextType is optional and hooks must be called in the same order, we need a fallback
 // context when none is specified. This likely has some overhead so we may want to deprecate and
@@ -162,6 +163,12 @@ const kind = (config) => {
 				...props,
 				...boundHandlers
 			};
+
+			if (defaultProps) Object.keys(defaultProps).forEach(key => {
+				if (merged[key] === null || merged[key] === undefined) {
+					merged[key] = defaultProps[key];
+				}
+			});
 
 			return renderKind(merged, ctx);
 		};
