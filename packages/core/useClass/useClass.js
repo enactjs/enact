@@ -29,7 +29,7 @@ import {useState} from 'react';
  * @private
  */
 function useClass (Ctor, ...args) {
-	const [state] = useState(new Ctor(...args));
+	const [state] = useState(() => new Ctor(...args));
 
 	return state;
 }

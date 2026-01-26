@@ -179,11 +179,17 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		// FIXME: Current behavior is to use `false` when switching from a truthy value to
 		// either null or undefined. The ternary below enforces that but we don't want to
 		// continue this exception in the future and should sunset it with this HOC.
-		const [instance, setInstance] = useState({selected: propSelected});
-		const selected = (instance.selected && propSelected == null) ? false : hook.selected;
+		const [derivedState, setDerivedState] = useState(() => ({
+			prevPropSelected: null,
+			selected: hook.selected
+		}));
+		const selected = (derivedState.selected && propSelected == null) ? false : hook.selected;
 
-		if (propSelected && instance.selected !== propSelected) {
-			setInstance({selected: propSelected});
+		if (propSelected !== derivedState.prevPropSelected) {
+			setDerivedState({
+				prevPropSelected: propSelected,
+				selected: selected
+			});
 		}
 
 		if (prop) {

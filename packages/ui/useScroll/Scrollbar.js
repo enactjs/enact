@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import {memo, useEffect, useLayoutEffect, useRef} from 'react';
+import {memo, useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 
 import ri from '../resolution';
 
@@ -50,30 +50,24 @@ const useScrollbar = (props) => {
 	const scrollbarTrackRef = useRef();
 	const hideScrollbarTrackJob = useRef(null);
 
-	function hideScrollbarTrack () {
+	const hideScrollbarTrack = useCallback(() => {
 		removeClass(scrollbarTrackRef.current, css.scrollbarTrackShown);
-	}
+	}, [css.scrollbarTrackShown]);
 
-	useEffect(() => {
-		return () => {
-			hideScrollbarTrackJob.current.stop();
-		};
+	const getContainerRef = useCallback(() => {
+		return scrollbarContainerRef;
 	}, []);
 
-	function getContainerRef () {
-		return scrollbarContainerRef;
-	}
-
-	function showScrollbarTrack () {
+	const showScrollbarTrack = useCallback(() => {
 		hideScrollbarTrackJob.current.stop();
 		addClass(scrollbarTrackRef.current, css.scrollbarTrackShown);
-	}
+	}, [css.scrollbarTrackShown]);
 
-	function startHidingScrollbarTrack () {
+	const startHidingScrollbarTrack = useCallback(() => {
 		hideScrollbarTrackJob.current.start();
-	}
+	}, []);
 
-	function update (bounds) {
+	const update = useCallback((bounds) => {
 		const
 			primaryDimension = vertical ? 'clientHeight' : 'clientWidth',
 			trackSize = clientSize ? clientSize[primaryDimension] : scrollbarContainerRef.current[primaryDimension],
@@ -86,7 +80,7 @@ const useScrollbar = (props) => {
 
 		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-size-ratio', scrollbarThumbSizeRatio);
 		setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-progress-ratio', scrollbarThumbProgressRatio);
-	}
+	}, [clientSize, minThumbSize, vertical]);
 
 	useLayoutEffect(() => {
 		if (scrollbarHandleRef) {
@@ -99,7 +93,13 @@ const useScrollbar = (props) => {
 		}
 
 		hideScrollbarTrackJob.current = hideScrollbarTrackJob.current || new Job(hideScrollbarTrack, scrollbarTrackHidingDelay);
-	});
+	}, [getContainerRef, hideScrollbarTrack, scrollbarHandleRef, showScrollbarTrack, startHidingScrollbarTrack, update]);
+
+	useEffect(() => {
+		return () => {
+			hideScrollbarTrackJob.current.stop();
+		};
+	}, []);
 
 	return {
 		restProps: rest,
