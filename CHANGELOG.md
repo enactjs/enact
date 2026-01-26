@@ -4,9 +4,15 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [unreleased]
 
+### Changed
+
+- `core/platform` to support `safari` 16.6, `chrome` 119, and `firefox` 128 or later
+- `ui/Scroller` scroll animation method for `scrollMode: native`
+
 ### Fixed
 
 - `ui/VirtulList` not to cut off focused item when scroll by pressing key
+- `ui/VirtualList` not to jump to the top when item size was changed
 - `ui/VirtualList.VirtualGridList` to adjust itemSize properly when resizing window
 
 ## [5.4.1] - 2025-12-30
@@ -17,7 +23,7 @@ No significant changes.
 
 ### Added
 
-- `limestone/Card` `splitCaption` prop to allow user to split the content for the captions
+- `ui/Card` `splitCaption` prop to allow user to split the content for the captions
 - `ui/useScroll.ScrollAnimator` `oase-out-cubic` animation function
 
 ### Changed
