@@ -23,8 +23,6 @@ const isRequired = (fn) => {
 
 const renderable = isRequired(function (props, key, componentName) {
 	const propValue = props[key];
-	console.log(propValue?.type);
-	console.log(props[key])
 	if (propValue && !isRenderable(propValue)) {
 		return new Error(
 			`Invalid prop '${key}' supplied to '${componentName}'. ` +

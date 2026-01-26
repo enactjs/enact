@@ -19,7 +19,7 @@ describe('prop-types', () => {
 	class TestComponent extends Component {
 		static displayName = 'TestComponent';
 
-		render ({...rest} = {}) {
+		render () {
 			checkPropTypes(propTypes, this.props, 'props', 'TestComponent');
 
 			return (<div>Test</div>);
