@@ -4,6 +4,8 @@ import {isRenderable} from '../../util';
 
 import deprecate from '../deprecate';
 
+const element = PropTypes.element;
+
 const isRequired = (fn) => {
 	fn.isRequired = function (props, key, componentName, location, propFullName, ...rest) {
 		const propValue = props[key];
@@ -21,6 +23,8 @@ const isRequired = (fn) => {
 
 const renderable = isRequired(function (props, key, componentName) {
 	const propValue = props[key];
+	console.log(propValue?.type);
+	console.log(props[key])
 	if (propValue && !isRenderable(propValue)) {
 		return new Error(
 			`Invalid prop '${key}' supplied to '${componentName}'. ` +
@@ -40,12 +44,12 @@ const component = isRequired(function (props, key, componentName) {
 });
 
 const renderableOverride = PropTypes.oneOfType([
-	PropTypes.element,
+	element,
 	renderable
 ]);
 
 const componentOverride = PropTypes.oneOfType([
-	PropTypes.element,
+	element,
 	component
 ]);
 

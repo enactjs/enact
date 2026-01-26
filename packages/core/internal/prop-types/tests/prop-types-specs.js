@@ -1,30 +1,27 @@
 import {render} from '@testing-library/react';
+import {checkPropTypes} from 'prop-types';
 import {Component, createRef} from 'react';
 import EnactPropTypes from '../prop-types';
 
-
-describe.skip('prop-types', () => {
+describe('prop-types', () => {
 	const DummyElement = (<div />);
 	const DummyRenderable = () => DummyElement;
 	const dummyString = 'Some String';
 
+	const propTypes = {
+		typeComponent: EnactPropTypes.component,
+		typeComponentOverride: EnactPropTypes.componentOverride,
+		typeRef: EnactPropTypes.ref,
+		typeRenderable: EnactPropTypes.renderable,
+		typeRenderableOverride: EnactPropTypes.renderableOverride
+	};
+
 	class TestComponent extends Component {
 		static displayName = 'TestComponent';
 
-		static propTypes = {
-			typeComponent: EnactPropTypes.component,
-			typeComponentOverride: EnactPropTypes.componentOverride,
-			typeRef: EnactPropTypes.ref,
-			typeRenderable: EnactPropTypes.renderable,
-			typeRenderableOverride: EnactPropTypes.renderableOverride
-		};
-
 		render ({...rest} = {}) {
-			delete rest.typeComponent;
-			delete rest.typeComponentOverride;
-			delete rest.typeRef;
-			delete rest.typeRenderable;
-			delete rest.typeRenderableOverride;
+			checkPropTypes(propTypes, this.props, 'props', 'TestComponent');
+
 			return (<div>Test</div>);
 		}
 	}
@@ -203,15 +200,18 @@ describe.skip('prop-types', () => {
 	});
 
 	describe('isRequired', () => {
+		const propTypesRequired = {
+			typeRequired: EnactPropTypes.renderable.isRequired
+		};
+
 		class RequiredComponent extends Component {
 			static displayName = 'RequiredComponent';
 
-			static propTypes = {
-				typeRequired: EnactPropTypes.renderable.isRequired
-			};
-
 			render ({...rest} = {}) {
 				delete rest.typeRequired;
+
+				checkPropTypes(propTypesRequired, this.props, 'props', 'testComponent');
+
 				return (<div>Test</div>);
 			}
 		}
