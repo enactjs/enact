@@ -108,7 +108,7 @@ describe('kind', () => {
 	});
 
 	test('should default {label} property for `functional` is `true`', () => {
-		render(<Kind prop={1} data-testid="unlabeled" />);
+		render(<FunctionalKind prop={1} data-testid="unlabeled" />);
 
 		const expected = 'Label';
 		const actual = screen.queryByTestId('unlabeled').getAttribute('title');
