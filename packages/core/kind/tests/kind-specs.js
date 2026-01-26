@@ -43,6 +43,40 @@ describe('kind', () => {
 			);
 		}
 	});
+	const FunctionalKind = kind({
+		name: 'Kind',
+		functional: true,
+		propTypes: {
+			prop: PropTypes.number.isRequired,
+			label: PropTypes.string
+		},
+		defaultProps: {
+			label: 'Label'
+		},
+		contextType: TestContext,
+		styles: {
+			className: 'kind'
+		},
+		handlers: {
+			onClick: (ev, props, context) => {
+				props.onClick(context.value);
+			}
+		},
+		computed: {
+			value: ({prop}) => prop + 1,
+			contextValue: (props, context) => {
+				return context ? `context${context.value}` : 'unknown';
+			}
+		},
+		render: ({contextValue, label, value, ...rest}) => {
+			delete rest.prop;
+			return (
+				<div {...rest} data-context={contextValue} title={label}>
+					{value}
+				</div>
+			);
+		}
+	});
 
 	test('should assign name to displayName', () => {
 		const expected = 'Kind';
@@ -65,6 +99,15 @@ describe('kind', () => {
 	});
 
 	test('should default {label} property', () => {
+		render(<Kind prop={1} data-testid="unlabeled" />);
+
+		const expected = 'Label';
+		const actual = screen.queryByTestId('unlabeled').getAttribute('title');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should default {label} property for `functional` is `true`', () => {
 		render(<Kind prop={1} data-testid="unlabeled" />);
 
 		const expected = 'Label';
