@@ -423,6 +423,11 @@ const useScrollBase = (props) => {
 				scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
 			} else {
 				scrollContentProps.itemSize *= ri.scale(1) / riRatio;
+				if (scrollContentProps.itemSizes) {
+					for(let i = 0; i < scrollContentProps.itemSizes.length; i++) {
+						scrollContentProps.itemSizes[i] *= ri.scale(1) / riRatio;
+					}
+				}
 			}
 			setItemSize(scrollContentProps.itemSize);
 			setRiRatio(ri.scale(1));
