@@ -424,7 +424,7 @@ const useScrollBase = (props) => {
 			} else {
 				scrollContentProps.itemSize *= ri.scale(1) / riRatio;
 				if (scrollContentProps.itemSizes) {
-					for(let i = 0; i < scrollContentProps.itemSizes.length; i++) {
+					for (let i = 0; i < scrollContentProps.itemSizes.length; i++) {
 						scrollContentProps.itemSizes[i] *= ri.scale(1) / riRatio;
 					}
 				}
