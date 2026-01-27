@@ -4,8 +4,6 @@ import {isRenderable} from '../../util';
 
 import deprecate from '../deprecate';
 
-const element = PropTypes.element;
-
 const isRequired = (fn) => {
 	fn.isRequired = function (props, key, componentName, location, propFullName, ...rest) {
 		const propValue = props[key];
@@ -20,6 +18,15 @@ const isRequired = (fn) => {
 
 	return fn;
 };
+
+const element = isRequired(function (props, key, componentName) {
+	const propValue = props[key].type;
+	if (!isRenderable(propValue)) {
+		return new Error(
+			`Warning: Failed props type: Invalid props ${key} supplied to ${componentName}.`
+		);
+	}
+});
 
 const renderable = isRequired(function (props, key, componentName) {
 	const propValue = props[key];
