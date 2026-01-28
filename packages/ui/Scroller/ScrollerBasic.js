@@ -79,6 +79,8 @@ class ScrollerBasic extends Component {
 		}
 	}
 
+	scrollAnimationId = null;
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
@@ -117,8 +119,49 @@ class ScrollerBasic extends Component {
 	}
 
 	// scrollMode 'native'
-	scrollToPosition (left, top, behavior) {
-		this.props.scrollContentRef.current.scrollTo({left: this.getRtlPositionX(left), top, behavior});
+	scrollToPosition (left, top, behavior, repeat) {
+		const node = this.props.scrollContentRef.current;
+		const smoothBehavior = behavior === 'smooth';
+
+		if (platform.chrome && smoothBehavior && repeat) {
+			this.animateScroll(this.getRtlPositionX(left), top, node);
+		} else {
+			node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
+		}
+	}
+
+	/**
+	 * Programmatically animates the native scroll position of `node` toward the target `left`/`top`
+	 * offsets using `requestAnimationFrame`. It computes the scroll direction on each axis, then repeatedly
+	 * calls `scrollBy` in small 18px steps (instant behavior) until the target is reached or a scroll bound
+	 * is hit. Used as a Chrome fallback when repeating a smooth scroll.
+	 */
+	animateScroll (left, top, node) {
+		const directionX = Math.sign(left - node.scrollLeft);
+		const directionY = Math.sign(top - node.scrollTop);
+
+		const animateScroll = () => {
+			const scrollLeft = directionX > 0 ? node.scrollLeft < left : node.scrollLeft > left;
+			const scrollTop = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
+
+			// Check if we reached the scroll bounds and cancel the animation
+			if (
+				top > this.scrollBounds.maxTop && node.scrollTop === this.scrollBounds.maxTop ||
+				left > this.scrollBounds.maxLeft && node.scrollLeft === this.scrollBounds.maxLeft ||
+				top < 0 && node.scrollTop === 0 ||
+				left < 0 && node.scrollLeft === 0
+			) {
+				window.cancelAnimationFrame(this.scrollAnimationId);
+				return;
+			}
+
+			if (scrollTop || scrollLeft) {
+				node.scrollBy({top: directionY * 8, left: directionX * 8, behavior: 'instant'});
+				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+			}
+		};
+
+		this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 	}
 
 	// scrollMode 'native'

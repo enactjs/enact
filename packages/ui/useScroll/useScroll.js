@@ -173,6 +173,7 @@ const useScrollBase = (props) => {
 
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
+	const [riRatio, setRiRatio] = useState(ri.scale(1));
 
 	const mutableRef = useRef({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
@@ -397,8 +398,31 @@ const useScrollBase = (props) => {
 	}, [forceUpdate, scrollContentHandle]);
 	// scrollMode 'translate' ]]
 
+	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
+		{
+			childProps,
+			clientSize,
+			dataSize,
+			itemRenderer,
+			itemSize,
+			itemSizes,
+			overhang,
+			pageScroll,
+			spacing,
+			wrap
+		} :
+		{children};
+
 	function handleResizeWindow () {
 		const propsHandleResizeWindow = props.handleResizeWindow;
+
+		if (ri.scale(1) !== riRatio) {
+			if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
+				scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
+				scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
+				setRiRatio(ri.scale(1));
+			}
+		}
 
 		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
 		setTimeout(() => {
@@ -411,7 +435,6 @@ const useScrollBase = (props) => {
 					scrollContentHandle.current.scrollToPosition(0, 0, 'instant');
 				}
 			}
-
 			enqueueForceUpdate();
 		});
 	}
@@ -842,6 +865,8 @@ const useScrollBase = (props) => {
 			}
 		} else {
 			props.preventScroll?.(ev);
+			mutableRef.current.repeat = ev.repeat;
+			if (ev.repeat && mutableRef.current.lastInputType === 'arrowKey') return;
 			forward('onKeyDown', ev, props);
 		}
 	}
@@ -1183,7 +1208,7 @@ const useScrollBase = (props) => {
 			let {roundedTargetX, roundedTargetY} = roundTarget(scrollContentHandle.current, targetX, targetY);
 
 			if (animate) {
-				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth');
+				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth', mutableRef.current.repeat);
 			} else {
 				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
 			}
@@ -1576,21 +1601,6 @@ const useScrollBase = (props) => {
 			onTouchStart: scrollMode === 'native' ? onTouchStart : null // scrollMode 'native'
 		})
 	});
-
-	const scrollContentProps = props.itemRenderer ? // If the child component is a VirtualList
-		{
-			childProps,
-			clientSize,
-			dataSize,
-			itemRenderer,
-			itemSize,
-			itemSizes,
-			overhang,
-			pageScroll,
-			spacing,
-			wrap
-		} :
-		{children};
 
 	assignProperties('scrollContentProps', {
 		...scrollContentProps,
