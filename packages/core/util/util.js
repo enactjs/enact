@@ -363,7 +363,7 @@ const checkPropTypes = (component, props, prevProps) => {
 			return checkPropsError.stack.split('@')[0];
 		});
 	}
-}
+};
 
 export {
 	cap,
