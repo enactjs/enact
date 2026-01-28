@@ -3,6 +3,7 @@
  *
  * @module core/util
  * @exports cap
+ * @exports checkPropTypes
  * @exports clamp
  * @exports coerceArray
  * @exports coerceFunction
@@ -15,6 +16,7 @@
  * @exports mapAndFilterChildren
  * @exports shallowEqual
  */
+import {checkPropTypes as check} from 'prop-types';
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
 import unless from 'ramda/src/unless';
@@ -329,8 +331,43 @@ const shallowEqual = (a, b) => {
 	return true;
 };
 
+/**
+ * Checks the prop types of a component.
+ *
+ * It only performs the check when `__DEV__` is true.
+ *
+ * @function checkPropTypes
+ * @param {Object} component The component instance to check.
+ * @param {Object} props The component props to check.
+ * @param {Object} [prevProps] The previous props to compare against.
+ *
+ * @returns	{undefined}
+ * @memberof core/util
+ * @public
+ */
+const checkPropTypes = (component, props, prevProps) => {
+	if (__DEV__) {
+		const isFunctional = typeof component === 'function';
+		const {displayName, propTypes} = isFunctional ? component : component.constructor; // eslint-disable-line react/forbid-foreign-prop-types
+		if (prevProps && prevProps === props) return;
+
+		// Create a new error to capture the current stack trace
+		const checkPropsError = new Error();
+		if (Error.captureStackTrace) {
+			// Exclude this function itself from the stack trace to point directly to the caller
+			Error.captureStackTrace(checkPropsError, checkPropTypes);
+		}
+
+		check(propTypes, props, 'prop', displayName, () => {
+			// Provide a cleaned-up stack trace by stripping out engine-specific formatting
+			return checkPropsError.stack.split('@')[0];
+		});
+	}
+}
+
 export {
 	cap,
+	checkPropTypes,
 	clamp,
 	coerceArray,
 	coerceFunction,
