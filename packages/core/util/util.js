@@ -348,7 +348,7 @@ const shallowEqual = (a, b) => {
 const checkPropTypes = (component, props, prevProps) => {
 	if (__DEV__) {
 		const isFunctional = typeof component === 'function';
-		const {displayName, propTypes} = isFunctional ? component : component.constructor; // eslint-disable-line react/forbid-foreign-prop-types
+		const {displayName, name, propTypes} = isFunctional ? component : component.constructor; // eslint-disable-line react/forbid-foreign-prop-types
 		if (prevProps && prevProps === props) return;
 
 		// Create a new error to capture the current stack trace
@@ -358,7 +358,7 @@ const checkPropTypes = (component, props, prevProps) => {
 			Error.captureStackTrace(checkPropsError, checkPropTypes);
 		}
 
-		check(propTypes, props, 'prop', displayName, () => {
+		check(propTypes, props, 'prop', displayName || name, () => {
 			// Provide a cleaned-up stack trace by stripping out engine-specific formatting
 			return checkPropsError.stack.split('@')[0];
 		});
