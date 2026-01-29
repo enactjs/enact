@@ -14,11 +14,12 @@
  * @exports perfNow
  * @exports mapAndFilterChildren
  * @exports shallowEqual
+ * @exports usePrevious
  */
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
 import unless from 'ramda/src/unless';
-import {Children} from 'react';
+import {Children, useState} from 'react';
 import * as ReactIs from 'react-is';
 
 import Job from './Job';
@@ -329,6 +330,28 @@ const shallowEqual = (a, b) => {
 	return true;
 };
 
+/**
+ * A custom hook that returns the previous value of a variable.
+ *
+ * @function
+ * @param   {*}    value    The value to track.
+ *
+ * @returns {*}             The value from the previous render.
+ * @memberof core/util
+ * @public
+ */
+const usePrevious = (value) => {
+	const [previousTrackedValue, setPreviousTrackedValue] = useState(value);
+	const [previousValue, setPreviousValue] = useState(value);
+
+	if (value !== previousTrackedValue) {
+		setPreviousTrackedValue(value);
+		setPreviousValue(previousTrackedValue);
+	}
+
+	return previousValue;
+};
+
 export {
 	cap,
 	clamp,
@@ -342,5 +365,6 @@ export {
 	perfNow,
 	mapAndFilterChildren,
 	setDefaultProps,
-	shallowEqual
+	shallowEqual,
+	usePrevious
 };
