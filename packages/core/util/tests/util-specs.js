@@ -68,13 +68,13 @@ describe('util', () => {
 		});
 
 		test('should pass test for a correct prop', () => {
-			render(<TestComponent bool={true} string='String' />);
+			render(<TestComponent bool string="String" />);
 
 			expect(consoleErrorMock).not.toHaveBeenCalled();
 		});
 
 		test('should fail test for a wrong prop', () => {
-			render(<TestComponent bool='true' string='String' />);
+			render(<TestComponent bool="true" string="String" />);
 
 			expect(consoleErrorMock).toHaveBeenCalled();
 		});
