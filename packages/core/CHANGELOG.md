@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/util` function `checkPropTypes` to check the prop types of a component
+
 ## [5.4.2] - 2026-01-28
 
 ### Changed
