@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 - `core/platform` to support `safari` 16.6, `chrome` 119, and `firefox` 128 or later
 
+### Fixed
+
+- `core/kind` to properly apply `defaultProps` to functional components
+
 ## [5.4.1] - 2025-12-30
 
 No significant changes.
