@@ -174,6 +174,7 @@ const useScrollBase = (props) => {
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
 	const [riRatio, setRiRatio] = useState(ri.scale(1));
+	const [originalItemSize, setOriginalItemSize] = useState(props.itemSize);
 	const [itemSize, setItemSize] = useState(props.itemSize);
 
 	const mutableRef = useRef({
@@ -298,6 +299,11 @@ const useScrollBase = (props) => {
 			mutableRef.current.wheelDirection = val;
 		}
 	});
+
+	if (originalItemSize !== props.itemSize) {
+		setOriginalItemSize(props.itemSize);
+		setItemSize(props.itemSize);
+	}
 
 	if (mutableRef.current.animator == null) {
 		mutableRef.current.animator = new ScrollAnimator();
