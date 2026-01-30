@@ -46,7 +46,7 @@ describe('util', () => {
 
 			constructor (props) {
 				super(props);
-				checkPropTypes(this, props);
+				checkPropTypes(this, this.props);
 			}
 
 			render () {
