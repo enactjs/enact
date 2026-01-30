@@ -1,6 +1,21 @@
-import {forwardRef, memo, lazy} from 'react';
+import {render} from '@testing-library/react';
+import PropTypes from 'prop-types';
+import {forwardRef, memo, lazy, Component} from 'react';
 
-import {cap, clamp, coerceArray, coerceFunction, extractAriaProps, isRenderable, memoize, mergeClassNameMaps, mapAndFilterChildren, setDefaultProps, shallowEqual} from '../util';
+import {
+	cap,
+	clamp,
+	coerceArray,
+	coerceFunction,
+	extractAriaProps,
+	isRenderable,
+	memoize,
+	mergeClassNameMaps,
+	mapAndFilterChildren,
+	setDefaultProps,
+	shallowEqual,
+	checkPropTypes
+} from '../util';
 
 describe('util', () => {
 	describe('cap', () => {
@@ -17,6 +32,51 @@ describe('util', () => {
 			expect(clamp(10, 20, 10)).toBe(10);
 			expect(clamp(10, 20, 20)).toBe(20);
 			expect(clamp(20, 10, 10)).toBe(20); // special case
+		});
+	});
+
+	describe('checkPropTypes', () => {
+		class TestComponent extends Component {
+			static displayName = 'TestComponent';
+
+			static propTypes = {
+				bool: PropTypes.bool,
+				string: PropTypes.string
+			};
+
+			constructor (props) {
+				super(props);
+				checkPropTypes(this, props);
+			}
+
+			render () {
+				return (<div>Test</div>);
+			}
+		}
+
+		let consoleWarnMock = null;
+		let consoleErrorMock = null;
+
+		beforeEach(() => {
+			consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();
+			consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
+		});
+
+		afterEach(() => {
+			consoleWarnMock.mockRestore();
+			consoleErrorMock.mockRestore();
+		});
+
+		test('should pass test for a correct prop', () => {
+			render(<TestComponent bool={true} string='String' />);
+
+			expect(consoleErrorMock).not.toHaveBeenCalled();
+		});
+
+		test('should fail test for a wrong prop', () => {
+			render(<TestComponent bool='true' string='String' />);
+
+			expect(consoleErrorMock).toHaveBeenCalled();
 		});
 	});
 
