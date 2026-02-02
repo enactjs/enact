@@ -163,6 +163,15 @@ const kind = (config) => {
 				...boundHandlers
 			};
 
+			if (defaultProps) {
+				Object.keys(defaultProps).forEach(key => {
+					// eslint-disable-next-line no-undefined
+					if (merged[key] === undefined) {
+						merged[key] = defaultProps[key];
+					}
+				});
+			}
+
 			return renderKind(merged, ctx);
 		};
 	} else {
