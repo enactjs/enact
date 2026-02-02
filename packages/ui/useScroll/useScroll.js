@@ -302,7 +302,9 @@ const useScrollBase = (props) => {
 
 	if (originalItemSize !== props.itemSize) {
 		setOriginalItemSize(props.itemSize);
-		setItemSize(props.itemSize);
+		if (ri.scale(1) / riRatio !== props.itemSize / itemSize) {
+			setItemSize(props.itemSize);
+		}
 	}
 
 	if (mutableRef.current.animator == null) {
