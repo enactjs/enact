@@ -156,6 +156,8 @@ const kind = (config) => {
 	// removed.
 	if (functional) {
 		Component = function (props) {
+			checkPropTypes(Component, props);
+
 			const ctx = use(contextType);
 			const boundHandlers = useHandlers(handlers, props, ctx);
 
@@ -170,8 +172,9 @@ const kind = (config) => {
 		Component = class extends ReactComponent {
 			static contextType = contextType;
 
-			constructor () {
-				super();
+			constructor (props) {
+				super(props);
+				checkPropTypes(this, props);
 
 				this.handlers = new Handlers(handlers);
 			}
