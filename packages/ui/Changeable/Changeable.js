@@ -10,6 +10,7 @@
 import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
+import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import {PureComponent} from 'react';
 import warning from 'warning';
@@ -127,6 +128,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			checkPropTypes(this, props);
 
 			this.state = {
 				rendered: false,

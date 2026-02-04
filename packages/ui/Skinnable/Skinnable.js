@@ -13,10 +13,12 @@
 
 import classnames from 'classnames';
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 import useSkins from './useSkins';
 import {objectify} from './util';
+import {props} from "ramda";
 
 /**
  * Default config for `Skinnable`.
@@ -126,7 +128,9 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 	const defaultVariants = objectify(config.defaultVariants);
 
 	// eslint-disable-next-line no-shadow
-	function Skinnable ({className, skin, skinVariants, ...rest}) {
+	function Skinnable (props) {
+		checkPropTypes(Skinnable, props);
+		const {className, skin, skinVariants, ...rest} = props;
 		const hook = useSkins({
 			defaultSkin,
 			defaultVariants,

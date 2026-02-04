@@ -1,4 +1,5 @@
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 
 import useId from './useId';
 
@@ -50,6 +51,8 @@ const IdProvider = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	function IdProvider (props) {
+		checkPropTypes(IdProvider, props);
+
 		const updated = {...props};
 		const {generateId} = useId({prefix});
 

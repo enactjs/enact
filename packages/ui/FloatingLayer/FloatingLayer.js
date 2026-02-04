@@ -1,4 +1,5 @@
 import {on, off} from '@enact/core/dispatcher';
+import {checkPropTypes} from '@enact/core/util';
 import {forwardCustom, forProp, handle, oneOf, stop, forEventProp, call} from '@enact/core/handle';
 import classNames from 'classnames';
 import invariant from 'invariant';
@@ -121,6 +122,8 @@ class FloatingLayerBase extends Component {
 
 	constructor (props) {
 		super(props);
+		checkPropTypes(this, props);
+
 		this.node = null;
 		this.state = {
 			readyToRender: false

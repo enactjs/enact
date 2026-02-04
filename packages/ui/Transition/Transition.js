@@ -19,7 +19,7 @@
 import {forward, forwardCustom} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import {Job} from '@enact/core/util';
+import {checkPropTypes, Job} from '@enact/core/util';
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
@@ -431,6 +431,7 @@ class Transition extends Component {
 
 	constructor (props) {
 		super(props);
+		checkPropTypes(this, props);
 
 		this.state = {
 			initialHeight: null,

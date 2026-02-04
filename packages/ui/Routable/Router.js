@@ -1,4 +1,5 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import {Children, createElement, Component as ReactComponent} from 'react';
 import warning from 'warning';
@@ -104,6 +105,7 @@ const RouterBase = class extends ReactComponent {
 
 	constructor (props) {
 		super(props);
+		checkPropTypes(this, props);
 	}
 
 	/**

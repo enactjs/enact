@@ -1,5 +1,6 @@
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
+import {checkPropTypes} from '@enact/core/util';
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
@@ -37,6 +38,7 @@ const PositionDecorator = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			checkPropTypes(this, props);
 
 			this.handleDown = this.handleDown.bind(this);
 			this.handleDrag = this.handleDrag.bind(this);

@@ -9,6 +9,7 @@ import {createContext, use, Component as ReactComponent} from 'react';
 
 import useHandlers from '../useHandlers';
 import Handlers from '../useHandlers/Handlers';
+import {checkPropTypes} from '../util';
 
 import computed from './computed';
 import styles from './styles';

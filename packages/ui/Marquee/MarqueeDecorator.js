@@ -4,7 +4,7 @@ import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
-import {Job, shallowEqual} from '@enact/core/util';
+import {checkPropTypes, Job, shallowEqual} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
 import PropTypes from 'prop-types';
 import {PureComponent} from 'react';
@@ -335,6 +335,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+
+			checkPropTypes(this, props);
+
 			this.state = {
 				animating: false,
 				overflow: 'ellipsis',

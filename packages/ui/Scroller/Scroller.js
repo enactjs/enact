@@ -7,6 +7,7 @@
  */
 
 import {setDefaultProps} from '@enact/core/util';
+import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
@@ -50,6 +51,7 @@ const scrollerDefaultProps = {
  * @public
  */
 const Scroller = (props) => {
+	checkPropTypes(Scroller, props);
 	// Hooks
 
 	const scrollerProps = setDefaultProps(props, scrollerDefaultProps);

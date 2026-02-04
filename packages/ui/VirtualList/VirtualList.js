@@ -10,6 +10,7 @@
  */
 
 import {setDefaultProps} from '@enact/core/util';
+import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
@@ -49,6 +50,7 @@ const virtualListDefaultProps = {
  * @public
  */
 const VirtualList = (props) => {
+	checkPropTypes(VirtualList, props);
 	// Hooks
 
 	const virtualListProps = setDefaultProps(props, virtualListDefaultProps);

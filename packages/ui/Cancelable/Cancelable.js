@@ -10,6 +10,7 @@
 import {forward, forwardCustom, handle, stop, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
+import {checkPropTypes} from '@enact/core/util';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
 import {Component as ReactComponent} from 'react';
@@ -172,6 +173,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.isFirstRender = true;
+			checkPropTypes(this, props);
 		}
 
 		componentWillUnmount () {
