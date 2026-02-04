@@ -74,11 +74,11 @@ describe('Card', () => {
 	});
 
 	test('should return a DOM node reference for `componentRef`', () => {
-		const ref = jest.fn();
+		const ref = {current: null};
 		render(<Card ref={ref} src={src} />);
 
-		const expected = 'DIV';
-		const actual = ref.mock.calls[0][0].nodeName;
+		const expected = 'div';
+		const actual = ref.current[Object.keys(ref.current)[0]].elementType;
 
 		expect(actual).toBe(expected);
 	});
