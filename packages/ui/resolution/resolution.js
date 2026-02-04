@@ -1,3 +1,20 @@
+/**
+ * Provides resolution independence utilities for responsive applications.
+ *
+ * This module enables applications to adapt to different screen resolutions, orientations,
+ * and aspect ratios. It includes support for screen rotation scenarios, allowing applications
+ * to dynamically adjust their layout and scaling when device orientation changes.
+ *
+ * Key features:
+ * - Automatic detection of a screen type based on resolution
+ * - Dynamic font-size calculation for different resolutions
+ * - Support for screen rotation and orientation changes
+ * - Configurable behavior via {@link ui/resolution.config}
+ * - CSS class generation for resolution-specific styling via {@link ui/resolution.getResolutionClasses}
+ *
+ * @module ui/resolution
+ */
+
 let baseScreen,
 	orientation,
 	riRatio,
@@ -29,6 +46,11 @@ const unitToPixelFactors = {
 	'in': 96
 };
 
+/**
+ * Default configuration values.
+ * See {@link ui/resolution.config} for full documentation.
+ * @private
+ */
 const configDefaults = {
 	intermediateScreenHandling: 'normal',
 	matchSmallerScreenType: false,
@@ -180,7 +202,7 @@ function getScreenType (rez) {
  *
  * This is how the magic happens. This accepts an optional `screenType` name. If one isn't provided,
  * the currently detected screen type is used. This uses the config option `orientationHandling`,
- * which when set to "scale" and the screen is in portrait orientation, will dynamically calculate
+ * which when set to "scale" and the screen is in portrait orientation (such as after screen rotation), will dynamically calculate
  * what the base font size should be, if the width were proportionally scaled down to fit in the portrait space.
  *
  * To use, put the following in your application code:
@@ -191,6 +213,8 @@ function getScreenType (rez) {
  * ri.init();
  * ```
  *
+ * This configuration is particularly useful for applications that support screen rotation and need
+ * to maintain consistent scaling when the device orientation changes from landscape to portrait or vice versa.
  * This has no effect if the screen is in landscape, or if `orientationHandling` is unset.
  *
  * @function
@@ -232,6 +256,23 @@ function updateBaseFontSize (size) {
 
 /**
  * Returns the CSS classes for the given `type`.
+ *
+ * This function generates CSS class names that can be used to style components based on
+ * the current screen resolution, orientation, and aspect ratio. The returned classes are
+ * particularly useful for responsive layouts and handling screen rotation scenarios.
+ *
+ * The following CSS classes are returned:
+ * - **Orientation class**: `enact-orientation-landscape` or `enact-orientation-portrait`
+ *   - Applied based on the current screen orientation
+ *   - Updates automatically when device rotation occurs (if dynamic mode is enabled)
+ * - **Resolution class**: `enact-res-{screentype}`
+ *   - Examples: `enact-res-fhd`, `enact-res-uhd`, `enact-res-hd`, `enact-res-qhd`
+ *   - Applied based on the matched screen type
+ * - **Aspect ratio class**: `enact-aspect-ratio-{aspectRatioName}`
+ *   - Examples: `enact-aspect-ratio-hdtv`, `enact-aspect-ratio-cinema`, `enact-aspect-ratio-standard`
+ *   - Applied based on the screen type's aspect ratio name
+ *
+ * Example return value: `'enact-orientation-landscape enact-res-fhd enact-aspect-ratio-hdtv'`
  *
  * @function
  * @memberof ui/resolution
@@ -478,11 +519,30 @@ function init (args = {}) {
 }
 
 /**
- * The current configuration
+ * Configuration object for resolution independence behavior.
+ *
+ * This object controls how the resolution independence system handles different screen sizes,
+ * orientations, and screen rotation scenarios.
  *
  * @type {Object}
  * @memberof ui/resolution
- * @private
+ * @property {('normal'|'scale')} intermediateScreenHandling - Determines how to calculate
+ *           font-size. When set to `'scale'` and the screen is in landscape orientation,
+ *           calculates font-size linearly based on screen resolution. When set to `'normal'`,
+ *           the font-size will be the pxPerRem value of the best match screen type.
+ *           Default: `'normal'`
+ * @property {Boolean} matchSmallerScreenType - Determines how to get the best match screen
+ *           type of current resolution. When set to `true`, the matched screen type will be
+ *           the one that is smaller and the closest to the screen resolution. When set to
+ *           `false`, the matched screen type will be the one that is greater and the closest
+ *           to the screen resolution. Default: `false`
+ * @property {('normal'|'scale')} orientationHandling - Determines how to handle screen
+ *           orientation and rotation. When set to `'scale'` and the screen is in portrait
+ *           orientation (due to screen rotation), dynamically calculates the base font size
+ *           based on proportional scaling. When set to `'normal'`, uses the standard pxPerRem
+ *           value. This is particularly useful for supporting device rotation scenarios.
+ *           Default: `'normal'`
+ * @public
  */
 config = Object.assign({}, configDefaults);
 
