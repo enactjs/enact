@@ -18,7 +18,6 @@ import PropTypes from 'prop-types';
 
 import useSkins from './useSkins';
 import {objectify} from './util';
-import {props} from "ramda";
 
 /**
  * Default config for `Skinnable`.
