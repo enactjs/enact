@@ -156,8 +156,6 @@ const kind = (config) => {
 	// removed.
 	if (functional) {
 		Component = function (props) {
-			checkPropTypes(Component, props);
-
 			const ctx = use(contextType);
 			const boundHandlers = useHandlers(handlers, props, ctx);
 
@@ -174,6 +172,8 @@ const kind = (config) => {
 					}
 				});
 			}
+
+			checkPropTypes(Component, merged);
 
 			return renderKind(merged, ctx);
 		};
