@@ -49,6 +49,10 @@ const PositionDecorator = hoc((config, Wrapped) => {
 			};
 		}
 
+		componentDidUpdate (prevProps) {
+			if (prevProps !== this.props) checkPropTypes(this, this.props);
+		}
+
 		emitChangeForPosition (x, y) {
 			const {max, min, orientation, step} = this.props;
 			let position = x;

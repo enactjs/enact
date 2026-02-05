@@ -86,6 +86,10 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.signLangDelayId = null;
 		}
 
+		componentDidUpdate (prevProps) {
+			if (prevProps !== this.props) checkPropTypes(this, this.props);
+		}
+
 		requestSignLang = (active) => {
 			const {signLangId = '', signLangOption = {}} = this.props;
 

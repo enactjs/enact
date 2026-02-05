@@ -6,7 +6,6 @@
  */
 
 import hoc from '@enact/core/hoc';
-import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 /**
@@ -52,7 +51,6 @@ const ForwardRef = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	const ForwardRef = (props) => {
-		checkPropTypes(ForwardRef, props);
 		const {ref = null, ...rest} = props;
 
 		const withRef = {
@@ -72,10 +70,7 @@ const ForwardRef = hoc(defaultConfig, (config, Wrapped) => {
 		 * @type {Object}
 		 * @private
 		 */
-		ref: PropTypes.oneOfType([
-			PropTypes.shape({current: PropTypes.any})
-			// PropTypes.func
-		])
+		ref: PropTypes.shape({current: PropTypes.any})
 	};
 
 	ForwardRef.displayName = 'ForwardRef';

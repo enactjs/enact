@@ -188,6 +188,10 @@ const kind = (config) => {
 				this.handlers = new Handlers(handlers);
 			}
 
+			componentDidUpdate (prevProps) {
+				if (prevProps !== this.props) checkPropTypes(this, this.props);
+			}
+
 			render () {
 				this.handlers.setContext(this.props, this.context);
 

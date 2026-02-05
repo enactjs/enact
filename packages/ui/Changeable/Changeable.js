@@ -169,6 +169,10 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			return null;
 		}
 
+		componentDidUpdate (prevProps) {
+			if (prevProps !== this.props) checkPropTypes(this, this.props);
+		}
+
 		handle = handle.bind(this);
 
 		handleChange = this.handle(

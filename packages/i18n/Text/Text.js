@@ -153,6 +153,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
+			if (prevProps !== this.props) checkPropTypes(this, this.props);
 			if (this.props.locale !== prevProps.locale) {
 				this.translate(this.props.locale);
 			}

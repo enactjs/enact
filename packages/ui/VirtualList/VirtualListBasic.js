@@ -349,6 +349,8 @@ class VirtualListBasic extends Component {
 
 	componentDidUpdate (prevProps, prevState) {
 		const items = document.getElementsByClassName(css.listItem);
+
+		if (prevProps !== this.props) checkPropTypes(this, this.props);
 		if (!this.itemMarginTop && this.itemMarginTop !== 0 && items.length > 0) {
 			const firstItemStyle = window.getComputedStyle(items[0].children[0]);
 			this.itemMarginTop = Number(firstItemStyle.getPropertyValue('margin-top').slice(0, -2));

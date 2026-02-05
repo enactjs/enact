@@ -178,6 +178,7 @@ class View extends Component {
 	}
 
 	componentDidUpdate (prevProps) {
+		if (prevProps !== this.props) checkPropTypes(this, this.props);
 		this.changeDirection = this.shouldChangeDirection(prevProps, this.props);
 	}
 

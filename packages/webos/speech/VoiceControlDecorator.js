@@ -88,6 +88,10 @@ const VoiceControlDecorator = hoc((config, Wrapped) => {
 			if (this.node) this.node.addEventListener('webOSVoice', this.props.onVoice);
 		}
 
+		componentDidUpdate (prevProps) {
+			if (prevProps !== this.props) checkPropTypes(this, this.props);
+		}
+
 		componentWillUnmount () {
 			if (this.node) this.node.removeEventListener('webOSVoice', this.props.onVoice);
 		}

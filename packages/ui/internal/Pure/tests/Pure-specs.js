@@ -25,6 +25,10 @@ class Base extends Component {
 		this.countRenders = 0;
 	}
 
+	componentDidUpdate (prevProps) {
+		if (prevProps !== this.props) checkPropTypes(this, this.props);
+	}
+
 	render () {
 		data = this.props;
 		const {value} = this.props;

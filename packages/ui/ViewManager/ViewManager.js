@@ -243,6 +243,10 @@ const ViewManagerBase = class extends Component {
 		return null;
 	}
 
+	componentDidUpdate (prevProps) {
+		if (prevProps !== this.props) checkPropTypes(this, this.props);
+	}
+
 	makeTransitionEvent = () => {
 		return {index: this.props.index, previousIndex: this.state.prevIndex};
 	};

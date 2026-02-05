@@ -476,6 +476,7 @@ class Transition extends Component {
 		const {noAnimation, visible} = this.props;
 		const {initialHeight, renderState} = this.state;
 
+		if (prevProps !== this.props) checkPropTypes(this, this.props);
 		if (this.state.renderState === TRANSITION_STATE.MEASURE) {
 			this.measuringJob.stop();
 		}

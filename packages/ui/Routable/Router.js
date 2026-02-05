@@ -108,6 +108,10 @@ const RouterBase = class extends ReactComponent {
 		checkPropTypes(this, props);
 	}
 
+	componentDidUpdate (prevProps) {
+		if (prevProps !== this.props) checkPropTypes(this, this.props);
+	}
+
 	/**
 	 * Generates a set of routes from `children` and appends them to `routes`.
 	 *
