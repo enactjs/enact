@@ -122,7 +122,40 @@ describe('useScroll', () => {
 			expect(itemSize.minHeight).toBe(100);
 		});
 
-		test('should NOT scale when ri.scale(1) remains unchanged', () => {
+		test('should scale itemSizes when ri.scale(1) changes from 1 to 2', () => {
+			mockRiScale = jest.fn((val) => val);
+
+			const itemSize = 100;
+			const itemSizes = [100, 100, 100, 100, 100];
+
+			const mocks = createMockRefs();
+
+			const props = {
+				itemRenderer: jest.fn(),
+				itemSize,
+				itemSizes,
+				direction: 'vertical',
+				scrollMode: 'translate',
+				...mocks,
+				assignProperties: jest.fn(),
+				horizontalScrollbar: 'auto',
+				verticalScrollbar: 'auto'
+			};
+
+			renderHook(() => useScrollBase(props));
+
+			mockRiScale = jest.fn(() => 2);
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				fireEvent(window, new Event('resize'));
+				jest.runAllTimers();
+			});
+
+			expect(itemSizes[1]).toBe(200);
+		});
+
+		test('should NOT scale itemSize when ri.scale(1) remains unchanged', () => {
 			mockRiScale = jest.fn((val) => val);
 
 			const itemSize = {
@@ -153,6 +186,37 @@ describe('useScroll', () => {
 
 			expect(itemSize.minWidth).toBe(100);
 			expect(itemSize.minHeight).toBe(50);
+		});
+
+		test('should NOT scale itemSizes when ri.scale(1) remains unchanged', () => {
+			mockRiScale = jest.fn((val) => val);
+
+			const itemSize = 100;
+			const itemSizes = [100, 100, 100, 100, 100];
+
+			const mocks = createMockRefs();
+
+			const props = {
+				itemRenderer: jest.fn(),
+				itemSize,
+				itemSizes,
+				direction: 'vertical',
+				scrollMode: 'translate',
+				...mocks,
+				assignProperties: jest.fn(),
+				horizontalScrollbar: 'auto',
+				verticalScrollbar: 'auto'
+			};
+
+			renderHook(() => useScrollBase(props));
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				fireEvent(window, new Event('resize'));
+				jest.runAllTimers();
+			});
+
+			expect(itemSizes[1]).toBe(100);
 		});
 
 		test('should NOT scale when minWidth is missing', () => {
