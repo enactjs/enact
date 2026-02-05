@@ -6,8 +6,7 @@
  * @exports ScrollerBasic
  */
 
-import {setDefaultProps} from '@enact/core/util';
-import {checkPropTypes} from '@enact/core/util';
+import {checkPropTypes, setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
