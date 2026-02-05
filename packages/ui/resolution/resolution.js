@@ -518,12 +518,9 @@ function init (args = {}) {
 }
 
 /**
- * Configuration object for resolution independence behavior.
+ * Configuration options for resolution independence behavior.
  *
- * This object controls how the resolution independence system handles different screen sizes,
- * orientations, and screen rotation scenarios.
- *
- * @type {Object}
+ * @typedef {Object} ResolutionConfig
  * @memberof ui/resolution
  * @property {('normal'|'scale')} intermediateScreenHandling - Determines how to calculate
  *           font-size. When set to `'scale'` and the screen is in landscape orientation,
@@ -541,6 +538,17 @@ function init (args = {}) {
  *           based on proportional scaling. When set to `'normal'`, uses the standard pxPerRem
  *           value. This is particularly useful for supporting device rotation scenarios.
  *           Default: `'normal'`
+ * @public
+ */
+
+/**
+ * Configuration object for resolution independence behavior.
+ *
+ * This object controls how the resolution independence system handles different screen sizes,
+ * orientations, and screen rotation scenarios.
+ *
+ * @type {ui/resolution.ResolutionConfig}
+ * @memberof ui/resolution
  * @public
  */
 config = Object.assign({}, configDefaults);
