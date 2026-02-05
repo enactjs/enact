@@ -1,3 +1,4 @@
+import {checkPropTypes} from '@enact/core/util';
 import {action} from '@enact/storybook-utils/addons/actions';
 import {boolean, number, range, select, text} from '@enact/storybook-utils/addons/controls';
 import {mergeComponentMetadata} from '@enact/storybook-utils';
@@ -41,7 +42,11 @@ const views = new Array(itemSize).fill().map((i, index) => {
 	};
 });
 
-const ChildrenDiv = ({args, ...rest}) => {
+const ChildrenDiv = (props) => {
+	checkPropTypes(ChildrenDiv, props);
+
+	const {args, ...rest} = props;
+
 	if (rest[args.enteringProp] === false) {
 		return <div {...rest}>{rest.children} (finished its transition)</div>;
 	} else {
