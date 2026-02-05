@@ -61,5 +61,10 @@
   "devDependencies": {
     "@enact/ui-test-utils": "^4.0.0",
     "ilib": "^14.21.2"
+  },
+  "overrides": {
+    "prop-types": {
+      "react-is": "^19.2.3"
+    }
   }
 }
