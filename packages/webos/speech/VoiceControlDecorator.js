@@ -1,7 +1,8 @@
-import {Component, createRef} from 'react';
-import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 import {WithRef} from '@enact/core/internal/WithRef';
+import {checkPropTypes} from '@enact/core/util';
+import {Component, createRef} from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * VoiceControlDecorator is a higher-order component that adds a callback for voice event
@@ -73,6 +74,7 @@ const VoiceControlDecorator = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			checkPropTypes(this, props);
 
 			this.node = null;
 			this.nodeRef = createRef();
