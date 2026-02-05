@@ -82,7 +82,7 @@ const defaultConfig = {
  *
  * Example:
  * ```
- *	// Will have the resolution classes and will be updated when the window resizes or screen rotates
+ *	// Will have the resolution classes and will be updated when the window resizes or the screen rotates
  *	const AppWithResolution = ResolutionDecorator(App);
  *	// Will have the resolution classes for the screen at the time of render only
  *	const AppWithStaticResolution = ResolutionDecorator({dynamic: false}, App);
