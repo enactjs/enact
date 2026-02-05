@@ -122,11 +122,11 @@ describe('Heading Specs', () => {
 	});
 
 	test('should return a DOM node reference for `componentRef`', () => {
-		const ref = {current: null};
+		const ref = jest.fn();
 		render(<Heading size="large" ref={ref} />);
 
-		const expected = 'h3';
-		const actual = ref.current[Object.keys(ref.current)[0]].elementType;
+		const expected = 'H3';
+		const actual = ref.mock.calls[0][0].nodeName;
 
 		expect(actual).toBe(expected);
 	});

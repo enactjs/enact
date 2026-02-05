@@ -91,11 +91,11 @@ describe('Icon', () => {
 	});
 
 	test('should return a DOM node reference for `componentRef`', () => {
-		const ref = {current: null};
+		const ref = jest.fn();
 		render(<Icon ref={ref} />);
 
-		const expected = 'div';
-		const actual = ref.current[Object.keys(ref.current)[0]].elementType;
+		const expected = 'DIV';
+		const actual = ref.mock.calls[0][0].nodeName;
 
 		expect(actual).toBe(expected);
 	});

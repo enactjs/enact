@@ -72,7 +72,10 @@ const ForwardRef = hoc(defaultConfig, (config, Wrapped) => {
 		 * @type {Object}
 		 * @private
 		 */
-		ref: PropTypes.shape({current: PropTypes.any})
+		ref: PropTypes.oneOfType([
+			PropTypes.shape({current: PropTypes.any})
+			// PropTypes.func
+		])
 	};
 
 	ForwardRef.displayName = 'ForwardRef';
