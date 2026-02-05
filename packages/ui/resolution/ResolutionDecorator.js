@@ -77,7 +77,7 @@ const defaultConfig = {
  * It also supports dynamic updates when the window is resized or when the screen rotates.
  *
  * Configuration options:
- *	* `dynamic: true` - when `true`, updates the resolution classes when the window resizes or screen rotates
+ *	* `dynamic: true` - when `true`, updates the resolution classes when the window resizes or the screen rotates
  *	* `screenTypes: null` - defines a set of screen types to support
  *
  * Example:
