@@ -7,6 +7,7 @@
  */
 
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 import '../src/glue';
@@ -104,6 +105,7 @@ const defaultConfig = {
 const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	// eslint-disable-next-line no-shadow
 	function I18nDecorator (props) {
+		checkPropTypes(I18nDecorator, props);
 		const {locale, ...rest} = props;
 		const {className: i18nClassName, ...i18n} = useI18n({
 			locale,
