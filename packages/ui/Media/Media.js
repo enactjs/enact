@@ -207,10 +207,11 @@ class Media extends ReactComponent {
 		this.attachCustomMediaEvents();
 	}
 
-	componentDidUpdate ({source: prevSource}) {
+	componentDidUpdate (prevProps) {
 		const {source} = this.props;
+		const {prevSource} = prevProps;
 
-		if (source !== this.props) checkPropTypes(this, this.props);
+		if (prevProps !== this.props) checkPropTypes(this, this.props);
 		if (getKeyFromSource(source) !== getKeyFromSource(prevSource)) {
 			this.load();
 		}
