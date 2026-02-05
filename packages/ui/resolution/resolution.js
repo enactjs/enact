@@ -1,4 +1,4 @@
-/**
+/*
  * Provides resolution independence utilities for responsive applications.
  *
  * This module enables applications to adapt to different screen resolutions, orientations,
@@ -12,7 +12,6 @@
  * - Configurable behavior via {@link ui/resolution.config}
  * - CSS class generation for resolution-specific styling via {@link ui/resolution.getResolutionClasses}
  *
- * @module ui/resolution
  */
 
 let baseScreen,
