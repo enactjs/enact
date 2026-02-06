@@ -47,9 +47,9 @@ const unitToPixelFactors = {
 
 /**
  * Default configuration values.
- * 
+ *
  * See {@link ui/resolution.config} for full documentation.
- * 
+ *
  * @type {Object}
  * @memberof ui/resolution
  * @private
