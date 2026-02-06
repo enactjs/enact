@@ -98,6 +98,28 @@ describe('kind', () => {
 		expect(minimalDiv).toBeInTheDocument();
 	});
 
+	test('should support change of props on rerender', () => {
+		const Minimal = kind({
+			name: 'Minimal',
+			propTypes: {
+				value: PropTypes.number
+			},
+			render: (props) => <div data-testid="minimal" {...props} />
+		});
+
+		const {rerender} = render(<Minimal value={0} />);
+
+		let minimalDiv = screen.queryByTestId('minimal');
+
+		expect(minimalDiv).toBeInTheDocument();
+
+		rerender(<Minimal value={5} />);
+
+		minimalDiv = screen.queryByTestId('minimal');
+
+		expect(minimalDiv).toBeInTheDocument();
+	});
+
 	test('should default {label} property', () => {
 		render(<Kind prop={1} data-testid="unlabeled" />);
 
