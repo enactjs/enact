@@ -174,8 +174,8 @@ const useScrollBase = (props) => {
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
 	const [riRatio, setRiRatio] = useState(ri.scale(1));
-	const [originalItemSize, setOriginalItemSize] = useState(props.itemSize);
-	const [itemSize, setItemSize] = useState(props.itemSize);
+	const [originalItemSize, setOriginalItemSize] = useState(props.itemSize || 0);
+	const [itemSize, setItemSize] = useState(props.itemSize || 0);
 
 	const mutableRef = useRef({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
@@ -300,10 +300,10 @@ const useScrollBase = (props) => {
 		}
 	});
 
-	if (originalItemSize !== props.itemSize) {
-		setOriginalItemSize(props.itemSize);
-		if (ri.scale(1) / riRatio !== props.itemSize / itemSize) {
-			setItemSize(props.itemSize);
+	if (originalItemSize !== (props.itemSize || 0)) {
+		setOriginalItemSize(props.itemSize || 0);
+		if (ri.scale(1) / riRatio !== (props.itemSize || 0) / itemSize) {
+			setItemSize(props.itemSize || 0);
 		}
 	}
 
