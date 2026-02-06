@@ -1,4 +1,5 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
+import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 /**
@@ -28,7 +29,11 @@ import PropTypes from 'prop-types';
  * @memberof ui/Routable
  * @public
  */
-const Route = () => null;
+const Route = (props) => {
+	checkPropTypes(Route, props);
+
+	return null;
+};
 
 Route.propTypes = {
 	/**

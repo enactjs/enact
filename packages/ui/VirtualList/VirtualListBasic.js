@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
-import {clamp, shallowEqual} from '@enact/core/util';
+import {checkPropTypes, clamp, shallowEqual} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import {createRef, Component} from 'react';
@@ -293,6 +293,7 @@ class VirtualListBasic extends Component {
 
 	constructor (props) {
 		super(props);
+		checkPropTypes(this, props);
 
 		this.contentRef = createRef();
 		this.itemContainerRefs = [];
@@ -348,6 +349,8 @@ class VirtualListBasic extends Component {
 
 	componentDidUpdate (prevProps, prevState) {
 		const items = document.getElementsByClassName(css.listItem);
+
+		checkPropTypes(this, this.props, prevProps);
 		if (!this.itemMarginTop && this.itemMarginTop !== 0 && items.length > 0) {
 			const firstItemStyle = window.getComputedStyle(items[0].children[0]);
 			this.itemMarginTop = Number(firstItemStyle.getPropertyValue('margin-top').slice(0, -2));

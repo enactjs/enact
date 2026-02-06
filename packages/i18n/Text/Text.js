@@ -7,6 +7,7 @@
  */
 
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 import ilib from 'ilib';
 import IString from 'ilib/lib/IString';
 import PropTypes from 'prop-types';
@@ -138,6 +139,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			checkPropTypes(this, props);
 
 			this.state = {
 				map: getTextMap(mapPropsToText, props)
@@ -151,6 +153,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
+			checkPropTypes(this, this.props, prevProps);
 			if (this.props.locale !== prevProps.locale) {
 				this.translate(this.props.locale);
 			}

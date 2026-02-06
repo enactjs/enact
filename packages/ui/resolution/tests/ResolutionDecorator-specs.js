@@ -16,6 +16,26 @@ describe('ResolutionDecorator Specs', () => {
 		expect(actual).toBe(expected);
 	});
 
+	test('should not change resolution between renders if the screen stays the same', () => {
+		const Component = ResolutionDecorator('div');
+		const {rerender} = render(<Component data-testid="component" />);
+
+		const expected = true;
+		let div = screen.getByTestId('component').className;
+		let actual = div.includes('enact-res-standard') &&
+			(div.includes('enact-orientation-landscape') || div.includes('enact-orientation-portrait'));
+
+		expect(actual).toBe(expected);
+
+		rerender (<Component data-testid="component" />);
+
+		div = screen.getByTestId('component').className;
+		actual = div.includes('enact-res-standard') &&
+			(div.includes('enact-orientation-landscape') || div.includes('enact-orientation-portrait'));
+
+		expect(actual).toBe(expected);
+	});
+
 	test('should allow custom screen types', () => {
 		const name = 'mhd';
 		const screens = [

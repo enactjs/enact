@@ -7,6 +7,7 @@
  */
 
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 import {configure} from './config';
@@ -108,6 +109,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	const Touchable = (props) => {
+		checkPropTypes(Touchable, props);
 		const {disabled = false, noResume = false, ref = null, ...rest} = props;
 		const {configForHook, propsForWrapped} = selectProps({disabled, noResume, ...rest});
 		const hook = useTouch({getActive: !!activeProp, ...configForHook});

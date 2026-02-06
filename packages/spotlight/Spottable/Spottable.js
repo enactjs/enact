@@ -9,6 +9,7 @@
 import handle, {forward, returnsTrue} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 import {WithRef} from '@enact/core/internal/WithRef';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -104,6 +105,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const WrappedWithRef = WithRef(Wrapped);
 
 	function SpottableBase (props) {
+		checkPropTypes(SpottableBase, props);
+
 		const nodeRef = useRef();
 
 		const {

@@ -7,6 +7,7 @@
  */
 
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 
 import Announce from './Announce';
@@ -69,7 +70,9 @@ const defaultConfig = {
  */
 const AnnounceDecorator = hoc(defaultConfig, ({prop}, Wrapped) => {
 	// eslint-disable-next-line no-shadow
-	function AnnounceDecorator ({children, ...rest}) {
+	function AnnounceDecorator (props) {
+		checkPropTypes(AnnounceDecorator, props);
+		const {children, ...rest} = props;
 		const announce = useAnnounce();
 
 		if (prop) rest[prop] = announce.announce;

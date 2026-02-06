@@ -3,6 +3,7 @@
  */
 
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 
 import {FloatingLayerContext, useFloatingLayerDecorator} from './useFloatingLayerDecorator';
 
@@ -54,6 +55,7 @@ const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	function FloatingLayerDecorator (props) {
+		checkPropTypes(FloatingLayerDecorator, props);
 		const {className, ...rest} = props;
 		const hook = useFloatingLayerDecorator({className, floatLayerId});
 

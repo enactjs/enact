@@ -9,6 +9,7 @@ import {createContext, use, Component as ReactComponent} from 'react';
 
 import useHandlers from '../useHandlers';
 import Handlers from '../useHandlers/Handlers';
+import {checkPropTypes} from '../util';
 
 import computed from './computed';
 import styles from './styles';
@@ -172,16 +173,23 @@ const kind = (config) => {
 				});
 			}
 
+			checkPropTypes(Component, merged);
+
 			return renderKind(merged, ctx);
 		};
 	} else {
 		Component = class extends ReactComponent {
 			static contextType = contextType;
 
-			constructor () {
-				super();
+			constructor (props) {
+				super(props);
+				checkPropTypes(this, props);
 
 				this.handlers = new Handlers(handlers);
+			}
+
+			componentDidUpdate (prevProps) {
+				checkPropTypes(this, this.props, prevProps);
 			}
 
 			render () {

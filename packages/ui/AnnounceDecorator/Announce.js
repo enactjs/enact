@@ -1,3 +1,4 @@
+import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import {Component} from 'react';
 
@@ -59,6 +60,15 @@ const Announce = class extends Component {
 		// "global" such that multiple instances of Announce respect each other.
 		timeout: 500
 	};
+
+	constructor (props) {
+		super(props);
+		checkPropTypes(this, props);
+	}
+
+	componentDidUpdate (prevProps) {
+		checkPropTypes(this, this.props, prevProps);
+	}
 
 	componentWillUnmount () {
 		this.clearTimeout();

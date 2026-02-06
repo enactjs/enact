@@ -8,7 +8,7 @@
 import handle, {forwardCustom} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import useHandlers from '@enact/core/useHandlers';
-import {cap} from '@enact/core/util';
+import {cap, checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import pick from 'ramda/src/pick';
 import {useRef} from 'react';
@@ -156,6 +156,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		const props = {disabled, ...rest};
 		const updated = {...props};
 		const propSelected = props[prop];
+		checkPropTypes(Toggleable, props);
 
 		const hook = useToggle({
 			defaultSelected: props[defaultPropKey],
