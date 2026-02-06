@@ -98,7 +98,7 @@ describe('kind', () => {
 		expect(minimalDiv).toBeInTheDocument();
 	});
 
-	test('should support change of props on rerender', () => {
+	test('should detect invalid proType on component rerender', () => {
 		const Minimal = kind({
 			name: 'Minimal',
 			propTypes: {
@@ -113,11 +113,13 @@ describe('kind', () => {
 
 		expect(minimalDiv).toBeInTheDocument();
 
-		rerender(<Minimal value={5} />);
+		let consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
 
-		minimalDiv = screen.queryByTestId('minimal');
+		rerender(<Minimal value="five" />);
 
-		expect(minimalDiv).toBeInTheDocument();
+		expect(consoleErrorMock).toHaveBeenCalled();
+
+		consoleErrorMock.mockRestore();
 	});
 
 	test('should default {label} property', () => {
