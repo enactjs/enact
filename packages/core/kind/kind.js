@@ -189,7 +189,7 @@ const kind = (config) => {
 			}
 
 			componentDidUpdate (prevProps) {
-				if (prevProps !== this.props) checkPropTypes(this, this.props);
+				checkPropTypes(this, this.props, prevProps);
 			}
 
 			render () {

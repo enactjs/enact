@@ -211,7 +211,7 @@ class Media extends ReactComponent {
 		const {source} = this.props;
 		const {source: prevSource} = prevProps;
 
-		if (prevProps !== this.props) checkPropTypes(this, this.props);
+		checkPropTypes(this, this.props, prevProps);
 		if (getKeyFromSource(source) !== getKeyFromSource(prevSource)) {
 			this.load();
 		}

@@ -328,6 +328,7 @@ const virtualGridListDefaultProps = {
  * @public
  */
 const VirtualGridList = (props) => {
+	checkPropTypes(VirtualList, props);
 	const virtualGridListProps = setDefaultProps(props, virtualGridListDefaultProps);
 
 	const {

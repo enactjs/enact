@@ -79,7 +79,7 @@ class ScrollerBasic extends Component {
 	}
 
 	componentDidUpdate (prevProps) {
-		if (prevProps !== this.props) checkPropTypes(this, this.props);
+		checkPropTypes(this, this.props, prevProps);
 		this.calculateMetrics();
 		if (this.props.isVerticalScrollbarVisible && !prevProps.isVerticalScrollbarVisible) {
 			this.forceUpdate();

@@ -216,7 +216,7 @@ class TransitionGroup extends Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		if (prevProps !== this.props) checkPropTypes(this, this.props);
+		checkPropTypes(this, this.props, prevProps);
 		this.reconcileUnmountedChildren(prevState.children, this.state.children);
 		this.reconcileChildren(prevState.activeChildren, this.state.activeChildren);
 	}

@@ -381,7 +381,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeSpeed, rtl} = this.props;
 			let forceRestartMarquee = false;
 
-			if (prevProps !== this.props) checkPropTypes(this, this.props);
+			checkPropTypes(this, this.props, prevProps);
 			if (
 				prevProps.locale !== locale ||
 				prevProps.rtl !== rtl ||

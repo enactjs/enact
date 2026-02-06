@@ -100,6 +100,7 @@ class Scrim extends Component {
 	}
 
 	componentDidUpdate (prevProps) {
+		checkPropTypes(this, this.props, prevProps);
 		if (prevProps.type === 'translucent' && this.props.type !== 'translucent') {
 			removeTranslucentScrim(this);
 		}

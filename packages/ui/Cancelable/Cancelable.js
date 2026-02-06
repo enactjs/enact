@@ -177,7 +177,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			if (prevProps !== this.props) checkPropTypes(this, this.props);
+			checkPropTypes(this, this.props, prevProps);
 		}
 
 		componentWillUnmount () {

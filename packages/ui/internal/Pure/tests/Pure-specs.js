@@ -26,7 +26,7 @@ class Base extends Component {
 	}
 
 	componentDidUpdate (prevProps) {
-		if (prevProps !== this.props) checkPropTypes(this, this.props);
+		checkPropTypes(this, this.props, prevProps);
 	}
 
 	render () {
