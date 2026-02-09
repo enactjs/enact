@@ -8,6 +8,7 @@
 import handle, {forward} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
@@ -180,6 +181,8 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	function SpotlightContainerDecorator (props) {
+		checkPropTypes(SpotlightContainerDecorator, props);
+
 		const {spotlightDisabled = false, spotlightId, spotlightMuted = false, spotlightRestrict = 'self-first', ...rest} = props;
 
 		const spotlightContainer = useSpotlightContainer({

@@ -232,6 +232,33 @@ describe('Cancelable', () => {
 		expect(handleCancel).not.toHaveBeenCalled();
 	});
 
+	test('should not bubble up the component tree when prop handler calls stopPropagation on rerender', () => {
+		const handleCancel = jest.fn();
+		const Comp = Cancelable(
+			{onCancel: 'onCustomEvent'},
+			Component
+		);
+
+		const {rerender} = render(
+			<Comp onCustomEvent={handleCancel}>
+				<Comp data-testid="second" className="second" />
+			</Comp>
+		);
+		const secondComponent = screen.getByTestId('second');
+
+		fireEvent.keyUp(secondComponent, makeKeyEvent(27));
+
+		expect(handleCancel).toHaveBeenCalledTimes(1);
+
+		rerender(
+			<Comp onCustomEvent={handleCancel}>
+				<Comp data-testid="second" className="second" onCustomEvent={stop} />
+			</Comp>
+		);
+
+		expect(handleCancel).toHaveBeenCalledTimes(1);
+	});
+
 	describe('modal instances', () => {
 		const customEventHandler = (ev) => {
 			return ev.keyIdentifier === '27';

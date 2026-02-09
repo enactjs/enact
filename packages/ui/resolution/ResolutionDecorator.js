@@ -7,6 +7,7 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 
 import {init, config as riConfig, defineScreenTypes, getResolutionClasses} from './resolution';
 
@@ -109,6 +110,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			checkPropTypes(this, props);
 			riConfig.intermediateScreenHandling = config.intermediateScreenHandling;
 			riConfig.matchSmallerScreenType = config.matchSmallerScreenType;
 			init({measurementNode: (typeof window !== 'undefined' && window)});
@@ -120,6 +122,10 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidMount () {
 			if (config.dynamic) window.addEventListener('resize', this.handleResize);
 			this.rootNode = document.getElementsByClassName(getResolutionClasses())?.[0] || null;
+		}
+
+		componentDidUpdate (prevProps) {
+			checkPropTypes(this, this.props, prevProps);
 		}
 
 		componentWillUnmount () {

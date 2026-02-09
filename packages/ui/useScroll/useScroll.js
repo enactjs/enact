@@ -119,7 +119,6 @@ const useScrollBase = (props) => {
 			horizontalScrollbar,
 			horizontalScrollbarHandle,
 			itemRenderer,
-			itemSize,
 			itemSizes,
 			noScrollByDrag,
 			noScrollByWheel,
@@ -143,6 +142,8 @@ const useScrollBase = (props) => {
 		} = props,
 		scrollClasses = classNames(css.scroll, className);
 
+	const propsItemSize = props.itemSize || 0;
+
 	// The following props are the one having the same naming function in this scope.
 	// So it is better to use props[propName]
 	// instead of extracting it from the `props` and renaming it
@@ -151,6 +152,7 @@ const useScrollBase = (props) => {
 	delete rest.cbScrollTo;
 	delete rest.clearOverscrollEffect;
 	delete rest.handleResizeWindow;
+	delete rest.itemSize;
 	delete rest.onFlick;
 	delete rest.onKeyDown;
 	delete rest.onMouseDown;
@@ -174,6 +176,8 @@ const useScrollBase = (props) => {
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
 	const [riRatio, setRiRatio] = useState(ri.scale(1));
+	const [originalItemSize, setOriginalItemSize] = useState(propsItemSize);
+	const [itemSize, setItemSize] = useState(propsItemSize);
 
 	const mutableRef = useRef({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
@@ -298,6 +302,13 @@ const useScrollBase = (props) => {
 		}
 	});
 
+	if (originalItemSize !== (propsItemSize)) {
+		setOriginalItemSize(propsItemSize);
+		if (ri.scale(1) / riRatio !== (propsItemSize) / itemSize) {
+			setItemSize(propsItemSize);
+		}
+	}
+
 	if (mutableRef.current.animator == null) {
 		mutableRef.current.animator = new ScrollAnimator();
 	}
@@ -420,8 +431,16 @@ const useScrollBase = (props) => {
 			if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
 				scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
 				scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
-				setRiRatio(ri.scale(1));
+			} else {
+				scrollContentProps.itemSize *= ri.scale(1) / riRatio;
+				if (scrollContentProps.itemSizes) {
+					for (let i = 0; i < scrollContentProps.itemSizes.length; i++) {
+						scrollContentProps.itemSizes[i] *= ri.scale(1) / riRatio;
+					}
+				}
 			}
+			setItemSize(scrollContentProps.itemSize);
+			setRiRatio(ri.scale(1));
 		}
 
 		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
