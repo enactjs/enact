@@ -538,7 +538,7 @@ function init (args = {}) {
  *           based on proportional scaling. When set to `'normal'`, uses the standard pxPerRem
  *           value. This is particularly useful for supporting device rotation scenarios.
  *           Default: `'normal'`
- * @public
+ * @private
  */
 
 /**
@@ -549,7 +549,7 @@ function init (args = {}) {
  *
  * @type {ui/resolution.ResolutionConfig}
  * @memberof ui/resolution
- * @public
+ * @private
  */
 config = Object.assign({}, configDefaults);
 
