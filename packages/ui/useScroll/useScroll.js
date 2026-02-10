@@ -142,6 +142,10 @@ const useScrollBase = (props) => {
 		} = props,
 		scrollClasses = classNames(css.scroll, className);
 
+	if (typeof props.itemSize === 'object') {
+		props.itemSize.minWidth = props.itemSize.minWidth || 0;
+		props.itemSize.minHeight = props.itemSize.minHeight || 0;
+	}
 	const propsItemSize = props.itemSize || 0;
 
 	// The following props are the one having the same naming function in this scope.
@@ -302,10 +306,16 @@ const useScrollBase = (props) => {
 		}
 	});
 
-	if (originalItemSize !== (propsItemSize)) {
+	if (originalItemSize !== propsItemSize) {
 		setOriginalItemSize(propsItemSize);
-		if (ri.scale(1) / riRatio !== ((propsItemSize / itemSize) || (propsItemSize.minWidth / itemSize.minWidth))) {
-			setItemSize(propsItemSize);
+		if (typeof propsItemSize === 'object') {
+			if ((ri.scale(1) / riRatio !== propsItemSize.minWidth / itemSize.minWidth) || (ri.scale(1) / riRatio !== propsItemSize.minHeight / itemSize.minHeight)) {
+				setItemSize(propsItemSize);
+			}
+		} else {
+			if (ri.scale(1) / riRatio !== propsItemSize / itemSize) {
+				setItemSize(propsItemSize);
+			}
 		}
 	}
 
