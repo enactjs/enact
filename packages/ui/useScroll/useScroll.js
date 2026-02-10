@@ -304,7 +304,7 @@ const useScrollBase = (props) => {
 
 	if (originalItemSize !== (propsItemSize)) {
 		setOriginalItemSize(propsItemSize);
-		if (ri.scale(1) / riRatio !== (propsItemSize) / itemSize) {
+		if (ri.scale(1) / riRatio !== ((propsItemSize / itemSize) || (propsItemSize.minWidth / itemSize.minWidth))) {
 			setItemSize(propsItemSize);
 		}
 	}
