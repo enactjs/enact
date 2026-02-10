@@ -1,19 +1,3 @@
-/*
- * Provides resolution independence utilities for responsive applications.
- *
- * This module enables applications to adapt to different screen resolutions, orientations,
- * and aspect ratios. It includes support for screen rotation scenarios, allowing applications
- * to dynamically adjust their layout and scaling when device orientation changes.
- *
- * Key features:
- * - Automatic detection of a screen type based on resolution
- * - Dynamic font-size calculation for different resolutions
- * - Support for screen rotation and orientation changes
- * - Configurable behavior via {@link ui/resolution.config}
- * - CSS class generation for resolution-specific styling via {@link ui/resolution.getResolutionClasses}
- *
- */
-
 let baseScreen,
 	orientation,
 	riRatio,
