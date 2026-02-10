@@ -4,8 +4,9 @@
  * The default export is an object containing the resolution independence methods.
  *
  * Key exports include:
- * - `getResolutionClasses` - Returns CSS classes for resolution, orientation, and aspect ratio
- * - `ResolutionDecorator` - HOC for wrapping components with resolution support
+ * - `{@link ui/resolution.config}` - Configuration object for controlling resolution behavior, screen rotation handling, and more
+ * - `{@link ui/resolution.getResolutionClasses}` - Returns CSS classes for resolution, orientation, and aspect ratio
+ * - `{@link ui/resolution.ResolutionDecorator}` - HOC for wrapping components with resolution support
  * - Other utility functions for scaling, unit conversion, and screen type detection
  *
  * @module ui/resolution
