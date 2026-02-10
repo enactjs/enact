@@ -534,7 +534,7 @@ function init (args = {}) {
  *
  * This object controls how the resolution independence system handles different screen sizes,
  * orientations, and screen rotation scenarios.
- * See the details in {@link ui/resolution.ResolutionConfig}
+ * See the details in {@link ui/resolution.ResolutionConfig|ResolutionConfig}
  *
  * @type {ui/resolution.ResolutionConfig}
  * @memberof ui/resolution
