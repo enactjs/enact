@@ -886,7 +886,7 @@ const useScrollBase = (props) => {
 		mutableRef.current.scrollStopJob.start();
 	}
 
-	/**
+	/*
 	 * Handler for scrollend event
 	 */
 	function onScrollEnd (ev) {
