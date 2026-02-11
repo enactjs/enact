@@ -841,32 +841,49 @@ const useScrollBase = (props) => {
 	}
 	// scrollMode 'translate' ]]
 
-	// scrollMode 'native' [[
-	function onScroll (ev) {
+	/**
+	 * Updates scroll position from a scroll event.
+	 * Handles RTL adjustment and position updates.
+	 *
+	 * @param {Event} ev - Scroll event
+	 * @private
+	 */
+	function updateScrollPosition (ev) {
 		let {scrollLeft, scrollTop} = ev.target;
 
 		const
 			bounds = getScrollBounds(),
 			canScrollH = canScrollHorizontally(bounds);
 
-		if (!mutableRef.current.scrolling) {
-			scrollStartOnScroll();
-		}
-
+		// Handle RTL (Right-to-Left) languages
 		if (rtl && canScrollH) {
 			scrollLeft = (platform.chrome < 85) ? bounds.maxLeft - scrollLeft : -scrollLeft;
 		}
 
+		// Update horizontal position if changed
 		if (scrollLeft !== mutableRef.current.scrollLeft) {
 			setScrollLeft(scrollLeft);
 		}
+
+		// Update vertical position if changed
 		if (scrollTop !== mutableRef.current.scrollTop) {
 			setScrollTop(scrollTop);
 		}
 
+		// Notify ScrollerBasic component
 		if (scrollContentHandle.current.didScroll) {
 			scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
 		}
+	}
+
+	// scrollMode 'native' [[
+	function onScroll (ev) {
+		if (!mutableRef.current.scrolling) {
+			scrollStartOnScroll();
+		}
+
+		updateScrollPosition(ev);
+
 
 		forwardScrollEvent('onScroll');
 		mutableRef.current.scrollStopJob.start();
@@ -876,36 +893,11 @@ const useScrollBase = (props) => {
 	 * Handler for scrollend event
 	 */
 	function onScrollEnd (ev) {
-		console.log("scroll end fired"); // eslint-disable-line no-console
-		// Extracts the final scroll position from the DOM element
-		let {scrollLeft, scrollTop} = ev.target;
+		updateScrollPosition(ev);
 
-		// Need to know the scrollable area dimensions for RTL handling and validation
-		const
-			bounds = getScrollBounds(),
-			canScrollH = canScrollHorizontally(bounds);
-
-		if (rtl && canScrollH) {
-			scrollLeft = (platform.chrome < 85) ? bounds.maxLeft - scrollLeft : -scrollLeft;
-		}
-
-		// Update final scroll position
-		if (scrollLeft !== mutableRef.current.scrollLeft) {
-			setScrollLeft(scrollLeft);
-		}
-		if (scrollTop !== mutableRef.current.scrollTop) {
-			setScrollTop(scrollTop);
-		}
-
-		// Notify ScrollerBasic Component for its internal tracking
-		if (scrollContentHandle.current.didScroll) {
-			scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
-		}
-
-		// Stop the fallback timer since scrollend has fired
+		// Stop the fallback timer since native scrollend has fired
 		mutableRef.current.scrollStopJob.stop();
 
-		// Call scroll stop handler
 		scrollStopOnScroll();
 	}
 	// scrollMode 'native' ]]
