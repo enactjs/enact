@@ -855,17 +855,14 @@ const useScrollBase = (props) => {
 			bounds = getScrollBounds(),
 			canScrollH = canScrollHorizontally(bounds);
 
-		// Handle RTL (Right-to-Left) languages
 		if (rtl && canScrollH) {
 			scrollLeft = (platform.chrome < 85) ? bounds.maxLeft - scrollLeft : -scrollLeft;
 		}
 
-		// Update horizontal position if changed
 		if (scrollLeft !== mutableRef.current.scrollLeft) {
 			setScrollLeft(scrollLeft);
 		}
 
-		// Update vertical position if changed
 		if (scrollTop !== mutableRef.current.scrollTop) {
 			setScrollTop(scrollTop);
 		}

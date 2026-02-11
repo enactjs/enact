@@ -20,7 +20,7 @@ const utilEvent = (eventName) => {
 			if (!ref) return;
 
 			if (isScrollEndEvent && !hasNativeScrollEnd) {
-				return; // Do nothing - fallback already exists in useScroll.js
+				return;
 			}
 
 			if (typeof window !== 'undefined' && (ref === window || ref === document)) {
@@ -36,7 +36,7 @@ const utilEvent = (eventName) => {
 			if (!ref) return;
 
 			if (isScrollEndEvent && !hasNativeScrollEnd) {
-				return; // Do nothing
+				return;
 			}
 
 			if (typeof window !== 'undefined' && (ref === window || ref === document)) {
