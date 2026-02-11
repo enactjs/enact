@@ -871,6 +871,43 @@ const useScrollBase = (props) => {
 		forwardScrollEvent('onScroll');
 		mutableRef.current.scrollStopJob.start();
 	}
+
+	/**
+	 * Handler for scrollend event
+	 */
+	function onScrollEnd (ev) {
+		console.log("scroll end fired")
+		// Extracts the final scroll position from the DOM element
+		let {scrollLeft, scrollTop} = ev.target;
+
+		// Need to know the scrollable area dimensions for RTL handling and validation
+		const
+			bounds = getScrollBounds(),
+			canScrollH = canScrollHorizontally(bounds);
+
+		if (rtl && canScrollH) {
+			scrollLeft = (platform.chrome < 85) ? bounds.maxLeft - scrollLeft : -scrollLeft;
+		}
+
+		// Update final scroll position
+		if (scrollLeft !== mutableRef.current.scrollLeft) {
+			setScrollLeft(scrollLeft);
+		}
+		if (scrollTop !== mutableRef.current.scrollTop) {
+			setScrollTop(scrollTop);
+		}
+
+		// Notify ScrollerBasic Component for its internal tracking
+		if (scrollContentHandle.current.didScroll) {
+			scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
+		}
+
+		// Stop the fallback timer since scrollend has fired
+		mutableRef.current.scrollStopJob.stop();
+
+		// Call scroll stop handler
+		scrollStopOnScroll();
+	}
 	// scrollMode 'native' ]]
 
 	function onKeyDown (ev) {
@@ -1551,6 +1588,7 @@ const useScrollBase = (props) => {
 		// scrollMode 'native' [[
 		if (scrollMode === 'native' && scrollContentRef.current) {
 			utilEvent('scroll').addEventListener(scrollContentRef, onScroll, {passive: true});
+			utilEvent('scrollend').addEventListener(scrollContentRef, onScrollEnd);
 		}
 		// scrollMode 'native' ]]
 
@@ -1572,6 +1610,7 @@ const useScrollBase = (props) => {
 
 		// scrollMode 'native' [[
 		utilEvent('scroll').removeEventListener(scrollContentRef, onScroll, {passive: true});
+		utilEvent('scrollend').removeEventListener(scrollContentRef, onScrollEnd);
 		// scrollMode 'native' ]]
 
 		if (props.removeEventListeners) {
