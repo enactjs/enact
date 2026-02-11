@@ -11,7 +11,7 @@
  * - Support for screen rotation and orientation changes
  * - Configurable behavior via {@link ui/resolution.config}
  * - CSS class generation for resolution-specific styling via {@link ui/resolution.getResolutionClasses}
- * The default export is an object containing the resolution independence methods.
+ * - The default export is an object containing the resolution independence methods.
  *
  * Key exports include:
  * - {@link ui/resolution.config} - Configuration object for controlling resolution behavior, screen rotation handling, and more
