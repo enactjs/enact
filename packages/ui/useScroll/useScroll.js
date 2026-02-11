@@ -876,7 +876,7 @@ const useScrollBase = (props) => {
 	 * Handler for scrollend event
 	 */
 	function onScrollEnd (ev) {
-		console.log("scroll end fired")
+		console.log("scroll end fired"); // eslint-disable-line no-console
 		// Extracts the final scroll position from the DOM element
 		let {scrollLeft, scrollTop} = ev.target;
 
