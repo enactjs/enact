@@ -348,18 +348,7 @@ class VirtualListBasic extends Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		const items = document.getElementsByClassName(css.listItem);
-
 		checkPropTypes(this, this.props, prevProps);
-		if (!this.itemMarginTop && this.itemMarginTop !== 0 && items.length > 0) {
-			const firstItemStyle = window.getComputedStyle(items[0].children[0]);
-			this.itemMarginTop = Number(firstItemStyle.getPropertyValue('margin-top').slice(0, -2));
-			this.itemMarginBottom = Number(firstItemStyle.getPropertyValue('margin-bottom').slice(0, -2));
-			this.itemMarginLeft = Number(firstItemStyle.getPropertyValue('margin-left').slice(0, -2));
-			this.itemMarginRight = Number(firstItemStyle.getPropertyValue('margin-right').slice(0, -2));
-		}
-		this.scrollBounds.maxTop += this.itemMarginTop + this.itemMarginBottom;
-		this.scrollBounds.maxLeft += this.itemMarginLeft + this.itemMarginRight;
 
 		let deferScrollTo = false;
 		const {firstIndex, numOfItems} = this.state;
@@ -511,10 +500,6 @@ class VirtualListBasic extends Component {
 	shouldUpdateBounds = false;
 
 	dimensionToExtent = 0;
-	itemMarginLeft = null;
-	itemMarginRight = null;
-	itemMarginTop = null;
-	itemMarginBottom = null;
 	threshold = 0;
 	maxFirstIndex = 0;
 	curDataSize = 0;
@@ -602,16 +587,15 @@ class VirtualListBasic extends Component {
 		const maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 		const position = this.getGridPosition(index);
 		let offset = 0;
-		const marginOffset = isPrimaryDirectionVertical ? this.itemMarginTop + this.itemMarginBottom : this.itemMarginLeft + this.itemMarginRight;
 
 		if (stickTo === 'start') {         // 'start'
 			offset = optionalOffset;
 		} else if (this.props.itemSizes) { // 'end' for different item sizes
-			offset = primary.clientSize - this.props.itemSizes[index] - marginOffset - optionalOffset;
+			offset = primary.clientSize - this.props.itemSizes[index] - optionalOffset;
 		} else if (stickTo === 'center') { // 'center'
 			offset = (primary.clientSize / 2) - (primary.gridSize / 2) - optionalOffset;
 		} else {                           // 'end' for same item sizes
-			offset = primary.clientSize - primary.itemSize - marginOffset - optionalOffset;
+			offset = primary.clientSize - primary.itemSize - optionalOffset;
 		}
 
 		/* istanbul ignore next */
