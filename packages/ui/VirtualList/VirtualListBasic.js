@@ -409,39 +409,13 @@ class VirtualListBasic extends Component {
 			!equals(prevProps.itemSize, this.props.itemSize) ||
 			(!this.hasDataSizeChanged && !shallowEqual(prevProps.itemSizes, this.props.itemSizes))
 		) {
-			const {clientHeight, clientWidth, scrollHeight, scrollWidth} = this.scrollBounds;
-
-			/* istanbul ignore next */
-			if (this.scrollPosition === 0 && this.moreInfo.firstVisibleIndex !== 0) {
-				this.scrollPosition = this.prevScrollPosition;
-				this.setState({firstIndex: prevState.firstIndex});
-				this.updateMoreInfo(this.props.dataSize, this.scrollPosition);
-
-				for (let i = prevState.firstIndex; i < prevState.firstIndex + this.state.numOfItems; i++) {
-					const size = this.isPrimaryDirectionVertical ? clientHeight : clientWidth;
-
-					if (this.itemPositions[i + 1]?.position > this.prevItemPositions[i + 1]?.position) {
-						if (i === this.moreInfo.lastVisibleIndex && this.getItemBottomPosition(i) > this.scrollPosition + size) {
-							this.scrollPosition = this.getItemBottomPosition(i) - size;
-						}
-						break;
-					}
-
-					if (this.itemPositions[i + 1]?.position < this.prevItemPositions[i + 1]?.position) {
-						if (this.itemPositions[i].position < this.scrollPosition) {
-							this.scrollPosition = this.itemPositions[i].position;
-						}
-						break;
-					}
-				}
-			}
-
 			const {x, y} = this.getXY(this.scrollPosition, 0);
 
 			this.calculateMetrics(this.props);
-			this.setState(this.getStatesAndUpdateBounds(this.props, prevState.firstIndex ? prevState.firstIndex : 0));
+			this.setState(this.getStatesAndUpdateBounds(this.props));
 			this.setContainerSize();
 
+			const {clientHeight, clientWidth, scrollHeight, scrollWidth} = this.scrollBounds;
 			const xMax = scrollWidth - clientWidth;
 			const yMax = scrollHeight - clientHeight;
 
@@ -503,13 +477,11 @@ class VirtualListBasic extends Component {
 	hasDataSizeChanged = false;
 	cc = [];
 	scrollPosition = 0;
-	prevScrollPosition = 0;
 	scrollPositionTarget = 0;
 	scrollToPositionTarget = -1;
 
 	// For individually sized item
 	itemPositions = [];
-	prevItemPositions = [];
 	indexToScrollIntoView = -1;
 
 	updateScrollPosition = ({x, y}, behavior) => {
@@ -683,10 +655,6 @@ class VirtualListBasic extends Component {
 		this.secondary = secondary;
 
 		// reset
-		this.prevScrollPosition = this.scrollPosition;
-		for (let i = 0; i < this.itemPositions.length; i++) {
-			this.prevItemPositions[i] = this.itemPositions[i];
-		}
 		this.scrollPosition = 0;
 		this.scrollToPositionTarget = -1;
 		if (scrollMode === 'translate' && this.contentRef.current) {
