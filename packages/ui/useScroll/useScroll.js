@@ -924,6 +924,12 @@ const useScrollBase = (props) => {
 
 	function onKeyUp (ev) {
 		mutableRef.current.keyPressed = false;
+
+		if (mutableRef.current.animator && mutableRef.current.animator.isAnimating()) {
+			mutableRef.current.animator.stop();
+			scrollStopOnScroll();
+		}
+
 		forward('onKeyUp', ev, props);
 	}
 
