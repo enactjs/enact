@@ -895,7 +895,13 @@ const useScrollBase = (props) => {
 		// Stop the fallback timer since native scrollend has fired
 		mutableRef.current.scrollStopJob.stop();
 
-		scrollStopOnScroll();
+		// CHECK if scrolling is truly done
+		const isKeyboardScrolling = mutableRef.current.keyPressed;
+		const isAnimating = mutableRef.current.animator && mutableRef.current.animator.isAnimating();
+
+		if (!isKeyboardScrolling && !isAnimating) {
+			scrollStopOnScroll();
+		}
 	}
 	// scrollMode 'native' ]]
 
