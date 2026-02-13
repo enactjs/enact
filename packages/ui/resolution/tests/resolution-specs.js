@@ -50,9 +50,7 @@ describe('Resolution Specs', () => {
 			expect(getScreenType(UHD2)).toBe('uhd2');
 		});
 
-		test('should select screen type whose height and width are both smaller than or same with the screen if `matchSmallerScreenType` true', () => {
-			config.matchSmallerScreenType = true;
-
+		test('should select screen type whose height and width are both smaller than or same', () => {
 			// if width or height of screen is smaller than the smallest screen type, select the smallest screen type
 			expect(getScreenType({width: VGA.width - 1, height: VGA.height - 1})).toBe('vga');
 			expect(getScreenType({width: VGA.width + 1, height: VGA.height - 1})).toBe('vga');
@@ -168,9 +166,7 @@ describe('Resolution Specs', () => {
 			expect(getScreenType({width: UHD2.width + 1, height: UHD2.height + 1})).toBe('uhd2');
 		});
 
-		test('should select screen type whose height and width are both bigger than or same with the screen if `matchSmallerScreenType` false', () => {
-			config.matchSmallerScreenType = false;
-
+		test('should select screen type whose height and width are both bigger than or same', () => {
 			// VGA
 			expect(getScreenType({width: VGA.width - 1, height: VGA.height - 1})).toBe('vga');
 
