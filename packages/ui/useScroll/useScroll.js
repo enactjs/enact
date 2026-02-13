@@ -182,6 +182,7 @@ const useScrollBase = (props) => {
 
 		// Enable the early bail out of repeated scrolling to the same position
 		animationInfo: null,
+		scrollEndGraceTimer: null,
 
 		resizeRegistry: null,
 
@@ -877,6 +878,11 @@ const useScrollBase = (props) => {
 
 	// scrollMode 'native' [[
 	function onScroll (ev) {
+		if (mutableRef.current.scrollEndGraceTimer) {
+			clearTimeout(mutableRef.current.scrollEndGraceTimer);
+			mutableRef.current.scrollEndGraceTimer = null;
+		}
+
 		if (!mutableRef.current.scrolling) {
 			scrollStartOnScroll();
 		}
@@ -894,16 +900,23 @@ const useScrollBase = (props) => {
 	function onScrollEnd (ev) {
 		updateScrollPosition(ev);
 
-		// Stop the fallback timer since native scrollend has fired
+		// Stop the fallback timer since the native scrollend has fired
 		mutableRef.current.scrollStopJob.stop();
 
-		// CHECK if scrolling is truly done
-		const isKeyboardScrolling = mutableRef.current.keyPressed;
-		const isAnimating = mutableRef.current.animator && mutableRef.current.animator.isAnimating();
-
-		if (!isKeyboardScrolling && !isAnimating) {
+		// stop for non-accumulating scrolls (mouse/touch)
+		if (!mutableRef.current.isScrollAnimationTargetAccumulated) {
 			scrollStopOnScroll();
+			return;
 		}
+
+		// This prevents spamming onScrollStop during smooth scroll continuation
+		if (mutableRef.current.scrollEndGraceTimer) {
+			clearTimeout(mutableRef.current.scrollEndGraceTimer);
+		}
+
+		mutableRef.current.scrollEndGraceTimer = setTimeout(() => {
+			scrollStopOnScroll();  // Only call once after scroll settles
+		}, 100);
 	}
 	// scrollMode 'native' ]]
 
