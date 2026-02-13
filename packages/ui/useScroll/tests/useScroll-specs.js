@@ -62,13 +62,15 @@ function createMockRefs () {
 		horizontalScrollbarHandle: {
 			current: {
 				update: jest.fn(),
-				getContainerRef: jest.fn(() => document.createElement('div'))
+				getContainerRef: jest.fn(() => document.createElement('div')),
+				startHidingScrollbarTrack: jest.fn()
 			}
 		},
 		verticalScrollbarHandle: {
 			current: {
 				update: jest.fn(),
-				getContainerRef: jest.fn(() => document.createElement('div'))
+				getContainerRef: jest.fn(() => document.createElement('div')),
+				startHidingScrollbarTrack: jest.fn()
 			}
 		}
 	};
