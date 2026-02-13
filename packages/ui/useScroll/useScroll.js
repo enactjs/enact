@@ -142,8 +142,6 @@ const useScrollBase = (props) => {
 		} = props,
 		scrollClasses = classNames(css.scroll, className);
 
-	const propsItemSize = props.itemSize || 0;
-
 	// The following props are the one having the same naming function in this scope.
 	// So it is better to use props[propName]
 	// instead of extracting it from the `props` and renaming it
@@ -176,8 +174,8 @@ const useScrollBase = (props) => {
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
 	const [riRatio, setRiRatio] = useState(ri.scale(1));
-	const [originalItemSize, setOriginalItemSize] = useState(propsItemSize);
-	const [itemSize, setItemSize] = useState(propsItemSize);
+	const [originalItemSize, setOriginalItemSize] = useState(props.itemSize);
+	const [itemSize, setItemSize] = useState(props.itemSize);
 
 	const mutableRef = useRef({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
@@ -302,10 +300,14 @@ const useScrollBase = (props) => {
 		}
 	});
 
-	if (originalItemSize !== (propsItemSize)) {
-		setOriginalItemSize(propsItemSize);
-		if (ri.scale(1) / riRatio !== (propsItemSize) / itemSize) {
-			setItemSize(propsItemSize);
+	if ((originalItemSize || originalItemSize === 0 || props.itemSize || props.itemSize === 0) && (originalItemSize !== props.itemSize)) {
+		setOriginalItemSize(props.itemSize);
+		if (typeof props.itemSize === 'object') {
+			if ((ri.scale(1) / riRatio !== props.itemSize.minWidth / itemSize.minWidth) || (ri.scale(1) / riRatio !== props.itemSize.minHeight / itemSize.minHeight)) {
+				setItemSize(props.itemSize);
+			}
+		} else if (ri.scale(1) / riRatio !== props.itemSize / itemSize) {
+			setItemSize(props.itemSize);
 		}
 	}
 
