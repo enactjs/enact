@@ -1,6 +1,5 @@
 import {
 	calculateFontSize,
-	config,
 	defineScreenTypes,
 	getScreenType,
 	scale,

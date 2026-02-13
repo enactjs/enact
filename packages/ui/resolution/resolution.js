@@ -170,7 +170,7 @@ function getScreenType (rez) {
 	// Calculates the distance between two points (types and rez)
 	const getDistance = (p1, p2) => {
 		return Math.sqrt(Math.pow(p2.width - p1.width, 2) + Math.pow(p2.height - p1.height, 2));
-	}
+	};
 
 	// Compares the calculated distances and returns the closest resolution type name that matches current resolution
 	const {name} = types.reduce((prev, curr) => {
