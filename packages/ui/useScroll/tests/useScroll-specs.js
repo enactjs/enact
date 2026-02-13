@@ -49,6 +49,7 @@ function createMockRefs () {
 				syncClientSize: jest.fn(() => false),
 				getRtlPositionX: jest.fn((x) => x),
 				calculateMetrics: jest.fn(),
+				didScroll: jest.fn(), // ADDED for scrollend tests
 				props: {}
 			}
 		},
@@ -62,14 +63,16 @@ function createMockRefs () {
 			current: {
 				update: jest.fn(),
 				getContainerRef: jest.fn(() => document.createElement('div')),
-				startHidingScrollbarTrack: jest.fn()
+				startHidingScrollbarTrack: jest.fn(),
+				showScrollbarTrack: jest.fn() // ADDED for scrollend tests
 			}
 		},
 		verticalScrollbarHandle: {
 			current: {
 				update: jest.fn(),
 				getContainerRef: jest.fn(() => document.createElement('div')),
-				startHidingScrollbarTrack: jest.fn()
+				startHidingScrollbarTrack: jest.fn(),
+				showScrollbarTrack: jest.fn() // ADDED for scrollend tests
 			}
 		}
 	};
@@ -80,6 +83,7 @@ describe('useScroll', () => {
 		beforeEach(() => {
 			jest.useFakeTimers();
 			mockPlatform = {chrome: 132};
+			mockRiScale = jest.fn((val) => val);
 		});
 
 		afterEach(() => {
@@ -345,6 +349,130 @@ describe('useScroll', () => {
 
 			expect(roundedTargetX).toEqual(90.4);
 			expect(roundedTargetY).toEqual(80.8);
+		});
+	});
+
+	describe('scrollend integration', () => {
+		beforeEach(() => {
+			jest.useFakeTimers();
+			mockPlatform = {chrome: 132};
+			mockRiScale = jest.fn((val) => val);
+		});
+
+		afterEach(() => {
+			jest.runOnlyPendingTimers();
+			jest.useRealTimers();
+		});
+
+		test('should call scrollStartOnScroll when scrolling starts', () => {
+			const mocks = createMockRefs();
+			const onScrollStart = jest.fn();
+
+			const props = {
+				direction: 'vertical',
+				scrollMode: 'native',
+				...mocks,
+				assignProperties: jest.fn(),
+				horizontalScrollbar: 'auto',
+				verticalScrollbar: 'auto',
+				onScrollStart
+			};
+
+			renderHook(() => useScrollBase(props));
+
+			const scrollEvent = new Event('scroll');
+			Object.defineProperty(scrollEvent, 'target', {
+				value: {scrollLeft: 0, scrollTop: 100},
+				writable: false
+			});
+
+			act(() => {
+				fireEvent(mocks.scrollContentRef.current, scrollEvent);
+			});
+
+			expect(onScrollStart).toHaveBeenCalled();
+		});
+
+		test('should clear scrollEndGraceTimer when onScroll fires', () => {
+			const mocks = createMockRefs();
+			const onScrollStop = jest.fn();
+
+			const props = {
+				direction: 'vertical',
+				scrollMode: 'native',
+				...mocks,
+				assignProperties: jest.fn(),
+				horizontalScrollbar: 'auto',
+				verticalScrollbar: 'auto',
+				onScrollStop
+			};
+
+			renderHook(() => useScrollBase(props));
+
+			const scrollEvent1 = new Event('scroll');
+			Object.defineProperty(scrollEvent1, 'target', {
+				value: {scrollLeft: 0, scrollTop: 100},
+				writable: false
+			});
+
+			act(() => {
+				fireEvent(mocks.scrollContentRef.current, scrollEvent1);
+			});
+
+			const scrollEndEvent = new Event('scrollend');
+			Object.defineProperty(scrollEndEvent, 'target', {
+				value: {scrollLeft: 0, scrollTop: 100},
+				writable: false
+			});
+
+			act(() => {
+				fireEvent(mocks.scrollContentRef.current, scrollEndEvent);
+			});
+
+			expect(onScrollStop).not.toHaveBeenCalled();
+
+			const scrollEvent2 = new Event('scroll');
+			Object.defineProperty(scrollEvent2, 'target', {
+				value: {scrollLeft: 0, scrollTop: 200},
+				writable: false
+			});
+
+			act(() => {
+				fireEvent(mocks.scrollContentRef.current, scrollEvent2);
+			});
+
+			act(() => {
+				jest.advanceTimersByTime(100);
+			});
+
+			expect(onScrollStop).not.toHaveBeenCalled();
+		});
+
+		test('should update scroll position from scroll event', () => {
+			const mocks = createMockRefs();
+
+			const props = {
+				direction: 'vertical',
+				scrollMode: 'native',
+				...mocks,
+				assignProperties: jest.fn(),
+				horizontalScrollbar: 'auto',
+				verticalScrollbar: 'auto'
+			};
+
+			renderHook(() => useScrollBase(props));
+
+			const scrollEvent = new Event('scroll');
+			Object.defineProperty(scrollEvent, 'target', {
+				value: {scrollLeft: 50, scrollTop: 150},
+				writable: false
+			});
+
+			act(() => {
+				fireEvent(mocks.scrollContentRef.current, scrollEvent);
+			});
+
+			expect(mocks.scrollContentHandle.current.didScroll).toHaveBeenCalledWith(50, 150);
 		});
 	});
 });
