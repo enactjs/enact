@@ -49,7 +49,7 @@ function createMockRefs () {
 				syncClientSize: jest.fn(() => false),
 				getRtlPositionX: jest.fn((x) => x),
 				calculateMetrics: jest.fn(),
-				didScroll: jest.fn(), // ADDED for scrollend tests
+				didScroll: jest.fn(),
 				props: {}
 			}
 		},
@@ -62,17 +62,13 @@ function createMockRefs () {
 		horizontalScrollbarHandle: {
 			current: {
 				update: jest.fn(),
-				getContainerRef: jest.fn(() => document.createElement('div')),
-				startHidingScrollbarTrack: jest.fn(),
-				showScrollbarTrack: jest.fn() // ADDED for scrollend tests
+				getContainerRef: jest.fn(() => document.createElement('div'))
 			}
 		},
 		verticalScrollbarHandle: {
 			current: {
 				update: jest.fn(),
-				getContainerRef: jest.fn(() => document.createElement('div')),
-				startHidingScrollbarTrack: jest.fn(),
-				showScrollbarTrack: jest.fn() // ADDED for scrollend tests
+				getContainerRef: jest.fn(() => document.createElement('div'))
 			}
 		}
 	};
@@ -83,7 +79,6 @@ describe('useScroll', () => {
 		beforeEach(() => {
 			jest.useFakeTimers();
 			mockPlatform = {chrome: 132};
-			mockRiScale = jest.fn((val) => val);
 		});
 
 		afterEach(() => {
@@ -384,6 +379,7 @@ describe('useScroll', () => {
 				writable: false
 			});
 
+			// eslint-disable-next-line testing-library/no-unnecessary-act
 			act(() => {
 				fireEvent(mocks.scrollContentRef.current, scrollEvent);
 			});
