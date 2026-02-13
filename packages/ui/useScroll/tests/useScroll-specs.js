@@ -39,10 +39,10 @@ function createMockRefs () {
 				getScrollBounds: jest.fn(() => ({
 					clientWidth: 1920,
 					clientHeight: 1080,
-					scrollWidth: 1000,
-					scrollHeight: 800,
-					maxTop: 200,
-					maxLeft: 200
+					scrollWidth: 2000,      // greater than clientWidth
+					scrollHeight: 2000,     // greater than clientHeight
+					maxTop: 920,            // 2000 - 1080 = 920
+					maxLeft: 80             // 2000 - 1920 = 80
 				})),
 				getMoreInfo: jest.fn(() => ({})),
 				hasDataSizeChanged: false,
@@ -63,14 +63,16 @@ function createMockRefs () {
 			current: {
 				update: jest.fn(),
 				getContainerRef: jest.fn(() => document.createElement('div')),
-				startHidingScrollbarTrack: jest.fn()
+				startHidingScrollbarTrack: jest.fn(),
+				showScrollbarTrack: jest.fn()
 			}
 		},
 		verticalScrollbarHandle: {
 			current: {
 				update: jest.fn(),
 				getContainerRef: jest.fn(() => document.createElement('div')),
-				startHidingScrollbarTrack: jest.fn()
+				startHidingScrollbarTrack: jest.fn(),
+				showScrollbarTrack: jest.fn()
 			}
 		}
 	};
@@ -349,7 +351,7 @@ describe('useScroll', () => {
 		});
 	});
 
-	describe('scrollend integration', () => {
+	describe('Native scroll behavior', () => {
 		beforeEach(() => {
 			jest.useFakeTimers();
 			mockPlatform = {chrome: 132};
@@ -387,6 +389,35 @@ describe('useScroll', () => {
 			});
 
 			expect(mocks.scrollContentHandle.current.didScroll).toHaveBeenCalledWith(50, 150);
+		});
+
+		test('should handle RTL scroll position correctly', () => {
+			const mocks = createMockRefs();
+			mockPlatform = {chrome: 132};
+
+			const props = {
+				direction: 'horizontal',
+				scrollMode: 'native',
+				rtl: true,
+				...mocks,
+				assignProperties: jest.fn(),
+				horizontalScrollbar: 'auto',
+				verticalScrollbar: 'auto'
+			};
+
+			renderHook(() => useScrollBase(props));
+
+			const scrollEvent = new Event('scroll');
+			Object.defineProperty(scrollEvent, 'target', {
+				value: {scrollLeft: -50, scrollTop: 0}
+			});
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				fireEvent(mocks.scrollContentRef.current, scrollEvent);
+			});
+
+			expect(mocks.scrollContentHandle.current.didScroll).toHaveBeenCalledWith(50, 0);
 		});
 	});
 });
