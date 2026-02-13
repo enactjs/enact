@@ -937,7 +937,6 @@ const useScrollBase = (props) => {
 
 	function onKeyUp (ev) {
 		mutableRef.current.keyPressed = false;
-
 		forward('onKeyUp', ev, props);
 	}
 
