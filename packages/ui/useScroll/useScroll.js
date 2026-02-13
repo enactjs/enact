@@ -844,6 +844,7 @@ const useScrollBase = (props) => {
 	}
 	// scrollMode 'translate' ]]
 
+	// scrollMode 'native' [[
 	/**
 	 * Updates scroll position from a scroll event.
 	 * Handles RTL adjustment and position updates.
@@ -865,18 +866,15 @@ const useScrollBase = (props) => {
 		if (scrollLeft !== mutableRef.current.scrollLeft) {
 			setScrollLeft(scrollLeft);
 		}
-
 		if (scrollTop !== mutableRef.current.scrollTop) {
 			setScrollTop(scrollTop);
 		}
 
-		// Notify ScrollerBasic component
 		if (scrollContentHandle.current.didScroll) {
 			scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
 		}
 	}
 
-	// scrollMode 'native' [[
 	function onScroll (ev) {
 		if (mutableRef.current.scrollEndGraceTimer) {
 			clearTimeout(mutableRef.current.scrollEndGraceTimer);
@@ -939,11 +937,6 @@ const useScrollBase = (props) => {
 
 	function onKeyUp (ev) {
 		mutableRef.current.keyPressed = false;
-
-		if (mutableRef.current.animator && mutableRef.current.animator.isAnimating()) {
-			mutableRef.current.animator.stop();
-			scrollStopOnScroll();
-		}
 
 		forward('onKeyUp', ev, props);
 	}
