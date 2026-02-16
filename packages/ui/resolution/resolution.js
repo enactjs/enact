@@ -43,6 +43,17 @@ const configDefaults = {
 	orientationHandling: 'normal'
 };
 
+/**
+ * Get the closest resolution type based on the `resolution`
+ *
+ * @function
+ * @memberOf ui/resolution
+ *
+ * @param {Object} resolution	The resolution object (must include `height` and `width` properties)
+ * @param {Object[]} types		The resolution types object (must include `name`, `width` and `height` properties)
+ * @returns {String}			Screen type (e.g., `'fhd'`, `'uhd'`, etc.)
+ * @private
+ */
 const getClosestResolutionType = (resolution, types) => {
 	// Calculates the distance between two points (types and rez)
 	const getDistance = (p1, p2) => {
@@ -484,7 +495,7 @@ function selectSrc (src) {
 			if (screenType === t && src[t]) return src[t];
 		}
 
-		const srcResolutions = types.filter((type) => Object.keys(src).includes(type.name));
+		const srcResolutions = types.filter((type) => type.name in src);
 		const currentScreenTypeResolution = types.find((type) => type.name === screenType);
 
 		if (srcResolutions.length && currentScreenTypeResolution) {
