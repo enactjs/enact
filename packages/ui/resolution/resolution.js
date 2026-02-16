@@ -43,6 +43,23 @@ const configDefaults = {
 	orientationHandling: 'normal'
 };
 
+const getClosestResolutionType = (resolution, types) => {
+	// Calculates the distance between two points (types and rez)
+	const getDistance = (p1, p2) => {
+		return Math.sqrt(Math.pow(p2.width - p1.width, 2) + Math.pow(p2.height - p1.height, 2));
+	};
+
+	// Compares the calculated distances and returns the closest resolution type name that matches current resolution
+	const {name} = types.reduce((prev, curr) => {
+		const distCurr = getDistance(curr, resolution);
+		const distPrev = getDistance(prev, resolution);
+
+		return distCurr < distPrev ? curr : prev;
+	});
+
+	return name;
+}
+
 /**
  * Update the common measured boundary object.
  *
@@ -167,21 +184,8 @@ function getScreenType (rez) {
 		}
 	}
 
-	// Calculates the distance between two points (types and rez)
-	const getDistance = (p1, p2) => {
-		return Math.sqrt(Math.pow(p2.width - p1.width, 2) + Math.pow(p2.height - p1.height, 2));
-	};
-
-	// Compares the calculated distances and returns the closest resolution type name that matches current resolution
-	const {name} = types.reduce((prev, curr) => {
-		const distCurr = getDistance(curr, rez);
-		const distPrev = getDistance(prev, rez);
-
-		return distCurr < distPrev ? curr : prev;
-	});
-
 	// Return the name of the closest fitting set of dimensions.
-	return name;
+	return getClosestResolutionType(rez, types);
 }
 
 /**
@@ -475,8 +479,19 @@ function selectSrc (src) {
 		// loop through resolutions
 		for (let i = types.length - 1; i >= 0; i--) {
 			let t = types[i].name;
-			if (screenType === t && src[t]) newSrc = src[t];
+
+			// return exact match
+			if (screenType === t && src[t]) return src[t];
 		}
+
+		const srcResolutions = types.filter((type) => Object.keys(src).includes(type.name));
+		const currentScreenTypeResolution = types.find((type) => type.name === screenType);
+
+		if (srcResolutions.length && currentScreenTypeResolution) {
+			const closestType = getClosestResolutionType(currentScreenTypeResolution, srcResolutions);
+			newSrc = src[closestType];
+		}
+
 		src = newSrc;
 	}
 	return src;
