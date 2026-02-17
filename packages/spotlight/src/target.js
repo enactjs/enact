@@ -245,7 +245,7 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 		if (next && containerId !== nextCandidateContainerId) {
 			// Don't apply visibility check when entering a restricted container. The container's own enterTo logic (last-focused, default-element) handles entry
 			// OR verify if the element from another container is visible (only for non-restricted)
-			if (isRestrictedContainer(nextCandidateContainerId) || isElementVisibleInContainer(next, nextCandidateContainerId) || isElementVisibleInViewport(next)) {
+			if (isRestrictedContainer(nextCandidateContainerId) || isElementVisibleInContainer(next, nextCandidateContainerId) || isElementVisibleInViewport(next, nextCandidateContainerId)) {
 				return next;
 			} else {
 				// otherwise, try to navigate to an element that is visible in its container
@@ -255,7 +255,7 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 					direction,
 					elementRects.filter((rect) => {
 						const elementContainerId = getContainersForNode(rect.element).pop();
-						return isElementVisibleInContainer(rect.element, elementContainerId) || isElementVisibleInViewport(rect.element);
+						return isElementVisibleInContainer(rect.element, elementContainerId) || isElementVisibleInViewport(rect.element, elementContainerId);
 					}),
 					getContainerConfig(containerId)
 				);
@@ -378,7 +378,7 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 		if (next && containerId !== nextCandidateContainerId) {
 			// Don't apply visibility check when entering a restricted container. The container's own enterTo logic (last-focused, default-element) handles entry
 			// OR verify if the element from another container is visible
-			if (isRestrictedContainer(nextCandidateContainerId) || isElementVisibleInContainer(next, nextCandidateContainerId) || isElementVisibleInViewport(next)) {
+			if (isRestrictedContainer(nextCandidateContainerId) || isElementVisibleInContainer(next, nextCandidateContainerId) || isElementVisibleInViewport(next, nextCandidateContainerId)) {
 				return next;
 			} else {
 				// otherwise, try to navigate to an element that is visible in its container
@@ -388,7 +388,7 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 					direction,
 					elementRects.filter((rect) => {
 						const elementContainerId = getContainersForNode(rect.element).pop();
-						return isElementVisibleInContainer(rect.element, elementContainerId) || isElementVisibleInViewport(rect.element);
+						return isElementVisibleInContainer(rect.element, elementContainerId) || isElementVisibleInViewport(rect.element, elementContainerId);
 					}),
 					getContainerConfig(containerId),
 					partitionRect
@@ -527,7 +527,14 @@ function isElementVisibleInContainer (element, containerId) {
 	return isVerticallyVisible && isHorizontallyVisible;
 }
 
-function isElementVisibleInViewport (element) {
+function isElementVisibleInViewport (element, containerId) {
+	// If the element's spotlight container has overflow:true, that container is the authority
+	// on what's visible (e.g., a Scroller hiding scrolled-away items).
+	const config = getContainerConfig(containerId);
+	if (config && config.overflow) {
+		return false;
+	}
+
 	const {top, right, bottom, left} = element.getBoundingClientRect();
 	return (
 		bottom > 0 &&
