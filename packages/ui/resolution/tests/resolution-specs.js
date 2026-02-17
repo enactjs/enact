@@ -49,238 +49,51 @@ describe('Resolution Specs', () => {
 			expect(getScreenType(UHD2)).toBe('uhd2');
 		});
 
-		test('should select screen type whose height and width are both smaller than or same', () => {
-			// if width or height of screen is smaller than the smallest screen type, select the smallest screen type
-			expect(getScreenType({width: VGA.width - 1, height: VGA.height - 1})).toBe('vga');
-			expect(getScreenType({width: VGA.width + 1, height: VGA.height - 1})).toBe('vga');
-			expect(getScreenType({width: VGA.width - 1, height: VGA.height + 1})).toBe('vga');
-
-			// VGA
-			expect(getScreenType({width: VGA.width + 1, height: VGA.height + 1})).toBe('vga');
-
-			expect(getScreenType({width: XGA.width - 1, height: XGA.height - 1})).toBe('vga');
-			expect(getScreenType({width: XGA.width + 1, height: XGA.height - 1})).toBe('vga');
-			expect(getScreenType({width: XGA.width - 1, height: XGA.height + 1})).toBe('vga');
-
-			expect(getScreenType({width: HD.width - 1, height: HD.height - 1})).toBe('vga');
-			expect(getScreenType({width: HD.width + 1, height: HD.height - 1})).toBe('vga');
-			expect(getScreenType({width: HD.width - 1, height: HD.height + 1})).toBe('vga');
-
-			expect(getScreenType({width: XGA.width, height: HD.height})).toBe('vga');
-			expect(getScreenType({width: XGA.width - 1, height: HD.height - 1})).toBe('vga');
-			expect(getScreenType({width: XGA.width + 1, height: HD.height - 1})).toBe('vga');
-			expect(getScreenType({width: XGA.width - 1, height: HD.height + 1})).toBe('vga');
-			expect(getScreenType({width: XGA.width + 1, height: HD.height + 1})).toBe('vga');
-
-			expect(getScreenType({width: HD.width - 1, height: XGA.height - 1})).toBe('vga');
-
-			// XGA
-			expect(getScreenType({width: XGA.width + 1, height: XGA.height + 1})).toBe('xga');
-			expect(getScreenType({width: HD.width - 1, height: XGA.height + 1})).toBe('xga');
-
-			// HD
-			expect(getScreenType({width: HD.width + 1, height: HD.height + 1})).toBe('hd');
-
-			expect(getScreenType({width: HD.width, height: XGA.height})).toBe('hd');
-			expect(getScreenType({width: HD.width + 1, height: XGA.height - 1})).toBe('hd');
-			expect(getScreenType({width: HD.width + 1, height: XGA.height + 1})).toBe('hd');
-
-			expect(getScreenType({width: UWHD.width - 1, height: UWHD.height - 1})).toBe('hd');
-			expect(getScreenType({width: UWHD.width + 1, height: UWHD.height - 1})).toBe('hd');
-			expect(getScreenType({width: UWHD.width - 1, height: UWHD.height + 1})).toBe('hd');
-
-			expect(getScreenType({width: UWUXGA.width - 1, height: UWHD.height - 1})).toBe('hd');
-			expect(getScreenType({width: UWUXGA.width + 1, height: UWHD.height - 1})).toBe('hd');
-
-			expect(getScreenType({width: FHD.width - 1, height: FHD.height - 1})).toBe('hd');
-			expect(getScreenType({width: FHD.width - 1, height: FHD.height + 1})).toBe('hd');
-
-			// UWHD
-			expect(getScreenType({width: UWHD.width + 1, height: UWHD.height + 1})).toBe('uw-hd');
-
-			expect(getScreenType({width: UWUXGA.width - 1, height: UWHD.height + 1})).toBe('uw-hd');
-			expect(getScreenType({width: UWUXGA.width + 1, height: UWHD.height + 1})).toBe('uw-hd');
-
-			expect(getScreenType({width: FHD.width + 1, height: FHD.height - 1})).toBe('uw-hd');
-
-			expect(getScreenType({width: UWUXGA.width - 1, height: UWUXGA.height - 1})).toBe('uw-hd');
-			expect(getScreenType({width: UWUXGA.width + 1, height: UWUXGA.height - 1})).toBe('uw-hd');
-
-			// FHD
-			expect(getScreenType({width: FHD.width + 1, height: FHD.height + 1})).toBe('fhd');
-
-			expect(getScreenType({width: UWUXGA.width - 1, height: UWUXGA.height + 1})).toBe('fhd');  // {height: FHD.height + 1, width: UWUXGA.width - 1}
-
-			expect(getScreenType({width: QHD.width - 1, height: QHD.height - 1})).toBe('fhd');  // {height: QHD.height - 1, width: UWUXGA.width - 1}
-			expect(getScreenType({width: QHD.width - 1, height: QHD.height + 1})).toBe('fhd');  // {height: QHD.height + 1, width: UWUXGA.width - 1}
-
-			// UWUXGA
-			expect(getScreenType({width: UWUXGA.width + 1, height: UWUXGA.height + 1})).toBe('uw-uxga');  // {height: FHD.height + 1, width: UWUXGA.width + 1}
-
-			expect(getScreenType({width: QHD.width + 1, height: QHD.height - 1})).toBe('uw-uxga');  // {height: QHD.height - 1, width: UWUXGA.width + 1}
-
-			expect(getScreenType({width: WQHD.width - 1, height: WQHD.height - 1})).toBe('uw-uxga');  // {height: QHD.height - 1, width: WQHD.width - 1}
-			expect(getScreenType({width: WQHD.width + 1, height: WQHD.height - 1})).toBe('uw-uxga');  // {height: QHD.height - 1, width: WQHD.width + 1}
-
-			// QHD
-			expect(getScreenType({width: QHD.width + 1, height: QHD.height + 1})).toBe('qhd');  // {height: QHD.height + 1, width: UWUXGA.width + 1}
-
-			expect(getScreenType({width: WQHD.width - 1, height: WQHD.height + 1})).toBe('qhd');  // {height: QHD.height + 1, width: WQHD.width - 1}
-
-			// WQHD
-			expect(getScreenType({width: WQHD.width + 1, height: WQHD.height + 1})).toBe('wqhd');  // {height: QHD.height + 1, width: WQHD.width + 1}
-
-			expect(getScreenType({width: UHD.width - 1, height: UHD.height - 1})).toBe('wqhd');
-			expect(getScreenType({width: UHD.width + 1, height: UHD.height - 1})).toBe('wqhd');
-			expect(getScreenType({width: UHD.width - 1, height: UHD.height + 1})).toBe('wqhd');
-
-			expect(getScreenType({width: WUHD.width - 1, height: WUHD.height - 1})).toBe('wqhd');
-			expect(getScreenType({width: WUHD.width + 1, height: WUHD.height - 1})).toBe('wqhd');
-
-			expect(getScreenType({width: UHD2.width - 1, height: WUHD.height - 1})).toBe('wqhd');
-			expect(getScreenType({width: UHD2.width + 1, height: WUHD.height - 1})).toBe('wqhd');
-
-			// UHD
-			expect(getScreenType({width: UHD.width + 1, height: UHD.height + 1})).toBe('uhd');
-
-			expect(getScreenType({width: WUHD.width - 1, height: WUHD.height + 1})).toBe('uhd');
-
-			expect(getScreenType({width: WUHD.width - 1, height: UHD2.height - 1})).toBe('uhd');
-			expect(getScreenType({width: WUHD.width - 1, height: UHD2.height + 1})).toBe('uhd');
-
-			// WUHD
-			expect(getScreenType({width: WUHD.width + 1, height: WUHD.height + 1})).toBe('wuhd');
-
-			expect(getScreenType({width: WUHD.width + 1, height: UHD2.height - 1})).toBe('wuhd');
-			expect(getScreenType({width: WUHD.width + 1, height: UHD2.height + 1})).toBe('wuhd');
-
-			expect(getScreenType({width: UHD2.width - 1, height: WUHD.height + 1})).toBe('wuhd');
-			expect(getScreenType({width: UHD2.width + 1, height: WUHD.height + 1})).toBe('wuhd');
-
-			expect(getScreenType({width: UHD2.width - 1, height: UHD2.height - 1})).toBe('wuhd');
-			expect(getScreenType({width: UHD2.width + 1, height: UHD2.height - 1})).toBe('wuhd');
-			expect(getScreenType({width: UHD2.width - 1, height: UHD2.height + 1})).toBe('wuhd');
-
-			// UHD2
-			expect(getScreenType({width: UHD2.width + 1, height: UHD2.height + 1})).toBe('uhd2');
-		});
-
-		test('should select screen type whose height and width are both bigger than or same', () => {
-			// VGA
-			expect(getScreenType({width: VGA.width - 1, height: VGA.height - 1})).toBe('vga');
-
-			// XGA
-			expect(getScreenType({width: VGA.width + 1, height: VGA.height - 1})).toBe('xga');
-			expect(getScreenType({width: VGA.width - 1, height: VGA.height + 1})).toBe('xga');
-			expect(getScreenType({width: VGA.width + 1, height: VGA.height + 1})).toBe('xga');
-
-			expect(getScreenType({width: XGA.width - 1, height: XGA.height - 1})).toBe('xga');
-
-			expect(getScreenType({width: XGA.width, height: HD.height})).toBe('xga');
-			expect(getScreenType({width: XGA.width - 1, height: HD.height - 1})).toBe('xga');
-			expect(getScreenType({width: XGA.width - 1, height: HD.height + 1})).toBe('xga');
-
-			// HD
-			expect(getScreenType({width: XGA.width + 1, height: HD.height - 1})).toBe('hd');
-
-			expect(getScreenType({width: HD.width - 1, height: HD.height - 1})).toBe('hd');
-
-			// UWHD
-			expect(getScreenType({width: UWHD.width - 1, height: UWHD.height - 1})).toBe('uw-hd');
-
-			expect(getScreenType({width: XGA.width + 1, height: XGA.height - 1})).toBe('uw-hd');
-			expect(getScreenType({width: XGA.width - 1, height: XGA.height + 1})).toBe('uw-hd');
-			expect(getScreenType({width: XGA.width + 1, height: XGA.height + 1})).toBe('uw-hd');
-
-			expect(getScreenType({width: HD.width, height: XGA.height})).toBe('uw-hd');
-			expect(getScreenType({width: HD.width - 1, height: XGA.height - 1})).toBe('uw-hd');
-			expect(getScreenType({width: HD.width + 1, height: XGA.height - 1})).toBe('uw-hd');
-			expect(getScreenType({width: HD.width - 1, height: XGA.height + 1})).toBe('uw-hd');
-			expect(getScreenType({width: HD.width + 1, height: XGA.height + 1})).toBe('uw-hd');
-
-			expect(getScreenType({width: XGA.width + 1, height: HD.height + 1})).toBe('uw-hd');
-			expect(getScreenType({width: HD.width + 1, height: HD.height - 1})).toBe('uw-hd');
-			expect(getScreenType({width: HD.width - 1, height: HD.height + 1})).toBe('uw-hd');
-			expect(getScreenType({width: HD.width + 1, height: HD.height + 1})).toBe('uw-hd');
-
-			expect(getScreenType({width: HD.width + 1, height: UWHD.height - 1})).toBe('uw-hd');
-
-			// FHD
-			expect(getScreenType({width: UWHD.width - 1, height: UWHD.height + 1})).toBe('fhd');
-
-			expect(getScreenType({width: FHD.width - 1, height: FHD.height - 1})).toBe('fhd');
-
-			// UWUXGA
-			expect(getScreenType({width: UWHD.width + 1, height: UWHD.height - 1})).toBe('uw-uxga');
-			expect(getScreenType({width: UWHD.width + 1, height: UWHD.height + 1})).toBe('uw-uxga');
-
-			expect(getScreenType({width: UWUXGA.width - 1, height: UWHD.height - 1})).toBe('uw-uxga');
-			expect(getScreenType({width: UWUXGA.width - 1, height: UWHD.height + 1})).toBe('uw-uxga');
-
-			expect(getScreenType({width: UWUXGA.width - 1, height: UWUXGA.height - 1})).toBe('uw-uxga');  // {height: FHD.height - 1, width: UWUXGA.width - 1}
-
-			expect(getScreenType({width: FHD.width + 1, height: FHD.height - 1})).toBe('uw-uxga');
-
-			// QHD
-			expect(getScreenType({width: UWUXGA.width - 1, height: UWUXGA.height + 1})).toBe('qhd');  // {height: FHD.height + 1, width: UWUXGA.width - 1}
-
-			expect(getScreenType({width: QHD.width - 1, height: QHD.height - 1})).toBe('qhd');  // {height: QHD.height - 1, width: UWUXGA.width - 1}
-
-			expect(getScreenType({width: FHD.width - 1, height: FHD.height + 1})).toBe('qhd');
-			expect(getScreenType({width: FHD.width + 1, height: FHD.height + 1})).toBe('qhd');
-
-			// WQHD
-			expect(getScreenType({width: UWUXGA.width + 1, height: UWHD.height - 1})).toBe('wqhd');
-			expect(getScreenType({width: UWUXGA.width + 1, height: UWHD.height + 1})).toBe('wqhd');
-
-			expect(getScreenType({width: UWUXGA.width + 1, height: UWUXGA.height - 1})).toBe('wqhd');  // {height: FHD.height - 1, width: UWUXGA.width + 1}
-			expect(getScreenType({width: UWUXGA.width + 1, height: UWUXGA.height + 1})).toBe('wqhd');  // {height: FHD.height + 1, width: UWUXGA.width + 1}
-
-			expect(getScreenType({width: QHD.width + 1, height: QHD.height - 1})).toBe('wqhd');  // {height: QHD.height - 1, width: UWUXGA.width + 1}
-
-			expect(getScreenType({width: WQHD.width - 1, height: WQHD.height - 1})).toBe('wqhd');  // {height: QHD.height - 1, width: WQHD.width - 1}
-
-			// UHD
-			expect(getScreenType({width: QHD.width - 1, height: QHD.height + 1})).toBe('uhd');  // {height: QHD.height + 1, width: UWUXGA.width - 1}
-			expect(getScreenType({width: QHD.width + 1, height: QHD.height + 1})).toBe('uhd');  // {height: QHD.height + 1, width: UWUXGA.width + 1}
-
-			expect(getScreenType({width: WQHD.width + 1, height: WQHD.height - 1})).toBe('uhd');  // {height: QHD.height - 1, width: WQHD.width + 1}
-			expect(getScreenType({width: WQHD.width - 1, height: WQHD.height + 1})).toBe('uhd');  // {height: QHD.height + 1, width: WQHD.width - 1}
-			expect(getScreenType({width: WQHD.width + 1, height: WQHD.height + 1})).toBe('uhd');  // {height: QHD.height + 1, width: WQHD.width + 1}
-
-			expect(getScreenType({width: UHD.width - 1, height: UHD.height - 1})).toBe('uhd');
-
-			// WUHD
-			expect(getScreenType({width: UHD.width + 1, height: UHD.height - 1})).toBe('wuhd');
-
-			expect(getScreenType({width: WUHD.width - 1, height: WUHD.height - 1})).toBe('wuhd');
-
-			// UHD2
-			expect(getScreenType({width: UHD.width - 1, height: UHD.height + 1})).toBe('uhd2');
-			expect(getScreenType({width: UHD.width + 1, height: UHD.height + 1})).toBe('uhd2');
-
-			expect(getScreenType({width: WUHD.width + 1, height: WUHD.height - 1})).toBe('uhd2');
-			expect(getScreenType({width: WUHD.width - 1, height: WUHD.height + 1})).toBe('uhd2');
-			expect(getScreenType({width: WUHD.width + 1, height: WUHD.height + 1})).toBe('uhd2');
-
-			expect(getScreenType({width: WUHD.width - 1, height: UHD2.height - 1})).toBe('uhd2');
-			expect(getScreenType({width: WUHD.width + 1, height: UHD2.height - 1})).toBe('uhd2');
-
-			expect(getScreenType({width: UHD2.width - 1, height: WUHD.height - 1})).toBe('uhd2');
-			expect(getScreenType({width: UHD2.width - 1, height: WUHD.height + 1})).toBe('uhd2');
-
-			expect(getScreenType({width: UHD2.width - 1, height: UHD2.height - 1})).toBe('uhd2');
-
-			// if width or height of screen is bigger than the biggest screen type, select the biggest screen type
-			expect(getScreenType({width: WUHD.width - 1, height: UHD2.height + 1})).toBe('uhd2');
-			expect(getScreenType({width: WUHD.width + 1, height: UHD2.height + 1})).toBe('uhd2');
-
-			expect(getScreenType({width: UHD2.width + 1, height: WUHD.height - 1})).toBe('uhd2');
-			expect(getScreenType({width: UHD2.width + 1, height: WUHD.height + 1})).toBe('uhd2');
-
-			expect(getScreenType({width: UHD2.width + 1, height: UHD2.height - 1})).toBe('uhd2');
-			expect(getScreenType({width: UHD2.width - 1, height: UHD2.height + 1})).toBe('uhd2');
-			expect(getScreenType({width: UHD2.width + 1, height: UHD2.height + 1})).toBe('uhd2');
+		test('should select screen type whose height and width are the closest to the screen', () => {
+			const getDistance = (p1, p2) => {
+				return Math.sqrt(Math.pow(p2.width - p1.width, 2) + Math.pow(p2.height - p1.height, 2));
+			};
+
+			screenTypes.forEach((type) => {
+				expect(getScreenType({width: type.width, height: type.height})).toBe(type.name);
+
+				expect(getScreenType({width: type.width - 1, height: type.height - 1})).toBe(type.name);
+				expect(getScreenType({width: type.width + 1, height: type.height + 1})).toBe(type.name);
+			});
+
+			for (let i = 0; i < screenTypes.length - 1; i++) {
+				const current = screenTypes[i];
+				const next = screenTypes[i + 1];
+
+				const midPoint = {
+					width: (current.width + next.width) / 2,
+					height: (current.height + next.height) / 2
+				};
+
+				const justBeforeMid = {
+					width: Math.floor(midPoint.width - 0.1),
+					height: Math.floor(midPoint.height - 0.1)
+				};
+
+				const justAfterMid = {
+					width: Math.ceil(midPoint.width + 0.1),
+					height: Math.ceil(midPoint.height + 0.1)
+				};
+
+				if (getDistance(justBeforeMid, current) < getDistance(justBeforeMid, next)) {
+					expect(getScreenType(justBeforeMid)).toBe(current.name);
+				}
+
+				if (getDistance(justAfterMid, next) < getDistance(justAfterMid, current)) {
+					expect(getScreenType(justAfterMid)).toBe(next.name);
+				}
+			}
+
+			const firstScreenType = screenTypes.at(0);
+			expect(getScreenType({width: 1, height: 1})).toBe(firstScreenType.name);
+
+			const lastType = screenTypes.at(-1);
+			expect(getScreenType({width: lastType.width + 1000, height: lastType.height + 1000})).toBe(lastType.name);
 		});
 	});
 

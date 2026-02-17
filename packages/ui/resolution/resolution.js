@@ -188,7 +188,7 @@ function getScreenType (rez) {
 		rez.height = swap;
 	}
 
-	// Loop through resolutions, last->first, largest->smallest and return in case of exact match
+	// Loop through resolutions, last->first, largest->smallest and return in case of exact match.
 	for (let i = types.length - 1; i >= 0; i--) {
 		if (rez.height === types[i].height && rez.width === types[i].width) {
 			return types[i].name;
