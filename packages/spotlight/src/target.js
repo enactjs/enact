@@ -249,7 +249,6 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 				return next;
 			} else {
 				// otherwise, try to navigate to an element that is visible in its container
-				// or visible in the viewport (handles overflow elements whose container has height:0)
 				next = navigate(
 					positionRect,
 					direction,
@@ -382,7 +381,6 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 				return next;
 			} else {
 				// otherwise, try to navigate to an element that is visible in its container
-				// or visible in the viewport (handles overflow elements whose container has height:0)
 				next = navigate(
 					elementRect,
 					direction,

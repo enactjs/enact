@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `core/util` function `checkPropTypes` to check the prop types of a component
 
+### Fixed
+
+- `spotlight` to focus visible children of elements which do not have `overflow:true`
+
 ## [5.4.2] - 2026-01-28
 
 ### Changed
