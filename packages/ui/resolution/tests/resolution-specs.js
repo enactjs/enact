@@ -50,10 +50,6 @@ describe('Resolution Specs', () => {
 		});
 
 		test('should select screen type whose height and width are the closest to the screen', () => {
-			const getDistance = (p1, p2) => {
-				return Math.sqrt(Math.pow(p2.width - p1.width, 2) + Math.pow(p2.height - p1.height, 2));
-			};
-
 			screenTypes.forEach((type) => {
 				expect(getScreenType({width: type.width, height: type.height})).toBe(type.name);
 
@@ -80,13 +76,8 @@ describe('Resolution Specs', () => {
 					height: Math.ceil(midPoint.height + 0.1)
 				};
 
-				if (getDistance(justBeforeMid, current) < getDistance(justBeforeMid, next)) {
-					expect(getScreenType(justBeforeMid)).toBe(current.name);
-				}
-
-				if (getDistance(justAfterMid, next) < getDistance(justAfterMid, current)) {
-					expect(getScreenType(justAfterMid)).toBe(next.name);
-				}
+				expect(getScreenType(justBeforeMid)).toBe(current.name);
+				expect(getScreenType(justAfterMid)).toBe(next.name);
 			}
 
 			const firstScreenType = screenTypes.at(0);

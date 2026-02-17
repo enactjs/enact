@@ -69,7 +69,7 @@ const getClosestResolutionType = (resolution, types) => {
 	});
 
 	return name;
-}
+};
 
 /**
  * Update the common measured boundary object.
