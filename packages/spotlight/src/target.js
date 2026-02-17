@@ -534,12 +534,7 @@ function isElementVisibleInViewport (element, containerId) {
 	}
 
 	const {top, right, bottom, left} = element.getBoundingClientRect();
-	return (
-		bottom > 0 &&
-		right > 0 &&
-		top < window.innerHeight &&
-		left < window.innerWidth
-	);
+	return (bottom > 0 && right > 0 && top < window.innerHeight && left < window.innerWidth);
 }
 
 const getOffsetDistanceToTargetFromPosition = (distance, direction, {x, y}, {left, right, top, bottom}) => {
