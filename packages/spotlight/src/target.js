@@ -245,16 +245,17 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 		if (next && containerId !== nextCandidateContainerId) {
 			// Don't apply visibility check when entering a restricted container. The container's own enterTo logic (last-focused, default-element) handles entry
 			// OR verify if the element from another container is visible (only for non-restricted)
-			if (isRestrictedContainer(nextCandidateContainerId) || isElementVisibleInContainer(next, nextCandidateContainerId)) {
+			if (isRestrictedContainer(nextCandidateContainerId) || isElementVisibleInContainer(next, nextCandidateContainerId) || isElementVisibleInViewport(next)) {
 				return next;
 			} else {
 				// otherwise, try to navigate to an element that is visible in its container
+				// or visible in the viewport (handles overflow elements whose container has height:0)
 				next = navigate(
 					positionRect,
 					direction,
 					elementRects.filter((rect) => {
 						const elementContainerId = getContainersForNode(rect.element).pop();
-						return isElementVisibleInContainer(rect.element, elementContainerId);
+						return isElementVisibleInContainer(rect.element, elementContainerId) || isElementVisibleInViewport(rect.element);
 					}),
 					getContainerConfig(containerId)
 				);
@@ -377,16 +378,17 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 		if (next && containerId !== nextCandidateContainerId) {
 			// Don't apply visibility check when entering a restricted container. The container's own enterTo logic (last-focused, default-element) handles entry
 			// OR verify if the element from another container is visible
-			if (isRestrictedContainer(nextCandidateContainerId) || isElementVisibleInContainer(next, nextCandidateContainerId)) {
+			if (isRestrictedContainer(nextCandidateContainerId) || isElementVisibleInContainer(next, nextCandidateContainerId) || isElementVisibleInViewport(next)) {
 				return next;
 			} else {
 				// otherwise, try to navigate to an element that is visible in its container
+				// or visible in the viewport (handles overflow elements whose container has height:0)
 				next = navigate(
 					elementRect,
 					direction,
 					elementRects.filter((rect) => {
 						const elementContainerId = getContainersForNode(rect.element).pop();
-						return isElementVisibleInContainer(rect.element, elementContainerId);
+						return isElementVisibleInContainer(rect.element, elementContainerId) || isElementVisibleInViewport(rect.element);
 					}),
 					getContainerConfig(containerId),
 					partitionRect
@@ -523,6 +525,16 @@ function isElementVisibleInContainer (element, containerId) {
 	const isHorizontallyVisible = elementRight >= containerLeft && elementLeft <= containerRight;
 
 	return isVerticallyVisible && isHorizontallyVisible;
+}
+
+function isElementVisibleInViewport (element) {
+	const {top, right, bottom, left} = element.getBoundingClientRect();
+	return (
+		bottom > 0 &&
+		right > 0 &&
+		top < window.innerHeight &&
+		left < window.innerWidth
+	);
 }
 
 const getOffsetDistanceToTargetFromPosition = (distance, direction, {x, y}, {left, right, top, bottom}) => {
