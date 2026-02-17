@@ -496,7 +496,7 @@ function selectSrc (src) {
 		}
 
 		const srcResolutions = types.filter((type) => type.name in src);
-		const currentScreenTypeResolution = types.find((type) => type.name === screenType);
+		const currentScreenTypeResolution = getScreenTypeObject();
 
 		if (srcResolutions.length && currentScreenTypeResolution) {
 			const closestType = getClosestResolutionType(currentScreenTypeResolution, srcResolutions);
