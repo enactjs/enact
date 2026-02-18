@@ -876,6 +876,9 @@ const useScrollBase = (props) => {
 	}
 
 	function onScroll (ev) {
+		// Track if we had a grace timer active before clearing it
+		const hadGraceTimer = !!mutableRef.current.scrollEndGraceTimer;
+
 		if (mutableRef.current.scrollEndGraceTimer) {
 			clearTimeout(mutableRef.current.scrollEndGraceTimer);
 			mutableRef.current.scrollEndGraceTimer = null;
@@ -887,15 +890,25 @@ const useScrollBase = (props) => {
 
 		updateScrollPosition(ev);
 
+		if (!mutableRef.current.isScrollAnimationTargetAccumulated) {
+			mutableRef.current.isScrollAnimationTargetAccumulated = true;
+		}
 
 		forwardScrollEvent('onScroll');
-		mutableRef.current.scrollStopJob.start();
+
+		if (!hadGraceTimer) {
+			mutableRef.current.scrollStopJob.start();
+		}
 	}
 
 	/*
 	 * Handler for scrollend event
 	 */
 	function onScrollEnd (ev) {
+		if (!mutableRef.current.scrolling) {
+			return;
+		}
+
 		updateScrollPosition(ev);
 
 		// Stop the fallback timer since the native scrollend has fired
@@ -913,7 +926,8 @@ const useScrollBase = (props) => {
 		}
 
 		mutableRef.current.scrollEndGraceTimer = setTimeout(() => {
-			scrollStopOnScroll();  // Only call once after scroll settles
+			mutableRef.current.scrollEndGraceTimer = null;
+			scrollStopOnScroll();
 		}, 100);
 	}
 	// scrollMode 'native' ]]
