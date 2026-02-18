@@ -2,7 +2,9 @@ import {
 	calculateFontSize,
 	defineScreenTypes,
 	getScreenType,
+	init,
 	scale,
+	selectSrc,
 	unit
 } from '../resolution.js';
 
@@ -146,9 +148,67 @@ describe('Resolution Specs', () => {
 		expect(actualHD).toBe(expectedHD);
 	});
 
-	// NOTE: Currently tough to test selectSrc because it relies on a global variable for screenType
-	test.skip('should select source for the current screen type', function () {
+	test('should select source for the current screen type', function () {
+		let measurementNode;
+		const src = {vga: 'VGA', hd: 'HD', fhd: 'FHD', uhd: 'UHD'};
+		const stringSrc = 'src/to/image';
 
+		// String src
+		expect(selectSrc(stringSrc)).toBe(stringSrc);
+
+		// VGA
+		measurementNode = {innerWidth: VGA.width, innerHeight: VGA.height};
+		init({measurementNode});
+		expect(selectSrc(src)).toBe(src.vga);
+
+		// XGA
+		measurementNode = {innerWidth: XGA.width, innerHeight: XGA.height};
+		init({measurementNode});
+		expect(selectSrc(src)).toBe(src.hd);
+
+		// HD
+		measurementNode = {innerWidth: HD.width, innerHeight: HD.height};
+		init({measurementNode});
+		expect(selectSrc(src)).toBe(src.hd);
+
+		// UWHD
+		measurementNode = {innerWidth: UWHD.width, innerHeight: UWHD.height};
+		init({measurementNode});
+		expect(selectSrc(src)).toBe(src.fhd);
+
+		// FHD
+		measurementNode = {innerWidth: FHD.width, innerHeight: FHD.height};
+		init({measurementNode});
+		expect(selectSrc(src)).toBe(src.fhd);
+
+		// UWUXGA
+		measurementNode = {innerWidth: UWUXGA.width, innerHeight: UWUXGA.height};
+		init({measurementNode});
+		expect(selectSrc(src)).toBe(src.fhd);
+
+		// QHD
+		measurementNode = {innerWidth: QHD.width, innerHeight: QHD.height};
+		init({measurementNode});
+		expect(selectSrc(src)).toBe(src.fhd);
+
+		// WQHD
+		measurementNode = {innerWidth: WQHD.width, innerHeight: WQHD.height};
+		init({measurementNode});
+		expect(selectSrc(src)).toBe(src.uhd);
+
+		// UHD
+		measurementNode = {innerWidth: UHD.width, innerHeight: UHD.height};
+		init({measurementNode});
+		expect(selectSrc(src)).toBe(src.uhd);
+
+		// WUHD
+		measurementNode = {innerWidth: WUHD.width, innerHeight: WUHD.height};
+		init({measurementNode});
+		expect(selectSrc(src)).toBe(src.uhd);
+
+		// UHD2
+		measurementNode = {innerWidth: UHD2.width, innerHeight: UHD2.height};
+		init({measurementNode});
+		expect(selectSrc(src)).toBe(src.uhd);
 	});
-
 });
