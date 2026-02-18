@@ -890,7 +890,7 @@ const useScrollBase = (props) => {
 
 		updateScrollPosition(ev);
 
-		if (!mutableRef.current.isScrollAnimationTargetAccumulated) {
+		if (mutableRef.current.lastInputType === 'wheel' && !mutableRef.current.isScrollAnimationTargetAccumulated) {
 			mutableRef.current.isScrollAnimationTargetAccumulated = true;
 		}
 
