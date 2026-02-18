@@ -2,6 +2,28 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/VirtualList.VirtualList`, to adjust itemSize properly when resizing window
+
+## [5.4.2] - 2026-01-28
+
+### Changed
+
+- `ui/Scroller` scroll animation method for `scrollMode: native`
+
+### Fixed
+
+- `ui/VirtulList` not to cut off focused item when scroll by pressing key
+- `ui/VirtualList` not to jump to the top when item size was changed
+- `ui/VirtualList.VirtualGridList` to adjust itemSize properly when resizing window
+
+## [5.4.1] - 2025-12-30
+
+No significant changes.
+
 ## [5.4.0] - 2025-12-08
 
 ### Added

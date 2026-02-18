@@ -10,6 +10,7 @@
 
 import {on, off} from '@enact/core/dispatcher';
 import {forward, forwardCustom} from '@enact/core/handle';
+import {checkPropTypes} from '@enact/core/util';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import {Children, isValidElement, Component as ReactComponent} from 'react';
@@ -179,6 +180,7 @@ class Media extends ReactComponent {
 
 	constructor (props) {
 		super(props);
+		checkPropTypes(this, props);
 
 		this.media = null;
 
@@ -205,9 +207,11 @@ class Media extends ReactComponent {
 		this.attachCustomMediaEvents();
 	}
 
-	componentDidUpdate ({source: prevSource}) {
+	componentDidUpdate (prevProps) {
 		const {source} = this.props;
+		const {source: prevSource} = prevProps;
 
+		checkPropTypes(this, this.props, prevProps);
 		if (getKeyFromSource(source) !== getKeyFromSource(prevSource)) {
 			this.load();
 		}

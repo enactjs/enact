@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import {Job} from '@enact/core/util';
+import {checkPropTypes, Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import {memo, useEffect, useRef} from 'react';
 
@@ -132,6 +132,7 @@ const Scrollbar = memo(({corner = false, css = componentCss, minThumbSize = 18, 
 		scrollbarProps,
 		scrollbarTrackProps
 	} = useScrollbar(props);
+	checkPropTypes(Scrollbar, props);
 
 	return (
 		<div {...restProps} {...scrollbarProps}>

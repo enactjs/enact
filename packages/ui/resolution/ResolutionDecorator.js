@@ -7,6 +7,7 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 
 import {init, config as riConfig, defineScreenTypes, getResolutionClasses} from './resolution';
 
@@ -19,6 +20,10 @@ import {init, config as riConfig, defineScreenTypes, getResolutionClasses} from 
 const defaultConfig = {
 	/**
 	 * Attaches an event listener to the window to listen for resize events.
+	 *
+	 * When enabled, the resolution classes will be automatically updated when the window
+	 * is resized or when screen rotation occurs (such as when a device changes from
+	 * landscape to portrait orientation).
 	 *
 	 * @type {Boolean}
 	 * @default true
@@ -68,13 +73,17 @@ const defaultConfig = {
 /**
  * A higher-order component that configures resolution support for its wrapped component tree.
  *
+ * This decorator automatically applies resolution-specific CSS classes to the wrapped component,
+ * enabling responsive layouts that adapt to different screen sizes, orientations, and aspect ratios.
+ * It also supports dynamic updates when the window is resized or when the screen rotates.
+ *
  * Configuration options:
- *	* `dynamic: true` - when `true`, updates the resolution classes when the window resizes
+ *	* `dynamic: true` - when `true`, updates the resolution classes when the window resizes or the screen rotates
  *	* `screenTypes: null` - defines a set of screen types to support
  *
  * Example:
  * ```
- *	// Will have the resolution classes and will be updated when the window resizes
+ *	// Will have the resolution classes and will be updated when the window resizes or the screen rotates
  *	const AppWithResolution = ResolutionDecorator(App);
  *	// Will have the resolution classes for the screen at the time of render only
  *	const AppWithStaticResolution = ResolutionDecorator({dynamic: false}, App);
@@ -101,6 +110,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			checkPropTypes(this, props);
 			riConfig.intermediateScreenHandling = config.intermediateScreenHandling;
 			riConfig.matchSmallerScreenType = config.matchSmallerScreenType;
 			init({measurementNode: (typeof window !== 'undefined' && window)});
@@ -112,6 +122,10 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidMount () {
 			if (config.dynamic) window.addEventListener('resize', this.handleResize);
 			this.rootNode = document.getElementsByClassName(getResolutionClasses())?.[0] || null;
+		}
+
+		componentDidUpdate (prevProps) {
+			checkPropTypes(this, this.props, prevProps);
 		}
 
 		componentWillUnmount () {

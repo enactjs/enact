@@ -1,9 +1,10 @@
 import {render} from '@testing-library/react';
 import {Component, createRef} from 'react';
+
 import EnactPropTypes from '../prop-types';
+import {checkPropTypes} from '../../../util';
 
-
-describe.skip('prop-types', () => {
+describe('prop-types', () => {
 	const DummyElement = (<div />);
 	const DummyRenderable = () => DummyElement;
 	const dummyString = 'Some String';
@@ -19,12 +20,12 @@ describe.skip('prop-types', () => {
 			typeRenderableOverride: EnactPropTypes.renderableOverride
 		};
 
-		render ({...rest} = {}) {
-			delete rest.typeComponent;
-			delete rest.typeComponentOverride;
-			delete rest.typeRef;
-			delete rest.typeRenderable;
-			delete rest.typeRenderableOverride;
+		constructor (props) {
+			super(props);
+			checkPropTypes(this, props);
+		}
+
+		render () {
 			return (<div>Test</div>);
 		}
 	}
@@ -210,8 +211,14 @@ describe.skip('prop-types', () => {
 				typeRequired: EnactPropTypes.renderable.isRequired
 			};
 
+			constructor (props) {
+				super(props);
+				checkPropTypes(this, props);
+			}
+
 			render ({...rest} = {}) {
 				delete rest.typeRequired;
+
 				return (<div>Test</div>);
 			}
 		}

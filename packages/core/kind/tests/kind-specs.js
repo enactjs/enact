@@ -43,6 +43,40 @@ describe('kind', () => {
 			);
 		}
 	});
+	const FunctionalKind = kind({
+		name: 'Kind',
+		functional: true,
+		propTypes: {
+			prop: PropTypes.number.isRequired,
+			label: PropTypes.string
+		},
+		defaultProps: {
+			label: 'Label'
+		},
+		contextType: TestContext,
+		styles: {
+			className: 'kind'
+		},
+		handlers: {
+			onClick: (ev, props, context) => {
+				props.onClick(context.value);
+			}
+		},
+		computed: {
+			value: ({prop}) => prop + 1,
+			contextValue: (props, context) => {
+				return context ? `context${context.value}` : 'unknown';
+			}
+		},
+		render: ({contextValue, label, value, ...rest}) => {
+			delete rest.prop;
+			return (
+				<div {...rest} data-context={contextValue} title={label}>
+					{value}
+				</div>
+			);
+		}
+	});
 
 	test('should assign name to displayName', () => {
 		const expected = 'Kind';
@@ -64,22 +98,55 @@ describe('kind', () => {
 		expect(minimalDiv).toBeInTheDocument();
 	});
 
-	test.skip('should default {label} property', () => {
-		const subject = <Kind prop={1} />;
+	test('should detect invalid proType on component rerender', () => {
+		const Minimal = kind({
+			name: 'Minimal',
+			propTypes: {
+				value: PropTypes.number
+			},
+			render: (props) => <div data-testid="minimal" {...props} />
+		});
+
+		const {rerender} = render(<Minimal value={0} />);
+
+		let minimalDiv = screen.queryByTestId('minimal');
+
+		expect(minimalDiv).toBeInTheDocument();
+
+		let consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
+
+		rerender(<Minimal value="five" />);
+
+		expect(consoleErrorMock).toHaveBeenCalled();
+
+		consoleErrorMock.mockRestore();
+	});
+
+	test('should default {label} property', () => {
+		render(<Kind prop={1} data-testid="unlabeled" />);
 
 		const expected = 'Label';
-		const actual = subject.props.label;
+		const actual = screen.queryByTestId('unlabeled').getAttribute('title');
 
 		expect(actual).toBe(expected);
 	});
 
-	test.skip('should default {label} property when explicitly undefined', () => {
-		// Explicitly testing for undefined
-		// eslint-disable-next-line no-undefined
-		const subject = <Kind label={undefined} prop={1} />;
+	test('should default {label} property for `functional` is `true`', () => {
+		render(<FunctionalKind prop={1} data-testid="unlabeled" />);
 
 		const expected = 'Label';
-		const actual = subject.props.label;
+		const actual = screen.queryByTestId('unlabeled').getAttribute('title');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should default {label} property when explicitly undefined', () => {
+		// Explicitly testing for undefined
+		// eslint-disable-next-line no-undefined
+		render(<Kind label={undefined} data-testid="unlabeled" prop={1} />);
+
+		const expected = 'Label';
+		const actual = screen.queryByTestId('unlabeled').getAttribute('title');
 
 		expect(actual).toBe(expected);
 	});
