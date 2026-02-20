@@ -58,7 +58,8 @@ const handleDown = handle(
 	isEnabled,
 	forwardCustomWithPrevent('onDown', makeTouchableEvent('onDown')),
 	call('activate'),
-	call('startGesture')
+	call('startGesture'),
+	(ev) => {console.log(ev)}
 ).named('handleDown');
 
 const handleUp = handle(
@@ -131,7 +132,8 @@ const handleClick = handle(
 const handleTouchStart = handle(
 	forward('onTouchStart'),
 	call('startTouch'),
-	handleDown
+	handleDown,
+	() => {console.log('touch')}
 );
 
 const handleTouchMove = handle(
@@ -176,6 +178,21 @@ const handleBlur = handle(
 	call('blurGesture')
 );
 
+const handlePointerDown = handle(
+	forward('onPointerDown'),
+	handleDown,
+	() => {console.log('pointerDown')}
+);
+
+const handlePointerEnter = handle();
+const handlePointerLeave = handle();
+const handlePointerMove = handle(
+	forward('onPointerMove'),
+	call('moveGesture')
+);
+
+const handlePointerUp = handle();
+
 class Touch {
 	constructor () {
 		this.context = {};
@@ -193,17 +210,19 @@ class Touch {
 		this.handlers = {
 			onClick: handleClick.bindAs(this, 'handleClick'),
 			onBlur: handleBlur.bindAs(this, 'handleBlur'),
-			onMouseDown: handleMouseDown.bindAs(this, 'handleMouseDown'),
+			// onMouseDown: handleMouseDown.bindAs(this, 'handleMouseDown'),
+			onPointerDown: handlePointerDown.bindAs(this, 'handlePointerDown'),
+			onPointerMove: handlePointerMove.bindAs(this, 'handlePointerMove'),
 			onMouseEnter: handleMouseEnter.bindAs(this, 'handleMouseEnter'),
-			onMouseMove: handleMouseMove.bindAs(this, 'handleMouseMove'),
+			// onMouseMove: handleMouseMove.bindAs(this, 'handleMouseMove'),
 			onMouseLeave: handleMouseLeave.bindAs(this, 'handleMouseLeave'),
 			onMouseUp: handleMouseUp.bindAs(this, 'handleMouseUp')
 		};
 
 		if (platform.touchEvent) {
 			Object.assign(this.handlers, {
-				onTouchStart: handleTouchStart.bindAs(this, 'handleTouchStart'),
-				onTouchMove: handleTouchMove.bindAs(this, 'handleTouchMove'),
+				// onTouchStart: handleTouchStart.bindAs(this, 'handleTouchStart'),
+				// onTouchMove: handleTouchMove.bindAs(this, 'handleTouchMove'),
 				onTouchEnd: handleTouchEnd.bindAs(this, 'handleTouchEnd')
 			});
 		}
@@ -235,6 +254,7 @@ class Touch {
 		}
 		on('mouseup', this.handleGlobalUp, document);
 		on('mousemove', this.handleGlobalMove, document);
+		on('pointermove', this.handleGlobalMove, document);
 	}
 
 	removeGlobalHandlers () {
@@ -243,6 +263,7 @@ class Touch {
 		}
 		off('mouseup', this.handleGlobalUp, document);
 		off('mousemove', this.handleGlobalMove, document);
+		off('pointermove', this.handleGlobalMove, document);
 	}
 
 	// State Management
@@ -402,6 +423,7 @@ class Touch {
 	}
 
 	shouldAllowMouseEvent (ev) {
+		console.log('shouldAllow')
 		return this.clickAllow.shouldAllowMouseEvent(ev);
 	}
 

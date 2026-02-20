@@ -521,6 +521,35 @@ const Spotlight = (function () {
 			}
 		}
 	}
+	function onPointerMove ({target, clientX, clientY}) {
+		if (shouldPreventNavigation()) {
+			notifyPointerMove(null, target, clientX, clientY);
+			return;
+		}
+
+		const current = getCurrent();
+		const update = notifyPointerMove(current, target, clientX, clientY);
+
+		if (update) {
+			if (_5WayKeyHold) {
+				_pointerMoveDuringKeyPress = true;
+			}
+
+			const next = getNavigableTarget(target);
+
+			// TODO: Consider encapsulating this work within focusElement
+			if (next !== current) {
+				if (next) {
+					focusElement(next, getContainersForNode(next), true);
+
+					return true;
+				} else if (current) {
+					current.blur();
+					setLastContainerFromTarget(current, target);
+				}
+			}
+		}
+	}
 
 	function onMouseOver (evt) {
 		if (shouldPreventNavigation()) return;
@@ -567,6 +596,7 @@ const Spotlight = (function () {
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
+				window.addEventListener('pointermove', onPointerMove);
 
 				if (platform.touchEvent) {
 					window.addEventListener('touchend', onTouchEnd);
@@ -605,6 +635,7 @@ const Spotlight = (function () {
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
+			window.removeEventListener('pointermove', onPointerMove);
 
 			if (platform.touchEvent) {
 				window.removeEventListener('touchend', onTouchEnd);

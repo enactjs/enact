@@ -139,6 +139,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		// For key input
 		handleKeyDown = (ev) => {
+			console.log('here')
 			const {keyCode} = ev;
 			if (is('enter', keyCode) && this.containerNode.classList.contains('spotlight-input-touch')) {
 				// Prevent onclick event trigger by enter key

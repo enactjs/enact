@@ -19,6 +19,7 @@ import {spottableClass, useSpottable} from './useSpottable';
 
 const
 	forwardMouseDown = forward('onMouseDown'),
+	forwardPointerDown = forward('onPointerDown'),
 	forwardMouseUp = forward('onMouseUp'),
 	forwardClick = forward('onClick'),
 	forwardBlur = forward('onBlur'),
@@ -33,7 +34,8 @@ const spotHandlers = {
 	onKeyDown: handle(
 		forwardKeyDown,
 		callContext('onKeyDown'),
-		forwardMouseDown
+		forwardMouseDown,
+		forwardPointerDown
 	),
 	onKeyUp: handle(
 		forwardKeyUp,

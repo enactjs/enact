@@ -30,6 +30,7 @@ const selectProps = (props) => {
 		onClick,
 		onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp,
 		onTouchEnd, onTouchMove, onTouchStart,
+		onPointerDown, onPointerEnter, onPointerLeave, onPointerMove, onPointerUp,
 		/* custom events to be forwarded by useTouch hook */
 		onDown,
 		onDrag, onDragEnd, onDragStart,
@@ -55,6 +56,11 @@ const selectProps = (props) => {
 			onClick,
 			onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp,
 			onTouchEnd, onTouchMove, onTouchStart,
+			onPointerDown,		// onMouseDown, onTouchStart
+			onPointerEnter, 	// onMouseEnter
+			onPointerLeave, 	// onMouseLeave
+			onPointerMove, 		// onMouseMove, onTouchMove
+			onPointerUp,		// onMouseUp, onTouchEnd
 			/* custom events to be forwarded by useTouch hook */
 			onDown,
 			onDrag, onDragEnd, onDragStart,
