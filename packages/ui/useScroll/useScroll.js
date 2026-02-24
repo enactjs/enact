@@ -17,6 +17,7 @@ import {platform} from '@enact/core/platform'; // scrollMode 'native'
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
+import {flushSync} from 'react-dom';
 import {useCallback, use, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
 import warning from 'warning';
 
@@ -867,7 +868,9 @@ const useScrollBase = (props) => {
 		}
 
 		if (scrollContentHandle.current.didScroll) {
-			scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
+			flushSync(() => {
+				scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
+			});
 		}
 
 		forwardScrollEvent('onScroll');

@@ -23,6 +23,8 @@ import unless from 'ramda/src/unless';
 import {Children} from 'react';
 import * as ReactIs from 'react-is';
 
+import {platform} from '../platform';
+
 import Job from './Job';
 
 /**
@@ -346,7 +348,7 @@ const shallowEqual = (a, b) => {
  * @public
  */
 const checkPropTypes = (component, props, prevProps) => {
-	if (__DEV__) {
+	if (__DEV__ && platform.type !== 'webos') {
 		const isFunctional = typeof component === 'function';
 		const {displayName, name, propTypes} = isFunctional ? component : component.constructor; // eslint-disable-line react/forbid-foreign-prop-types
 		if (prevProps && prevProps === props) return;
