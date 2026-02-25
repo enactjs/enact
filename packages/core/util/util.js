@@ -345,7 +345,7 @@ const shallowEqual = (a, b) => {
  *
  * @returns	{undefined}
  * @memberof core/util
- * @public
+ * @private
  */
 const checkPropTypes = (component, props, prevProps) => {
 	if (__DEV__ && platform.type !== 'webos') {
