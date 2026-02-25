@@ -183,6 +183,7 @@ const useScrollBase = (props) => {
 
 		// Enable the early bail out of repeated scrolling to the same position
 		animationInfo: null,
+		scrollEndGraceTimer: null,
 
 		resizeRegistry: null,
 
@@ -845,16 +846,19 @@ const useScrollBase = (props) => {
 	// scrollMode 'translate' ]]
 
 	// scrollMode 'native' [[
-	function onScroll (ev) {
+	/**
+	 * Updates scroll position from a scroll event.
+	 * Handles RTL adjustment and position updates.
+	 *
+	 * @param {Event} ev - Scroll event
+	 * @private
+	 */
+	function updateScrollPosition (ev) {
 		let {scrollLeft, scrollTop} = ev.target;
 
 		const
 			bounds = getScrollBounds(),
 			canScrollH = canScrollHorizontally(bounds);
-
-		if (!mutableRef.current.scrolling) {
-			scrollStartOnScroll();
-		}
 
 		if (rtl && canScrollH) {
 			scrollLeft = (platform.chrome < 85) ? bounds.maxLeft - scrollLeft : -scrollLeft;
@@ -872,9 +876,62 @@ const useScrollBase = (props) => {
 				scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
 			});
 		}
+	}
+
+	function onScroll (ev) {
+		// Track if we had a grace timer active before clearing it
+		const hadGraceTimer = !!mutableRef.current.scrollEndGraceTimer;
+
+		if (mutableRef.current.scrollEndGraceTimer) {
+			clearTimeout(mutableRef.current.scrollEndGraceTimer);
+			mutableRef.current.scrollEndGraceTimer = null;
+		}
+
+		if (!mutableRef.current.scrolling) {
+			scrollStartOnScroll();
+		}
+
+		updateScrollPosition(ev);
+
+		if (mutableRef.current.lastInputType === 'wheel' && !mutableRef.current.isScrollAnimationTargetAccumulated) {
+			mutableRef.current.isScrollAnimationTargetAccumulated = true;
+		}
 
 		forwardScrollEvent('onScroll');
-		mutableRef.current.scrollStopJob.start();
+
+		if (!hadGraceTimer) {
+			mutableRef.current.scrollStopJob.start();
+		}
+	}
+
+	/*
+	 * Handler for scrollend event
+	 */
+	function onScrollEnd (ev) {
+		if (!mutableRef.current.scrolling) {
+			return;
+		}
+
+		updateScrollPosition(ev);
+
+		// Stop the fallback timer since the native scrollend has fired
+		mutableRef.current.scrollStopJob.stop();
+
+		// stop for non-accumulating scrolls (mouse/touch)
+		if (!mutableRef.current.isScrollAnimationTargetAccumulated) {
+			scrollStopOnScroll();
+			return;
+		}
+
+		// This prevents spamming onScrollStop during smooth scroll continuation
+		if (mutableRef.current.scrollEndGraceTimer) {
+			clearTimeout(mutableRef.current.scrollEndGraceTimer);
+		}
+
+		mutableRef.current.scrollEndGraceTimer = setTimeout(() => {
+			mutableRef.current.scrollEndGraceTimer = null;
+			scrollStopOnScroll();
+		}, 100);
 	}
 	// scrollMode 'native' ]]
 
@@ -1556,6 +1613,7 @@ const useScrollBase = (props) => {
 		// scrollMode 'native' [[
 		if (scrollMode === 'native' && scrollContentRef.current) {
 			utilEvent('scroll').addEventListener(scrollContentRef, onScroll, {passive: true});
+			utilEvent('scrollend').addEventListener(scrollContentRef, onScrollEnd);
 		}
 		// scrollMode 'native' ]]
 
@@ -1577,6 +1635,7 @@ const useScrollBase = (props) => {
 
 		// scrollMode 'native' [[
 		utilEvent('scroll').removeEventListener(scrollContentRef, onScroll, {passive: true});
+		utilEvent('scrollend').removeEventListener(scrollContentRef, onScrollEnd);
 		// scrollMode 'native' ]]
 
 		if (props.removeEventListeners) {
