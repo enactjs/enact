@@ -2,11 +2,15 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [5.4.3] - 2026-02-26
 
 ### Fixed
 
+- `spotlight` to revert 5.4.0 fix to skip visibility check when entering a restricted container or choose a visible container as next target
 - `spotlight` to focus visible children of elements which do not have `overflow:true`
+- `ui/VirtualList` to revert 5.4.2 cix that not to jump to the top when item size was changed
+- `ui/VirtulList` to revert 5.4.2 fix that not to cut off focused item when scroll by pressing key
+- `ui/VirtualList.VirtualGridList` to revert 5.4.2 fix to adjust itemSize properly when resizing window
 
 ## [5.4.2] - 2026-01-28
 
