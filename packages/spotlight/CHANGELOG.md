@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [5.4.3] - 2026-02-26
+
+### Fixed
+
+- `spotlight` to revert 5.4.0 fix to skip visibility check when entering a restricted container or choose a visible container as next target
+- `spotlight` to focus visible children of elements which do not have `overflow:true`
+
 ## [5.4.2] - 2026-01-28
 
 No significant changes.
