@@ -58,8 +58,7 @@ const handleDown = handle(
 	isEnabled,
 	forwardCustomWithPrevent('onDown', makeTouchableEvent('onDown')),
 	call('activate'),
-	call('startGesture'),
-	(ev) => {console.log(ev)}
+	call('startGesture')
 ).named('handleDown');
 
 const handleUp = handle(
@@ -132,8 +131,7 @@ const handleClick = handle(
 const handleTouchStart = handle(
 	forward('onTouchStart'),
 	call('startTouch'),
-	handleDown,
-	() => {console.log('touch')}
+	handleDown
 );
 
 const handleTouchMove = handle(
@@ -180,8 +178,7 @@ const handleBlur = handle(
 
 const handlePointerDown = handle(
 	forward('onPointerDown'),
-	handleDown,
-	() => {console.log('pointerDown')}
+	handleDown
 );
 
 const handlePointerEnter = handle();
@@ -423,7 +420,6 @@ class Touch {
 	}
 
 	shouldAllowMouseEvent (ev) {
-		console.log('shouldAllow')
 		return this.clickAllow.shouldAllowMouseEvent(ev);
 	}
 

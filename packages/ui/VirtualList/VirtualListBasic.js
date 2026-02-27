@@ -285,7 +285,7 @@ class VirtualListBasic extends Component {
 		dataSize: 0,
 		direction: 'vertical',
 		getAffordance: () => (0),
-		overhang: 10,
+		overhang: 3,
 		pageScroll: false,
 		scrollMode: 'translate',
 		spacing: 0
