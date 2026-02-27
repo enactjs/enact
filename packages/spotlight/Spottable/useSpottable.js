@@ -54,7 +54,7 @@ const REMOTE_OK_KEY = 16777221;
  * @private
  */
 
-const useSpottable = ({emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
+const useSpottable = ({disabled, emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
 	const hook = useClass(SpottableCore, {emulateMouse});
 	const context = useRef({
 		prevSpotlightDisabled: spotlightDisabled,
@@ -71,7 +71,7 @@ const useSpottable = ({emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REM
 		attributes['data-spotlight-id'] = props.spotlightId;
 	}
 
-	hook.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context.current);
+	hook.setPropsAndContext({disabled, selectionKeys, spotlightDisabled, ...props}, context.current);
 
 	useLayoutEffect(() => {
 		hook.load(getSpotRef() || null);
@@ -81,7 +81,22 @@ const useSpottable = ({emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REM
 		};
 	}, [getSpotRef]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useLayoutEffect(hook.didUpdate); // eslint-disable-line react-hooks/exhaustive-deps
+	// hook.didUpdate only needs to run when disabled or spotlightDisabled changes.
+	//
+	// It does three things:
+	//   1. Sync this.isFocused from the DOM (this.node === Spotlight.getCurrent())
+	//   2. If focused and became disabled → emit onSelectionCancel
+	//   3. If became enabled (prevSpotlightDisabled && !spotlightDisabled) → restore focus
+	//
+	// None of these are relevant when disabled/spotlightDisabled are stable — which is
+	// the case for every recycled VirtualList item render where only data-index changes.
+	//
+	// The previous bare useLayoutEffect(hook.didUpdate) (no deps) was calling
+	// Spotlight.getCurrent() + getContainersForNode() after every render of every item.
+	// With 31 items recycled per VirtualList scroll step that caused visible "Forced
+	// reflow" violations and contributed to the 200-400ms scheduler message handler
+	// violations on constrained hardware (webOS / Chromium 132).
+	useLayoutEffect(hook.didUpdate, [disabled, spotlightDisabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return {
 		attributes,

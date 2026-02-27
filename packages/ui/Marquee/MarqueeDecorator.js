@@ -382,12 +382,24 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			let forceRestartMarquee = false;
 
 			checkPropTypes(this, this.props, prevProps);
+
+			// When marqueeDisabled transitions true → false, we must invalidate regardless of
+			// whether children changed, because content may have changed multiple times during
+			// the disabled period (VirtualList recycling items while scrolling) and the cached
+			// metrics are stale.
+			const reenabled = prevProps.marqueeDisabled && !marqueeDisabled;
+
 			if (
-				prevProps.locale !== locale ||
-				prevProps.rtl !== rtl ||
-				prevProps.marqueeSpacing !== marqueeSpacing ||
-				!shallowEqual(prevProps.children, children) ||
-				(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
+				reenabled ||
+				(
+					!marqueeDisabled && (
+						prevProps.locale !== locale ||
+						prevProps.rtl !== rtl ||
+						prevProps.marqueeSpacing !== marqueeSpacing ||
+						!shallowEqual(prevProps.children, children) ||
+						(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
+					)
+				)
 			) {
 				// restart marqueeOn="render" marquees or synced marquees that were animating
 				forceRestartMarquee = marqueeOn === 'render' || (

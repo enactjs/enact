@@ -20,6 +20,14 @@ const useMarqueeController = (props) => {
 		isHovered: false
 	});
 
+	// Keep a stable ref to props so handleFocus/handleBlur don't need props in their
+	// useCallback deps. Without this, props (a new object every render) busts the
+	// handleFocus/handleBlur memos → value memo busts → new MarqueeControllerContext
+	// value → every MarqueeDecorator consumer (static contextType) re-renders → 62+
+	// async re-renders per VirtualList scroll step on constrained hardware.
+	const propsRef = useRef(props);
+	propsRef.current = props;
+
 	/*
 	 * Invokes the `action` handler for each synchronized component except the invoking
 	 * `component`.
@@ -224,8 +232,8 @@ const useMarqueeController = (props) => {
 			dispatch('start');
 		}
 		cancelJob.stop();
-		forwardFocus(ev, props);
-	}, [anyRunning, cancelJob, dispatch, props]);
+		forwardFocus(ev, propsRef.current);
+	}, [anyRunning, cancelJob, dispatch]);
 
 	/*
 	 * Handler for the blur event
@@ -235,8 +243,8 @@ const useMarqueeController = (props) => {
 		if (anyRunning()) {
 			cancelJob.start();
 		}
-		forwardBlur(ev, props);
-	}, [anyRunning, cancelJob, props]);
+		forwardBlur(ev, propsRef.current);
+	}, [anyRunning, cancelJob]);
 
 	useEffect(() => {
 		return () => {
