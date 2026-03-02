@@ -18,6 +18,7 @@ import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
 import {useCallback, use, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
+import {flushSync} from 'react-dom';
 import warning from 'warning';
 
 import {ResizeContext} from '../Resizable';
@@ -871,7 +872,9 @@ const useScrollBase = (props) => {
 		}
 
 		if (scrollContentHandle.current.didScroll) {
-			scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
+			flushSync(() => {
+				scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
+			});
 		}
 	}
 
