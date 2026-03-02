@@ -382,24 +382,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			let forceRestartMarquee = false;
 
 			checkPropTypes(this, this.props, prevProps);
-
-			// When marqueeDisabled transitions true → false, we must invalidate regardless of
-			// whether children changed, because content may have changed multiple times during
-			// the disabled period (VirtualList recycling items while scrolling) and the cached
-			// metrics are stale.
-			const reenabled = prevProps.marqueeDisabled && !marqueeDisabled;
-
 			if (
-				reenabled ||
-				(
-					!marqueeDisabled && (
-						prevProps.locale !== locale ||
-						prevProps.rtl !== rtl ||
-						prevProps.marqueeSpacing !== marqueeSpacing ||
-						!shallowEqual(prevProps.children, children) ||
-						(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
-					)
-				)
+				prevProps.locale !== locale ||
+				prevProps.rtl !== rtl ||
+				prevProps.marqueeSpacing !== marqueeSpacing ||
+				!shallowEqual(prevProps.children, children) ||
+				(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
 			) {
 				// restart marqueeOn="render" marquees or synced marquees that were animating
 				forceRestartMarquee = marqueeOn === 'render' || (
@@ -424,9 +412,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.validateTextDirection();
 			if (forceRestartMarquee || this.shouldStartMarquee()) {
-				// When re-enabling after marqueeDisabled (scroll stopped), restart with no delay
-				const delay = reenabled ? 0 : (this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
-				this.tryStartingAnimation(delay);
+				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
 		}
 
@@ -737,7 +723,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// assuming the condition is we're waiting on render delay and someone just hovered
 				// us, so we can start with the (hopefully) faster hover delay.
 				if (this.timerState !== TimerState.CLEAR &&
-						this.timerState !== TimerState.SYNCSTART_PENDING) {
+					this.timerState !== TimerState.SYNCSTART_PENDING) {
 					return;
 				}
 				this.setTimeout(() => {
