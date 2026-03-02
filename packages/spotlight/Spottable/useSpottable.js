@@ -81,6 +81,8 @@ const useSpottable = ({emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REM
 		};
 	}, [getSpotRef]); // eslint-disable-line react-hooks/exhaustive-deps
 
+	useLayoutEffect(hook.didUpdate); // eslint-disable-line react-hooks/exhaustive-deps
+
 	return {
 		attributes,
 		className: hook.spottableClass || null,

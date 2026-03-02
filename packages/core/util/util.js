@@ -23,8 +23,6 @@ import unless from 'ramda/src/unless';
 import {Children} from 'react';
 import * as ReactIs from 'react-is';
 
-import {platform} from '../platform';
-
 import Job from './Job';
 
 /**
