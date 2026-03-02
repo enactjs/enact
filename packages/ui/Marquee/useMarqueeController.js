@@ -20,11 +20,6 @@ const useMarqueeController = (props) => {
 		isHovered: false
 	});
 
-	// Keep a stable ref to props so handleFocus/handleBlur don't need props in their
-	// useCallback deps. Without this, props (a new object every render) busts the
-	// handleFocus/handleBlur memos → value memo busts → new MarqueeControllerContext
-	// value → every MarqueeDecorator consumer (static contextType) re-renders → 62+
-	// async re-renders per VirtualList scroll step on constrained hardware.
 	const propsRef = useRef(props);
 	propsRef.current = props;
 

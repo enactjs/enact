@@ -723,7 +723,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// assuming the condition is we're waiting on render delay and someone just hovered
 				// us, so we can start with the (hopefully) faster hover delay.
 				if (this.timerState !== TimerState.CLEAR &&
-					this.timerState !== TimerState.SYNCSTART_PENDING) {
+						this.timerState !== TimerState.SYNCSTART_PENDING) {
 					return;
 				}
 				this.setTimeout(() => {
