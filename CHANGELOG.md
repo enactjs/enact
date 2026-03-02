@@ -11,6 +11,8 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Fixed
 
 - `spotlight` to focus visible children of elements which do not have `overflow:true`
+- `ui/Marquee.useMarqueeController` to not re-render any prop is changed
+- `ui/useScroll` to treat the didScroll state update as synchronous
 
 ## [5.4.2] - 2026-01-28
 

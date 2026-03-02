@@ -424,7 +424,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.validateTextDirection();
 			if (forceRestartMarquee || this.shouldStartMarquee()) {
-				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
+				// When re-enabling after marqueeDisabled (scroll stopped), restart with no delay
+				const delay = reenabled ? 0 : (this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
+				this.tryStartingAnimation(delay);
 			}
 		}
 
