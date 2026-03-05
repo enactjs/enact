@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight` to focus visible children of elements which do not have `overflow:true`
+
 ## [5.4.2] - 2026-01-28
 
 No significant changes.
