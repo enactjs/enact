@@ -39,9 +39,36 @@ const unitToPixelFactors = {
  * @private
  */
 const configDefaults = {
-	intermediateScreenHandling: 'normal',
-	matchSmallerScreenType: false,
+	fontSizeHandling: 'scale',
 	orientationHandling: 'normal'
+};
+
+/**
+ * Get the closest resolution type based on the `resolution`
+ *
+ * @function
+ * @memberOf ui/resolution
+ *
+ * @param {Object} resolution	The resolution object (must include `height` and `width` properties)
+ * @param {Object[]} types		The resolution types object (must include `name`, `width` and `height` properties)
+ * @returns {String}			Screen type (e.g., `'fhd'`, `'uhd'`, etc.)
+ * @private
+ */
+const getClosestResolutionType = (resolution, types) => {
+	// Calculates the distance between two points (types and rez)
+	const getDistance = (p1, p2) => {
+		return Math.sqrt(Math.pow(p2.width - p1.width, 2) + Math.pow(p2.height - p1.height, 2));
+	};
+
+	// Compares the calculated distances and returns the closest resolution type name that matches current resolution
+	const {name} = types.reduce((prev, curr) => {
+		const distCurr = getDistance(curr, resolution);
+		const distPrev = getDistance(prev, resolution);
+
+		return distCurr < distPrev ? curr : prev;
+	});
+
+	return name;
 };
 
 /**
@@ -151,7 +178,6 @@ function getScreenType (rez) {
 	rez = rez || workspaceBounds;
 
 	const types = screenTypes;
-	let bestMatch = config.matchSmallerScreenType ? types[0].name : types[types.length - 1].name; // Blindly set the first screen type, in case no matches are found later.
 
 	orientation = 'landscape';
 
@@ -162,26 +188,15 @@ function getScreenType (rez) {
 		rez.height = swap;
 	}
 
-	if (config.matchSmallerScreenType) {
-		// Loop through resolutions, first->last, smallest->largest
-		for (let i = 0; i <= types.length - 1; i++) {
-			// Does this screenType definition fit inside the current resolution? If so, save it as the current best match.
-			if (rez.height >= types[i].height && rez.width >= types[i].width) {
-				bestMatch = types[i].name;
-			}
-		}
-	} else {
-		// Loop through resolutions, last->first, largest->smallest
-		for (let i = types.length - 1; i >= 0; i--) {
-			// Does the current resolution fit inside this screenType definition? If so, save it as the current best match.
-			if (rez.height <= types[i].height && rez.width <= types[i].width) {
-				bestMatch = types[i].name;
-			}
+	// Loop through resolutions, last->first, largest->smallest and return in case of exact match.
+	for (let i = types.length - 1; i >= 0; i--) {
+		if (rez.height === types[i].height && rez.width === types[i].width) {
+			return types[i].name;
 		}
 	}
 
 	// Return the name of the closest fitting set of dimensions.
-	return bestMatch;
+	return getClosestResolutionType(rez, types);
 }
 
 /**
@@ -213,8 +228,7 @@ function getScreenType (rez) {
  */
 function calculateFontSize (type) {
 	const scrObj = getScreenTypeObject(type);
-	const shouldScaleFontSize = (config.intermediateScreenHandling === 'scale') && (config.matchSmallerScreenType ? workspaceBounds.width > scrObj.width && workspaceBounds.height > scrObj.height :
-		workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
+	const shouldScaleFontSize = (config.fontSizeHandling === 'scale') && (workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
 	let size;
 
 	if (orientation === 'portrait' && config.orientationHandling === 'scale') {
@@ -476,8 +490,19 @@ function selectSrc (src) {
 		// loop through resolutions
 		for (let i = types.length - 1; i >= 0; i--) {
 			let t = types[i].name;
-			if (screenType === t && src[t]) newSrc = src[t];
+
+			// return exact match
+			if (screenType === t && src[t]) return src[t];
 		}
+
+		const srcResolutions = types.filter((type) => type.name in src);
+		const currentScreenTypeResolution = getScreenTypeObject();
+
+		if (srcResolutions.length && currentScreenTypeResolution) {
+			const closestType = getClosestResolutionType(currentScreenTypeResolution, srcResolutions);
+			newSrc = src[closestType];
+		}
+
 		src = newSrc;
 	}
 	return src;
@@ -510,16 +535,11 @@ function init (args = {}) {
  *
  * @typedef {Object} ResolutionConfig
  * @memberof ui/resolution
- * @property {('normal'|'scale')} intermediateScreenHandling - Determines how to calculate
+ * @property {('normal'|'scale')} fontSizeHandling - Determines how to calculate
  *           font-size. When set to `'scale'` and the screen is in landscape orientation,
  *           calculates font-size linearly based on screen resolution. When set to `'normal'`,
  *           the font-size will be the pxPerRem value of the best match screen type.
- *           Default: `'normal'`
- * @property {Boolean} matchSmallerScreenType - Determines how to get the best match screen
- *           type of current resolution. When set to `true`, the matched screen type will be
- *           the one that is smaller and the closest to the screen resolution. When set to
- *           `false`, the matched screen type will be the one that is greater and the closest
- *           to the screen resolution. Default: `false`
+ *           Default: `'scale'`
  * @property {('normal'|'scale')} orientationHandling - Determines how to handle screen
  *           orientation and rotation. When set to `'scale'` and the screen is in portrait
  *           orientation (due to screen rotation), dynamically calculates the base font size
