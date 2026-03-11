@@ -1,0 +1,66 @@
+name: CI Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      checkout-ref:
+        description: 'Git ref to checkout (empty for default merge commit)'
+        type: string
+        required: false
+        default: ''
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.checkout-ref || github.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+
+      - name: Clone and setup Enact CLI
+        run: |
+          git clone --branch=develop --depth 1 https://github.com/enactjs/cli ../cli
+          pushd ../cli
+          npm install
+          npm link
+          popd
+
+      - name: Install project dependencies
+        run: npm install
+
+      - name: Bootstrap packages
+        run: npm run bootstrap
+
+      - name: Interlink packages
+        run: npm run interlink
+
+      - name: Run tests with coverage
+        run: npm test -- -- --runInBand --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+      - name: Run ESLint
+        run: npm run lerna -- run lint -- -- --report-unused-disable-directives --max-warnings 0 .
+
+      - name: Validate documentation
+        run: npm run validate-docs
+
+      - name: Build sampler
+        run: npm run pack
+        working-directory: packages/sampler
