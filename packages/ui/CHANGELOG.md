@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Marquee.useMarqueeController` to not re-render any prop is changed
+- `ui/Marquee.useMarqueeController` not to re-render handlers when any prop is changed
 - `ui/useScroll` to treat the didScroll state update as synchronous
 - `ui/VirtualList.VirtualList`, to adjust itemSize properly when resizing window
 
