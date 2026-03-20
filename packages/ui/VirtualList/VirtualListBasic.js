@@ -607,11 +607,11 @@ class VirtualListBasic extends Component {
 		if (stickTo === 'start') {         // 'start'
 			offset = optionalOffset;
 		} else if (this.props.itemSizes) { // 'end' for different item sizes
-			offset = primary.clientSize - this.props.itemSizes[index] - marginOffset - optionalOffset;
+			offset = primary.clientSize - this.props.itemSizes[index] - (optionalOffset || marginOffset);
 		} else if (stickTo === 'center') { // 'center'
 			offset = (primary.clientSize / 2) - (primary.gridSize / 2) - optionalOffset;
 		} else {                           // 'end' for same item sizes
-			offset = primary.clientSize - primary.itemSize - marginOffset - optionalOffset;
+			offset = primary.clientSize - primary.itemSize - (optionalOffset || marginOffset);
 		}
 
 		/* istanbul ignore next */
