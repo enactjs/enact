@@ -350,6 +350,40 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.contentFits = null;
 			this.resizeRegistry = null;
 			this.resizeObserver = null;
+			// Used to avoid redundant start attempts in `marqueeOn="render"` mode.
+			this.hasStartedRender = false;
+		}
+
+		updateResizeObserver () {
+			const canObserve = typeof ResizeObserver === 'function' && this.node && !this.props.marqueeDisabled;
+			if (!canObserve) {
+				if (this.resizeObserver) {
+					this.resizeObserver.disconnect();
+					this.resizeObserver = null;
+				}
+				return;
+			}
+
+			// Attach only when marquee is likely to be sensitive to size changes.
+			const shouldObserve = (
+				this.state.animating ||
+				this.state.promoted ||
+				this.props.marqueeOn === 'render' ||
+				!!this.isFocused ||
+				!!this.isHovered
+			);
+
+			if (shouldObserve) {
+				if (!this.resizeObserver) {
+					this.resizeObserver = new ResizeObserver(() => {
+						this.handleResize();
+					});
+				}
+				this.resizeObserver.observe(this.node);
+			} else if (this.resizeObserver) {
+				this.resizeObserver.disconnect();
+				this.resizeObserver = null;
+			}
 		}
 
 		componentDidMount () {
@@ -363,7 +397,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.validateTextDirection();
-
+			// Preserve original ResizeObserver behavior to avoid timing regressions
+			// (disconnect/reconnect can cause marquee offsets to be out of sync).
 			if (typeof ResizeObserver === 'function' && this.node) {
 				this.resizeObserver = new ResizeObserver(() => {
 					this.handleResize();
@@ -372,6 +407,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (this.props.marqueeOn === 'render') {
+				// `marqueeOn="render"` should start once per mount unless a restart is forced
+				// due to metric-affecting prop changes.
+				if (!this.props.marqueeDisabled) {
+					this.hasStartedRender = true;
+				}
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 			on('keydown', this.handlePointerHide, document);
@@ -382,6 +422,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			let forceRestartMarquee = false;
 
 			checkPropTypes(this, this.props, prevProps);
+			const shouldValidateTextDirection = (
+				prevProps.rtl !== rtl ||
+				prevProps.forceDirection !== forceDirection ||
+				prevProps.locale !== locale ||
+				!shallowEqual(prevProps.children, children)
+			);
 			if (
 				prevProps.locale !== locale ||
 				prevProps.rtl !== rtl ||
@@ -394,6 +440,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
 				);
 
+				// If a restart is forced for render-mode, allow a new start attempt.
+				if (forceRestartMarquee && marqueeOn === 'render') {
+					this.hasStartedRender = false;
+				}
+
 				this.invalidateMetrics();
 				this.cancelAnimation(forceRestartMarquee);
 				if (forceRestartMarquee && marqueeOn === 'focus') {
@@ -405,12 +456,29 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				prevProps.marqueeSpeed !== marqueeSpeed ||
 				prevProps.forceDirection !== forceDirection
 			) {
-				this.cancelAnimation();
+				// Avoid redundant work when already idle (especially common during list updates).
+				// Keep original behavior for synchronized marquees to avoid controller timing issues.
+				if (
+					this.sync ||
+					this.state.animating ||
+					this.state.promoted ||
+					this.timerState !== TimerState.CLEAR
+				) {
+					this.cancelAnimation();
+				}
+				// If we transition into render-mode (or re-enable marquee), allow a new start.
+				if (marqueeOn === 'render' && !marqueeDisabled) {
+					if (prevProps.marqueeOn !== marqueeOn || prevProps.marqueeDisabled !== marqueeDisabled) {
+						this.hasStartedRender = false;
+					}
+				}
 			} else if (disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
 				this.context.enter(this);
 			}
 
-			this.validateTextDirection();
+			if (shouldValidateTextDirection) {
+				this.validateTextDirection();
+			}
 			if (forceRestartMarquee || this.shouldStartMarquee()) {
 				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
@@ -498,7 +566,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		shouldStartMarquee () {
 			const {disabled, marqueeDisabled, marqueeOn} = this.props;
 			return !marqueeDisabled && (
-				marqueeOn === 'render' ||
+				(marqueeOn === 'render' && !this.hasStartedRender) ||
 				!this.sync && (
 					(this.isFocused && marqueeOn === 'focus' && !disabled) ||
 					(this.isHovered && (marqueeOn === 'hover' || marqueeOn === 'focus' && disabled))
