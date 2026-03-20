@@ -189,6 +189,49 @@ describe('Marquee', () => {
 		expect(marquee).not.toHaveClass(expected);
 	});
 
+	test('should start marquee when transitioning into `marqueeOn="render"`', () => {
+		const {rerender} = render(
+			<Marquee marqueeOn="focus" marqueeDelay={0} marqueeOnRenderDelay={0}>
+				{ltrText}
+			</Marquee>
+		);
+
+		rerender(
+			<Marquee marqueeOn="render" marqueeDelay={0} marqueeOnRenderDelay={0}>
+				{ltrText}
+			</Marquee>
+		);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		const marquee = screen.getByText(ltrText);
+		expect(marquee).toHaveStyle({'--ui-marquee-spacing': '50'});
+	});
+
+	test('should restart render-mode marquee when children change', () => {
+		const {rerender} = render(
+			<Marquee marqueeOn="render" marqueeDelay={0} marqueeOnRenderDelay={0}>
+				{ltrText}
+			</Marquee>
+		);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		const ltrMarquee = screen.getByText(ltrText);
+		expect(ltrMarquee).toHaveStyle({'--ui-marquee-spacing': '50'});
+
+		rerender(
+			<Marquee marqueeOn="render" marqueeDelay={0} marqueeOnRenderDelay={0}>
+				{rtlText}
+			</Marquee>
+		);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		const rtlMarquee = screen.getByText(rtlText);
+		expect(rtlMarquee).toHaveStyle({'direction': 'rtl'});
+	});
+
 	test('should start marquee on focus if `marqueeOn` is focus', () => {
 		render(<Marquee marqueeOn="focus" marqueeDelay={10}>{ltrText}</Marquee>);
 		const marquee = screen.getByText(ltrText);

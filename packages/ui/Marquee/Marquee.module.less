@@ -34,8 +34,6 @@
 		}
 
 		&.willAnimate {
-			// The marquee animation is implemented using transform (translateX),
-			// so the compositing hint should target transform.
 			will-change: transform;
 			overflow: visible;
 		}

@@ -350,7 +350,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.contentFits = null;
 			this.resizeRegistry = null;
 			this.resizeObserver = null;
-			// Used to avoid redundant start attempts in `marqueeOn="render"` mode.
 			this.hasStartedRender = false;
 		}
 
@@ -364,7 +363,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				return;
 			}
 
-			// Attach only when marquee is likely to be sensitive to size changes.
 			const shouldObserve = (
 				this.state.animating ||
 				this.state.promoted ||
@@ -397,8 +395,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.validateTextDirection();
-			// Preserve original ResizeObserver behavior to avoid timing regressions
-			// (disconnect/reconnect can cause marquee offsets to be out of sync).
 			if (typeof ResizeObserver === 'function' && this.node) {
 				this.resizeObserver = new ResizeObserver(() => {
 					this.handleResize();
@@ -407,8 +403,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (this.props.marqueeOn === 'render') {
-				// `marqueeOn="render"` should start once per mount unless a restart is forced
-				// due to metric-affecting prop changes.
 				if (!this.props.marqueeDisabled) {
 					this.hasStartedRender = true;
 				}
@@ -435,12 +429,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				!shallowEqual(prevProps.children, children) ||
 				(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
 			) {
-				// restart marqueeOn="render" marquees or synced marquees that were animating
 				forceRestartMarquee = marqueeOn === 'render' || (
 					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
 				);
 
-				// If a restart is forced for render-mode, allow a new start attempt.
 				if (forceRestartMarquee && marqueeOn === 'render') {
 					this.hasStartedRender = false;
 				}
@@ -456,8 +448,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				prevProps.marqueeSpeed !== marqueeSpeed ||
 				prevProps.forceDirection !== forceDirection
 			) {
-				// Avoid redundant work when already idle (especially common during list updates).
-				// Keep original behavior for synchronized marquees to avoid controller timing issues.
 				if (
 					this.sync ||
 					this.state.animating ||
@@ -466,7 +456,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				) {
 					this.cancelAnimation();
 				}
-				// If we transition into render-mode (or re-enable marquee), allow a new start.
 				if (marqueeOn === 'render' && !marqueeDisabled) {
 					if (prevProps.marqueeOn !== marqueeOn || prevProps.marqueeDisabled !== marqueeDisabled) {
 						this.hasStartedRender = false;
