@@ -348,11 +348,11 @@ class VirtualListBasic extends Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
-		const items = document.getElementsByClassName(css.listItem);
+		const items = this.props.itemRefs.current;
 
 		checkPropTypes(this, this.props, prevProps);
 		if (!this.itemMarginTop && this.itemMarginTop !== 0 && items.length > 0) {
-			const firstItemStyle = window.getComputedStyle(items[0].children[0]);
+			const firstItemStyle = window.getComputedStyle(items[0]);
 			this.itemMarginTop = Number(firstItemStyle.getPropertyValue('margin-top').slice(0, -2));
 			this.itemMarginBottom = Number(firstItemStyle.getPropertyValue('margin-bottom').slice(0, -2));
 			this.itemMarginLeft = Number(firstItemStyle.getPropertyValue('margin-left').slice(0, -2));
