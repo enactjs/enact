@@ -353,37 +353,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.hasStartedRender = false;
 		}
 
-		updateResizeObserver () {
-			const canObserve = typeof ResizeObserver === 'function' && this.node && !this.props.marqueeDisabled;
-			if (!canObserve) {
-				if (this.resizeObserver) {
-					this.resizeObserver.disconnect();
-					this.resizeObserver = null;
-				}
-				return;
-			}
-
-			const shouldObserve = (
-				this.state.animating ||
-				this.state.promoted ||
-				this.props.marqueeOn === 'render' ||
-				!!this.isFocused ||
-				!!this.isHovered
-			);
-
-			if (shouldObserve) {
-				if (!this.resizeObserver) {
-					this.resizeObserver = new ResizeObserver(() => {
-						this.handleResize();
-					});
-				}
-				this.resizeObserver.observe(this.node);
-			} else if (this.resizeObserver) {
-				this.resizeObserver.disconnect();
-				this.resizeObserver = null;
-			}
-		}
-
 		componentDidMount () {
 			if (this.context && this.context.register) {
 				this.sync = true;

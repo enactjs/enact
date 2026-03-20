@@ -232,6 +232,45 @@ describe('Marquee', () => {
 		expect(rtlMarquee).toHaveStyle({'direction': 'rtl'});
 	});
 
+	test('should cancel animation on marqueeSpeed change while animating (render mode)', () => {
+		const originalGetBoundingClientRect = global.Element.prototype.getBoundingClientRect;
+		global.Element.prototype.getBoundingClientRect = jest.fn(function () {
+			const isSpan = this && this.tagName === 'SPAN';
+			return {
+				width: isSpan ? 200 : 100,
+				height: 50,
+				top: 0,
+				left: 0,
+				bottom: 0,
+				right: isSpan ? 200 : 100
+			};
+		});
+
+		const {rerender} = render(
+			<Marquee marqueeOn="render" marqueeDelay={0} marqueeOnRenderDelay={0} marqueeSpeed={60}>
+				{ltrText}
+			</Marquee>
+		);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		const marquee = screen.getAllByText(ltrText).find(el => el.classList.contains('text'));
+		expect(marquee).not.toHaveStyle({'transform': 'translateX(0)'});
+
+		act(() => {
+			rerender(
+				<Marquee marqueeOn="render" marqueeDelay={0} marqueeOnRenderDelay={0} marqueeSpeed={70}>
+					{ltrText}
+				</Marquee>
+			);
+		});
+
+		const marqueeAfter = screen.getAllByText(ltrText).find(el => el.classList.contains('text'));
+		expect(marqueeAfter).toHaveStyle({'transform': 'translateX(0)'});
+
+		global.Element.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+	});
+
 	test('should start marquee on focus if `marqueeOn` is focus', () => {
 		render(<Marquee marqueeOn="focus" marqueeDelay={10}>{ltrText}</Marquee>);
 		const marquee = screen.getByText(ltrText);
@@ -286,10 +325,14 @@ describe('Marquee', () => {
 		const originalResizeObserver = global.ResizeObserver;
 
 		const observe = jest.fn();
-		global.ResizeObserver = jest.fn(() => ({
-			observe,
-			disconnect: jest.fn()
-		}));
+		let resizeCallback = null;
+		global.ResizeObserver = jest.fn((cb) => {
+			resizeCallback = cb;
+			return {
+				observe,
+				disconnect: jest.fn()
+			};
+		});
 
 		render(<Marquee>{ltrText}</Marquee>);
 
@@ -297,6 +340,12 @@ describe('Marquee', () => {
 
 		expect(global.ResizeObserver).toHaveBeenCalled();
 		expect(observe).toHaveBeenCalled();
+
+		act(() => {
+			if (typeof resizeCallback === 'function') {
+				resizeCallback();
+			}
+		});
 
 		global.ResizeObserver = originalResizeObserver;
 	});
@@ -651,5 +700,58 @@ describe('MarqueeController', () => {
 
 		act(() => jest.advanceTimersByTime(40));
 		expect(marquee1).toHaveStyle({'transform': 'translateX(-125px)'});
+	});
+
+	test('should call resetAnimation on content change while focused (marqueeOn="focus")', () => {
+		const originalGetBoundingClientRect = global.Element.prototype.getBoundingClientRect;
+		global.Element.prototype.getBoundingClientRect = jest.fn(function () {
+			const isSpan = this && this.tagName === 'SPAN';
+			return {
+				width: isSpan ? 200 : 100,
+				height: 50,
+				top: 0,
+				left: 0,
+				bottom: 0,
+				right: isSpan ? 200 : 100
+			};
+		});
+
+		const {rerender} = render(
+			<Controller>
+				{[ltrText].map((children, index) => (
+					<Marquee
+						key={index}
+						marqueeDelay={10}
+						marqueeOn="focus"
+					>
+						{children}
+					</Marquee>
+				))}
+			</Controller>
+		);
+
+		const marquee1 = screen.getByText(ltrText);
+		fireEvent.focus(marquee1);
+		act(() => jest.advanceTimersByTime(100));
+
+		rerender(
+			<Controller>
+				{[rtlText].map((children, index) => (
+					<Marquee
+						key={index}
+						marqueeDelay={10}
+						marqueeOn="focus"
+					>
+						{children}
+					</Marquee>
+				))}
+			</Controller>
+		);
+
+		act(() => jest.advanceTimersByTime(1));
+
+		expect(screen.getByText(rtlText)).toHaveStyle({'transform': 'translateX(0)'});
+
+		global.Element.prototype.getBoundingClientRect = originalGetBoundingClientRect;
 	});
 });
