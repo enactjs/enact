@@ -19,7 +19,7 @@ describe('VirtualList with native scrollMode', () => {
 
 		renderItem = ({index, ...rest}) => {	// eslint-disable-line enact/display-name
 			return (
-				<div {...rest} id={'item' + index}>
+				<div {...rest} data-index={index} id={'item' + index}>
 					{items[index].name}
 				</div>
 			);
