@@ -257,13 +257,11 @@ describe('Marquee', () => {
 		const marquee = screen.getAllByText(ltrText).find(el => el.classList.contains('text'));
 		expect(marquee).not.toHaveStyle({'transform': 'translateX(0)'});
 
-		act(() => {
-			rerender(
-				<Marquee marqueeOn="render" marqueeDelay={0} marqueeOnRenderDelay={0} marqueeSpeed={70}>
-					{ltrText}
-				</Marquee>
-			);
-		});
+		rerender(
+			<Marquee marqueeOn="render" marqueeDelay={0} marqueeOnRenderDelay={0} marqueeSpeed={70}>
+				{ltrText}
+			</Marquee>
+		);
 
 		const marqueeAfter = screen.getAllByText(ltrText).find(el => el.classList.contains('text'));
 		expect(marqueeAfter).toHaveStyle({'transform': 'translateX(0)'});
