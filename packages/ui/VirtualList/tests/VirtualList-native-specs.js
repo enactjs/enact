@@ -55,6 +55,24 @@ describe('VirtualList with native scrollMode', () => {
 		expect(actual).toBe(expected);
 	});
 
+	test('should render a list of \'items\' with horizontal direction', () => {
+		render(
+			<VirtualList
+				clientSize={clientSize}
+				dataSize={dataSize}
+				direction="horizontal"
+				itemRenderer={renderItem}
+				itemSize={itemSize}
+				scrollMode="native"
+			/>
+		);
+
+		const expected = 'Account 0';
+		const actual = screen.getByRole('list').children.item(0).textContent;
+
+		expect(actual).toBe(expected);
+	});
+
 	test('should render overhang items when clientSize is not given', () => {
 		render(
 			<VirtualList
