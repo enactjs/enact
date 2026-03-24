@@ -357,8 +357,11 @@ class VirtualListBasic extends Component {
 			this.itemMarginBottom = Number(firstItemStyle.getPropertyValue('margin-bottom').slice(0, -2));
 			this.itemMarginLeft = Number(firstItemStyle.getPropertyValue('margin-left').slice(0, -2));
 			this.itemMarginRight = Number(firstItemStyle.getPropertyValue('margin-right').slice(0, -2));
-			this.scrollBounds.maxTop += this.itemMarginTop + this.itemMarginBottom;
-			this.scrollBounds.maxLeft += this.itemMarginLeft + this.itemMarginRight;
+			if (this.isPrimaryDirectionVertical) {
+				this.scrollBounds.maxTop += this.itemMarginTop + this.itemMarginBottom;
+			} else {
+				this.scrollBounds.maxLeft += this.itemMarginLeft + this.itemMarginRight;
+			}
 		}
 
 		let deferScrollTo = false;
