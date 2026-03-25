@@ -62,7 +62,7 @@ const configDefaults = {
 	fontSizeHandling: 'scale',
 	orientationHandling: 'normal',
 	linearScaling: {
-		active: false,
+		active: true,
 		type: linearScalingType.baseScreenReport
 	}
 };
