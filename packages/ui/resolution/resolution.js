@@ -41,12 +41,12 @@ const linearScalingType = {
 	/**
 	 * Scales based on the `baseScreen` (the screen type marked as `base: true`).
 	 */
-	baseScreenReport: 'baseScreen',
+	baseScreen: 'baseScreen',
 
 	/**
 	 * Scales based on the current detected `screenType`.
 	 */
-	currentScreenReport: 'currentScreen'
+	currentScreen: 'currentScreen'
 };
 
 /**
@@ -63,7 +63,7 @@ const configDefaults = {
 	orientationHandling: 'normal',
 	linearScaling: {
 		active: true,
-		type: linearScalingType.baseScreenReport
+		type: linearScalingType.baseScreen
 	}
 };
 
@@ -80,7 +80,7 @@ const configDefaults = {
  * @private
  */
 function getLinearSize () {
-	const reportScreen = config.linearScaling.type === linearScalingType.currentScreenReport ? screenTypeObject : baseScreen;
+	const reportScreen = config.linearScaling.type === linearScalingType.currentScreen ? screenTypeObject : baseScreen;
 
 	const scaleX = workspaceBounds.width / reportScreen.width;
 	const scaleY = workspaceBounds.height / reportScreen.height;
