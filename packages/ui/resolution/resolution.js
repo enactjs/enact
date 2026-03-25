@@ -30,6 +30,26 @@ const unitToPixelFactors = {
 };
 
 /**
+ * Enumerates the available reporting types for linear scaling.
+ *
+ * @enum {String}
+ * @memberof ui/resolution
+ * @readonly
+ * @private
+ */
+const linearScalingType = {
+	/**
+	 * Scales based on the `baseScreen` (the screen type marked as `base: true`).
+	 */
+	baseScreenReport: 'baseScreen',
+
+	/**
+	 * Scales based on the current detected `screenType`.
+	 */
+	currentScreenReport: 'currentScreen'
+};
+
+/**
  * Default configuration values.
  *
  * See {@link ui/resolution.config} for full documentation.
@@ -40,8 +60,36 @@ const unitToPixelFactors = {
  */
 const configDefaults = {
 	fontSizeHandling: 'scale',
-	orientationHandling: 'normal'
+	orientationHandling: 'normal',
+	linearScaling: {
+		active: false,
+		type: linearScalingType.baseScreenReport
+	}
 };
+
+/**
+ * Calculates a linearly scaled size based on the current workspace dimensions
+ * relative to a reference screen (either the base screen or the current screen type).
+ *
+ * The calculation uses the geometric mean of horizontal and vertical scale factors,
+ * constrained between 0.125 and 2.0 to prevent extreme scaling.
+ *
+ * @function
+ * @returns {Number} The calculated pixel size for 1rem.
+ * @memberof ui/resolution
+ * @private
+ */
+function getLinearSize () {
+	const reportScreen = config.linearScaling.type === linearScalingType.currentScreenReport ? screenTypeObject : baseScreen;
+
+	const scaleX = workspaceBounds.width / reportScreen.width;
+	const scaleY = workspaceBounds.height / reportScreen.height;
+
+	const ratio = Math.sqrt(scaleX * scaleY);
+	const finalRatio = Math.max(0.125, Math.min(ratio, 2));
+
+	return Math.round(reportScreen.pxPerRem * finalRatio * 10) / 10;
+}
 
 /**
  * Get the closest resolution type based on the `resolution`
@@ -227,6 +275,11 @@ function getScreenType (rez) {
  * @public
  */
 function calculateFontSize (type) {
+	// If linear scaling is enabled, bypass standard screen-type-based calculation and use the dynamic linear size
+	if (config.linearScaling.active) {
+		return getLinearSize() + 'px';
+	}
+
 	const scrObj = getScreenTypeObject(type);
 	const shouldScaleFontSize = (config.fontSizeHandling === 'scale') && (workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
 	let size;
@@ -326,6 +379,11 @@ function getRiRatio (type = screenType) {
  * @returns {Number}          pixels per rem
  */
 function getUnitToPixelFactors (type = screenType) {
+	// Use linear scaling for the current screen type if active.
+	if (config.linearScaling.active && (!type || type === screenType)) {
+		return getLinearSize();
+	}
+
 	if (type) {
 		return getScreenTypeObject(type).pxPerRem;
 	}
@@ -411,7 +469,7 @@ function scale (px) {
  */
 function unit (pixels, toUnit) {
 	if (!toUnit || !unitToPixelFactors[toUnit]) return;
-	if (typeof pixels === 'string' && pixels.substr(-2) === 'px') pixels = parseInt(pixels.substr(0, pixels.length - 2));
+	if (typeof pixels === 'string' && pixels.substring(-2) === 'px') pixels = parseInt(pixels.substring(0, pixels.length - 2));
 	if (typeof pixels !== 'number') return;
 
 	return (pixels / unitToPixelFactors[toUnit]) + '' + toUnit;
@@ -531,6 +589,12 @@ function init (args = {}) {
 }
 
 /**
+ * @typedef {Object} LinearScalingConfig
+ * @property {Boolean} active - Enables linear scaling.
+ * @property {('baseScreen'|'currentScreen')} type - Reference screen type.
+ */
+
+/**
  * Configuration options for resolution independence behavior.
  *
  * @typedef {Object} ResolutionConfig
@@ -546,6 +610,12 @@ function init (args = {}) {
  *           based on proportional scaling. When set to `'normal'`, uses the standard pxPerRem
  *           value. This is particularly useful for supporting device rotation scenarios.
  *           Default: `'normal'`
+ * @property {LinearScalingConfig} [linearScaling] - Configuration for linear scaling mode.
+ * @property {Boolean} linearScaling.active - Enables linear scaling calculation for
+ *           font sizes and unit conversions. Default: `false`.
+ * @property {ui/resolution.linearScalingType} linearScaling.type - Determines the
+ *           reference screen used for linear scaling calculation.
+ *           Default: `linearScalingType.baseScreenReport`.
  * @public
  */
 
