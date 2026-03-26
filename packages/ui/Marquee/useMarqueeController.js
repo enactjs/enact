@@ -20,6 +20,9 @@ const useMarqueeController = (props) => {
 		isHovered: false
 	});
 
+	const propsRef = useRef(props);
+	propsRef.current = props;
+
 	/*
 	 * Invokes the `action` handler for each synchronized component except the invoking
 	 * `component`.
@@ -224,8 +227,8 @@ const useMarqueeController = (props) => {
 			dispatch('start');
 		}
 		cancelJob.stop();
-		forwardFocus(ev, props);
-	}, [anyRunning, cancelJob, dispatch, props]);
+		forwardFocus(ev, propsRef.current);
+	}, [anyRunning, cancelJob, dispatch]);
 
 	/*
 	 * Handler for the blur event
@@ -235,8 +238,8 @@ const useMarqueeController = (props) => {
 		if (anyRunning()) {
 			cancelJob.start();
 		}
-		forwardBlur(ev, props);
-	}, [anyRunning, cancelJob, props]);
+		forwardBlur(ev, propsRef.current);
+	}, [anyRunning, cancelJob]);
 
 	useEffect(() => {
 		return () => {
