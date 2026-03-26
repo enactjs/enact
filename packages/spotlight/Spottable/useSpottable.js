@@ -54,6 +54,8 @@ const REMOTE_OK_KEY = 16777221;
  * @private
  */
 
+const EMPTY_ATTRIBUTES = {};
+
 const useSpottable = ({emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
 	const hook = useClass(SpottableCore, {emulateMouse});
 	const context = useRef({
@@ -61,15 +63,11 @@ const useSpottable = ({emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REM
 		spotlightDisabled
 	});
 
-	context.current = {
-		prevSpotlightDisabled: context.current.spotlightDisabled,
-		spotlightDisabled
-	};
+	// Mutate in-place to avoid a new object allocation on every render.
+	context.current.prevSpotlightDisabled = context.current.spotlightDisabled;
+	context.current.spotlightDisabled = spotlightDisabled;
 
-	let attributes = {};
-	if (props.spotlightId) {
-		attributes['data-spotlight-id'] = props.spotlightId;
-	}
+	const attributes = props.spotlightId ? {'data-spotlight-id': props.spotlightId} : EMPTY_ATTRIBUTES;
 
 	hook.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context.current);
 

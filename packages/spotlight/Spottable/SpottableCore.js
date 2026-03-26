@@ -70,7 +70,8 @@ class SpottableCore {
 	}
 
 	unload () {
-		if (this.isFocused) {
+		const isFocusedNow = this.node && this.node === Spotlight.getCurrent();
+		if (isFocusedNow) {
 			forwardCustom('onSpotlightDisappear')(null, this.props);
 		}
 		if (lastSelectTarget === this) {
@@ -79,7 +80,16 @@ class SpottableCore {
 	}
 
 	didUpdate = () => {
-		this.isFocused = this.node && this.node === Spotlight.getCurrent();
+		// Avoid the cost of calling `Spotlight.getCurrent()` on every render unless we
+		// need focus state for class calculation (`spotlightDisabled`) or selection cancel.
+		const shouldUpdateFocusState = (
+			this.props.spotlightDisabled ||
+			(this.props.disabled && lastSelectTarget === this && !selectCancelled)
+		);
+
+		if (shouldUpdateFocusState) {
+			this.isFocused = this.node && this.node === Spotlight.getCurrent();
+		}
 
 		// if the component is focused and became disabled
 		if (this.isFocused && this.props.disabled && lastSelectTarget === this && !selectCancelled) {

@@ -268,10 +268,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 	// eslint-disable-next-line no-shadow
 	class Spottable extends Component {
-		componentDidMount () {
-			this.forceUpdate();
-		}
-
 		handleForceUpdate = () => {
 			this.forceUpdate();
 		};

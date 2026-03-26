@@ -59,7 +59,7 @@ describe('Spottable', () => {
 
 			rerender(<Component data-id="123" />);
 
-			const expected = 3;
+			const expected = 2;
 
 			expect(spy).toHaveBeenCalledTimes(expected);
 		});
@@ -71,7 +71,7 @@ describe('Spottable', () => {
 
 			rerender(<Component selectionKeys={[2, 1, 3]} />);
 
-			const expected = 3;
+			const expected = 2;
 
 			expect(spy).toHaveBeenCalledTimes(expected);
 		});
@@ -84,7 +84,7 @@ describe('Spottable', () => {
 
 			div.focus();
 
-			const expected = 2;
+			const expected = 1;
 
 			expect(spy).toHaveBeenCalledTimes(expected);
 		});
