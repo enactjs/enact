@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/resolution` Added support for linear scaling type
+
 ### Fixed
 
 - `ui/VirtualList.VirtualList`, to adjust itemSize properly when resizing window
