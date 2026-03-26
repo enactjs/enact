@@ -189,6 +189,61 @@ describe('Marquee', () => {
 		expect(marquee).not.toHaveClass(expected);
 	});
 
+	test('should re-measure content after marqueeDisabled transitions to false', () => {
+		const originalGetBoundingClientRect = global.Element.prototype.getBoundingClientRect;
+
+		global.Element.prototype.getBoundingClientRect = jest.fn(function () {
+			const isSpan = this && this.tagName === 'SPAN';
+			return {
+				width: isSpan ? 200 : 100,
+				height: 50,
+				top: 0,
+				left: 0,
+				bottom: 0,
+				right: isSpan ? 200 : 100
+			};
+		});
+
+		const {rerender} = render(
+			<Marquee marqueeOn="render" marqueeDelay={0} marqueeOnRenderDelay={0}>
+				{ltrText}
+			</Marquee>
+		);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		rerender(
+			<Marquee marqueeOn="render" marqueeDelay={0} marqueeOnRenderDelay={0} marqueeDisabled>
+				{ltrText}
+			</Marquee>
+		);
+
+		global.Element.prototype.getBoundingClientRect = jest.fn(function () {
+			const isSpan = this && this.tagName === 'SPAN';
+			return {
+				width: isSpan ? 300 : 100,
+				height: 50,
+				top: 0,
+				left: 0,
+				bottom: 0,
+				right: isSpan ? 300 : 100
+			};
+		});
+
+		rerender(
+			<Marquee marqueeOn="render" marqueeDelay={0} marqueeOnRenderDelay={0}>
+				{ltrText}
+			</Marquee>
+		);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		const marquee = screen.getAllByText(ltrText).find(el => el.classList.contains('text'));
+		expect(marquee).toHaveStyle({'transform': 'translateX(-350px)'});
+
+		global.Element.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+	});
+
 	test('should start marquee when transitioning into `marqueeOn="render"`', () => {
 		const {rerender} = render(
 			<Marquee marqueeOn="focus" marqueeDelay={0} marqueeOnRenderDelay={0}>
@@ -698,6 +753,32 @@ describe('MarqueeController', () => {
 
 		act(() => jest.advanceTimersByTime(40));
 		expect(marquee1).toHaveStyle({'transform': 'translateX(-125px)'});
+	});
+
+	test('should enter marquee context when component becomes disabled while hovered in sync mode', () => {
+		const {rerender} = render(
+			<Controller>
+				<Marquee marqueeDelay={0} marqueeOn="focus">
+					{ltrText}
+				</Marquee>
+			</Controller>
+		);
+
+		const marquee = screen.getByText(ltrText);
+
+		fireEvent.mouseOver(marquee);
+
+		rerender(
+			<Controller>
+				<Marquee disabled marqueeDelay={0} marqueeOn="focus">
+					{ltrText}
+				</Marquee>
+			</Controller>
+		);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		expect(marquee).toHaveStyle({'--ui-marquee-spacing': '50'});
 	});
 
 	test('should call resetAnimation on content change while focused (marqueeOn="focus")', () => {
