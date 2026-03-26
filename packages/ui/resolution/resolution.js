@@ -68,31 +68,34 @@ const configDefaults = {
 };
 
 /**
- * Calculates a linearly scaled size based on the current workspace dimensions
- * relative to a reference screen (either the base screen or the current screen type).
+ * Calculates a linearly scaled size for 1rem based on the current workspace dimensions.
  *
- * The calculation uses the geometric mean of horizontal and vertical scale factors,
- * constrained between 0.01 and 2.0 for base screen type and 0.005 and 1 for current
- * screen type to prevent extreme scaling.
+ * The calculation determines a scaling factor using the geometric mean of horizontal
+ * and vertical scale factors relative to a reference screen (either the `baseScreen`
+ * or the currently matched `screenTypeObject`).
+ *
+ * The resulting size is rounded to one decimal place and constrained to a minimum
+ * of 1px and a maximum of the `pxPerRem` value defined for the largest screen type
+ * (the last element in `screenTypes`).
  *
  * @function
- * @returns {Number} The calculated pixel size for 1rem.
  * @memberof ui/resolution
+ * @returns {Number} The calculated pixel size for 1rem, clamped between 1 and the
+ *                   maximum defined pxPerRem.
  * @private
  */
 function getLinearSize () {
 	const isCurrentScreen = config.linearScaling.type === linearScalingType.currentScreen;
 	const reportScreen = isCurrentScreen ? screenTypeObject : baseScreen;
-	const minRation = isCurrentScreen ? 0.005 : 0.01;
-	const maxRatio = isCurrentScreen ? 1 : 2;
+	const maxSize = screenTypes.at(-1).pxPerRem;
 
 	const scaleX = workspaceBounds.width / reportScreen.width;
 	const scaleY = workspaceBounds.height / reportScreen.height;
 
 	const ratio = Math.sqrt(scaleX * scaleY);
-	const finalRatio = Math.max(minRation, Math.min(ratio, maxRatio));
+	const size = Math.round(reportScreen.pxPerRem * ratio * 10) / 10;
 
-	return Math.round(reportScreen.pxPerRem * finalRatio * 10) / 10;
+	return Math.max(1, Math.min(size, maxSize));
 }
 
 /**
@@ -280,7 +283,7 @@ function getScreenType (rez) {
  */
 function calculateFontSize (type) {
 	// If linear scaling is enabled, bypass standard screen-type-based calculation and use the dynamic linear size
-	if (config.linearScaling.active) {
+	if (config.linearScaling.active && !type) {
 		return getLinearSize() + 'px';
 	}
 
