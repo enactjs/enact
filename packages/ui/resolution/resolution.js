@@ -38,14 +38,9 @@ const unitToPixelFactors = {
  * @private
  */
 const linearScalingType = {
-	/**
-	 * Scales based on the `baseScreen` (the screen type marked as `base: true`).
-	 */
+	// Scales based on the `baseScreen` (the screen type marked as `base: true`).
 	baseScreen: 'baseScreen',
-
-	/**
-	 * Scales based on the current detected `screenType`.
-	 */
+	 //Scales based on the current detected `screenType`.
 	currentScreen: 'currentScreen'
 };
 
