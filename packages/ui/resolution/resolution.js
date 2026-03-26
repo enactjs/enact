@@ -63,7 +63,7 @@ const configDefaults = {
 	orientationHandling: 'normal',
 	linearScaling: {
 		active: true,
-		type: linearScalingType.baseScreen
+		type: linearScalingType.currentScreen
 	}
 };
 
@@ -72,7 +72,8 @@ const configDefaults = {
  * relative to a reference screen (either the base screen or the current screen type).
  *
  * The calculation uses the geometric mean of horizontal and vertical scale factors,
- * constrained between 0.125 and 2.0 to prevent extreme scaling.
+ * constrained between 0.01 and 2.0 for base screen type and 0.005 and 1 for current
+ * screen type to prevent extreme scaling.
  *
  * @function
  * @returns {Number} The calculated pixel size for 1rem.
@@ -80,13 +81,16 @@ const configDefaults = {
  * @private
  */
 function getLinearSize () {
-	const reportScreen = config.linearScaling.type === linearScalingType.currentScreen ? screenTypeObject : baseScreen;
+	const isCurrentScreen = config.linearScaling.type === linearScalingType.currentScreen;
+	const reportScreen = isCurrentScreen ? screenTypeObject : baseScreen;
+	const minRation = isCurrentScreen ? 0.005 : 0.01;
+	const maxRatio = isCurrentScreen ? 1 : 2;
 
 	const scaleX = workspaceBounds.width / reportScreen.width;
 	const scaleY = workspaceBounds.height / reportScreen.height;
 
 	const ratio = Math.sqrt(scaleX * scaleY);
-	const finalRatio = Math.max(0.125, Math.min(ratio, 2));
+	const finalRatio = Math.max(minRation, Math.min(ratio, maxRatio));
 
 	return Math.round(reportScreen.pxPerRem * finalRatio * 10) / 10;
 }
