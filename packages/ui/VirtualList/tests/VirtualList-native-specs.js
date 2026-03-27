@@ -19,7 +19,7 @@ describe('VirtualList with native scrollMode', () => {
 
 		renderItem = ({index, ...rest}) => {	// eslint-disable-line enact/display-name
 			return (
-				<div {...rest} id={'item' + index}>
+				<div {...rest} data-index={index} id={'item' + index}>
 					{items[index].name}
 				</div>
 			);
@@ -43,6 +43,24 @@ describe('VirtualList with native scrollMode', () => {
 			<VirtualList
 				clientSize={clientSize}
 				dataSize={dataSize}
+				itemRenderer={renderItem}
+				itemSize={itemSize}
+				scrollMode="native"
+			/>
+		);
+
+		const expected = 'Account 0';
+		const actual = screen.getByRole('list').children.item(0).textContent;
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should render a list of \'items\' with horizontal direction', () => {
+		render(
+			<VirtualList
+				clientSize={clientSize}
+				dataSize={dataSize}
+				direction="horizontal"
 				itemRenderer={renderItem}
 				itemSize={itemSize}
 				scrollMode="native"
