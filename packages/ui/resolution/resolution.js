@@ -54,7 +54,7 @@ const configDefaults = {
 	fontSizeHandling: 'scale',
 	orientationHandling: 'normal',
 	linearScaling: {
-		active: true,
+		active: false,
 		type: linearScalingType.currentScreen
 	}
 };
