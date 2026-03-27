@@ -34,13 +34,10 @@ const unitToPixelFactors = {
  *
  * @enum {String}
  * @memberof ui/resolution
- * @readonly
- * @private
+ * @public
  */
 const linearScalingType = {
-	// Scales based on the `baseScreen` (the screen type marked as `base: true`).
 	baseScreen: 'baseScreen',
-	 //Scales based on the current detected `screenType`.
 	currentScreen: 'currentScreen'
 };
 
@@ -592,8 +589,12 @@ function init (args = {}) {
 
 /**
  * @typedef {Object} LinearScalingConfig
- * @property {Boolean} active - Enables linear scaling.
- * @property {('baseScreen'|'currentScreen')} type - Reference screen type.
+ * @memberof ui/resolution
+ * @property {Boolean} active - Enables linear scaling calculation for
+ *           font sizes and unit conversions. Default: `true`.
+ * @property {ui/resolution.linearScalingType} type - Determines the
+ *           reference screen used for linear scaling calculation.
+ *           Default: `linearScalingType.currentScreen`.
  */
 
 /**
@@ -612,12 +613,7 @@ function init (args = {}) {
  *           based on proportional scaling. When set to `'normal'`, uses the standard pxPerRem
  *           value. This is particularly useful for supporting device rotation scenarios.
  *           Default: `'normal'`
- * @property {LinearScalingConfig} [linearScaling] - Configuration for linear scaling mode.
- * @property {Boolean} linearScaling.active - Enables linear scaling calculation for
- *           font sizes and unit conversions. Default: `false`.
- * @property {ui/resolution.linearScalingType} linearScaling.type - Determines the
- *           reference screen used for linear scaling calculation.
- *           Default: `linearScalingType.baseScreenReport`.
+ * @property {LinearScalingConfig} linearScaling - Configuration for linear scaling mode.
  * @public
  */
 
@@ -644,6 +640,7 @@ export {
 	getScreenTypeObject,
 	getScreenType,
 	init,
+	linearScalingType,
 	scale,
 	scaleToRem,
 	selectSrc,

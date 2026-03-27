@@ -1,6 +1,5 @@
 import {
 	calculateFontSize,
-	config,
 	defineScreenTypes,
 	getScreenType,
 	init,
@@ -214,8 +213,6 @@ describe('Resolution Specs', () => {
 	});
 
 	test('should calculate linearly scaled font size based on workspace bounds and current screen', () => {
-		config.linearScaling.type = 'currentScreen';
-
 		screenTypes.forEach((type, index, arr) => {
 			init({measurementNode: {innerWidth: type.width, innerHeight: type.height}});
 			let actual = calculateFontSize();
