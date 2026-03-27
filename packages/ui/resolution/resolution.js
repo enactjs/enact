@@ -29,10 +29,46 @@ const unitToPixelFactors = {
 	'in': 96
 };
 
+/**
+ * Default configuration values.
+ *
+ * See {@link ui/resolution.config} for full documentation.
+ *
+ * @type {Object}
+ * @memberof ui/resolution
+ * @private
+ */
 const configDefaults = {
-	intermediateScreenHandling: 'normal',
-	matchSmallerScreenType: false,
+	fontSizeHandling: 'scale',
 	orientationHandling: 'normal'
+};
+
+/**
+ * Get the closest resolution type based on the `resolution`
+ *
+ * @function
+ * @memberOf ui/resolution
+ *
+ * @param {Object} resolution	The resolution object (must include `height` and `width` properties)
+ * @param {Object[]} types		The resolution types object (must include `name`, `width` and `height` properties)
+ * @returns {String}			Screen type (e.g., `'fhd'`, `'uhd'`, etc.)
+ * @private
+ */
+const getClosestResolutionType = (resolution, types) => {
+	// Calculates the distance between two points (types and rez)
+	const getDistance = (p1, p2) => {
+		return Math.sqrt(Math.pow(p2.width - p1.width, 2) + Math.pow(p2.height - p1.height, 2));
+	};
+
+	// Compares the calculated distances and returns the closest resolution type name that matches current resolution
+	const {name} = types.reduce((prev, curr) => {
+		const distCurr = getDistance(curr, resolution);
+		const distPrev = getDistance(prev, resolution);
+
+		return distCurr < distPrev ? curr : prev;
+	});
+
+	return name;
 };
 
 /**
@@ -142,7 +178,6 @@ function getScreenType (rez) {
 	rez = rez || workspaceBounds;
 
 	const types = screenTypes;
-	let bestMatch = config.matchSmallerScreenType ? types[0].name : types[types.length - 1].name; // Blindly set the first screen type, in case no matches are found later.
 
 	orientation = 'landscape';
 
@@ -153,26 +188,15 @@ function getScreenType (rez) {
 		rez.height = swap;
 	}
 
-	if (config.matchSmallerScreenType) {
-		// Loop through resolutions, first->last, smallest->largest
-		for (let i = 0; i <= types.length - 1; i++) {
-			// Does this screenType definition fit inside the current resolution? If so, save it as the current best match.
-			if (rez.height >= types[i].height && rez.width >= types[i].width) {
-				bestMatch = types[i].name;
-			}
-		}
-	} else {
-		// Loop through resolutions, last->first, largest->smallest
-		for (let i = types.length - 1; i >= 0; i--) {
-			// Does the current resolution fit inside this screenType definition? If so, save it as the current best match.
-			if (rez.height <= types[i].height && rez.width <= types[i].width) {
-				bestMatch = types[i].name;
-			}
+	// Loop through resolutions, last->first, largest->smallest and return in case of exact match.
+	for (let i = types.length - 1; i >= 0; i--) {
+		if (rez.height === types[i].height && rez.width === types[i].width) {
+			return types[i].name;
 		}
 	}
 
 	// Return the name of the closest fitting set of dimensions.
-	return bestMatch;
+	return getClosestResolutionType(rez, types);
 }
 
 /**
@@ -180,7 +204,7 @@ function getScreenType (rez) {
  *
  * This is how the magic happens. This accepts an optional `screenType` name. If one isn't provided,
  * the currently detected screen type is used. This uses the config option `orientationHandling`,
- * which when set to "scale" and the screen is in portrait orientation, will dynamically calculate
+ * which when set to "scale" and the screen is in portrait orientation (such as after screen rotation), will dynamically calculate
  * what the base font size should be, if the width were proportionally scaled down to fit in the portrait space.
  *
  * To use, put the following in your application code:
@@ -191,6 +215,8 @@ function getScreenType (rez) {
  * ri.init();
  * ```
  *
+ * This configuration is particularly useful for applications that support screen rotation and need
+ * to maintain consistent scaling when the device orientation changes from landscape to portrait or vice versa.
  * This has no effect if the screen is in landscape, or if `orientationHandling` is unset.
  *
  * @function
@@ -202,8 +228,7 @@ function getScreenType (rez) {
  */
 function calculateFontSize (type) {
 	const scrObj = getScreenTypeObject(type);
-	const shouldScaleFontSize = (config.intermediateScreenHandling === 'scale') && (config.matchSmallerScreenType ? workspaceBounds.width > scrObj.width && workspaceBounds.height > scrObj.height :
-		workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
+	const shouldScaleFontSize = (config.fontSizeHandling === 'scale') && (workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
 	let size;
 
 	if (orientation === 'portrait' && config.orientationHandling === 'scale') {
@@ -232,6 +257,23 @@ function updateBaseFontSize (size) {
 
 /**
  * Returns the CSS classes for the given `type`.
+ *
+ * This function generates CSS class names that can be used to style components based on
+ * the current screen resolution, orientation, and aspect ratio. The returned classes are
+ * particularly useful for responsive layouts and handling screen rotation scenarios.
+ *
+ * The following CSS classes are returned:
+ * - **Orientation class**: `enact-orientation-landscape` or `enact-orientation-portrait`
+ *   - Applied based on the current screen orientation
+ *   - Updates automatically when device rotation occurs (if dynamic mode is enabled)
+ * - **Resolution class**: `enact-res-{screentype}`
+ *   - Examples: `enact-res-fhd`, `enact-res-uhd`, `enact-res-hd`, `enact-res-qhd`
+ *   - Applied based on the matched screen type
+ * - **Aspect ratio class**: `enact-aspect-ratio-{aspectRatioName}`
+ *   - Examples: `enact-aspect-ratio-hdtv`, `enact-aspect-ratio-cinema`, `enact-aspect-ratio-standard`
+ *   - Applied based on the screen type's aspect ratio name
+ *
+ * Example return value: `'enact-orientation-landscape enact-res-fhd enact-aspect-ratio-hdtv'`
  *
  * @function
  * @memberof ui/resolution
@@ -448,8 +490,19 @@ function selectSrc (src) {
 		// loop through resolutions
 		for (let i = types.length - 1; i >= 0; i--) {
 			let t = types[i].name;
-			if (screenType === t && src[t]) newSrc = src[t];
+
+			// return exact match
+			if (screenType === t && src[t]) return src[t];
 		}
+
+		const srcResolutions = types.filter((type) => type.name in src);
+		const currentScreenTypeResolution = getScreenTypeObject();
+
+		if (srcResolutions.length && currentScreenTypeResolution) {
+			const closestType = getClosestResolutionType(currentScreenTypeResolution, srcResolutions);
+			newSrc = src[closestType];
+		}
+
 		src = newSrc;
 	}
 	return src;
@@ -478,11 +531,34 @@ function init (args = {}) {
 }
 
 /**
- * The current configuration
+ * Configuration options for resolution independence behavior.
  *
- * @type {Object}
+ * @typedef {Object} ResolutionConfig
  * @memberof ui/resolution
- * @private
+ * @property {('normal'|'scale')} fontSizeHandling - Determines how to calculate
+ *           font-size. When set to `'scale'` and the screen is in landscape orientation,
+ *           calculates font-size linearly based on screen resolution. When set to `'normal'`,
+ *           the font-size will be the pxPerRem value of the best match screen type.
+ *           Default: `'scale'`
+ * @property {('normal'|'scale')} orientationHandling - Determines how to handle screen
+ *           orientation and rotation. When set to `'scale'` and the screen is in portrait
+ *           orientation (due to screen rotation), dynamically calculates the base font size
+ *           based on proportional scaling. When set to `'normal'`, uses the standard pxPerRem
+ *           value. This is particularly useful for supporting device rotation scenarios.
+ *           Default: `'normal'`
+ * @public
+ */
+
+/**
+ * Configuration object for resolution independence behavior.
+ *
+ * This object controls how the resolution independence system handles different screen sizes,
+ * orientations, and screen rotation scenarios.
+ * See the details in {@link ui/resolution.ResolutionConfig|ResolutionConfig}
+ *
+ * @type {ui/resolution.ResolutionConfig}
+ * @memberof ui/resolution
+ * @public
  */
 config = Object.assign({}, configDefaults);
 

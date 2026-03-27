@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/util` function `checkPropTypes` to check the prop types of a component
+
+### Fixed
+
+- `spotlight` to focus visible children of elements which do not have `overflow:true`
+
 ## [5.4.2] - 2026-01-28
 
 ### Changed
@@ -13,7 +23,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `ui/VirtulList` not to cut off focused item when scroll by pressing key
 - `ui/VirtualList` not to jump to the top when item size was changed
-- `ui/VirtualList.VirtualGridList` to adjust itemSize properly when resizing window
+- `ui/VirtualList.VirtualList`, `ui/VirtualList.VirtualGridList` to adjust itemSize properly when resizing window
 
 ## [5.4.1] - 2025-12-30
 

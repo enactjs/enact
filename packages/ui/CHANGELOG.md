@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/VirtualList.VirtualList` to adjust itemSize properly when resizing window
+- `ui/VirtualList.VirtualList` to scroll properly when another VirtualList exist
+
 ## [5.4.2] - 2026-01-28
 
 ### Changed

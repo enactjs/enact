@@ -39,16 +39,17 @@ function createMockRefs () {
 				getScrollBounds: jest.fn(() => ({
 					clientWidth: 1920,
 					clientHeight: 1080,
-					scrollWidth: 1000,
-					scrollHeight: 800,
-					maxTop: 200,
-					maxLeft: 200
+					scrollWidth: 2000,      // greater than clientWidth
+					scrollHeight: 2000,     // greater than clientHeight
+					maxTop: 920,            // 2000 - 1080 = 920
+					maxLeft: 80             // 2000 - 1920 = 80
 				})),
 				getMoreInfo: jest.fn(() => ({})),
 				hasDataSizeChanged: false,
 				syncClientSize: jest.fn(() => false),
 				getRtlPositionX: jest.fn((x) => x),
 				calculateMetrics: jest.fn(),
+				didScroll: jest.fn(),
 				props: {}
 			}
 		},
@@ -62,14 +63,16 @@ function createMockRefs () {
 			current: {
 				update: jest.fn(),
 				getContainerRef: jest.fn(() => document.createElement('div')),
-				startHidingScrollbarTrack: jest.fn()
+				startHidingScrollbarTrack: jest.fn(),
+				showScrollbarTrack: jest.fn()
 			}
 		},
 		verticalScrollbarHandle: {
 			current: {
 				update: jest.fn(),
 				getContainerRef: jest.fn(() => document.createElement('div')),
-				startHidingScrollbarTrack: jest.fn()
+				startHidingScrollbarTrack: jest.fn(),
+				showScrollbarTrack: jest.fn()
 			}
 		}
 	};
@@ -122,7 +125,40 @@ describe('useScroll', () => {
 			expect(itemSize.minHeight).toBe(100);
 		});
 
-		test('should NOT scale when ri.scale(1) remains unchanged', () => {
+		test('should scale itemSizes when ri.scale(1) changes from 1 to 2', () => {
+			mockRiScale = jest.fn((val) => val);
+
+			const itemSize = 100;
+			const itemSizes = [100, 100, 100, 100, 100];
+
+			const mocks = createMockRefs();
+
+			const props = {
+				itemRenderer: jest.fn(),
+				itemSize,
+				itemSizes,
+				direction: 'vertical',
+				scrollMode: 'translate',
+				...mocks,
+				assignProperties: jest.fn(),
+				horizontalScrollbar: 'auto',
+				verticalScrollbar: 'auto'
+			};
+
+			renderHook(() => useScrollBase(props));
+
+			mockRiScale = jest.fn(() => 2);
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				fireEvent(window, new Event('resize'));
+				jest.runAllTimers();
+			});
+
+			expect(itemSizes[1]).toBe(200);
+		});
+
+		test('should NOT scale itemSize when ri.scale(1) remains unchanged', () => {
 			mockRiScale = jest.fn((val) => val);
 
 			const itemSize = {
@@ -153,6 +189,37 @@ describe('useScroll', () => {
 
 			expect(itemSize.minWidth).toBe(100);
 			expect(itemSize.minHeight).toBe(50);
+		});
+
+		test('should NOT scale itemSizes when ri.scale(1) remains unchanged', () => {
+			mockRiScale = jest.fn((val) => val);
+
+			const itemSize = 100;
+			const itemSizes = [100, 100, 100, 100, 100];
+
+			const mocks = createMockRefs();
+
+			const props = {
+				itemRenderer: jest.fn(),
+				itemSize,
+				itemSizes,
+				direction: 'vertical',
+				scrollMode: 'translate',
+				...mocks,
+				assignProperties: jest.fn(),
+				horizontalScrollbar: 'auto',
+				verticalScrollbar: 'auto'
+			};
+
+			renderHook(() => useScrollBase(props));
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				fireEvent(window, new Event('resize'));
+				jest.runAllTimers();
+			});
+
+			expect(itemSizes[1]).toBe(100);
 		});
 
 		test('should NOT scale when minWidth is missing', () => {
@@ -281,6 +348,76 @@ describe('useScroll', () => {
 
 			expect(roundedTargetX).toEqual(90.4);
 			expect(roundedTargetY).toEqual(80.8);
+		});
+	});
+
+	describe('Native scroll behavior', () => {
+		beforeEach(() => {
+			jest.useFakeTimers();
+			mockPlatform = {chrome: 132};
+			mockRiScale = jest.fn((val) => val);
+		});
+
+		afterEach(() => {
+			jest.runOnlyPendingTimers();
+			jest.useRealTimers();
+		});
+
+		test('should update scroll position from scroll event', () => {
+			const mocks = createMockRefs();
+
+			const props = {
+				direction: 'vertical',
+				scrollMode: 'native',
+				...mocks,
+				assignProperties: jest.fn(),
+				horizontalScrollbar: 'auto',
+				verticalScrollbar: 'auto'
+			};
+
+			renderHook(() => useScrollBase(props));
+
+			const scrollEvent = new Event('scroll');
+			Object.defineProperty(scrollEvent, 'target', {
+				value: {scrollLeft: 50, scrollTop: 150},
+				writable: false
+			});
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				fireEvent(mocks.scrollContentRef.current, scrollEvent);
+			});
+
+			expect(mocks.scrollContentHandle.current.didScroll).toHaveBeenCalledWith(50, 150);
+		});
+
+		test('should handle RTL scroll position correctly', () => {
+			const mocks = createMockRefs();
+			mockPlatform = {chrome: 132};
+
+			const props = {
+				direction: 'horizontal',
+				scrollMode: 'native',
+				rtl: true,
+				...mocks,
+				assignProperties: jest.fn(),
+				horizontalScrollbar: 'auto',
+				verticalScrollbar: 'auto'
+			};
+
+			renderHook(() => useScrollBase(props));
+
+			const scrollEvent = new Event('scroll');
+			Object.defineProperty(scrollEvent, 'target', {
+				value: {scrollLeft: -50, scrollTop: 0}
+			});
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				fireEvent(mocks.scrollContentRef.current, scrollEvent);
+			});
+
+			expect(mocks.scrollContentHandle.current.didScroll).toHaveBeenCalledWith(50, 0);
 		});
 	});
 });

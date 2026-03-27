@@ -29,8 +29,13 @@
     "classnames": "^2.5.1",
     "prop-types": "^15.8.1",
     "ramda": "^0.32.0",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "warning": "^4.0.3"
+  },
+  "overrides": {
+    "prop-types": {
+      "react-is": "^19.2.3"
+    }
   }
 }

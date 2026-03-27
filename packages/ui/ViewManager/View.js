@@ -2,7 +2,7 @@
  * Exports the {@link ui/ViewManager.View} component.
  */
 
-import {Job} from '@enact/core/util';
+import {checkPropTypes, Job} from '@enact/core/util';
 import {cloneElement, Children, Component} from 'react';
 import PropTypes from 'prop-types';
 
@@ -24,7 +24,6 @@ const clearEntering = ({entering}) => {
  * @private
  */
 class View extends Component {
-
 	static propTypes = /** @lends ui/ViewManager.View.prototype */ {
 		children: PropTypes.node.isRequired,
 
@@ -158,6 +157,8 @@ class View extends Component {
 
 	constructor (props) {
 		super(props);
+		checkPropTypes(this, props);
+
 		this.animation = null;
 		this.state = {
 			entering: !props.appearing
@@ -177,6 +178,7 @@ class View extends Component {
 	}
 
 	componentDidUpdate (prevProps) {
+		checkPropTypes(this, this.props, prevProps);
 		this.changeDirection = this.shouldChangeDirection(prevProps, this.props);
 	}
 

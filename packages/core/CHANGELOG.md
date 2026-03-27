@@ -2,11 +2,21 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/util` function `checkPropTypes` to check the prop types of a component
+
 ## [5.4.2] - 2026-01-28
 
 ### Changed
 
 - `core/platform` to support `safari` 16.6, `chrome` 119, and `firefox` 128 or later
+
+### Fixed
+
+- `core/kind` to properly apply `defaultProps` to functional components
 
 ## [5.4.1] - 2025-12-30
 
