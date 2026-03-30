@@ -1,5 +1,6 @@
 import {
 	calculateFontSize,
+	config,
 	defineScreenTypes,
 	getScreenType,
 	init,
@@ -213,6 +214,7 @@ describe('Resolution Specs', () => {
 	});
 
 	test('should calculate linearly scaled font size based on workspace bounds and current screen', () => {
+		config.linearScaling.active = true;
 		screenTypes.forEach((type, index, arr) => {
 			init({measurementNode: {innerWidth: type.width, innerHeight: type.height}});
 			let actual = calculateFontSize();
@@ -228,5 +230,6 @@ describe('Resolution Specs', () => {
 			const expectCondition = arr.length - 1 === index ? 'toEqual' : 'toBeGreaterThan';
 			expect(actual)[expectCondition](type.pxPerRem);
 		});
+		config.linearScaling.active = false;
 	});
 });
