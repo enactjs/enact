@@ -41,7 +41,6 @@ const ResolutionDecoratorView = ({
 	currentFontSize,
 	screenInfo
 }) => {
-	// eslint-disable-next-line enact/display-name
 	const itemRenderer = useCallback(({index, ...rest}) => {
 		return <Item {...rest}>Item {index}</Item>;
 	}, []);
