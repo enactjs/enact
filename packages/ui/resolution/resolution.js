@@ -228,7 +228,7 @@ function getScreenType (rez) {
  */
 function calculateFontSize (type) {
 	const scrObj = getScreenTypeObject(type);
-	const shouldScaleFontSize = (config.fontSizeHandling === 'scale') && (workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
+	const shouldScaleFontSize = (config.fontSizeHandling === 'scale') && (workspaceBounds.width > scrObj.width && workspaceBounds.height > scrObj.height);
 	let size;
 
 	if (orientation === 'portrait' && config.orientationHandling === 'scale') {
@@ -236,7 +236,7 @@ function calculateFontSize (type) {
 	} else {
 		size = scrObj.pxPerRem;
 		if (orientation === 'landscape' && shouldScaleFontSize) {
-			size = parseInt(workspaceBounds.height * scrObj.pxPerRem / scrObj.height);
+			size = workspaceBounds.height * scrObj.pxPerRem / scrObj.height;
 		}
 	}
 	return size + 'px';
