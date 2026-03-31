@@ -4,8 +4,16 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Changed
+
+- `ui/Marquee` to reduce redundant lifecycle work during high-frequency re-renders
+### Added
+
+- `ui/resolution` Added support for linear scaling type
+
 ### Fixed
 
+- `ui/resolution` to display the components accordingly on wide resolutions
 - `ui/VirtualList.VirtualList` to adjust itemSize properly when resizing window
 - `ui/VirtualList.VirtualList` to scroll properly when another VirtualList exist
 

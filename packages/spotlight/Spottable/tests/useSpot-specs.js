@@ -220,6 +220,26 @@ describe('useSpottable', () => {
 
 			expect(spy).not.toHaveBeenCalled();
 		});
+
+		test('should emulate {onMouseDown} for a custom selection key', () => {
+			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} emulateMouse onMouseDown={spy} selectionKeys={[32]} />);
+			const div = screen.getByTestId(id);
+
+			fireEvent.keyDown(div, makeKeyEvent(32));
+
+			expect(spy).toHaveBeenCalledTimes(1);
+		});
+
+		test('should not emulate {onMouseDown} for a non-selection key', () => {
+			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} emulateMouse onMouseDown={spy} selectionKeys={[13]} />);
+			const div = screen.getByTestId(id);
+
+			fireEvent.keyDown(div, makeKeyEvent(65));
+
+			expect(spy).not.toHaveBeenCalled();
+		});
 	});
 
 	describe('shouldComponentUpdate', () => {
@@ -249,6 +269,17 @@ describe('useSpottable', () => {
 			const expected = 2;
 
 			expect(spy).toHaveBeenCalledTimes(expected);
+		});
+
+		test('should update when {spotlightDisabled} changes', () => {
+			const spy = jest.fn((props) => <div {...props} />);
+			const {rerender} = render(
+				<SpottableComponent component={spy} data-testid={id} spotlightDisabled />
+			);
+
+			rerender(<SpottableComponent component={spy} data-testid={id} spotlightDisabled={false} />);
+
+			expect(spy).toHaveBeenCalledTimes(2);
 		});
 
 		test('should not re-render when focused', () => {

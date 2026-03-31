@@ -13,7 +13,7 @@ import {checkPropTypes} from '@enact/core/util';
 import {WithRef} from '@enact/core/internal/WithRef';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import {Component, useCallback, useRef} from 'react';
+import {useCallback, useReducer, useRef} from 'react';
 
 import {spottableClass, useSpottable} from './useSpottable';
 
@@ -92,6 +92,11 @@ const defaultConfig = {
  *	...
  *	const SpottableComponent = Spottable(Component);
  * ```
+ *
+ * When a component receives spotlight focus, the `data-spotlight-focused` attribute is
+ * automatically applied to its DOM node and removed on blur. This provides a stable CSS hook
+ * for styling focused components without any additional configuration:
+ *
  * @class Spottable
  * @memberof spotlight/Spottable
  * @param  {Object} defaultConfig Set of default configuration parameters
@@ -149,8 +154,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		rest.tabIndex = tabIndex;
 
 		const handlers = useHandlers(spotHandlers, rest, spot);
-
-		delete rest.spotlightId;
 
 		return (
 			<WrappedWithRef
@@ -267,18 +270,9 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	};
 
 	// eslint-disable-next-line no-shadow
-	class Spottable extends Component {
-		componentDidMount () {
-			this.forceUpdate();
-		}
-
-		handleForceUpdate = () => {
-			this.forceUpdate();
-		};
-
-		render () {
-			return <SpottableBase {...this.props} handleForceUpdate={this.handleForceUpdate} />;
-		}
+	function Spottable (props) {
+		const [, forceUpdate] = useReducer(x => x + 1, 0);
+		return <SpottableBase {...props} handleForceUpdate={forceUpdate} />;
 	}
 
 	return Spottable;

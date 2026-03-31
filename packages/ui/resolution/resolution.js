@@ -30,6 +30,18 @@ const unitToPixelFactors = {
 };
 
 /**
+ * Enumerates the available reporting types for linear scaling.
+ *
+ * @enum {String}
+ * @memberof ui/resolution
+ * @public
+ */
+const linearScalingType = {
+	baseScreen: 'baseScreen',
+	currentScreen: 'currentScreen'
+};
+
+/**
  * Default configuration values.
  *
  * See {@link ui/resolution.config} for full documentation.
@@ -40,22 +52,75 @@ const unitToPixelFactors = {
  */
 const configDefaults = {
 	fontSizeHandling: 'scale',
-	orientationHandling: 'normal'
+	orientationHandling: 'normal',
+	linearScaling: {
+		active: false,
+		type: linearScalingType.currentScreen
+	}
 };
 
 /**
- * Get the closest resolution type based on the `resolution`
+ * Calculates a linearly scaled size for 1rem based on the current workspace dimensions.
+ *
+ * The calculation determines a scaling factor using the geometric mean of horizontal
+ * and vertical scale factors relative to a reference screen (either the `baseScreen`
+ * or the currently matched `screenTypeObject`).
+ *
+ * The resulting size is rounded to one decimal place and constrained to a minimum
+ * of 1px and a maximum of the `pxPerRem` value defined for the largest screen type
+ * (the last element in `screenTypes`).
+ *
+ * @function
+ * @memberof ui/resolution
+ * @returns {Number} The calculated pixel size for 1rem, clamped between 1 and the
+ *                   maximum defined pxPerRem.
+ * @private
+ */
+function getLinearSize () {
+	const isCurrentScreen = config.linearScaling.type === linearScalingType.currentScreen;
+	const reportScreen = isCurrentScreen ? screenTypeObject : baseScreen;
+	const maxSize = screenTypes.at(-1).pxPerRem;
+
+	const scaleX = workspaceBounds.width / reportScreen.width;
+	const scaleY = workspaceBounds.height / reportScreen.height;
+
+	const ratio = Math.sqrt(scaleX * scaleY);
+	const size = Math.round(reportScreen.pxPerRem * ratio * 10) / 10;
+
+	return Math.max(1, Math.min(size, maxSize));
+}
+
+/**
+ * Calculates the scale factor and determines if scaling is necessary
+ * for the landscape workspace based on the screen type.
+ *
+ * @function
+ * @memberof ui/resolution
+ * @param {String} [type=screenType] 	The screen type identifier used to retrieve dimensions. Defaults to the global
+ * 										or scoped `screenType`.
+ * @returns {Object} 					Returns an object containing the scaling data.
+ * @private
+ */
+const getLandscapeScaleFactor = (type = screenType) => {
+	if (!type) return {shouldScale: false, factor: 1};
+
+	const scrObj = getScreenTypeObject(type);
+	const shouldScale = workspaceBounds.width < scrObj.width || workspaceBounds.height < scrObj.height;
+	return {shouldScale, factor: workspaceBounds.height / scrObj.height};
+};
+
+/**
+ * Get the closest resolution type based on the `resolution`.
  *
  * @function
  * @memberOf ui/resolution
- *
- * @param {Object} resolution	The resolution object (must include `height` and `width` properties)
- * @param {Object[]} types		The resolution types object (must include `name`, `width` and `height` properties)
- * @returns {String}			Screen type (e.g., `'fhd'`, `'uhd'`, etc.)
+ * @param {Object} resolution  The resolution object (must include `height` and `width` properties).
+ * @param {Object[]} types     The resolution types object (must include `name`, `width`, `height`, and `aspectRatioName` properties).
+ * @returns {String}           Screen type (e.g., `'fhd'`, `'uhd'`, etc.).
  * @private
  */
 const getClosestResolutionType = (resolution, types) => {
-	// Calculates the distance between two points (types and rez)
+	// Calculates the distance between two resolutions using their width and height as coordinates (x, y)
 	const getDistance = (p1, p2) => {
 		return Math.sqrt(Math.pow(p2.width - p1.width, 2) + Math.pow(p2.height - p1.height, 2));
 	};
@@ -227,8 +292,13 @@ function getScreenType (rez) {
  * @public
  */
 function calculateFontSize (type) {
+	// If linear scaling is enabled, bypass standard screen-type-based calculation and use the dynamic linear size
+	if (config.linearScaling.active && !type) {
+		return getLinearSize() + 'px';
+	}
+
 	const scrObj = getScreenTypeObject(type);
-	const shouldScaleFontSize = (config.fontSizeHandling === 'scale') && (workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
+	const shouldScaleFontSize = (config.fontSizeHandling === 'scale') && (workspaceBounds.width < scrObj.width || workspaceBounds.height < scrObj.height);
 	let size;
 
 	if (orientation === 'portrait' && config.orientationHandling === 'scale') {
@@ -236,7 +306,7 @@ function calculateFontSize (type) {
 	} else {
 		size = scrObj.pxPerRem;
 		if (orientation === 'landscape' && shouldScaleFontSize) {
-			size = parseInt(workspaceBounds.height * scrObj.pxPerRem / scrObj.height);
+			size = workspaceBounds.height * scrObj.pxPerRem / scrObj.height;
 		}
 	}
 	return size + 'px';
@@ -307,7 +377,16 @@ function getResolutionClasses (type = screenType) {
  */
 function getRiRatio (type = screenType) {
 	if (type && baseScreen) {
-		const ratio = getUnitToPixelFactors(type) / getUnitToPixelFactors(baseScreen.name);
+		let ratio = getUnitToPixelFactors(type) / getUnitToPixelFactors(baseScreen.name);
+
+		if (orientation === 'landscape' && config.fontSizeHandling === 'scale') {
+			const {shouldScale, factor} = getLandscapeScaleFactor(type);
+
+			if (shouldScale) {
+				ratio *= factor;
+			}
+		}
+
 		if (type === screenType) {
 			// cache this if it's for our current screen type.
 			riRatio = ratio;
@@ -326,6 +405,11 @@ function getRiRatio (type = screenType) {
  * @returns {Number}          pixels per rem
  */
 function getUnitToPixelFactors (type = screenType) {
+	// Use linear scaling for the current screen type if active.
+	if (config.linearScaling.active && (!type || type === screenType)) {
+		return getLinearSize();
+	}
+
 	if (type) {
 		return getScreenTypeObject(type).pxPerRem;
 	}
@@ -411,8 +495,16 @@ function scale (px) {
  */
 function unit (pixels, toUnit) {
 	if (!toUnit || !unitToPixelFactors[toUnit]) return;
-	if (typeof pixels === 'string' && pixels.substr(-2) === 'px') pixels = parseInt(pixels.substr(0, pixels.length - 2));
+	if (typeof pixels === 'string' && pixels.substring(-2) === 'px') pixels = parseInt(pixels.substring(0, pixels.length - 2));
 	if (typeof pixels !== 'number') return;
+
+	if (screenType && orientation === 'landscape' && config.fontSizeHandling === 'scale') {
+		const {shouldScale, factor} = getLandscapeScaleFactor();
+
+		if (shouldScale) {
+			return (pixels / factor / unitToPixelFactors[toUnit]) + '' + toUnit;
+		}
+	}
 
 	return (pixels / unitToPixelFactors[toUnit]) + '' + toUnit;
 }
@@ -531,6 +623,16 @@ function init (args = {}) {
 }
 
 /**
+ * @typedef {Object} LinearScalingConfig
+ * @memberof ui/resolution
+ * @property {Boolean} active - Enables linear scaling calculation for
+ *           font sizes and unit conversions. Default: `true`.
+ * @property {ui/resolution.linearScalingType} type - Determines the
+ *           reference screen used for linear scaling calculation.
+ *           Default: `linearScalingType.currentScreen`.
+ */
+
+/**
  * Configuration options for resolution independence behavior.
  *
  * @typedef {Object} ResolutionConfig
@@ -546,6 +648,7 @@ function init (args = {}) {
  *           based on proportional scaling. When set to `'normal'`, uses the standard pxPerRem
  *           value. This is particularly useful for supporting device rotation scenarios.
  *           Default: `'normal'`
+ * @property {LinearScalingConfig} linearScaling - Configuration for linear scaling mode.
  * @public
  */
 
@@ -572,6 +675,7 @@ export {
 	getScreenTypeObject,
 	getScreenType,
 	init,
+	linearScalingType,
 	scale,
 	scaleToRem,
 	selectSrc,

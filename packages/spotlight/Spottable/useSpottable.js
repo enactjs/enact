@@ -54,24 +54,25 @@ const REMOTE_OK_KEY = 16777221;
  * @private
  */
 
+const EMPTY_ATTRIBUTES = {};
+
 const useSpottable = ({emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
 	const hook = useClass(SpottableCore, {emulateMouse});
-	const context = useRef({
+	const contextRef = useRef({
 		prevSpotlightDisabled: spotlightDisabled,
 		spotlightDisabled
 	});
+	const context = contextRef.current;
 
-	context.current = {
-		prevSpotlightDisabled: context.current.spotlightDisabled,
-		spotlightDisabled
-	};
+	const attributes = props.spotlightId ? {'data-spotlight-id': props.spotlightId} : EMPTY_ATTRIBUTES;
 
-	let attributes = {};
-	if (props.spotlightId) {
-		attributes['data-spotlight-id'] = props.spotlightId;
+	if (context.spotlightDisabled !== spotlightDisabled) { // eslint-disable-line react-hooks/refs
+		// Mutate in-place to avoid a new object allocation on every render.
+		context.prevSpotlightDisabled = context.spotlightDisabled; // eslint-disable-line react-hooks/refs
+		context.spotlightDisabled = spotlightDisabled; // eslint-disable-line react-hooks/refs
 	}
 
-	hook.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context.current);
+	hook.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context); // eslint-disable-line react-hooks/refs
 
 	useLayoutEffect(() => {
 		hook.load(getSpotRef() || null);
