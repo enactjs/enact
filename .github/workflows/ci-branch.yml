@@ -5,6 +5,9 @@ on:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
   group: ci-branch-${{ github.event.pull_request.number }}
   cancel-in-progress: true
