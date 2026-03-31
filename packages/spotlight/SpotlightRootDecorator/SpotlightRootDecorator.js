@@ -13,6 +13,7 @@ import {Component} from 'react';
 import {spottableClass} from '../Spottable';
 import {rootContainerId} from '../src/container';
 import {activateInputType, applyInputTypeToNode, getInputInfo, getInputType, setInputType} from '../src/inputType';
+import {setFocusEffectClass} from '../src/focusEffect';
 import Spotlight from '../src/spotlight';
 
 import './debug.less';
@@ -24,6 +25,24 @@ import './debug.less';
  * @memberof spotlight/SpotlightRootDecorator.SpotlightRootDecorator
  */
 const defaultConfig = {
+	/**
+	 * A CSS class name to apply globally to every spottable component when it receives spotlight focus.
+	 *
+	 * This is the declarative equivalent of calling `setFocusEffectClass` imperatively. It acts as
+	 * an app-wide default
+	 *
+	 * Example:
+	 * ```js
+	 * const App = SpotlightRootDecorator({focusEffectClass: css.focusClass}, AppBase);
+	 * ```
+	 *
+	 * @type {String}
+	 * @default null
+	 * @public
+	 * @memberof spotlight/SpotlightRootDecorator.SpotlightRootDecorator.defaultConfig
+	 */
+	focusEffectClass: null,
+
 	/**
 	 * When `true`, the contents of the component will not receive spotlight focus after being rendered.
 	 *
@@ -64,7 +83,7 @@ const defaultConfig = {
  * @hoc
  */
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {noAutoFocus, rootId} = config;
+	const {focusEffectClass, noAutoFocus, rootId} = config;
 
 	return class extends Component {
 		static displayName = 'SpotlightRootDecorator';
@@ -73,6 +92,11 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.containerNode = null;
+
+			// Apply global focus effect class when provided via HoC config.
+			if (focusEffectClass) {
+				setFocusEffectClass(focusEffectClass);
+			}
 
 			if (typeof window === 'object') {
 				Spotlight.initialize({
@@ -182,5 +206,6 @@ export {
 	SpotlightRootDecorator,
 	activateInputType,
 	getInputType,
+	setFocusEffectClass,
 	setInputType
 };

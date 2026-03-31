@@ -183,6 +183,30 @@ class SpottableCore {
 		return true;
 	};
 
+	/**
+	 * Applies the `data-spotlight-focused` attribute and any custom focus class to `this.node`.
+	 * Uses direct DOM manipulation to avoid a React re-render on every focus change.
+	 *
+	 * @private
+	 */
+	applyFocusEffect () {
+		if (!this.node) return;
+
+		// Always set the attribute so CSS authors can use [data-spotlight-focused] selectors.
+		this.node.setAttribute('data-spotlight-focused', '');
+	}
+
+	/**
+	 * Removes the `data-spotlight-focused` attribute.
+	 *
+	 * @private
+	 */
+	removeFocusEffect () {
+		if (!this.node) return;
+
+		this.node.removeAttribute('data-spotlight-focused');
+	}
+
 	handle = handle.bind(this);
 
 	handleKeyDown = this.handle(
@@ -211,6 +235,7 @@ class SpottableCore {
 
 		if (ev.currentTarget === ev.target) {
 			this.isFocused = true;
+			this.applyFocusEffect();
 		}
 
 		if (Spotlight.isMuted(ev.target)) {
@@ -226,6 +251,8 @@ class SpottableCore {
 
 		if (ev.currentTarget === ev.target) {
 			this.isFocused = false;
+			this.removeFocusEffect();
+
 			if (this.isFocusedWhenDisabled) {
 				this.isFocusedWhenDisabled = false;
 				// We only need to trigger a rerender if a focused item becomes disabled and still needs its focus.
