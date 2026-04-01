@@ -44,20 +44,46 @@ const configDefaults = {
 };
 
 /**
- * Get the closest resolution type based on the `resolution`
+ * Calculates the scaling factor for landscape orientation based on the current
+ * workspace height and the target screen type's height.
+ *
+ * @function
+ * @param {Object}    params             The parameters object.
+ * @param {String}    [params.type]      The screen type key. Used to look up height if `scrHeight` is not provided.
+ * @param {Number}    [params.scrHeight] The explicit height of the screen type to scale against.
+ *
+ * @returns {Number}                     The calculated scale factor (workspace height / reference height).
+ * @private
+ */
+const getLandscapeScaleFactor = ({type, scrHeight}) => {
+	const height = scrHeight ? scrHeight : getScreenTypeObject(type).height;
+	return workspaceBounds.height / height;
+}
+
+/**
+ * Get the closest resolution type based on the `resolution`.
+ *
+ * This method uses a hybrid distance formula that prioritizes matching the aspect ratio
+ * (shape) of the screen over the raw pixel dimensions. This ensures that wide-screen
+ * displays are matched to appropriate wide-screen profiles even if a standard 16:9
+ * profile is numerically closer in pixel count.
  *
  * @function
  * @memberOf ui/resolution
- *
- * @param {Object} resolution	The resolution object (must include `height` and `width` properties)
- * @param {Object[]} types		The resolution types object (must include `name`, `width` and `height` properties)
- * @returns {String}			Screen type (e.g., `'fhd'`, `'uhd'`, etc.)
+ * @param {Object} resolution  The resolution object (must include `height` and `width` properties).
+ * @param {Object[]} types     The resolution types object (must include `name`, `width`, `height`, and `aspectRatioName` properties).
+ * @returns {String}           Screen type (e.g., `'fhd'`, `'uhd'`, etc.).
  * @private
  */
 const getClosestResolutionType = (resolution, types) => {
-	// Calculates the distance between two points (types and rez)
+	// Calculates the distance between two points with the prioritised screen ratio
 	const getDistance = (p1, p2) => {
-		return Math.sqrt(Math.pow(p2.width - p1.width, 2) + Math.pow(p2.height - p1.height, 2));
+		const targetRatio = p2.width / p2.height;
+		const currentRatio = p1.width / p1.height;
+		const ratioDifference = Math.abs(Math.log(targetRatio) - Math.log(currentRatio));
+		const sizeDifference = Math.sqrt(Math.pow(p2.width - p1.width, 2) + Math.pow(p2.height - p1.height, 2));
+
+		return sizeDifference + ratioDifference * 1000;
 	};
 
 	// Compares the calculated distances and returns the closest resolution type name that matches current resolution
@@ -228,7 +254,7 @@ function getScreenType (rez) {
  */
 function calculateFontSize (type) {
 	const scrObj = getScreenTypeObject(type);
-	const shouldScaleFontSize = (config.fontSizeHandling === 'scale') && (workspaceBounds.width > scrObj.width && workspaceBounds.height > scrObj.height);
+	const shouldScaleFontSize = (config.fontSizeHandling === 'scale') && (workspaceBounds.width < scrObj.width || workspaceBounds.height < scrObj.height);
 	let size;
 
 	if (orientation === 'portrait' && config.orientationHandling === 'scale') {
@@ -236,7 +262,7 @@ function calculateFontSize (type) {
 	} else {
 		size = scrObj.pxPerRem;
 		if (orientation === 'landscape' && shouldScaleFontSize) {
-			size = workspaceBounds.height * scrObj.pxPerRem / scrObj.height;
+			size = getLandscapeScaleFactor({scrHeight: scrObj.height}) * scrObj.pxPerRem;
 		}
 	}
 	return size + 'px';
@@ -307,7 +333,17 @@ function getResolutionClasses (type = screenType) {
  */
 function getRiRatio (type = screenType) {
 	if (type && baseScreen) {
-		const ratio = getUnitToPixelFactors(type) / getUnitToPixelFactors(baseScreen.name);
+		let ratio = getUnitToPixelFactors(type) / getUnitToPixelFactors(baseScreen.name);
+
+		if (orientation === 'landscape' && config.fontSizeHandling === 'scale') {
+			const scrObj = getScreenTypeObject(type);
+			const shouldScale = workspaceBounds.width < scrObj.width || workspaceBounds.height < scrObj.height
+
+			if (shouldScale) {
+				ratio *= getLandscapeScaleFactor({type});
+			}
+		}
+
 		if (type === screenType) {
 			// cache this if it's for our current screen type.
 			riRatio = ratio;
