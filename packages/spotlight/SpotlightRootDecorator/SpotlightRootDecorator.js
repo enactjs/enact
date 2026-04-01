@@ -12,8 +12,8 @@ import {Component} from 'react';
 
 import {spottableClass} from '../Spottable';
 import {rootContainerId} from '../src/container';
-import {activateInputType, applyInputTypeToNode, getInputInfo, getInputType, setInputType} from '../src/inputType';
 import {setFocusEffectClass} from '../src/focusEffect';
+import {activateInputType, applyInputTypeToNode, getInputInfo, getInputType, setInputType} from '../src/inputType';
 import Spotlight from '../src/spotlight';
 
 import './debug.less';
@@ -93,7 +93,6 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.containerNode = null;
 
-			// Apply global focus effect class when provided via HoC config.
 			if (focusEffectClass) {
 				setFocusEffectClass(focusEffectClass);
 			}

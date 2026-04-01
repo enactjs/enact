@@ -30,7 +30,6 @@ const focusEffect = {
  */
 const setFocusEffectClass = (className) => {
 	focusEffect.className = className || null;
-	console.log(focusEffect, className);
 };
 
 /**
