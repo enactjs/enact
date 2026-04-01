@@ -1,7 +1,7 @@
 /**
  * Manages the global spotlight focus effect configuration.
  *
- * App developers can call `setFocusEffectClass` once (e.g. in their app root) to apply a
+ * App developers can set `focusEffectClass` once (e.g. in their app root) to apply a
  * custom CSS class to every focused spottable component.
  *
  * example: const App = SpotlightRootDecorator({ focusEffectClass: css.appFocusClass }, AppBase);
@@ -30,8 +30,19 @@ const focusEffect = {
  */
 const setFocusEffectClass = (className) => {
 	focusEffect.className = className || null;
+	console.log(focusEffect, className);
 };
 
+/**
+ * Returns the currently configured global focus effect class, or `null` if none is set.
+ *
+ * @returns {String|null}
+ * @memberof spotlight/focusEffect
+ * @private
+ */
+const getFocusEffectClass = () => focusEffect.className;
+
 export {
+	getFocusEffectClass,
 	setFocusEffectClass
 };

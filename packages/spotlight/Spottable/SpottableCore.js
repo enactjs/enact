@@ -2,6 +2,7 @@ import {forwardCustom, handle, preventDefault, stop} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 
 import {getContainersForNode} from '../src/container';
+import {getFocusEffectClass} from "../src/focusEffect";
 import {getDirection, Spotlight} from '../src/spotlight';
 
 const REMOTE_OK_KEY = 16777221;
@@ -55,6 +56,7 @@ class SpottableCore {
 		// Used to indicate that we want to stop propagation on blur events that occur as a
 		// result of this component imperatively blurring itself on focus when spotlightDisabled
 		this.shouldPreventBlur = false;
+		this.appliedFocusClass = null
 	}
 
 	setPropsAndContext (props, context) {
@@ -187,17 +189,28 @@ class SpottableCore {
 	 * Applies the `data-spotlight-focused` attribute and any custom focus class to `this.node`.
 	 * Uses direct DOM manipulation to avoid a React re-render on every focus change.
 	 *
+	 * Priority: `data-spotlight-focused` attribute > global `focusEffectClass` value.
+	 *
 	 * @private
 	 */
 	applyFocusEffect () {
 		if (!this.node) return;
 
-		// Always set the attribute so CSS authors can use [data-spotlight-focused] selectors.
 		this.node.setAttribute('data-spotlight-focused', '');
+
+		const focusClass = getFocusEffectClass();
+		if (focusClass) {
+			this.appliedFocusClass = focusClass;
+			focusClass.split(' ').forEach((cls) => {
+				if (cls) this.node.classList.add(cls);
+			});
+		}
 	}
 
 	/**
-	 * Removes the `data-spotlight-focused` attribute.
+	 * Removes the `data-spotlight-focused` attribute and any previously applied custom focus class
+	 * from `this.node`. Cleans up exactly what `applyFocusEffect` added, regardless of whether
+	 * props have changed between focus and blur.
 	 *
 	 * @private
 	 */
@@ -205,6 +218,13 @@ class SpottableCore {
 		if (!this.node) return;
 
 		this.node.removeAttribute('data-spotlight-focused');
+
+		if (this.appliedFocusClass) {
+			this.appliedFocusClass.split(' ').forEach((cls) => {
+				if (cls) this.node.classList.remove(cls);
+			});
+			this.appliedFocusClass = null;
+		}
 	}
 
 	handle = handle.bind(this);
