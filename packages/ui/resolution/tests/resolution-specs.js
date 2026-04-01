@@ -164,7 +164,7 @@ describe('Resolution Specs', () => {
 		// XGA
 		measurementNode = {innerWidth: XGA.width, innerHeight: XGA.height};
 		init({measurementNode});
-		expect(selectSrc(src)).toBe(src.vga);
+		expect(selectSrc(src)).toBe(src.hd);
 
 		// HD
 		measurementNode = {innerWidth: HD.width, innerHeight: HD.height};

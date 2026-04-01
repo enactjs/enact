@@ -76,14 +76,9 @@ const getLandscapeScaleFactor = ({type, scrHeight}) => {
  * @private
  */
 const getClosestResolutionType = (resolution, types) => {
-	// Calculates the distance between two points with the prioritised screen ratio
+	// Calculates the distance between two resolutions using their width and height as coordinates (x, y)
 	const getDistance = (p1, p2) => {
-		const targetRatio = p2.width / p2.height;
-		const currentRatio = p1.width / p1.height;
-		const ratioDifference = Math.abs(Math.log(targetRatio) - Math.log(currentRatio));
-		const sizeDifference = Math.sqrt(Math.pow(p2.width - p1.width, 2) + Math.pow(p2.height - p1.height, 2));
-
-		return sizeDifference + ratioDifference * 1000;
+		return Math.sqrt(Math.pow(p2.width - p1.width, 2) + Math.pow(p2.height - p1.height, 2));
 	};
 
 	// Compares the calculated distances and returns the closest resolution type name that matches current resolution
