@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Added
+
+- `spotlight/SpotlightRootDecorator` config `focusEffectClass` apply globally a css class to every spottable component when it receives spotlight focus.
+
 ### Fixed
 
 - `spotlight` to focus visible children of elements which do not have `overflow:true`

@@ -3,6 +3,7 @@ import {render, screen, fireEvent} from '@testing-library/react';
 
 import {
 	SpotlightRootDecorator,
+	setFocusEffectClass,
 	setInputType,
 	getInputType
 } from '../SpotlightRootDecorator';
@@ -10,6 +11,8 @@ import {
 import {
 	getContainerConfig
 } from '../../src/container';
+
+import {getFocusEffectClass} from '../../src/focusEffect';
 
 describe('SpotlightRootDecorator', () => {
 	const AppBase = (props) => (
@@ -44,6 +47,32 @@ describe('SpotlightRootDecorator', () => {
 		const actual = getInputType();
 
 		expect(actual).toBe(expected);
+	});
+
+	test('should export setFocusEffectClass as a function', () => {
+		expect(typeof setFocusEffectClass).toBe('function');
+	});
+
+	describe('focusEffectClass config', () => {
+		afterEach(() => {
+			setFocusEffectClass(null);
+		});
+
+		test('should call setFocusEffectClass with the configured class on construction', () => {
+			const App = SpotlightRootDecorator({focusEffectClass: 'app-focus-class'}, AppBase);
+
+			render(<App />);
+
+			expect(getFocusEffectClass()).toBe('app-focus-class');
+		});
+
+		test('should not call setFocusEffectClass when focusEffectClass config is not provided', () => {
+			const App = SpotlightRootDecorator(AppBase);
+
+			render(<App />);
+
+			expect(getFocusEffectClass()).toBeNull();
+		});
 	});
 
 	test('should set spotlightRootDecorator container enterTo config to `null` by default', () => {

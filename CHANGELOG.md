@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Added
 
 - `core/util` function `checkPropTypes` to check the prop types of a component
+- `spotlight/SpotlightRootDecorator` config `focusEffectClass` apply globally a css class to every spottable component when it receives spotlight focus.
 
 ### Fixed
 
