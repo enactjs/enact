@@ -44,20 +44,22 @@ const configDefaults = {
 };
 
 /**
- * Calculates the scaling factor for landscape orientation based on the current
- * workspace height and the target screen type's height.
+ * Calculates the scale factor and determines if scaling is necessary
+ * for the landscape workspace based on the screen type.
  *
  * @function
- * @param {Object}    params             The parameters object.
- * @param {String}    [params.type]      The screen type key. Used to look up height if `scrHeight` is not provided.
- * @param {Number}    [params.scrHeight] The explicit height of the screen type to scale against.
- *
- * @returns {Number}                     The calculated scale factor (workspace height / reference height).
+ * @memberof ui/resolution
+ * @param {String} [type=screenType] 	The screen type identifier used to retrieve dimensions. Defaults to the global
+ * 										or scoped `screenType`.
+ * @returns {Object} 					Returns an object containing the scaling data.
  * @private
  */
-const getLandscapeScaleFactor = ({type, scrHeight}) => {
-	const height = scrHeight ? scrHeight : getScreenTypeObject(type).height;
-	return workspaceBounds.height / height;
+const getLandscapeScaleFactor = (type = screenType) => {
+	if (!type) return {shouldScale: false, factor: 1};
+
+	const scrObj = getScreenTypeObject(type);
+	const shouldScale = workspaceBounds.width < scrObj.width || workspaceBounds.height < scrObj.height;
+	return {shouldScale, factor: workspaceBounds.height / scrObj.height};
 }
 
 /**
@@ -257,7 +259,7 @@ function calculateFontSize (type) {
 	} else {
 		size = scrObj.pxPerRem;
 		if (orientation === 'landscape' && shouldScaleFontSize) {
-			size = getLandscapeScaleFactor({scrHeight: scrObj.height}) * scrObj.pxPerRem;
+			size = workspaceBounds.height * scrObj.pxPerRem / scrObj.height;
 		}
 	}
 	return size + 'px';
@@ -331,11 +333,10 @@ function getRiRatio (type = screenType) {
 		let ratio = getUnitToPixelFactors(type) / getUnitToPixelFactors(baseScreen.name);
 
 		if (orientation === 'landscape' && config.fontSizeHandling === 'scale') {
-			const scrObj = getScreenTypeObject(type);
-			const shouldScale = workspaceBounds.width < scrObj.width || workspaceBounds.height < scrObj.height
+			const {shouldScale, factor} = getLandscapeScaleFactor(type);
 
 			if (shouldScale) {
-				ratio *= getLandscapeScaleFactor({type});
+				ratio *= factor;
 			}
 		}
 
@@ -442,8 +443,16 @@ function scale (px) {
  */
 function unit (pixels, toUnit) {
 	if (!toUnit || !unitToPixelFactors[toUnit]) return;
-	if (typeof pixels === 'string' && pixels.substr(-2) === 'px') pixels = parseInt(pixels.substr(0, pixels.length - 2));
+	if (typeof pixels === 'string' && pixels.substring(-2) === 'px') pixels = parseInt(pixels.substring(0, pixels.length - 2));
 	if (typeof pixels !== 'number') return;
+
+	if (screenType && orientation === 'landscape' && config.fontSizeHandling === 'scale') {
+		const {shouldScale, factor} = getLandscapeScaleFactor();
+
+		if (shouldScale) {
+			return (pixels / factor / unitToPixelFactors[toUnit]) + '' + toUnit;
+		}
+	}
 
 	return (pixels / unitToPixelFactors[toUnit]) + '' + toUnit;
 }
