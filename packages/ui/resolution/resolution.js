@@ -107,7 +107,7 @@ const getLandscapeScaleFactor = (type = screenType) => {
 	const scrObj = getScreenTypeObject(type);
 	const shouldScale = workspaceBounds.width < scrObj.width || workspaceBounds.height < scrObj.height;
 	return {shouldScale, factor: workspaceBounds.height / scrObj.height};
-}
+};
 
 /**
  * Get the closest resolution type based on the `resolution`.
