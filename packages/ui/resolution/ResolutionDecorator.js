@@ -99,6 +99,9 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 			checkPropTypes(this, props);
 			riConfig.fontSizeHandling = config.fontSizeHandling;
+
+			if (config.linearScaling) riConfig.linearScaling = config.linearScaling;
+
 			init({measurementNode: (typeof window !== 'undefined' && window)});
 			this.state = {
 				resolutionClasses: ''
