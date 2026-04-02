@@ -149,6 +149,21 @@ describe('Resolution Specs', () => {
 		expect(actualHD).toBe(expectedHD);
 	});
 
+	test('should convert pixels to units in landscape and fontSizeHandling is "scale"', () => {
+		const closestResolution = {...XGA};
+		const wideResolution = {innerWidth: 1024, innerHeight: 480};
+		init({measurementNode: wideResolution});
+
+		const expectedFHD = 3 / (wideResolution.innerHeight / closestResolution.height) + 'rem';
+		const actualFHD = unit(48, 'rem');
+
+		const expectedHD = 2 / (wideResolution.innerHeight / closestResolution.height) + 'rem';
+		const actualHD = unit(32, 'rem');
+
+		expect(actualFHD).toBe(expectedFHD);
+		expect(actualHD).toBe(expectedHD);
+	});
+
 	test('should select source for the current screen type', function () {
 		let measurementNode;
 		const src = {vga: 'VGA', hd: 'HD', fhd: 'FHD', uhd: 'UHD'};
