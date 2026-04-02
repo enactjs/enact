@@ -1,12 +1,12 @@
 import '@testing-library/jest-dom';
-import {act, fireEvent, render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 
 import ResolutionDecorator from '../ResolutionDecorator';
 
 const changeTargetResolution = (target, width, height) => {
 	Object.defineProperty(target, 'clientWidth', {configurable: true, value: width});
 	Object.defineProperty(target, 'clientHeight', {configurable: true, value: height});
-}
+};
 
 describe('ResolutionDecorator Specs', () => {
 	test('should apply resolution classes to the wrapped component', () => {
@@ -63,17 +63,15 @@ describe('ResolutionDecorator Specs', () => {
 		render(<Component data-testid="component" />);
 		const div = screen.getByTestId('component');
 
-		act(() => {
-			changeTargetResolution(div, 1920, 1080);
-			fireEvent(window, new Event('resize'));
-		});
+		changeTargetResolution(div, 1920, 1080);
+		fireEvent(window, new Event('resize'));
+
 		expect(div).toHaveClass('enact-res-fhd');
 
-		act(() => {
-			changeTargetResolution(div, 1280, 720);
-			fireEvent(window, new Event('resize'));
-		});
-		expect(div).not.toHaveClass('enact-res-hd');
+		changeTargetResolution(div, 1280, 720);
+		fireEvent(window, new Event('resize'));
+
+		expect(div).toHaveClass('enact-res-hd');
 		expect(div).not.toHaveClass('enact-res-fhd');
 	});
 
@@ -89,10 +87,8 @@ describe('ResolutionDecorator Specs', () => {
 
 		expect(div).toHaveClass('enact-res-mhd');
 
-		act(() => {
-			changeTargetResolution(div, 1920, 1080);
-			fireEvent(window, new Event('resize'));
-		});
+		changeTargetResolution(div, 1920, 1080);
+		fireEvent(window, new Event('resize'));
 
 		expect(div).toHaveClass('enact-res-mhd');
 		expect(div).not.toHaveClass('enact-res-fhd');
