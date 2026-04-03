@@ -30,6 +30,18 @@ const unitToPixelFactors = {
 };
 
 /**
+ * Enumerates the available reporting types for linear scaling.
+ *
+ * @enum {String}
+ * @memberof ui/resolution
+ * @public
+ */
+const linearScalingType = {
+	baseScreen: 'baseScreen',
+	currentScreen: 'currentScreen'
+};
+
+/**
  * Default configuration values.
  *
  * See {@link ui/resolution.config} for full documentation.
@@ -40,8 +52,43 @@ const unitToPixelFactors = {
  */
 const configDefaults = {
 	fontSizeHandling: 'scale',
-	orientationHandling: 'normal'
+	orientationHandling: 'normal',
+	linearScaling: {
+		active: false,
+		type: linearScalingType.currentScreen
+	}
 };
+
+/**
+ * Calculates a linearly scaled size for 1rem based on the current workspace dimensions.
+ *
+ * The calculation determines a scaling factor using the geometric mean of horizontal
+ * and vertical scale factors relative to a reference screen (either the `baseScreen`
+ * or the currently matched `screenTypeObject`).
+ *
+ * The resulting size is rounded to one decimal place and constrained to a minimum
+ * of 1px and a maximum of the `pxPerRem` value defined for the largest screen type
+ * (the last element in `screenTypes`).
+ *
+ * @function
+ * @memberof ui/resolution
+ * @returns {Number} The calculated pixel size for 1rem, clamped between 1 and the
+ *                   maximum defined pxPerRem.
+ * @private
+ */
+function getLinearSize () {
+	const isCurrentScreen = config.linearScaling.type === linearScalingType.currentScreen;
+	const reportScreen = isCurrentScreen ? screenTypeObject : baseScreen;
+	const maxSize = screenTypes.at(-1).pxPerRem;
+
+	const scaleX = workspaceBounds.width / reportScreen.width;
+	const scaleY = workspaceBounds.height / reportScreen.height;
+
+	const ratio = Math.sqrt(scaleX * scaleY);
+	const size = Math.round(reportScreen.pxPerRem * ratio * 10) / 10;
+
+	return Math.max(1, Math.min(size, maxSize));
+}
 
 /**
  * Get the closest resolution type based on the `resolution`
@@ -227,6 +274,11 @@ function getScreenType (rez) {
  * @public
  */
 function calculateFontSize (type) {
+	// If linear scaling is enabled, bypass standard screen-type-based calculation and use the dynamic linear size
+	if (config.linearScaling.active && !type) {
+		return getLinearSize() + 'px';
+	}
+
 	const scrObj = getScreenTypeObject(type);
 	const shouldScaleFontSize = (config.fontSizeHandling === 'scale') && (workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
 	let size;
@@ -326,6 +378,11 @@ function getRiRatio (type = screenType) {
  * @returns {Number}          pixels per rem
  */
 function getUnitToPixelFactors (type = screenType) {
+	// Use linear scaling for the current screen type if active.
+	if (config.linearScaling.active && (!type || type === screenType)) {
+		return getLinearSize();
+	}
+
 	if (type) {
 		return getScreenTypeObject(type).pxPerRem;
 	}
@@ -411,7 +468,7 @@ function scale (px) {
  */
 function unit (pixels, toUnit) {
 	if (!toUnit || !unitToPixelFactors[toUnit]) return;
-	if (typeof pixels === 'string' && pixels.substr(-2) === 'px') pixels = parseInt(pixels.substr(0, pixels.length - 2));
+	if (typeof pixels === 'string' && pixels.substring(-2) === 'px') pixels = parseInt(pixels.substring(0, pixels.length - 2));
 	if (typeof pixels !== 'number') return;
 
 	return (pixels / unitToPixelFactors[toUnit]) + '' + toUnit;
@@ -531,6 +588,16 @@ function init (args = {}) {
 }
 
 /**
+ * @typedef {Object} LinearScalingConfig
+ * @memberof ui/resolution
+ * @property {Boolean} active - Enables linear scaling calculation for
+ *           font sizes and unit conversions. Default: `true`.
+ * @property {ui/resolution.linearScalingType} type - Determines the
+ *           reference screen used for linear scaling calculation.
+ *           Default: `linearScalingType.currentScreen`.
+ */
+
+/**
  * Configuration options for resolution independence behavior.
  *
  * @typedef {Object} ResolutionConfig
@@ -546,6 +613,7 @@ function init (args = {}) {
  *           based on proportional scaling. When set to `'normal'`, uses the standard pxPerRem
  *           value. This is particularly useful for supporting device rotation scenarios.
  *           Default: `'normal'`
+ * @property {LinearScalingConfig} linearScaling - Configuration for linear scaling mode.
  * @public
  */
 
@@ -572,6 +640,7 @@ export {
 	getScreenTypeObject,
 	getScreenType,
 	init,
+	linearScalingType,
 	scale,
 	scaleToRem,
 	selectSrc,
