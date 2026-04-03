@@ -324,6 +324,45 @@ describe('Marquee', () => {
 		global.Element.prototype.getBoundingClientRect = originalGetBoundingClientRect;
 	});
 
+	test('should restart render-mode marquee after forceDirection changes', () => {
+		const originalGetBoundingClientRect = global.Element.prototype.getBoundingClientRect;
+		global.Element.prototype.getBoundingClientRect = jest.fn(function () {
+			const isSpan = this && this.tagName === 'SPAN';
+			return {
+				width: isSpan ? 200 : 100,
+				height: 50,
+				top: 0,
+				left: 0,
+				bottom: 0,
+				right: isSpan ? 200 : 100
+			};
+		});
+
+		const {rerender} = render(
+			<Marquee marqueeOn="render" marqueeDelay={0} marqueeOnRenderDelay={0}>
+				{ltrText}
+			</Marquee>
+		);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		const marquee = screen.getAllByText(ltrText).find(el => el.classList.contains('text'));
+		expect(marquee).toHaveStyle({'--ui-marquee-spacing': '50'});
+
+		rerender(
+			<Marquee marqueeOn="render" marqueeDelay={0} marqueeOnRenderDelay={0} forceDirection="rtl">
+				{ltrText}
+			</Marquee>
+		);
+
+		act(() => jest.advanceTimersByTime(100));
+
+		const marqueeAfter = screen.getAllByText(ltrText).find(el => el.classList.contains('text'));
+		expect(marqueeAfter).toHaveStyle({'--ui-marquee-spacing': '50'});
+
+		global.Element.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+	});
+
 	test('should start marquee on focus if `marqueeOn` is focus', () => {
 		render(<Marquee marqueeOn="focus" marqueeDelay={10}>{ltrText}</Marquee>);
 		const marquee = screen.getByText(ltrText);

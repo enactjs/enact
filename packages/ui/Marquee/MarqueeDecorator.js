@@ -417,8 +417,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				prevProps.marqueeSpeed !== marqueeSpeed ||
 				prevProps.forceDirection !== forceDirection
 			) {
-				// When re-enabling after marqueeDisabled, invalidate stale metrics since
-				// content may have changed multiple times while measurements were suppressed.
 				if (prevProps.marqueeDisabled && !marqueeDisabled) {
 					this.invalidateMetrics();
 				}
@@ -431,9 +429,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.cancelAnimation();
 				}
 				if (marqueeOn === 'render' && !marqueeDisabled) {
-					if (prevProps.marqueeOn !== marqueeOn || prevProps.marqueeDisabled !== marqueeDisabled) {
-						this.hasStartedRender = false;
-					}
+					this.hasStartedRender = false;
 				}
 			} else if (disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
 				this.context.enter(this);
