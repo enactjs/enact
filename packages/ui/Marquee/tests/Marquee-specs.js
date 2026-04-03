@@ -872,4 +872,35 @@ describe('MarqueeController', () => {
 
 		global.Element.prototype.getBoundingClientRect = originalGetBoundingClientRect;
 	});
+
+	test('should detect RTL direction when content changes mid-marquee in sync mode', () => {
+		const {rerender} = render(
+			<Controller>
+				<Marquee
+					marqueeDelay={10}
+					marqueeOn="focus"
+				>
+					{ltrText}
+				</Marquee>
+			</Controller>
+		);
+
+		const marquee1 = screen.getByText(ltrText);
+		fireEvent.focus(marquee1);
+		act(() => jest.advanceTimersByTime(200));
+
+		rerender(
+			<Controller>
+				<Marquee
+					marqueeDelay={10}
+					marqueeOn="focus"
+				>
+					{rtlText}
+				</Marquee>
+			</Controller>
+		);
+
+		const marquee2 = screen.getByText(rtlText);
+		expect(marquee2).toHaveStyle({'direction': 'rtl'});
+	});
 });

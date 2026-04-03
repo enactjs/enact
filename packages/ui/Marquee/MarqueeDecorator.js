@@ -685,10 +685,17 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.setTimeout(() => {
 					this.calculateMetrics();
 					if (this.contentFits === false) {
-						this.setState({
-							promoted: true,
-							animating: true
-						});
+						if (!this.state.promoted) {
+							this.setState({promoted: true});
+							this.setTimeout(() => {
+								this.setState({animating: true});
+							}, MINIMUM_MARQUEE_RESET_DELAY, TimerState.START_PENDING);
+						} else {
+							this.setState({
+								promoted: true,
+								animating: true
+							});
+						}
 					} else if (this.sync) {
 						this.context.complete(this);
 					}
