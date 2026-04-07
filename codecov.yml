@@ -13,4 +13,3 @@ ignore:
     - "packages/webos/application"
     - "packages/webos/LS2Request"
     - "packages/ui/Touchable/Pinch.js"
-    - "packages/ui/spottable/useSpottable.js"
