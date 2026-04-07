@@ -379,6 +379,7 @@ describe('util', () => {
 			let value = 1;
 			const {result, rerender} = renderHook(() => usePrevious(value));
 
+			// eslint-disable-next-line testing-library/no-unnecessary-act
 			act(() => {
 				value = 2;
 				rerender();
@@ -391,6 +392,7 @@ describe('util', () => {
 			let value = 'a';
 			const {result, rerender} = renderHook(() => usePrevious(value));
 
+			// eslint-disable-next-line testing-library/no-unnecessary-act
 			act(() => {
 				value = 'b';
 				rerender();
@@ -398,6 +400,7 @@ describe('util', () => {
 
 			expect(result.current).toBe('a');
 
+			// eslint-disable-next-line testing-library/no-unnecessary-act
 			act(() => {
 				value = 'c';
 				rerender();
@@ -410,6 +413,7 @@ describe('util', () => {
 			let value = 42;
 			const {result, rerender} = renderHook(() => usePrevious(value));
 
+			// eslint-disable-next-line testing-library/no-unnecessary-act
 			act(() => {
 				rerender();
 			});
