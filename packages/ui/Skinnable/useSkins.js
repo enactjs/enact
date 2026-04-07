@@ -1,4 +1,4 @@
-import {createContext, use} from 'react';
+import {createContext, use, useCallback, useMemo} from 'react';
 
 import {determineSkin, determineVariants, getClassName} from './util';
 
@@ -83,16 +83,23 @@ function useSkins (config) {
 	const {defaultSkin, defaultVariants, skin, skins, skinVariants, variants} = config;
 
 	const {parentSkin, parentVariants} = use(SkinContext) || {};
-	const effectiveSkin = determineSkin(defaultSkin, skin, parentSkin);
-	const effectiveVariants = determineVariants(defaultVariants, variants, skinVariants, parentVariants);
-	const className = getClassName(skins, effectiveSkin, effectiveVariants);
-	const value = {parentSkin: effectiveSkin, parentVariants: effectiveVariants};
 
-	const provideSkins = (children) => (
-		<SkinContext value={value}>
-			{children}
-		</SkinContext>
-	);
+	// eslint-disable-next-line react-hooks/preserve-manual-memoization
+	const currentParentVariants = useMemo(() => parentVariants, [parentVariants]);
+
+	const effectiveSkin = determineSkin(defaultSkin, skin, parentSkin);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const effectiveVariants = useMemo(() => determineVariants(defaultVariants, variants, skinVariants, currentParentVariants), [currentParentVariants, parentVariants, skinVariants, variants]);
+	const className = getClassName(skins, effectiveSkin, effectiveVariants);
+	const value = useMemo(() => ({parentSkin: effectiveSkin, parentVariants: effectiveVariants}), [effectiveSkin, effectiveVariants]);
+
+	const provideSkins = useCallback((children) => {
+		return (
+			<SkinContext value={value}>
+				{children}
+			</SkinContext>
+		);
+	}, [value]);
 
 	return {
 		className,
