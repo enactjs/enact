@@ -84,7 +84,6 @@ function useSkins (config) {
 
 	const {parentSkin, parentVariants} = use(SkinContext) || {};
 
-	// eslint-disable-next-line react-hooks/preserve-manual-memoization
 	const currentParentVariants = useMemo(() => parentVariants, [parentVariants]);
 
 	const effectiveSkin = determineSkin(defaultSkin, skin, parentSkin);
