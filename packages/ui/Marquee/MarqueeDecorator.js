@@ -385,12 +385,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			let forceRestartMarquee = false;
 
 			checkPropTypes(this, this.props, prevProps);
-			const shouldValidateTextDirection = (
-				prevProps.rtl !== rtl ||
-				prevProps.forceDirection !== forceDirection ||
-				prevProps.locale !== locale ||
-				!shallowEqual(prevProps.children, children)
-			);
 			if (
 				prevProps.locale !== locale ||
 				prevProps.rtl !== rtl ||
@@ -435,9 +429,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.context.enter(this);
 			}
 
-			if (shouldValidateTextDirection) {
-				this.validateTextDirection();
-			}
+			this.validateTextDirection();
 			if (forceRestartMarquee || this.shouldStartMarquee()) {
 				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
@@ -685,17 +677,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.setTimeout(() => {
 					this.calculateMetrics();
 					if (this.contentFits === false) {
-						if (!this.state.promoted) {
-							this.setState({promoted: true});
-							this.setTimeout(() => {
-								this.setState({animating: true});
-							}, MINIMUM_MARQUEE_RESET_DELAY, TimerState.START_PENDING);
-						} else {
-							this.setState({
-								promoted: true,
-								animating: true
-							});
-						}
+						this.setState({
+							promoted: true,
+							animating: true
+						});
 					} else if (this.sync) {
 						this.context.complete(this);
 					}
