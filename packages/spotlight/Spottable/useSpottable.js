@@ -62,7 +62,7 @@ const useSpottable = ({emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REM
 		prevSpotlightDisabled: spotlightDisabled,
 		spotlightDisabled
 	});
-	const context = contextRef.current; // eslint-disable-line react-hooks/refs
+	const context = contextRef.current;
 
 	const attributes = props.spotlightId ? {'data-spotlight-id': props.spotlightId} : EMPTY_ATTRIBUTES;
 
