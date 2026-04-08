@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import {render} from '@testing-library/react';
+import {useEffect} from 'react';
 
 import {PlaceholderControllerDecorator} from '../../Placeholder';
 
@@ -7,7 +8,9 @@ describe('PlaceholderControllerDecorator', () => {
 	let data;
 
 	const DivComponent = (props) => {
-		data = props;
+		useEffect(() => {
+			data = props;
+		}, [props]);
 
 		return <div data-testid="component" {...props} />;
 	};

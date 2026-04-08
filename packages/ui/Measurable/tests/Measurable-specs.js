@@ -1,13 +1,18 @@
 import {act, render} from '@testing-library/react';
+import {useEffect} from 'react';
 
 import Measurable, {useMeasurable} from '../Measurable';
 
 let data;
 
 const DivComponent = (props) => {
-	data = props;
+	const {controlsRef} = props;
 
-	return <div ref={props.controlsRef} />;
+	useEffect(() => {
+		data = props;
+	}, [props]);
+
+	return <div ref={controlsRef} />;
 };
 
 const MeasurableComponent = Measurable({refProp: 'controlsRef', measurementProp: 'controlsMeasurements'}, DivComponent);

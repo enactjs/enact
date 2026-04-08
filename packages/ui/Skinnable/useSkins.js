@@ -84,8 +84,11 @@ function useSkins (config) {
 
 	const {parentSkin, parentVariants} = use(SkinContext) || {};
 
+	const currentParentVariants = useMemo(() => parentVariants, [parentVariants]);
+
 	const effectiveSkin = determineSkin(defaultSkin, skin, parentSkin);
-	const effectiveVariants = useMemo(() => determineVariants(defaultVariants, variants, skinVariants, parentVariants), [defaultVariants, variants, skinVariants, parentVariants]);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const effectiveVariants = useMemo(() => determineVariants(defaultVariants, variants, skinVariants, currentParentVariants), [currentParentVariants, parentVariants, skinVariants, variants]);
 	const className = getClassName(skins, effectiveSkin, effectiveVariants);
 	const value = useMemo(() => ({parentSkin: effectiveSkin, parentVariants: effectiveVariants}), [effectiveSkin, effectiveVariants]);
 
