@@ -1,4 +1,4 @@
-import {render} from '@testing-library/react';
+import {render, renderHook, act} from '@testing-library/react';
 import PropTypes from 'prop-types';
 import {forwardRef, memo, lazy, Component} from 'react';
 
@@ -14,7 +14,8 @@ import {
 	mapAndFilterChildren,
 	setDefaultProps,
 	shallowEqual,
-	checkPropTypes
+	checkPropTypes,
+	usePrevious
 } from '../util';
 
 describe('util', () => {
@@ -364,6 +365,60 @@ describe('util', () => {
 				child.toString(...args);
 			};
 			expect(shallowEqual(child, fakeChild)).toBe(false);
+		});
+	});
+
+	describe('usePrevious', () => {
+		test('should return the initial value on first render', () => {
+			const {result} = renderHook(() => usePrevious(1));
+
+			expect(result.current).toBe(1);
+		});
+
+		test('should return the previous value after the value changes', () => {
+			let value = 1;
+			const {result, rerender} = renderHook(() => usePrevious(value));
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				value = 2;
+				rerender();
+			});
+
+			expect(result.current).toBe(1);
+		});
+
+		test('should track the previous value across multiple changes', () => {
+			let value = 'a';
+			const {result, rerender} = renderHook(() => usePrevious(value));
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				value = 'b';
+				rerender();
+			});
+
+			expect(result.current).toBe('a');
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				value = 'c';
+				rerender();
+			});
+
+			expect(result.current).toBe('b');
+		});
+
+		test('should not update previous value when value stays the same', () => {
+			let value = 42;
+			const {result, rerender} = renderHook(() => usePrevious(value));
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				rerender();
+			});
+
+			expect(result.current).toBe(42);
 		});
 	});
 });
