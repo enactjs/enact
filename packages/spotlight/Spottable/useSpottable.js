@@ -1,5 +1,5 @@
 import useClass from '@enact/core/useClass';
-import {useLayoutEffect, useState} from 'react';
+import {useLayoutEffect, useRef} from 'react';
 
 import {SpottableCore, spottableClass} from './SpottableCore';
 
@@ -58,18 +58,18 @@ const EMPTY_ATTRIBUTES = {};
 
 const useSpottable = ({emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
 	const hook = useClass(SpottableCore, {emulateMouse});
-	const [context, setContext] = useState({
+	const contextRef = useRef({
 		prevSpotlightDisabled: spotlightDisabled,
 		spotlightDisabled
 	});
+	const context = contextRef.current;
 
 	const attributes = props.spotlightId ? {'data-spotlight-id': props.spotlightId} : EMPTY_ATTRIBUTES;
 
 	if (context.spotlightDisabled !== spotlightDisabled) {
-		setContext({
-			prevSpotlightDisabled: context.spotlightDisabled,
-			spotlightDisabled
-		});
+		// Mutate in-place to avoid a new object allocation on every render.
+		context.prevSpotlightDisabled = context.spotlightDisabled;
+		context.spotlightDisabled = spotlightDisabled;
 	}
 
 	hook.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context);
