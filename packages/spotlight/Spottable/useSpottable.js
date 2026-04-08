@@ -54,6 +54,8 @@ const REMOTE_OK_KEY = 16777221;
  * @private
  */
 
+const EMPTY_ATTRIBUTES = {};
+
 const useSpottable = ({emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
 	const hook = useClass(SpottableCore, {emulateMouse});
 	const [context, setContext] = useState({
@@ -61,10 +63,7 @@ const useSpottable = ({emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REM
 		spotlightDisabled
 	});
 
-	let attributes = {};
-	if (props.spotlightId) {
-		attributes['data-spotlight-id'] = props.spotlightId;
-	}
+	const attributes = props.spotlightId ? {'data-spotlight-id': props.spotlightId} : EMPTY_ATTRIBUTES;
 
 	if (context.spotlightDisabled !== spotlightDisabled) {
 		setContext({
