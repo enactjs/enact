@@ -1,5 +1,6 @@
 import Registry from '@enact/core/internal/Registry';
 import {render} from '@testing-library/react';
+import {useEffect} from 'react';
 
 import Resizable, {ResizeContext} from '../Resizable';
 
@@ -7,7 +8,9 @@ describe('Resizable', () => {
 	let data;
 
 	const DivComponent = (props) => {
-		data = props;
+		useEffect(() => {
+			data = props;
+		}, [props]);
 
 		return <div data-testid="component" />;
 	};
