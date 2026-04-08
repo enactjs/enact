@@ -1,4 +1,5 @@
 import {render} from '@testing-library/react';
+import {useEffect} from 'react';
 
 import AnnounceDecorator from '../AnnounceDecorator';
 
@@ -7,7 +8,9 @@ describe('AnnounceDecorator', () => {
 
 	// no-op wrapper
 	const Div = (props) => {
-		announceProps = props;
+		useEffect(() => {
+			announceProps = props;
+		}, [props]);
 
 		return <div />;
 	};

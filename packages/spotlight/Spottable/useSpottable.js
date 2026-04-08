@@ -1,5 +1,5 @@
 import useClass from '@enact/core/useClass';
-import {useLayoutEffect, useRef} from 'react';
+import {useLayoutEffect, useState} from 'react';
 
 import {SpottableCore, spottableClass} from './SpottableCore';
 
@@ -56,22 +56,24 @@ const REMOTE_OK_KEY = 16777221;
 
 const useSpottable = ({emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REMOTE_OK_KEY], spotlightDisabled, ...props} = {}) => {
 	const hook = useClass(SpottableCore, {emulateMouse});
-	const context = useRef({
+	const [context, setContext] = useState({
 		prevSpotlightDisabled: spotlightDisabled,
 		spotlightDisabled
 	});
-
-	context.current = {
-		prevSpotlightDisabled: context.current.spotlightDisabled,
-		spotlightDisabled
-	};
 
 	let attributes = {};
 	if (props.spotlightId) {
 		attributes['data-spotlight-id'] = props.spotlightId;
 	}
 
-	hook.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context.current);
+	if (context.spotlightDisabled !== spotlightDisabled) {
+		setContext({
+			prevSpotlightDisabled: context.spotlightDisabled,
+			spotlightDisabled
+		});
+	}
+
+	hook.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context);
 
 	useLayoutEffect(() => {
 		hook.load(getSpotRef() || null);

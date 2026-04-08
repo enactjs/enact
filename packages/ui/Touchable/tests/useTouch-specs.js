@@ -1,4 +1,5 @@
 import {createEvent, fireEvent, render, screen} from '@testing-library/react';
+import {useEffect} from 'react';
 
 import {configure, getConfig, resetDefaultConfig} from '../config';
 import useTouch from '../useTouch';
@@ -7,7 +8,9 @@ describe('useTouch', () => {
 	let data;
 
 	const DivComponent = (props) => {
-		data = props;
+		useEffect(() => {
+			data = props;
+		}, [props]);
 
 		return (<div data-testid="component" />);
 	};

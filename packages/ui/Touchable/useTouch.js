@@ -72,6 +72,7 @@ function useTouch (config = {}) {
 
 	const touch = useClass(Touch);
 	const [state, setState] = useState(States.Inactive);
+	const [prevTouchState, setPrevTouchState] = useState(null);
 
 	touch.setPropsAndContext({...config, disabled: !!disabled}, state, setState);
 
@@ -98,9 +99,10 @@ function useTouch (config = {}) {
 		}
 	}, [disabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
+	if (state !== prevTouchState) {
 		setState((prevState) => ((!getActive || disabled) ? States.Inactive : prevState));
-	}, [getActive, disabled]);
+		setPrevTouchState(state);
+	}
 
 	return {
 		active: state !== States.Inactive,

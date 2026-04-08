@@ -1,4 +1,4 @@
-import {useRef} from 'react';
+import {useState} from 'react';
 
 /**
  * Creates one instance of the class, `Ctor` with the provided `args`, for the life of the
@@ -29,10 +29,9 @@ import {useRef} from 'react';
  * @private
  */
 function useClass (Ctor, ...args) {
-	const ref = useRef(null);
-	ref.current = ref.current || new Ctor(...args);
+	const [state] = useState(() => new Ctor(...args));
 
-	return ref.current;
+	return state;
 }
 
 export default useClass;

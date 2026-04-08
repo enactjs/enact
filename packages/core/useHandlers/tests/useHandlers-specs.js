@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import {render} from '@testing-library/react';
+import {useEffect} from 'react';
 
 import useHandlers from '../useHandlers';
 
@@ -17,9 +18,11 @@ describe('useHandlers', () => {
 			}
 		}, props, context);
 
-		data = {
-			handlers
-		};
+		useEffect(() => {
+			data = {
+				handlers
+			};
+		}, [handlers]);
 
 		return (
 			<div {...props} data-testid="divComponent" />
