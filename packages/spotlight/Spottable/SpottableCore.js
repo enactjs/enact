@@ -43,21 +43,6 @@ const hasSelectionKey = (selectionKeys, keyCode) => {
 	return false;
 };
 
-const getMatchedSelectionKey = (selectionKeys, which, type, keyboardAccessible) => {
-	if (which === REMOTE_OK_KEY) {
-		return REMOTE_OK_KEY;
-	}
-
-	for (let i = 0; i < selectionKeys.length; i++) {
-		const key = selectionKeys[i];
-		if (which === key && (type !== 'keypress' || !keyboardAccessible)) {
-			return key;
-		}
-	}
-
-	return null;
-};
-
 // Last instance of spottable to be focused
 let lastSelectTarget = null;
 
@@ -179,9 +164,17 @@ class SpottableCore {
 
 		const {currentTarget, repeat, type, which} = ev;
 		const {selectionKeys} = props;
-		const keyboardAccessible = isKeyboardAccessible(currentTarget);
+		const isRemoteOkKey = which === REMOTE_OK_KEY;
+		const isSelectionKey = isRemoteOkKey || hasSelectionKey(selectionKeys, which);
 
-		const keyCode = getMatchedSelectionKey(selectionKeys, which, type, keyboardAccessible);
+		// Fast-path: avoid DOM checks and event normalization for non-selection key events.
+		if (!isSelectionKey) {
+			return false;
+		}
+
+		const keyboardAccessible = isKeyboardAccessible(currentTarget);
+		const canEmulate = isRemoteOkKey || (type !== 'keypress' || !keyboardAccessible);
+		const keyCode = canEmulate ? which : null;
 
 		if (getDirection(keyCode)) {
 			preventDefault(ev);
