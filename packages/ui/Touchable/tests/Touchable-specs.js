@@ -1,4 +1,5 @@
 import {act, createEvent, fireEvent, render, screen} from '@testing-library/react';
+import {useEffect} from 'react';
 
 import {configure, getConfig, resetDefaultConfig} from '../config';
 import Touchable from '../Touchable';
@@ -14,7 +15,10 @@ describe('Touchable', () => {
 	let data;
 
 	const DivComponent = ({children = 'Toggle', id, onClick, onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp, onTouchStart, onTouchEnd, ...props}) => {
-		data = props;
+		useEffect(() => {
+			data = props;
+		}, [props]);
+
 		return (
 			<div
 				data-testid="component"

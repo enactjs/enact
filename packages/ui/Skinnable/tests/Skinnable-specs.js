@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
+import {useEffect} from 'react';
 
 import Skinnable from '../Skinnable';
 
@@ -9,7 +10,10 @@ describe('Skinnable Specs', () => {
 		let data;
 
 		const Component = (props) => {
-			data = props;
+			useEffect(() => {
+				data = props;
+			}, [props]);
+
 			return <div {...props} />;
 		};
 
@@ -77,7 +81,10 @@ describe('Skinnable Specs', () => {
 		let data;
 
 		const Component = (props) => {
-			data = props;
+			useEffect(() => {
+				data = props;
+			}, [props]);
+
 			return <div {...props} />;
 		};
 

@@ -7,10 +7,12 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Added
 
 - `core/util` function `checkPropTypes` to check the prop types of a component
+- `ui/resolution` Added support for linear scaling type
 
 ### Fixed
 
 - `spotlight` to focus visible children of elements which do not have `overflow:true`
+- `ui/resolution` to display the components accordingly on wide resolutions
 
 ## [5.4.2] - 2026-01-28
 

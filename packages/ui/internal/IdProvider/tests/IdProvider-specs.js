@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
+import {useEffect} from 'react';
 
 import IdProvider from '../IdProvider';
 
@@ -22,7 +23,10 @@ describe('IdProvider', () => {
 		let actual;
 
 		const Base = (props) => {
-			actual = props;
+			useEffect(() => {
+				actual = props;
+			}, [props]);
+
 			return <div />;
 		};
 
