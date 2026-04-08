@@ -34,6 +34,30 @@ const isKeyboardAccessible = (node) => {
 
 const isSpottable = (props) => !props.spotlightDisabled;
 
+const hasSelectionKey = (selectionKeys, keyCode) => {
+	for (let i = 0; i < selectionKeys.length; i++) {
+		if (selectionKeys[i] === keyCode) {
+			return true;
+		}
+	}
+	return false;
+};
+
+const getMatchedSelectionKey = (selectionKeys, which, type, keyboardAccessible) => {
+	if (which === REMOTE_OK_KEY) {
+		return REMOTE_OK_KEY;
+	}
+
+	for (let i = 0; i < selectionKeys.length; i++) {
+		const key = selectionKeys[i];
+		if (which === key && (type !== 'keypress' || !keyboardAccessible)) {
+			return key;
+		}
+	}
+
+	return null;
+};
+
 // Last instance of spottable to be focused
 let lastSelectTarget = null;
 
@@ -134,7 +158,7 @@ class SpottableCore {
 	forwardAndResetLastSelectTarget = (ev, props) => {
 		const {keyCode} = ev;
 		const {selectionKeys} = props;
-		const key = selectionKeys.find((value) => keyCode === value);
+		const key = hasSelectionKey(selectionKeys, keyCode);
 		const notPrevented = !ev.defaultPrevented;
 
 		// bail early for non-selection keyup to avoid clearing lastSelectTarget prematurely
@@ -157,16 +181,7 @@ class SpottableCore {
 		const {selectionKeys} = props;
 		const keyboardAccessible = isKeyboardAccessible(currentTarget);
 
-		const keyCode = selectionKeys.find((value) => (
-			// emulate mouse events for any remote okay button event
-			which === REMOTE_OK_KEY ||
-			// or a non-keypress selection event or any selection event on a non-keyboard accessible
-			// control
-			(
-				which === value &&
-				(type !== 'keypress' || !keyboardAccessible)
-			)
-		));
+		const keyCode = getMatchedSelectionKey(selectionKeys, which, type, keyboardAccessible);
 
 		if (getDirection(keyCode)) {
 			preventDefault(ev);
@@ -184,7 +199,7 @@ class SpottableCore {
 		const {selectionKeys} = props;
 
 		// Only apply accelerator if handling a selection key
-		if (selectionKeys.find((value) => which === value)) {
+		if (hasSelectionKey(selectionKeys, which)) {
 			if (selectCancelled || (lastSelectTarget && lastSelectTarget !== this)) {
 				return false;
 			}
