@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {createContext, useState} from 'react';
 
 import kind from '../kind';
+import functionalKind from '../functionalKind';
 
 describe('kind', () => {
 	const TestContext = createContext({
@@ -43,9 +44,8 @@ describe('kind', () => {
 			);
 		}
 	});
-	const FunctionalKind = kind({
+	const FunctionalKind = functionalKind({
 		name: 'Kind',
-		functional: true,
 		propTypes: {
 			prop: PropTypes.number.isRequired,
 			label: PropTypes.string
@@ -68,7 +68,7 @@ describe('kind', () => {
 				return context ? `context${context.value}` : 'unknown';
 			}
 		},
-		render: ({contextValue, label, value, ...rest}) => {
+		useRender: ({contextValue, label, value, ...rest}) => {
 			delete rest.prop;
 			return (
 				<div {...rest} data-context={contextValue} title={label}>
