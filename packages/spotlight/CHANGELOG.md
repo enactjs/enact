@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Added
 
-- `spotlight/SpotlightRootDecorator` config `focusEffectClass` to apply a css class to every spottable component when it receives spotlight focus.
+- `spotlight/SpotlightRootDecorator` config `focusEffectClass` and function `setFocusEffectClass` to apply a css class to every spottable component when it receives spotlight focus.
 
 ### Fixed
 

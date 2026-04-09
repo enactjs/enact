@@ -93,31 +93,11 @@ const defaultConfig = {
  *	const SpottableComponent = Spottable(Component);
  * ```
  *
- *  When a component receives spotlight focus, the `data-spotlight-focused` attribute is
- *  automatically applied to its DOM node and removed on blur. This provides a stable CSS hook
- *  for styling focused components without any additional configuration:
+ * When a component receives spotlight focus, the `data-spotlight-focused` attribute is
+ * automatically applied to its DOM node and removed on blur. This provides a stable CSS hook
+ * for styling focused components without any additional configuration:
  *
- *  ```css
- *  [data-spotlight-focused] {
- *      outline: 3px solid var(--my-focus-color);
- *  }
- *  ```
- *
- *  Or within a CSS Modules component stylesheet:
- *
- *  ```less
- *  .button {
- *      &[data-spotlight-focused] {
- *          .bg {
- *              background-color: var(--my-focus-bg-color);
- *          }
- *      }
- *  }
- *  ```
- *
- *  For an app-wide focus class, see {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}
- *  and its `focusEffectClass` config option.
- *
+ * 
  * @class Spottable
  * @memberof spotlight/Spottable
  * @param  {Object} defaultConfig Set of default configuration parameters
