@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Changed
+
+- `spotlight/Spottable` to reduce redundant work during high-frequency re-renders
+
 ### Fixed
 
 - `spotlight` to focus visible children of elements which do not have `overflow:true`
