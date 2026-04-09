@@ -54,7 +54,7 @@ const PositionDecorator = hoc((config, Wrapped) => {
 		}
 
 		emitChangeForPosition (x, y) {
-			const {max, min, orientation, step} = this.props;
+			const {colorPicker, max, min, orientation, step} = this.props;
 			let position = x;
 			let offset = this.bounds.offsetX;
 
@@ -83,12 +83,16 @@ const PositionDecorator = hoc((config, Wrapped) => {
 				proportion = calcProportion(min, max, value);
 			}
 
+			const onChangeObj = {
+				type: 'onChange',
+				value,
+				proportion
+			};
+
+			if (colorPicker) onChangeObj.color = `hsla(${value}, 100%, 50%, 1)`;
+
 			if (value !== this.props.value) {
-				forward('onChange', {
-					type: 'onChange',
-					value,
-					proportion
-				}, this.props);
+				forward('onChange', onChangeObj, this.props);
 			}
 		}
 
