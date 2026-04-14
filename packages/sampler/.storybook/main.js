@@ -9,7 +9,8 @@ const __dirname = dirname(__filename);
 
 export default {
 	core: {
-		disableTelemetry: true
+		disableTelemetry: true,
+		allowedHosts: true
 	},
 	features: {
 		backgrounds: false,
