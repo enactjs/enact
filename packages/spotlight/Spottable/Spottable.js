@@ -97,7 +97,7 @@ const defaultConfig = {
  * automatically applied to its DOM node and removed on blur. This provides a stable CSS hook
  * for styling focused components without any additional configuration:
  *
- * 
+ *
  * @class Spottable
  * @memberof spotlight/Spottable
  * @param  {Object} defaultConfig Set of default configuration parameters
