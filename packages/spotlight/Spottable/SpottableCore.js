@@ -102,6 +102,11 @@ class SpottableCore {
 			this.isFocused = this.node && this.node === Spotlight.getCurrent();
 		}
 
+		// Re-apply focus effect after every render while focused
+		if (this.isFocused) {
+			this.applyFocusEffect();
+		}
+
 		// if the component is focused and became disabled
 		if (this.isFocused && this.props.disabled && lastSelectTarget === this && !selectCancelled) {
 			selectCancelled = true;
