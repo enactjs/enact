@@ -10,6 +10,10 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `spotlight/SpotlightRootDecorator` config `focusEffectClass` and function `setFocusEffectClass` to apply a css class to every spottable component when it receives spotlight focus.
 - `ui/resolution` Added support for linear scaling type
 
+### Changed
+
+- `spotlight/Spottable` to reduce redundant work during high-frequency re-renders
+
 ### Fixed
 
 - `spotlight` to focus visible children of elements which do not have `overflow:true`

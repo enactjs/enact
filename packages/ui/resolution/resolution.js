@@ -112,11 +112,6 @@ const getLandscapeScaleFactor = (type = screenType) => {
 /**
  * Get the closest resolution type based on the `resolution`.
  *
- * This method uses a hybrid distance formula that prioritizes matching the aspect ratio
- * (shape) of the screen over the raw pixel dimensions. This ensures that wide-screen
- * displays are matched to appropriate wide-screen profiles even if a standard 16:9
- * profile is numerically closer in pixel count.
- *
  * @function
  * @memberOf ui/resolution
  * @param {Object} resolution  The resolution object (must include `height` and `width` properties).
