@@ -181,8 +181,8 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		// either null or undefined. The ternary below enforces that but we don't want to
 		// continue this exception in the future and should sunset it with this HOC.
 		const {current: instance} = useRef({selected: null});
-		const selected = (instance.selected && propSelected == null) ? false : hook.selected;
-		instance.selected = propSelected;
+		const selected = (instance.selected && propSelected == null) ? false : hook.selected; // eslint-disable-line react-hooks/refs
+		instance.selected = propSelected; // eslint-disable-line react-hooks/refs
 
 		if (prop) {
 			updated[prop] = selected;

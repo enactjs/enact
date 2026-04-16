@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+- `@storybook/addon-docs` version to `^10.3.4`.
+- `@storybook/react-webpack5` version to `^10.3.4`.
+- `storybook` version to `^10.3.4`.
+
 ## [5.4.2] - 2026-01-28
 
 No significant changes.

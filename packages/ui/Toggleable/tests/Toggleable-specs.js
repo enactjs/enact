@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import {act, render, screen} from '@testing-library/react';
+import {useEffect} from 'react';
 
 import Toggleable from '../Toggleable';
 
@@ -7,7 +8,10 @@ describe('Toggleable', () => {
 	let data;
 
 	const DivComponent = (props) => {
-		data = props;
+		useEffect(() => {
+			data = props;
+		}, [props]);
+
 		return <div data-testid="selected-state">{props.selected?.toString()}</div>;
 	};
 

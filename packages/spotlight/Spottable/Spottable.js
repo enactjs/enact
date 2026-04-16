@@ -13,7 +13,7 @@ import {checkPropTypes} from '@enact/core/util';
 import {WithRef} from '@enact/core/internal/WithRef';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import {Component, useCallback, useRef} from 'react';
+import {useCallback, useReducer, useRef} from 'react';
 
 import {spottableClass, useSpottable} from './useSpottable';
 
@@ -150,8 +150,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		const handlers = useHandlers(spotHandlers, rest, spot);
 
-		delete rest.spotlightId;
-
 		return (
 			<WrappedWithRef
 				{...rest}
@@ -267,18 +265,9 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	};
 
 	// eslint-disable-next-line no-shadow
-	class Spottable extends Component {
-		componentDidMount () {
-			this.forceUpdate();
-		}
-
-		handleForceUpdate = () => {
-			this.forceUpdate();
-		};
-
-		render () {
-			return <SpottableBase {...this.props} handleForceUpdate={this.handleForceUpdate} />;
-		}
+	function Spottable (props) {
+		const [, forceUpdate] = useReducer(x => x + 1, 0);
+		return <SpottableBase {...props} handleForceUpdate={forceUpdate} />;
 	}
 
 	return Spottable;

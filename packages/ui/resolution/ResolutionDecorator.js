@@ -39,24 +39,11 @@ const defaultConfig = {
 	 * When set to `normal`, the font-size will be the pxPerRem value of the best match screen type.
 	 *
 	 * @type {('normal'|'scale')}
-	 * @default 'normal'
+	 * @default 'scale'
 	 * @private
 	 * @memberof ui/resolution.ResolutionDecorator.defaultConfig
 	 */
-	intermediateScreenHandling: 'normal',
-
-	/**
-	 * Determines how to get the best match screen type of current resolution.
-	 * When set to `true`, the matched screen type will be the one that is smaller and
-	 * the closest to the screen resolution.
-	 * When set to `false`, the matched screen type will be the one that is greater and
-	 * the closest to the screen resolution.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 * @memberof ui/resolution.ResolutionDecorator.defaultConfig
-	 */
-	matchSmallerScreenType: false,
+	fontSizeHandling: 'scale',
 
 	/**
 	 * An array of objects containing declarations for screen types to add to the list of known
@@ -111,8 +98,10 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			checkPropTypes(this, props);
-			riConfig.intermediateScreenHandling = config.intermediateScreenHandling;
-			riConfig.matchSmallerScreenType = config.matchSmallerScreenType;
+			riConfig.fontSizeHandling = config.fontSizeHandling;
+
+			if (config.linearScaling) riConfig.linearScaling = config.linearScaling;
+
 			init({measurementNode: (typeof window !== 'undefined' && window)});
 			this.state = {
 				resolutionClasses: ''

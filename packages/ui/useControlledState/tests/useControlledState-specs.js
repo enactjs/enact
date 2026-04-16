@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
+import {useEffect} from 'react';
 
 import useControlledState from '../useControlledState';
 
@@ -9,7 +10,9 @@ describe('useControlledState', () => {
 	function Component (props) {
 		const [value, setValue] = useControlledState(props.defaultValue, props.value, 'value' in props);
 		const handleChange = (ev) => setValue(ev.value);
-		data = setValue;
+		useEffect(() => {
+			data = setValue;
+		}, [setValue]);
 
 		return <div onChange={handleChange}>{value}</div>;
 	}
