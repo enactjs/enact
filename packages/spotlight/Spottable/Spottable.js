@@ -71,31 +71,31 @@ const defaultConfig = {
 	 * to Spotlight 5-way events.
 	 *
 	 * @type {Boolean}
-	 * @default true
-	 * @public
-	 * @memberof spotlight/Spottable.Spottable.defaultConfig
-	 */
-	emulateMouse: true
-};
-
-/**
- * Constructs a Spotlight 5-way navigation-enabled higher-order component.
- *
- * Note: This HoC passes a number of props to the wrapped component that should be passed to the
- * main DOM node.
- *
- * Example:
- * ```
- *	const Component = ({myProp, ...rest}) => (
- *		<div {...rest}>{myProp}</div>
- *	);
- *	...
- *	const SpottableComponent = Spottable(Component);
- * ```
  *
  * When a component receives spotlight focus, the `data-spotlight-focused` attribute is
  * automatically applied to its DOM node and removed on blur. This provides a stable CSS hook
  * for styling focused components without any additional configuration:
+ *
+ * ```css
+ *  [data-spotlight-focused] {
+ *      outline: 3px solid var(--my-focus-color);
+ *  }
+ * ```
+ *
+ * Or within a CSS Modules component stylesheet:
+ *
+ * ```less
+ *  .button {
+ *      &[data-spotlight-focused] {
+ *          .bg {
+ *              background-color: var(--my-focus-bg-color);
+ *          }
+ *      }
+ *  }
+ * ```
+ *
+ * For an app-wide focus class, see {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}
+ * and its `focusEffectClass` config option.
  *
  * @class Spottable
  * @memberof spotlight/Spottable
