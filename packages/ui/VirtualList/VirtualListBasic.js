@@ -6,6 +6,7 @@ import {checkPropTypes, clamp, shallowEqual} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import {createRef, Component} from 'react';
+import {flushSync} from 'react-dom';
 
 import css from './VirtualList.module.less';
 
@@ -1011,7 +1012,19 @@ class VirtualListBasic extends Component {
 		this.updateMoreInfo(dataSize, pos);
 
 		if (this.shouldUpdateBounds || firstIndex !== newFirstIndex) {
-			this.setState({firstIndex: newFirstIndex});
+			console.log("updating")
+			// React 19.1+ treats setState from passive scroll event handlers as a low-priority
+			// concurrent update, deferring the render by one or more frames. Items then appear
+			// blank or stale while the browser has already painted the new scroll position.
+			//
+			// flushSync forces a synchronous render before returning from didScroll, so items
+			// always match the current scroll position. This is scoped to VirtualListBasic only
+			// (not the outer useScroll layer), so Dropdown and other scroll containers are
+			// unaffected.
+			flushSync(() => {
+				console.log("updating 1")
+				this.setState({firstIndex: newFirstIndex});
+			});
 		}
 	}
 

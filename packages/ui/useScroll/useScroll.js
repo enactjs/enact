@@ -872,9 +872,7 @@ const useScrollBase = (props) => {
 		}
 
 		if (scrollContentHandle.current.didScroll) {
-			flushSync(() => {
-				scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
-			});
+			scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
 		}
 	}
 
