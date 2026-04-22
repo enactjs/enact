@@ -75,93 +75,93 @@ const NoContext = createContext(null);
  * @private
  */
 const functionalKind = (config) => {
-    const {
-        computed: cfgComputed,
-        contextType = NoContext,
-        defaultProps,
-        handlers,
-        name,
-        propTypes,	// eslint-disable-line react/forbid-foreign-prop-types
-        useRender,
-        styles: cfgStyles
-    } = config;
+	const {
+		computed: cfgComputed,
+		contextType = NoContext,
+		defaultProps,
+		handlers,
+		name,
+		propTypes,	// eslint-disable-line react/forbid-foreign-prop-types
+		useRender,
+		styles: cfgStyles
+	} = config;
 
-    const renderStyles  = cfgStyles   ? styles(cfgStyles)     : false;
-    const renderComputed = cfgComputed ? computed(cfgComputed) : false;
+	const renderStyles  = cfgStyles   ? styles(cfgStyles)     : false;
+	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
 
-    const renderKind = (props, context) => {
-        if (renderStyles)   props = renderStyles(props, context);
-        if (renderComputed) props = renderComputed(props, context);
+	const renderKind = (props, context) => {
+		if (renderStyles)   props = renderStyles(props, context);
+		if (renderComputed) props = renderComputed(props, context);
 
-        return useRender(props, context); // eslint-disable-line react-hooks/rules-of-hooks
-    };
+		return useRender(props, context); // eslint-disable-line react-hooks/rules-of-hooks
+	};
 
-    const Component = function (props) {
-        // Hooks must always be called unconditionally and in the same order.
-        const ctx = useContext(contextType);
-        const boundHandlers = useHandlers(handlers, props, ctx);
+	const Component = function (props) {
+		// Hooks must always be called unconditionally and in the same order.
+		const ctx = useContext(contextType);
+		const boundHandlers = useHandlers(handlers, props, ctx);
 
-        // Merge incoming props with bound handlers.
-        let merged = {
-            ...props,
-            ...boundHandlers
-        };
+		// Merge incoming props with bound handlers.
+		let merged = {
+			...props,
+			...boundHandlers
+		};
 
-        // Apply defaultProps manually so functional components
-        // receive defaults even when React's own defaultProps is set.
-        if (defaultProps) {
-            Object.keys(defaultProps).forEach(key => {
-                // eslint-disable-next-line no-undefined
-                if (merged[key] === undefined) {
-                    merged[key] = defaultProps[key];
-                }
-            });
-        }
+		// Apply defaultProps manually so functional components
+		// receive defaults even when React's own defaultProps is set.
+		if (defaultProps) {
+			Object.keys(defaultProps).forEach(key => {
+				// eslint-disable-next-line no-undefined
+				if (merged[key] === undefined) {
+					merged[key] = defaultProps[key];
+				}
+			});
+		}
 
-        checkPropTypes(Component, merged);
+		checkPropTypes(Component, merged);
 
-        return renderKind(merged, ctx);
-    };
+		return renderKind(merged, ctx);
+	};
 
-    if (name)         Component.displayName = name;
-    if (propTypes)    Component.propTypes   = propTypes;
-    if (defaultProps) Component.defaultProps = defaultProps;
+	if (name)         Component.displayName = name;
+	if (propTypes)    Component.propTypes   = propTypes;
+	if (defaultProps) Component.defaultProps = defaultProps;
 
-    // Expose computed map in DEV for easier testability.
-    if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
+	// Expose computed map in DEV for easier testability.
+	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
 
-    // ── inline ──────────────────────────────────────────────────────────────
-    // A synchronous, hook-free path for calling the component logic outside
-    // of the React render cycle (e.g. in tests or server-side utilities).
-    const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
-    const handlerKeys     = handlers     ? Object.keys(handlers)     : null;
+	// ── inline ──────────────────────────────────────────────────────────────
+	// A synchronous, hook-free path for calling the component logic outside
+	// of the React render cycle (e.g. in tests or server-side utilities).
+	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
+	const handlerKeys     = handlers     ? Object.keys(handlers)     : null;
 
-    Component.inline = (props, context) => {
-        let updated = { ...props };
+	Component.inline = (props, context) => {
+		let updated = {...props};
 
-        if (defaultPropKeys?.length) {
-            defaultPropKeys.forEach(key => {
-                // eslint-disable-next-line no-undefined
-                if (props == null || props[key] === undefined) {
-                    updated[key] = defaultProps[key];
-                }
-            });
-        }
+		if (defaultPropKeys?.length) {
+			defaultPropKeys.forEach(key => {
+				// eslint-disable-next-line no-undefined
+				if (props == null || props[key] === undefined) {
+					updated[key] = defaultProps[key];
+				}
+			});
+		}
 
-        if (handlerKeys?.length) {
-            // Snapshot `updated` before injecting handlers so every handler
-            // receives the same base props (no cross-contamination).
-            const snapshot = { ...updated };
-            updated = handlerKeys.reduce((_props, key) => {
-                _props[key] = (ev) => handlers[key](ev, snapshot, context);
-                return _props;
-            }, updated);
-        }
+		if (handlerKeys?.length) {
+			// Snapshot `updated` before injecting handlers so every handler
+			// receives the same base props (no cross-contamination).
+			const snapshot = {...updated};
+			updated = handlerKeys.reduce((_props, key) => {
+				_props[key] = (ev) => handlers[key](ev, snapshot, context);
+				return _props;
+			}, updated);
+		}
 
-        return renderKind(updated, context);
-    };
+		return renderKind(updated, context);
+	};
 
-    return Component;
+	return Component;
 };
 
 export default functionalKind;

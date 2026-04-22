@@ -152,7 +152,7 @@ describe('kind', () => {
 	});
 
 	test('should add className defined in styles', () => {
-		render(<Kind prop={1}/>);
+		render(<Kind prop={1} />);
 
 		const expected = 'kind';
 		const kindDiv = screen.getByTitle('Label');
@@ -161,7 +161,7 @@ describe('kind', () => {
 	});
 
 	test('should compute {value} property', () => {
-		render(<Kind prop={1}/>);
+		render(<Kind prop={1} />);
 
 		const expected = '2';
 		const kindDiv = screen.getByTitle('Label');
@@ -172,7 +172,7 @@ describe('kind', () => {
 	test('should support contextType in handlers', async () => {
 		const onClick = jest.fn();
 		const user = userEvent.setup();
-		render(<Kind onClick={onClick} prop={1}/>);
+		render(<Kind onClick={onClick} prop={1} />);
 
 		const kindDiv = screen.getByTitle('Label');
 		await user.click(kindDiv);
@@ -184,7 +184,7 @@ describe('kind', () => {
 	});
 
 	test('should support contextType in computed', () => {
-		render(<Kind prop={1}/>);
+		render(<Kind prop={1} />);
 
 		const expected = 'contextinitial';
 		const kindDiv = screen.getByTitle('Label');
@@ -205,7 +205,7 @@ describe('kind', () => {
 			}
 		});
 
-		render(<Comp/>);
+		render(<Comp />);
 
 		const button = screen.getByTestId('button');
 		await user.click(button);
@@ -219,7 +219,7 @@ describe('kind', () => {
 		test('should support a minimal kind', () => {
 			const Minimal = kind({
 				name: 'Minimal',
-				render: () => <div/>
+				render: () => <div />
 			});
 
 			const component = Minimal.inline();
