@@ -93,7 +93,7 @@ const functionalKind = (config) => {
         if (renderStyles)   props = renderStyles(props, context);
         if (renderComputed) props = renderComputed(props, context);
 
-        return useRender(props, context);
+        return useRender(props, context); // eslint-disable-line react-hooks/rules-of-hooks
     };
 
     const Component = function (props) {
