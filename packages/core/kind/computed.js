@@ -43,26 +43,5 @@ const computed = (cfg, optProps) => {
 	return renderComputed;
 };
 
-const hooks = (cfg, optHooks) => {
-	const keys = Object.keys(cfg);
-
-	const renderHooks = (props, ...args) => {
-		const updated = {};
-
-		for (let i = keys.length - 1; i >= 0; i--) {
-			updated[keys[i]] = cfg[keys[i]](props, ...args);
-		}
-
-		return Object.assign(props, updated);
-	}
-
-	// maintain compatibility with 1.x
-	if (optHooks) {
-		return renderHooks(optHooks);
-	}
-
-	return renderHooks;
-}
-
 export default computed;
 export {computed};
