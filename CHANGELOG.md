@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `core/util` function `checkPropTypes` to check the prop types of a component
 - `ui/resolution` Added support for linear scaling type
+- `ui/Slider` Added support for `colorPicker`
 
 ### Fixed
 

@@ -7,9 +7,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Changed
 
 - `ui/Marquee` to reduce redundant lifecycle work during high-frequency re-renders
+
 ### Added
 
 - `ui/resolution` Added support for linear scaling type
+- `ui/Slider` Added support for `colorPicker`
 
 ### Fixed
 
