@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import {validateRangeOnce, validateSteppedOnce} from '../internal/validators';
 
-import {calcProportion} from './utils';
+import {calcProportion, hslToHex} from './utils';
 
 import css from './Slider.module.less';
 
@@ -89,7 +89,12 @@ const PositionDecorator = hoc((config, Wrapped) => {
 				proportion
 			};
 
-			if (colorPicker) onChangeObj.color = `hsla(${value}, 100%, 50%, 1)`;
+			if (colorPicker) {
+				onChangeObj.color = {
+					hex: hslToHex(value),
+					hsl: `hsla(${value}, 100%, 50%, 1)`
+				};
+			}
 
 			if (value !== this.props.value) {
 				forward('onChange', onChangeObj, this.props);
