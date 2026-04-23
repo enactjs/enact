@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/resolution` Added support for linear scaling type
-- `ui/Slider` Added support for `colorPicker`
+- `ui/Slider` support for `colorPicker`
 
 ### Fixed
 
