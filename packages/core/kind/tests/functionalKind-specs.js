@@ -157,7 +157,6 @@ describe('functionalKind', () => {
 			name: 'Comp',
 			functional: true,
 			useRender: () => {
-				// eslint-disable-next-line react-hooks/rules-of-hooks
 				const [state, setState] = useState(0);
 
 				return <button data-testid="button" onClick={() => setState(state + 1)}>{state}</button>;
