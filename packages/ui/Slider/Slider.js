@@ -67,7 +67,7 @@ const SliderBase = kind({
 		backgroundProgress: PropTypes.number,
 
 		/**
-		 * Indicates if this component will be used as a colorPicker.
+		 * Indicates if Slider will be used as a colorPicker.
 		 *
 		 * @type {Boolean}
 		 * @default false
