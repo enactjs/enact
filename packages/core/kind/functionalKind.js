@@ -1,10 +1,3 @@
-/**
- * Provides the {@link core/kind.functionalKind} method to create components
- *
- * @module core/kind
- * @exports functionalKind
- */
-
 import {createContext, useContext} from 'react';
 
 import useHandlers from '../useHandlers';
