@@ -90,11 +90,11 @@ const NoContext = createContext(null);
  *			className: 'button'
  *		},
  *		// add event handlers that are cached between calls to prevent recreating each call. Any
- *		// handlers are added to the props passed to `render()`.  See core/handle.
+ *		// handlers are added to the props passed to `useRender()`.  See core/handle.
  *		handlers: {
  *			onKeyDown: (evt, props) => { .... }
  *		},
- *		// add some computed properties, these are added to props passed to `render()`
+ *		// add some computed properties, these are added to props passed to `useRender()`
  *		computed: {
  *			// border color will be the color prepended by 'light'
  *			borderColor: ({color}) => 'light' + color,
