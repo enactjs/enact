@@ -1,3 +1,10 @@
+/*
+ * Provides the {@link core/kind.functionalKind} method to create components
+ *
+ * @module core/kind
+ * @exports functionalKind
+ */
+
 import {createContext, useContext} from 'react';
 
 import useHandlers from '../useHandlers';
@@ -9,7 +16,7 @@ import styles from './styles';
 // Fallback context when none is specified.
 const NoContext = createContext(null);
 
-/**
+/*
  * @callback RenderFunction
  * @memberof core/kind
  * @param {Object<string, any>} props
@@ -17,7 +24,7 @@ const NoContext = createContext(null);
  * @returns React.Element|null
  */
 
-/**
+/*
  * @callback ComputedPropFunction
  * @memberof core/kind
  * @param {Object<string, any>} props
@@ -25,7 +32,7 @@ const NoContext = createContext(null);
  * @returns any
  */
 
-/**
+/*
  * @callback HandlerFunction
  * @memberof core/kind
  * @param {any} event
@@ -33,7 +40,7 @@ const NoContext = createContext(null);
  * @param {Object<string, any>} context
  */
 
-/**
+/*
  * Configuration for CSS class name mapping
  *
  * @typedef {Object} StylesBlock
@@ -44,7 +51,7 @@ const NoContext = createContext(null);
  * If this value is `true`, all the class names of the component CSS will become public.
  */
 
-/**
+/*
  * @typedef {Object} KindConfig
  * @memberof core/kind
  * @property {String} [name] The name of the component
@@ -57,7 +64,7 @@ const NoContext = createContext(null);
  * @property {RenderFunction} useRender The useRender function
  */
 
-/**
+/*
  * Creates a new functional component with declarative syntactic sugar.
  *
  * @function
