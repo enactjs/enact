@@ -67,6 +67,15 @@ const SliderBase = kind({
 		backgroundProgress: PropTypes.number,
 
 		/**
+		 * Indicates if Slider will be used as a colorPicker.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		colorPicker: PropTypes.bool,
+
+		/**
 		 * Called with a reference to the root component.
 		 *
 		 * When using {@link ui/Slider.Slider}, the `ref` prop is forwarded to this component
@@ -252,6 +261,7 @@ const SliderBase = kind({
 	},
 
 	defaultProps: {
+		colorPicker: false,
 		disabled: false,
 		knobComponent: Knob,
 		min: 0,
@@ -306,6 +316,7 @@ const SliderBase = kind({
 		value = min,
 		...rest
 	}) => {
+		delete rest.colorPicker;
 		delete rest.noFill;
 		delete rest.pressed;
 		delete rest.step;

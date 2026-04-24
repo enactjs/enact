@@ -431,18 +431,20 @@ const useScrollBase = (props) => {
 		const propsHandleResizeWindow = props.handleResizeWindow;
 
 		if (ri.scale(1) !== riRatio) {
-			if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
-				scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
-				scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
-			} else {
-				scrollContentProps.itemSize *= ri.scale(1) / riRatio;
-				if (scrollContentProps.itemSizes) {
-					for (let i = 0; i < scrollContentProps.itemSizes.length; i++) {
-						scrollContentProps.itemSizes[i] *= ri.scale(1) / riRatio;
+			if (scrollContentProps.itemSize) {
+				if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
+					scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
+					scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
+				} else {
+					scrollContentProps.itemSize *= ri.scale(1) / riRatio;
+					if (scrollContentProps.itemSizes) {
+						for (let i = 0; i < scrollContentProps.itemSizes.length; i++) {
+							scrollContentProps.itemSizes[i] *= ri.scale(1) / riRatio;
+						}
 					}
 				}
+				setItemSize(scrollContentProps.itemSize);
 			}
-			setItemSize(scrollContentProps.itemSize);
 			setRiRatio(ri.scale(1));
 		}
 
