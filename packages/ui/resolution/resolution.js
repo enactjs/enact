@@ -51,7 +51,7 @@ const linearScalingType = {
  * @private
  */
 const configDefaults = {
-	fontSizeHandling: 'scale',
+	fontSizeHandling: 'normal',
 	orientationHandling: 'normal',
 	linearScaling: {
 		active: false,
@@ -298,7 +298,7 @@ function calculateFontSize (type) {
 	}
 
 	const scrObj = getScreenTypeObject(type);
-	const shouldScaleFontSize = (config.fontSizeHandling === 'scale') && (workspaceBounds.width < scrObj.width || workspaceBounds.height < scrObj.height);
+	const shouldScaleFontSize = (config.fontSizeHandling === 'scale') && (workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height);
 	let size;
 
 	if (orientation === 'portrait' && config.orientationHandling === 'scale') {
