@@ -907,7 +907,7 @@ const useScrollBase = (props) => {
 	 * Handler for scrollend event
 	 */
 	function onScrollEnd (ev) {
-		if (!mutableRef.current.scrolling) {
+		if (!mutableRef.current.scrolling || mutableRef.current.keyPressed) {
 			return;
 		}
 
@@ -917,7 +917,7 @@ const useScrollBase = (props) => {
 		mutableRef.current.scrollStopJob.stop();
 
 		// stop for non-accumulating scrolls (mouse/touch)
-		if (!mutableRef.current.isScrollAnimationTargetAccumulated) {
+		if (!mutableRef.current.isScrollAnimationTargetAccumulated && !mutableRef.current.keyScroll) {
 			scrollStopOnScroll();
 			return;
 		}
@@ -929,6 +929,7 @@ const useScrollBase = (props) => {
 
 		mutableRef.current.scrollEndGraceTimer = setTimeout(() => {
 			mutableRef.current.scrollEndGraceTimer = null;
+			mutableRef.current.keyScroll = false;
 			scrollStopOnScroll();
 		}, 100);
 	}
@@ -953,6 +954,7 @@ const useScrollBase = (props) => {
 
 	function onKeyUp (ev) {
 		mutableRef.current.keyPressed = false;
+		mutableRef.current.keyScroll = true;
 		forward('onKeyUp', ev, props);
 	}
 
