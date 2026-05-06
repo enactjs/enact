@@ -51,7 +51,7 @@ const linearScalingType = {
  * @private
  */
 const configDefaults = {
-	fontSizeHandling: 'normal',
+	fontSizeHandling: 'scale',
 	orientationHandling: 'normal',
 	linearScaling: {
 		active: false,
