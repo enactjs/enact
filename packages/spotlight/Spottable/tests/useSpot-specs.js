@@ -294,4 +294,79 @@ describe('useSpottable', () => {
 			expect(spy).toHaveBeenCalledTimes(expected);
 		});
 	});
+
+	describe('focus restoration on spotlightDisabled transition', () => {
+		let focusSpy;
+		let isPausedSpy;
+		let pointerModeSpy;
+		let setPointerModeSpy;
+
+		beforeEach(() => {
+			focusSpy = jest.spyOn(Spotlight, 'focus').mockImplementation(() => true);
+			isPausedSpy = jest.spyOn(Spotlight, 'isPaused').mockReturnValue(false);
+			// Drive the pointer-mode + hover branch of focus restoration;
+			pointerModeSpy = jest.spyOn(Spotlight, 'getPointerMode').mockReturnValue(true);
+			setPointerModeSpy = jest.spyOn(Spotlight, 'setPointerMode').mockImplementation(() => {});
+			// Override the wrapper's getCurrent mock: simulate "focus is on something outside Spotlight's tracking"
+			Spotlight.getCurrent = () => null;
+		});
+
+		afterEach(() => {
+			focusSpy.mockRestore();
+			isPausedSpy.mockRestore();
+			pointerModeSpy.mockRestore();
+			setPointerModeSpy.mockRestore();
+		});
+
+		test('should restore focus exactly once on a true→false transition', () => {
+			const {rerender} = render(<SpottableComponent data-testid={id} spotlightDisabled />);
+			// isHovered must be true for the pointer-mode restoration branch to fire.
+			fireEvent.mouseEnter(screen.getByTestId(id));
+
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+
+			expect(focusSpy).toHaveBeenCalledTimes(1);
+		});
+
+		test('should not re-restore focus on no-change rerenders after the transition', () => {
+			const {rerender} = render(<SpottableComponent data-testid={id} spotlightDisabled />);
+			fireEvent.mouseEnter(screen.getByTestId(id));
+
+			// Transition true → false: legitimate restore, fires once.
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+			expect(focusSpy).toHaveBeenCalledTimes(1);
+
+			// Subsequent no-change rerenders simulate the parent re-rendering for
+			// reasons unrelated to spotlightDisabled (e.g. a sibling prop changing_
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+
+			expect(focusSpy).toHaveBeenCalledTimes(1);
+		});
+
+		test('should restore focus again on a second true→false transition', () => {
+			const {rerender} = render(<SpottableComponent data-testid={id} spotlightDisabled />);
+			fireEvent.mouseEnter(screen.getByTestId(id));
+
+			// First transition.
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+			expect(focusSpy).toHaveBeenCalledTimes(1);
+
+			// No-change rerender between transitions
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+			expect(focusSpy).toHaveBeenCalledTimes(1);
+
+			// Toggle back to disabled (no restoration on this direction).
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled />);
+			expect(focusSpy).toHaveBeenCalledTimes(1);
+
+			// Second true → false transition — restoration must fire again.
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+			expect(focusSpy).toHaveBeenCalledTimes(2);
+
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+			expect(focusSpy).toHaveBeenCalledTimes(2);
+		});
+	});
 });
