@@ -8,7 +8,7 @@
 import handle, {forwardCustom} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import useHandlers from '@enact/core/useHandlers';
-import {cap} from '@enact/core/util';
+import {cap, checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import pick from 'ramda/src/pick';
 import {useRef} from 'react';
@@ -156,6 +156,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		const props = {disabled, ...rest};
 		const updated = {...props};
 		const propSelected = props[prop];
+		checkPropTypes(Toggleable, props);
 
 		const hook = useToggle({
 			defaultSelected: props[defaultPropKey],
@@ -180,8 +181,8 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		// either null or undefined. The ternary below enforces that but we don't want to
 		// continue this exception in the future and should sunset it with this HOC.
 		const {current: instance} = useRef({selected: null});
-		const selected = (instance.selected && propSelected == null) ? false : hook.selected;
-		instance.selected = propSelected;
+		const selected = (instance.selected && propSelected == null) ? false : hook.selected; // eslint-disable-line react-hooks/refs
+		instance.selected = propSelected; // eslint-disable-line react-hooks/refs
 
 		if (prop) {
 			updated[prop] = selected;

@@ -9,10 +9,11 @@
 import handle, {forward, returnsTrue} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 import {WithRef} from '@enact/core/internal/WithRef';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import {Component, useCallback, useRef} from 'react';
+import {useCallback, useReducer, useRef} from 'react';
 
 import {spottableClass, useSpottable} from './useSpottable';
 
@@ -91,6 +92,32 @@ const defaultConfig = {
  *	...
  *	const SpottableComponent = Spottable(Component);
  * ```
+ *
+ * When a component receives spotlight focus, the `data-spotlight-focused` attribute is
+ * automatically applied to its DOM node and removed on blur. This provides a stable CSS hook
+ * for styling focused components without any additional configuration:
+ *
+ * ```css
+ * [data-spotlight-focused] {
+ *     outline: 3px solid var(--my-focus-color);
+ * }
+ * ```
+ *
+ * Or within a CSS Modules component stylesheet:
+ *
+ * ```less
+ * .button {
+ *     &[data-spotlight-focused] {
+ *         .bg {
+ *             background-color: var(--my-focus-bg-color);
+ *         }
+ *     }
+ * }
+ * ```
+ *
+ * For an app-wide focus class, see {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}
+ * and its `focusEffectClass` config option.
+ *
  * @class Spottable
  * @memberof spotlight/Spottable
  * @param  {Object} defaultConfig Set of default configuration parameters
@@ -104,6 +131,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const WrappedWithRef = WithRef(Wrapped);
 
 	function SpottableBase (props) {
+		checkPropTypes(SpottableBase, props);
+
 		const nodeRef = useRef();
 
 		const {
@@ -146,8 +175,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		rest.tabIndex = tabIndex;
 
 		const handlers = useHandlers(spotHandlers, rest, spot);
-
-		delete rest.spotlightId;
 
 		return (
 			<WrappedWithRef
@@ -264,18 +291,9 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	};
 
 	// eslint-disable-next-line no-shadow
-	class Spottable extends Component {
-		componentDidMount () {
-			this.forceUpdate();
-		}
-
-		handleForceUpdate = () => {
-			this.forceUpdate();
-		};
-
-		render () {
-			return <SpottableBase {...this.props} handleForceUpdate={this.handleForceUpdate} />;
-		}
+	function Spottable (props) {
+		const [, forceUpdate] = useReducer(x => x + 1, 0);
+		return <SpottableBase {...props} handleForceUpdate={forceUpdate} />;
 	}
 
 	return Spottable;

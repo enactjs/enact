@@ -1,3 +1,4 @@
+import {checkPropTypes} from '@enact/core/util';
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
@@ -78,6 +79,7 @@ class Scrim extends Component {
 
 	constructor (props) {
 		super(props);
+		checkPropTypes(this, props);
 
 		this.state = {
 			visible: true
@@ -98,6 +100,7 @@ class Scrim extends Component {
 	}
 
 	componentDidUpdate (prevProps) {
+		checkPropTypes(this, this.props, prevProps);
 		if (prevProps.type === 'translucent' && this.props.type !== 'translucent') {
 			removeTranslucentScrim(this);
 		}

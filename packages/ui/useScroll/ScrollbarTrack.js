@@ -1,3 +1,4 @@
+import {checkPropTypes} from '@enact/core/util';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {memo} from 'react';
@@ -13,6 +14,7 @@ import css from './ScrollbarTrack.module.less';
  * @private
  */
 const ScrollbarTrack = (props) => {
+	checkPropTypes(ScrollbarTrack, props);
 	const
 		{ref = null, vertical = true, ...rest} = props,
 		className = classNames(css.scrollbarTrack, vertical ? css.vertical : null);

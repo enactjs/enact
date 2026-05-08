@@ -1,11 +1,12 @@
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
+import {checkPropTypes} from '@enact/core/util';
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {validateRangeOnce, validateSteppedOnce} from '../internal/validators';
 
-import {calcProportion} from './utils';
+import {calcProportion, hslToHex} from './utils';
 
 import css from './Slider.module.less';
 
@@ -37,6 +38,7 @@ const PositionDecorator = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			checkPropTypes(this, props);
 
 			this.handleDown = this.handleDown.bind(this);
 			this.handleDrag = this.handleDrag.bind(this);
@@ -47,8 +49,12 @@ const PositionDecorator = hoc((config, Wrapped) => {
 			};
 		}
 
+		componentDidUpdate (prevProps) {
+			checkPropTypes(this, this.props, prevProps);
+		}
+
 		emitChangeForPosition (x, y) {
-			const {max, min, orientation, step} = this.props;
+			const {colorPicker, max, min, orientation, step} = this.props;
 			let position = x;
 			let offset = this.bounds.offsetX;
 
@@ -77,12 +83,21 @@ const PositionDecorator = hoc((config, Wrapped) => {
 				proportion = calcProportion(min, max, value);
 			}
 
+			const onChangeObj = {
+				type: 'onChange',
+				value,
+				proportion
+			};
+
+			if (colorPicker) {
+				onChangeObj.color = {
+					hex: hslToHex(value),
+					hsl: `hsla(${value}, 100%, 50%, 1)`
+				};
+			}
+
 			if (value !== this.props.value) {
-				forward('onChange', {
-					type: 'onChange',
-					value,
-					proportion
-				}, this.props);
+				forward('onChange', onChangeObj, this.props);
 			}
 		}
 

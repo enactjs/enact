@@ -1,1 +1,1 @@
-module.exports = require('@enact/storybook-utils/configs/babel');
+export {default} from '@enact/storybook-utils/configs/babel.js';

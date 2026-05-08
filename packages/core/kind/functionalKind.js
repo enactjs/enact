@@ -1,25 +1,22 @@
-/**
- * Provides the {@link core/kind.kind} method to create components
+/*
+ * Provides the {@link core/kind.functionalKind} method to create components
  *
  * @module core/kind
- * @exports kind
+ * @exports functionalKind
  */
 
-import {createContext, use, Component as ReactComponent} from 'react';
+import {createContext, useContext} from 'react';
 
 import useHandlers from '../useHandlers';
-import Handlers from '../useHandlers/Handlers';
 import {checkPropTypes} from '../util';
 
 import computed from './computed';
 import styles from './styles';
 
-// Because contextType is optional and hooks must be called in the same order, we need a fallback
-// context when none is specified. This likely has some overhead so we may want to deprecate and
-// remove contextType support for 4.0 since the context APIs have improved since this was added.
+// Fallback context when none is specified.
 const NoContext = createContext(null);
 
-/**
+/*
  * @callback RenderFunction
  * @memberof core/kind
  * @param {Object<string, any>} props
@@ -27,7 +24,7 @@ const NoContext = createContext(null);
  * @returns React.Element|null
  */
 
-/**
+/*
  * @callback ComputedPropFunction
  * @memberof core/kind
  * @param {Object<string, any>} props
@@ -35,7 +32,7 @@ const NoContext = createContext(null);
  * @returns any
  */
 
-/**
+/*
  * @callback HandlerFunction
  * @memberof core/kind
  * @param {any} event
@@ -43,7 +40,7 @@ const NoContext = createContext(null);
  * @param {Object<string, any>} context
  */
 
-/**
+/*
  * Configuration for CSS class name mapping
  *
  * @typedef {Object} StylesBlock
@@ -54,31 +51,28 @@ const NoContext = createContext(null);
  * If this value is `true`, all the class names of the component CSS will become public.
  */
 
-/**
+/*
  * @typedef {Object} KindConfig
  * @memberof core/kind
  * @property {String} [name] The name of the component
- * @property {Boolean} [functional] Boolean controlling whether the returned component should be a functional component
  * @property {Object.<string, Function>} [propTypes] Specifies expected props
  * @property {Object.<string, any>} [defaultProps] Sets the default props
  * @property {Object} [contextType] Specifies context type
- * @property {StylesBlock} [styles] Configures styles with the static className to merge with user className
- * @property {Object.<string, HandlerFunction>} [handlers]  Adds event handlers that are cached between calls to prevent recreating each call.
- * Any handlers are added to the props passed to `render()`. See {@link core/handle.handle}.
- * @property {Object.<string, ComputedPropFunction>} [computed] Adds some computed properties, these are added to props passed to `render()`
- * @property {RenderFunction} render The render function
+ * @property {StylesBlock} [styles] Configures styles
+ * @property {Object.<string, HandlerFunction>} [handlers] Adds event handlers
+ * @property {Object.<string, ComputedPropFunction>} [computed] Adds computed properties
+ * @property {RenderFunction} useRender The useRender function
  */
 
-/**
+/*
  * Creates a new component with some helpful declarative syntactic sugar.
  *
  * Example:
  * ```
  *	import css from './Button.module.less';
- *	const Button = kind({
+ *	// Return a functional component
+ *	const Button = functionalKind({
  *		name: 'Button',
- *		// Return a functional component
- *		functional: true,
  *		// expect color and onClick properties but neither required
  *		propTypes: {
  *			color: PropTypes.string
@@ -96,11 +90,11 @@ const NoContext = createContext(null);
  *			className: 'button'
  *		},
  *		// add event handlers that are cached between calls to prevent recreating each call. Any
- *		// handlers are added to the props passed to `render()`.  See core/handle.
+ *		// handlers are added to the props passed to `useRender()`.  See core/handle.
  *		handlers: {
  *			onKeyDown: (evt, props) => { .... }
  *		},
- *		// add some computed properties, these are added to props passed to `render()`
+ *		// add some computed properties, these are added to props passed to `useRender()`
  *		computed: {
  *			// border color will be the color prepended by 'light'
  *			borderColor: ({color}) => 'light' + color,
@@ -108,7 +102,7 @@ const NoContext = createContext(null);
  *			color: ({color}, context) => context.backgroundColor || color
  *		},
  *		// Render the thing, already!
- *		render: ({color, borderColor, children, ...rest}) => (
+ *		useRender: ({color, borderColor, children, ...rest}) => (
  *			<button
  *				{...rest}
  *				style={{backgroundColor: color, borderColor}}
@@ -117,110 +111,84 @@ const NoContext = createContext(null);
  *			</button>
  *		)
  *	});
- * ```
+
+
+/*
+ * Creates a new functional component with declarative syntactic sugar.
  *
  * @function
  * @template Props
  * @param  {KindConfig}    config    Component configuration
- *
- * @returns {Component<Props>}           Component
+ * @returns {Component<Props>}
  * @memberof core/kind
- * @see {@link core/handle}
- * @public
+ * @private
  */
-const kind = (config) => {
+const functionalKind = (config) => {
 	const {
 		computed: cfgComputed,
 		contextType = NoContext,
 		defaultProps,
-		functional,
 		handlers,
 		name,
 		propTypes,	// eslint-disable-line react/forbid-foreign-prop-types
-		render,
+		useRender,
 		styles: cfgStyles
 	} = config;
 
-	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
+	const renderStyles  = cfgStyles   ? styles(cfgStyles)     : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
+
 	const renderKind = (props, context) => {
-		if (renderStyles) props = renderStyles(props, context);
+		if (renderStyles)   props = renderStyles(props, context);
 		if (renderComputed) props = renderComputed(props, context);
 
-		return render(props, context);
+		return useRender(props, context); // eslint-disable-line react-hooks/rules-of-hooks
 	};
 
-	let Component;
+	const Component = function (props) {
+		// Hooks must always be called unconditionally and in the same order.
+		const ctx = useContext(contextType);
+		const boundHandlers = useHandlers(handlers, props, ctx);
 
-	// In 4.x, this branch will become the only supported version and the class branch will be
-	// removed.
-	if (functional) {
-		Component = function (props) {
-			const ctx = use(contextType);
-			const boundHandlers = useHandlers(handlers, props, ctx);
-
-			const merged = {
-				...props,
-				...boundHandlers
-			};
-
-			if (defaultProps) {
-				Object.keys(defaultProps).forEach(key => {
-					// eslint-disable-next-line no-undefined
-					if (merged[key] === undefined) {
-						merged[key] = defaultProps[key];
-					}
-				});
-			}
-
-			checkPropTypes(Component, merged);
-
-			return renderKind(merged, ctx);
+		// Merge incoming props with bound handlers.
+		let merged = {
+			...props,
+			...boundHandlers
 		};
-	} else {
-		Component = class extends ReactComponent {
-			static contextType = contextType;
 
-			constructor (props) {
-				super(props);
-				checkPropTypes(this, props);
+		// Apply defaultProps manually so functional components
+		// receive defaults even when React's own defaultProps is set.
+		if (defaultProps) {
+			Object.keys(defaultProps).forEach(key => {
+				// eslint-disable-next-line no-undefined
+				if (merged[key] === undefined) {
+					merged[key] = defaultProps[key];
+				}
+			});
+		}
 
-				this.handlers = new Handlers(handlers);
-			}
+		checkPropTypes(Component, merged);
 
-			componentDidUpdate (prevProps) {
-				checkPropTypes(this, this.props, prevProps);
-			}
+		return renderKind(merged, ctx);
+	};
 
-			render () {
-				this.handlers.setContext(this.props, this.context);
-
-				const merged = {
-					...this.props,
-					...this.handlers.handlers
-				};
-
-				return renderKind(merged, this.context);
-			}
-		};
-	}
-
-	if (name) Component.displayName = name;
-	if (propTypes) Component.propTypes = propTypes;
+	if (name)         Component.displayName = name;
+	if (propTypes)    Component.propTypes   = propTypes;
 	if (defaultProps) Component.defaultProps = defaultProps;
 
-	// Decorate the Component with the computed property object in DEV for easier testability
+	// Expose computed map in DEV for easier testability.
 	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
 
+	// ── inline ──────────────────────────────────────────────────────────────
+	// A synchronous, hook-free path for calling the component logic outside
+	// of the React render cycle (e.g. in tests or server-side utilities).
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
-	const handlerKeys = handlers ? Object.keys(handlers) : null;
+	const handlerKeys     = handlers     ? Object.keys(handlers)     : null;
 
 	Component.inline = (props, context) => {
-		let updated = {
-			...props
-		};
+		let updated = {...props};
 
-		if (defaultPropKeys && defaultPropKeys.length > 0) {
+		if (defaultPropKeys?.length) {
 			defaultPropKeys.forEach(key => {
 				// eslint-disable-next-line no-undefined
 				if (props == null || props[key] === undefined) {
@@ -229,13 +197,14 @@ const kind = (config) => {
 			});
 		}
 
-		if (handlerKeys && handlerKeys.length > 0) {
-			// generate a handler with a clone of updated to ensure each handler receives the same
-			// props without the kind.handlers injected.
+		if (handlerKeys?.length) {
+			// Snapshot `updated` before injecting handlers so every handler
+			// receives the same base props (no cross-contamination).
+			const snapshot = {...updated};
 			updated = handlerKeys.reduce((_props, key) => {
-				_props[key] = (ev) => handlers[key](ev, updated, context);
+				_props[key] = (ev) => handlers[key](ev, snapshot, context);
 				return _props;
-			}, {...updated});
+			}, updated);
 		}
 
 		return renderKind(updated, context);
@@ -244,5 +213,5 @@ const kind = (config) => {
 	return Component;
 };
 
-export default kind;
-export {kind};
+export default functionalKind;
+export {functionalKind};

@@ -119,7 +119,6 @@ const useScrollBase = (props) => {
 			horizontalScrollbar,
 			horizontalScrollbarHandle,
 			itemRenderer,
-			itemSize,
 			itemSizes,
 			noScrollByDrag,
 			noScrollByWheel,
@@ -151,6 +150,7 @@ const useScrollBase = (props) => {
 	delete rest.cbScrollTo;
 	delete rest.clearOverscrollEffect;
 	delete rest.handleResizeWindow;
+	delete rest.itemSize;
 	delete rest.onFlick;
 	delete rest.onKeyDown;
 	delete rest.onMouseDown;
@@ -174,12 +174,15 @@ const useScrollBase = (props) => {
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
 	const [riRatio, setRiRatio] = useState(ri.scale(1));
+	const [originalItemSize, setOriginalItemSize] = useState(props.itemSize);
+	const [itemSize, setItemSize] = useState(props.itemSize);
 
 	const mutableRef = useRef({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
 
 		// Enable the early bail out of repeated scrolling to the same position
 		animationInfo: null,
+		scrollEndGraceTimer: null,
 
 		resizeRegistry: null,
 
@@ -297,6 +300,17 @@ const useScrollBase = (props) => {
 			mutableRef.current.wheelDirection = val;
 		}
 	});
+
+	if ((originalItemSize || originalItemSize === 0 || props.itemSize || props.itemSize === 0) && (originalItemSize !== props.itemSize)) {
+		setOriginalItemSize(props.itemSize);
+		if (typeof props.itemSize === 'object') {
+			if ((ri.scale(1) / riRatio !== props.itemSize.minWidth / itemSize.minWidth) || (ri.scale(1) / riRatio !== props.itemSize.minHeight / itemSize.minHeight)) {
+				setItemSize(props.itemSize);
+			}
+		} else if (ri.scale(1) / riRatio !== props.itemSize / itemSize) {
+			setItemSize(props.itemSize);
+		}
+	}
 
 	if (mutableRef.current.animator == null) {
 		mutableRef.current.animator = new ScrollAnimator();
@@ -417,11 +431,21 @@ const useScrollBase = (props) => {
 		const propsHandleResizeWindow = props.handleResizeWindow;
 
 		if (ri.scale(1) !== riRatio) {
-			if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
-				scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
-				scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
-				setRiRatio(ri.scale(1));
+			if (scrollContentProps.itemSize) {
+				if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
+					scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
+					scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
+				} else {
+					scrollContentProps.itemSize *= ri.scale(1) / riRatio;
+					if (scrollContentProps.itemSizes) {
+						for (let i = 0; i < scrollContentProps.itemSizes.length; i++) {
+							scrollContentProps.itemSizes[i] *= ri.scale(1) / riRatio;
+						}
+					}
+				}
+				setItemSize(scrollContentProps.itemSize);
 			}
+			setRiRatio(ri.scale(1));
 		}
 
 		// `handleSize` in `ui/resolution.ResolutionDecorator` should be executed first.
@@ -823,16 +847,19 @@ const useScrollBase = (props) => {
 	// scrollMode 'translate' ]]
 
 	// scrollMode 'native' [[
-	function onScroll (ev) {
+	/**
+	 * Updates scroll position from a scroll event.
+	 * Handles RTL adjustment and position updates.
+	 *
+	 * @param {Event} ev - Scroll event
+	 * @private
+	 */
+	function updateScrollPosition (ev) {
 		let {scrollLeft, scrollTop} = ev.target;
 
 		const
 			bounds = getScrollBounds(),
 			canScrollH = canScrollHorizontally(bounds);
-
-		if (!mutableRef.current.scrolling) {
-			scrollStartOnScroll();
-		}
 
 		if (rtl && canScrollH) {
 			scrollLeft = (platform.chrome < 85) ? bounds.maxLeft - scrollLeft : -scrollLeft;
@@ -848,9 +875,62 @@ const useScrollBase = (props) => {
 		if (scrollContentHandle.current.didScroll) {
 			scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
 		}
+	}
+
+	function onScroll (ev) {
+		// Track if we had a grace timer active before clearing it
+		const hadGraceTimer = !!mutableRef.current.scrollEndGraceTimer;
+
+		if (mutableRef.current.scrollEndGraceTimer) {
+			clearTimeout(mutableRef.current.scrollEndGraceTimer);
+			mutableRef.current.scrollEndGraceTimer = null;
+		}
+
+		if (!mutableRef.current.scrolling) {
+			scrollStartOnScroll();
+		}
+
+		updateScrollPosition(ev);
+
+		if (mutableRef.current.lastInputType === 'wheel' && !mutableRef.current.isScrollAnimationTargetAccumulated) {
+			mutableRef.current.isScrollAnimationTargetAccumulated = true;
+		}
 
 		forwardScrollEvent('onScroll');
-		mutableRef.current.scrollStopJob.start();
+
+		if (!hadGraceTimer) {
+			mutableRef.current.scrollStopJob.start();
+		}
+	}
+
+	/*
+	 * Handler for scrollend event
+	 */
+	function onScrollEnd (ev) {
+		if (!mutableRef.current.scrolling) {
+			return;
+		}
+
+		updateScrollPosition(ev);
+
+		// Stop the fallback timer since the native scrollend has fired
+		mutableRef.current.scrollStopJob.stop();
+
+		// stop for non-accumulating scrolls (mouse/touch)
+		if (!mutableRef.current.isScrollAnimationTargetAccumulated) {
+			scrollStopOnScroll();
+			return;
+		}
+
+		// This prevents spamming onScrollStop during smooth scroll continuation
+		if (mutableRef.current.scrollEndGraceTimer) {
+			clearTimeout(mutableRef.current.scrollEndGraceTimer);
+		}
+
+		mutableRef.current.scrollEndGraceTimer = setTimeout(() => {
+			mutableRef.current.scrollEndGraceTimer = null;
+			scrollStopOnScroll();
+		}, 100);
 	}
 	// scrollMode 'native' ]]
 
@@ -1532,6 +1612,7 @@ const useScrollBase = (props) => {
 		// scrollMode 'native' [[
 		if (scrollMode === 'native' && scrollContentRef.current) {
 			utilEvent('scroll').addEventListener(scrollContentRef, onScroll, {passive: true});
+			utilEvent('scrollend').addEventListener(scrollContentRef, onScrollEnd);
 		}
 		// scrollMode 'native' ]]
 
@@ -1553,6 +1634,7 @@ const useScrollBase = (props) => {
 
 		// scrollMode 'native' [[
 		utilEvent('scroll').removeEventListener(scrollContentRef, onScroll, {passive: true});
+		utilEvent('scrollend').removeEventListener(scrollContentRef, onScrollEnd);
 		// scrollMode 'native' ]]
 
 		if (props.removeEventListeners) {
@@ -1711,13 +1793,13 @@ const useScroll = (props) => {
 		verticalScrollbarHandle
 	});
 
-	assignProperties('scrollContainerProps', {ref: scrollContainerRef});
-	assignProperties('scrollContentProps', {
+	assignProperties('scrollContainerProps', {ref: scrollContainerRef}); // eslint-disable-line react-hooks/refs
+	assignProperties('scrollContentProps', { // eslint-disable-line react-hooks/refs
 		...(props.itemRenderer ? {itemRefs} : {}),
 		scrollContentRef
 	});
-	assignProperties('verticalScrollbarProps', {scrollbarHandle: verticalScrollbarHandle});
-	assignProperties('horizontalScrollbarProps', {scrollbarHandle: horizontalScrollbarHandle});
+	assignProperties('verticalScrollbarProps', {scrollbarHandle: verticalScrollbarHandle}); // eslint-disable-line react-hooks/refs
+	assignProperties('horizontalScrollbarProps', {scrollbarHandle: horizontalScrollbarHandle}); // eslint-disable-line react-hooks/refs
 
 	// Return
 

@@ -3,6 +3,7 @@
  *
  * @module core/util
  * @exports cap
+ * @exports checkPropTypes
  * @exports clamp
  * @exports coerceArray
  * @exports coerceFunction
@@ -14,11 +15,13 @@
  * @exports perfNow
  * @exports mapAndFilterChildren
  * @exports shallowEqual
+ * @exports usePrevious
  */
+import {checkPropTypes as check} from 'prop-types';
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
 import unless from 'ramda/src/unless';
-import {Children} from 'react';
+import {Children, useState} from 'react';
 import * as ReactIs from 'react-is';
 
 import Job from './Job';
@@ -329,8 +332,61 @@ const shallowEqual = (a, b) => {
 	return true;
 };
 
+/**
+ * Checks the prop types of a component.
+ *
+ * It only performs the check when `__DEV__` is true.
+ *
+ * @function checkPropTypes
+ * @param {Object} component The component instance to check.
+ * @param {Object} props The component props to check.
+ * @param {Object} [prevProps] The previous props to compare against.
+ *
+ * @returns	{undefined}
+ * @memberof core/util
+ * @public
+ */
+const checkPropTypes = (component, props, prevProps) => {
+	if (__DEV__ && !(prevProps && prevProps === props)) {
+		const isFunctional = typeof component === 'function';
+		const {displayName, name, propTypes} = isFunctional ? component : component.constructor; // eslint-disable-line react/forbid-foreign-prop-types
+
+		check(propTypes, props, 'prop', displayName || name, () => {
+			// Create a new error to capture the current stack trace
+			const checkPropsError = new Error();
+			if (Error.captureStackTrace) {
+				Error.captureStackTrace(checkPropsError, checkPropTypes);
+			}
+			return checkPropsError.stack.split('@')[0];
+		});
+	}
+};
+
+/**
+ * A custom hook that returns the previous value of a variable.
+ *
+ * @function
+ * @param   {*}    value    The value to track.
+ *
+ * @returns {*}             The value from the previous render.
+ * @memberof core/util
+ * @public
+ */
+const usePrevious = (value) => {
+	const [previousTrackedValue, setPreviousTrackedValue] = useState(value);
+	const [previousValue, setPreviousValue] = useState(value);
+
+	if (value !== previousTrackedValue) {
+		setPreviousTrackedValue(value);
+		setPreviousValue(previousTrackedValue);
+	}
+
+	return previousValue;
+};
+
 export {
 	cap,
+	checkPropTypes,
 	clamp,
 	coerceArray,
 	coerceFunction,
@@ -342,5 +398,6 @@ export {
 	perfNow,
 	mapAndFilterChildren,
 	setDefaultProps,
-	shallowEqual
+	shallowEqual,
+	usePrevious
 };

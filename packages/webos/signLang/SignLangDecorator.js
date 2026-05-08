@@ -1,5 +1,6 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import {Component} from 'react';
 
@@ -80,8 +81,13 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			checkPropTypes(this, props);
 
 			this.signLangDelayId = null;
+		}
+
+		componentDidUpdate (prevProps) {
+			checkPropTypes(this, this.props, prevProps);
 		}
 
 		requestSignLang = (active) => {

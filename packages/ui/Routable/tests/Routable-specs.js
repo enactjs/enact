@@ -55,3 +55,24 @@ describe('Routable', () => {
 		expect(secondPage).toBeInTheDocument();
 	});
 });
+
+describe('Route', () => {
+	let consoleWarnMock = null;
+	let consoleErrorMock = null;
+
+	beforeEach(() => {
+		consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();
+		consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
+	});
+
+	afterEach(() => {
+		consoleWarnMock.mockRestore();
+		consoleErrorMock.mockRestore();
+	});
+
+	test('should return an error if no props are provided to `Route`', async () => {
+		render(<Route />);
+
+		expect(consoleErrorMock).toHaveBeenCalled();
+	});
+});

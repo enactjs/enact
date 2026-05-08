@@ -15,6 +15,7 @@
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import handle, {forwardCustom} from '@enact/core/handle';
+import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import {Children, Component} from 'react';
 
@@ -216,6 +217,8 @@ const ViewManagerBase = class extends Component {
 
 	constructor (props) {
 		super(props);
+		checkPropTypes(this, props);
+
 		this.state = {
 			prevIndex: null,
 			reverseTransition: null
@@ -238,6 +241,10 @@ const ViewManagerBase = class extends Component {
 		}
 
 		return null;
+	}
+
+	componentDidUpdate (prevProps) {
+		checkPropTypes(this, this.props, prevProps);
 	}
 
 	makeTransitionEvent = () => {

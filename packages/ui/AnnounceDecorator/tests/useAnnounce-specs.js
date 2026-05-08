@@ -1,4 +1,5 @@
 import {render, screen} from '@testing-library/react';
+import {useEffect} from 'react';
 
 import useAnnounce from '../useAnnounce';
 
@@ -6,7 +7,10 @@ describe('useAnnounce', () => {
 	let announceType;
 
 	function Base ({children, announce}) {
-		announceType = typeof announce;
+		useEffect(() => {
+			announceType = typeof announce;
+		}, [announce]);
+
 		return <div data-testid="announce">{children}</div>;
 	}
 

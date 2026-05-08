@@ -123,6 +123,82 @@ wrap your base control with the `Spottable` HOC, like so:
     const SpottableComponent = Spottable(Component);
 ```
 
+## Customizing the Focus Effect
+
+Spotlight provides multiple ways to customize the visual appearance of focused components,
+ranging from a zero-configuration CSS hook to an app-wide class applied via the root decorator.
+All approaches use direct DOM manipulation and do not trigger React re-renders.
+
+### `data-spotlight-focused` attribute
+
+Every spottable component automatically receives the `data-spotlight-focused` DOM attribute
+when it gains spotlight focus. The attribute is removed on blur. No configuration is required.
+
+This is the recommended approach for component library authors styling focus within their own
+component stylesheets:
+
+```less
+// Button.module.less
+.button {
+    &[data-spotlight-focused] {
+        .bg {
+            background-color: var(--my-focus-bg-color);
+        }
+    }
+}
+```
+
+It can also be used as a global selector in any plain CSS or Less file:
+
+```css
+[data-spotlight-focused] {
+    outline: 3px solid var(--my-focus-color);
+    outline-offset: 2px;
+}
+```
+
+### `focusEffectClass` configuration parameter
+
+`SpotlightRootDecorator` accepts a `focusEffectClass` configuration parameter that applies
+a CSS class to every focused spottable component across the entire application. This is
+useful when an app needs to apply focus styles that are defined in its own stylesheet without
+modifying any component internals.
+
+```js
+import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
+
+import ApplicationView from './ApplicationView';
+
+import css from './App.module.less';
+
+const App = SpotlightRootDecorator({focusEffectClass: css.focusRing}, ApplicationView);
+```
+
+```less
+// App.module.less
+.focusRing {
+    outline: 3px solid var(--my-focus-color);
+    outline-offset: 2px;
+}
+```
+
+Note that when using CSS Modules, `css.focusRing` must be passed rather than the plain
+string `'focusRing'`, since CSS Modules transforms class names at build time. This also
+means the class is scoped to the stylesheet it is defined in, so it can style properties
+on the focused element itself (such as `outline`, `box-shadow`, or `filter`) but cannot
+reach into child nodes of other components.
+
+For component-level customization of child nodes (such as a button's background), use the
+`data-spotlight-focused` attribute selector inside the component's own stylesheet instead.
+
+### Choosing the right approach
+
+| Approach | Scope | Reaches into child nodes | CSS Modules compatible |
+|---|---|---|---|
+| `[data-spotlight-focused]` in component stylesheet | per-component | yes | yes |
+| `[data-spotlight-focused]` in global stylesheet | all components | yes | n/a |
+| `focusEffectClass` via `SpotlightRootDecorator` | all components | no | yes (pass `css.className`) |
+
 ## Containers
 
 In order to organize controls into navigation groups, we have created Spotlight
@@ -271,6 +347,39 @@ May be added to temporarily make a control not spottable.
 
 A callback function to override default spotlight behavior when exiting the spottable control.
 
+### SpotlightRootDecorator
+
+For more details and full list of `SpotlightRootDecorator` API, see [spotlight/SpotlightRootDecorator](../../modules/spotlight/SpotlightRootDecorator).
+
+##### Configuration Parameters
+
+`noAutoFocus`
++ Type: [boolean]
++ Default: `false`
+
+When `true`, the contents of the component will not receive spotlight focus after being rendered.
+
+`rootId`
++ Type: [string]
++ Default: `'root'`
+
+Specifies the id of the React DOM tree root node.
+
+`focusEffectClass`
++ Type: [string]
++ Default: `null`
+
+A CSS class name to apply globally to every spottable component when it receives spotlight focus.
+Applied via direct DOM manipulation on focus and removed on blur — no React re-render is triggered.
+
+```js
+import css from './App.module.less';
+const App = SpotlightRootDecorator({focusEffectClass: css.focusRing}, ApplicationView);
+```
+
+See [Customizing the Focus Effect](#customizing-the-focus-effect) for a full discussion of this
+feature and guidance on when to use this versus the `data-spotlight-focused` attribute.
+
 ### Container
 
 For more details and full list of `Container` API, see [spotlight/SpotlightContainerDecorator](../../modules/spotlight/SpotlightContainerDecorator).
@@ -355,4 +464,35 @@ const App = SpotlightRootDecorator(kind({
 		);
 	}
 }));
+```
+
+#### Customizing focus appearance with `data-spotlight-focused`
+
+No configuration needed. Add the attribute selector to any component stylesheet:
+
+```less
+// MyComponent.module.less
+.myComponent {
+    &[data-spotlight-focused] {
+        outline: 3px solid var(--my-focus-color);
+    }
+}
+```
+
+#### Applying an app-wide focus class via `SpotlightRootDecorator`
+
+```js
+import css from './App.module.less';
+import ApplicationView from './ApplicationView';
+import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
+
+const App = SpotlightRootDecorator({focusEffectClass: css.focusRing}, ApplicationView);
+```
+
+```less
+// App.module.less
+.focusRing {
+    outline: 3px solid var(--my-focus-color);
+    outline-offset: 2px;
+}
 ```

@@ -1,6 +1,22 @@
-import {forwardRef, memo, lazy} from 'react';
+import {render, renderHook, act} from '@testing-library/react';
+import PropTypes from 'prop-types';
+import {forwardRef, memo, lazy, Component} from 'react';
 
-import {cap, clamp, coerceArray, coerceFunction, extractAriaProps, isRenderable, memoize, mergeClassNameMaps, mapAndFilterChildren, setDefaultProps, shallowEqual} from '../util';
+import {
+	cap,
+	clamp,
+	coerceArray,
+	coerceFunction,
+	extractAriaProps,
+	isRenderable,
+	memoize,
+	mergeClassNameMaps,
+	mapAndFilterChildren,
+	setDefaultProps,
+	shallowEqual,
+	checkPropTypes,
+	usePrevious
+} from '../util';
 
 describe('util', () => {
 	describe('cap', () => {
@@ -17,6 +33,51 @@ describe('util', () => {
 			expect(clamp(10, 20, 10)).toBe(10);
 			expect(clamp(10, 20, 20)).toBe(20);
 			expect(clamp(20, 10, 10)).toBe(20); // special case
+		});
+	});
+
+	describe('checkPropTypes', () => {
+		class TestComponent extends Component {
+			static displayName = 'TestComponent';
+
+			static propTypes = {
+				bool: PropTypes.bool,
+				string: PropTypes.string
+			};
+
+			constructor (props) {
+				super(props);
+				checkPropTypes(this, this.props);
+			}
+
+			render () {
+				return (<div>Test</div>);
+			}
+		}
+
+		let consoleWarnMock = null;
+		let consoleErrorMock = null;
+
+		beforeEach(() => {
+			consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();
+			consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
+		});
+
+		afterEach(() => {
+			consoleWarnMock.mockRestore();
+			consoleErrorMock.mockRestore();
+		});
+
+		test('should not call any console.error for a correct prop', () => {
+			render(<TestComponent bool string="String" />);
+
+			expect(consoleErrorMock).not.toHaveBeenCalled();
+		});
+
+		test('should call console.error for a wrong prop', () => {
+			render(<TestComponent bool="true" string="String" />);
+
+			expect(consoleErrorMock).toHaveBeenCalled();
 		});
 	});
 
@@ -304,6 +365,60 @@ describe('util', () => {
 				child.toString(...args);
 			};
 			expect(shallowEqual(child, fakeChild)).toBe(false);
+		});
+	});
+
+	describe('usePrevious', () => {
+		test('should return the initial value on first render', () => {
+			const {result} = renderHook(() => usePrevious(1));
+
+			expect(result.current).toBe(1);
+		});
+
+		test('should return the previous value after the value changes', () => {
+			let value = 1;
+			const {result, rerender} = renderHook(() => usePrevious(value));
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				value = 2;
+				rerender();
+			});
+
+			expect(result.current).toBe(1);
+		});
+
+		test('should track the previous value across multiple changes', () => {
+			let value = 'a';
+			const {result, rerender} = renderHook(() => usePrevious(value));
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				value = 'b';
+				rerender();
+			});
+
+			expect(result.current).toBe('a');
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				value = 'c';
+				rerender();
+			});
+
+			expect(result.current).toBe('b');
+		});
+
+		test('should not update previous value when value stays the same', () => {
+			let value = 42;
+			const {result, rerender} = renderHook(() => usePrevious(value));
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				rerender();
+			});
+
+			expect(result.current).toBe(42);
 		});
 	});
 });

@@ -1,6 +1,6 @@
 {
   "name": "@enact/core",
-  "version": "5.4.2",
+  "version": "5.5.0",
   "description": "Enact is an open source JavaScript framework containing everything you need to create a fast, scalable mobile or web application.",
   "repository": {
     "type": "git",
@@ -36,9 +36,14 @@
     "invariant": "^2.2.4",
     "prop-types": "^15.8.1",
     "ramda": "^0.32.0",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "react-is": "^19.2.3",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-is": "^19.2.6",
     "warning": "^4.0.3"
+  },
+  "overrides": {
+    "prop-types": {
+      "react-is": "^19.2.6"
+    }
   }
 }
