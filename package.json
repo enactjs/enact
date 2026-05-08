@@ -22,7 +22,11 @@
   "overrides": {
     "autolinker": "^4.0.0",
     "nx": {
-      "minimatch": "^10.2.4"
+      "minimatch": "^10.2.4",
+      "axios": "^1.16.0",
+      "brace-expansion": "^5.0.5",
+      "follow-redirects": "^1.15.12",
+      "yaml": "^2.8.3"
     },
     "@nx/devkit": {
       "minimatch": "^10.2.4"
@@ -30,7 +34,7 @@
     "vue-template-compiler": "@vue/compiler-sfc@3.4.31"
   },
   "devDependencies": {
-    "@enact/docs-utils": "^0.4.16",
-    "lerna": "^9.0.5"
+    "@enact/docs-utils": "^0.4.17",
+    "lerna": "^9.0.7"
   }
 }
