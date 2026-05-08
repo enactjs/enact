@@ -17,6 +17,30 @@ To package the sampler applications as a stand-alone app:
 npm run pack
 ```
 
+### Performance Panel addon
+
+The `@github-ui/storybook-addon-performance-panel` addon is disabled by default. To enable it, set the `PERF_PANEL` environment variable to `true` when launching or packaging the sampler. The flag applies to both `npm run serve` and `npm run pack`.
+
+PowerShell:
+```
+$env:PERF_PANEL='true'; npm run serve
+$env:PERF_PANEL='true'; npm run pack
+```
+
+Windows CMD:
+```
+set "PERF_PANEL=true" && npm run serve
+set "PERF_PANEL=true" && npm run pack
+```
+
+Bash:
+```
+PERF_PANEL=true npm run serve
+PERF_PANEL=true npm run pack
+```
+
+Without the flag, both commands run normally and the addon is excluded.
+
 ## Copyright and License Information
 
 Unless otherwise specified, all content, including all source code files and documentation files in this repository are:

@@ -19,7 +19,7 @@
     "@enact/storybook-utils": "^8.0.0",
     "@enact/ui": "^5.5.0",
     "@enact/webos": "^5.5.0",
-    "@storybook/addon-docs": "^10.3.6",
+    "@github-ui/storybook-addon-performance-panel": "^1.1.4",
     "@storybook/react-webpack5": "^10.3.6",
     "classnames": "^2.5.1",
     "ilib": "^14.21.3",
