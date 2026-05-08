@@ -400,6 +400,7 @@ describe('useScroll', () => {
 				scrollMode: 'native',
 				rtl: true,
 				...mocks,
+				addEventListeners: jest.fn(),
 				assignProperties: jest.fn(),
 				horizontalScrollbar: 'auto',
 				verticalScrollbar: 'auto'
