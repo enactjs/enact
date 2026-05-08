@@ -2,6 +2,14 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [5.5.0] - 2026-05-08
+
+No significant changes.
+
+## [5.4.3] - 2026-02-26
+
+No significant changes.
+
 ## [5.4.2] - 2026-01-28
 
 No significant changes.
