@@ -2,20 +2,30 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [5.5.0] - 2026-05-08
+
+### Added
+
+- `ui/resolution` Added support for linear scaling type
+- `ui/Slider` support for `colorPicker`
 
 ### Changed
 
 - `ui/Marquee` to reduce redundant lifecycle work during high-frequency re-renders
-### Added
-
-- `ui/resolution` Added support for linear scaling type
 
 ### Fixed
 
 - `ui/resolution` to display the components accordingly on wide resolutions
 - `ui/VirtualList.VirtualList` to adjust itemSize properly when resizing window
 - `ui/VirtualList.VirtualList` to scroll properly when another VirtualList exist
+
+## [5.4.3] - 2026-02-26
+
+### Fixed
+
+- `ui/VirtualList` to revert 5.4.2 cix that not to jump to the top when item size was changed
+- `ui/VirtulList` to revert 5.4.2 fix that not to cut off focused item when scroll by pressing key
+- `ui/VirtualList.VirtualGridList` to revert 5.4.2 fix to adjust itemSize properly when resizing window
 
 ## [5.4.2] - 2026-01-28
 

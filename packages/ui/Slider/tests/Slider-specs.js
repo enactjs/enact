@@ -75,6 +75,19 @@ describe('Slider', () => {
 
 		expect(actual).toMatchObject(expected);
 	});
+
+	test('should fire `onChange` with `onChange` type of vertical slider when value changed with `colorPicker` true', () => {
+		const handleChange = jest.fn();
+		render(<Slider colorPicker defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} orientation="vertical" step={5} />);
+
+		const knob = screen.getByRole('progressbar').children.item(1);
+		fireEvent.mouseDown(knob);
+
+		const expected = {type: 'onChange'};
+		const actual = handleChange.mock.calls.length && handleChange.mock.calls[0][0];
+
+		expect(actual).toMatchObject(expected);
+	});
 });
 
 describe('Knob', () => {

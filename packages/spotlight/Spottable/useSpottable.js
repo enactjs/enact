@@ -66,11 +66,9 @@ const useSpottable = ({emulateMouse, getSpotRef, selectionKeys = [ENTER_KEY, REM
 
 	const attributes = props.spotlightId ? {'data-spotlight-id': props.spotlightId} : EMPTY_ATTRIBUTES;
 
-	if (context.spotlightDisabled !== spotlightDisabled) { // eslint-disable-line react-hooks/refs
-		// Mutate in-place to avoid a new object allocation on every render.
-		context.prevSpotlightDisabled = context.spotlightDisabled; // eslint-disable-line react-hooks/refs
-		context.spotlightDisabled = spotlightDisabled; // eslint-disable-line react-hooks/refs
-	}
+	// Mutate in-place to avoid a new object allocation on every render.
+	context.prevSpotlightDisabled = context.spotlightDisabled; // eslint-disable-line react-hooks/refs
+	context.spotlightDisabled = spotlightDisabled; // eslint-disable-line react-hooks/refs
 
 	hook.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context); // eslint-disable-line react-hooks/refs
 

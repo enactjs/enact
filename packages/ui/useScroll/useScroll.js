@@ -431,18 +431,20 @@ const useScrollBase = (props) => {
 		const propsHandleResizeWindow = props.handleResizeWindow;
 
 		if (ri.scale(1) !== riRatio) {
-			if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
-				scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
-				scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
-			} else {
-				scrollContentProps.itemSize *= ri.scale(1) / riRatio;
-				if (scrollContentProps.itemSizes) {
-					for (let i = 0; i < scrollContentProps.itemSizes.length; i++) {
-						scrollContentProps.itemSizes[i] *= ri.scale(1) / riRatio;
+			if (scrollContentProps.itemSize) {
+				if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
+					scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
+					scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
+				} else {
+					scrollContentProps.itemSize *= ri.scale(1) / riRatio;
+					if (scrollContentProps.itemSizes) {
+						for (let i = 0; i < scrollContentProps.itemSizes.length; i++) {
+							scrollContentProps.itemSizes[i] *= ri.scale(1) / riRatio;
+						}
 					}
 				}
+				setItemSize(scrollContentProps.itemSize);
 			}
-			setItemSize(scrollContentProps.itemSize);
 			setRiRatio(ri.scale(1));
 		}
 
@@ -905,7 +907,7 @@ const useScrollBase = (props) => {
 	 * Handler for scrollend event
 	 */
 	function onScrollEnd (ev) {
-		if (!mutableRef.current.scrolling) {
+		if (!mutableRef.current.scrolling || mutableRef.current.keyPressed) {
 			return;
 		}
 
@@ -915,7 +917,7 @@ const useScrollBase = (props) => {
 		mutableRef.current.scrollStopJob.stop();
 
 		// stop for non-accumulating scrolls (mouse/touch)
-		if (!mutableRef.current.isScrollAnimationTargetAccumulated) {
+		if (!mutableRef.current.isScrollAnimationTargetAccumulated && !mutableRef.current.keyScroll) {
 			scrollStopOnScroll();
 			return;
 		}
@@ -927,6 +929,7 @@ const useScrollBase = (props) => {
 
 		mutableRef.current.scrollEndGraceTimer = setTimeout(() => {
 			mutableRef.current.scrollEndGraceTimer = null;
+			mutableRef.current.keyScroll = false;
 			scrollStopOnScroll();
 		}, 100);
 	}
@@ -951,6 +954,7 @@ const useScrollBase = (props) => {
 
 	function onKeyUp (ev) {
 		mutableRef.current.keyPressed = false;
+		mutableRef.current.keyScroll = true;
 		forward('onKeyUp', ev, props);
 	}
 

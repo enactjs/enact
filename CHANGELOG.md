@@ -2,21 +2,37 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [5.5.0] - 2026-05-08
 
 ### Added
 
 - `core/util` function `checkPropTypes` to check the prop types of a component
+- `spotlight/SpotlightRootDecorator` config `focusEffectClass` and function `setFocusEffectClass` to apply a css class to every spottable component when it receives spotlight focus.
 - `ui/resolution` Added support for linear scaling type
+- `ui/Slider` support for `colorPicker`
 
 ### Changed
 
+- `sampler` look and feel by updating to Storybook 10
 - `spotlight/Spottable` to reduce redundant work during high-frequency re-renders
+- `ui/Marquee` to reduce redundant lifecycle work during high-frequency re-renders
 
 ### Fixed
 
 - `spotlight` to focus visible children of elements which do not have `overflow:true`
 - `ui/resolution` to display the components accordingly on wide resolutions
+- `ui/VirtualList.VirtualList` to adjust itemSize properly when resizing window
+- `ui/VirtualList.VirtualList` to scroll properly when another VirtualList exist
+
+## [5.4.3] - 2026-02-26
+
+### Fixed
+
+- `spotlight` to revert 5.4.0 fix to skip visibility check when entering a restricted container or choose a visible container as next target
+- `spotlight` to focus visible children of elements which do not have `overflow:true`
+- `ui/VirtualList` to revert 5.4.2 cix that not to jump to the top when item size was changed
+- `ui/VirtulList` to revert 5.4.2 fix that not to cut off focused item when scroll by pressing key
+- `ui/VirtualList.VirtualGridList` to revert 5.4.2 fix to adjust itemSize properly when resizing window
 
 ## [5.4.2] - 2026-01-28
 
