@@ -8,7 +8,7 @@
 
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
-import {Component} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
 
 import {spottableClass} from '../Spottable';
 import {rootContainerId} from '../src/container';
@@ -85,13 +85,64 @@ const defaultConfig = {
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {focusEffectClass, noAutoFocus, rootId} = config;
 
-	return class extends Component {
-		static displayName = 'SpotlightRootDecorator';
+	function SpotlightRootDecoratorBase (props) {
+		const containerNode = useRef(null);
+		const hasFocusedIn = useRef(false);
 
-		constructor (props) {
-			super(props);
+		const applyInputType = useCallback(() => {
+			if (containerNode.current) {
+				applyInputTypeToNode(containerNode.current);
+			}
+		}, []);
 
-			this.containerNode = null;
+		const handleFocusInBeforeMount = useCallback(() => {
+			hasFocusedIn.current = true;
+		}, []);
+
+		const handleFocusIn = useCallback(() => {
+			if (!getInputInfo().applied) {
+				applyInputType();
+			}
+		}, [applyInputType]);
+
+		// For key input
+		const handleKeyDown = useCallback((ev) => {
+			const {keyCode} = ev;
+			if (is('enter', keyCode) && containerNode.current.classList.contains('spotlight-input-touch')) {
+				// Prevent onclick event trigger by enter key
+				ev.preventDefault();
+			}
+
+			setTimeout(() => {
+				if (!getInputInfo().activated) {
+					setInputType('key');
+				}
+				applyInputType();
+			}, 0);
+		}, [applyInputType]);
+
+		// For mouse input
+		const handlePointerMove = useCallback((ev) => {
+			if (ev.pointerType === 'mouse') {
+				setInputType('mouse');
+				applyInputType();
+			}
+		}, [applyInputType]);
+
+		// For touch input
+		const handlePointerOver = useCallback((ev) => {
+			if (ev.pointerType === 'touch') {
+				setInputType('touch');
+				applyInputType();
+			}
+		}, [applyInputType]);
+
+		// One-time initialization equivalent to the class constructor.
+		// Runs synchronously on first render so the focusin listener is in place
+		// before the component mounts (mirrors the constructor behaviour).
+		const initialized = useRef(false);
+		if (!initialized.current) {
+			initialized.current = true;
 
 			if (focusEffectClass) {
 				setFocusEffectClass(focusEffectClass);
@@ -107,97 +158,52 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					overflow: true
 				});
 
-				// Sometimes the focusin event is fired before componentDidMount.
-				document.addEventListener('focusin', this.handleFocusInBeforeMount, {capture: true});
+				// Sometimes the focusin event is fired before the effect runs.
+				document.addEventListener('focusin', handleFocusInBeforeMount, {capture: true});
 			}
 		}
 
-		componentDidMount () {
+		useEffect(() => {
 			if (!noAutoFocus) {
 				Spotlight.focus();
 			}
 
 			if (typeof document === 'object') {
-				this.containerNode = document.querySelector('#' + rootId);
+				containerNode.current = document.querySelector('#' + rootId);
 
-				document.addEventListener('focusin', this.handleFocusIn, {capture: true});
-				document.addEventListener('keydown', this.handleKeyDown, {capture: true});
-				document.addEventListener('pointermove', this.handlePointerMove, {capture: true});
-				document.addEventListener('pointerover', this.handlePointerOver, {capture: true});
-				document.removeEventListener('focusin', this.handleFocusInBeforeMount, {capture: true});
+				document.addEventListener('focusin', handleFocusIn, {capture: true});
+				document.addEventListener('keydown', handleKeyDown, {capture: true});
+				document.addEventListener('pointermove', handlePointerMove, {capture: true});
+				document.addEventListener('pointerover', handlePointerOver, {capture: true});
+				document.removeEventListener('focusin', handleFocusInBeforeMount, {capture: true});
 			}
 
-			if (this.hasFocusedIn) {
-				this.hasFocusedIn = false;
-				this.handleFocusIn();
-			}
-		}
-
-		componentWillUnmount () {
-			Spotlight.terminate();
-
-			if (typeof document === 'object') {
-				document.removeEventListener('focusin', this.handleFocusIn, {capture: true});
-				document.removeEventListener('keydown', this.handleKeyDown, {capture: true});
-				document.removeEventListener('pointermove', this.handlePointerMove, {capture: true});
-				document.removeEventListener('pointerover', this.handlePointerOver, {capture: true});
-			}
-		}
-
-		applyInputType = () => {
-			if (this && this.containerNode) {
-				applyInputTypeToNode(this.containerNode);
-			}
-		};
-
-		handleFocusInBeforeMount = () => {
-			this.hasFocusedIn = true;
-		};
-
-		handleFocusIn = () => {
-			if (!getInputInfo().applied) {
-				this.applyInputType();
-			}
-		};
-
-		// For key input
-		handleKeyDown = (ev) => {
-			const {keyCode} = ev;
-			if (is('enter', keyCode) && this.containerNode.classList.contains('spotlight-input-touch')) {
-				// Prevent onclick event trigger by enter key
-				ev.preventDefault();
+			if (hasFocusedIn.current) {
+				hasFocusedIn.current = false;
+				handleFocusIn();
 			}
 
-			setTimeout(() => {
-				if (!getInputInfo().activated) {
-					setInputType('key');
+			return () => {
+				Spotlight.terminate();
+
+				if (typeof document === 'object') {
+					document.removeEventListener('focusin', handleFocusIn, {capture: true});
+					document.removeEventListener('keydown', handleKeyDown, {capture: true});
+					document.removeEventListener('pointermove', handlePointerMove, {capture: true});
+					document.removeEventListener('pointerover', handlePointerOver, {capture: true});
 				}
-				this.applyInputType();
-			}, 0);
-		};
+			};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, []);
 
-		// For mouse input
-		handlePointerMove = (ev) => {
-			if (ev.pointerType === 'mouse') {
-				setInputType('mouse');
-				this.applyInputType();
-			}
-		};
+		return (
+			<Wrapped {...props} />
+		);
+	}
 
-		// For touch input
-		handlePointerOver = (ev) => {
-			if (ev.pointerType === 'touch') {
-				setInputType('touch');
-				this.applyInputType();
-			}
-		};
+	SpotlightRootDecoratorBase.displayName = 'SpotlightRootDecorator';
 
-		render () {
-			return (
-				<Wrapped {...this.props} />
-			);
-		}
-	};
+	return SpotlightRootDecoratorBase;
 });
 
 export default SpotlightRootDecorator;
