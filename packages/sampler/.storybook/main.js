@@ -1,5 +1,3 @@
-/* eslint-disable no-shadow */
-
 import webpack from '@enact/storybook-utils/configs/webpack.js';
 import {readFileSync} from 'fs';
 import {createRequire} from 'module';
@@ -9,7 +7,7 @@ import {fileURLToPath} from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const require = createRequire(import.meta.url);
+const moduleRequire = createRequire(import.meta.url);
 
 export default {
 	core: {
@@ -52,8 +50,8 @@ export default {
 
 		// Force a single React copy. Other enact packages might have different patch versions of React,
 		// which causes "Cannot read properties of null (reading 'useEffect')"
-		const reactDir = dirname(require.resolve('react/package.json'));
-		const reactDomDir = dirname(require.resolve('react-dom/package.json'));
+		const reactDir = dirname(moduleRequire.resolve('react/package.json'));
+		const reactDomDir = dirname(moduleRequire.resolve('react-dom/package.json'));
 		webpackFinalConfig.resolve = webpackFinalConfig.resolve || {};
 		webpackFinalConfig.resolve.alias = {
 			...(webpackFinalConfig.resolve.alias || {}),
