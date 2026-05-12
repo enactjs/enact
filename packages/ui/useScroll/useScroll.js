@@ -907,7 +907,7 @@ const useScrollBase = (props) => {
 	 * Handler for scrollend event
 	 */
 	function onScrollEnd (ev) {
-		if (!mutableRef.current.scrolling || mutableRef.current.keyPressed) {
+		if (!mutableRef.current.scrolling || mutableRef.current.keyPressed || scrollContentRef.current?.scrolling) {
 			return;
 		}
 
@@ -1290,6 +1290,10 @@ const useScrollBase = (props) => {
 			let {roundedTargetX, roundedTargetY} = roundTarget(scrollContentHandle.current, targetX, targetY);
 
 			if (animate) {
+				if (scrollContentHandle.current.constructor.name.includes('VirtualListBasic')) {
+					return scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth', mutableRef.current.lastInputType);
+				}
+
 				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth', mutableRef.current.repeat);
 			} else {
 				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');

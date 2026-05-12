@@ -891,10 +891,50 @@ class VirtualListBasic extends Component {
 	};
 
 	// scrollMode 'native' only
-	scrollToPosition (left, top, behavior) {
-		if (this.props.scrollContentRef.current && this.props.scrollContentRef.current.scrollTo) {
-			this.props.scrollContentRef.current.scrollTo({left: this.getRtlPositionX(left), top, behavior});
+	scrollToPosition (left, top, behavior, lastInputType) {
+		const node = this.props.scrollContentRef.current;
+		const isSmoothBehavior = behavior === 'smooth';
+
+		if (platform.chrome && isSmoothBehavior && lastInputType !== 'pageKey') {
+			this.animateScroll(this.getRtlPositionX(left), top, node);
+		} else if (node.scrollTo) {
+			node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
 		}
+	}
+
+	// scroll mode 'native' only
+	animateScroll (left, top, node) {
+		// Determine the direction of scroll (1 for forward/down, -1 for backward/up, 0 for no movement)
+		const directionX = Math.sign(left - node.scrollLeft);
+		const directionY = Math.sign(top - node.scrollTop);
+
+		// Calculate an adaptive scroll factor (pixels per frame).
+		// It uses the average item size (gridSize) to ensure the speed feels consistent.
+		const scrollFactor = Math.max(this.primary.gridSize / 12, 2);
+		const startTime =  performance.now();
+
+		const animateScroll = (currentTime) => {
+			const elapsed = currentTime - startTime;
+			const shift = Math.min(0.1 * elapsed, this.primary.gridSize);
+			const scrollLeft = directionX > 0 ? node.scrollLeft < left : node.scrollLeft > left;
+			const scrollTop = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
+
+			// Check if we've reached the last focused element and cancel the animation
+			if (shift >= this.primary.gridSize) {
+				window.cancelAnimationFrame(this.scrollAnimationId);
+				this.scrollAnimationId = null;
+				node.scrolling = false;
+				return;
+			}
+
+			if (scrollLeft || scrollTop) {
+				node.scrollBy({top: directionY * scrollFactor, left: directionX * scrollFactor, behavior: 'instant'});
+				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+				node.scrolling = true;
+			}
+		};
+
+		this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 	}
 
 	// scrollMode 'native' only
