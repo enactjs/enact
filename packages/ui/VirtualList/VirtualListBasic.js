@@ -892,10 +892,18 @@ class VirtualListBasic extends Component {
 
 	// scrollMode 'native' only
 	scrollToPosition (left, top, behavior, lastInputType) {
-		const node = this.props.scrollContentRef.current;
-		const isSmoothBehavior = behavior === 'smooth';
+		const {clientWidth, clientHeight, scrollWidth, scrollHeight} = this.scrollBounds;
+		const {firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
+		const {dataSize, scrollContentRef} = this.props;
 
-		if (platform.chrome && isSmoothBehavior && lastInputType !== 'pageKey') {
+		const scrollSize = this.isPrimaryDirectionVertical ? top >= scrollWidth - clientWidth : left >= scrollHeight - clientHeight;
+		const isScrollWrap = (lastVisibleIndex === dataSize - 1 && top === 0) || (firstVisibleIndex === 0 && scrollSize);
+		const isScrollByPageKey = lastInputType === 'pageKey';
+		const isSmoothBehavior = behavior === 'smooth';
+		const node = scrollContentRef.current;
+		node.scrolling = true;
+
+		if (platform.chrome && isSmoothBehavior && !isScrollByPageKey && !isScrollWrap) {
 			this.animateScroll(this.getRtlPositionX(left), top, node);
 		} else if (node.scrollTo) {
 			node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
@@ -911,26 +919,22 @@ class VirtualListBasic extends Component {
 		// Calculate an adaptive scroll factor (pixels per frame).
 		// It uses the average item size (gridSize) to ensure the speed feels consistent.
 		const scrollFactor = Math.max(this.primary.gridSize / 12, 2);
-		const startTime =  performance.now();
+		const startTime = performance.now();
 
 		const animateScroll = (currentTime) => {
-			const elapsed = currentTime - startTime;
-			const shift = Math.min(0.1 * elapsed, this.primary.gridSize);
+			const elapsed = (currentTime - startTime) / 500;
+
+			node.scrollBy({top: directionY * scrollFactor, left: directionX * scrollFactor, behavior: 'instant'});
+			this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+
 			const scrollLeft = directionX > 0 ? node.scrollLeft < left : node.scrollLeft > left;
 			const scrollTop = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
 
-			// Check if we've reached the last focused element and cancel the animation
-			if (shift >= this.primary.gridSize) {
+			// Check if we've reached the needed scroll position
+			// or the elapsed time since last call is longer than 0.5s and cancel the animation
+			if (!scrollLeft && !scrollTop || elapsed > 1) {
 				window.cancelAnimationFrame(this.scrollAnimationId);
 				this.scrollAnimationId = null;
-				node.scrolling = false;
-				return;
-			}
-
-			if (scrollLeft || scrollTop) {
-				node.scrollBy({top: directionY * scrollFactor, left: directionX * scrollFactor, behavior: 'instant'});
-				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
-				node.scrolling = true;
 			}
 		};
 

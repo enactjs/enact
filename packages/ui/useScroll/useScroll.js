@@ -1288,13 +1288,10 @@ const useScrollBase = (props) => {
 			}
 		} else { // scrollMode 'native'
 			let {roundedTargetX, roundedTargetY} = roundTarget(scrollContentHandle.current, targetX, targetY);
+			const isVirtualList = scrollContentHandle.current.constructor.name.includes('VirtualListBasic');
 
 			if (animate) {
-				if (scrollContentHandle.current.constructor.name.includes('VirtualListBasic')) {
-					return scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth', mutableRef.current.lastInputType);
-				}
-
-				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth', mutableRef.current.repeat);
+				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth', mutableRef.current[isVirtualList ? 'lastInputType' : 'repeat']);
 			} else {
 				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
 			}
