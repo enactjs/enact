@@ -841,9 +841,13 @@ const useScrollBase = (props) => {
 				scrollByPage(ev.keyCode);
 			}
 		} else {
+			const isArrowKey = mutableRef.current.lastInputType === 'arrowKey';
+			const isPageKey = mutableRef.current.lastInputType === 'pageKey';
+
 			props.preventScroll?.(ev);
 			mutableRef.current.repeat = ev.repeat;
-			if (ev.repeat && mutableRef.current.lastInputType === 'arrowKey') return;
+
+			if (ev.repeat && (isArrowKey || isPageKey)) return;
 			forward('onKeyDown', ev, props);
 		}
 	}
