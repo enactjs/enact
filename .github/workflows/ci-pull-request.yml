@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  pull-request:
+    uses: ./.github/workflows/ci-reusable.yml
+    with:
+      checkout-ref: ''
+    secrets: inherit
