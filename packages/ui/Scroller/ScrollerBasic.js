@@ -133,31 +133,28 @@ class ScrollerBasic extends Component {
 	/**
 	 * Programmatically animates the native scroll position of `node` toward the target `left`/`top`
 	 * offsets using `requestAnimationFrame`. It computes the scroll direction on each axis, then repeatedly
-	 * calls `scrollBy` in small 18px steps (instant behavior) until the target is reached or a scroll bound
+	 * calls `scrollBy` in small 8px steps (instant behavior) until the target is reached or a scroll bound
 	 * is hit. Used as a Chrome fallback when repeating a smooth scroll.
 	 */
 	animateScroll (left, top, node) {
 		const directionX = Math.sign(left - node.scrollLeft);
 		const directionY = Math.sign(top - node.scrollTop);
+		const startTime = performance.now();
 
-		const animateScroll = () => {
+		const animateScroll = (currentTime) => {
+			const elapsed = (currentTime - startTime) / 500;
+
+			node.scrollBy({top: directionY * 8, left: directionX * 8, behavior: 'instant'});
+			this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+
 			const scrollLeft = directionX > 0 ? node.scrollLeft < left : node.scrollLeft > left;
 			const scrollTop = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
 
-			// Check if we reached the scroll bounds and cancel the animation
-			if (
-				top > this.scrollBounds.maxTop && node.scrollTop === this.scrollBounds.maxTop ||
-				left > this.scrollBounds.maxLeft && node.scrollLeft === this.scrollBounds.maxLeft ||
-				top < 0 && node.scrollTop === 0 ||
-				left < 0 && node.scrollLeft === 0
-			) {
+			// Check if we've reached the needed scroll position
+			// or the elapsed time since last call is longer than 0.5s and cancel the animation
+			if (!scrollTop && !scrollLeft || elapsed > 1) {
 				window.cancelAnimationFrame(this.scrollAnimationId);
-				return;
-			}
-
-			if (scrollTop || scrollLeft) {
-				node.scrollBy({top: directionY * 8, left: directionX * 8, behavior: 'instant'});
-				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+				this.scrollAnimationId = null;
 			}
 		};
 
