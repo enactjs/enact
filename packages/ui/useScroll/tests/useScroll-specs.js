@@ -474,12 +474,10 @@ describe('useScroll', () => {
 			const mocks = createMockRefs();
 			renderHook(() => useScrollBase(createNativeProps(mocks)));
 
-			act(() => {
-				// Simulate an in-progress native scroll to set scrolling=true
-				const scrollEvent = new Event('scroll');
-				Object.defineProperty(scrollEvent, 'target', {value: {scrollLeft: 0, scrollTop: 50}});
-				fireEvent(mocks.scrollContentRef.current, scrollEvent);
-			});
+			// Simulate an in-progress native scroll to set scrolling=true
+			const scrollEvent = new Event('scroll');
+			Object.defineProperty(scrollEvent, 'target', {value: {scrollLeft: 0, scrollTop: 50}});
+			fireEvent(mocks.scrollContentRef.current, scrollEvent);
 
 			act(() => {
 				containerHandle.lastInputType = 'arrowKey';
@@ -495,11 +493,9 @@ describe('useScroll', () => {
 			const mocks = createMockRefs();
 			renderHook(() => useScrollBase(createNativeProps(mocks)));
 
-			act(() => {
-				const scrollEvent = new Event('scroll');
-				Object.defineProperty(scrollEvent, 'target', {value: {scrollLeft: 0, scrollTop: 50}});
-				fireEvent(mocks.scrollContentRef.current, scrollEvent);
-			});
+			const scrollEvent = new Event('scroll');
+			Object.defineProperty(scrollEvent, 'target', {value: {scrollLeft: 0, scrollTop: 50}});
+			fireEvent(mocks.scrollContentRef.current, scrollEvent);
 
 			act(() => {
 				containerHandle.lastInputType = 'drag';
