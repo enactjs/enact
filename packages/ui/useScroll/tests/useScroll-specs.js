@@ -50,6 +50,8 @@ function createMockRefs () {
 				getRtlPositionX: jest.fn((x) => x),
 				calculateMetrics: jest.fn(),
 				didScroll: jest.fn(),
+				scrollToPosition: jest.fn(),
+				scrollPos: {left: 0, top: 0},
 				props: {}
 			}
 		},
@@ -419,6 +421,110 @@ describe('useScroll', () => {
 			});
 
 			expect(mocks.scrollContentHandle.current.didScroll).toHaveBeenCalledWith(50, 0);
+		});
+	});
+
+	describe('Native scroll behavior determination (long press / arrowKey)', () => {
+		let containerHandle;
+
+		beforeEach(() => {
+			jest.useFakeTimers();
+			mockPlatform = {chrome: 132};
+			mockRiScale = jest.fn((val) => val);
+			containerHandle = null;
+		});
+
+		afterEach(() => {
+			jest.runOnlyPendingTimers();
+			jest.useRealTimers();
+		});
+
+		function createNativeProps (mocks) {
+			return {
+				direction: 'vertical',
+				scrollMode: 'native',
+				...mocks,
+				assignProperties: jest.fn(),
+				horizontalScrollbar: 'auto',
+				verticalScrollbar: 'auto',
+				setScrollContainerHandle: (handle) => {
+					containerHandle = handle;
+				}
+			};
+		}
+
+		test('should use smooth behavior when animate is true and not scrolling', () => {
+			const mocks = createMockRefs();
+			renderHook(() => useScrollBase(createNativeProps(mocks)));
+
+			act(() => {
+				containerHandle.lastInputType = 'arrowKey';
+				// scrolling is false by default
+				containerHandle.start({targetX: 0, targetY: 100, animate: true});
+			});
+
+			expect(mocks.scrollContentHandle.current.scrollToPosition).toHaveBeenCalledWith(
+				expect.any(Number),
+				expect.any(Number),
+				'smooth'
+			);
+		});
+
+		test('should use instant behavior when animate is true but already scrolling with arrowKey (long press)', () => {
+			const mocks = createMockRefs();
+			renderHook(() => useScrollBase(createNativeProps(mocks)));
+
+			act(() => {
+				// Simulate an in-progress native scroll to set scrolling=true
+				const scrollEvent = new Event('scroll');
+				Object.defineProperty(scrollEvent, 'target', {value: {scrollLeft: 0, scrollTop: 50}});
+				fireEvent(mocks.scrollContentRef.current, scrollEvent);
+			});
+
+			act(() => {
+				containerHandle.lastInputType = 'arrowKey';
+				containerHandle.start({targetX: 0, targetY: 200, animate: true});
+			});
+
+			const calls = mocks.scrollContentHandle.current.scrollToPosition.mock.calls;
+			const lastCall = calls[calls.length - 1];
+			expect(lastCall[2]).toBe('instant');
+		});
+
+		test('should use smooth behavior when animate is true, scrolling, but lastInputType is not arrowKey', () => {
+			const mocks = createMockRefs();
+			renderHook(() => useScrollBase(createNativeProps(mocks)));
+
+			act(() => {
+				const scrollEvent = new Event('scroll');
+				Object.defineProperty(scrollEvent, 'target', {value: {scrollLeft: 0, scrollTop: 50}});
+				fireEvent(mocks.scrollContentRef.current, scrollEvent);
+			});
+
+			act(() => {
+				containerHandle.lastInputType = 'drag';
+				containerHandle.start({targetX: 0, targetY: 200, animate: true});
+			});
+
+			const calls = mocks.scrollContentHandle.current.scrollToPosition.mock.calls;
+			const lastCall = calls[calls.length - 1];
+			expect(lastCall[2]).toBe('smooth');
+		});
+
+		test('should use instant behavior when animate is false regardless of lastInputType', () => {
+			const mocks = createMockRefs();
+			renderHook(() => useScrollBase(createNativeProps(mocks)));
+
+			act(() => {
+				containerHandle.lastInputType = 'drag';
+				containerHandle.start({targetX: 0, targetY: 100, animate: false});
+			});
+
+			expect(mocks.scrollContentHandle.current.scrollToPosition).toHaveBeenCalledWith(
+				expect.any(Number),
+				expect.any(Number),
+				'instant'
+			);
 		});
 	});
 });
