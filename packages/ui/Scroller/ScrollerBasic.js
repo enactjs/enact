@@ -142,7 +142,7 @@ class ScrollerBasic extends Component {
 		const startTime = performance.now();
 
 		const animateScroll = (currentTime) => {
-			const elapsed = (currentTime - startTime) / 500;
+			const elapsed = (currentTime - startTime) / 1000;
 
 			node.scrollBy({top: directionY * 8, left: directionX * 8, behavior: 'instant'});
 			this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
@@ -151,7 +151,7 @@ class ScrollerBasic extends Component {
 			const scrollTop = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
 
 			// Check if we've reached the needed scroll position
-			// or the elapsed time since last call is longer than 0.5s and cancel the animation
+			// or the elapsed time since last call is longer than 1s and cancel the animation
 			if (!scrollTop && !scrollLeft || elapsed > 1) {
 				window.cancelAnimationFrame(this.scrollAnimationId);
 				this.scrollAnimationId = null;
