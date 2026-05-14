@@ -1289,11 +1289,9 @@ const useScrollBase = (props) => {
 		} else { // scrollMode 'native'
 			let {roundedTargetX, roundedTargetY} = roundTarget(scrollContentHandle.current, targetX, targetY);
 
-			if (animate) {
-				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth', mutableRef.current.repeat);
-			} else {
-				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
-			}
+			const isArrowKeyScroll = mutableRef.current.lastInputType === 'arrowKey';
+			const behavior = (animate && !(mutableRef.current.scrolling && isArrowKeyScroll)) ? 'smooth' : 'instant';
+			scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, behavior);
 
 			if (props.start) {
 				props.start(animate);
