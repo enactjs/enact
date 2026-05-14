@@ -2,11 +2,17 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Scroller` jumping back when scrolled by long press
+
 ## [5.5.0] - 2026-05-08
 
 ### Added
 
-- `ui/resolution` Added support for linear scaling type
+- `ui/resolution` support for linear scaling type
 - `ui/Slider` support for `colorPicker`
 
 ### Changed

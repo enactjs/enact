@@ -2,13 +2,19 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Scroller` jumping back when scrolled by long press
+
 ## [5.5.0] - 2026-05-08
 
 ### Added
 
 - `core/util` function `checkPropTypes` to check the prop types of a component
 - `spotlight/SpotlightRootDecorator` config `focusEffectClass` and function `setFocusEffectClass` to apply a css class to every spottable component when it receives spotlight focus.
-- `ui/resolution` Added support for linear scaling type
+- `ui/resolution` support for linear scaling type
 - `ui/Slider` support for `colorPicker`
 
 ### Changed
