@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/VirtualList.VirtualListBasic` scroll animation method for `scrollMode: native`
+
 ## [5.5.0] - 2026-05-08
 
 ### Added
