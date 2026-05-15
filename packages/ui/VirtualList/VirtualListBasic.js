@@ -927,12 +927,13 @@ class VirtualListBasic extends Component {
 			node.scrollBy({top: directionY * scrollFactor, left: directionX * scrollFactor, behavior: 'instant'});
 			this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 
-			const scrollLeft = directionX > 0 ? node.scrollLeft < left : node.scrollLeft > left;
-			const scrollTop = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
+			const scrollHorizontally = directionX > 0 ? node.scrollLeft < left : node.scrollLeft > left;
+			const scrollVertically = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
+			const targetReached = node.scrollLeft === left && node.scrollTop === top;
 
 			// Check if we've reached the needed scroll position
 			// or the elapsed time since last call is longer than 0.5s and cancel the animation
-			if (!scrollLeft && !scrollTop || elapsed > 1) {
+			if (!scrollHorizontally && !scrollVertically || (targetReached && elapsed > 1)) {
 				window.cancelAnimationFrame(this.scrollAnimationId);
 				this.scrollAnimationId = null;
 			}
