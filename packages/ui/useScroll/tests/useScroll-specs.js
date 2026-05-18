@@ -476,7 +476,6 @@ describe('useScroll', () => {
 			renderHook(() => useScrollBase(props));
 
 			// Set lastInputType to arrowKey via the exposed themeScrollContainerHandle
-			// eslint-disable-next-line testing-library/no-unnecessary-act
 			act(() => {
 				if (scrollContainerHandle) {
 					scrollContainerHandle.lastInputType = 'arrowKey';
@@ -506,7 +505,6 @@ describe('useScroll', () => {
 			renderHook(() => useScrollBase(props));
 
 			// Set lastInputType to pageKey via the exposed themeScrollContainerHandle
-			// eslint-disable-next-line testing-library/no-unnecessary-act
 			act(() => {
 				if (scrollContainerHandle) {
 					scrollContainerHandle.lastInputType = 'pageKey';
@@ -536,7 +534,6 @@ describe('useScroll', () => {
 			renderHook(() => useScrollBase(props));
 
 			// Set lastInputType to wheel (not arrowKey or pageKey)
-			// eslint-disable-next-line testing-library/no-unnecessary-act
 			act(() => {
 				if (scrollContainerHandle) {
 					scrollContainerHandle.lastInputType = 'wheel';
