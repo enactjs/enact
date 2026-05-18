@@ -1,4 +1,34 @@
 import '@testing-library/jest-dom';
+import {act, fireEvent, renderHook} from '@testing-library/react';
+
+import {useScrollBase} from '../useScroll';
+
+let mockPlatform;
+
+jest.mock('@enact/core/platform', () => ({
+	__esModule: true,
+	get platform () {
+		return mockPlatform;
+	}
+}));
+
+
+function createMockRefs () {
+	const el = document.createElement('div');
+	document.body.appendChild(el);
+
+	return {
+		scrollContainerRef: {current: el},
+		scrollContentHandle: {
+			current: {
+				getScrollBounds: () => ({maxTop: 0, maxLeft: 0, clientWidth: 0, clientHeight: 0, scrollWidth: 0, scrollHeight: 0})
+			}
+		},
+		scrollContentRef: {current: el},
+		horizontalScrollbarHandle: {current: {}},
+		verticalScrollbarHandle: {current: {}}
+	};
+}
 
 describe('useScroll', () => {
 	describe('Rounding target scroll position', () => {
@@ -74,7 +104,6 @@ describe('useScroll', () => {
 		beforeEach(() => {
 			jest.useFakeTimers();
 			mockPlatform = {chrome: 132};
-			mockRiScale = jest.fn((val) => val);
 		});
 
 		afterEach(() => {
