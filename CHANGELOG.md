@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Scroller` jumping back when scrolled by long press
+
 ## [5.5.0] - 2026-05-08
 
 ### Added
