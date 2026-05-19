@@ -891,21 +891,23 @@ class VirtualListBasic extends Component {
 	};
 
 	// scrollMode 'native' only
-	scrollToPosition (left, top, behavior, lastInputType) {
+	scrollToPosition (left, top, behavior) {
 		const {clientWidth, clientHeight, scrollWidth, scrollHeight} = this.scrollBounds;
 		const {firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
 		const {dataSize, scrollContentRef} = this.props;
 
+		const node = scrollContentRef.current;
 		const scrollSize = this.isPrimaryDirectionVertical ? top >= scrollWidth - clientWidth : left >= scrollHeight - clientHeight;
 		const isScrollWrap = (lastVisibleIndex === dataSize - 1 && top === 0) || (firstVisibleIndex === 0 && scrollSize);
-		const isScrollByPageKey = lastInputType === 'pageKey';
+		const isScrollByPageKey = node.lastInputType === 'pageKey';
 		const isSmoothBehavior = behavior === 'smooth';
-		const node = scrollContentRef.current;
-		node.scrolling = true;
 
 		if (platform.chrome && isSmoothBehavior && !isScrollByPageKey && !isScrollWrap) {
 			this.animateScroll(this.getRtlPositionX(left), top, node);
 		} else if (node.scrollTo) {
+			if (this.scrollAnimationId) {
+				this.cancelScrollAnimation(node);
+			}
 			node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
 		}
 	}
@@ -921,11 +923,17 @@ class VirtualListBasic extends Component {
 		const scrollFactor = Math.max(this.primary.gridSize / 12, 2);
 		const startTime = performance.now();
 
+
+		// Progressively scrolls the node toward a target position using requestAnimationFrame.
+		// It applies an incremental scroll on each frame and cancels the animation once
+		// the target is reached or the duration (500ms) is exceeded, falling back to
+		// a smooth scroll if the timeout occurs first.
 		const animateScroll = (currentTime) => {
 			const elapsed = (currentTime - startTime) / 500;
 
 			node.scrollBy({top: directionY * scrollFactor, left: directionX * scrollFactor, behavior: 'instant'});
 			this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+			node.scrolling = true;
 
 			const scrollHorizontally = directionX > 0 ? node.scrollLeft < left : node.scrollLeft > left;
 			const scrollVertically = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
@@ -933,13 +941,24 @@ class VirtualListBasic extends Component {
 
 			// Check if we've reached the needed scroll position
 			// or the elapsed time since last call is longer than 0.5s and cancel the animation
-			if (!scrollHorizontally && !scrollVertically || (targetReached && elapsed > 1)) {
-				window.cancelAnimationFrame(this.scrollAnimationId);
-				this.scrollAnimationId = null;
+			if (!scrollHorizontally && !scrollVertically || elapsed > 1) {
+				this.cancelScrollAnimation(node);
+
+				// Fallback: if time is out before reaching the target, jump there with smooth scroll
+				if (elapsed > 1 && !targetReached) {
+					node.scrollTo({top, left, behavior: 'smooth'});
+				}
 			}
 		};
 
 		this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+	}
+
+	// scrollMode 'native' only
+	cancelScrollAnimation (node) {
+		window.cancelAnimationFrame(this.scrollAnimationId);
+		this.scrollAnimationId = null;
+		node.scrolling = false;
 	}
 
 	// scrollMode 'native' only
