@@ -897,7 +897,7 @@ class VirtualListBasic extends Component {
 		const {dataSize, scrollContentRef} = this.props;
 
 		const node = scrollContentRef.current;
-		const scrollSize = this.isPrimaryDirectionVertical ? top >= scrollWidth - clientWidth : left >= scrollHeight - clientHeight;
+		const scrollSize = this.isPrimaryDirectionVertical ? top >= scrollHeight - clientHeight : left >= scrollWidth - clientWidth;
 		const isScrollWrap = (lastVisibleIndex === dataSize - 1 && top === 0) || (firstVisibleIndex === 0 && scrollSize);
 		const isScrollByPageKey = node.lastInputType === 'pageKey';
 		const isSmoothBehavior = behavior === 'smooth';
