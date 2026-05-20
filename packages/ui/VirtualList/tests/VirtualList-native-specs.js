@@ -200,7 +200,7 @@ describe('VirtualListBasic scrollBounds consistency after item margin detection'
 				direction={direction}
 				getAffordance={() => 0}
 				itemRefs={itemRefs}
-				itemRenderer={({index, ...rest2}) => <div {...rest2} data-index={index} />} // eslint-disable-line enact/display-name
+				itemRenderer={({index, ...rest2}) => <div {...rest2} data-index={index} />}
 				itemSize={30}
 				overhang={3}
 				placeholderRenderer={nop}
@@ -248,7 +248,9 @@ describe('VirtualListBasic scrollBounds consistency after item margin detection'
 		};
 
 		instance.itemMarginTop = null;
-		act(() => { instance.forceUpdate(); });
+		act(() => {
+			instance.forceUpdate();
+		});
 
 		const scrollHeightAfterFirst = instance.scrollBounds.scrollHeight;
 		const maxTopAfterFirst = instance.scrollBounds.maxTop;
@@ -256,7 +258,9 @@ describe('VirtualListBasic scrollBounds consistency after item margin detection'
 		expect(instance.scrollBounds.maxTop).toBe(instance.scrollBounds.scrollHeight - instance.props.clientSize.clientHeight);
 
 		// guard prevents re-applying on subsequent updates
-		act(() => { instance.forceUpdate(); });
+		act(() => {
+			instance.forceUpdate();
+		});
 		expect(instance.scrollBounds.scrollHeight).toBe(scrollHeightAfterFirst);
 		expect(instance.scrollBounds.maxTop).toBe(maxTopAfterFirst);
 	});
@@ -284,7 +288,9 @@ describe('VirtualListBasic scrollBounds consistency after item margin detection'
 		};
 
 		instance.itemMarginTop = null;
-		act(() => { instance.forceUpdate(); });
+		act(() => {
+			instance.forceUpdate();
+		});
 
 		expect(instance.scrollBounds.scrollWidth - instance.scrollBounds.maxLeft).toBe(instance.props.clientSize.clientWidth);
 	});
