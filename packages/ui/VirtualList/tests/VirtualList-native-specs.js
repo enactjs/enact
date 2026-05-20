@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom';
 import {act, render, screen} from '@testing-library/react';
+import {createRef} from 'react';
 
-import VirtualList from '../VirtualList';
+import VirtualList, {VirtualListBasic} from '../VirtualList';
 
 describe('VirtualList with native scrollMode', () => {
 	let
@@ -177,5 +178,114 @@ describe('VirtualList with native scrollMode', () => {
 			done();
 			jest.useRealTimers();
 		});
+	});
+});
+
+describe('VirtualListBasic scrollBounds consistency after item margin detection', () => {
+	let originalGetComputedStyle;
+
+	const nop = () => {};
+
+	function renderVirtualListBasic ({direction = 'vertical', ...rest} = {}) {
+		const scrollContentRef = createRef();
+		const itemRefs = createRef();
+		itemRefs.current = [];
+
+		const ref = createRef();
+
+		render(
+			<VirtualListBasic
+				clientSize={{clientWidth: 1280, clientHeight: 720}}
+				dataSize={100}
+				direction={direction}
+				getAffordance={() => 0}
+				itemRefs={itemRefs}
+				itemRenderer={({index, ...rest2}) => <div {...rest2} data-index={index} />} // eslint-disable-line enact/display-name
+				itemSize={30}
+				overhang={3}
+				placeholderRenderer={nop}
+				role="list"
+				scrollContentRef={scrollContentRef}
+				scrollMode="native"
+				spacing={0}
+				cbScrollTo={nop}
+				ref={ref}
+				{...rest}
+			/>
+		);
+
+		return {ref};
+	}
+
+	beforeEach(() => {
+		originalGetComputedStyle = window.getComputedStyle;
+	});
+
+	afterEach(() => {
+		window.getComputedStyle = originalGetComputedStyle;
+	});
+
+	test('should increment scrollHeight and maxTop by the same margin sum when vertical item margins are detected, and not re-apply on subsequent updates', () => {
+		const {ref} = renderVirtualListBasic();
+		const instance = ref.current;
+
+		const marginTop = 10;
+		const marginBottom = 5;
+
+		window.getComputedStyle = (el) => {
+			if (el === instance.props.itemRefs.current[0]) {
+				return {
+					getPropertyValue: (prop) => {
+						if (prop === 'margin-top') return `${marginTop}px`;
+						if (prop === 'margin-bottom') return `${marginBottom}px`;
+						if (prop === 'margin-left') return '0px';
+						if (prop === 'margin-right') return '0px';
+						return '0px';
+					}
+				};
+			}
+			return originalGetComputedStyle(el);
+		};
+
+		instance.itemMarginTop = null;
+		act(() => { instance.forceUpdate(); });
+
+		const scrollHeightAfterFirst = instance.scrollBounds.scrollHeight;
+		const maxTopAfterFirst = instance.scrollBounds.maxTop;
+		expect(scrollHeightAfterFirst - maxTopAfterFirst).toBe(instance.props.clientSize.clientHeight);
+		expect(instance.scrollBounds.maxTop).toBe(instance.scrollBounds.scrollHeight - instance.props.clientSize.clientHeight);
+
+		// guard prevents re-applying on subsequent updates
+		act(() => { instance.forceUpdate(); });
+		expect(instance.scrollBounds.scrollHeight).toBe(scrollHeightAfterFirst);
+		expect(instance.scrollBounds.maxTop).toBe(maxTopAfterFirst);
+	});
+
+	test('should increment scrollWidth and maxLeft by the same margin sum when horizontal item margins are detected', () => {
+		const {ref} = renderVirtualListBasic({direction: 'horizontal'});
+		const instance = ref.current;
+
+		const marginLeft = 8;
+		const marginRight = 8;
+
+		window.getComputedStyle = (el) => {
+			if (el === instance.props.itemRefs.current[0]) {
+				return {
+					getPropertyValue: (prop) => {
+						if (prop === 'margin-top') return '0px';
+						if (prop === 'margin-bottom') return '0px';
+						if (prop === 'margin-left') return `${marginLeft}px`;
+						if (prop === 'margin-right') return `${marginRight}px`;
+						return '0px';
+					}
+				};
+			}
+			return originalGetComputedStyle(el);
+		};
+
+		instance.itemMarginTop = null;
+		act(() => { instance.forceUpdate(); });
+
+		expect(instance.scrollBounds.scrollWidth - instance.scrollBounds.maxLeft).toBe(instance.props.clientSize.clientWidth);
 	});
 });

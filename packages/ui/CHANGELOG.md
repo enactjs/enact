@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/VirtualList` overscroll effect at the bottom of the list
+
 ## [5.5.0] - 2026-05-08
 
 ### Added
