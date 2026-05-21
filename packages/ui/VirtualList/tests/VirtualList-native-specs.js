@@ -208,6 +208,10 @@ describe('VirtualList with native scrollMode', () => {
 			jest.spyOn(performance, 'now').mockReturnValue(0);
 		});
 
+		afterEach(() => {
+			delete mockPlatform.chrome;
+		});
+
 		test('should call native scrollTo when behavior is instant', () => {
 			instance.scrollToPosition(0, 300, 'instant');
 
@@ -230,6 +234,7 @@ describe('VirtualList with native scrollMode', () => {
 		});
 
 		test('should cancel animation when content is scrolled by pageKey', () => {
+			mockPlatform.chrome = 88;
 			instance.scrollToPosition(0, 600, 'smooth');
 			node.lastInputType = 'pageKey';
 			instance.scrollToPosition(0, 200, 'smooth');
@@ -248,7 +253,7 @@ describe('VirtualList with native scrollMode', () => {
 			instance.rafCallback();
 
 			expect(node.scrollBy).toHaveBeenCalledWith(expect.objectContaining({behavior: 'instant'}));
-			expect(node.scrolling).toBe(true);
+			expect(instance.scrolling).toBe(true);
 		});
 
 		test('should cancel animation and stop when target is reached', () => {
@@ -257,7 +262,7 @@ describe('VirtualList with native scrollMode', () => {
 			instance.rafCallback(600);
 
 			expect(window.cancelAnimationFrame).toHaveBeenCalled();
-			expect(node.scrolling).toBe(false);
+			expect(instance.scrolling).toBe(false);
 		});
 
 		test('should fallback to smooth scroll if animation exceeds duration (timeout)', () => {
