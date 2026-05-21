@@ -775,42 +775,43 @@ const Spotlight = (function () {
 	 * preventDefault when focus moved or when paused (to keep Tab inside a modal overlay).
 	 */
 	function handleTab (evt) {
-		const keyCode = evt.keyCode;
 		const blocked = shouldPreventNavigation();
 
 		if (blocked) {
-			notifyKeyDown(keyCode);
+			notifyKeyDown(evt.keyCode);
 		} else {
-			notifyKeyDown(keyCode, handlePointerHide);
-			if (_pointerMoveDuringKeyPress) return;
+			notifyKeyDown(evt.keyCode, handlePointerHide);
+			if (_pointerMoveDuringKeyPress) {
+				return;
+			}
 		}
 
 		_linearTargetsCache = new Map();
-		const handled = spotLinear(!evt.shiftKey);
-		_linearTargetsCache = null;
+		let handled;
+		try {
+			handled = spotLinear(!evt.shiftKey);
+		} finally {
+			_linearTargetsCache = null;
+		}
 
 		if (handled || (blocked && isPaused())) {
 			preventDefault(evt);
 		}
 	}
 
-	function onKeyDown (evt) {
-		const keyCode = evt.keyCode;
-
-		if (isTab(keyCode)) {
-			handleTab(evt);
-			return;
-		}
-
+	function handleFiveWayKeyDown (evt) {
 		if (shouldPreventNavigation()) {
-			notifyKeyDown(keyCode);
+			notifyKeyDown(evt.keyCode);
 			return;
 		}
 
+		const keyCode = evt.keyCode;
 		const direction = getDirection(keyCode);
 		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
 
-		if (pointerHandled || !(direction || isEnter(keyCode))) return;
+		if (pointerHandled || !(direction || isEnter(keyCode))) {
+			return;
+		}
 
 		if (!isPaused() && !_pointerMoveDuringKeyPress) {
 			if (getCurrent()) {
@@ -824,6 +825,15 @@ const Spotlight = (function () {
 		if (direction) {
 			preventDefault(evt);
 		}
+	}
+
+	function onKeyDown (evt) {
+		if (isTab(evt.keyCode)) {
+			handleTab(evt);
+			return;
+		}
+
+		handleFiveWayKeyDown(evt);
 	}
 
 	function onMouseMove ({target, clientX, clientY}) {
