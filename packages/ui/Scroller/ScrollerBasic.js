@@ -158,7 +158,7 @@ class ScrollerBasic extends Component {
 			const scrollTop = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
 
 			// Stop animating if the target is reached or 1s has elapsed since animation started
-			if (!scrollTop && !scrollLeft || elapsed > 1) {
+			if ((!scrollTop && !scrollLeft) || elapsed > 1) {
 				// Fallback: if timed out before reaching target, jump there with smooth scroll
 				if (elapsed > 1 && (node.scrollLeft !== left || node.scrollTop !== top)) {
 					node.scrollTo({top, left, behavior: 'smooth'});
