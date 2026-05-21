@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Changed
 
 - `ui/VirtualList.VirtualListBasic` scroll animation method for `scrollMode: native`
+
 ### Fixed
 
 - `ui/Scroller` jumping back when scrolled by long press
