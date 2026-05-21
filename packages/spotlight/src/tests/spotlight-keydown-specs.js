@@ -80,6 +80,92 @@ describe('Spotlight Tab key dispatch (integration)', () => {
 		expect(document.activeElement.id).toBe('second');
 	});
 
+	test('should move focus forward on Tab when document dir is rtl', () => {
+		setupSimpleDocument();
+		document.documentElement.setAttribute('dir', 'rtl');
+		try {
+			focusForTest(document.getElementById('second'));
+
+			const ev = dispatchTab(handlers.keydown);
+
+			expect(ev.preventDefault).toHaveBeenCalled();
+			expect(document.activeElement.id).toBe('first');
+		} finally {
+			document.documentElement.removeAttribute('dir');
+		}
+	});
+
+	test('should move focus forward on Tab when I18nDecorator RTL class is present', () => {
+		setupSimpleDocument();
+		document.getElementById('root').classList.add('enact-locale-right-to-left');
+		focusForTest(document.getElementById('second'));
+
+		const ev = dispatchTab(handlers.keydown);
+
+		expect(ev.preventDefault).toHaveBeenCalled();
+		expect(document.activeElement.id).toBe('first');
+	});
+
+	test('should move focus forward on Tab when body dir is rtl', () => {
+		setupSimpleDocument();
+		document.body.setAttribute('dir', 'rtl');
+		try {
+			focusForTest(document.getElementById('second'));
+
+			const ev = dispatchTab(handlers.keydown);
+
+			expect(ev.preventDefault).toHaveBeenCalled();
+			expect(document.activeElement.id).toBe('first');
+		} finally {
+			document.body.removeAttribute('dir');
+		}
+	});
+
+	test('should move focus forward on Tab when dir is RTL (case insensitive)', () => {
+		setupSimpleDocument();
+		document.documentElement.setAttribute('dir', 'RTL');
+		try {
+			focusForTest(document.getElementById('second'));
+
+			const ev = dispatchTab(handlers.keydown);
+
+			expect(ev.preventDefault).toHaveBeenCalled();
+			expect(document.activeElement.id).toBe('first');
+		} finally {
+			document.documentElement.removeAttribute('dir');
+		}
+	});
+
+	test('should move focus forward on Tab when RTL class is on documentElement', () => {
+		setupSimpleDocument();
+		document.documentElement.classList.add('enact-locale-right-to-left');
+		try {
+			focusForTest(document.getElementById('second'));
+
+			const ev = dispatchTab(handlers.keydown);
+
+			expect(ev.preventDefault).toHaveBeenCalled();
+			expect(document.activeElement.id).toBe('first');
+		} finally {
+			document.documentElement.classList.remove('enact-locale-right-to-left');
+		}
+	});
+
+	test('should move focus forward on Tab when RTL class is on body', () => {
+		setupSimpleDocument();
+		document.body.classList.add('enact-locale-right-to-left');
+		try {
+			focusForTest(document.getElementById('second'));
+
+			const ev = dispatchTab(handlers.keydown);
+
+			expect(ev.preventDefault).toHaveBeenCalled();
+			expect(document.activeElement.id).toBe('first');
+		} finally {
+			document.body.classList.remove('enact-locale-right-to-left');
+		}
+	});
+
 	test('should move focus backward on Shift+Tab', () => {
 		setupSimpleDocument();
 		focusForTest(document.getElementById('second'));

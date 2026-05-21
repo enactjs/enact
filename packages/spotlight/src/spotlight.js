@@ -102,6 +102,9 @@ const isUp = is('up');
 // Vertical centers within this distance share a Tab row; horizontal position breaks ties.
 const TAB_ROW_THRESHOLD = 24;
 
+// CSS class applied by @enact/i18n I18nDecorator to the app root for RTL locales.
+const I18N_RTL_CLASS = 'enact-locale-right-to-left';
+
 // Per-keypress cache for getLinearTargetsInContainer, scoped to one handleTab call.
 let _linearTargetsCache = null;
 
@@ -480,16 +483,31 @@ const Spotlight = (function () {
 		}
 	}
 
-	// Reads the `dir` attribute already written to the DOM by I18nDecorator after locale resolution.
-	// i18n/locale.isRtlLocale is async (callback-based) and i18n/util.isRtlText operates on string
-	// content, so neither is a suitable synchronous replacement here. spotlight does not depend on
-	// @enact/i18n, so we read the DOM directly rather than introduce that package dependency.
+	/*
+	 * Whether the document uses right-to-left layout for Tab ordering.
+	 *
+	 * Intentionally does not import @enact/i18n:
+	 * - `locale.isRtlLocale` is callback-based and depends on ilib; Tab handling needs a
+	 *   synchronous answer on every keydown without adding that heavyweight dependency to spotlight.
+	 * - `util.isRtlText` detects RTL characters in a string, not page layout direction.
+	 *
+	 * Instead, read layout direction already reflected on the DOM by the app or I18nDecorator:
+	 * the `dir` attribute when set, and the `enact-locale-right-to-left` class on the app root.
+	 */
 	function isRtlDocument () {
-		const rootDir = document.documentElement && document.documentElement.dir;
-		const bodyDir = document.body && document.body.dir;
-		const dir = rootDir || bodyDir;
+		const root = document.documentElement;
+		const body = document.body;
+		const dir = (root && root.dir) || (body && body.dir);
 
-		return typeof dir === 'string' && dir.toLowerCase() === 'rtl';
+		if (typeof dir === 'string' && dir.toLowerCase() === 'rtl') {
+			return true;
+		}
+
+		if (root?.classList.contains(I18N_RTL_CLASS) || body?.classList.contains(I18N_RTL_CLASS)) {
+			return true;
+		}
+
+		return Boolean(document.querySelector('.' + I18N_RTL_CLASS));
 	}
 
 	/*
