@@ -51,6 +51,25 @@ describe('Spotlight Tab key dispatch (integration)', () => {
 		}
 	});
 
+	test('should ignore non-Tab keys while Spotlight is paused', () => {
+		setupSimpleDocument();
+		focusForTest(document.getElementById('first'));
+		pause();
+		try {
+			const ev = {
+				keyCode: 37,
+				shiftKey: false,
+				preventDefault: jest.fn(),
+				stopPropagation: jest.fn()
+			};
+			handlers.keydown(ev);
+			expect(document.activeElement.id).toBe('first');
+			expect(ev.preventDefault).not.toHaveBeenCalled();
+		} finally {
+			resume();
+		}
+	});
+
 	test('should move focus forward on Tab', () => {
 		setupSimpleDocument();
 		focusForTest(document.getElementById('first'));
@@ -442,6 +461,17 @@ describe('Spotlight Tab helpers (integration)', () => {
 		document.getElementById('root').appendChild(wrap);
 
 		expect(tabNavTestHooks.getLinearTargetContainerId(btn)).toBe('');
+	});
+
+	test('getLinearTargetsInContainer: reuses the per-keypress cache on repeated lookups', () => {
+		setupPopupDocument();
+
+		tabNavTestHooks.runWithLinearTargetsCache(() => {
+			const first = tabNavTestHooks.getLinearTargetsInContainer(rootContainerId);
+			const second = tabNavTestHooks.getLinearTargetsInContainer(rootContainerId);
+
+			expect(second).toBe(first);
+		});
 	});
 
 	test('getLinearTargetsInContainer: lists root and portaled controls in visual order with finite coordinates', () => {
