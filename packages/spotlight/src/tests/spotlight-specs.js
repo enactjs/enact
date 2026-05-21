@@ -1,3 +1,5 @@
+// Public Spotlight API and Tab handoff across multi-popup scenarios.
+
 import {
 	configureContainer,
 	configureDefaults,
@@ -6,7 +8,18 @@ import {
 	rootContainerId,
 	setLastContainer
 } from '../container';
-import Spotlight from '../spotlight';
+import Spotlight, {_tabNavTestHooks as tabNavTestHooks} from '../spotlight';
+
+import {
+	captureHandlers,
+	dispatchTab,
+	focusForTest,
+	installTabTestEnvironment,
+	setupPopupDocument,
+	setupTabHandoffScenario,
+	teardownTabTest,
+	uninstallTabTestEnvironment
+} from './tab-fixtures';
 
 import {
 	container,
@@ -51,8 +64,8 @@ const setupContainers = () => {
 };
 
 const teardownContainers = () => {
-	// clean up any containers we create for safe tests
 	removeAllContainers();
+	document.body.innerHTML = '';
 };
 
 const mockFocus = (n) => {
@@ -202,4 +215,136 @@ describe('Spotlight', () => {
 			expect(window.removeEventListener).toHaveBeenCalledWith('mousemove', expect.any(Function));
 		});
 	});
+
+	describe('Tab handoff across open popups (internal hook integration)', () => {
+		afterEach(teardownTabTest);
+
+		test('should find a DOM element target when tabbing forward out of a popup with two open', () => {
+			setupTabHandoffScenario({openA: true, openB: true, openC: false});
+			const next = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('a5'), 'popup-a', true);
+
+			expect(next).not.toBeNull();
+			expect(next.id).toBe('b1');
+		});
+
+		test('should find a DOM element target when shift-tabbing backward out of a popup', () => {
+			setupTabHandoffScenario({openA: true, openB: true, openC: false});
+			const previous = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('b1'), 'popup-b', false);
+
+			expect(previous).not.toBeNull();
+			expect(previous.id).toBe('a5');
+		});
+
+		test('should chain forward handoff a5 -> b1, b5 -> c1, c5 -> closeX when three popups are open', () => {
+			setupTabHandoffScenario({openA: true, openB: true, openC: true});
+			const fromA = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('a5'), 'popup-a', true);
+			const fromB = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('b5'), 'popup-b', true);
+			const fromC = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('c5'), 'popup-c', true);
+
+			expect(fromA).not.toBeNull();
+			expect(fromA.id).toBe('b1');
+			expect(fromB).not.toBeNull();
+			expect(fromB.id).toBe('c1');
+			expect(fromC).not.toBeNull();
+			expect(fromC.id).toBe('closeX');
+		});
+
+		test('should return null when popup container id is invalid', () => {
+			setupTabHandoffScenario({openA: true, openB: true, openC: false});
+			const result = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('a5'), 'missing-popup', true);
+
+			expect(result).toBeNull();
+		});
+
+		test('should find a DOM element target when the adjacent popup is closed', () => {
+			setupTabHandoffScenario({openA: true, openB: false, openC: false});
+			const next = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('a5'), 'popup-a', true);
+
+			expect(next).not.toBeNull();
+			expect(next.id).toBe('bOwner');
+		});
+	});
+
+	describe('Tab keydown (integration — real modules, real DOM, real keydown events)', () => {
+		let onKeyDown;
+
+		beforeAll(installTabTestEnvironment);
+		afterAll(uninstallTabTestEnvironment);
+
+		beforeEach(() => {
+			Spotlight.terminate();
+			onKeyDown = captureHandlers().keydown;
+			Spotlight.setPointerMode(false);
+		});
+
+		afterEach(teardownTabTest);
+
+		test('should move focus from popup-a last option to popup-b first option on Tab', () => {
+			setupPopupDocument();
+			setLastContainer('popup-a');
+			focusForTest(document.getElementById('a2'));
+
+			const ev = dispatchTab(onKeyDown);
+
+			expect(ev.preventDefault).toHaveBeenCalled();
+			expect(document.activeElement.id).toBe('b1');
+		});
+
+		test('should move focus from popup-b first option back to popup-a last option on Shift+Tab', () => {
+			setupPopupDocument();
+			setLastContainer('popup-b');
+			focusForTest(document.getElementById('b1'));
+
+			const ev = dispatchTab(onKeyDown, true);
+
+			expect(ev.preventDefault).toHaveBeenCalled();
+			expect(document.activeElement.id).toBe('a2');
+		});
+
+		test('should hand off to trigger button ownerB when it has no aria-owns', () => {
+			setupPopupDocument();
+			document.getElementById('ownerB').removeAttribute('aria-owns');
+			setLastContainer('popup-a');
+			focusForTest(document.getElementById('a2'));
+
+			const ev = dispatchTab(onKeyDown);
+
+			expect(ev.preventDefault).toHaveBeenCalled();
+			expect(document.activeElement.id).toBe('ownerB');
+		});
+
+		test('should chain Tab across three open popups: a5 → b1, b5 → c1, c5 → closeX', () => {
+			setupTabHandoffScenario({openA: true, openB: true, openC: true});
+
+			setLastContainer('popup-a');
+			focusForTest(document.getElementById('a5'));
+			let ev = dispatchTab(onKeyDown);
+			expect(ev.preventDefault).toHaveBeenCalled();
+			expect(document.activeElement.id).toBe('b1');
+
+			setLastContainer('popup-b');
+			focusForTest(document.getElementById('b5'));
+			ev = dispatchTab(onKeyDown);
+			expect(ev.preventDefault).toHaveBeenCalled();
+			expect(document.activeElement.id).toBe('c1');
+
+			setLastContainer('popup-c');
+			focusForTest(document.getElementById('c5'));
+			ev = dispatchTab(onKeyDown);
+			expect(ev.preventDefault).toHaveBeenCalled();
+			expect(document.activeElement.id).toBe('closeX');
+		});
+
+		test('should hand off to nearest owner button when adjacent popup is closed', () => {
+			setupTabHandoffScenario({openA: true, openB: false, openC: false});
+			setLastContainer('popup-a');
+			focusForTest(document.getElementById('a5'));
+
+			const ev = dispatchTab(onKeyDown);
+
+			expect(ev.preventDefault).toHaveBeenCalled();
+			expect(document.activeElement.id).toBe('bOwner');
+		});
+	});
+
 });

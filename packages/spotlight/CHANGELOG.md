@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 - `spotlight` to focus visible children of elements which do not have `overflow:true`
+- `spotlight` keyboard focus flow for open dropdown popups so Tab/Shift+Tab traversal is predictable between open lists and can continue to nearby controls after popup navigation
 
 ## [5.4.3] - 2026-02-26
 
