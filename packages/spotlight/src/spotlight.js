@@ -605,46 +605,39 @@ const Spotlight = (function () {
 		const isRtl = isRtlDocument();
 		const rootTargets = getLinearTargetsInContainer(rootContainerId);
 
-		if (isForward) {
-			const fallbackTarget = findLinearTabExitTargetInTargets(
+		const pickExitTarget = (x, y, searchForward) => {
+			const candidate = findLinearTabExitTargetInTargets(
 				rootTargets,
-				focusCenter.x,
-				focusCenter.y,
+				x,
+				y,
 				isRtl,
-				true
+				searchForward
 			);
-			if (fallbackTarget) {
-				return resolveTargetToOpenPopupItem(fallbackTarget, selfOnlyContainerId, true);
+			return candidate ?
+				resolveTargetToOpenPopupItem(candidate, selfOnlyContainerId, isForward) :
+				null;
+		};
+
+		if (isForward) {
+			const exitTarget = pickExitTarget(focusCenter.x, focusCenter.y, true);
+			if (exitTarget) {
+				return exitTarget;
 			}
 		}
 
 		if (popupOwner) {
 			const ownerRect = getRect(popupOwner);
 			// top+1 keeps row-level neighbors in the same TAB_ROW_THRESHOLD band as a tall owner button.
-			const ownerTarget = findLinearTabExitTargetInTargets(
-				rootTargets,
-				ownerRect.center.x,
-				ownerRect.top + 1,
-				isRtl,
-				isForward
-			);
-			if (ownerTarget) {
-				return resolveTargetToOpenPopupItem(ownerTarget, selfOnlyContainerId, isForward);
+			const exitTarget = pickExitTarget(ownerRect.center.x, ownerRect.top + 1, isForward);
+			if (exitTarget) {
+				return exitTarget;
 			}
 		}
 
 		if (!isForward) {
-			const fallbackTarget = findLinearTabExitTargetInTargets(
-				rootTargets,
-				focusCenter.x,
-				focusCenter.y,
-				isRtl,
-				false
-			);
-			if (fallbackTarget) {
-				return resolveTargetToOpenPopupItem(fallbackTarget, selfOnlyContainerId, false);
-			}
+			return pickExitTarget(focusCenter.x, focusCenter.y, false);
 		}
+
 		return null;
 	}
 
