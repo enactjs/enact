@@ -126,6 +126,10 @@ class ScrollerBasic extends Component {
 		if (platform.chrome && smoothBehavior && repeat) {
 			this.animateScroll(this.getRtlPositionX(left), top, node);
 		} else {
+			if (this.scrollAnimationId) {
+				window.cancelAnimationFrame(this.scrollAnimationId);
+				this.scrollAnimationId = null;
+			}
 			node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
 		}
 	}
@@ -133,32 +137,33 @@ class ScrollerBasic extends Component {
 	/**
 	 * Programmatically animates the native scroll position of `node` toward the target `left`/`top`
 	 * offsets using `requestAnimationFrame`. It computes the scroll direction on each axis, then repeatedly
-	 * calls `scrollBy` in small 18px steps (instant behavior) until the target is reached or a scroll bound
-	 * is hit. Used as a Chrome fallback when repeating a smooth scroll.
+	 * calls `scrollBy` with a dynamic step (10% of remaining distance, minimum 8px) until the target is reached
+	 * or 1s has elapsed. Used as a Chrome fallback when repeating a smooth scroll.
 	 */
 	animateScroll (left, top, node) {
 		const directionX = Math.sign(left - node.scrollLeft);
 		const directionY = Math.sign(top - node.scrollTop);
+		const startTime = performance.now();
 
-		const animateScroll = () => {
+		const animateScroll = (currentTime) => {
+			const elapsed = (currentTime - startTime) / 1000;
 			const scrollLeft = directionX > 0 ? node.scrollLeft < left : node.scrollLeft > left;
 			const scrollTop = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
 
-			// Check if we reached the scroll bounds and cancel the animation
-			if (
-				top > this.scrollBounds.maxTop && node.scrollTop === this.scrollBounds.maxTop ||
-				left > this.scrollBounds.maxLeft && node.scrollLeft === this.scrollBounds.maxLeft ||
-				top < 0 && node.scrollTop === 0 ||
-				left < 0 && node.scrollLeft === 0
-			) {
-				window.cancelAnimationFrame(this.scrollAnimationId);
+			// Stop animating if the target is reached or 1s has elapsed since animation started
+			if ((!scrollTop && !scrollLeft) || elapsed > 1) {
+				// Fallback: if timed out before reaching target, jump there with smooth scroll
+				if (elapsed > 1 && (node.scrollLeft !== left || node.scrollTop !== top)) {
+					node.scrollTo({top, left, behavior: 'smooth'});
+				}
 				return;
 			}
 
-			if (scrollTop || scrollLeft) {
-				node.scrollBy({top: directionY * 8, left: directionX * 8, behavior: 'instant'});
-				this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
-			}
+			const horizontalScrollFactor = Math.max(Math.abs(left - node.scrollLeft) * 0.1, 8);
+			const verticalScrollFactor = Math.max(Math.abs(top - node.scrollTop) * 0.1, 8);
+
+			node.scrollBy({top: directionY * verticalScrollFactor, left: directionX * horizontalScrollFactor, behavior: 'instant'});
+			this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 		};
 
 		this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
