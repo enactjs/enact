@@ -1344,6 +1344,14 @@ const Spotlight = (function () {
 		findLinearTabExitTargetInTargets,
 		getLinearTargetContainerId,
 		getLinearTargetsInContainer,
+		runWithLinearTargetsCache: (fn) => {
+			_linearTargetsCache = new Map();
+			try {
+				return fn();
+			} finally {
+				_linearTargetsCache = null;
+			}
+		},
 		spotLinear
 	};
 
