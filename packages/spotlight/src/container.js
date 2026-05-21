@@ -244,11 +244,20 @@ const getSubContainerSelector = (node) => {
 const getContainerNode = (containerId) => {
 	if (!containerId) {
 		return null;
-	} else if (containerId === rootContainerId) {
+	}
+
+	const node = document.querySelector(`[${containerAttribute}="${containerId}"]`);
+	if (node) {
+		return node;
+	}
+
+	// rootContainerId may not have a matching DOM node (e.g. during tests or SSR), in which case
+	// the document itself is used so that queries still traverse the full DOM tree.
+	if (containerId === rootContainerId) {
 		return document;
 	}
 
-	return document.querySelector(`[${containerAttribute}="${containerId}"]`);
+	return null;
 };
 
 /**
@@ -300,6 +309,61 @@ const getOwnedNodes = (node, selector) => {
 	}
 
 	return [];
+};
+
+/**
+ * Returns the nearest `[aria-owns]` owner whose owned subtree contains `containerNode`.
+ *
+ * @param   {Node}    containerNode  Popup container node or descendant
+ * @returns {Node|null}              Owner element, or null
+ * @memberof spotlight/container
+ * @private
+ */
+const getPopupOwnerElement = (containerNode) => {
+	if (!containerNode) {
+		return null;
+	}
+
+	const owners = document.querySelectorAll('[aria-owns]');
+	for (const owner of owners) {
+		if (getOwnedNodes(owner, '*').some(n => n.contains(containerNode))) {
+			return owner;
+		}
+	}
+
+	return null;
+};
+
+/**
+ * Returns IDs of `self-only` spotlight containers reachable through the `aria-owns` of
+ * `ownerNode`, excluding `excludeContainerId`.
+ *
+ * @param   {Node}      ownerNode            Owner element carrying `aria-owns`
+ * @param   {String}    excludeContainerId   Container ID to skip
+ * @returns {String[]}                       Owned self-only container IDs
+ * @memberof spotlight/container
+ * @private
+ */
+const getOwnedSelfOnlyContainerIds = (ownerNode, excludeContainerId) => {
+	const ownedContainerSelector = '[data-spotlight-container][data-spotlight-id]';
+	const ids = [];
+
+	for (const ownedNode of getOwnedNodes(ownerNode, '*')) {
+		const containerNodes = [
+			...(ownedNode.matches?.(ownedContainerSelector) ? [ownedNode] : []),
+			...ownedNode.querySelectorAll(ownedContainerSelector)
+		];
+		for (const containerNode of containerNodes) {
+			const id = getContainerId(containerNode);
+			if (!id || id === excludeContainerId) continue;
+			const cfg = getContainerConfig(id);
+			if (cfg?.restrict === 'self-only') {
+				ids.push(id);
+			}
+		}
+	}
+
+	return ids;
 };
 
 /**
@@ -1136,6 +1200,9 @@ export {
 	// Keep
 	addContainer,
 	containerAttribute,
+	getOwnedNodes,
+	getOwnedSelfOnlyContainerIds,
+	getPopupOwnerElement,
 	configureDefaults,
 	configureContainer,
 	getContainerFocusTarget,
