@@ -177,6 +177,12 @@ const useScrollBase = (props) => {
 	const [originalItemSize, setOriginalItemSize] = useState(props.itemSize);
 	const [itemSize, setItemSize] = useState(props.itemSize);
 	const scaledItemSizesRef = useRef(null);
+	const scaledItemSizesSourceRef = useRef(props.itemSizes);
+
+	if (scaledItemSizesSourceRef.current !== props.itemSizes) {
+		scaledItemSizesRef.current = null;
+		scaledItemSizesSourceRef.current = props.itemSizes;
+	}
 
 	const mutableRef = useRef({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
