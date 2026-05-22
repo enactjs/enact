@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import {render, screen, fireEvent, act} from '@testing-library/react';
+import {useLayoutEffect} from 'react';
 
 import {
 	SpotlightRootDecorator,
@@ -20,6 +21,12 @@ describe('SpotlightRootDecorator', () => {
 			<button>123</button>
 		</div>
 	);
+
+	afterEach(() => {
+		jest.restoreAllMocks();
+		jest.useRealTimers();
+		delete document.elementFromPoint;
+	});
 
 	test('should set `spotlight-input-key` class when the app is focused for the first time', () => {
 		const App = SpotlightRootDecorator(AppBase);
@@ -105,9 +112,6 @@ describe('SpotlightRootDecorator', () => {
 		});
 
 		expect(element).toHaveClass('spotlight-input-key');
-
-		delete document.elementFromPoint;
-		jest.useRealTimers();
 	});
 
 	test('should set `spotlight-input-mouse` class on pointermove event with mouse pointer', () => {
@@ -142,24 +146,23 @@ describe('SpotlightRootDecorator', () => {
 		expect(element).toHaveClass('spotlight-input-touch');
 	});
 
-	test('should handle focusin that fires before mount without throwing', () => {
-		const App = SpotlightRootDecorator(AppBase);
+	test('should handle focusin that fires during child mount without throwing', () => {
+		const ChildFiringFocusin = () => {
+			useLayoutEffect(() => {
+				document.dispatchEvent(new Event('focusin', {bubbles: true}));
+			}, []);
+			return 123;
+		};
 
-		const originalAddEventListener = document.addEventListener.bind(document);
-		let beforeMountHandlerCalled = false;
+		const AppWithChild = (props) => (
+			<div id="root" data-testid="root" {...props}>
+				<ChildFiringFocusin />
+			</div>
+		);
 
-		jest.spyOn(document, 'addEventListener').mockImplementation((type, handler, options) => {
-			if (type === 'focusin' && !beforeMountHandlerCalled) {
-				beforeMountHandlerCalled = true;
-				// Invoke it immediately to simulate focusin firing before useEffect
-				handler();
-			}
-			originalAddEventListener(type, handler, options);
-		});
+		const App = SpotlightRootDecorator(AppWithChild);
 
 		render(<App />);
-
-		document.addEventListener.mockRestore();
 
 		expect(screen.getByTestId('root')).toBeInTheDocument();
 	});
@@ -181,13 +184,8 @@ describe('SpotlightRootDecorator', () => {
 
 		expect(preventDefaultSpy).toHaveBeenCalled();
 
-		preventDefaultSpy.mockRestore();
-
 		await act(async () => {
 			jest.runAllTimers();
 		});
-
-		delete document.elementFromPoint;
-		jest.useRealTimers();
 	});
 });
