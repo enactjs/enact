@@ -1,6 +1,6 @@
 {
   "name": "enact",
-  "version": "5.4.3",
+  "version": "5.4.4",
   "description": "Monorepo for all Enact front end libraries.",
   "private": true,
   "scripts": {
@@ -25,7 +25,7 @@
     "vue-template-compiler": "@vue/compiler-sfc@3.4.31"
   },
   "devDependencies": {
-    "@enact/docs-utils": "^0.4.16",
-    "lerna": "^9.0.4"
+    "@enact/docs-utils": "^0.4.17",
+    "lerna": "^9.0.7"
   }
 }
