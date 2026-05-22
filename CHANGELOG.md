@@ -8,8 +8,6 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `spotlight/SpotlightRootDecorator` to use a functional component
 
-## [unreleased]
-
 ### Fixed
 
 - `ui/Scroller` jumping back when scrolled by long press
