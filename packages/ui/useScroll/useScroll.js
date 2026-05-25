@@ -916,7 +916,7 @@ const useScrollBase = (props) => {
 	 * Handler for scrollend event
 	 */
 	function onScrollEnd (ev) {
-		if (!mutableRef.current.scrolling || mutableRef.current.keyPressed) {
+		if (!mutableRef.current.scrolling || mutableRef.current.keyPressed || scrollContentHandle.current?.scrolling) {
 			return;
 		}
 
@@ -1303,6 +1303,7 @@ const useScrollBase = (props) => {
 			let {roundedTargetX, roundedTargetY} = roundTarget(scrollContentHandle.current, targetX, targetY);
 
 			if (animate) {
+				scrollContentRef.current.lastInputType = mutableRef.current.lastInputType;
 				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth', mutableRef.current.repeat);
 			} else {
 				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
