@@ -8,7 +8,8 @@ import {
 	setLastContainer
 } from '../container';
 import {pause, resume} from '../../Pause';
-import Spotlight, {_tabNavTestHooks as tabNavTestHooks} from '../spotlight';
+import Spotlight from '../spotlight';
+import * as tabTraversal from '../tabTraversal';
 import * as target from '../target';
 
 import {
@@ -214,11 +215,18 @@ describe('Spotlight Tab key dispatch (integration)', () => {
 	});
 });
 
-describe('Spotlight spotLinear (integration)', () => {
-	beforeEach(() => Spotlight.setPointerMode(false));
+describe('Spotlight Tab dispatch — spotLinear branches', () => {
+	let handlers;
+
+	beforeEach(() => {
+		Spotlight.terminate();
+		handlers = captureHandlers();
+		Spotlight.setPointerMode(false);
+	});
+
 	afterEach(teardownTabTest);
 
-	test('should return false when nothing is focused and focus cannot be restored', () => {
+	test('should not move focus when nothing is focused and focus cannot be restored', () => {
 		document.body.innerHTML = `
 			<div data-spotlight-container="true" data-spotlight-id="${rootContainerId}"></div>
 		`;
@@ -226,35 +234,21 @@ describe('Spotlight spotLinear (integration)', () => {
 		configureContainer(rootContainerId, {selector: '.spottable'});
 		setLastContainer(rootContainerId);
 
-		expect(tabNavTestHooks.spotLinear(true)).toBe(false);
+		const ev = dispatchTab(handlers.keydown);
+
+		expect(ev.preventDefault).not.toHaveBeenCalled();
 	});
 
-	test('should return false when restoreFocus appears to succeed but leaves no active element', () => {
+	test('should not move focus when restoreFocus succeeds but leaves no active element', () => {
 		setupSimpleDocument();
 		document.getElementById('first').blur?.();
 		const focusSpy = jest.spyOn(Spotlight, 'focus').mockImplementation(() => true);
 		try {
-			expect(tabNavTestHooks.spotLinear(true)).toBe(false);
+			const ev = dispatchTab(handlers.keydown);
+			expect(ev.preventDefault).not.toHaveBeenCalled();
 		} finally {
 			focusSpy.mockRestore();
 		}
-	});
-
-	test('should advance focus to the next spottable element', () => {
-		setupSimpleDocument();
-		focusForTest(document.getElementById('first'));
-
-		const moved = tabNavTestHooks.spotLinear(true);
-
-		expect(moved).toBe(true);
-		expect(document.activeElement.id).toBe('second');
-	});
-
-	test('should return false at the end of the linear list', () => {
-		setupSimpleDocument();
-		focusForTest(document.getElementById('second'));
-
-		expect(tabNavTestHooks.spotLinear(true)).toBe(false);
 	});
 
 	test('should fall back to first element when nearest target cannot be resolved', () => {
@@ -267,8 +261,8 @@ describe('Spotlight spotLinear (integration)', () => {
 
 		const nearestSpy = jest.spyOn(target, 'getNearestTargetFromPosition').mockReturnValue(null);
 		try {
-			const moved = tabNavTestHooks.spotLinear(true);
-			expect(moved).toBe(true);
+			const ev = dispatchTab(handlers.keydown);
+			expect(ev.preventDefault).toHaveBeenCalled();
 			expect(document.activeElement.id).toBe('ownerA');
 		} finally {
 			nearestSpy.mockRestore();
@@ -283,17 +277,19 @@ describe('Spotlight spotLinear (integration)', () => {
 		setRect(orphan, {left: 144, top: 18, width: 16, height: 10});
 		focusForTest(orphan);
 
-		const moved = tabNavTestHooks.spotLinear(true);
+		const ev = dispatchTab(handlers.keydown);
 
-		expect(moved).toBe(true);
+		expect(ev.preventDefault).toHaveBeenCalled();
 		expect(document.activeElement.id).toBe('outside');
 	});
 
-	test('should return false when reverse index goes before start in non-self-only scope', () => {
+	test('should not move focus on Shift+Tab from the first element in non-self-only scope', () => {
 		setupPopupDocument();
 		focusForTest(document.getElementById('ownerA'));
 
-		expect(tabNavTestHooks.spotLinear(false)).toBe(false);
+		const ev = dispatchTab(handlers.keydown, true);
+
+		expect(ev.preventDefault).not.toHaveBeenCalled();
 	});
 
 	test('should bootstrap focus via restoreFocus when nothing is focused', () => {
@@ -302,13 +298,13 @@ describe('Spotlight spotLinear (integration)', () => {
 			document.activeElement.blur();
 		}
 
-		const moved = tabNavTestHooks.spotLinear(true);
+		const ev = dispatchTab(handlers.keydown);
 
-		expect(moved).toBe(true);
+		expect(ev.preventDefault).toHaveBeenCalled();
 		expect(document.activeElement.id).toBe('second');
 	});
 
-	test('should return false when self-only popup has no spottable linear targets', () => {
+	test('should not move focus when self-only popup has no spottable linear targets', () => {
 		setupPopupDocument();
 		const popup = document.querySelector('[data-spotlight-id="popup-a"]');
 		popup.innerHTML = '';
@@ -318,10 +314,12 @@ describe('Spotlight spotLinear (integration)', () => {
 		setLastContainer('popup-a');
 		focusForTest(btn);
 
-		expect(tabNavTestHooks.spotLinear(true)).toBe(false);
+		const ev = dispatchTab(handlers.keydown);
+
+		expect(ev.preventDefault).not.toHaveBeenCalled();
 	});
 
-	test('should return false when self-only container has no valid exit target', () => {
+	test('should not move focus when self-only container has no valid exit target', () => {
 		setupPopupDocument();
 		document.getElementById('ownerA').removeAttribute('aria-owns');
 		document.getElementById('ownerB').remove();
@@ -330,23 +328,27 @@ describe('Spotlight spotLinear (integration)', () => {
 		setLastContainer('popup-a');
 		focusForTest(document.getElementById('a2'));
 
-		expect(tabNavTestHooks.spotLinear(true)).toBe(false);
+		const ev = dispatchTab(handlers.keydown);
+
+		expect(ev.preventDefault).not.toHaveBeenCalled();
 	});
 });
 
-describe('Spotlight Tab helpers (integration)', () => {
+// Pure helpers — these don't touch the Spotlight singleton or window events, so they're
+// imported directly from tabTraversal and tested as plain functions.
+describe('tabTraversal pure helpers', () => {
 	afterEach(teardownTabTest);
 
 	test('getLinearTabSearchContainerId: returns root for null focus', () => {
 		setupPopupDocument();
-		expect(tabNavTestHooks.getLinearTabSearchContainerId(null)).toBe(rootContainerId);
+		expect(tabTraversal.getLinearTabSearchContainerId(null)).toBe(rootContainerId);
 	});
 
 	test('getLinearTabSearchContainerId: returns root when paused', () => {
 		setupPopupDocument();
 		pause();
 		try {
-			expect(tabNavTestHooks.getLinearTabSearchContainerId(document.getElementById('a1'))).toBe(rootContainerId);
+			expect(tabTraversal.getLinearTabSearchContainerId(document.getElementById('a1'))).toBe(rootContainerId);
 		} finally {
 			resume();
 		}
@@ -355,7 +357,7 @@ describe('Spotlight Tab helpers (integration)', () => {
 	test('getLinearTabSearchContainerId: returns self-only container for an element inside one', () => {
 		setupPopupDocument();
 		setLastContainer('popup-a');
-		expect(tabNavTestHooks.getLinearTabSearchContainerId(document.getElementById('a1'))).toBe('popup-a');
+		expect(tabTraversal.getLinearTabSearchContainerId(document.getElementById('a1'))).toBe('popup-a');
 	});
 
 	test.each([
@@ -364,7 +366,7 @@ describe('Spotlight Tab helpers (integration)', () => {
 		['same row rtl', 30, 10, 10, 12, true, true],
 		['same row same X', 10, 10, 10, 12, false, false]
 	])('comesBeforeInTabOrder: %s', (_label, ax, ay, bx, by, rtl, expected) => {
-		expect(tabNavTestHooks.comesBeforeInTabOrder(ax, ay, bx, by, rtl)).toBe(expected);
+		expect(tabTraversal.comesBeforeInTabOrder(ax, ay, bx, by, rtl)).toBe(expected);
 	});
 
 	test('getPopupOwnerElement: finds the aria-owns trigger for a popup container', () => {
@@ -381,17 +383,17 @@ describe('Spotlight Tab helpers (integration)', () => {
 
 	test('isTargetInSelfOnlyContainer: true for popup items, false for root-level elements and null', () => {
 		setupPopupDocument();
-		expect(tabNavTestHooks.isTargetInSelfOnlyContainer(document.getElementById('a2'))).toBe(true);
-		expect(tabNavTestHooks.isTargetInSelfOnlyContainer(document.getElementById('ownerB'))).toBe(false);
-		expect(tabNavTestHooks.isTargetInSelfOnlyContainer(document.getElementById('outside'))).toBe(false);
-		expect(tabNavTestHooks.isTargetInSelfOnlyContainer(null)).toBe(false);
+		expect(tabTraversal.isTargetInSelfOnlyContainer(document.getElementById('a2'))).toBe(true);
+		expect(tabTraversal.isTargetInSelfOnlyContainer(document.getElementById('ownerB'))).toBe(false);
+		expect(tabTraversal.isTargetInSelfOnlyContainer(document.getElementById('outside'))).toBe(false);
+		expect(tabTraversal.isTargetInSelfOnlyContainer(null)).toBe(false);
 	});
 
 	test('isTargetInSelfOnlyContainer: false when target has no spotlight container ancestor', () => {
 		setupPopupDocument();
 		const orphan = document.createElement('button');
 		document.body.appendChild(orphan);
-		expect(tabNavTestHooks.isTargetInSelfOnlyContainer(orphan)).toBe(false);
+		expect(tabTraversal.isTargetInSelfOnlyContainer(orphan)).toBe(false);
 	});
 
 	test('isTargetInSelfOnlyContainer: false for a node inside the root container itself', () => {
@@ -403,138 +405,10 @@ describe('Spotlight Tab helpers (integration)', () => {
 		configureDefaults({selector: '.spottable'});
 		configureContainer(rootContainerId, {selector: '.spottable'});
 
-		expect(tabNavTestHooks.isTargetInSelfOnlyContainer(document.getElementById('root-child'))).toBe(false);
+		expect(tabTraversal.isTargetInSelfOnlyContainer(document.getElementById('root-child'))).toBe(false);
 	});
 
-	test('resolveTargetToOpenPopupItem: redirects into the first item of an open popup', () => {
-		setupPopupDocument();
-		const res = tabNavTestHooks.resolveTargetToOpenPopupItem(
-			document.getElementById('ownerB'), 'popup-a', true
-		);
-		expect(res.id).toBe('b1');
-	});
-
-	test('resolveTargetToOpenPopupItem: passes through when aria-owns is removed', () => {
-		setupPopupDocument();
-		document.getElementById('ownerB').removeAttribute('aria-owns');
-		const res = tabNavTestHooks.resolveTargetToOpenPopupItem(
-			document.getElementById('ownerB'), 'popup-a', true
-		);
-		expect(res.id).toBe('ownerB');
-	});
-
-	test('resolveTargetToOpenPopupItem: passes through when aria-owns is empty string', () => {
-		setupPopupDocument();
-		document.getElementById('ownerB').setAttribute('aria-owns', '');
-		const res = tabNavTestHooks.resolveTargetToOpenPopupItem(
-			document.getElementById('ownerB'), 'popup-a', true
-		);
-		expect(res.id).toBe('ownerB');
-	});
-
-	test('resolveTargetToOpenPopupItem: passes through when aria-owns points to a non-container element', () => {
-		setupPopupDocument();
-		document.getElementById('ownerB').setAttribute('aria-owns', 'outside');
-		const res = tabNavTestHooks.resolveTargetToOpenPopupItem(
-			document.getElementById('ownerB'), 'popup-a', true
-		);
-		expect(res.id).toBe('ownerB');
-	});
-
-	test('resolveTargetToOpenPopupItem: passes through when nearest aria-owns ancestor is document.body', () => {
-		setupPopupDocument();
-		document.getElementById('ownerA').removeAttribute('aria-owns');
-		document.body.setAttribute('aria-owns', 'layerB');
-		try {
-			const res = tabNavTestHooks.resolveTargetToOpenPopupItem(
-				document.getElementById('ownerA'), 'popup-b', true
-			);
-			expect(res.id).toBe('ownerA');
-		} finally {
-			document.body.removeAttribute('aria-owns');
-		}
-	});
-
-	test('findLinearTabExitTarget: uses forward fallback path when popup owner has no aria-owns', () => {
-		setupPopupDocument();
-		document.getElementById('ownerA').removeAttribute('aria-owns');
-		setRect(document.getElementById('outside'), {left: 320, top: 160});
-
-		const exitTarget = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('a2'), 'popup-a', true);
-
-		expect(exitTarget).not.toBeNull();
-		expect(exitTarget.id).toBe('outside');
-	});
-
-	test('findLinearTabExitTarget: uses reverse fallback path when popup owner has no aria-owns', () => {
-		setupPopupDocument();
-		document.getElementById('ownerB').removeAttribute('aria-owns');
-
-		const exitTarget = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('b1'), 'popup-b', false);
-
-		expect(exitTarget).not.toBeNull();
-		expect(exitTarget.id).toBe('outside');
-	});
-
-	test('findLinearTabExitTarget: exits second popup forward to the element after it in root order', () => {
-		setupPopupDocument();
-		const exitTarget = tabNavTestHooks.findLinearTabExitTarget(
-			document.getElementById('b2'), 'popup-b', true
-		);
-		expect(exitTarget).not.toBeNull();
-		expect(exitTarget.id).toBe('outside');
-	});
-
-	test('findLinearTabExitTargetInTargets: skips self-only members and returns null when nothing qualifies', () => {
-		setupPopupDocument();
-		const targets = [
-			{target: document.getElementById('a2'), x: 40, y: 120},
-			{target: document.getElementById('b1'), x: 180, y: 92},
-			{target: document.getElementById('outside'), x: 360, y: 32}
-		];
-		expect(tabNavTestHooks.findLinearTabExitTargetInTargets(targets, 60, 90, false, true)).toBeNull();
-	});
-
-	test('findLinearTabExitTargetInTargets: returns outside in reverse order', () => {
-		setupPopupDocument();
-		const targets = [
-			{target: document.getElementById('a2'), x: 40, y: 120},
-			{target: document.getElementById('b1'), x: 180, y: 92},
-			{target: document.getElementById('outside'), x: 360, y: 32}
-		];
-		const reverse = tabNavTestHooks.findLinearTabExitTargetInTargets(targets, 180, 90, false, false);
-		expect(reverse).not.toBeNull();
-		expect(reverse.id).toBe('outside');
-	});
-
-	test('findLinearTabExitTargetInTargets: returns a non-popup owner with empty aria-owns directly', () => {
-		setupPopupDocument();
-		const ownerLike = document.createElement('button');
-		ownerLike.id = 'owner-empty-owns';
-		ownerLike.className = 'spottable';
-		ownerLike.setAttribute('aria-owns', '');
-		document.getElementById('root').appendChild(ownerLike);
-
-		const result = tabNavTestHooks.findLinearTabExitTargetInTargets(
-			[{target: ownerLike, x: 300, y: 90}],
-			60, 90, false, true
-		);
-		expect(result.id).toBe('owner-empty-owns');
-	});
-
-	test('getLinearTargetsInContainer: skips nested containers that have no spotlight id', () => {
-		configureDefaults({selector: '.spottable'});
-		document.body.innerHTML = `
-			<div data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
-				<div data-spotlight-container="true"></div>
-			</div>
-		`;
-		configureContainer(rootContainerId, {selector: '.spottable'});
-
-		expect(tabNavTestHooks.getLinearTargetsInContainer(rootContainerId)).toEqual([]);
-	});
-
-	test('getLinearTargetContainerId: falls back to getContainersForNode when closest container has empty id', () => {
+	test('getLinearTargetContainerId: returns the empty string when closest container has empty id', () => {
 		setupSimpleDocument();
 		const wrap = document.createElement('div');
 		wrap.setAttribute('data-spotlight-container', 'true');
@@ -546,23 +420,34 @@ describe('Spotlight Tab helpers (integration)', () => {
 		wrap.appendChild(btn);
 		document.getElementById('root').appendChild(wrap);
 
-		expect(tabNavTestHooks.getLinearTargetContainerId(btn)).toBe('');
+		expect(tabTraversal.getLinearTargetContainerId(btn)).toBe('');
 	});
 
-	test('getLinearTargetsInContainer: reuses the per-keypress cache on repeated lookups', () => {
+	test('getLinearTargetsInContainer: skips nested containers that have no spotlight id', () => {
+		configureDefaults({selector: '.spottable'});
+		document.body.innerHTML = `
+			<div data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+				<div data-spotlight-container="true"></div>
+			</div>
+		`;
+		configureContainer(rootContainerId, {selector: '.spottable'});
+
+		expect(tabTraversal.getLinearTargetsInContainer(rootContainerId)).toEqual([]);
+	});
+
+	test('getLinearTargetsInContainer: reuses cache Map on repeated lookups', () => {
 		setupPopupDocument();
+		const cache = new Map();
 
-		tabNavTestHooks.runWithLinearTargetsCache(() => {
-			const first = tabNavTestHooks.getLinearTargetsInContainer(rootContainerId);
-			const second = tabNavTestHooks.getLinearTargetsInContainer(rootContainerId);
+		const first = tabTraversal.getLinearTargetsInContainer(rootContainerId, cache);
+		const second = tabTraversal.getLinearTargetsInContainer(rootContainerId, cache);
 
-			expect(second).toBe(first);
-		});
+		expect(second).toBe(first);
 	});
 
 	test('getLinearTargetsInContainer: lists root and portaled controls in visual order with finite coordinates', () => {
 		setupPopupDocument();
-		const linear = tabNavTestHooks.getLinearTargetsInContainer(rootContainerId);
+		const linear = tabTraversal.getLinearTargetsInContainer(rootContainerId);
 		const ids = linear.map(({target: t}) => t.id);
 
 		expect(ids).toEqual(['ownerA', 'ownerB', 'outside', 'a1', 'b1', 'a2', 'b2']);
@@ -571,15 +456,13 @@ describe('Spotlight Tab helpers (integration)', () => {
 
 	test('getLinearTargetsInContainer: computes correct centre coordinates from getBoundingClientRect', () => {
 		setupPopupDocument();
-		const linear = tabNavTestHooks.getLinearTargetsInContainer(rootContainerId);
+		const linear = tabTraversal.getLinearTargetsInContainer(rootContainerId);
 
 		const ownerAEntry = linear.find(({target: t}) => t.id === 'ownerA');
-		expect(ownerAEntry).toBeDefined();
 		expect(ownerAEntry.x).toBe(60);
 		expect(ownerAEntry.y).toBe(32);
 
 		const outsideEntry = linear.find(({target: t}) => t.id === 'outside');
-		expect(outsideEntry).toBeDefined();
 		expect(outsideEntry.x).toBe(360);
 		expect(outsideEntry.y).toBe(32);
 	});
@@ -590,9 +473,80 @@ describe('Spotlight Tab helpers (integration)', () => {
 		setRect(document.getElementById('first'), sameRect);
 		setRect(document.getElementById('second'), sameRect);
 
-		const linear = tabNavTestHooks.getLinearTargetsInContainer(rootContainerId);
+		const linear = tabTraversal.getLinearTargetsInContainer(rootContainerId);
 		expect(linear[0].target.id).toBe('first');
 		expect(linear[1].target.id).toBe('second');
+	});
+
+	test('resolveTargetToOpenPopupItem: redirects into the first item of an open popup', () => {
+		setupPopupDocument();
+		const res = tabTraversal.resolveTargetToOpenPopupItem(
+			document.getElementById('ownerB'), 'popup-a', true
+		);
+		expect(res.id).toBe('b1');
+	});
+
+	test('resolveTargetToOpenPopupItem: passes through when aria-owns is removed', () => {
+		setupPopupDocument();
+		document.getElementById('ownerB').removeAttribute('aria-owns');
+		const res = tabTraversal.resolveTargetToOpenPopupItem(
+			document.getElementById('ownerB'), 'popup-a', true
+		);
+		expect(res.id).toBe('ownerB');
+	});
+
+	test('resolveTargetToOpenPopupItem: passes through when nearest aria-owns ancestor is document.body', () => {
+		setupPopupDocument();
+		document.getElementById('ownerA').removeAttribute('aria-owns');
+		document.body.setAttribute('aria-owns', 'layerB');
+		try {
+			const res = tabTraversal.resolveTargetToOpenPopupItem(
+				document.getElementById('ownerA'), 'popup-b', true
+			);
+			expect(res.id).toBe('ownerA');
+		} finally {
+			document.body.removeAttribute('aria-owns');
+		}
+	});
+
+	test('findLinearTabExitTarget: forward fallback path lands on outside when popup owner has no aria-owns', () => {
+		setupPopupDocument();
+		document.getElementById('ownerA').removeAttribute('aria-owns');
+		setRect(document.getElementById('outside'), {left: 320, top: 160});
+
+		const exitTarget = tabTraversal.findLinearTabExitTarget(document.getElementById('a2'), 'popup-a', true);
+
+		expect(exitTarget.id).toBe('outside');
+	});
+
+	test('findLinearTabExitTarget: reverse fallback lands on outside when popup owner has no aria-owns', () => {
+		setupPopupDocument();
+		document.getElementById('ownerB').removeAttribute('aria-owns');
+
+		const exitTarget = tabTraversal.findLinearTabExitTarget(document.getElementById('b1'), 'popup-b', false);
+
+		expect(exitTarget.id).toBe('outside');
+	});
+
+	test('findLinearTabExitTargetInTargets: skips self-only members and returns null when nothing qualifies', () => {
+		setupPopupDocument();
+		const targets = [
+			{target: document.getElementById('a2'), x: 40, y: 120},
+			{target: document.getElementById('b1'), x: 180, y: 92},
+			{target: document.getElementById('outside'), x: 360, y: 32}
+		];
+		expect(tabTraversal.findLinearTabExitTargetInTargets(targets, 60, 90, false, true)).toBeNull();
+	});
+
+	test('findLinearTabExitTargetInTargets: returns outside in reverse order', () => {
+		setupPopupDocument();
+		const targets = [
+			{target: document.getElementById('a2'), x: 40, y: 120},
+			{target: document.getElementById('b1'), x: 180, y: 92},
+			{target: document.getElementById('outside'), x: 360, y: 32}
+		];
+		const reverse = tabTraversal.findLinearTabExitTargetInTargets(targets, 180, 90, false, false);
+		expect(reverse.id).toBe('outside');
 	});
 
 	test('should complete Tab handoff when owned popup is empty and aria-owns lists duplicate layers', () => {
