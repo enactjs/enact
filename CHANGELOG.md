@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [unreleased]
 
+### Changed
+
+- `ui/VirtualList.VirtualListBasic` scroll animation method for `scrollMode: native`
+
 ### Fixed
 
 - `ui/Scroller` jumping back when scrolled by long press
