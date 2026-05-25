@@ -11,6 +11,9 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Fixed
 
 - `ui/Scroller` jumping back when scrolled by long press
+- `ui/VirtualList` overscroll effect at the bottom of the list
+- `ui/VirtualList.VirtualList` overscroll effect at the bottom of the list
+- `ui/VirtualList.VirtualGridList` overscroll effect at the bottom of the list
 
 ## [5.5.0] - 2026-05-08
 

@@ -119,7 +119,6 @@ const useScrollBase = (props) => {
 			horizontalScrollbar,
 			horizontalScrollbarHandle,
 			itemRenderer,
-			itemSizes,
 			noScrollByDrag,
 			noScrollByWheel,
 			overhang,
@@ -151,6 +150,7 @@ const useScrollBase = (props) => {
 	delete rest.clearOverscrollEffect;
 	delete rest.handleResizeWindow;
 	delete rest.itemSize;
+	delete rest.itemSizes;
 	delete rest.onFlick;
 	delete rest.onKeyDown;
 	delete rest.onMouseDown;
@@ -176,6 +176,13 @@ const useScrollBase = (props) => {
 	const [riRatio, setRiRatio] = useState(ri.scale(1));
 	const [originalItemSize, setOriginalItemSize] = useState(props.itemSize);
 	const [itemSize, setItemSize] = useState(props.itemSize);
+	const scaledItemSizesRef = useRef(null);
+	const scaledItemSizesSourceRef = useRef(props.itemSizes);
+
+	if (scaledItemSizesSourceRef.current !== props.itemSizes) {
+		scaledItemSizesRef.current = null;
+		scaledItemSizesSourceRef.current = props.itemSizes;
+	}
 
 	const mutableRef = useRef({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
@@ -419,7 +426,7 @@ const useScrollBase = (props) => {
 			dataSize,
 			itemRenderer,
 			itemSize,
-			itemSizes,
+			itemSizes: scaledItemSizesRef.current ?? props.itemSizes,
 			overhang,
 			pageScroll,
 			spacing,
@@ -432,15 +439,17 @@ const useScrollBase = (props) => {
 
 		if (ri.scale(1) !== riRatio) {
 			if (scrollContentProps.itemSize) {
+				const ratio = ri.scale(1) / riRatio;
 				if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
-					scrollContentProps.itemSize.minWidth *= ri.scale(1) / riRatio;
-					scrollContentProps.itemSize.minHeight *= ri.scale(1) / riRatio;
+					scrollContentProps.itemSize = {
+						...scrollContentProps.itemSize,
+						minWidth: scrollContentProps.itemSize.minWidth * ratio,
+						minHeight: scrollContentProps.itemSize.minHeight * ratio
+					};
 				} else {
-					scrollContentProps.itemSize *= ri.scale(1) / riRatio;
+					scrollContentProps.itemSize *= ratio;
 					if (scrollContentProps.itemSizes) {
-						for (let i = 0; i < scrollContentProps.itemSizes.length; i++) {
-							scrollContentProps.itemSizes[i] *= ri.scale(1) / riRatio;
-						}
+						scaledItemSizesRef.current = scrollContentProps.itemSizes.map((s) => s * ratio);
 					}
 				}
 				setItemSize(scrollContentProps.itemSize);

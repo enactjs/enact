@@ -99,6 +99,7 @@ describe('useScroll', () => {
 			};
 
 			const mocks = createMockRefs();
+			const assignProperties = jest.fn();
 
 			const props = {
 				itemRenderer: jest.fn(),
@@ -106,7 +107,7 @@ describe('useScroll', () => {
 				direction: 'vertical',
 				scrollMode: 'translate',
 				...mocks,
-				assignProperties: jest.fn(),
+				assignProperties,
 				horizontalScrollbar: 'auto',
 				verticalScrollbar: 'auto'
 			};
@@ -121,8 +122,16 @@ describe('useScroll', () => {
 				jest.runAllTimers();
 			});
 
-			expect(itemSize.minWidth).toBe(200);
-			expect(itemSize.minHeight).toBe(100);
+			// Original props object must not be mutated
+			expect(itemSize.minWidth).toBe(100);
+			expect(itemSize.minHeight).toBe(50);
+
+			// The scaled values should be passed to scrollContentProps via assignProperties
+			const scrollContentPropsCall = assignProperties.mock.calls.findLast(([name]) => name === 'scrollContentProps');
+			const passedItemSize = scrollContentPropsCall?.[1]?.itemSize;
+
+			expect(passedItemSize?.minWidth).toBe(200);
+			expect(passedItemSize?.minHeight).toBe(100);
 		});
 
 		test('should scale itemSizes when ri.scale(1) changes from 1 to 2', () => {
@@ -132,6 +141,7 @@ describe('useScroll', () => {
 			const itemSizes = [100, 100, 100, 100, 100];
 
 			const mocks = createMockRefs();
+			const assignProperties = jest.fn();
 
 			const props = {
 				itemRenderer: jest.fn(),
@@ -140,7 +150,7 @@ describe('useScroll', () => {
 				direction: 'vertical',
 				scrollMode: 'translate',
 				...mocks,
-				assignProperties: jest.fn(),
+				assignProperties,
 				horizontalScrollbar: 'auto',
 				verticalScrollbar: 'auto'
 			};
@@ -155,7 +165,14 @@ describe('useScroll', () => {
 				jest.runAllTimers();
 			});
 
-			expect(itemSizes[1]).toBe(200);
+			// Original props array must not be mutated
+			expect(itemSizes[1]).toBe(100);
+
+			// The scaled values should be passed to scrollContentProps via assignProperties
+			const scrollContentPropsCall = assignProperties.mock.calls.findLast(([name]) => name === 'scrollContentProps');
+			const passedItemSizes = scrollContentPropsCall?.[1]?.itemSizes;
+
+			expect(passedItemSizes?.[1]).toBe(200);
 		});
 
 		test('should NOT scale itemSize when ri.scale(1) remains unchanged', () => {
@@ -314,7 +331,7 @@ describe('useScroll', () => {
 			expect(roundedTargetY).toEqual(121);
 		});
 
-		test('should round target position downwards when target is bi than current position', () => {
+		test('should round target position downwards when target is less than current position', () => {
 			mockPlatform = {chrome: 132};
 
 			const {roundTarget} = require('../useScroll');
