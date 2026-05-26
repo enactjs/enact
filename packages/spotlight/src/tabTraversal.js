@@ -1,5 +1,8 @@
-/*
+/**
  * Tab key linear focus traversal for Spotlight.
+ *
+ * @module spotlight/tabTraversal
+ * @private
  */
 
 import last from 'ramda/src/last';
@@ -27,23 +30,9 @@ const TAB_ROW_THRESHOLD = 24;
 // CSS class applied by @enact/i18n I18nDecorator to the app root for RTL locales.
 const I18N_RTL_CLASS = 'enact-locale-right-to-left';
 
-/**
- * Live tab traversal API, set when Spotlight initializes via {@link createTabTraversal}.
- *
- * @type {Object|null}
- */
+// Live tab traversal API, set when Spotlight initializes via createTabTraversal.
 export let tabTraversal = null;
 
-/**
- * Creates tab traversal helpers wired to Spotlight focus routines.
- *
- * @param {Object} deps
- * @param {Function} deps.focusElement
- * @param {Function} deps.getCurrent
- * @param {Function} deps.isPaused
- * @param {Function} deps.restoreFocus
- * @returns {Object} Tab traversal API
- */
 export function createTabTraversal ({
 	focusElement,
 	getCurrent,
