@@ -7,8 +7,10 @@ import {
 	rootContainerId,
 	setLastContainer
 } from '../container';
+import * as container from '../container';
 import {pause, resume} from '../../Pause';
-import Spotlight, {_tabNavTestHooks as tabNavTestHooks} from '../spotlight';
+import Spotlight from '../spotlight';
+import {tabTraversal as tabNavTestHooks} from '../tabTraversal';
 import * as target from '../target';
 
 import {
@@ -546,7 +548,12 @@ describe('Spotlight Tab helpers (integration)', () => {
 		wrap.appendChild(btn);
 		document.getElementById('root').appendChild(wrap);
 
-		expect(tabNavTestHooks.getLinearTargetContainerId(btn)).toBe('');
+		const containersSpy = jest.spyOn(container, 'getContainersForNode')
+			.mockReturnValue([rootContainerId, 'sentinel']);
+
+		expect(tabNavTestHooks.getLinearTargetContainerId(btn)).toBe('sentinel');
+
+		containersSpy.mockRestore();
 	});
 
 	test('getLinearTargetsInContainer: reuses the per-keypress cache on repeated lookups', () => {

@@ -8,7 +8,8 @@ import {
 	rootContainerId,
 	setLastContainer
 } from '../container';
-import Spotlight, {_tabNavTestHooks as tabNavTestHooks} from '../spotlight';
+import Spotlight from '../spotlight';
+import {tabTraversal as tabNavTestHooks} from '../tabTraversal';
 
 import {
 	captureHandlers,
