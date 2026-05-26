@@ -9,7 +9,7 @@ import {
 	setLastContainer
 } from '../container';
 import Spotlight from '../spotlight';
-import {tabTraversal as tabNavTestHooks} from '../tabTraversal';
+import {findLinearTabExitTarget} from '../tabTraversal';
 
 import {
 	captureHandlers,
@@ -217,12 +217,12 @@ describe('Spotlight', () => {
 		});
 	});
 
-	describe('Tab handoff across open popups (internal hook integration)', () => {
+	describe('tabTraversal — findLinearTabExitTarget', () => {
 		afterEach(teardownTabTest);
 
 		test('should find a DOM element target when tabbing forward out of a popup with two open', () => {
 			setupTabHandoffScenario({openA: true, openB: true, openC: false});
-			const next = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('a5'), 'popup-a', true);
+			const next = findLinearTabExitTarget(document.getElementById('a5'), 'popup-a', true);
 
 			expect(next).not.toBeNull();
 			expect(next.id).toBe('b1');
@@ -230,7 +230,7 @@ describe('Spotlight', () => {
 
 		test('should find a DOM element target when shift-tabbing backward out of a popup', () => {
 			setupTabHandoffScenario({openA: true, openB: true, openC: false});
-			const previous = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('b1'), 'popup-b', false);
+			const previous = findLinearTabExitTarget(document.getElementById('b1'), 'popup-b', false);
 
 			expect(previous).not.toBeNull();
 			expect(previous.id).toBe('a5');
@@ -238,9 +238,9 @@ describe('Spotlight', () => {
 
 		test('should chain forward handoff a5 -> b1, b5 -> c1, c5 -> closeX when three popups are open', () => {
 			setupTabHandoffScenario({openA: true, openB: true, openC: true});
-			const fromA = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('a5'), 'popup-a', true);
-			const fromB = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('b5'), 'popup-b', true);
-			const fromC = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('c5'), 'popup-c', true);
+			const fromA = findLinearTabExitTarget(document.getElementById('a5'), 'popup-a', true);
+			const fromB = findLinearTabExitTarget(document.getElementById('b5'), 'popup-b', true);
+			const fromC = findLinearTabExitTarget(document.getElementById('c5'), 'popup-c', true);
 
 			expect(fromA).not.toBeNull();
 			expect(fromA.id).toBe('b1');
@@ -252,14 +252,14 @@ describe('Spotlight', () => {
 
 		test('should return null when popup container id is invalid', () => {
 			setupTabHandoffScenario({openA: true, openB: true, openC: false});
-			const result = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('a5'), 'missing-popup', true);
+			const result = findLinearTabExitTarget(document.getElementById('a5'), 'missing-popup', true);
 
 			expect(result).toBeNull();
 		});
 
 		test('should find a DOM element target when the adjacent popup is closed', () => {
 			setupTabHandoffScenario({openA: true, openB: false, openC: false});
-			const next = tabNavTestHooks.findLinearTabExitTarget(document.getElementById('a5'), 'popup-a', true);
+			const next = findLinearTabExitTarget(document.getElementById('a5'), 'popup-a', true);
 
 			expect(next).not.toBeNull();
 			expect(next.id).toBe('bOwner');

@@ -312,7 +312,6 @@ const Spotlight = (function () {
 	const {runWithLinearTargetsCache, spotLinear} = createTabTraversal({
 		focusElement,
 		getCurrent,
-		isPaused,
 		restoreFocus
 	});
 
