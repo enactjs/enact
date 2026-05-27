@@ -1,5 +1,4 @@
 import {on, off} from '@enact/core/dispatcher';
-import {Job} from '@enact/core/util';
 
 import {isRtlLocale, updateLocale} from '../locale';
 import {createResBundle, setResBundle} from '../src/resBundle';
@@ -10,6 +9,9 @@ import {onWindowFocus} from './windowFocus';
 
 /**
  * Manages i18n resource loading.
+ *
+ * Implements the external store contract expected by `useSyncExternalStore`:
+ * `subscribe`, `getSnapshot`, and `getServerSnapshot`.
  *
  * @class I18n
  * @private
@@ -23,8 +25,13 @@ class I18n {
 	}) {
 		this._locale = null;
 		this._ready = sync;
-		this._onLoadResources = () => {};
-		this.loadResourceJob = null;
+		this._listeners = new Set();
+		this._snapshot = {
+			className: null,
+			loaded: sync,
+			locale: null,
+			rtl: false
+		};
 
 		this.latinLanguageOverrides = latinLanguageOverrides;
 		this.nonLatinLanguageOverrides = nonLatinLanguageOverrides;
@@ -33,20 +40,81 @@ class I18n {
 	}
 
 	/**
-	 * Sets the current locale and load callback.
+	 * Subscribes a listener to store updates.
 	 *
-	 * Changing the locale will request new resource files for that locale.
+	 * Returns an unsubscribe function, as required by `useSyncExternalStore`.
 	 *
-	 * @type {String}
+	 * @param {Function} listener Called whenever the snapshot changes
+	 * @returns {Function} Unsubscribe function
 	 * @public
 	 */
-	setContext (locale, onLoadResources) {
-		this.loadResourceJob = new Job(onLoadResources);
-		this._onLoadResources = onLoadResources;
+	subscribe = (listener) => {
+		this._listeners.add(listener);
+		return () => this._listeners.delete(listener);
+	};
 
+	/**
+	 * Returns the current snapshot of the i18n state.
+	 *
+	 * @returns {{className: String, loaded: Boolean, locale: String, rtl: Boolean}}
+	 * @public
+	 */
+	getSnapshot = () => this._snapshot;
+
+	/**
+	 * Returns the server-side snapshot (for SSR).
+	 *
+	 * Sync mode is assumed on the server so `loaded` is always `true`.
+	 *
+	 * @returns {{className: String, loaded: Boolean, locale: String, rtl: Boolean}}
+	 * @public
+	 */
+	getServerSnapshot = () => ({
+		className: null,
+		loaded: true,
+		locale: this._locale,
+		rtl: false
+	});
+
+	/**
+	 * Notifies all subscribers that the snapshot has changed.
+	 *
+	 * @private
+	 */
+	_notifyListeners () {
+		this._listeners.forEach(l => l());
+	}
+
+	/**
+	 * Updates the snapshot and notifies all subscribers.
+	 *
+	 * Notifications are suppressed before `load()` is called (i.e. during render
+	 * in async mode) so that `setLocale` in render does not trigger store updates
+	 * mid-render. In sync mode `_ready` is already `true`, so `useSyncExternalStore`
+	 * handles the concurrent-rendering tearing check automatically.
+	 *
+	 * @param {Object} newState New snapshot values
+	 * @private
+	 */
+	_updateSnapshot (newState) {
+		this._snapshot = newState;
+		if (this._ready) {
+			this._notifyListeners();
+		}
+	}
+
+	/**
+	 * Updates the locale when it changes between renders.
+	 *
+	 * Unlike the former `setContext`, this method does not accept a React
+	 * `setState` callback — state propagation is handled by `useSyncExternalStore`.
+	 *
+	 * @param {String} locale BCP 47 locale identifier
+	 * @public
+	 */
+	setLocale (locale) {
 		if (this._locale !== locale) {
 			this._locale = locale;
-
 			this.loadResources(locale);
 		}
 	}
@@ -97,7 +165,6 @@ class I18n {
 	unload () {
 		this._ready = false;
 
-		this.loadResourceJob.stop();
 		if (typeof window === 'object') {
 			off('languagechange', this.handleLocaleChange, window);
 		}
@@ -122,13 +189,6 @@ class I18n {
 		const bundle = wrapIlibCallback(createResBundle, options);
 
 		if (this.sync) {
-			const state = {
-				className,
-				loaded: true,
-				locale,
-				rtl
-			};
-
 			setResBundle(bundle);
 
 			this.resources.forEach(({resource, onLoad}) => {
@@ -136,29 +196,42 @@ class I18n {
 				if (onLoad) onLoad(result);
 			});
 
-			this._onLoadResources(state);
+			this._updateSnapshot({
+				className,
+				loaded: true,
+				locale,
+				rtl
+			});
 		} else {
-			const resources = Promise.all([
+			Promise.all([
 				rtl,
 				className,
-				// move updating into a new method with call to setState
 				bundle,
 				...this.resources.map(res => wrapIlibCallback(res.resource, options))
 			]).then(([rtlResult, classNameResult, bundleResult, ...userResources]) => {
 				setResBundle(bundleResult);
 				this.resources.forEach(({onLoad}, i) => onLoad && onLoad(userResources[i]));
 
-				return {
+				this._updateSnapshot({
 					className: classNameResult,
 					loaded: true,
 					locale,
 					rtl: rtlResult
-				};
-			});
-			// TODO: Resolve how to handle failed resource requests
-			// .catch(...);
+				});
+			}).catch((error) => {
+				// Resource loading failed — update the snapshot with the last known locale
+				// so the app remains functional, and surface the error for diagnostics.
+				this._updateSnapshot({
+					...this._snapshot,
+					loaded: true,
+					locale
+				});
 
-			this.loadResourceJob.promise(resources);
+				if (typeof console !== 'undefined') {
+					// eslint-disable-next-line no-console
+					console.error('[I18n] Failed to load resources for locale', locale, error);
+				}
+			});
 		}
 	}
 
