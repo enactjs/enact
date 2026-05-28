@@ -42,16 +42,14 @@ function useI18n ({locale, ...config} = {}) {
 
 	const i18n = useClass(I18n, config);
 
+	i18n.setLocale(locale);
+
 	// Subscribe to the ilib locale store — tearing-safe in concurrent rendering.
 	const state = useSyncExternalStore(
 		i18n.subscribe,
 		i18n.getSnapshot,
 		i18n.getServerSnapshot
 	);
-
-	// Propagate locale prop changes into the store.
-	// `setLocale` is a no-op when the locale has not changed.
-	i18n.setLocale(locale);
 
 	// Add/remove the `languagechange` event listener on mount/unmount.
 	useEffect(() => {

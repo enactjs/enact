@@ -3,6 +3,7 @@ import {act, render, screen, waitFor} from '@testing-library/react';
 import {useState} from 'react';
 
 import {updateLocale} from '../../locale';
+import {I18n} from '../I18n';
 import useI18n from '../useI18n';
 
 describe('useI18n', () => {
@@ -131,6 +132,8 @@ describe('useI18n', () => {
 
 			await waitFor(() => {
 				expect(i18nDiv).toHaveClass('enact-locale-ar-SA');
+			});
+			await waitFor(() => {
 				expect(i18nDiv).toHaveTextContent('rtl');
 			});
 		});
@@ -158,7 +161,9 @@ describe('useI18n', () => {
 
 			expect(i18nDiv).toHaveTextContent('ltr');
 
-			act(() => { btn.click(); });
+			act(() => {
+				btn.click();
+			});
 
 			expect(i18nDiv).toHaveTextContent('rtl');
 		});
@@ -171,7 +176,9 @@ describe('useI18n', () => {
 
 			expect(i18nDiv).toHaveClass('enact-locale-en-US');
 
-			act(() => { btn.click(); });
+			act(() => {
+				btn.click();
+			});
 
 			expect(i18nDiv).toHaveClass('enact-locale-ar-SA');
 			expect(i18nDiv).not.toHaveClass('enact-locale-en-US');
@@ -181,12 +188,12 @@ describe('useI18n', () => {
 	// updateLocale — verifies the store notifies subscribers when called imperatively
 	describe('updateLocale', () => {
 		function UpdateLocaleComponent () {
-			const {className, rtl, updateLocale} = useI18n({});
+			const {className, rtl, updateLocale: changeLocale} = useI18n({});
 
 			return (
 				<div>
 					<div className={className} data-testid="i18nDiv">{rtl ? 'rtl' : 'ltr'}</div>
-					<button data-testid="updateBtn" onClick={() => updateLocale('ar-SA')}>update</button>
+					<button data-testid="updateBtn" onClick={() => changeLocale('ar-SA')}>update</button>
 				</div>
 			);
 		}
@@ -199,9 +206,80 @@ describe('useI18n', () => {
 
 			expect(i18nDiv).toHaveTextContent('ltr');
 
-			act(() => { btn.click(); });
+			act(() => {
+				btn.click();
+			});
 
 			expect(i18nDiv).toHaveTextContent('rtl');
+		});
+	});
+
+	// getServerSnapshot — used by useSyncExternalStore for SSR
+	describe('getServerSnapshot', () => {
+		test('should return loaded=true for SSR', () => {
+			const i18n = new I18n({sync: false});
+
+			const snapshot = i18n.getServerSnapshot();
+
+			expect(snapshot.loaded).toBe(true);
+		});
+
+		test('should return the current locale in server snapshot', () => {
+			const i18n = new I18n({sync: true});
+
+			i18n.setLocale('ar-SA');
+
+			const snapshot = i18n.getServerSnapshot();
+
+			expect(snapshot.locale).toBe('ar-SA');
+		});
+	});
+
+	// async error handling — verifies .catch() path in loadResources
+	describe('async error handling', () => {
+		function AsyncComponentWithResources ({resources}) {
+			const {loaded} = useI18n({sync: false, resources});
+
+			return <div data-loaded={loaded} data-testid="i18nDiv" />;
+		}
+
+		test('should set loaded=true even when a resource fails to load', async () => {
+			// A resource that throws causes Promise.all to reject → .catch() path
+			const failingResource = () => {
+				throw new Error('resource load failed');
+			};
+
+			// Suppress the expected console.error from the catch handler
+			const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+			render(<AsyncComponentWithResources resources={[failingResource]} />);
+
+			const i18nDiv = screen.getByTestId('i18nDiv');
+
+			await waitFor(() => {
+				expect(i18nDiv).toHaveAttribute('data-loaded', 'true');
+			});
+
+			errorSpy.mockRestore();
+		});
+
+		test('should log an error when resource loading fails', async () => {
+			const failingResource = () => {
+				throw new Error('resource load failed');
+			};
+			const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+			render(<AsyncComponentWithResources resources={[failingResource]} />);
+
+			await waitFor(() => {
+				expect(errorSpy).toHaveBeenCalledWith(
+					'[I18n] Failed to load resources for locale',
+					expect.any(String),
+					expect.any(Error)
+				);
+			});
+
+			errorSpy.mockRestore();
 		});
 	});
 
@@ -228,7 +306,9 @@ describe('useI18n', () => {
 			expect(screen.getByTestId('compA')).toHaveTextContent('ltr');
 			expect(screen.getByTestId('compB')).toHaveTextContent('ltr');
 
-			act(() => { updateLocale('ar-SA'); });
+			act(() => {
+				updateLocale('ar-SA');
+			});
 
 			rerender(
 				<div>
