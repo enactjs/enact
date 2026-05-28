@@ -20,7 +20,7 @@ import {forward, forwardCustom} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {checkPropTypes, Job} from '@enact/core/util';
-import {Component} from 'react';
+import {Component, memo} from 'react';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
@@ -561,7 +561,6 @@ class Transition extends Component {
 		let {visible, ...props} = this.props;
 		delete props.onHide;
 		delete props.onShow;
-		delete props.textSize;
 
 		switch (this.state.renderState) {
 			// If we are deferring children, don't render any
