@@ -1,4 +1,3 @@
-/* global ResizeObserver */
 /**
  * A component that can transition its children components onto the screen.
  *
@@ -441,7 +440,6 @@ class Transition extends Component {
 			renderState: props.visible ? TRANSITION_STATE.READY : TRANSITION_STATE.INIT
 		};
 		this.resizeRegistry = null;
-		this.resizeObserver = null;
 	}
 
 	static getDerivedStateFromProps (props, state) {
@@ -458,18 +456,9 @@ class Transition extends Component {
 	}
 
 	componentDidMount () {
-		if (typeof ResizeObserver === 'function') {
-			this.resizeObserver = new ResizeObserver(this.handleObserverResize);
-			if (this.childNode) {
-				this.resizeObserver.observe(this.childNode);
-			}
-		}
-
 		if (!this.props.visible) {
 			this.measuringJob.idle();
-		} else if (!this.resizeObserver) {
-			// Without an observer we must read scrollHeight on mount;
-			// otherwise the observer's initial callback handles it.
+		} else {
 			this.measureInner();
 		}
 
@@ -492,22 +481,20 @@ class Transition extends Component {
 
 	componentDidUpdate (prevProps, prevState) {
 		const {noAnimation, visible} = this.props;
+		const {initialHeight, renderState} = this.state;
 
 		checkPropTypes(this, this.props, prevProps);
 		if (this.state.renderState === TRANSITION_STATE.MEASURE) {
 			this.measuringJob.stop();
 		}
 
-		// The observer drives measurement when available; only the fallback path
-		// needs to re-read scrollHeight from componentDidUpdate.
-		if (!this.resizeObserver) {
-			const {initialHeight, renderState} = this.state;
-			if ((visible === prevProps.visible &&
-				initialHeight === prevState.initialHeight &&
-				renderState !== TRANSITION_STATE.INIT) ||
-				(initialHeight == null && visible)) {
-				this.measureInner();
-			}
+		// Checking that something changed that wasn't the visibility
+		// or the initialHeight state or checking if component should be visible but doesn't have a height
+		if ((visible === prevProps.visible &&
+			initialHeight === prevState.initialHeight &&
+			renderState !== TRANSITION_STATE.INIT) ||
+			(initialHeight == null && visible)) {
+			this.measureInner();
 		}
 
 		if (noAnimation) {
@@ -521,10 +508,6 @@ class Transition extends Component {
 
 	componentWillUnmount () {
 		this.measuringJob.stop();
-		if (this.resizeObserver) {
-			this.resizeObserver.disconnect();
-			this.resizeObserver = null;
-		}
 		if (this.resizeRegistry) {
 			this.resizeRegistry.unregister();
 		}
@@ -537,39 +520,11 @@ class Transition extends Component {
 	});
 
 	handleResize = () => {
-		// ResizeObserver fires automatically on size changes of the inner element,
-		// so when it's active this manual remeasure path is unnecessary.
-		if (this.resizeObserver) return;
-
 		// @TODO oddly, using the setState callback is required here to ensure that the bounds
 		// are remeasured in a separate tick
 		this.setState({
 			initialHeight: null
 		}, this.measureInner);
-	};
-
-	handleObserverResize = (entries) => {
-		const entry = entries[0];
-		if (!entry) return;
-
-		// contentRect reflects the inner element's intrinsic layout size, which
-		// is not affected by the parent's animated height/max-width during a clip
-		// transition (the inner element overflows its clipped parent at its
-		// natural size).
-		const initialHeight = Math.round(entry.contentRect.height);
-		const initialWidth = Math.round(entry.contentRect.width);
-
-		if (
-			initialHeight !== this.state.initialHeight ||
-			initialWidth !== this.state.initialWidth ||
-			this.state.renderState !== TRANSITION_STATE.READY
-		) {
-			this.setState({
-				initialHeight,
-				initialWidth,
-				renderState: TRANSITION_STATE.READY
-			});
-		}
 	};
 
 	handleTransitionEnd = (ev) => {
@@ -599,14 +554,6 @@ class Transition extends Component {
 	};
 
 	childRef = (node) => {
-		if (this.resizeObserver) {
-			if (this.childNode && this.childNode !== node) {
-				this.resizeObserver.unobserve(this.childNode);
-			}
-			if (node && node !== this.childNode) {
-				this.resizeObserver.observe(node);
-			}
-		}
 		this.childNode = node;
 	};
 
