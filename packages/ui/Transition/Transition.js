@@ -296,17 +296,17 @@ const TRANSITION_STATE = {
  * @public
  */
 function Transition ({
-						 children,
-						 direction = 'up',
-						 duration = 'medium',
-						 noAnimation = false,
-						 onHide,
-						 onShow,
-						 timingFunction = 'ease-in-out',
-						 type = 'slide',
-						 visible = true,
-						 ...rest
-					 }) {
+	children,
+	direction = 'up',
+	duration = 'medium',
+	noAnimation = false,
+	onHide,
+	onShow,
+	timingFunction = 'ease-in-out',
+	type = 'slide',
+	visible = true,
+	...rest
+}) {
 	const [state, setState] = useState(() => ({
 		initialHeight: null,
 		initialWidth: null,
@@ -334,9 +334,9 @@ function Transition ({
 
 	if (!measuringJobRef.current) {
 		measuringJobRef.current = new Job(() => {
-			setState(prev => prev.renderState === TRANSITION_STATE.MEASURE
-				? prev
-				: {...prev, renderState: TRANSITION_STATE.MEASURE});
+			setState(prev => prev.renderState === TRANSITION_STATE.MEASURE ?
+				prev :
+				{...prev, renderState: TRANSITION_STATE.MEASURE});
 		});
 	}
 
