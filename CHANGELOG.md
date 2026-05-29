@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [Unreleased]
+
+### Changed
+
+- `spotlight/SpotlightRootDecorator` to use a functional component
+
 ## [unreleased]
 
 ### Changed
