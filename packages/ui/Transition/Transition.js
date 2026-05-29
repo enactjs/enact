@@ -315,8 +315,11 @@ function Transition ({
 
 	const prevVisibleRef = useRef(visible);
 
-	if (!prevVisibleRef.current && visible) {
-		prevVisibleRef.current = true;
+	// Adjust state during render when `visible` flips on. The functional equivalent of the
+	// class's getDerivedStateFromProps. Reading/writing the ref here is intentional.
+	// https://react.dev/reference/react/useState#storing-information-from-previous-renders
+	if (!prevVisibleRef.current && visible) { // eslint-disable-line react-hooks/refs
+		prevVisibleRef.current = true; // eslint-disable-line react-hooks/refs
 		setState({
 			initialHeight: null,
 			initialWidth: null,
@@ -325,14 +328,17 @@ function Transition ({
 	}
 
 	// Latest props for handlers that fire asynchronously (transitionend, observer callbacks)
+	const currentProps = {children, direction, duration, noAnimation, onHide, onShow, timingFunction, type, visible, ...rest};
+	checkPropTypes(Transition, currentProps);
+
 	const propsRef = useRef();
-	propsRef.current = {children, direction, duration, noAnimation, onHide, onShow, timingFunction, type, visible, ...rest};
-	checkPropTypes(Transition, propsRef.current);
+	propsRef.current = currentProps; // eslint-disable-line react-hooks/refs
+
 
 	const childNodeRef = useRef(null);
 	const measuringJobRef = useRef(null);
 
-	if (!measuringJobRef.current) {
+	if (measuringJobRef.current == null) {
 		measuringJobRef.current = new Job(() => {
 			setState(prev => prev.renderState === TRANSITION_STATE.MEASURE ?
 				prev :
@@ -384,7 +390,6 @@ function Transition ({
 		}
 
 		return () => job.stop();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	// ResizeContext registration — the context value is itself the register fn.
