@@ -340,9 +340,7 @@ function Transition ({
 
 	if (measuringJobRef.current == null) {
 		measuringJobRef.current = new Job(() => {
-			setState(prev => prev.renderState === TRANSITION_STATE.MEASURE ?
-				prev :
-				{...prev, renderState: TRANSITION_STATE.MEASURE});
+			setState(prev => prev.renderState === TRANSITION_STATE.MEASURE ? prev : {...prev, renderState: TRANSITION_STATE.MEASURE});
 		});
 	}
 
@@ -354,9 +352,7 @@ function Transition ({
 		const initialWidth = node.scrollWidth;
 
 		setState(prev => {
-			if (prev.initialHeight === initialHeight &&
-				prev.initialWidth === initialWidth &&
-				prev.renderState === TRANSITION_STATE.READY) {
+			if (prev.initialHeight === initialHeight && prev.initialWidth === initialWidth && prev.renderState === TRANSITION_STATE.READY) {
 				return prev;
 			}
 			return {
