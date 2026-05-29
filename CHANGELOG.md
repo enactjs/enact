@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `spotlight/SpotlightRootDecorator` to use a functional component
 
+## [unreleased]
+
 ### Changed
 
 - `ui/VirtualList.VirtualListBasic` scroll animation method for `scrollMode: native`
