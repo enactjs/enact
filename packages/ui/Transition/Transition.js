@@ -319,7 +319,7 @@ function Transition ({
 	// class's getDerivedStateFromProps. Reading/writing the ref here is intentional.
 	// https://react.dev/reference/react/useState#storing-information-from-previous-renders
 	if (!prevVisibleRef.current && visible) { // eslint-disable-line react-hooks/refs
-		prevVisibleRef.current = true; // eslint-disable-line react-hooks/refs
+		prevVisibleRef.current = true;
 		setState({
 			initialHeight: null,
 			initialWidth: null,
