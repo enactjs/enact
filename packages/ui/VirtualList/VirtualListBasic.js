@@ -358,10 +358,15 @@ class VirtualListBasic extends Component {
 			this.itemMarginLeft = Number(firstItemStyle.getPropertyValue('margin-left').slice(0, -2));
 			this.itemMarginRight = Number(firstItemStyle.getPropertyValue('margin-right').slice(0, -2));
 			if (this.isPrimaryDirectionVertical) {
-				this.scrollBounds.maxTop += this.itemMarginTop + this.itemMarginBottom;
+				const marginSum = this.itemMarginTop + this.itemMarginBottom;
+				this.scrollBounds.scrollHeight += marginSum;
+				this.scrollBounds.maxTop += marginSum;
 			} else {
-				this.scrollBounds.maxLeft += this.itemMarginLeft + this.itemMarginRight;
+				const marginSum = this.itemMarginLeft + this.itemMarginRight;
+				this.scrollBounds.scrollWidth += marginSum;
+				this.scrollBounds.maxLeft += marginSum;
 			}
+			this.setContainerSize();
 		}
 
 		let deferScrollTo = false;
@@ -892,9 +897,75 @@ class VirtualListBasic extends Component {
 
 	// scrollMode 'native' only
 	scrollToPosition (left, top, behavior) {
-		if (this.props.scrollContentRef.current && this.props.scrollContentRef.current.scrollTo) {
-			this.props.scrollContentRef.current.scrollTo({left: this.getRtlPositionX(left), top, behavior});
+		const {dataSize, scrollContentRef} = this.props;
+		const node = scrollContentRef.current;
+		if (!node) return;
+
+		const {clientWidth, clientHeight, scrollWidth, scrollHeight} = this.scrollBounds;
+		const {firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
+
+		const scrollSize = this.isPrimaryDirectionVertical ? top >= scrollHeight - clientHeight : left >= scrollWidth - clientWidth;
+		const isTargetStart = this.isPrimaryDirectionVertical ? top === 0 : left === 0;
+		const isScrollWrap = (lastVisibleIndex === dataSize - 1 && isTargetStart) || (firstVisibleIndex === 0 && scrollSize);
+		const isScrollByPageKey = node.lastInputType === 'pageKey';
+		const isSmoothBehavior = behavior === 'smooth';
+
+		if (platform.chrome && isSmoothBehavior && !isScrollByPageKey && !isScrollWrap) {
+			this.animateScroll(this.getRtlPositionX(left), top, node);
+		} else if (node.scrollTo) {
+			if (this.scrollAnimationId) {
+				this.cancelScrollAnimation();
+			}
+			node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
 		}
+	}
+
+	// scroll mode 'native' only
+	animateScroll (left, top, node) {
+		// Determine the direction of scroll (1 for forward/down, -1 for backward/up, 0 for no movement)
+		const directionX = Math.sign(left - node.scrollLeft);
+		const directionY = Math.sign(top - node.scrollTop);
+
+		// Calculate an adaptive scroll factor (pixels per frame).
+		// It uses the average item size (gridSize) to ensure the speed feels consistent.
+		const scrollFactor = Math.max(this.primary.gridSize / 12, 2);
+		const startTime = performance.now();
+
+		// Progressively scrolls the node toward a target position using requestAnimationFrame.
+		// It applies an incremental scroll on each frame and cancels the animation once
+		// the target is reached or the duration (500ms) is exceeded, falling back to
+		// a smooth scroll if the timeout occurs first.
+		const animateScroll = (currentTime) => {
+			const elapsed = (currentTime - startTime) / 500;
+
+			node.scrollBy({top: directionY * scrollFactor, left: directionX * scrollFactor, behavior: 'instant'});
+			this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+			this.scrolling = true;
+
+			const scrollHorizontally = directionX > 0 ? node.scrollLeft < left : node.scrollLeft > left;
+			const scrollVertically = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
+			const targetReached = node.scrollLeft === left && node.scrollTop === top;
+
+			// Check if we've reached the needed scroll position
+			// or the elapsed time since startTime is longer than 0.5s and cancel the animation
+			if (!scrollHorizontally && !scrollVertically || elapsed > 1) {
+				this.cancelScrollAnimation();
+
+				// Fallback: if time is out before reaching the target, jump there with smooth scroll
+				if (elapsed > 1 && !targetReached) {
+					node.scrollTo({top, left, behavior: 'smooth'});
+				}
+			}
+		};
+
+		this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+	}
+
+	// scrollMode 'native' only
+	cancelScrollAnimation () {
+		window.cancelAnimationFrame(this.scrollAnimationId);
+		this.scrollAnimationId = null;
+		this.scrolling = false;
 	}
 
 	// scrollMode 'native' only
