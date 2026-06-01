@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `spotlight/SpotlightRootDecorator` to use a functional component
 
 ## [unreleased]
+## [5.5.1] - 2026-06-01
 
 ### Changed
 
@@ -20,6 +21,12 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `ui/VirtualList` overscroll effect at the bottom of the list
 - `ui/VirtualList.VirtualList` overscroll effect at the bottom of the list
 - `ui/VirtualList.VirtualGridList` overscroll effect at the bottom of the list
+
+## [5.4.4] - 2026-05-22
+
+### Fixed
+
+- `ui/Scroller` jumping back when scrolled by long press
 
 ## [5.5.0] - 2026-05-08
 
