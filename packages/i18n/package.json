@@ -56,7 +56,7 @@
     "ilib": "^14.21.0 || ^14.21.0-webos1"
   },
   "devDependencies": {
-    "ilib": "^14.21.3"
+    "ilib": "^14.22.0"
   },
   "overrides": {
     "prop-types": {
