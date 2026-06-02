@@ -393,8 +393,7 @@ function Transition ({
 
 	const handleResize = useCallback(() => {
 		// Null initialHeight so the next layout commit re-measures in a separate tick.
-		// (In the class this required a setState callback; here the useLayoutEffect
-		// above re-runs when state.initialHeight transitions to null.)
+		// the useLayoutEffect above re-runs when state.initialHeight transitions to null.
 		setState(prev => prev.initialHeight == null ? prev : {...prev, initialHeight: null});
 	}, []);
 
@@ -407,7 +406,6 @@ function Transition ({
 		};
 	}, [resizeRegister, handleResize]);
 
-	// noAnimation onShow/onHide moved to useEffect, so the user callback does not fire synchronously inside the commit phase.
 	const prevVisibleForEffectRef = useRef(visible);
 
 	useEffect(() => {
