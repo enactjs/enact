@@ -12,8 +12,6 @@ import I18n from './I18n';
  * @memberof i18n/I18nDecorator
  * @property {String[]}   [latinLanguageOverrides]    Locales that should be treated as latin
  * @property {String[]}   [nonLatinLanguageOverrides] Locales that should be treated as non-latin
- * @property {Function}   [onLoadResources]           Called when resources have been loaded after a
- *                                                    locale change
  * @property {Function[]} [resources]                 Additional resource callbacks to be invoked
  *                                                    during a locale change
  * @property {Boolean}    [sync = false]              Load the resources synchronously

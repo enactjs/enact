@@ -26,7 +26,6 @@ class I18n {
 	}) {
 		this._locale = null;
 		this._ready = sync;
-		this._onLoadResources = () => {};
 		this.loadResourceJob = new Job(state => this._updateSnapshot(state));
 		this._listeners = new Set();
 		this._snapshot = {
