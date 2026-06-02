@@ -227,59 +227,11 @@ describe('useI18n', () => {
 		test('should return the current locale in server snapshot', () => {
 			const i18n = new I18n({sync: true});
 
-			i18n.setLocale('ar-SA');
+			i18n.setContext('ar-SA');
 
 			const snapshot = i18n.getServerSnapshot();
 
 			expect(snapshot.locale).toBe('ar-SA');
-		});
-	});
-
-	// async error handling — verifies .catch() path in loadResources
-	describe('async error handling', () => {
-		function AsyncComponentWithResources ({resources}) {
-			const {loaded} = useI18n({sync: false, resources});
-
-			return <div data-loaded={loaded} data-testid="i18nDiv" />;
-		}
-
-		test('should set loaded=true even when a resource fails to load', async () => {
-			// A resource that throws causes Promise.all to reject → .catch() path
-			const failingResource = () => {
-				throw new Error('resource load failed');
-			};
-
-			// Suppress the expected console.error from the catch handler
-			const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
-			render(<AsyncComponentWithResources resources={[failingResource]} />);
-
-			const i18nDiv = screen.getByTestId('i18nDiv');
-
-			await waitFor(() => {
-				expect(i18nDiv).toHaveAttribute('data-loaded', 'true');
-			});
-
-			errorSpy.mockRestore();
-		});
-
-		test('should log an error when resource loading fails', async () => {
-			const failingResource = () => {
-				throw new Error('resource load failed');
-			};
-			const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
-			render(<AsyncComponentWithResources resources={[failingResource]} />);
-
-			await waitFor(() => {
-				expect(errorSpy).toHaveBeenCalledWith(
-					'[I18n] Failed to load resources for locale',
-					expect.any(String),
-					expect.any(Error)
-				);
-			});
-
-			errorSpy.mockRestore();
 		});
 	});
 

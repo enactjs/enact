@@ -1,4 +1,5 @@
 import {on, off} from '@enact/core/dispatcher';
+import {Job} from '@enact/core/util';
 
 import {isRtlLocale, updateLocale} from '../locale';
 import {createResBundle, setResBundle} from '../src/resBundle';
@@ -25,6 +26,8 @@ class I18n {
 	}) {
 		this._locale = null;
 		this._ready = sync;
+		this._onLoadResources = () => {};
+		this.loadResourceJob = new Job(state => this._updateSnapshot(state));
 		this._listeners = new Set();
 		this._snapshot = {
 			className: null,
@@ -86,12 +89,14 @@ class I18n {
 	}
 
 	/**
-	 * Updates the snapshot and notifies all subscribers.
+	 * Updates the snapshot and notifies subscribers when the store is ready.
 	 *
-	 * Notifications are suppressed before `load()` is called (i.e. during render
-	 * in async mode) so that `setLocale` in render does not trigger store updates
-	 * mid-render. In sync mode `_ready` is already `true`, so `useSyncExternalStore`
-	 * handles the concurrent-rendering tearing check automatically.
+	 * `_ready` reflects whether `load()` has run. In async mode it starts `false`,
+	 * which suppresses notifications for the synchronous `setContext` call made
+	 * during the first render (the initial snapshot is published by the first
+	 * `getSnapshot` read instead). In sync mode `_ready` is `true` from
+	 * construction, so updates notify immediately; `useSyncExternalStore` is
+	 * responsible for the tearing check under concurrent rendering.
 	 *
 	 * @param {Object} newState New snapshot values
 	 * @private
@@ -104,15 +109,14 @@ class I18n {
 	}
 
 	/**
-	 * Updates the locale when it changes between renders.
+	 * Sets the current locale.
 	 *
-	 * Unlike the former `setContext`, this method does not accept a React
-	 * `setState` callback — state propagation is handled by `useSyncExternalStore`.
+	 * Changing the locale will request new resource files for that locale.
 	 *
 	 * @param {String} locale BCP 47 locale identifier
 	 * @public
 	 */
-	setLocale (locale) {
+	setContext (locale) {
 		if (this._locale !== locale) {
 			this._locale = locale;
 			this.loadResources(locale);
@@ -165,6 +169,7 @@ class I18n {
 	unload () {
 		this._ready = false;
 
+		this.loadResourceJob.stop();
 		if (typeof window === 'object') {
 			off('languagechange', this.handleLocaleChange, window);
 		}
@@ -203,7 +208,7 @@ class I18n {
 				rtl
 			});
 		} else {
-			Promise.all([
+			const resources = Promise.all([
 				rtl,
 				className,
 				bundle,
@@ -212,26 +217,17 @@ class I18n {
 				setResBundle(bundleResult);
 				this.resources.forEach(({onLoad}, i) => onLoad && onLoad(userResources[i]));
 
-				this._updateSnapshot({
+				return {
 					className: classNameResult,
 					loaded: true,
 					locale,
 					rtl: rtlResult
-				});
-			}).catch((error) => {
-				// Resource loading failed — update the snapshot with the last known locale
-				// so the app remains functional, and surface the error for diagnostics.
-				this._updateSnapshot({
-					...this._snapshot,
-					loaded: true,
-					locale
-				});
-
-				if (typeof console !== 'undefined') {
-					// eslint-disable-next-line no-console
-					console.error('[I18n] Failed to load resources for locale', locale, error);
-				}
+				};
 			});
+			// TODO: Resolve how to handle failed resource requests
+			// .catch(...);
+
+			this.loadResourceJob.promise(resources);
 		}
 	}
 

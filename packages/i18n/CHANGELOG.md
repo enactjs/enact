@@ -9,15 +9,6 @@ No significant changes.
 ## [5.4.4] - 2026-05-22
 
 No significant changes.
-## [unreleased]
-
-### Changed
-
-- `i18n/I18nDecorator` to use `useSyncExternalStore` for subscribing to the ilib locale store, replacing the manual `useState` + `setContext` pattern for safer concurrent rendering
-
-### Fixed
-
-- `i18n/I18nDecorator` to handle failed async resource requests instead of silently ignoring them
 
 ## [5.5.0] - 2026-05-08
 
