@@ -91,8 +91,30 @@ function getLinearSize () {
 }
 
 /**
+ * Determines if the current workspace should be scaled based on the screen type,
+ * orientation, and configuration settings.
+ *
+ * @function
+ * @memberof ui/resolution
+ * @param {Object} scrObj 			The screen type object to compare against.
+ *
+ * @returns {boolean}
+ * @private
+ */
+const getShouldScale = (scrObj) => {
+	const isPortrait = orientation === 'portrait';
+	const isLandscape = orientation === 'landscape';
+	const shouldScale = workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height;
+
+	const shouldScaleLandscape = (config.fontSizeHandling === 'scale') && isLandscape && shouldScale;
+	const shouldScalePortrait = (config.orientationHandling === 'scale') && isPortrait && shouldScale;
+
+	return shouldScaleLandscape || shouldScalePortrait;
+};
+
+/**
  * Calculates the scale factor and determines if scaling is necessary
- * for the landscape workspace based on the screen type.
+ * for the landscape or portrait workspace based on the screen type.
  *
  * @function
  * @memberof ui/resolution
@@ -101,16 +123,18 @@ function getLinearSize () {
  * @returns {Object} 					Returns an object containing the scaling data.
  * @private
  */
-const getLandscapeScaleFactor = (type = screenType) => {
-	if (!type) return {shouldScale: false, factor: 1};
-
+const getScaleFactor = (type = screenType) => {
 	const scrObj = getScreenTypeObject(type);
-	const shouldScale = workspaceBounds.width < scrObj.width || workspaceBounds.height < scrObj.height;
+	const shouldScale = getShouldScale(scrObj);
 	return {shouldScale, factor: workspaceBounds.height / scrObj.height};
 };
 
 /**
- * Get the closest resolution type based on the `resolution`.
+ * Gets the closest resolution type based on the provided resolution by calculating a distance score.
+ *
+ * The score is determined by the Euclidean distance between the widths and heights of the
+ * resolutions, plus a weighted penalty for the difference in aspect ratios. This ensures that
+ * the matched resolution is not only close in size but also has a similar shape.
  *
  * @function
  * @memberOf ui/resolution
@@ -120,17 +144,25 @@ const getLandscapeScaleFactor = (type = screenType) => {
  * @private
  */
 const getClosestResolutionType = (resolution, types) => {
-	// Calculates the distance between two resolutions using their width and height as coordinates (x, y)
-	const getDistance = (p1, p2) => {
-		return Math.sqrt(Math.pow(p2.width - p1.width, 2) + Math.pow(p2.height - p1.height, 2));
+	// Calculates a score for a candidate resolution based on proximity to the target. A lower score indicates a better match.
+	const getDistanceScore = (p) => {
+		const distance = Math.sqrt(Math.pow(p.width - resolution.width, 2) + Math.pow(p.height - resolution.height, 2));
+		const currentRatio = resolution.width / resolution.height;
+		const targetRatio = getAspectRatio(p.name);
+		// Apply a weighted penalty (x1000) for aspect ratio mismatch.
+		// This ensures that even if a resolution is close in size, it won't be chosen
+		// if its shape (e.g., UltraWide vs. Standard) is significantly different.
+		const ratioPenalty = Math.abs(currentRatio - targetRatio) * 1000;
+
+		return distance + ratioPenalty;
 	};
 
-	// Compares the calculated distances and returns the closest resolution type name that matches current resolution
+	// Compares the calculated distance scores and returns the closest resolution type name that matches the current resolution.
 	const {name} = types.reduce((prev, curr) => {
-		const distCurr = getDistance(curr, resolution);
-		const distPrev = getDistance(prev, resolution);
+		const currScore = getDistanceScore(curr);
+		const prevScore = getDistanceScore(prev);
 
-		return distCurr < distPrev ? curr : prev;
+		return currScore < prevScore ? curr : prev;
 	});
 
 	return name;
@@ -298,16 +330,13 @@ function calculateFontSize (type) {
 	}
 
 	const scrObj = getScreenTypeObject(type);
-	const shouldScaleFontSize = (config.fontSizeHandling === 'scale') && (workspaceBounds.width < scrObj.width || workspaceBounds.height < scrObj.height);
+	const shouldScaleFontSize = getShouldScale(scrObj);
 	let size;
 
-	if (orientation === 'portrait' && config.orientationHandling === 'scale') {
-		size = scrObj.height / scrObj.width * scrObj.pxPerRem;
+	if (shouldScaleFontSize) {
+		size = workspaceBounds.height * scrObj.pxPerRem / scrObj.height;
 	} else {
 		size = scrObj.pxPerRem;
-		if (orientation === 'landscape' && shouldScaleFontSize) {
-			size = workspaceBounds.height * scrObj.pxPerRem / scrObj.height;
-		}
 	}
 	return size + 'px';
 }
@@ -378,13 +407,10 @@ function getResolutionClasses (type = screenType) {
 function getRiRatio (type = screenType) {
 	if (type && baseScreen) {
 		let ratio = getUnitToPixelFactors(type) / getUnitToPixelFactors(baseScreen.name);
+		const {shouldScale, factor} = getScaleFactor(type);
 
-		if (orientation === 'landscape' && config.fontSizeHandling === 'scale') {
-			const {shouldScale, factor} = getLandscapeScaleFactor(type);
-
-			if (shouldScale) {
-				ratio *= factor;
-			}
+		if (shouldScale) {
+			ratio *= factor;
 		}
 
 		if (type === screenType) {
@@ -498,12 +524,10 @@ function unit (pixels, toUnit) {
 	if (typeof pixels === 'string' && pixels.substring(-2) === 'px') pixels = parseInt(pixels.substring(0, pixels.length - 2));
 	if (typeof pixels !== 'number') return;
 
-	if (screenType && orientation === 'landscape' && config.fontSizeHandling === 'scale') {
-		const {shouldScale, factor} = getLandscapeScaleFactor();
+	const {shouldScale, factor} = getScaleFactor();
 
-		if (shouldScale) {
-			return (pixels / factor / unitToPixelFactors[toUnit]) + '' + toUnit;
-		}
+	if (shouldScale) {
+		return (pixels / factor / unitToPixelFactors[toUnit]) + '' + toUnit;
 	}
 
 	return (pixels / unitToPixelFactors[toUnit]) + '' + toUnit;
