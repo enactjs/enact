@@ -52,7 +52,7 @@ describe('Resolution Specs', () => {
 			expect(getScreenType(UHD2)).toBe('uhd2');
 		});
 
-		test('should select screen type whose height and width are the closest to the screen', () => {
+		test('should select screen type whose height and width are the closest to the screen and have the same aspect ratio', () => {
 			screenTypes.forEach((type) => {
 				expect(getScreenType({width: type.width, height: type.height})).toBe(type.name);
 
@@ -60,28 +60,28 @@ describe('Resolution Specs', () => {
 				expect(getScreenType({width: type.width + 1, height: type.height + 1})).toBe(type.name);
 			});
 
-			for (let i = 0; i < screenTypes.length - 1; i++) {
-				const current = screenTypes[i];
-				const next = screenTypes[i + 1];
+			screenTypes.slice(0, -1)
+				.map((current, i) => [current, screenTypes[i + 1]])
+				.filter(([current, next]) => current.aspectRatioName === next.aspectRatioName)
+				.forEach(([current, next]) => {
+					const midPoint = {
+						width: (current.width + next.width) / 2,
+						height: (current.height + next.height) / 2
+					};
 
-				const midPoint = {
-					width: (current.width + next.width) / 2,
-					height: (current.height + next.height) / 2
-				};
+					const justBeforeMid = {
+						width: Math.floor(midPoint.width - 0.1),
+						height: Math.floor(midPoint.height - 0.1)
+					};
 
-				const justBeforeMid = {
-					width: Math.floor(midPoint.width - 0.1),
-					height: Math.floor(midPoint.height - 0.1)
-				};
+					const justAfterMid = {
+						width: Math.ceil(midPoint.width + 0.1),
+						height: Math.ceil(midPoint.height + 0.1)
+					};
 
-				const justAfterMid = {
-					width: Math.ceil(midPoint.width + 0.1),
-					height: Math.ceil(midPoint.height + 0.1)
-				};
-
-				expect(getScreenType(justBeforeMid)).toBe(current.name);
-				expect(getScreenType(justAfterMid)).toBe(next.name);
-			}
+					expect(getScreenType(justBeforeMid)).toBe(current.name);
+					expect(getScreenType(justAfterMid)).toBe(next.name);
+				});
 
 			const firstScreenType = screenTypes.at(0);
 			expect(getScreenType({width: 1, height: 1})).toBe(firstScreenType.name);
@@ -150,7 +150,7 @@ describe('Resolution Specs', () => {
 	});
 
 	test('should convert pixels to units in landscape and fontSizeHandling is "scale"', () => {
-		const closestResolution = {...XGA};
+		const closestResolution = {...HD};
 		const wideResolution = {innerWidth: 1024, innerHeight: 480};
 		init({measurementNode: wideResolution});
 
@@ -180,7 +180,7 @@ describe('Resolution Specs', () => {
 		// XGA
 		measurementNode = {innerWidth: XGA.width, innerHeight: XGA.height};
 		init({measurementNode});
-		expect(selectSrc(src)).toBe(src.hd);
+		expect(selectSrc(src)).toBe(src.vga);
 
 		// HD
 		measurementNode = {innerWidth: HD.width, innerHeight: HD.height};
@@ -226,6 +226,18 @@ describe('Resolution Specs', () => {
 		measurementNode = {innerWidth: UHD2.width, innerHeight: UHD2.height};
 		init({measurementNode});
 		expect(selectSrc(src)).toBe(src.uhd);
+	});
+
+	test('should calculate font size with orientationHandling="scale" in portrait', () => {
+		config.orientationHandling = 'scale';
+		const portraitWidth = 540;
+		const portraitHeight = 960;
+		init({measurementNode: {innerWidth: portraitWidth, innerHeight: portraitHeight}});
+
+		const expectedSize = (portraitWidth * 16 / HD.height) + 'px';
+		expect(calculateFontSize()).toBe(expectedSize);
+
+		config.orientationHandling = 'normal';
 	});
 
 	test('should calculate linearly scaled font size based on workspace bounds and current screen', () => {
