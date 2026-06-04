@@ -101,7 +101,9 @@ function getLinearSize () {
  * @returns {boolean}
  * @private
  */
-const getShouldScale = (scrObj) => {
+const getShouldScale = (scrObj = screenTypeObject) => {
+	if (!scrObj) return false;
+
 	const isPortrait = orientation === 'portrait';
 	const isLandscape = orientation === 'landscape';
 	const shouldScale = workspaceBounds.width < scrObj.width && workspaceBounds.height < scrObj.height;
@@ -124,6 +126,8 @@ const getShouldScale = (scrObj) => {
  * @private
  */
 const getScaleFactor = (type = screenType) => {
+	if (!type) return {shouldScale: false, factor: 1};
+
 	const scrObj = getScreenTypeObject(type);
 	const shouldScale = getShouldScale(scrObj);
 	return {shouldScale, factor: workspaceBounds.height / scrObj.height};
