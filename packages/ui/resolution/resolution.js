@@ -130,6 +130,7 @@ const getScaleFactor = (type = screenType) => {
 
 	const scrObj = getScreenTypeObject(type);
 	const shouldScale = getShouldScale(scrObj);
+
 	return {shouldScale, factor: workspaceBounds.height / scrObj.height};
 };
 
