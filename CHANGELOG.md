@@ -2,13 +2,13 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [Unreleased]
+## [unreleased]
 
 ### Changed
 
 - `spotlight/SpotlightRootDecorator` to use a functional component
+- `ui/resolution` to not resize too often for some intermediate resolutions
 
-## [unreleased]
 ## [5.5.1] - 2026-06-01
 
 ### Changed
