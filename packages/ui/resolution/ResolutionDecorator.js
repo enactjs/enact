@@ -98,8 +98,9 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			checkPropTypes(this, props);
-			riConfig.fontSizeHandling = config.fontSizeHandling;
 
+			if (config.fontSizeHandling) riConfig.fontSizeHandling = config.fontSizeHandling;
+			if (config.orientationHandling) riConfig.orientationHandling = config.orientationHandling;
 			if (config.linearScaling) riConfig.linearScaling = config.linearScaling;
 
 			init({measurementNode: (typeof window !== 'undefined' && window)});

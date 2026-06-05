@@ -343,6 +343,7 @@ function calculateFontSize (type) {
 	} else {
 		size = scrObj.pxPerRem;
 	}
+
 	return size + 'px';
 }
 
