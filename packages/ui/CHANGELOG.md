@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/resolution` to not resize too often for some intermediate resolutions
+
 ## [5.5.1] - 2026-06-01
 
 ### Changed
