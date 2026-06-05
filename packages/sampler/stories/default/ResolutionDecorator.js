@@ -115,7 +115,6 @@ export const ResolutionDecorator_ = (args) => {
 		config.orientationHandling = args['orientationHandling'];
 	}
 
-
 	const View = ResolutionDecorator({
 		...config,
 		screenTypes: screenTypes

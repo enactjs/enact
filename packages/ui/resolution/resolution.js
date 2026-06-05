@@ -152,12 +152,12 @@ const getClosestResolutionType = (resolution, types) => {
 	// Calculates a score for a candidate resolution based on proximity to the target. A lower score indicates a better match.
 	const getDistanceScore = (p) => {
 		const distance = Math.sqrt(Math.pow(p.width - resolution.width, 2) + Math.pow(p.height - resolution.height, 2));
-		const currentRatio = resolution.width / resolution.height;
-		const targetRatio = getAspectRatio(p.name);
+		const inputRatio = resolution.width / resolution.height;
+		const candidateRatio = getAspectRatio(p.name);
 		// Apply a weighted penalty (x1000) for aspect ratio mismatch.
 		// This ensures that even if a resolution is close in size, it won't be chosen
 		// if its shape (e.g., UltraWide vs. Standard) is significantly different.
-		const ratioPenalty = Math.abs(currentRatio - targetRatio) * 1000;
+		const ratioPenalty = Math.abs(inputRatio - candidateRatio) * 1000;
 
 		return distance + ratioPenalty;
 	};
@@ -305,9 +305,12 @@ function getScreenType (rez) {
  * Calculate the base rem font size.
  *
  * This is how the magic happens. This accepts an optional `screenType` name. If one isn't provided,
- * the currently detected screen type is used. This uses the config option `orientationHandling`,
- * which when set to "scale" and the screen is in portrait orientation (such as after screen rotation), will dynamically calculate
- * what the base font size should be, if the width were proportionally scaled down to fit in the portrait space.
+ * the currently detected screen type is used. When the workspace is smaller than the matched screen
+ * type in both dimensions, the base font size is scaled proportionally based on the workspace height.
+ * This scaling is gated by the config options `fontSizeHandling` (landscape orientation) and
+ * `orientationHandling` (portrait orientation, such as after screen rotation); when the relevant
+ * option is set to `'scale'` the size is calculated dynamically, otherwise the screen type's
+ * `pxPerRem` value is used directly.
  *
  * To use, put the following in your application code:
  * ```
@@ -319,7 +322,6 @@ function getScreenType (rez) {
  *
  * This configuration is particularly useful for applications that support screen rotation and need
  * to maintain consistent scaling when the device orientation changes from landscape to portrait or vice versa.
- * This has no effect if the screen is in landscape, or if `orientationHandling` is unset.
  *
  * @function
  * @memberof ui/resolution
