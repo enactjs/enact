@@ -1,5 +1,5 @@
 import useClass from '@enact/core/useClass';
-import {useState, useEffect} from 'react';
+import {useEffect, useSyncExternalStore} from 'react';
 
 import ilib from '../src/index.js';
 
@@ -12,8 +12,6 @@ import I18n from './I18n';
  * @memberof i18n/I18nDecorator
  * @property {String[]}   [latinLanguageOverrides]    Locales that should be treated as latin
  * @property {String[]}   [nonLatinLanguageOverrides] Locales that should be treated as non-latin
- * @property {Function}   [onLoadResources]           Called when resources have been loaded after a
- *                                                    locale change
  * @property {Function[]} [resources]                 Additional resource callbacks to be invoked
  *                                                    during a locale change
  * @property {Boolean}    [sync = false]              Load the resources synchronously
@@ -42,15 +40,18 @@ function useI18n ({locale, ...config} = {}) {
 	const ilibLocale = ilib.getLocale();
 	locale = locale && locale !== ilibLocale ? locale : ilibLocale;
 
-	const [state, setState] = useState({
-		locale,
-		loaded: Boolean(config.sync)
-	});
-
 	const i18n = useClass(I18n, config);
-	i18n.setContext(locale, setState);
 
-	// Add/remove listeners on mount/unmount
+	i18n.setContext(locale);
+
+	// Subscribe to the ilib locale store — tearing-safe in concurrent rendering.
+	const state = useSyncExternalStore(
+		i18n.subscribe,
+		i18n.getSnapshot,
+		i18n.getServerSnapshot
+	);
+
+	// Add/remove the `languagechange` event listener on mount/unmount.
 	useEffect(() => {
 		i18n.load();
 
