@@ -380,6 +380,32 @@ describe('Spotlight Tab key dispatch (integration)', () => {
 		expect(ev.preventDefault).toHaveBeenCalled();
 		expect(document.activeElement.id).toBe('ownerB');
 	});
+
+	test('should exit self-only popup backward on Shift+Tab from first item', () => {
+		setupPopupDocument();
+		setLastContainer('popup-b');
+		focusForTest(document.getElementById('b1'));
+
+		const ev = dispatchTab(handlers.keydown, true);
+
+		expect(ev.preventDefault).toHaveBeenCalled();
+		expect(document.activeElement.id).toBe('a2');
+	});
+
+	test('should not call preventDefault when self-only popup has no reverse exit target', () => {
+		setupPopupDocument();
+		document.getElementById('ownerA').remove();
+		document.getElementById('ownerB').remove();
+		document.getElementById('layerA').remove();
+		document.getElementById('outside').remove();
+		setLastContainer('popup-b');
+		focusForTest(document.getElementById('b1'));
+
+		const ev = dispatchTab(handlers.keydown, true);
+
+		expect(ev.preventDefault).not.toHaveBeenCalled();
+		expect(document.activeElement.id).toBe('b1');
+	});
 });
 
 describe('tabTraversal — pure helpers', () => {
@@ -462,6 +488,14 @@ describe('tabTraversal — pure helpers', () => {
 		expect(res.id).toBe('b1');
 	});
 
+	test('resolveTargetToOpenPopupItem: redirects into the last item of an open popup on reverse traversal', () => {
+		setupPopupDocument();
+		const res = resolveTargetToOpenPopupItem(
+			document.getElementById('ownerB'), 'popup-a', false
+		);
+		expect(res.id).toBe('b2');
+	});
+
 	test('resolveTargetToOpenPopupItem: passes through when aria-owns is removed', () => {
 		setupPopupDocument();
 		document.getElementById('ownerB').removeAttribute('aria-owns');
@@ -501,6 +535,11 @@ describe('tabTraversal — pure helpers', () => {
 		} finally {
 			document.body.removeAttribute('aria-owns');
 		}
+	});
+
+	test('findLinearTabExitTarget: returns null for an unknown container id', () => {
+		setupPopupDocument();
+		expect(findLinearTabExitTarget(document.getElementById('a1'), 'missing-popup', true)).toBeNull();
 	});
 
 	test('findLinearTabExitTarget: uses forward fallback path when popup owner has no aria-owns', () => {
@@ -580,6 +619,11 @@ describe('tabTraversal — pure helpers', () => {
 		configureContainer(rootContainerId, {selector: '.spottable'});
 
 		expect(getLinearTargetsInContainer(rootContainerId)).toEqual([]);
+	});
+
+	test('getLinearTargetContainerId: prefers DOM ancestry over aria-owns containers', () => {
+		setupPopupDocument();
+		expect(getLinearTargetContainerId(document.getElementById('ownerA'))).toBe(rootContainerId);
 	});
 
 	test('getLinearTargetContainerId: falls back to getContainersForNode when closest container has empty id', () => {
@@ -677,6 +721,27 @@ describe('tabTraversal — pure helpers', () => {
 		expect(linear.map(({target: t}) => t.id)).toEqual(['home', 'gear', 'content']);
 	});
 
+	test('getLinearTargetsInContainer: keeps partition group before an earlier sibling control', () => {
+		document.body.innerHTML = `
+			<div id="root" data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+				<button id="outside" class="spottable">Outside</button>
+				<div id="tabs-collapsed" data-spotlight-container="true" data-spotlight-id="tabs-collapsed">
+					<button id="home" class="spottable tab">Home</button>
+				</div>
+			</div>
+		`;
+		setRect(document.getElementById('tabs-collapsed'), {left: 160, top: 10, width: 60, height: 40});
+		setRect(document.getElementById('outside'), {left: 20, top: 20});
+		setRect(document.getElementById('home'), {left: 170, top: 20});
+
+		configureDefaults({selector: '.spottable'});
+		configureContainer(rootContainerId, {selector: '.spottable'});
+		configureContainer('tabs-collapsed', {partition: true, selector: '.spottable'});
+
+		const linear = getLinearTargetsInContainer(rootContainerId);
+		expect(linear.map(({target: t}) => t.id)).toEqual(['home', 'outside']);
+	});
+
 	test('getLinearTargetsInContainer: orders partition sidebar before content even when x coordinates overlap', () => {
 		document.body.innerHTML = `
 			<div id="root" data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
@@ -746,6 +811,98 @@ describe('tabTraversal — pure helpers', () => {
 		expect(linear.map(({target: t}) => t.id)).toEqual([
 			'home', 'gear', 'item', 'btn1', 'btn2', 'btn3', 'btn4', 'btn5'
 		]);
+	});
+
+	test('getLinearTargetsInContainer: uses visual order for external controls when partition node is unavailable', () => {
+		document.body.innerHTML = `
+			<div id="root" data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+				<div id="tabs-collapsed" data-spotlight-container="true" data-spotlight-id="tabs-collapsed">
+					<button id="home" class="spottable tab">Home</button>
+				</div>
+				<button id="content" class="spottable">Content</button>
+			</div>
+		`;
+		setRect(document.getElementById('tabs-collapsed'), {left: 10, top: 10, width: 60, height: 100});
+		setRect(document.getElementById('home'), {left: 200, top: 20});
+		setRect(document.getElementById('content'), {left: 20, top: 20});
+
+		configureDefaults({selector: '.spottable'});
+		configureContainer(rootContainerId, {selector: '.spottable'});
+		configureContainer('tabs-collapsed', {partition: true, selector: '.spottable'});
+
+		const containerNodeSpy = jest.spyOn(container, 'getContainerNode').mockImplementation((id) => {
+			if (id === 'tabs-collapsed') {
+				return null;
+			}
+			return document.querySelector(`[data-spotlight-id="${id}"]`) ||
+				(id === rootContainerId ? document : null);
+		});
+		try {
+			const linear = getLinearTargetsInContainer(rootContainerId);
+			expect(linear.map(({target: t}) => t.id)).toEqual(['content', 'home']);
+		} finally {
+			containerNodeSpy.mockRestore();
+		}
+	});
+
+	test('getLinearTargetsInContainer: uses visual order when partition container node is unavailable', () => {
+		document.body.innerHTML = `
+			<div id="root" data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+				<button id="content" class="spottable">Content</button>
+				<div id="tabs-collapsed" data-spotlight-container="true" data-spotlight-id="tabs-collapsed">
+					<button id="home" class="spottable tab">Home</button>
+				</div>
+			</div>
+		`;
+		setRect(document.getElementById('tabs-collapsed'), {left: 10, top: 10, width: 60, height: 100});
+		setRect(document.getElementById('home'), {left: 20, top: 20});
+		setRect(document.getElementById('content'), {left: 200, top: 20});
+
+		configureDefaults({selector: '.spottable'});
+		configureContainer(rootContainerId, {selector: '.spottable'});
+		configureContainer('tabs-collapsed', {partition: true, selector: '.spottable'});
+
+		const containerNodeSpy = jest.spyOn(container, 'getContainerNode').mockImplementation((id) => {
+			if (id === 'tabs-collapsed') {
+				return null;
+			}
+			return document.querySelector(`[data-spotlight-id="${id}"]`) ||
+				(id === rootContainerId ? document : null);
+		});
+		try {
+			const linear = getLinearTargetsInContainer(rootContainerId);
+			expect(linear.map(({target: t}) => t.id)).toEqual(['home', 'content']);
+			expect(containerNodeSpy).toHaveBeenCalledWith('tabs-collapsed');
+		} finally {
+			containerNodeSpy.mockRestore();
+		}
+	});
+
+	test('getLinearTargetsInContainer: orders two partition groups before non-partition controls', () => {
+		document.body.innerHTML = `
+			<div id="root" data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+				<div id="group-a" data-spotlight-container="true" data-spotlight-id="group-a">
+					<button id="a1" class="spottable">A1</button>
+				</div>
+				<div id="group-b" data-spotlight-container="true" data-spotlight-id="group-b">
+					<button id="b1" class="spottable">B1</button>
+				</div>
+				<button id="free" class="spottable">Free</button>
+			</div>
+		`;
+		setRect(document.getElementById('group-a'), {left: 10, top: 10, width: 50, height: 100});
+		setRect(document.getElementById('group-b'), {left: 70, top: 10, width: 50, height: 100});
+		setRect(document.getElementById('a1'), {left: 15, top: 20});
+		setRect(document.getElementById('b1'), {left: 75, top: 20});
+		setRect(document.getElementById('free'), {left: 200, top: 20});
+
+		configureDefaults({selector: '.spottable'});
+		configureContainer(rootContainerId, {selector: '.spottable'});
+		configureContainer('group-a', {partition: true, selector: '.spottable'});
+		configureContainer('group-b', {partition: true, selector: '.spottable'});
+
+		const linear = getLinearTargetsInContainer(rootContainerId);
+		expect(linear.map(({target: t}) => t.id)).toEqual(['a1', 'b1', 'free']);
 	});
 
 	test('getLinearTargetsInContainer: keeps partition sidebar before scrolled content in the same panel', () => {
