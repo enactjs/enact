@@ -376,7 +376,7 @@ const getOwnedSelfOnlyContainerIds = (ownerNode, excludeContainerId) => {
  * @memberof spotlight/container
  * @public
  */
-const getSpottableDescendants = (containerId) => {
+const getSpottableCandidates = (containerId, applyNavigableFilter = true) => {
 	const node = getContainerNode(containerId);
 
 	// if it's falsy or is a disabled container, return an empty set
@@ -400,8 +400,23 @@ const getSpottableDescendants = (containerId) => {
 
 	candidates.push(...getOwnedNodes(node, selector));
 
-	return candidates.filter(n => navigableFilter(n, containerId));
+	return applyNavigableFilter ?
+		candidates.filter(n => navigableFilter(n, containerId)) :
+		candidates;
 };
+
+const getSpottableDescendants = (containerId) => getSpottableCandidates(containerId, true);
+
+/**
+ * Like {@link getSpottableDescendants} but ignores `navigableFilter`. Used by Tab linear traversal
+ * so 5-way-only filters (e.g. TabLayout collapsed tabs) do not remove controls from Tab order.
+ *
+ * @param   {String}  containerId  ID of container
+ * @returns {Node[]}               Array of spottable elements and containers.
+ * @memberof spotlight/container
+ * @private
+ */
+const getSpottableDescendantsForTab = (containerId) => getSpottableCandidates(containerId, false);
 
 /**
  * Recursively get spottable descendants by including elements within sub-containers that do not
@@ -669,6 +684,48 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	return navigableFilter(node, containerId);
+};
+
+/**
+ * Like {@link isNavigable} but ignores `navigableFilter` (still checks visibility and disabled state).
+ *
+ * @param   {Node}     node         DOM node to check if it is navigable
+ * @param   {String}   containerId  ID of the container containing `node`
+ * @param   {Boolean}  verify       `true` to verify the node matches the container's `selector`
+ * @returns {Boolean}               `true` if `node` is navigable for Tab traversal
+ * @memberof spotlight/container
+ * @private
+ */
+const isNavigableForTab = (node, containerId, verify) => {
+	if (!node) {
+		return false;
+	}
+
+	// Prefer layout bounds over offset* — collapsed/icon-only controls can report 0 offset* while
+	// still being visible (e.g. TabLayout sidebar tabs).
+	if (process.env.NODE_ENV !== 'test') {
+		const {width, height} = getRect(node);
+		if (width <= 0 && height <= 0) {
+			return false;
+		}
+	}
+
+	const containerNode = getContainerNode(containerId);
+	if (containerNode !== document && containerNode.dataset[disabledKey] === 'true') {
+		return false;
+	}
+
+	const nodeStyle = node && isWindowReady() && window.getComputedStyle(node);
+	if (!nodeStyle || nodeStyle.display === 'none' || nodeStyle.visibility === 'hidden') {
+		return false;
+	}
+
+	const config = getContainerConfig(containerId);
+	if (verify && config && config.selector && !isContainer(node) && !matchSelector(config.selector, node) && !(GlobalConfig.isStandardFocusableMode && isStandardFocusable(node))) {
+		return false;
+	}
+
+	return true;
 };
 
 /**
@@ -1214,8 +1271,10 @@ export {
 	getNavigableContainersForNode,
 	getPositionTargetOnFocus,
 	getSpottableDescendants,
+	getSpottableDescendantsForTab,
 	isContainer,
 	isNavigable,
+	isNavigableForTab,
 	isWithinOverflowContainer,
 	mayActivateContainer,
 	notifyLeaveContainer,

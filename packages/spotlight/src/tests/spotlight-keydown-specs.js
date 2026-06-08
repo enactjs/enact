@@ -201,14 +201,14 @@ describe('Spotlight Tab key dispatch (integration)', () => {
 		handlers.keyup({keyCode: 39});
 	});
 
-	test('should not call preventDefault when Tab reaches end of a non-self-only linear list', () => {
+	test('should wrap Tab focus to the first target after the last root target', () => {
 		setupSimpleDocument();
 		focusForTest(document.getElementById('second'));
 
 		const ev = dispatchTab(handlers.keydown);
 
-		expect(ev.preventDefault).not.toHaveBeenCalled();
-		expect(document.activeElement.id).toBe('second');
+		expect(ev.preventDefault).toHaveBeenCalled();
+		expect(document.activeElement.id).toBe('first');
 	});
 
 	test('should move focus to nearest element when current focus is outside the linear list', () => {
@@ -268,14 +268,61 @@ describe('Spotlight Tab key dispatch (integration)', () => {
 		}
 	});
 
-	test('should not call preventDefault when Shift+Tab goes before the start of a non-self-only list', () => {
+	test('should wrap Shift+Tab focus to the last root target before the first', () => {
 		setupPopupDocument();
 		focusForTest(document.getElementById('ownerA'));
 
 		const ev = dispatchTab(handlers.keydown, true);
 
-		expect(ev.preventDefault).not.toHaveBeenCalled();
-		expect(document.activeElement.id).toBe('ownerA');
+		expect(ev.preventDefault).toHaveBeenCalled();
+		expect(document.activeElement.id).toBe('b2');
+	});
+
+	test('should move focus from sidebar Button tab to Home on Shift+Tab in TabLayout-like layout', () => {
+		document.body.innerHTML = `
+			<div data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+				<div data-spotlight-container="true" data-spotlight-id="tablayout">
+					<div id="tabs-collapsed" data-spotlight-container="true" data-spotlight-id="tabs-collapsed">
+						<button id="home" class="spottable tab">Home</button>
+						<button id="gear" class="spottable tab">Button</button>
+						<button id="item" class="spottable tab">Item</button>
+					</div>
+					<button id="closex" class="spottable">X</button>
+					<button id="btn1" class="spottable">Button 1</button>
+					<button id="btn2" class="spottable">Button 2</button>
+					<button id="btn3" class="spottable">Button 3</button>
+					<button id="btn4" class="spottable">Button 4</button>
+					<button id="btn5" class="spottable">Button 5</button>
+				</div>
+			</div>
+		`;
+		setRect(document.getElementById('tabs-collapsed'), {left: 10, top: 100, width: 60, height: 400});
+		setRect(document.getElementById('home'), {left: 20, top: 110});
+		setRect(document.getElementById('gear'), {left: 20, top: 200});
+		setRect(document.getElementById('item'), {left: 20, top: 290});
+		setRect(document.getElementById('closex'), {left: 900, top: 40, width: 48, height: 48});
+		setRect(document.getElementById('btn1'), {left: 300, top: 200});
+		setRect(document.getElementById('btn2'), {left: 400, top: 200});
+		setRect(document.getElementById('btn3'), {left: 500, top: 200});
+		setRect(document.getElementById('btn4'), {left: 600, top: 200});
+		setRect(document.getElementById('btn5'), {left: 700, top: 200});
+
+		configureDefaults({selector: '.spottable'});
+		configureContainer(rootContainerId, {selector: '.spottable'});
+		configureContainer('tablayout', {
+			navigableFilter: (elem) => (
+				elem.dataset.spotlightId !== 'tabs-collapsed' &&
+				!elem.classList.contains('tab')
+			),
+			selector: '.spottable'
+		});
+		configureContainer('tabs-collapsed', {partition: true, selector: '.spottable'});
+
+		focusForTest(document.getElementById('gear'));
+		const ev = dispatchTab(handlers.keydown, true);
+
+		expect(ev.preventDefault).toHaveBeenCalled();
+		expect(document.activeElement.id).toBe('home');
 	});
 
 	test('should bootstrap focus via restoreFocus when nothing is focused', () => {
@@ -599,5 +646,135 @@ describe('tabTraversal — pure helpers', () => {
 		const linear = getLinearTargetsInContainer(rootContainerId);
 		expect(linear[0].target.id).toBe('first');
 		expect(linear[1].target.id).toBe('second');
+	});
+
+	test('getLinearTargetsInContainer: includes spottables inside navigableFilter-excluded subcontainers', () => {
+		document.body.innerHTML = `
+			<div id="root" data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+				<div data-spotlight-container="true" data-spotlight-id="tabs-collapsed">
+					<button id="home" class="spottable tab">Home</button>
+					<button id="gear" class="spottable tab">Gear</button>
+				</div>
+				<button id="content" class="spottable">Content</button>
+			</div>
+		`;
+		setRect(document.getElementById('home'), {left: 20, top: 20});
+		setRect(document.getElementById('gear'), {left: 20, top: 60});
+		// Content sits below the sidebar tabs so visual Tab order matches TabLayout.
+		setRect(document.getElementById('content'), {left: 200, top: 100});
+
+		configureDefaults({selector: '.spottable'});
+		configureContainer(rootContainerId, {
+			navigableFilter: (elem) => (
+				elem.dataset.spotlightId !== 'tabs-collapsed' &&
+				!elem.classList.contains('tab')
+			),
+			selector: '.spottable'
+		});
+		configureContainer('tabs-collapsed', {partition: true, selector: '.spottable'});
+
+		const linear = getLinearTargetsInContainer(rootContainerId);
+		expect(linear.map(({target: t}) => t.id)).toEqual(['home', 'gear', 'content']);
+	});
+
+	test('getLinearTargetsInContainer: orders partition sidebar before content even when x coordinates overlap', () => {
+		document.body.innerHTML = `
+			<div id="root" data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+				<div id="tablayout-body">
+					<div id="tabs-collapsed" data-spotlight-container="true" data-spotlight-id="tabs-collapsed">
+						<button id="home" class="spottable tab">Home</button>
+						<button id="gear" class="spottable tab">Button</button>
+						<button id="item" class="spottable tab">Item</button>
+					</div>
+					<button id="btn1" class="spottable">Button 1</button>
+					<button id="btn5" class="spottable">Button 5</button>
+				</div>
+			</div>
+		`;
+		setRect(document.getElementById('tabs-collapsed'), {left: 10, top: 100, width: 200, height: 400});
+		setRect(document.getElementById('home'), {left: 20, top: 110});
+		setRect(document.getElementById('gear'), {left: 20, top: 200});
+		setRect(document.getElementById('item'), {left: 20, top: 290});
+		// Same row as the sidebar Button tab; x still inside the partition rect width.
+		setRect(document.getElementById('btn1'), {left: 120, top: 200});
+		setRect(document.getElementById('btn5'), {left: 180, top: 200});
+
+		configureDefaults({selector: '.spottable'});
+		configureContainer(rootContainerId, {selector: '.spottable'});
+		configureContainer('tabs-collapsed', {partition: true, selector: '.spottable'});
+
+		const linear = getLinearTargetsInContainer(rootContainerId);
+		expect(linear.map(({target: t}) => t.id)).toEqual(['home', 'gear', 'item', 'btn1', 'btn5']);
+	});
+
+	test('getLinearTargetsInContainer: orders partition groups in DOM order before visually overlapping controls', () => {
+		document.body.innerHTML = `
+			<div id="root" data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+				<div id="tabs-collapsed" data-spotlight-container="true" data-spotlight-id="tabs-collapsed">
+					<button id="home" class="spottable tab">Home</button>
+					<button id="gear" class="spottable tab">Button</button>
+					<button id="item" class="spottable tab">Item</button>
+				</div>
+				<button id="btn1" class="spottable">Button 1</button>
+				<button id="btn2" class="spottable">Button 2</button>
+				<button id="btn3" class="spottable">Button 3</button>
+				<button id="btn4" class="spottable">Button 4</button>
+				<button id="btn5" class="spottable">Button 5</button>
+			</div>
+		`;
+		setRect(document.getElementById('tabs-collapsed'), {left: 10, top: 10, width: 60, height: 150});
+		setRect(document.getElementById('home'), {left: 20, top: 20});
+		setRect(document.getElementById('gear'), {left: 20, top: 60});
+		setRect(document.getElementById('item'), {left: 20, top: 100});
+		setRect(document.getElementById('btn1'), {left: 200, top: 60});
+		setRect(document.getElementById('btn2'), {left: 280, top: 60});
+		setRect(document.getElementById('btn3'), {left: 360, top: 60});
+		setRect(document.getElementById('btn4'), {left: 440, top: 60});
+		setRect(document.getElementById('btn5'), {left: 520, top: 60});
+
+		configureDefaults({selector: '.spottable'});
+		configureContainer(rootContainerId, {
+			navigableFilter: (elem) => (
+				elem.dataset.spotlightId !== 'tabs-collapsed' &&
+				!elem.classList.contains('tab')
+			),
+			selector: '.spottable'
+		});
+		configureContainer('tabs-collapsed', {partition: true, selector: '.spottable'});
+
+		const linear = getLinearTargetsInContainer(rootContainerId);
+		expect(linear.map(({target: t}) => t.id)).toEqual([
+			'home', 'gear', 'item', 'btn1', 'btn2', 'btn3', 'btn4', 'btn5'
+		]);
+	});
+
+	test('getLinearTargetsInContainer: keeps partition sidebar before scrolled content in the same panel', () => {
+		document.body.innerHTML = `
+			<div id="root" data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+				<div id="tabs-collapsed" data-spotlight-container="true" data-spotlight-id="tabs-collapsed">
+					<button id="home" class="spottable tab">Home</button>
+					<button id="gear" class="spottable tab">Button</button>
+					<button id="item" class="spottable tab">Item</button>
+				</div>
+				<button id="img11" class="spottable">ImageItem 11</button>
+				<button id="img12" class="spottable">ImageItem 12</button>
+			</div>
+		`;
+		setRect(document.getElementById('tabs-collapsed'), {left: 10, top: 10, width: 60, height: 400});
+		setRect(document.getElementById('home'), {left: 20, top: 20});
+		setRect(document.getElementById('gear'), {left: 20, top: 200});
+		setRect(document.getElementById('item'), {left: 20, top: 380});
+		// Scrolled content: item 11 can sit above the sidebar Button tab in viewport coordinates.
+		setRect(document.getElementById('img11'), {left: 300, top: 50});
+		setRect(document.getElementById('img12'), {left: 300, top: 700});
+
+		configureDefaults({selector: '.spottable'});
+		configureContainer(rootContainerId, {selector: '.spottable'});
+		configureContainer('tabs-collapsed', {partition: true, selector: '.spottable'});
+
+		const linear = getLinearTargetsInContainer(rootContainerId);
+		expect(linear.map(({target: t}) => t.id)).toEqual([
+			'home', 'gear', 'item', 'img11', 'img12'
+		]);
 	});
 });

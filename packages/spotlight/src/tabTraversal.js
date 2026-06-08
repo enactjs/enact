@@ -17,14 +17,14 @@ import {
 	getLastContainer,
 	getOwnedSelfOnlyContainerIds,
 	getPopupOwnerElement,
-	getSpottableDescendants,
+	getSpottableDescendantsForTab,
 	isContainer,
-	isNavigable,
+	isNavigableForTab,
 	rootContainerId
 } from './container';
 
 import {getNearestTargetFromPosition, getTargetByContainer} from './target';
-import {getRect} from './utils';
+import {getContainerRect, getRect} from './utils';
 
 // Vertical centers within this distance share a Tab row; horizontal position breaks ties.
 const TAB_ROW_THRESHOLD = 24;
@@ -219,6 +219,97 @@ export function findLinearTabExitTarget (focusedElement, selfOnlyContainerId, is
 	return null;
 }
 
+/*
+ * Innermost `partition: true` spotlight container ancestor of `target`, if any.
+ * Matches 5-way navigation: controls in a partition group (e.g. TabLayout sidebar tabs)
+ * share the container bounds instead of individual positions for ordering.
+ */
+function getInnermostPartitionContainerId (target) {
+	let node = target;
+
+	while (node && node !== document) {
+		if (isContainer(node)) {
+			const containerId = getContainerId(node);
+			if (containerId && getContainerConfig(containerId)?.partition) {
+				return containerId;
+			}
+		}
+		node = node.parentNode;
+	}
+
+	return null;
+}
+
+/*
+ * Whether `target` lies outside the DOM subtree of a `partition` container. TabLayout sidebar
+ * tabs and main-panel controls are siblings — comparing viewport x/y alone can interleave them
+ * when rows overlap; DOM containment keeps the whole partition group ahead of outside content.
+ */
+function isOutsidePartitionContainer (target, partitionContainerId) {
+	const partitionNode = getContainerNode(partitionContainerId);
+
+	return Boolean(partitionNode && !partitionNode.contains(target));
+}
+
+function compareVisualTabOrder (a, b, isRtl) {
+	if (comesBeforeInTabOrder(a.x, a.y, b.x, b.y, isRtl)) {
+		return -1;
+	}
+	if (comesBeforeInTabOrder(b.x, b.y, a.x, a.y, isRtl)) {
+		return 1;
+	}
+
+	return a.order - b.order;
+}
+
+function compareTabOrderEntries (a, b, isRtl) {
+	const partitionA = a.partitionId;
+	const partitionB = b.partitionId;
+
+	if (partitionA && partitionA === partitionB) {
+		return a.order - b.order;
+	}
+
+	const partitionRectA = partitionA ? getContainerRect(partitionA) : null;
+	const partitionRectB = partitionB ? getContainerRect(partitionB) : null;
+
+	if (partitionA && !partitionB) {
+		if (isOutsidePartitionContainer(b.target, partitionA)) {
+			return -1;
+		}
+
+		return compareVisualTabOrder(a, b, isRtl);
+	}
+
+	if (!partitionA && partitionB) {
+		if (isOutsidePartitionContainer(a.target, partitionB)) {
+			return 1;
+		}
+
+		return compareVisualTabOrder(a, b, isRtl);
+	}
+
+	if (partitionA && partitionB) {
+		const visual = compareVisualTabOrder(
+			{
+				order: a.order,
+				x: partitionRectA.center.x,
+				y: partitionRectA.top + 1
+			},
+			{
+				order: b.order,
+				x: partitionRectB.center.x,
+				y: partitionRectB.top + 1
+			},
+			isRtl
+		);
+
+		return visual || a.order - b.order;
+	}
+
+	return compareVisualTabOrder(a, b, isRtl);
+}
+
 export function getLinearTargetContainerId (target) {
 	// Prefer DOM ancestry over getContainersForNode so aria-owns owners stay in root Tab order.
 	const containerNode = target?.closest?.('[data-spotlight-container][data-spotlight-id]');
@@ -249,7 +340,7 @@ export function getLinearTargetsInContainer (containerId) {
 
 		visitedContainers.add(id);
 
-		return getSpottableDescendants(id).reduce((result, candidate) => {
+		return getSpottableDescendantsForTab(id).reduce((result, candidate) => {
 			if (isContainer(candidate)) {
 				const nestedContainerId = getContainerId(candidate);
 				result.push(...gatherSpottableLeaves(nestedContainerId));
@@ -265,17 +356,19 @@ export function getLinearTargetsInContainer (containerId) {
 	const targets = gatherSpottableLeaves(containerId)
 		.filter((target) => {
 			const targetContainerId = getLinearTargetContainerId(target);
-			return isNavigable(target, targetContainerId, true);
+			return isNavigableForTab(target, targetContainerId, true);
 		})
 		.map((target, order) => {
 			const {center} = getRect(target);
-			return {order, target, x: center.x, y: center.y};
+			return {
+				order,
+				partitionId: getInnermostPartitionContainerId(target),
+				target,
+				x: center.x,
+				y: center.y
+			};
 		})
-		.sort((a, b) => {
-			if (comesBeforeInTabOrder(a.x, a.y, b.x, b.y, isRtl)) return -1;
-			if (comesBeforeInTabOrder(b.x, b.y, a.x, a.y, isRtl)) return 1;
-			return a.order - b.order;
-		});
+		.sort((a, b) => compareTabOrderEntries(a, b, isRtl));
 
 	if (_linearTargetsCache) {
 		_linearTargetsCache.set(containerId, targets);
@@ -333,6 +426,10 @@ export function createTabTraversal ({
 					return focusElement(exitTarget, getContainersForNode(exitTarget));
 				}
 			}
+			if (searchContainerId === rootContainerId && linearTargets.length > 1) {
+				const wrapTarget = linearTargets[0].target;
+				return focusElement(wrapTarget, getContainersForNode(wrapTarget));
+			}
 			return false;
 		}
 		if (nextIndex < 0) {
@@ -345,6 +442,10 @@ export function createTabTraversal ({
 				if (exitTarget) {
 					return focusElement(exitTarget, getContainersForNode(exitTarget));
 				}
+			}
+			if (searchContainerId === rootContainerId && linearTargets.length > 1) {
+				const wrapTarget = linearTargets[linearTargets.length - 1].target;
+				return focusElement(wrapTarget, getContainersForNode(wrapTarget));
 			}
 			return false;
 		}
