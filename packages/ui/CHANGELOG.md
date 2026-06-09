@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
+- `ui/Transition` to remove static `will-change` declarations, reducing persistent GPU layer promotion and memory usage on TV targets
 - `ui/resolution` to not resize too often for some intermediate resolutions
 
 ## [5.5.1] - 2026-06-01

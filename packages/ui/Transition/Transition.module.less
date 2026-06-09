@@ -12,13 +12,11 @@
 
 		.inner {
 			transition-property: transform;
-			will-change: transform;
 		}
 	}
 
 	&.fade .inner {
 		transition-property: opacity;
-		will-change: opacity;
 	}
 
 	&.shown {
@@ -80,13 +78,11 @@
 		&.up,
 		&.down {
 			transition-property: height;
-			will-change: height;
 		}
 
 		&.right,
 		&.left {
 			transition-property: max-width;
-			will-change: max-width;
 
 			.inner {
 				position: relative;
@@ -100,7 +96,6 @@
 		&.down {
 			.inner {
 				transition-property: transform;
-				will-change: transform;
 			}
 
 			&.shown .inner {
