@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Changed
 
 - `spotlight/SpotlightRootDecorator` to use a functional component
+- `ui/Transition` to remove static `will-change` declarations, reducing persistent GPU layer promotion and memory usage on TV targets
 
 ## [unreleased]
 

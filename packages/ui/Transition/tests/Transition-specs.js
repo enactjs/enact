@@ -258,6 +258,31 @@ describe('Transition Specs', () => {
 		expect(handleTransitionEnd).toHaveBeenCalledTimes(expected);
 	});
 
+	// The main accordion/header path: animated clip transition driven by `transitionend`
+	// across a full show → hide → show cycle
+	test('should fire \'onHide\' then \'onShow\' over a visible true → false → true cycle with type="clip"', () => {
+		const handleHide = jest.fn();
+		const handleShow = jest.fn();
+
+		const {rerender} = render(
+			<Transition direction="up" onHide={handleHide} onShow={handleShow} type="clip" visible>Body</Transition>
+		);
+
+		// true → false: the hide animation runs and completes.
+		rerender(<Transition direction="up" onHide={handleHide} onShow={handleShow} type="clip" visible={false}>Body</Transition>);
+		fireEvent.transitionEnd(screen.getByText('Body'));
+
+		expect(handleHide).toHaveBeenCalledTimes(1);
+		expect(handleShow).not.toHaveBeenCalled();
+
+		// false → true: the show animation runs and completes.
+		rerender(<Transition direction="up" onHide={handleHide} onShow={handleShow} type="clip" visible>Body</Transition>);
+		fireEvent.transitionEnd(screen.getByText('Body'));
+
+		expect(handleShow).toHaveBeenCalledTimes(1);
+		expect(handleHide).toHaveBeenCalledTimes(1);
+	});
+
 	// ResizeContext registration
 	test('should register with ResizeContext and unregister on unmount', () => {
 		const unregister = jest.fn();
