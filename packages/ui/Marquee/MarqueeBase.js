@@ -202,6 +202,7 @@ const MarqueeBase = kind({
 				return aria;
 			}
 		},
+		children: ({children}) => Array.isArray(children) ? children.filter(child => child !== null) : [children],
 		clientClassName: ({animating, willAnimate, styler}) => styler.join({
 			animate: animating,
 			text: true,
@@ -245,26 +246,28 @@ const MarqueeBase = kind({
 		delete rest.speed;
 		delete rest.willAnimate;
 
-		return (
-			<div {...rest}>
-				<div
-					className={clientClassName}
-					ref={clientRef}
-					style={clientStyle}
-					onTransitionEnd={onMarqueeComplete}
-				>
-					{children}
-					{duplicate ? (
-						<Fragment>
-							<div className={css.spacing} ref={applyOffset} />
-							<span dir={rtl ? "rtl" : "ltr"}>
-								{children}
+		return children.map((child) => {
+			return (
+				<div {...rest}>
+					<div
+						className={clientClassName}
+						ref={clientRef}
+						style={clientStyle}
+						onTransitionEnd={onMarqueeComplete}
+					>
+						{child}
+						{duplicate ? (
+							<Fragment>
+								<div className={css.spacing} ref={applyOffset}/>
+								<span dir={rtl ? "rtl" : "ltr"}>
+								{child}
 							</span>
-						</Fragment>
-					) : null}
+							</Fragment>
+						) : null}
+					</div>
 				</div>
-			</div>
-		);
+			)
+		});
 	}
 });
 
