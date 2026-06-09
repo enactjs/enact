@@ -7,6 +7,12 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Changed
 
 - `ui/Transition` to remove static `will-change` declarations, reducing persistent GPU layer promotion and memory usage on TV targets
+- `ui/resolution` to not resize too often for some intermediate resolutions
+
+## [5.5.1] - 2026-06-01
+
+### Changed
+
 - `ui/VirtualList.VirtualListBasic` scroll animation method for `scrollMode: native`
 
 ### Fixed
@@ -15,6 +21,12 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/VirtualList` overscroll effect at the bottom of the list
 - `ui/VirtualList.VirtualList` overscroll effect at the bottom of the list
 - `ui/VirtualList.VirtualGridList` overscroll effect at the bottom of the list
+
+## [5.4.4] - 2026-05-22
+
+### Fixed
+
+- `ui/Scroller` jumping back when scrolled by long press
 
 ## [5.5.0] - 2026-05-08
 

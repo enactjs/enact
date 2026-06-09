@@ -11,6 +11,9 @@ import {onWindowFocus} from './windowFocus';
 /**
  * Manages i18n resource loading.
  *
+ * Implements the external store contract expected by `useSyncExternalStore`:
+ * `subscribe`, `getSnapshot`, and `getServerSnapshot`.
+ *
  * @class I18n
  * @private
  */
@@ -23,8 +26,14 @@ class I18n {
 	}) {
 		this._locale = null;
 		this._ready = sync;
-		this._onLoadResources = () => {};
-		this.loadResourceJob = null;
+		this.loadResourceJob = new Job(state => this._updateSnapshot(state));
+		this._listeners = new Set();
+		this._snapshot = {
+			className: null,
+			loaded: sync,
+			locale: null,
+			rtl: false
+		};
 
 		this.latinLanguageOverrides = latinLanguageOverrides;
 		this.nonLatinLanguageOverrides = nonLatinLanguageOverrides;
@@ -33,20 +42,82 @@ class I18n {
 	}
 
 	/**
-	 * Sets the current locale and load callback.
+	 * Subscribes a listener to store updates.
+	 *
+	 * Returns an unsubscribe function, as required by `useSyncExternalStore`.
+	 *
+	 * @param {Function} listener Called whenever the snapshot changes
+	 * @returns {Function} Unsubscribe function
+	 * @public
+	 */
+	subscribe = (listener) => {
+		this._listeners.add(listener);
+		return () => this._listeners.delete(listener);
+	};
+
+	/**
+	 * Returns the current snapshot of the i18n state.
+	 *
+	 * @returns {{className: String, loaded: Boolean, locale: String, rtl: Boolean}}
+	 * @public
+	 */
+	getSnapshot = () => this._snapshot;
+
+	/**
+	 * Returns the server-side snapshot (for SSR).
+	 *
+	 * Sync mode is assumed on the server so `loaded` is always `true`.
+	 *
+	 * @returns {{className: String, loaded: Boolean, locale: String, rtl: Boolean}}
+	 * @public
+	 */
+	getServerSnapshot = () => ({
+		className: null,
+		loaded: true,
+		locale: this._locale,
+		rtl: false
+	});
+
+	/**
+	 * Notifies all subscribers that the snapshot has changed.
+	 *
+	 * @private
+	 */
+	_notifyListeners () {
+		this._listeners.forEach(l => l());
+	}
+
+	/**
+	 * Updates the snapshot and notifies subscribers when the store is ready.
+	 *
+	 * `_ready` reflects whether `load()` has run. In async mode it starts `false`,
+	 * which suppresses notifications for the synchronous `setContext` call made
+	 * during the first render (the initial snapshot is published by the first
+	 * `getSnapshot` read instead). In sync mode `_ready` is `true` from
+	 * construction, so updates notify immediately; `useSyncExternalStore` is
+	 * responsible for the tearing check under concurrent rendering.
+	 *
+	 * @param {Object} newState New snapshot values
+	 * @private
+	 */
+	_updateSnapshot (newState) {
+		this._snapshot = newState;
+		if (this._ready) {
+			this._notifyListeners();
+		}
+	}
+
+	/**
+	 * Sets the current locale.
 	 *
 	 * Changing the locale will request new resource files for that locale.
 	 *
-	 * @type {String}
+	 * @param {String} locale BCP 47 locale identifier
 	 * @public
 	 */
-	setContext (locale, onLoadResources) {
-		this.loadResourceJob = new Job(onLoadResources);
-		this._onLoadResources = onLoadResources;
-
+	setContext (locale) {
 		if (this._locale !== locale) {
 			this._locale = locale;
-
 			this.loadResources(locale);
 		}
 	}
@@ -122,13 +193,6 @@ class I18n {
 		const bundle = wrapIlibCallback(createResBundle, options);
 
 		if (this.sync) {
-			const state = {
-				className,
-				loaded: true,
-				locale,
-				rtl
-			};
-
 			setResBundle(bundle);
 
 			this.resources.forEach(({resource, onLoad}) => {
@@ -136,12 +200,16 @@ class I18n {
 				if (onLoad) onLoad(result);
 			});
 
-			this._onLoadResources(state);
+			this._updateSnapshot({
+				className,
+				loaded: true,
+				locale,
+				rtl
+			});
 		} else {
 			const resources = Promise.all([
 				rtl,
 				className,
-				// move updating into a new method with call to setState
 				bundle,
 				...this.resources.map(res => wrapIlibCallback(res.resource, options))
 			]).then(([rtlResult, classNameResult, bundleResult, ...userResources]) => {
