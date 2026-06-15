@@ -20,13 +20,13 @@
     "@enact/ui": "^5.5.1",
     "@enact/webos": "^5.5.1",
     "@github-ui/storybook-addon-performance-panel": "^1.1.4",
-    "@storybook/react-webpack5": "^10.3.6",
+    "@storybook/react-webpack5": "^10.4.4",
     "classnames": "^2.5.1",
     "ilib": "^14.22.0",
     "prop-types": "^15.8.1",
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6",
-    "storybook": "^10.3.6"
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "storybook": "^10.4.4"
   },
   "overrides": {
     "prop-types": {
