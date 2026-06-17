@@ -938,7 +938,13 @@ class VirtualListBasic extends Component {
 		const animateScroll = (currentTime) => {
 			const elapsed = (currentTime - startTime) / 500;
 
-			node.scrollBy({top: directionY * scrollFactor, left: directionX * scrollFactor, behavior: 'instant'});
+			// Clamp each step to the remaining distance so the final frame lands exactly on the target
+			// instead of overshooting by up to `scrollFactor`. Overshooting would push a focused item
+			// anchored to the start edge (e.g. `stickTo="start"`) past that edge and clip it.
+			const stepX = directionX === 0 ? 0 : directionX * Math.min(scrollFactor, Math.abs(left - node.scrollLeft));
+			const stepY = directionY === 0 ? 0 : directionY * Math.min(scrollFactor, Math.abs(top - node.scrollTop));
+
+			node.scrollBy({top: stepY, left: stepX, behavior: 'instant'});
 			this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 			this.scrolling = true;
 
