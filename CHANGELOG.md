@@ -10,6 +10,11 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `ui/resolution` to not resize too often for some intermediate resolutions
 - `ui/Transition` to remove static `will-change` declarations, reducing persistent GPU layer promotion and memory usage on TV targets
 
+### Fixed
+
+- `ui/Scroller` native scroll animation to land exactly on the target position instead of overshooting by up to one animation step
+- `ui/VirtualList` native scroll animation to land exactly on the target position instead of overshooting by up to one animation step
+
 ## [5.5.1] - 2026-06-01
 
 ### Changed
