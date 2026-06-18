@@ -38,7 +38,7 @@ jobs:
 
       - name: Clone and setup Enact CLI
         run: |
-          git clone --branch=feature/NXT-15800 --depth 1 https://github.com/enactjs/cli ../cli
+          git clone --branch=develop --depth 1 https://github.com/enactjs/cli ../cli
           pushd ../cli
           npm install
           npm link
