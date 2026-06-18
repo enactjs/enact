@@ -68,7 +68,8 @@ const ResolutionDecoratorView = ({
 				<hr />
 				<div>
 					<Card
-						captionOverlay="Resolution TEsting"
+						caption="Resolution Testing"
+						captionOverlay
 						src="https://placehold.co/300x300/69cdff/ffffff/png?text=Card Component"
 						style={{
 							width: ri.scaleToRem(args['width']),
