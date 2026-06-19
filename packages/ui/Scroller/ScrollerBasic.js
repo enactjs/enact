@@ -166,8 +166,13 @@ class ScrollerBasic extends Component {
 				return;
 			}
 
-			const horizontalScrollFactor = Math.max(Math.abs(left - node.scrollLeft) * 0.1, 8);
-			const verticalScrollFactor = Math.max(Math.abs(top - node.scrollTop) * 0.1, 8);
+			// Clamp the step to the remaining distance so the final frame lands exactly on the target
+			// instead of overshooting by up to the minimum step (8px), which would push a focused item
+			// anchored to the start edge (e.g. `stickTo="start"`) past that edge and clip it.
+			const remainingX = Math.abs(left - node.scrollLeft);
+			const remainingY = Math.abs(top - node.scrollTop);
+			const horizontalScrollFactor = Math.min(Math.max(remainingX * 0.1, 8), remainingX);
+			const verticalScrollFactor = Math.min(Math.max(remainingY * 0.1, 8), remainingY);
 
 			node.scrollBy({top: directionY * verticalScrollFactor, left: directionX * horizontalScrollFactor, behavior: 'instant'});
 			this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
