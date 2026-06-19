@@ -27,10 +27,5 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "storybook": "^10.4.4"
-  },
-  "overrides": {
-    "prop-types": {
-      "react-is": "^19.2.6"
-    }
   }
 }

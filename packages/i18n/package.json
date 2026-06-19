@@ -57,10 +57,5 @@
   },
   "devDependencies": {
     "ilib": "^14.22.0"
-  },
-  "overrides": {
-    "prop-types": {
-      "react-is": "^19.2.3"
-    }
   }
 }

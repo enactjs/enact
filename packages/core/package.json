@@ -40,10 +40,5 @@
     "react-dom": "^19.2.7",
     "react-is": "^19.2.7",
     "warning": "^4.0.3"
-  },
-  "overrides": {
-    "prop-types": {
-      "react-is": "^19.2.7"
-    }
   }
 }

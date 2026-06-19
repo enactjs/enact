@@ -52,11 +52,13 @@ export default {
 		// which causes "Cannot read properties of null (reading 'useEffect')"
 		const reactDir = dirname(moduleRequire.resolve('react/package.json'));
 		const reactDomDir = dirname(moduleRequire.resolve('react-dom/package.json'));
+		const reactIsDir = dirname(moduleRequire.resolve('react-is/package.json'));
 		webpackFinalConfig.resolve = webpackFinalConfig.resolve || {};
 		webpackFinalConfig.resolve.alias = {
 			...(webpackFinalConfig.resolve.alias || {}),
 			react: reactDir,
-			'react-dom': reactDomDir
+			'react-dom': reactDomDir,
+			'react-is': reactIsDir
 		};
 
 		return webpackFinalConfig;
