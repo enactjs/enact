@@ -26,6 +26,7 @@ class I18n {
 	}) {
 		this._locale = null;
 		this._ready = sync;
+		this._updatingFromRender = false;
 		this.loadResourceJob = new Job(state => this._updateSnapshot(state));
 		this._listeners = new Set();
 		this._snapshot = {
@@ -97,12 +98,17 @@ class I18n {
 	 * construction, so updates notify immediately; `useSyncExternalStore` is
 	 * responsible for the tearing check under concurrent rendering.
 	 *
+	 * `_updatingFromRender` guards the render-phase `setContext` path: in sync mode
+	 * that updates the snapshot synchronously, and notifying subscribers there would
+	 * schedule a React update while rendering. The current render reads the fresh
+	 * snapshot via `getSnapshot`, so no notification is needed.
+	 *
 	 * @param {Object} newState New snapshot values
 	 * @private
 	 */
 	_updateSnapshot (newState) {
 		this._snapshot = newState;
-		if (this._ready) {
+		if (this._ready && !this._updatingFromRender) {
 			this._notifyListeners();
 		}
 	}
@@ -118,7 +124,16 @@ class I18n {
 	setContext (locale) {
 		if (this._locale !== locale) {
 			this._locale = locale;
-			this.loadResources(locale);
+
+			// `setContext` is invoked during render by `useI18n`. Suppress listener
+			// notification for this synchronous update so we don't schedule a
+			// React update while rendering;
+			this._updatingFromRender = true;
+			try {
+				this.loadResources(locale);
+			} finally {
+				this._updatingFromRender = false;
+			}
 		}
 	}
 
