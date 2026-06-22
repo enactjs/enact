@@ -5,7 +5,7 @@
  * @exports functionalKind
  */
 
-import {createContext, useContext} from 'react';
+import {createContext, use} from 'react';
 
 import useHandlers from '../useHandlers';
 import {checkPropTypes} from '../util';
@@ -61,7 +61,9 @@ const NoContext = createContext(null);
  * @property {StylesBlock} [styles] Configures styles
  * @property {Object.<string, HandlerFunction>} [handlers] Adds event handlers
  * @property {Object.<string, ComputedPropFunction>} [computed] Adds computed properties
- * @property {RenderFunction} useRender The useRender function
+ * @property {RenderFunction} [useRender] The render function. May call hooks. Because its name
+ * begins with `use`, the `react-hooks/rules-of-hooks` lint rule treats it as a hook and allows
+ * hook calls within it.
  */
 
 /*
@@ -147,7 +149,7 @@ const functionalKind = (config) => {
 
 	const Component = function (props) {
 		// Hooks must always be called unconditionally and in the same order.
-		const ctx = useContext(contextType);
+		const ctx = use(contextType);
 		const boundHandlers = useHandlers(handlers, props, ctx);
 
 		// Merge incoming props with bound handlers.
