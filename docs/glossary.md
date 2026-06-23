@@ -49,7 +49,7 @@ An acronym for 'higher-order component'.
 ### i18n
 `i18n` is an abbreviation for 'internationalization' where the middle 18 letters are replaced with `18`.  Clever, no?
 #### See also
-*   [enact/i18n](../../modules/i18n/$L)
+*   [enact/i18n](../../modules/i18n/L)
 
 ### JSX
 A JavaScript syntax extension that enables mixing JavaScript code with HTML/XML-like tags.

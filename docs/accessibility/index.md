@@ -35,7 +35,7 @@ We've included a few custom components that may be useful to build accessible ap
 
 ### sandstone/Region
 
-[sandstone/Region](../../modules/sandstone/Region/) provides a labeled region to group components. The `title` is wrapped by a [sandstone/Heading](../../modules/sandstone/Heading/) to provide visual context to the `children`. The Heading and `children` are wrapped by a `<div role="region">` with its `aria-label` set to the `title` to provide aural context.
+[sandstone/Region](../../modules/limestone/Region/) provides a labeled region to group components. The `title` is wrapped by a [sandstone/Heading](../../modules/limestone/Heading/) to provide visual context to the `children`. The Heading and `children` are wrapped by a `<div role="region">` with its `aria-label` set to the `title` to provide aural context.
 
 ```js
 import CheckboxItem from '@enact/sandstone/CheckboxItem';
