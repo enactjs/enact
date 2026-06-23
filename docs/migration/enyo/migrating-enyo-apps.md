@@ -216,16 +216,16 @@ a majority of the Spotlight navigation events or are there multiple levels of ne
 
 #### Spotlight Containers
 
-If your application uses Spotlight containers, be sure to review the [Spotlight container documentation](../../spotlight/#containers).
+If your application uses Spotlight containers, be sure to review the [Spotlight container documentation](../../spotlight/docs/#containers).
 
 #### Custom Spotlight Components
 
-If you have created custom Spotlight components in your application, make sure to review the [Spottable documentation](../../spotlight/#spottable).
+If you have created custom Spotlight components in your application, make sure to review the [Spottable documentation](../../spotlight/docs/#spottable).
 
 #### Spotlight Events
 
 Spotlight now uses native DOM events and does not dispatch synthetic events to the currently spotted control.  Please review
-the [Spotlight event documentation](/developer-guide/spotlight/docs/#events).
+the [Spotlight event documentation](./../spotlight/docs/#events).
 
 ### Data Management
 
