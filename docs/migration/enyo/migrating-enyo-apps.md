@@ -220,12 +220,12 @@ If your application uses Spotlight containers, be sure to review the [Spotlight 
 
 #### Custom Spotlight Components
 
-If you have created custom Spotlight components in your application, make sure to review the [Spottable documentation](../../spotlight/docs/#spottable).
+If you have created custom Spotlight components in your application, make sure to review the [Spottable documentation](../../../spotlight/docs/#spottable).
 
 #### Spotlight Events
 
 Spotlight now uses native DOM events and does not dispatch synthetic events to the currently spotted control.  Please review
-the [Spotlight event documentation](../../spotlight/docs/#events).
+the [Spotlight event documentation](../../../spotlight/docs/#events).
 
 ### Data Management
 
@@ -323,7 +323,7 @@ The `@enact/webos` module provides many useful utilities and methods to interact
 *   `@enact/webos/keyboard` - use to see if the keyboard is currently visible
 *   `@enact/webos/LS2Request` - without this, your application cannot use the myriad webOS services that are available!
 Almost every Enyo webOS application utilizes service calls.
-    *    [Luna Service API](../../../webos/luna-service-api/) example
+    *    [Luna Service API](../../../webos/docs/luna-service-api/) example
 *   `@enact/webos/platform` - returns various details about the webOS platform where the application is running (SmartTV, Open webOS, legacy devices (Palm, HP), etc.)
 *   `@enact/webos/pmloglib` - system-level logging for your application
 *   `@enact/webos/VoiceReadout` - reads alert text when accessibility VoiceReadout enabled
