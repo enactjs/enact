@@ -142,7 +142,7 @@ const IconBase = kind({
 		 * The size of the button.
 		 *
 		 * Applies the CSS class which can be customized by
-		 * {@link /docs/developer-guide/theming/|theming}.
+		 * {@link developer-guide/theming/|theming}.
 		 *
 		 * @type {String}
 		 * @public
