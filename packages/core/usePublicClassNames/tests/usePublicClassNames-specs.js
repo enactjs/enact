@@ -47,4 +47,17 @@ describe('usePublicClassNames', () => {
 		expect(result.current.a).toBe(expected.a);
 		expect(result.current.b).toBe(expected.b);
 	});
+
+	test('should reuse merged css when publicClassNames is a new array with the same values', () => {
+		const {result, rerender} = renderHook(
+			({publicClassNames}) => usePublicClassNames({componentCss, customCss, publicClassNames}),
+			{initialProps: {publicClassNames: ['a', 'b']}}
+		);
+
+		const first = result.current;
+
+		rerender({publicClassNames: ['a', 'b']});
+
+		expect(result.current).toBe(first);
+	});
 });

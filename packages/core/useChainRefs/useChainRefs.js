@@ -48,7 +48,9 @@ function chainRefs (...refs) {
  */
 function useChainRefs (...refs) {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	return useCallback(chainRefs(...refs), refs);
+	return useCallback((node) => {
+		refs.forEach(ref => updateRef(ref, node));
+	}, refs);
 }
 
 export default useChainRefs;
