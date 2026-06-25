@@ -107,18 +107,12 @@ describe('useI18n', () => {
 			);
 		}
 
-		test('should start with loaded=false', () => {
+		test('should start with loaded=false and then set loaded=true after resources resolve', async () => {
 			render(<AsyncComponent />);
 
 			const i18nDiv = screen.getByTestId('i18nDiv');
 
 			expect(i18nDiv).toHaveAttribute('data-loaded', 'false');
-		});
-
-		test('should set loaded=true after resources resolve', async () => {
-			render(<AsyncComponent />);
-
-			const i18nDiv = screen.getByTestId('i18nDiv');
 
 			await waitFor(() => {
 				expect(i18nDiv).toHaveAttribute('data-loaded', 'true');
@@ -211,6 +205,24 @@ describe('useI18n', () => {
 			});
 
 			expect(i18nDiv).toHaveTextContent('rtl');
+		});
+
+		// Regression guard for the render-phase `setContext` path. `useI18n` calls `setContext`
+		// during render, so in sync mode the locale-change snapshot update must NOT notify
+		// subscribers.
+		test('should not notify subscribers when setContext changes locale in sync mode', () => {
+			const i18n = new I18n({sync: true});
+			i18n.setContext('en-US');
+
+			const listener = jest.fn();
+			i18n.subscribe(listener);
+
+			// Simulates the render-phase locale change driven by `updateLocale`.
+			i18n.setContext('ar-SA');
+
+			expect(listener).not.toHaveBeenCalled();
+			// The snapshot is still updated so the in-progress render reads the new locale.
+			expect(i18n.getSnapshot().locale).toBe('ar-SA');
 		});
 	});
 
