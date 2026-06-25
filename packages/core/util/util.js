@@ -419,9 +419,9 @@ const checkPropTypes = (component, props, prevProps) => {
  */
 const usePrevious = (value) => {
 	const ref = useRef(value);
-	const previous = ref.current;
+	const previous = ref.current; // eslint-disable-line react-hooks/refs -- intentional previous-value tracking
 
-	ref.current = value;
+	ref.current = value; // eslint-disable-line react-hooks/refs
 
 	return previous;
 };

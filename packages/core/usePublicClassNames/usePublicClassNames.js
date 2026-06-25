@@ -23,6 +23,7 @@ const publicClassNamesMemoKey = (publicClassNames) => (
 function usePublicClassNames ({componentCss, customCss, publicClassNames}) {
 	const publicClassNamesKey = publicClassNamesMemoKey(publicClassNames);
 
+	// publicClassNamesKey is a value-based dep so inline arrays with the same entries reuse the memoized map
 	return useMemo(() => {
 		if (!componentCss || !customCss) {
 			return componentCss;
@@ -35,6 +36,7 @@ function usePublicClassNames ({componentCss, customCss, publicClassNames}) {
 		}
 
 		return componentCss;
+		// eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/preserve-manual-memoization
 	}, [componentCss, customCss, publicClassNamesKey]);
 }
 
