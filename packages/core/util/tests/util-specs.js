@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {forwardRef, memo, lazy, Component} from 'react';
 
 import {
+	applyDefaultProps,
 	cap,
 	clamp,
 	coerceArray,
@@ -12,6 +13,7 @@ import {
 	memoize,
 	mergeClassNameMaps,
 	mapAndFilterChildren,
+	normalizePublicClassNames,
 	setDefaultProps,
 	shallowEqual,
 	checkPropTypes,
@@ -313,6 +315,27 @@ describe('util', () => {
 			const actual = spy.mock.calls[0];
 
 			expect(expected).toEqual(actual);
+		});
+	});
+
+	describe('normalizePublicClassNames', () => {
+		const css = {a: 'a-class', b: 'b-class'};
+
+		test('should return all css keys when publicClassNames is true', () => {
+			expect(normalizePublicClassNames(true, css)).toEqual(['a', 'b']);
+		});
+
+		test('should split a string publicClassNames value', () => {
+			expect(normalizePublicClassNames('a b', css)).toEqual(['a', 'b']);
+		});
+	});
+
+	describe('applyDefaultProps', () => {
+		test('should return target unchanged when keys are not provided', () => {
+			const target = {size: 'small'};
+
+			expect(applyDefaultProps(target, {size: 'large'}, null)).toBe(target);
+			expect(target).toEqual({size: 'small'});
 		});
 	});
 

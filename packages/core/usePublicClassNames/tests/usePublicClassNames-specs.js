@@ -47,4 +47,10 @@ describe('usePublicClassNames', () => {
 		expect(result.current.a).toBe(expected.a);
 		expect(result.current.b).toBe(expected.b);
 	});
+
+	test('should return `componentCss` when `publicClassNames` is not set', () => {
+		const {result} = renderHook(() => usePublicClassNames({componentCss, customCss}));
+
+		expect(result.current).toBe(componentCss);
+	});
 });
