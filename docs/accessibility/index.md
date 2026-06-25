@@ -97,7 +97,7 @@ Enact also provides ways to debug these accessibility implementations.
 We provide a sampler in [UI COMPONENTS](https://enactjs.com/sampler/sandstone) that implements several UI components as [Storybook](https://storybook.js.org/).
 If click the `debug aria` tab located at the top of the page of the sampler and select `true`, the ARIA properties of each component is displayed as shown in the image below.
 
-![debug-aria in sampler](Debugaria-Sampler.png)
+![debug-aria in sampler](debugaria-sampler.png)
 
 ### In Enact App
 
