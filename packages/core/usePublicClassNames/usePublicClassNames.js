@@ -2,11 +2,6 @@ import {useMemo} from 'react';
 
 import {mergeClassNameMaps, normalizePublicClassNames} from '../util';
 
-// Value-based key so inline arrays with the same entries still hit useMemo.
-const publicClassNamesMemoKey = (publicClassNames) => (
-	Array.isArray(publicClassNames) ? publicClassNames.join('\0') : publicClassNames
-);
-
 /**
  * A hook for supporting `publicClassNames` to functional components.
  * It returns merged CSS of given two CSS objects according to `publicClassNames` option.
@@ -21,9 +16,6 @@ const publicClassNamesMemoKey = (publicClassNames) => (
  * @private
  */
 function usePublicClassNames ({componentCss, customCss, publicClassNames}) {
-	const publicClassNamesKey = publicClassNamesMemoKey(publicClassNames);
-
-	// publicClassNamesKey is a value-based dep so inline arrays with the same entries reuse the memoized map
 	return useMemo(() => {
 		if (!componentCss || !customCss) {
 			return componentCss;
@@ -36,8 +28,7 @@ function usePublicClassNames ({componentCss, customCss, publicClassNames}) {
 		}
 
 		return componentCss;
-		// eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/preserve-manual-memoization
-	}, [componentCss, customCss, publicClassNamesKey]);
+	}, [componentCss, customCss, publicClassNames]);
 }
 
 export default usePublicClassNames;
