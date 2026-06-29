@@ -1,5 +1,3 @@
-import {useMemo} from 'react';
-
 import {mergeClassNameMaps, normalizePublicClassNames} from '../util';
 
 /**
@@ -16,19 +14,17 @@ import {mergeClassNameMaps, normalizePublicClassNames} from '../util';
  * @private
  */
 function usePublicClassNames ({componentCss, customCss, publicClassNames}) {
-	return useMemo(() => {
-		if (!componentCss || !customCss) {
-			return componentCss;
-		}
-
-		const allowedClassNames = normalizePublicClassNames(publicClassNames, componentCss);
-
-		if (allowedClassNames) {
-			return mergeClassNameMaps(componentCss, customCss, allowedClassNames);
-		}
-
+	if (!componentCss || !customCss) {
 		return componentCss;
-	}, [componentCss, customCss, publicClassNames]);
+	}
+
+	const allowedClassNames = normalizePublicClassNames(publicClassNames, componentCss);
+
+	if (allowedClassNames) {
+		return mergeClassNameMaps(componentCss, customCss, allowedClassNames);
+	}
+
+	return componentCss;
 }
 
 export default usePublicClassNames;
