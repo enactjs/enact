@@ -4,7 +4,7 @@ title: Test Driven Development(TDD)
 
 ## Before Getting Started
 
-Please refer to our document [Unit Testing](../unit-testing/index.md), it gives 
+Please refer to our document [Unit Testing](../unit-testing/), it gives 
 the basic information on what unit testing is and how to start unit testing.
 
 ## Overview

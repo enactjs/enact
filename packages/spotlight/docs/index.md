@@ -322,7 +322,7 @@ const App = kind({
 
 ### Spottable
 
-For more details and full list of `Spottable` API, see [spotlight/Spottable](../../modules/spotlight/Spottable).
+For more details and full list of `Spottable` API, see [spotlight/Spottable](../../../modules/spotlight/Spottable/).
 
 ##### Configuration Parameters
 
@@ -349,7 +349,7 @@ A callback function to override default spotlight behavior when exiting the spot
 
 ### SpotlightRootDecorator
 
-For more details and full list of `SpotlightRootDecorator` API, see [spotlight/SpotlightRootDecorator](../../modules/spotlight/SpotlightRootDecorator).
+For more details and full list of `SpotlightRootDecorator` API, see [spotlight/SpotlightRootDecorator](../../../modules/spotlight/SpotlightRootDecorator/).
 
 ##### Configuration Parameters
 
@@ -382,7 +382,7 @@ feature and guidance on when to use this versus the `data-spotlight-focused` att
 
 ### Container
 
-For more details and full list of `Container` API, see [spotlight/SpotlightContainerDecorator](../../modules/spotlight/SpotlightContainerDecorator).
+For more details and full list of `Container` API, see [spotlight/SpotlightContainerDecorator](../../../modules/spotlight/SpotlightContainerDecorator/).
 
 ##### Configuration Parameters
 

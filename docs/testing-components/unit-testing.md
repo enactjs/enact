@@ -113,7 +113,7 @@ and outputs we can test basically any JavaScript function that returns a value.
 
 ## Testing React
 
-To test react we use [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) plus other tools you can find out about [here](../test-driven-development/index.md).
+To test react we use [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) plus other tools you can find out about [here](../test-driven-development/).
 
 ```js
 const Text = (props) => {
@@ -297,6 +297,6 @@ write tests in those cases.
 
 ## What to do next
 
-Please refer to our document [Test Driven Development(TDD)](../test-driven-development/index.md), it contains how to run tests
+Please refer to our document [Test Driven Development(TDD)](../test-driven-development/), it contains how to run tests
 and how they fit in our testing strategy. It also contains more information about TDD and the methodology behind it. This
 document is a deeper dive into the unit test specifically.
