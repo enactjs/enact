@@ -18,6 +18,131 @@ library.
 Spotlight is based on a fork of [JavaScript SpatialNavigation](https://github.com/luke-chang/js-spatial-navigation)
 (c) 2016 Luke Chang, under the terms of the [Mozilla Public License](https://www.mozilla.org/en-US/MPL/2.0/).
 
+## Using Spotlight Standalone
+
+When you build an app with only `@enact/spotlight`—without a theme library—you wire up Spotlight yourself.
+The steps below cover the minimum setup; the rest of this guide explains navigation, containers, styling, and
+the API in detail.
+
+### Install dependencies
+
+Add `@enact/spotlight` to your project. Enact components also rely on `@enact/core` for the `kind` factory and on React:
+
+```json
+"dependencies": {
+	"@enact/core": "^5.4.2",
+	"@enact/spotlight": "^5.4.2",
+	"react": "^19.2.4",
+	"react-dom": "^19.2.4"
+}
+```
+
+If you use the Enact CLI, create a new app with `enact create` and add `@enact/spotlight` to `package.json`, or
+start from the [spotlight-sandbox](https://github.com/enactjs/samples/tree/master/ui/spotlight-sandbox) sample in
+the Enact samples repository.
+
+### Initialize Spotlight
+
+Wrap your application root with `SpotlightRootDecorator`. This initializes Spotlight, attaches global key listeners,
+and manages 5-way and pointer modes. See [SpotlightRootDecorator](#spotlightrootdecorator) for configuration options.
+
+```js
+import kind from '@enact/core/kind';
+import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
+
+const AppView = kind({
+	name: 'App',
+	render: (props) => (
+		<div {...props}>
+			{/* spottable controls go here */}
+		</div>
+	)
+});
+
+export default SpotlightRootDecorator(AppView);
+```
+
+Do **not** wrap with both `SpotlightRootDecorator` and a theme decorator that already includes it (for example
+`@enact/sandstone/ThemeDecorator`).
+
+### Make controls spottable
+
+Wrap each focusable control with the `Spottable` HOC. Spottable adds the `.spottable` CSS class, `tabIndex`, and key
+handlers to the root DOM node. Spread the received props onto that node. See [Spottable](#spottable) for the full API.
+
+```js
+import kind from '@enact/core/kind';
+import Spottable from '@enact/spotlight/Spottable';
+
+const Button = Spottable(kind({
+	name: 'Button',
+	render: ({children, ...rest}) => (
+		<div role="button" {...rest}>
+			{children}
+		</div>
+	)
+}));
+```
+
+Style the focused state using the `[data-spotlight-focused]` attribute or `focusEffectClass` on the root decorator.
+See [Customizing the Focus Effect](#customizing-the-focus-effect).
+
+Assign a `spotlightId` to controls and containers when you need to target them with `Spotlight.focus()`:
+
+```js
+<Button spotlightId="submit">Submit</Button>
+```
+
+### Organize navigation with containers
+
+When a set of controls should be navigated as a group—for example, a radio cluster or a panel—wrap them in
+`SpotlightContainerDecorator`. See [Containers](#containers).
+
+```js
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+
+const Panel = SpotlightContainerDecorator('div');
+
+<Panel spotlightId="settings">
+	<Button spotlightId="option-a">Option A</Button>
+	<Button spotlightId="option-b">Option B</Button>
+</Panel>
+```
+
+### Move focus programmatically
+
+When the spotted control is removed from the DOM (disabled, hidden, or unmounted), call `Spotlight.focus()` to move
+focus to a known target. After DOM changes, call `focus` from a layout effect so Spotlight runs after the updated
+tree is painted:
+
+```js
+import Spotlight from '@enact/spotlight';
+import {useLayoutEffect, useRef} from 'react';
+
+const pendingFocusRef = useRef(false);
+
+useLayoutEffect(() => {
+	if (pendingFocusRef.current) {
+		pendingFocusRef.current = false;
+		Spotlight.focus('button02');
+	}
+}, [showPanel]);
+
+const handleRemovePanel = () => {
+	pendingFocusRef.current = true;
+	setShowPanel(false);
+};
+```
+
+See [Selectors](#selectors) and [Spotlight API](#spotlight-api) for selector strings and cache refresh behavior.
+
+### Try the sample app
+
+The [spotlight-sandbox](https://github.com/enactjs/samples/tree/master/ui/spotlight-sandbox) sample is a standalone
+Enact app that exercises nested containers, draggable spottable controls, disappearing controls, hold-to-activate,
+and a wide test layout. Clone the samples repository, then from `ui/spotlight-sandbox` run `npm install` and
+`npm run serve`. Use the arrow keys and Enter on your keyboard to explore each sample page.
+
 ## Modes
 
 Spotlight operates in two mutually exclusive modes: **5-way mode** and **Pointer

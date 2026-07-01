@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [Unreleased]
 
+### Added
+
+- Developer guide section on using `@enact/spotlight` as a standalone library
+
 ### Changed
 
 - `spotlight/SpotlightRootDecorator` to use a functional component
