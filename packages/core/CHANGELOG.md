@@ -8,14 +8,6 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 - `core/util` functions `applyDefaultProps` and `normalizePublicClassNames`
 
-### Changed
-
-- `core/kind` to cache `defaultPropKeys` and apply defaults via `applyDefaultProps` on the functional render path
-- `core/kind.functionalKind` to use React `use()` for context
-- `core/usePublicClassNames` to use `normalizePublicClassNames`
-- `core/util.usePrevious` to use `useRef` instead of updating state during render
-- `core/util.setDefaultProps` to delegate to `applyDefaultProps`
-
 ### Fixed
 
 - `core/kind` `inline` handler injection to use a props snapshot so each handler receives the same base props

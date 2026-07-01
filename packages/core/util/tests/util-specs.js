@@ -443,5 +443,25 @@ describe('util', () => {
 
 			expect(result.current).toBe(42);
 		});
+
+		test('should keep prior value when value changes then stays the same', () => {
+			let value = 'a';
+			const {result, rerender} = renderHook(() => usePrevious(value));
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				value = 'b';
+				rerender();
+			});
+
+			expect(result.current).toBe('a');
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				rerender();
+			});
+
+			expect(result.current).toBe('a');
+		});
 	});
 });
