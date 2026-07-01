@@ -23,7 +23,7 @@ import {checkPropTypes as check} from 'prop-types';
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
 import unless from 'ramda/src/unless';
-import {Children, useRef} from 'react';
+import {Children, useState} from 'react';
 import * as ReactIs from 'react-is';
 
 import Job from './Job';
@@ -418,15 +418,15 @@ const checkPropTypes = (component, props, prevProps) => {
  * @public
  */
 const usePrevious = (value) => {
-	const trackedRef = useRef(value);
-	const previousRef = useRef(value);
+	const [previousTrackedValue, setPreviousTrackedValue] = useState(value);
+	const [previousValue, setPreviousValue] = useState(value);
 
-	if (value !== trackedRef.current) {
-		previousRef.current = trackedRef.current;
-		trackedRef.current = value;
+	if (value !== previousTrackedValue) {
+		setPreviousTrackedValue(value);
+		setPreviousValue(previousTrackedValue);
 	}
 
-	return previousRef.current;
+	return previousValue;
 };
 
 export {
