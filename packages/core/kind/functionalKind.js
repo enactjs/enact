@@ -5,7 +5,7 @@
  * @exports functionalKind
  */
 
-import {createContext, use} from 'react';
+import {createContext, useContext} from 'react';
 
 import useHandlers from '../useHandlers';
 import {checkPropTypes, applyDefaultProps} from '../util';
@@ -151,7 +151,8 @@ const functionalKind = (config) => {
 
 	const Component = function (props) {
 		// Hooks must always be called unconditionally and in the same order.
-		const ctx = use(contextType);
+		// useContext only accepts Context and never suspends (unlike use(), which can suspend on Promises and break SSR).
+		const ctx = useContext(contextType);
 		const boundHandlers = useHandlers(handlers, props, ctx);
 
 		// Merge incoming props with bound handlers.
