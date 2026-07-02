@@ -9,10 +9,11 @@ import {createContext, use, Component as ReactComponent} from 'react';
 
 import useHandlers from '../useHandlers';
 import Handlers from '../useHandlers/Handlers';
-import {checkPropTypes} from '../util';
+import {checkPropTypes, applyDefaultProps} from '../util';
 
 import computed from './computed';
 import styles from './styles';
+import {bindInlineHandlers} from './util';
 
 // Because contextType is optional and hooks must be called in the same order, we need a fallback
 // context when none is specified. This likely has some overhead so we may want to deprecate and
@@ -150,6 +151,9 @@ const kind = (config) => {
 		return render(props, context);
 	};
 
+	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
+	const handlerKeys = handlers ? Object.keys(handlers) : null;
+
 	let Component;
 
 	// In 4.x, this branch will become the only supported version and the class branch will be
@@ -164,14 +168,7 @@ const kind = (config) => {
 				...boundHandlers
 			};
 
-			if (defaultProps) {
-				Object.keys(defaultProps).forEach(key => {
-					// eslint-disable-next-line no-undefined
-					if (merged[key] === undefined) {
-						merged[key] = defaultProps[key];
-					}
-				});
-			}
+			applyDefaultProps(merged, defaultProps, defaultPropKeys);
 
 			checkPropTypes(Component, merged);
 
@@ -212,33 +209,10 @@ const kind = (config) => {
 	// Decorate the Component with the computed property object in DEV for easier testability
 	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
 
-	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
-	const handlerKeys = handlers ? Object.keys(handlers) : null;
-
 	Component.inline = (props, context) => {
-		let updated = {
-			...props
-		};
+		const updated = applyDefaultProps({...props}, defaultProps, defaultPropKeys);
 
-		if (defaultPropKeys && defaultPropKeys.length > 0) {
-			defaultPropKeys.forEach(key => {
-				// eslint-disable-next-line no-undefined
-				if (props == null || props[key] === undefined) {
-					updated[key] = defaultProps[key];
-				}
-			});
-		}
-
-		if (handlerKeys && handlerKeys.length > 0) {
-			// generate a handler with a clone of updated to ensure each handler receives the same
-			// props without the kind.handlers injected.
-			updated = handlerKeys.reduce((_props, key) => {
-				_props[key] = (ev) => handlers[key](ev, updated, context);
-				return _props;
-			}, {...updated});
-		}
-
-		return renderKind(updated, context);
+		return renderKind(bindInlineHandlers(updated, handlers, handlerKeys, context), context);
 	};
 
 	return Component;

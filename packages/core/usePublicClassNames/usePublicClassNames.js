@@ -1,4 +1,4 @@
-import {mergeClassNameMaps} from '../util';
+import {mergeClassNameMaps, normalizePublicClassNames} from '../util';
 
 /**
  * A hook for supporting `publicClassNames` to functional components.
@@ -14,25 +14,17 @@ import {mergeClassNameMaps} from '../util';
  * @private
  */
 function usePublicClassNames ({componentCss, customCss, publicClassNames}) {
-	let allowedClassNames = publicClassNames;
-	let mergedCss = componentCss;
-
 	if (!componentCss || !customCss) {
-		return mergedCss;
+		return componentCss;
 	}
 
-	if (allowedClassNames === true) {
-		allowedClassNames = Object.keys(componentCss);
-	} else if (typeof allowedClassNames === 'string') {
-		allowedClassNames = allowedClassNames.split(/\s+/);
-	}
+	const allowedClassNames = normalizePublicClassNames(publicClassNames, componentCss);
 
-	// if the config includes a css map, merge them together now
 	if (allowedClassNames) {
-		mergedCss = mergeClassNameMaps(componentCss, customCss, allowedClassNames);
+		return mergeClassNameMaps(componentCss, customCss, allowedClassNames);
 	}
 
-	return mergedCss;
+	return componentCss;
 }
 
 export default usePublicClassNames;

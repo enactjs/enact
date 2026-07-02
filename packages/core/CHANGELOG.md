@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [Unreleased]
+
+### Added
+
+- `core/util` functions `applyDefaultProps` and `normalizePublicClassNames`
+
+### Fixed
+
+- `core/kind` `inline` handler injection to use a props snapshot so each handler receives the same base props
+
 ## [5.5.1] - 2026-06-01
 
 No significant changes.

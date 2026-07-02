@@ -8,10 +8,11 @@
 import {createContext, useContext} from 'react';
 
 import useHandlers from '../useHandlers';
-import {checkPropTypes} from '../util';
+import {checkPropTypes, applyDefaultProps} from '../util';
 
 import computed from './computed';
 import styles from './styles';
+import {bindInlineHandlers} from './util';
 
 // Fallback context when none is specified.
 const NoContext = createContext(null);
@@ -145,8 +146,12 @@ const functionalKind = (config) => {
 		return useRender(props, context); // eslint-disable-line react-hooks/rules-of-hooks
 	};
 
+	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
+	const handlerKeys     = handlers     ? Object.keys(handlers)     : null;
+
 	const Component = function (props) {
 		// Hooks must always be called unconditionally and in the same order.
+		// useContext only accepts Context and never suspends (unlike use(), which can suspend on Promises and break SSR).
 		const ctx = useContext(contextType);
 		const boundHandlers = useHandlers(handlers, props, ctx);
 
@@ -158,14 +163,7 @@ const functionalKind = (config) => {
 
 		// Apply defaultProps manually so functional components
 		// receive defaults even when React's own defaultProps is set.
-		if (defaultProps) {
-			Object.keys(defaultProps).forEach(key => {
-				// eslint-disable-next-line no-undefined
-				if (merged[key] === undefined) {
-					merged[key] = defaultProps[key];
-				}
-			});
-		}
+		applyDefaultProps(merged, defaultProps, defaultPropKeys);
 
 		checkPropTypes(Component, merged);
 
@@ -182,32 +180,10 @@ const functionalKind = (config) => {
 	// ── inline ──────────────────────────────────────────────────────────────
 	// A synchronous, hook-free path for calling the component logic outside
 	// of the React render cycle (e.g. in tests or server-side utilities).
-	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
-	const handlerKeys     = handlers     ? Object.keys(handlers)     : null;
-
 	Component.inline = (props, context) => {
-		let updated = {...props};
+		const updated = applyDefaultProps({...props}, defaultProps, defaultPropKeys);
 
-		if (defaultPropKeys?.length) {
-			defaultPropKeys.forEach(key => {
-				// eslint-disable-next-line no-undefined
-				if (props == null || props[key] === undefined) {
-					updated[key] = defaultProps[key];
-				}
-			});
-		}
-
-		if (handlerKeys?.length) {
-			// Snapshot `updated` before injecting handlers so every handler
-			// receives the same base props (no cross-contamination).
-			const snapshot = {...updated};
-			updated = handlerKeys.reduce((_props, key) => {
-				_props[key] = (ev) => handlers[key](ev, snapshot, context);
-				return _props;
-			}, updated);
-		}
-
-		return renderKind(updated, context);
+		return renderKind(bindInlineHandlers(updated, handlers, handlerKeys, context), context);
 	};
 
 	return Component;
