@@ -328,6 +328,25 @@ describe('util', () => {
 		test('should split a string publicClassNames value', () => {
 			expect(normalizePublicClassNames('a b', css)).toEqual(['a', 'b']);
 		});
+
+		test('should return `true` unchanged when css is not provided', () => {
+			expect(normalizePublicClassNames(true)).toBe(true);
+		});
+
+		test('should return `false` unchanged', () => {
+			expect(normalizePublicClassNames(false, css)).toBe(false);
+		});
+
+		test('should return `undefined` unchanged', () => {
+			// eslint-disable-next-line no-undefined
+			expect(normalizePublicClassNames(undefined, css)).toBe(undefined);
+		});
+
+		test('should return an array value unchanged', () => {
+			const allowed = ['a', 'b'];
+
+			expect(normalizePublicClassNames(allowed, css)).toBe(allowed);
+		});
 	});
 
 	describe('applyDefaultProps', () => {
@@ -336,6 +355,33 @@ describe('util', () => {
 
 			expect(applyDefaultProps(target, {size: 'large'}, null)).toBe(target);
 			expect(target).toEqual({size: 'small'});
+		});
+
+		test('should apply defaults for keys that are `undefined`', () => {
+			// eslint-disable-next-line no-undefined
+			const target = {size: undefined};
+
+			applyDefaultProps(target, {size: 'large'}, ['size']);
+
+			expect(target.size).toBe('large');
+		});
+
+		test('should not overwrite a key that is already set', () => {
+			const target = {size: 'small'};
+
+			applyDefaultProps(target, {size: 'large'}, ['size']);
+
+			expect(target.size).toBe('small');
+		});
+
+		test('should preserve falsy-but-defined values', () => {
+			const target = {count: 0, label: '', flag: false};
+
+			applyDefaultProps(target, {count: 5, label: 'default', flag: true}, ['count', 'label', 'flag']);
+
+			expect(target.count).toBe(0);
+			expect(target.label).toBe('');
+			expect(target.flag).toBe(false);
 		});
 	});
 
