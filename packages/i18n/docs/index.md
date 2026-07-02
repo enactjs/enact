@@ -4,7 +4,7 @@ title: i18n (Internationalization)
 
 ## Overview
 
-This guide details how to use some of i18n library's features. For an overview of the modules supplied with the library please see [I18nDecorator](../../modules/i18n/I18nDecorator/) and [Text](../../modules/i18n/Text/). This library incorporates the [iLib](https://github.com/iLib-js/iLib) internationalization library.
+This guide details how to use some of i18n library's features. For an overview of the modules supplied with the library please see [I18nDecorator](../../../modules/i18n/I18nDecorator/) and [Text](../../../modules/i18n/Text/). This library incorporates the [iLib](https://github.com/iLib-js/iLib) internationalization library.
 
 ## Using I18nDecorator
 

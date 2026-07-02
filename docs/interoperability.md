@@ -134,7 +134,7 @@ export default ThemeDecorator(App);
 ### Internationalization Outside of Enact
 
 #### CRA Example
-In order to use the [`@enact/i18n`](../../developer-guide/i18n) library for internationalization, you can [eject](https://create-react-app.dev/docs/available-scripts/#npm-run-eject)
+In order to use the [`@enact/i18n`](../../developer-guide/i18n/docs/) library for internationalization, you can [eject](https://create-react-app.dev/docs/available-scripts/#npm-run-eject)
 your CRA app, install your required Enact libraries (plus, `@enact/dev-utils`), and update the webpack configuration.
 
 ```json

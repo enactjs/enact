@@ -652,10 +652,10 @@ const MyContainer = SpotlightContainerDecorator(MyComponent);
 for more information.
 
 ### `Holdable`
-This component has been replaced by [`ui/Touchable`](../../../modules/ui/Touchable/).
+This component has been replaced by [`ui/Touchable`](../../../../modules/ui/Touchable/).
 
 ### `Pressable`
-This component has been replaced by [`ui/Touchable`](../../../modules/ui/Touchable/).
+This component has been replaced by [`ui/Touchable`](../../../../modules/ui/Touchable/).
 
 ### `Repeater`
 `Repeater` now requires a unique key for `Object` type data. [Read about keys](https://react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key)
