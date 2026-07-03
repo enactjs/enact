@@ -30,10 +30,10 @@ Add `@enact/spotlight` to your project. Enact components also rely on `@enact/co
 
 ```json
 "dependencies": {
-	"@enact/core": "^5.4.2",
-	"@enact/spotlight": "^5.4.2",
-	"react": "^19.2.4",
-	"react-dom": "^19.2.4"
+	"@enact/core": "^5.5.1",
+	"@enact/spotlight": "^5.5.1",
+	"react": "^19.2.7",
+	"react-dom": "^19.2.7"
 }
 ```
 
