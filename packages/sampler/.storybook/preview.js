@@ -3,6 +3,14 @@ import {getBooleanType, getObjectType} from '@enact/storybook-utils/addons/contr
 
 import Environment from '../src/Environment';
 
+const tvViewports = {
+	tvHD: {name: 'TV 720p (HD)', type: 'desktop', styles: {width: '1280px', height: '720px'}},
+	tvFHD: {name: 'TV 1080p (FHD)', type: 'desktop', styles: {width: '1920px', height: '1080px'}},
+	tvUHD: {name: 'TV 2160p (UHD / 4K)', type: 'desktop', styles: {width: '3840px', height: '2160px'}},
+	portraitFHD: {name: 'Portrait 1080p (FHD)', type: 'mobile', styles: {width: '1080px', height: '1920px'}},
+	portraitUHD: {name: 'Portrait 2160p (UHD / 4K)', type: 'mobile', styles: {width: '2160px', height: '3840px'}}
+};
+
 // NOTE: Locales taken from strawman. Might need to add more in the future.
 const locales = {
 	'local':                                                             '',
@@ -40,6 +48,11 @@ export const parameters = {
 	options: {
 		storySort: {
 			method: 'alphabetical'
+		}
+	},
+	viewport: {
+		options: {
+			...tvViewports
 		}
 	}
 };

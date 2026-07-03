@@ -18,7 +18,7 @@ export default {
 		backgrounds: false,
 		interactions: false,
 		postcss: false,
-		viewport: false,
+		viewport: true,
 		warnOnLegacyHierarchySeparator: false
 	},
 	framework: {
