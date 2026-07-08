@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {forwardRef, memo, lazy, Component} from 'react';
 
 import {
+	applyDefaultProps,
 	cap,
 	clamp,
 	coerceArray,
@@ -12,6 +13,7 @@ import {
 	memoize,
 	mergeClassNameMaps,
 	mapAndFilterChildren,
+	normalizePublicClassNames,
 	setDefaultProps,
 	shallowEqual,
 	checkPropTypes,
@@ -316,6 +318,73 @@ describe('util', () => {
 		});
 	});
 
+	describe('normalizePublicClassNames', () => {
+		const css = {a: 'a-class', b: 'b-class'};
+
+		test('should return all css keys when publicClassNames is true', () => {
+			expect(normalizePublicClassNames(true, css)).toEqual(['a', 'b']);
+		});
+
+		test('should split a string publicClassNames value', () => {
+			expect(normalizePublicClassNames('a b', css)).toEqual(['a', 'b']);
+		});
+
+		test('should return `true` unchanged when css is not provided', () => {
+			expect(normalizePublicClassNames(true)).toBe(true);
+		});
+
+		test('should return `false` unchanged', () => {
+			expect(normalizePublicClassNames(false, css)).toBe(false);
+		});
+
+		test('should return `undefined` unchanged', () => {
+			// eslint-disable-next-line no-undefined
+			expect(normalizePublicClassNames(undefined, css)).toBe(undefined);
+		});
+
+		test('should return an array value unchanged', () => {
+			const allowed = ['a', 'b'];
+
+			expect(normalizePublicClassNames(allowed, css)).toBe(allowed);
+		});
+	});
+
+	describe('applyDefaultProps', () => {
+		test('should return target unchanged when keys are not provided', () => {
+			const target = {size: 'small'};
+
+			expect(applyDefaultProps(target, {size: 'large'}, null)).toBe(target);
+			expect(target).toEqual({size: 'small'});
+		});
+
+		test('should apply defaults for keys that are `undefined`', () => {
+			// eslint-disable-next-line no-undefined
+			const target = {size: undefined};
+
+			applyDefaultProps(target, {size: 'large'}, ['size']);
+
+			expect(target.size).toBe('large');
+		});
+
+		test('should not overwrite a key that is already set', () => {
+			const target = {size: 'small'};
+
+			applyDefaultProps(target, {size: 'large'}, ['size']);
+
+			expect(target.size).toBe('small');
+		});
+
+		test('should preserve falsy-but-defined values', () => {
+			const target = {count: 0, label: '', flag: false};
+
+			applyDefaultProps(target, {count: 5, label: 'default', flag: true}, ['count', 'label', 'flag']);
+
+			expect(target.count).toBe(0);
+			expect(target.label).toBe('');
+			expect(target.flag).toBe(false);
+		});
+	});
+
 	describe('setDefaultProps', () => {
 		const props = {
 			// eslint-disable-next-line no-undefined
@@ -419,6 +488,26 @@ describe('util', () => {
 			});
 
 			expect(result.current).toBe(42);
+		});
+
+		test('should keep prior value when value changes then stays the same', () => {
+			let value = 'a';
+			const {result, rerender} = renderHook(() => usePrevious(value));
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				value = 'b';
+				rerender();
+			});
+
+			expect(result.current).toBe('a');
+
+			// eslint-disable-next-line testing-library/no-unnecessary-act
+			act(() => {
+				rerender();
+			});
+
+			expect(result.current).toBe('a');
 		});
 	});
 });

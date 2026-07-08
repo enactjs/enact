@@ -1,6 +1,6 @@
 import classnames from 'classnames/bind';
 
-import {mergeClassNameMaps} from '../util';
+import {mergeClassNameMaps, normalizePublicClassNames} from '../util';
 
 import {addInternalProp} from './util';
 
@@ -44,13 +44,7 @@ import {addInternalProp} from './util';
  */
 const styles = (cfg, optProps) => {
 	const {className, css: configCss, prop = 'className', style} = cfg;
-	let {publicClassNames: allowedClassNames} = cfg;
-
-	if (configCss && allowedClassNames === true) {
-		allowedClassNames = Object.keys(configCss);
-	} else if (typeof allowedClassNames === 'string') {
-		allowedClassNames = allowedClassNames.split(/\s+/);
-	}
+	const allowedClassNames = normalizePublicClassNames(cfg.publicClassNames, configCss);
 
 	const renderStyles = (props) => {
 		let css = configCss;

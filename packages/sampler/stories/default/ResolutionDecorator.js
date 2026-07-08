@@ -48,6 +48,9 @@ const ResolutionDecoratorView = ({
 	return (
 		<Fragment>
 			<div style={{height: 'fit-content'}}>
+				<BodyText>
+					<strong>fontSizeHandling (landscape)</strong> and <strong>orientationHandling (portrait)</strong> can be used only when <code>linearScaling = false</code>
+				</BodyText>
 				<div style={{padding: '1rem', border: '1px solid #ccc', marginBottom: '1rem'}}>
 					<BodyText><strong>Current Resolution:</strong> {screenInfo.width}x{screenInfo.height} ({screenInfo.name})</BodyText>
 					<BodyText><strong>Font Size:</strong> {currentFontSize}</BodyText>
@@ -65,7 +68,8 @@ const ResolutionDecoratorView = ({
 				<hr />
 				<div>
 					<Card
-						captionOverlay="Resolution TEsting"
+						caption="Resolution Testing"
+						captionOverlay
 						src="https://placehold.co/300x300/69cdff/ffffff/png?text=Card Component"
 						style={{
 							width: ri.scaleToRem(args['width']),
@@ -107,6 +111,11 @@ export const ResolutionDecorator_ = (args) => {
 	config.linearScaling.type = args['scalingType'];
 	config.linearScaling.active = args['linearScaling'];
 
+	if (!config.linearScaling.active) {
+		config.fontSizeHandling = args['fontSizeHandling'];
+		config.orientationHandling = args['orientationHandling'];
+	}
+
 	const View = ResolutionDecorator({
 		...config,
 		screenTypes: screenTypes
@@ -123,6 +132,8 @@ export const ResolutionDecorator_ = (args) => {
 
 boolean('linearScaling', ResolutionDecorator_, ResolutionDecorator);
 select('scalingType', ResolutionDecorator_, ['currentScreen', 'baseScreen'], ResolutionDecorator, 'currentScreen');
+select('fontSizeHandling', ResolutionDecorator_, ['scale', 'normal'], ResolutionDecorator, 'scale');
+select('orientationHandling', ResolutionDecorator_, ['scale', 'normal'], ResolutionDecorator, 'normal');
 number('dataSize', ResolutionDecorator_, VirtualList, 100);
 number('itemSize', ResolutionDecorator_, VirtualList, 156);
 number('width', ResolutionDecorator_, Card, 500);
@@ -130,6 +141,6 @@ number('height', ResolutionDecorator_, Card, 250);
 
 ResolutionDecorator_.parameters = {
 	info: {
-		text: 'Basic Usage of Linear Scaling'
+		text: 'Basic Usage of ResolutionDecorator and Linear Scaling'
 	}
 };

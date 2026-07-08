@@ -2,6 +2,25 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [5.5.2] - 2026-07-08
+
+### Added
+
+- `core/util` functions `applyDefaultProps` and `normalizePublicClassNames`
+- Developer guide section on using `@enact/spotlight` as a standalone library
+
+### Changed
+
+- `spotlight/SpotlightRootDecorator` to use a functional component
+- `ui/resolution` to not resize too often for some intermediate resolutions
+- `ui/Transition` to remove static `will-change` declarations, reducing persistent GPU layer promotion and memory usage on TV targets
+
+### Fixed
+
+- `core/kind` `inline` handler injection to use a props snapshot so each handler receives the same base props
+- `ui/Scroller` native scroll animation to land exactly on the target position instead of overshooting by up to one animation step
+- `ui/VirtualList` native scroll animation to land exactly on the target position instead of overshooting by up to one animation step
+
 ## [5.5.1] - 2026-06-01
 
 ### Changed

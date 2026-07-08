@@ -20,7 +20,7 @@ import {forward, forwardCustom} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {checkPropTypes, Job} from '@enact/core/util';
-import {Component} from 'react';
+import {use, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
@@ -28,6 +28,9 @@ import {ResizeContext} from '../Resizable';
 import componentCss from './Transition.module.less';
 
 const formatter = (duration) => (typeof duration === 'number' ? duration + 'ms' : duration);
+
+// Shared empty style object reused when no per-type tweaks are needed.
+const EMPTY_STYLE = {};
 /**
  * The stateless structure of the component.
  *
@@ -231,35 +234,29 @@ const TransitionBase = kind({
 			css[type]
 		),
 		innerStyle: ({clipWidth, css, direction, duration, type}) => {
-			const style = {};
-
 			if (type === 'clip' && (direction === 'left' || direction === 'right')) {
-				style.width = clipWidth;
-			} else if ((type === 'fade' || type === 'slide') && duration && !css[duration]) {
-				// If it's a number, assume it's milliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
-				style.transitionDuration = formatter(duration);
+				return {width: clipWidth};
 			}
-
-			return style;
+			if ((type === 'fade' || type === 'slide') && duration && !css[duration]) {
+				// If it's a number, assume it's milliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
+				return {transitionDuration: formatter(duration)};
+			}
+			return EMPTY_STYLE;
 		},
 		style: ({clipHeight, css, direction, duration, type, visible, style}) => {
-			if (type === 'clip') {
-				style = {
-					...style,
-					overflow: 'hidden'
-				};
+			if (type !== 'clip') return style;
 
-				if (visible && (direction === 'up' || direction === 'down')) {
-					style.height = clipHeight;
-				}
-				// If duration isn't a known named string, assume it is a CSS duration value
-				if (duration && !css[duration]) {
-					// If it's a number, assume it's milliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
-					style.transitionDuration = formatter(duration);
-				}
+			const merged = style ? {...style, overflow: 'hidden'} : {overflow: 'hidden'};
+
+			if (visible && (direction === 'up' || direction === 'down')) {
+				merged.height = clipHeight;
 			}
-
-			return style;
+			// If duration isn't a known named string, assume it is a CSS duration value
+			if (duration && !css[duration]) {
+				// If it's a number, assume it's milliseconds, if not, assume it's already a CSS duration string (like "200ms" or "2s")
+				merged.transitionDuration = formatter(duration);
+			}
+			return merged;
 		}
 	},
 
@@ -293,293 +290,296 @@ const TRANSITION_STATE = {
  * A stateful component that allows for applying transitions to its child items via configurable
  * properties and events.
  *
- * @class Transition
+ * @function Transition
  * @ui
  * @memberof ui/Transition
  * @public
  */
-class Transition extends Component {
+function Transition ({
+	children,
+	direction = 'up',
+	duration = 'medium',
+	noAnimation = false,
+	onHide,
+	onShow,
+	timingFunction = 'ease-in-out',
+	type = 'slide',
+	visible = true,
+	...rest
+}) {
+	const [state, setState] = useState(() => ({
+		initialHeight: null,
+		initialWidth: null,
+		renderState: visible ? TRANSITION_STATE.READY : TRANSITION_STATE.INIT
+	}));
 
-	static contextType = ResizeContext;
+	const prevVisibleRef = useRef(visible);
 
-	static propTypes = /** @lends ui/Transition.Transition.prototype */ {
-		/**
-		 * The node to be transitioned.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node,
-
-		/**
-		 * The direction of transition (i.e. where the component will move *to*; the destination).
-		 *
-		 * * Supported directions are: `'up'`, `'right'`, `'down'`, `'left'`.
-		 *
-		 * @type {String}
-		 * @default 'up'
-		 * @public
-		 */
-		direction: PropTypes.oneOf(['up', 'right', 'down', 'left']),
-
-		/**
-		 * Controls how long the transition should take.
-		 *
-		 * * Supported preset durations are: `'short'` (250ms), `'medium'` (500ms), and `'long'` (1s).
-		 * `'medium'` (500ms) is default when no others are specified.
-		 *
-		 * Any valid CSS duration value is also accepted, e.g. "200ms" or "3s". Pure numeric values
-		 * are also supported and treated as milliseconds.
-		 *
-		 * @type {String|Number}
-		 * @default 'medium'
-		 * @public
-		 */
-		duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-
-		/**
-		 * Disables transition animation.
-		 *
-		 * When `false`, visibility changes animate.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noAnimation: PropTypes.bool,
-
-		/**
-		 * Called after transition for hiding is finished.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onHide: PropTypes.func,
-
-		/**
-		 * Called after transition for showing is finished.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onShow: PropTypes.func,
-
-		/**
-		 * The transition timing function.
-		 * Supported function names are: `ease`, `ease-in`, `ease-out`, `ease-in-out`, `ease-in-quart`,
-		 * `ease-out-quart`, and `linear`.
-		 *
-		 * @type {String}
-		 * @default 'ease-in-out'
-		 * @public
-		 */
-		timingFunction: PropTypes.oneOf([
-			'ease',
-			'ease-in',
-			'ease-out',
-			'ease-in-out',
-			'ease-in-quart',
-			'ease-out-quart',
-			'linear'
-		]),
-
-		/**
-		 * The type of transition to affect the content.
-		 *
-		 * * Supported types are: `'slide'`, `'clip'`, and `'fade'`.
-		 *
-		 * Details on types:
-		 *  * `'slide'` - Typically used for bringing something which is off the edge of the screen,
-		 *  	and not visible, onto the screen. Think of a popup, toast, notification, dialog, or
-		 *  	an overlaying menu. This requires no re-rendering or repainting of the screen during
-		 *  	the transition, making it very performant. However, this does not affect layout at
-		 *  	all, which makes it less useful for transitioning from a place already on the
-		 *  	screen.
-		 *  * `'clip'` - This is useful for showing a component that transitions-in from a location
-		 *  	that is already on the screen. Examples would be an expanding header or an
-		 *  	accordion. This type does affect layout, its current size will push other sibling
-		 *  	elements to make room for itself. Because of this, repainting the layout does happen
-		 *  	during transition.
-		 *  * `'fade'` - Fade the components onto the screen, from 0 opacity (completely invisible)
-		 *  	to 1 (full visibility). Pretty basic, but useful for fading on/off a tooltip, a
-		 *  	menu, a panel, or even view contents. This does not affect layout at all.
-		 *
-		 * @type {String}
-		 * @default 'slide'
-		 * @public
-		 */
-		type: PropTypes.oneOf(['slide', 'clip', 'fade']),
-
-		/**
-		 * The visibility of the component, which determines whether it's on the screen or off.
-		 *
-		 * @type {Boolean}
-		 * @default true
-		 * @public
-		 */
-		visible: PropTypes.bool
-	};
-
-	static defaultProps = {
-		direction: 'up',
-		duration: 'medium',
-		noAnimation: false,
-		timingFunction: 'ease-in-out',
-		type: 'slide',
-		visible: true
-	};
-
-	constructor (props) {
-		super(props);
-		checkPropTypes(this, props);
-
-		this.state = {
+	// Adjust state during render when `visible` flips on. The functional equivalent of the
+	// class's getDerivedStateFromProps. Reading/writing the ref here is intentional.
+	// https://react.dev/reference/react/useState#storing-information-from-previous-renders
+	if (!prevVisibleRef.current && visible) { // eslint-disable-line react-hooks/refs
+		prevVisibleRef.current = true;
+		setState({
 			initialHeight: null,
 			initialWidth: null,
-			prevVisible: props.visible,
-			renderState: props.visible ? TRANSITION_STATE.READY : TRANSITION_STATE.INIT
-		};
-		this.resizeRegistry = null;
+			renderState: TRANSITION_STATE.MEASURE
+		});
 	}
 
-	static getDerivedStateFromProps (props, state) {
-		if (!state.prevVisible && props.visible) {
+	// Latest props for handlers that fire asynchronously (transitionend, observer callbacks)
+	const currentProps = {children, direction, duration, noAnimation, onHide, onShow, timingFunction, type, visible, ...rest};
+	checkPropTypes(Transition, currentProps);
+
+	const propsRef = useRef();
+	propsRef.current = currentProps; // eslint-disable-line react-hooks/refs
+
+
+	const childNodeRef = useRef(null);
+	const measuringJobRef = useRef(null);
+
+	if (measuringJobRef.current == null) {
+		measuringJobRef.current = new Job(() => {
+			setState(prev => prev.renderState === TRANSITION_STATE.MEASURE ? prev : {...prev, renderState: TRANSITION_STATE.MEASURE});
+		});
+	}
+
+	const measureInner = useCallback(() => {
+		const node = childNodeRef.current;
+		if (!node) return;
+
+		const initialHeight = node.scrollHeight;
+		const initialWidth = node.scrollWidth;
+
+		setState(prev => {
+			if (prev.initialHeight === initialHeight && prev.initialWidth === initialWidth && prev.renderState === TRANSITION_STATE.READY) {
+				return prev;
+			}
 			return {
-				initialHeight: null,
-				initialWidth: null,
-				prevVisible: props.visible,
-				renderState: TRANSITION_STATE.MEASURE
+				initialHeight,
+				initialWidth,
+				renderState: TRANSITION_STATE.READY
 			};
+		});
+	}, []);
+
+	const childRef = useCallback((node) => {
+		childNodeRef.current = node;
+	}, []);
+
+	// Measurement effect — covers MEASURE → READY commits and the resize-driven
+	// re-measure path (handleResize nulls initialHeight, this re-fires).
+	useLayoutEffect(() => {
+		if (state.renderState === TRANSITION_STATE.MEASURE) {
+			measuringJobRef.current.stop();
+			measureInner();
+		} else if (visible && state.initialHeight == null) {
+			// Component should be visible but doesn't have a height — measure now.
+			measureInner();
+		}
+	}, [state.renderState, state.initialHeight, visible, measureInner]);
+
+	useEffect(() => {
+		const job = measuringJobRef.current;
+		if (!propsRef.current.visible) {
+			job.idle();
 		}
 
+		return () => job.stop();
+	}, []);
+
+	// ResizeContext registration — the context value is itself the register fn.
+	const resizeRegister = use(ResizeContext);
+
+	const handleResize = useCallback(() => {
+		// Null initialHeight so the next layout commit re-measures in a separate tick.
+		// the useLayoutEffect above re-runs when state.initialHeight transitions to null.
+		setState(prev => prev.initialHeight == null ? prev : {...prev, initialHeight: null});
+	}, []);
+
+	useEffect(() => {
+		if (typeof resizeRegister !== 'function') return;
+		const registry = resizeRegister(handleResize);
+
+		return () => {
+			if (registry) registry.unregister();
+		};
+	}, [resizeRegister, handleResize]);
+
+	const prevVisibleForEffectRef = useRef(visible);
+
+	useEffect(() => {
+		const prev = prevVisibleForEffectRef.current;
+		prevVisibleForEffectRef.current = visible;
+		if (!noAnimation || prev === visible) return;
+		if (!prev && visible) {
+			forwardCustom('onShow')(null, propsRef.current);
+		} else if (prev && !visible) {
+			forwardCustom('onHide')(null, propsRef.current);
+		}
+	}, [visible, noAnimation]);
+
+	const handleTransitionEnd = useCallback((ev) => {
+		forward('onTransitionEnd', ev, propsRef.current);
+		if (ev.target === childNodeRef.current) {
+			const eventName = propsRef.current.visible ? 'onShow' : 'onHide';
+			forward(eventName, {type: eventName, currentTarget: ev.currentTarget}, propsRef.current);
+		}
+	}, []);
+
+	// If we are deferring children, don't render any.
+	if (state.renderState === TRANSITION_STATE.INIT) {
 		return null;
 	}
 
-	componentDidMount () {
-		if (!this.props.visible) {
-			this.measuringJob.idle();
-		} else {
-			this.measureInner();
-		}
-
-		if (this.context && typeof this.context === 'function') {
-			this.resizeRegistry = this.context(this.handleResize);
-		}
-	}
-
-	shouldComponentUpdate (nextProps, nextState) {
-		// Don't update if only updating the height and we're not visible
-		return (this.state.initialHeight === nextState.initialHeight) || this.props.visible || nextProps.visible;
-	}
-
-	componentDidUpdate (prevProps, prevState) {
-		const {noAnimation, visible} = this.props;
-		const {initialHeight, renderState} = this.state;
-
-		checkPropTypes(this, this.props, prevProps);
-		if (this.state.renderState === TRANSITION_STATE.MEASURE) {
-			this.measuringJob.stop();
-		}
-
-		// Checking that something changed that wasn't the visibility
-		// or the initialHeight state or checking if component should be visible but doesn't have a height
-		if ((visible === prevProps.visible &&
-			initialHeight === prevState.initialHeight &&
-			renderState !== TRANSITION_STATE.INIT) ||
-			(initialHeight == null && visible)) {
-			this.measureInner();
-		}
-
-		if (noAnimation) {
-			if (!prevProps.visible && visible) {
-				forwardCustom('onShow')(null, this.props);
-			} else if (prevProps.visible && !visible) {
-				forwardCustom('onHide')(null, this.props);
-			}
-		}
-	}
-
-	componentWillUnmount () {
-		this.measuringJob.stop();
-		if (this.resizeRegistry) {
-			this.resizeRegistry.unregister();
-		}
-	}
-
-	measuringJob = new Job(() => {
-		this.setState({
-			renderState: TRANSITION_STATE.MEASURE
-		});
-	});
-
-	handleResize = () => {
-		// @TODO oddly, using the setState callback is required here to ensure that the bounds
-		// are remeasured in a separate tick
-		this.setState({
-			initialHeight: null
-		}, this.measureInner);
+	const childProps = {
+		...rest,
+		children,
+		direction,
+		duration,
+		noAnimation,
+		timingFunction,
+		type
 	};
 
-	handleTransitionEnd = (ev) => {
-		forward('onTransitionEnd', ev, this.props);
-
-		if (ev.target === this.childNode) {
-			if (!this.props.visible) {
-				forward('onHide', {type: 'onHide', currentTarget: ev.currentTarget}, this.props);
-			} else if (this.props.visible) {
-				forward('onShow', {type: 'onShow', currentTarget: ev.currentTarget}, this.props);
-			}
-		}
-	};
-
-	measureInner = () => {
-		if (this.childNode) {
-			const initialHeight = this.childNode.scrollHeight;
-			const initialWidth = this.childNode.scrollWidth;
-			if (initialHeight !== this.state.initialHeight || initialWidth !== this.state.initialWidth) {
-				this.setState({
-					initialHeight,
-					initialWidth,
-					renderState: TRANSITION_STATE.READY
-				});
-			}
-		}
-	};
-
-	childRef = (node) => {
-		this.childNode = node;
-	};
-
-	render () {
-		let {visible, ...props} = this.props;
-		delete props.onHide;
-		delete props.onShow;
-		delete props.textSize;
-
-		switch (this.state.renderState) {
-			// If we are deferring children, don't render any
-			case TRANSITION_STATE.INIT: return null;
-
-			// If we're transitioning to visible but don't have a measurement yet, create the
-			// transition container with its children so we can measure. Measuring will cause a
-			// state change to trigger the animation.
-			case TRANSITION_STATE.MEASURE: return (
-				<TransitionBase {...props} childRef={this.childRef} visible={false} />
-			);
-
-			case TRANSITION_STATE.READY: return (
-				<TransitionBase
-					{...props}
-					childRef={this.childRef}
-					visible={visible}
-					clipHeight={this.state.initialHeight}
-					clipWidth={this.state.initialWidth}
-					onTransitionEnd={this.handleTransitionEnd}
-				/>
-			);
-		}
+	// If we're transitioning to visible but don't have a measurement yet, create
+	// the transition container with its children so we can measure. Measuring
+	// will cause a state change to trigger the animation.
+	if (state.renderState === TRANSITION_STATE.MEASURE) {
+		return <TransitionBase {...childProps} childRef={childRef} visible={false} />;
 	}
+
+	return (
+		<TransitionBase
+			{...childProps}
+			childRef={childRef}
+			visible={visible}
+			clipHeight={state.initialHeight}
+			clipWidth={state.initialWidth}
+			onTransitionEnd={handleTransitionEnd}
+		/>
+	);
 }
+
+Transition.displayName = 'Transition';
+
+Transition.propTypes = /** @lends ui/Transition.Transition.prototype */ {
+	/**
+	 * The node to be transitioned.
+	 *
+	 * @type {Node}
+	 * @public
+	 */
+	children: PropTypes.node,
+
+	/**
+	 * The direction of transition (i.e. where the component will move *to*; the destination).
+	 *
+	 * * Supported directions are: `'up'`, `'right'`, `'down'`, `'left'`.
+	 *
+	 * @type {String}
+	 * @default 'up'
+	 * @public
+	 */
+	direction: PropTypes.oneOf(['up', 'right', 'down', 'left']),
+
+	/**
+	 * Controls how long the transition should take.
+	 *
+	 * * Supported preset durations are: `'short'` (250ms), `'medium'` (500ms), and `'long'` (1s).
+	 * `'medium'` (500ms) is default when no others are specified.
+	 *
+	 * Any valid CSS duration value is also accepted, e.g. "200ms" or "3s". Pure numeric values
+	 * are also supported and treated as milliseconds.
+	 *
+	 * @type {String|Number}
+	 * @default 'medium'
+	 * @public
+	 */
+	duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+	/**
+	 * Disables transition animation.
+	 *
+	 * When `false`, visibility changes animate.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
+	noAnimation: PropTypes.bool,
+
+	/**
+	 * Called after transition for hiding is finished.
+	 *
+	 * @type {Function}
+	 * @public
+	 */
+	onHide: PropTypes.func,
+
+	/**
+	 * Called after transition for showing is finished.
+	 *
+	 * @type {Function}
+	 * @public
+	 */
+	onShow: PropTypes.func,
+
+	/**
+	 * The transition timing function.
+	 * Supported function names are: `ease`, `ease-in`, `ease-out`, `ease-in-out`, `ease-in-quart`,
+	 * `ease-out-quart`, and `linear`.
+	 *
+	 * @type {String}
+	 * @default 'ease-in-out'
+	 * @public
+	 */
+	timingFunction: PropTypes.oneOf([
+		'ease',
+		'ease-in',
+		'ease-out',
+		'ease-in-out',
+		'ease-in-quart',
+		'ease-out-quart',
+		'linear'
+	]),
+
+	/**
+	 * The type of transition to affect the content.
+	 *
+	 * * Supported types are: `'slide'`, `'clip'`, and `'fade'`.
+	 *
+	 * Details on types:
+	 *  * `'slide'` - Typically used for bringing something which is off the edge of the screen,
+	 *  	and not visible, onto the screen. Think of a popup, toast, notification, dialog, or
+	 *  	an overlaying menu. This requires no re-rendering or repainting of the screen during
+	 *  	the transition, making it very performant. However, this does not affect layout at
+	 *  	all, which makes it less useful for transitioning from a place already on the
+	 *  	screen.
+	 *  * `'clip'` - This is useful for showing a component that transitions-in from a location
+	 *  	that is already on the screen. Examples would be an expanding header or an
+	 *  	accordion. This type does affect layout, its current size will push other sibling
+	 *  	elements to make room for itself. Because of this, repainting the layout does happen
+	 *  	during transition.
+	 *  * `'fade'` - Fade the components onto the screen, from 0 opacity (completely invisible)
+	 *  	to 1 (full visibility). Pretty basic, but useful for fading on/off a tooltip, a
+	 *  	menu, a panel, or even view contents. This does not affect layout at all.
+	 *
+	 * @type {String}
+	 * @default 'slide'
+	 * @public
+	 */
+	type: PropTypes.oneOf(['slide', 'clip', 'fade']),
+
+	/**
+	 * The visibility of the component, which determines whether it's on the screen or off.
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 * @public
+	 */
+	visible: PropTypes.bool
+};
 
 export default Transition;
 export {Transition, TransitionBase};

@@ -11,7 +11,7 @@ import {checkPropTypes} from '@enact/core/util';
 import ilib from 'ilib';
 import IString from 'ilib/lib/IString';
 import PropTypes from 'prop-types';
-import {Component} from 'react';
+import {useEffect, useState} from 'react';
 
 import {I18nContextDecorator} from '../I18nDecorator';
 import {createResBundle, getIStringFromBundle, getResBundle} from '../src/resBundle';
@@ -111,137 +111,110 @@ const defaultConfig = {
 const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {mapPropsToText} = config;
 
-	const Decorator = class extends Component {
-		static displayName = 'TextDecorator';
+	function Decorator (props) {
+		checkPropTypes(Decorator, props);
 
-		static propTypes = /** @lends i18n/Text.TextDecorator.prototype */ {
-			/**
-			 * Passed to the wrapped component.
-			 *
-			 * If `mapPropsToText` is `null` and `children` is a string, the string will be
-			 * translated before being passed to the wrapped component.
-			 *
-			 * @type {*}
-			 * @public
-			 */
-			children: PropTypes.any,
+		const {locale} = props;
+		const [map, setMap] = useState(() => getTextMap(mapPropsToText, props));
 
-			/**
-			 * The locale for translation.
-			 *
-			 * If not supplied, the current locale is used.
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			locale: PropTypes.string
-		};
+		const shouldTranslate = mapPropsToText || typeof props.children === 'string';
 
-		constructor (props) {
-			super(props);
-			checkPropTypes(this, props);
+		// Translate on mount and whenever the locale changes. The cleanup flag prevents a
+		// pending translation from committing after the locale changes again or the component
+		// unmounts.
+		useEffect(() => {
+			if (!shouldTranslate || !map) return;
 
-			this.state = {
-				map: getTextMap(mapPropsToText, props)
-			};
-		}
-
-		componentDidMount () {
-			if (this.shouldTranslate()) {
-				this.translate(this.props.locale);
-			}
-		}
-
-		componentDidUpdate (prevProps) {
-			checkPropTypes(this, this.props, prevProps);
-			if (this.props.locale !== prevProps.locale) {
-				this.translate(this.props.locale);
-			}
-		}
-
-		shouldTranslate () {
-			return mapPropsToText || typeof this.props.children === 'string';
-		}
-
-		translate (locale = ilib.getLocale()) {
-			const {map} = this.state;
+			let active = true;
+			const targetLocale = locale != null ? locale : ilib.getLocale();
 			const bundle = getResBundle();
-
-			if (!map) return;
-
-			const props = Object.keys(map);
 
 			Promise.all([
 				new Promise((resolve) => {
 					if (bundle) {
 						resolve(bundle);
 					}
-					createResBundle({locale, sync: false, onLoad: resolve});
+					createResBundle({locale: targetLocale, sync: false, onLoad: resolve});
 				}),
 				// ResBundle.getString will try to synchronously fetch the plurals resource so need
 				// to proactively fetch it to avoid the sync XHR
 				new Promise(resolve => IString.loadPlurals(false, null, null, resolve))
 			]).then(([resBundle]) => {
-				if (!resBundle) return;
+				if (!active || !resBundle) return;
 
-				const translated = props.reduce((obj, prop) => {
+				setMap(prevMap => Object.keys(prevMap).reduce((obj, prop) => {
 					obj[prop].translated = String(getIStringFromBundle(obj[prop].text, resBundle));
 					return obj;
-				}, {...map});
-
-				this.setState({
-					map: translated
-				});
+				}, {...prevMap}));
 			});
-		}
 
-		canRender () {
-			const entries = Object.values(this.state.map);
-			for (const entry of entries) {
-				if (entry.translated === false && entry.defaultText === false) {
-					return false;
-				}
-			}
+			return () => {
+				active = false;
+			};
+		}, [locale, shouldTranslate]); // eslint-disable-line react-hooks/exhaustive-deps
 
-			return true;
-		}
-
-		getTextForProp (prop) {
-			const {defaultText = '', translated} = this.state.map[prop];
-
-			return translated === false ? defaultText : translated;
-		}
-
-		render () {
-			if (!this.shouldTranslate()) {
-				const passThrough = {...this.props};
-
-				delete passThrough.locale;
-
-				return (
-					<Wrapped {...passThrough} />
-				);
-			}
-
-			if (!this.canRender()) {
-				return null;
-			}
-
-			if (Wrapped === STRING_ONLY) {
-				return this.getTextForProp('children');
-			}
-
-			const props = {...this.props};
-			delete props.locale;
-
-			Object.keys(this.state.map).forEach(prop => {
-				props[prop] = this.getTextForProp(prop);
-			});
+		if (!shouldTranslate) {
+			const passThrough = {...props};
+			delete passThrough.locale;
 
 			return (
-				<Wrapped {...props} />
+				<Wrapped {...passThrough} />
 			);
 		}
+
+		const canRender = Object.values(map).every(
+			entry => !(entry.translated === false && entry.defaultText === false)
+		);
+
+		if (!canRender) {
+			return null;
+		}
+
+		const getTextForProp = (prop) => {
+			const {defaultText = '', translated} = map[prop];
+
+			return translated === false ? defaultText : translated;
+		};
+
+		if (Wrapped === STRING_ONLY) {
+			return getTextForProp('children');
+		}
+
+		const outProps = {...props};
+		delete outProps.locale;
+
+		Object.keys(map).forEach(prop => {
+			outProps[prop] = getTextForProp(prop);
+		});
+
+		return (
+			<Wrapped {...outProps} />
+		);
+	}
+
+	Decorator.displayName = 'TextDecorator';
+
+	Decorator.propTypes = /** @lends i18n/Text.TextDecorator.prototype */ {
+		/**
+		 * Passed to the wrapped component.
+		 *
+		 * If `mapPropsToText` is `null` and `children` is a string, the string will be
+		 * translated before being passed to the wrapped component.
+		 *
+		 * @type {*}
+		 * @public
+		 */
+		children: PropTypes.any,
+
+		/**
+		 * The locale for translation.
+		 *
+		 * If not supplied, the current locale is used.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		locale: PropTypes.string
 	};
 
 	return I18nContextDecorator(

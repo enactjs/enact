@@ -12,6 +12,8 @@
  * @exports Job
  * @exports memoize
  * @exports mergeClassNameMaps
+ * @exports normalizePublicClassNames
+ * @exports applyDefaultProps
  * @exports perfNow
  * @exports mapAndFilterChildren
  * @exports shallowEqual
@@ -210,6 +212,58 @@ const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
 };
 
 /**
+ * Normalizes a `publicClassNames` config value into an array of logical class names.
+ *
+ * @function
+ * @param {Boolean|String|String[]} [publicClassNames]  The public class names config
+ * @param {Object}                  [css]             Component CSS map used when
+ *                                                      `publicClassNames` is `true`
+ * @returns {String[]|Boolean|String|undefined}         Normalized class name list, or the
+ *                                                      original value when no normalization applies
+ * @memberof core/util
+ * @public
+ */
+const normalizePublicClassNames = (publicClassNames, css) => {
+	let allowedClassNames = publicClassNames;
+
+	if (css && allowedClassNames === true) {
+		allowedClassNames = Object.keys(css);
+	} else if (typeof allowedClassNames === 'string') {
+		allowedClassNames = allowedClassNames.split(/\s+/);
+	}
+
+	return allowedClassNames;
+};
+
+/**
+ * Applies default values for keys that are `undefined` on `target`.
+ *
+ * When `keys` is provided, only those keys are considered. This avoids
+ * `Object.keys` on the hot path (e.g. `core/kind` render).
+ *
+ * @function
+ * @param {Object}        target         Props object to update in place
+ * @param {Object}        defaultProps   Default value object
+ * @param {String[]}      [keys]         Optional precomputed key list
+ *
+ * @returns {Object}                      The updated `target`
+ * @memberof core/util
+ * @public
+ */
+const applyDefaultProps = (target, defaultProps, keys) => {
+	if (keys?.length) {
+		keys.forEach(key => {
+			// eslint-disable-next-line no-undefined
+			if (target[key] === undefined) {
+				target[key] = defaultProps[key];
+			}
+		});
+	}
+
+	return target;
+};
+
+/**
  * Creates a function that memoizes the result of `fn`.
  *
  * Note that this function is a naive implementation and only checks the first argument for
@@ -281,16 +335,7 @@ const mapAndFilterChildren = (children, callback, filter) => {
  * @public
  */
 const setDefaultProps = (props, defaultProps = {}) => {
-	const result = Object.assign({}, props);
-
-	for (const prop in defaultProps) {
-		// eslint-disable-next-line no-undefined
-		if (props[prop] === undefined) {
-			result[prop] = defaultProps[prop];
-		}
-	}
-
-	return result;
+	return applyDefaultProps(Object.assign({}, props), defaultProps, Object.keys(defaultProps));
 };
 
 /**
@@ -386,6 +431,7 @@ const usePrevious = (value) => {
 
 export {
 	cap,
+	applyDefaultProps,
 	checkPropTypes,
 	clamp,
 	coerceArray,
@@ -395,6 +441,7 @@ export {
 	Job,
 	memoize,
 	mergeClassNameMaps,
+	normalizePublicClassNames,
 	perfNow,
 	mapAndFilterChildren,
 	setDefaultProps,
