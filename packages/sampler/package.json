@@ -1,6 +1,6 @@
 {
   "name": "enact-sampler",
-  "version": "5.5.1",
+  "version": "5.5.2",
   "description": "Component and QA samples for Enact",
   "private": true,
   "main": "index.js",
@@ -13,20 +13,20 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@enact/core": "^5.5.1",
-    "@enact/i18n": "^5.5.1",
-    "@enact/spotlight": "^5.5.1",
-    "@enact/storybook-utils": "^8.0.0",
-    "@enact/ui": "^5.5.1",
-    "@enact/webos": "^5.5.1",
+    "@enact/core": "^5.5.2",
+    "@enact/i18n": "^5.5.2",
+    "@enact/spotlight": "^5.5.2",
+    "@enact/storybook-utils": "^8.0.2",
+    "@enact/ui": "^5.5.2",
+    "@enact/webos": "^5.5.2",
     "@github-ui/storybook-addon-performance-panel": "^1.1.4",
-    "@storybook/react-webpack5": "^10.4.4",
+    "@storybook/react-webpack5": "^10.4.6",
     "classnames": "^2.5.1",
     "ilib": "^14.22.0",
     "prop-types": "^15.8.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-is": "^19.2.7",
-    "storybook": "^10.4.4"
+    "storybook": "^10.4.6"
   }
 }

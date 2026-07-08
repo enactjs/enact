@@ -2,7 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [5.5.2] - 2026-07-08
+
+### Added
+
+- `core/util` functions `applyDefaultProps` and `normalizePublicClassNames`
+- Developer guide section on using `@enact/spotlight` as a standalone library
 
 ### Changed
 
@@ -12,6 +17,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Fixed
 
+- `core/kind` `inline` handler injection to use a props snapshot so each handler receives the same base props
 - `ui/Scroller` native scroll animation to land exactly on the target position instead of overshooting by up to one animation step
 - `ui/VirtualList` native scroll animation to land exactly on the target position instead of overshooting by up to one animation step
 
