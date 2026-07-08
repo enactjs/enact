@@ -1,7 +1,7 @@
 {
   "name": "@enact/i18n",
   "main": "./src/index.js",
-  "version": "5.5.1",
+  "version": "5.5.2",
   "description": "Internationalization support for Enact using iLib",
   "repository": {
     "type": "git",
@@ -45,7 +45,7 @@
     ]
   },
   "dependencies": {
-    "@enact/core": "^5.5.1",
+    "@enact/core": "^5.5.2",
     "prop-types": "^15.8.1",
     "ramda": "^0.32.0",
     "react": "^19.2.7",
