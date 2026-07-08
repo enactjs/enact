@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [Unreleased]
+## [5.5.2] - 2026-07-08
 
 ### Added
 
@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Changed
 
 - `spotlight/SpotlightRootDecorator` to use a functional component
+
 ## [5.5.1] - 2026-06-01
 
 No significant changes.

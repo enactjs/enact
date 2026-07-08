@@ -2,6 +2,10 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
+## [5.5.2] - 2026-07-08
+
+No significant changes.
+
 ## [5.5.1] - 2026-06-01
 
 No significant changes.
