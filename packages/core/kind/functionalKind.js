@@ -150,6 +150,8 @@ const functionalKind = (config) => {
 	const handlerKeys     = handlers     ? Object.keys(handlers)     : null;
 
 	const Component = function (props) {
+		"use no memo"; // Added to remove react-compiler optimizations
+
 		// Hooks must always be called unconditionally and in the same order.
 		// useContext only accepts Context and never suspends (unlike use(), which can suspend on Promises and break SSR).
 		const ctx = useContext(contextType);
