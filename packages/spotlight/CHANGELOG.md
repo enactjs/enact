@@ -19,6 +19,11 @@ No significant changes.
 ## [5.4.4] - 2026-05-22
 
 No significant changes.
+## [unreleased]
+
+### Fixed
+
+- `spotlight` keyboard focus flow for open dropdown popups so Tab/Shift+Tab traversal is predictable between open lists and can continue to nearby controls after popup navigation
 
 ## [5.5.0] - 2026-05-08
 
