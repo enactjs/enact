@@ -4,7 +4,7 @@ import Card from '@enact/ui/Card';
 import Item from '@enact/ui/Item';
 import VirtualList from '@enact/ui/VirtualList';
 import ri, {ResolutionDecorator, getScreenTypeObject, getScreenType} from '@enact/ui/resolution';
-import {Fragment, useCallback, useState, useEffect} from 'react';
+import {Fragment, useCallback, useEffect, useReducer} from 'react';
 
 Card.displayName = 'Card';
 ResolutionDecorator.displayName = 'ResolutionDecorator';
@@ -85,21 +85,35 @@ const ResolutionDecoratorView = ({
 	);
 };
 
+let View = ResolutionDecorator(ResolutionDecoratorView);
+
 export const ResolutionDecorator_ = (args) => {
-	const [currentFontSize, setCurrentFontSize] = useState('');
-	const [screenInfo, setScreenInfo] = useState({name: '', width: 0, height: 0});
+	const reducer = (reducerState, payload) => {
+		return {...reducerState, ...payload};
+	};
+
+	const createInitialState = () => {
+		return {
+			currentFontSize: '',
+			height: 0,
+			name: '',
+			width: 0
+		};
+	};
+
+	const [screenInfo, dispatch] = useReducer(reducer, null, createInitialState);
 
 	const updateInfo = useCallback(() => {
 		const type = getScreenType({width: window.innerWidth, height: window.innerHeight});
 		const screenTypeObject = getScreenTypeObject(type);
 		if (screenTypeObject) {
-			setScreenInfo({
+			dispatch({
 				name: screenTypeObject.name,
 				width: window.innerWidth,
 				height: window.innerHeight
 			});
 		}
-		setCurrentFontSize(document.documentElement.style.fontSize);
+		dispatch({currentFontSize: document.documentElement.style.fontSize});
 	}, []);
 
 	useEffect(() => {
@@ -108,23 +122,24 @@ export const ResolutionDecorator_ = (args) => {
 		return () => window.removeEventListener('resize', updateInfo);
 	}, [updateInfo]);
 
-	config.linearScaling.type = args['scalingType'];
-	config.linearScaling.active = args['linearScaling'];
+	useEffect(() => {
+		config.linearScaling.type = args['scalingType'];
+		config.linearScaling.active = args['linearScaling'];
 
-	if (!config.linearScaling.active) {
-		config.fontSizeHandling = args['fontSizeHandling'];
-		config.orientationHandling = args['orientationHandling'];
-	}
+		if (!config.linearScaling.active) {
+			config.fontSizeHandling = args['fontSizeHandling'];
+			config.orientationHandling = args['orientationHandling'];
+		}
+	}, [args]);
 
-	const View = ResolutionDecorator({
-		...config,
-		screenTypes: screenTypes
-	}, ResolutionDecoratorView);
+	useEffect(() => {
+		View = ResolutionDecorator({...config, screenTypes: screenTypes}, ResolutionDecoratorView);
+	});
 
 	return (
 		<View
 			args={args}
-			currentFontSize={currentFontSize}
+			currentFontSize={screenInfo.currentFontSize}
 			screenInfo={screenInfo}
 		/>
 	);
