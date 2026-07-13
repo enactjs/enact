@@ -47,7 +47,7 @@ function chainRefs (...refs) {
  * @public
  */
 function useChainRefs (...refs) {
-	// eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	return useCallback(chainRefs(...refs), refs);
 }
 
