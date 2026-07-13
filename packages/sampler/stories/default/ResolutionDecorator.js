@@ -15,13 +15,6 @@ export default {
 	component: ResolutionDecorator
 };
 
-const config = {
-	linearScaling: {
-		active: false,
-		type: 'currentScreen'
-	}
-};
-
 const screenTypes = [
 	{name: 'vga', pxPerRem: 8, width: 640, height: 480, aspectRatioName: 'standard'},
 	{name: 'xga', pxPerRem: 16, width: 1024, height: 768, aspectRatioName: 'standard'},
@@ -85,8 +78,6 @@ const ResolutionDecoratorView = ({
 	);
 };
 
-let View = ResolutionDecorator(ResolutionDecoratorView);
-
 export const ResolutionDecorator_ = (args) => {
 	const reducer = (reducerState, payload) => {
 		return {...reducerState, ...payload};
@@ -122,21 +113,27 @@ export const ResolutionDecorator_ = (args) => {
 		return () => window.removeEventListener('resize', updateInfo);
 	}, [updateInfo]);
 
-	useEffect(() => {
-		config.linearScaling.type = args['scalingType'];
-		config.linearScaling.active = args['linearScaling'];
+	// Config is derived in render (not via a post-render effect) so `View` and the config stay
+	// consistent within the same render pass and the controls take effect immediately.
+	const resolutionConfig = {
+		linearScaling: {
+			active: args['linearScaling'],
+			type: args['scalingType']
+		},
+		screenTypes
+	};
 
-		if (!config.linearScaling.active) {
-			config.fontSizeHandling = args['fontSizeHandling'];
-			config.orientationHandling = args['orientationHandling'];
-		}
-	}, [args]);
+	if (!resolutionConfig.linearScaling.active) {
+		resolutionConfig.fontSizeHandling = args['fontSizeHandling'];
+		resolutionConfig.orientationHandling = args['orientationHandling'];
+	}
 
-	useEffect(() => {
-		View = ResolutionDecorator({...config, screenTypes: screenTypes}, ResolutionDecoratorView);
-	});
+	// ResolutionDecorator bakes its config in at decoration time, so the demo must re-decorate when
+	// the controls change. This inherently creates the component during render for this sampler story.
+	const View = ResolutionDecorator(resolutionConfig, ResolutionDecoratorView);
 
 	return (
+		// eslint-disable-next-line react-hooks/static-components
 		<View
 			args={args}
 			currentFontSize={screenInfo.currentFontSize}
