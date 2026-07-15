@@ -361,7 +361,7 @@ function Transition ({
 				renderState: TRANSITION_STATE.READY
 			};
 		});
-	}, []);
+	}, [setState]);
 
 	const childRef = useCallback((node) => {
 		childNodeRef.current = node;
@@ -395,7 +395,7 @@ function Transition ({
 		// Null initialHeight so the next layout commit re-measures in a separate tick.
 		// the useLayoutEffect above re-runs when state.initialHeight transitions to null.
 		setState(prev => prev.initialHeight == null ? prev : {...prev, initialHeight: null});
-	}, []);
+	}, [setState]);
 
 	useEffect(() => {
 		if (typeof resizeRegister !== 'function') return;
