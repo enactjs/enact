@@ -1,4 +1,4 @@
-import webpack from '@enact/storybook-utils/configs/webpack.js';
+import vite from '@enact/storybook-utils/configs/vite.js';
 import {readFileSync} from 'fs';
 import {createRequire} from 'module';
 import {dirname} from 'path';
@@ -22,7 +22,7 @@ export default {
 		warnOnLegacyHierarchySeparator: false
 	},
 	framework: {
-		name: '@storybook/react-webpack5'
+		name: '@storybook/react-vite'
 	},
 	experimental_indexers: (indexers) => { // eslint-disable-line camelcase
 		const createIndex = async (fileName, opts) => {
@@ -45,23 +45,21 @@ export default {
 		'@enact/storybook-utils/addons/controls',
 		...(process.env.PERF_PANEL === 'true' ? ['@github-ui/storybook-addon-performance-panel'] : [])
 	],
-	webpackFinal: async (config, {configType}) => {
-		const webpackFinalConfig = await webpack(config, configType, __dirname);
+	viteFinal: async (config, {configType}) => {
+		const viteConfig = await vite(config, configType, __dirname);
 
-		// Force a single React copy. Other enact packages might have different patch versions of React,
-		// which causes "Cannot read properties of null (reading 'useEffect')"
 		const reactDir = dirname(moduleRequire.resolve('react/package.json'));
 		const reactDomDir = dirname(moduleRequire.resolve('react-dom/package.json'));
 		const reactIsDir = dirname(moduleRequire.resolve('react-is/package.json'));
-		webpackFinalConfig.resolve = webpackFinalConfig.resolve || {};
-		webpackFinalConfig.resolve.alias = {
-			...(webpackFinalConfig.resolve.alias || {}),
+		viteConfig.resolve = viteConfig.resolve || {};
+		viteConfig.resolve.alias = {
+			...(viteConfig.resolve.alias || {}),
 			react: reactDir,
 			'react-dom': reactDomDir,
 			'react-is': reactIsDir
 		};
 
-		return webpackFinalConfig;
+		return viteConfig;
 	},
 	typescript: {
 		reactDocgen: false

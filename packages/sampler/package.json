@@ -20,7 +20,7 @@
     "@enact/ui": "^5.5.1",
     "@enact/webos": "^5.5.1",
     "@github-ui/storybook-addon-performance-panel": "^1.1.4",
-    "@storybook/react-webpack5": "^10.4.4",
+    "@storybook/react-vite": "^10.4.4",
     "classnames": "^2.5.1",
     "ilib": "^14.22.0",
     "prop-types": "^15.8.1",
