@@ -3,31 +3,39 @@
 import {memoize} from '@enact/core/util';
 import Loader from 'ilib/lib/Loader';
 import LocaleInfo from 'ilib/lib/LocaleInfo';
-import xhr from 'xhr';
 
 import ZoneInfoFile from './zoneinfo';
 
 const getImpl = (url, callback, sync) => {
 	if (typeof XMLHttpRequest !== 'undefined') {
-		xhr.XMLHttpRequest = XMLHttpRequest || xhr.XMLHttpRequest;
-		let req;
-		xhr({url, sync, beforeSend: (r) => (req = r)}, (err, resp, body) => {
-			let error = err || resp.statusCode !== 200 && resp.statusCode;
-			// false failure from chrome and file:// urls
-			if (error && req.status === 0 && req.response.length > 0) {
-				body = req.response;
-				error = false;
-			}
+		const req = new XMLHttpRequest();
+		req.open('GET', url, !sync);
+		req.onreadystatechange = function () {
+			if (req.readyState === 4) {
+				let error = null;
+				let body = req.responseText;
 
-			let json = null;
-			try {
-				json = error ? null : JSON.parse(body);
-			} catch (e) {
-				error = 'Failed to parse ILIB JSON data';
-			}
+				if (req.status !== 200 && req.status !== 0) {
+					error = req.status;
+				}
 
-			callback(json, error);
-		});
+				// false failure from chrome and file:// urls
+				if (error && req.status === 0 && req.response.length > 0) {
+					body = req.response;
+					error = null;
+				}
+
+				let json = null;
+				try {
+					json = error ? null : JSON.parse(body);
+				} catch (e) {
+					error = 'Failed to parse ILIB JSON data';
+				}
+
+				callback(json, error);
+			}
+		};
+		req.send(null);
 	} else {
 		callback(null, new Error('Not a web browser environment'));
 	}

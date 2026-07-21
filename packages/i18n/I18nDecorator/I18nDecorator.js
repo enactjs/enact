@@ -8,7 +8,6 @@
 
 import hoc from '@enact/core/hoc';
 import {checkPropTypes} from '@enact/core/util';
-import PropTypes from 'prop-types';
 
 import '../src/glue';
 
@@ -128,7 +127,15 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @type {String}
 		 * @public
 		 */
-		className: PropTypes.string,
+		className: function (props, propName, componentName) {
+			const value = props[propName];
+			if (value != null && typeof value !== 'string') {
+				return new Error(
+					`Invalid prop \`${propName}\` supplied to \`${componentName}\`, expected a string.`
+				);
+			}
+			return null;
+		},
 
 		/**
 		 * The locale to use.
@@ -139,7 +146,15 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @type {String}
 		 * @public
 		 */
-		locale: PropTypes.string
+		locale: function (props, propName, componentName) {
+			const value = props[propName];
+			if (value != null && typeof value !== 'string') {
+				return new Error(
+					`Invalid prop \`${propName}\` supplied to \`${componentName}\`, expected a string.`
+				);
+			}
+			return null;
+		}
 	};
 
 	return I18nDecorator;

@@ -10,7 +10,6 @@ import hoc from '@enact/core/hoc';
 import {checkPropTypes} from '@enact/core/util';
 import ilib from 'ilib';
 import IString from 'ilib/lib/IString';
-import PropTypes from 'prop-types';
 import {useEffect, useState} from 'react';
 
 import {I18nContextDecorator} from '../I18nDecorator';
@@ -204,7 +203,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @type {*}
 		 * @public
 		 */
-		children: PropTypes.any,
+		children: function () { return null; },
 
 		/**
 		 * The locale for translation.
@@ -214,7 +213,15 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @type {String}
 		 * @public
 		 */
-		locale: PropTypes.string
+		locale: function (props, propName, componentName) {
+			const value = props[propName];
+			if (value != null && typeof value !== 'string') {
+				return new Error(
+					`Invalid prop \`${propName}\` supplied to \`${componentName}\`, expected a string.`
+				);
+			}
+			return null;
+		}
 	};
 
 	return I18nContextDecorator(
