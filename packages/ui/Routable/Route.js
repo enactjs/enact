@@ -1,6 +1,6 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {checkPropTypes} from '@enact/core/util';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 
 /**
  * Used with {@link ui/Routable.Routable} to define the `path` segment and the

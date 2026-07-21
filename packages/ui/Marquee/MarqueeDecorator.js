@@ -6,10 +6,10 @@ import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {checkPropTypes, Job, shallowEqual} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 import {PureComponent} from 'react';
 import {flushSync} from 'react-dom';
-import warning from 'warning';
+import warning from '../internal/warning';
 
 import {scale} from '../resolution';
 import {ResizeContext} from '../Resizable';

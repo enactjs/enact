@@ -36,12 +36,7 @@
     "@enact/i18n": "^5.5.2",
     "classnames": "^2.5.1",
     "ilib": "^14.22.0",
-    "invariant": "^2.2.4",
-    "prop-types": "^15.8.1",
-    "ramda": "^0.32.0",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "react-is": "^19.2.7",
-    "warning": "^4.0.3"
+    "react-dom": "^19.2.7"
   }
 }

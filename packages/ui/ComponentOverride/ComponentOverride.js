@@ -11,7 +11,26 @@
  */
 
 import {isValidElement, cloneElement} from 'react';
-import {isValidElementType} from 'react-is';
+
+/**
+ * Checks if a value is a valid React element type (component class, function, or string tag name).
+ * Replaces `isValidElementType` from the deprecated `react-is` package.
+ *
+ * @param {*} type The value to check
+ * @returns {Boolean} Whether the value is a valid element type
+ * @private
+ */
+function isValidElementType (type) {
+	if (typeof type === 'string' || typeof type === 'function') {
+		return true;
+	}
+	// React.memo, React.forwardRef, React.lazy, and other special types
+	if (typeof type === 'object' && type !== null) {
+		const $$typeof = type.$$typeof;
+		if ($$typeof) return true;
+	}
+	return false;
+}
 
 /**
  * Utility to either create or clone a component instance with the given set of props.

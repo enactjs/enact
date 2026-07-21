@@ -7,7 +7,7 @@
  */
 
 import {checkPropTypes, setDefaultProps} from '@enact/core/util';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 
 import {ResizeContext} from '../Resizable';
 import useScroll from '../useScroll';

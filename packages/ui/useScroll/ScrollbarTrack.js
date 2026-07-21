@@ -1,6 +1,6 @@
 import {checkPropTypes} from '@enact/core/util';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 import {memo} from 'react';
 
 import css from './ScrollbarTrack.module.less';

@@ -11,8 +11,8 @@ import {forward, forwardCustom, handle, stop, stopImmediate} from '@enact/core/h
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import {checkPropTypes} from '@enact/core/util';
-import invariant from 'invariant';
-import PropTypes from 'prop-types';
+import invariant from '../internal/invariant';
+import PropTypes from '../internal/PropTypes';
 import {Component as ReactComponent} from 'react';
 
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';

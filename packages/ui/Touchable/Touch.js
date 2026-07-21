@@ -1,6 +1,6 @@
 import {call, forward, forwardCustom, forwardCustomWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
 import {on, off} from '@enact/core/dispatcher';
-import complement from 'ramda/src/complement';
+import {complement} from '../internal/fp';
 import platform from '@enact/core/platform';
 
 import {mergeConfig} from './config';

@@ -1,4 +1,4 @@
-import warning from 'warning';
+import warning from '../internal/warning';
 
 // At the end, wes should not use DOM APIs as well as the APIs in the `utilDOM`. If we use them, we have to try to remove them first if possible.
 

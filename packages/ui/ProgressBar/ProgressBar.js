@@ -13,9 +13,8 @@
 
 import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import clamp from 'ramda/src/clamp';
-import compose from 'ramda/src/compose';
-import PropTypes from 'prop-types';
+import {clamp, compose} from '../internal/fp';
+import PropTypes from '../internal/PropTypes';
 
 import {validateRange} from '../internal/validators';
 import ForwardRef from '../ForwardRef';

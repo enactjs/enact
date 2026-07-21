@@ -10,9 +10,9 @@
 
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
-import invariant from 'invariant';
-import PropTypes from 'prop-types';
-import warning from 'warning';
+import invariant from '../internal/invariant';
+import PropTypes from '../internal/PropTypes';
+import warning from '../internal/warning';
 
 import {Link, Linkable} from './Link';
 import Route from './Route';

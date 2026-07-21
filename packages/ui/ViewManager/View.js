@@ -4,7 +4,7 @@
 
 import {checkPropTypes, Job} from '@enact/core/util';
 import {cloneElement, Children, Component} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 
 import {shape} from './Arranger';
 

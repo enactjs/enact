@@ -2,7 +2,7 @@ import {checkPropTypes} from '@enact/core/util';
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 import {Component} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from '../../PropTypes';
 
 import Pure from '../Pure';
 

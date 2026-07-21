@@ -1,5 +1,5 @@
 import {Job} from '@enact/core/util';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 
 class Flick {
 	constructor () {

@@ -1,5 +1,5 @@
 import {perfNow} from '@enact/core/util';
-import clamp from 'ramda/src/clamp';
+import {clamp} from '../internal/fp';
 
 import utilAnimation from './utilAnimation';
 

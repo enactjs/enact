@@ -1,5 +1,5 @@
-import clamp from 'ramda/src/clamp';
-import PropTypes from 'prop-types';
+import {clamp} from '../internal/fp';
+import PropTypes from '../internal/PropTypes';
 
 const Tracking = {
 	Untracked: 0,

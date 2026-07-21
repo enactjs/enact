@@ -2,7 +2,7 @@ import kind from '@enact/core/kind';
 import {forProp, forward, handle, preventDefault} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import useHandlers from '@enact/core/useHandlers';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 import {Component} from 'react';
 
 import useLink from './useLink';

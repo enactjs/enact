@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 import {createContext} from 'react';
 
 const RouteContext = createContext(null);

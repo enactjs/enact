@@ -6,7 +6,7 @@
  */
 
 import hoc from '@enact/core/hoc';
-import invariant from 'invariant';
+import invariant from '../internal/invariant';
 
 import ResizeContext from './ResizeContext';
 import useResize from './useResize';

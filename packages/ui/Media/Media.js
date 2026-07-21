@@ -12,7 +12,7 @@ import {on, off} from '@enact/core/dispatcher';
 import {forward, forwardCustom} from '@enact/core/handle';
 import {checkPropTypes} from '@enact/core/util';
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 import {Children, isValidElement, Component as ReactComponent} from 'react';
 
 /**

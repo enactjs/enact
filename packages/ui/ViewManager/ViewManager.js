@@ -16,7 +16,7 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import handle, {forwardCustom} from '@enact/core/handle';
 import {checkPropTypes} from '@enact/core/util';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 import {Children, Component} from 'react';
 
 import ForwardRef from '../ForwardRef';

@@ -1,8 +1,8 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {checkPropTypes} from '@enact/core/util';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 import {Children, createElement, Component as ReactComponent} from 'react';
-import warning from 'warning';
+import warning from '../internal/warning';
 
 import ForwardRef from '../ForwardRef';
 

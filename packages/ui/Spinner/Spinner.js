@@ -16,7 +16,7 @@
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 
 import FloatingLayer from '../FloatingLayer';
 import ForwardRef from '../ForwardRef';

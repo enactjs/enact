@@ -8,7 +8,7 @@
 
 import hoc from '@enact/core/hoc';
 import {checkPropTypes} from '@enact/core/util';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 
 import Announce from './Announce';
 import useAnnounce from './useAnnounce';

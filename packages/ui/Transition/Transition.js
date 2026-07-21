@@ -21,7 +21,7 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {checkPropTypes, Job} from '@enact/core/util';
 import {use, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 
 import {ResizeContext} from '../Resizable';
 

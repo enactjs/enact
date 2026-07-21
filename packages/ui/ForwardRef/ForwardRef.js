@@ -6,7 +6,7 @@
  */
 
 import hoc from '@enact/core/hoc';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 
 /**
  * Default config for {@link ui/ForwardRef.ForwardRef}.

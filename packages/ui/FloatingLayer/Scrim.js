@@ -1,6 +1,6 @@
 import {checkPropTypes} from '@enact/core/util';
 import {Component} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 
 import css from './Scrim.module.less';
 

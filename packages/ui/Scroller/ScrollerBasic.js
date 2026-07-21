@@ -2,7 +2,7 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import {platform} from '@enact/core/platform';
 import {checkPropTypes} from '@enact/core/util';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 import {Component} from 'react';
 
 import css from './Scroller.module.less';

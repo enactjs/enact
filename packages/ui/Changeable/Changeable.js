@@ -10,9 +10,9 @@
 import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap, checkPropTypes} from '@enact/core/util';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 import {PureComponent} from 'react';
-import warning from 'warning';
+import warning from '../internal/warning';
 
 /**
  * Default config for {@link ui/Changeable.Changeable}.

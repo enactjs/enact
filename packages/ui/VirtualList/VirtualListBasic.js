@@ -3,8 +3,8 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import {checkPropTypes, clamp, shallowEqual} from '@enact/core/util';
-import PropTypes from 'prop-types';
-import equals from 'ramda/src/equals';
+import PropTypes from '../internal/PropTypes';
+import {equals} from '../internal/fp';
 import {createRef, Component} from 'react';
 
 import css from './VirtualList.module.less';

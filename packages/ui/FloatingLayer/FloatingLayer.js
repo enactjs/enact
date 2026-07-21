@@ -2,8 +2,8 @@ import {on, off} from '@enact/core/dispatcher';
 import {checkPropTypes} from '@enact/core/util';
 import {forwardCustom, forProp, handle, oneOf, stop, forEventProp, call} from '@enact/core/handle';
 import classNames from 'classnames';
-import invariant from 'invariant';
-import PropTypes from 'prop-types';
+import invariant from '../internal/invariant';
+import PropTypes from '../internal/PropTypes';
 import {cloneElement, Component} from 'react';
 import ReactDOM from 'react-dom';
 

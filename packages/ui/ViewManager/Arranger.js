@@ -3,7 +3,7 @@
  * note: not jsdoc on purpose
  */
 
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 
 const slideInOut = (direction, total, orientation) => {
 	const p = direction === 'out' ? total : -total;

@@ -2,7 +2,7 @@ import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
 import {checkPropTypes} from '@enact/core/util';
 import {Component} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 
 import {validateRangeOnce, validateSteppedOnce} from '../internal/validators';
 

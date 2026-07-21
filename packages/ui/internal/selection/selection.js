@@ -1,4 +1,4 @@
-import curry from 'ramda/src/curry';
+import {curry} from '../fp';
 
 /**
  * Determines if `item` is selected

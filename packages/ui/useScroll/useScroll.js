@@ -16,9 +16,9 @@ import {is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform'; // scrollMode 'native'
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
-import clamp from 'ramda/src/clamp';
+import {clamp} from '../internal/fp';
 import {useCallback, use, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
-import warning from 'warning';
+import warning from '../internal/warning';
 
 import {ResizeContext} from '../Resizable';
 import ri from '../resolution';

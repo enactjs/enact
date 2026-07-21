@@ -9,9 +9,9 @@
 
 import kind from '@enact/core/kind';
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import PropTypes from 'prop-types';
-import compose from 'ramda/src/compose';
-import warning from 'warning';
+import PropTypes from '../internal/PropTypes';
+import {compose} from '../internal/fp';
+import warning from '../internal/warning';
 
 import {selectSrc} from '../resolution';
 import ForwardRef from '../ForwardRef';

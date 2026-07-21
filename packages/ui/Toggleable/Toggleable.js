@@ -9,10 +9,10 @@ import handle, {forwardCustom} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import useHandlers from '@enact/core/useHandlers';
 import {cap, checkPropTypes} from '@enact/core/util';
-import PropTypes from 'prop-types';
-import pick from 'ramda/src/pick';
+import PropTypes from '../internal/PropTypes';
+import {pick} from '../internal/fp';
 import {useRef} from 'react';
-import warning from 'warning';
+import warning from '../internal/warning';
 
 import {useToggle} from './useToggle';
 

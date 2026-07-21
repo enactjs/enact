@@ -7,15 +7,8 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward, forwardCustom} from '@enact/core/handle';
 import {checkPropTypes} from '@enact/core/util';
-import PropTypes from 'prop-types';
-import eqBy from 'ramda/src/eqBy';
-import findIndex from 'ramda/src/findIndex';
-import identity from 'ramda/src/identity';
-import prop from 'ramda/src/prop';
-import propEq from 'ramda/src/propEq';
-import remove from 'ramda/src/remove';
-import unionWith from 'ramda/src/unionWith';
-import useWith from 'ramda/src/useWith';
+import PropTypes from '../internal/PropTypes';
+import {eqBy, findIndex, identity, prop, propEq, remove, unionWith, useWith} from '../internal/fp';
 import {Children, cloneElement, createElement, createRef, Component} from 'react';
 
 /**

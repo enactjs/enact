@@ -1,5 +1,5 @@
 import {createElement, isValidElement, Children} from 'react';
-import warning from 'warning';
+import warning from '../internal/warning';
 
 // ** WARNING ** This is an intentional but likely dangerous hack necessary to clone a child while
 // omitting the `slot` property. It relies on the black box structure of a React element which could
