@@ -1,4 +1,4 @@
-import curry from 'ramda/src/curry';
+import {curry} from '../internal/fp/fp';
 
 /*
  * The singleton map of names to keyCodes. If a name doesn't have any keyCodes mapped to it, it will

@@ -7,7 +7,7 @@
  * @exports once
  */
 
-import curry from 'ramda/src/curry';
+import {curry} from '../internal/fp/fp';
 
 import {getListeners, addListener} from './listeners';
 

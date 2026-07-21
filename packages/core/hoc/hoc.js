@@ -6,7 +6,7 @@
  */
 
 import {isRenderable} from '../util';
-import mergeDeepWithKey from 'ramda/src/mergeDeepWithKey';
+import {mergeDeepWithKey} from '../internal/fp/fp';
 
 const mergeFn = (key, defaultValue, userValue) => {
 	// eslint-disable-next-line no-undefined

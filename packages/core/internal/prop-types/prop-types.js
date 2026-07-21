@@ -1,8 +1,64 @@
-import PropTypes from 'prop-types';
-
 import {isRenderable} from '../../util';
 
 import deprecate from '../deprecate';
+
+/**
+ * Minimal PropTypes validators to replace the `prop-types` npm package.
+ * Only the subset used internally is implemented.
+ */
+const PropTypes = {
+	oneOfType: (types) => {
+		return function validate (props, propName, componentName, location, propFullName, ...rest) {
+			const errors = [];
+			for (const type of types) {
+				const error = type(props, propName, componentName, location, propFullName, ...rest);
+				if (!error) return null;
+				errors.push(error);
+			}
+			return errors.length === types.length
+				? new Error(`Invalid ${location} \`${propFullName}\` supplied to \`${componentName}\`.`)
+				: null;
+		};
+	},
+	element: function (props, propName, componentName) {
+		const value = props[propName];
+		if (value != null && typeof value !== 'object') {
+			return new Error(
+				`Invalid prop \`${propName}\` supplied to \`${componentName}\`, expected a React element.`
+			);
+		}
+		return null;
+	},
+	shape: (shapeTypes) => {
+		return function (props, propName, componentName, location, propFullName) {
+			const value = props[propName];
+			if (value == null) return null;
+			if (typeof value !== 'object') {
+				return new Error(
+					`Invalid ${location} \`${propFullName}\` supplied to \`${componentName}\`, expected an object.`
+				);
+			}
+			for (const key in shapeTypes) {
+				const checker = shapeTypes[key];
+				if (checker) {
+					const error = checker(value, key, componentName, location, `${propFullName}.${key}`);
+					if (error) return error;
+				}
+			}
+			return null;
+		};
+	},
+	any: function () { return null; },
+	func: function (props, propName, componentName) {
+		const value = props[propName];
+		if (value != null && typeof value !== 'function') {
+			return new Error(
+				`Invalid prop \`${propName}\` supplied to \`${componentName}\`, expected a function.`
+			);
+		}
+		return null;
+	}
+};
 
 const isRequired = (fn) => {
 	fn.isRequired = function (props, key, componentName, location, propFullName, ...rest) {

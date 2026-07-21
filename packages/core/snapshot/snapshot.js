@@ -8,7 +8,7 @@
  * @public
  */
 
-import invariant from 'invariant';
+import invariant from '../internal/invariant/invariant';
 
 const windowCallbacks = [];
 

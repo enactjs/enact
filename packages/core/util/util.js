@@ -19,12 +19,8 @@
  * @exports shallowEqual
  * @exports usePrevious
  */
-import {checkPropTypes as check} from 'prop-types';
-import always from 'ramda/src/always';
-import isType from 'ramda/src/is';
-import unless from 'ramda/src/unless';
 import {Children, useState} from 'react';
-import * as ReactIs from 'react-is';
+import {isValidElementType} from 'react-is';
 
 import Job from './Job';
 
@@ -77,7 +73,7 @@ const clamp = (min, max, value) => {
  * @memberof core/util
  * @public
  */
-const coerceFunction = unless(isType(Function), always);
+const coerceFunction = (arg) => typeof arg === 'function' ? arg : () => arg;
 
 /**
  * If `arg` is array-like, return it. Otherwise returns a single element array containing `arg`.
@@ -111,7 +107,7 @@ const coerceArray = function (array) {
  * @public
  */
 const isRenderable = function (tag) {
-	return ReactIs.isValidElementType(tag);
+	return isValidElementType(tag);
 };
 
 /**
@@ -395,15 +391,20 @@ const checkPropTypes = (component, props, prevProps) => {
 	if (__DEV__ && !(prevProps && prevProps === props)) {
 		const isFunctional = typeof component === 'function';
 		const {displayName, name, propTypes} = isFunctional ? component : component.constructor; // eslint-disable-line react/forbid-foreign-prop-types
+		const componentName = displayName || name;
 
-		check(propTypes, props, 'prop', displayName || name, () => {
-			// Create a new error to capture the current stack trace
-			const checkPropsError = new Error();
-			if (Error.captureStackTrace) {
-				Error.captureStackTrace(checkPropsError, checkPropTypes);
-			}
-			return checkPropsError.stack.split('@')[0];
-		});
+		if (propTypes) {
+			Object.keys(propTypes).forEach((propName) => {
+				try {
+					const error = propTypes[propName](props, propName, componentName, 'prop', propName);
+					if (error instanceof Error) {
+						console.error(error.message);	// eslint-disable-line no-console
+					}
+				} catch (e) {
+					console.error(e.message);	// eslint-disable-line no-console
+				}
+			});
+		}
 	}
 };
 

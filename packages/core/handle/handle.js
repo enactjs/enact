@@ -77,8 +77,7 @@
  * @exports stopImmediate
  */
 
-import cond from 'ramda/src/cond';
-import curry from 'ramda/src/curry';
+import {cond, curry} from '../internal/fp/fp';
 
 import {is} from '../keymap';
 

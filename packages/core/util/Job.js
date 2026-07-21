@@ -1,4 +1,4 @@
-import invariant from 'invariant';
+import invariant from '../internal/invariant/invariant';
 
 /**
  * Provides a convenient way to manage timed execution of functions.

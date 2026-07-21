@@ -8,7 +8,7 @@
  */
 
 import {useCallback} from 'react';
-import warning from 'warning';
+import warning from '../internal/warning/warning';
 
 // Safely handles functional and object refs (and ignores invalid refs)
 function updateRef (ref, node) {

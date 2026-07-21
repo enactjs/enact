@@ -5,7 +5,7 @@
  * @private
  */
 
-import invariant from 'invariant';
+import invariant from '../invariant/invariant';
 import {Component} from 'react';
 
 import hoc from '../../hoc';
