@@ -1,7 +1,7 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {checkPropTypes} from '@enact/core/util';
-import PropTypes from 'prop-types';
+import PropTypes from '../internal/PropTypes';
 import {Component} from 'react';
 
 import {startSignLang, stopSignLang} from './signLang';
