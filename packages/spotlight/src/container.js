@@ -5,12 +5,10 @@
  * @private
  */
 
-import and from 'ramda/src/and';
-import concat from 'ramda/src/concat';
 import {isWindowReady} from '@enact/core/snapshot';
 import {coerceArray} from '@enact/core/util';
-import intersection from 'ramda/src/intersection';
-import last from 'ramda/src/last';
+
+import {concat, intersection, last} from './internal/fp';
 
 import {contains, matchSelector, getContainerRect, getRect, intersects, isStandardFocusable} from './utils';
 
@@ -184,7 +182,7 @@ const isContainer = (nodeOrId) => {
 const isContainerEnabled = (node) => {
 	return mapContainers(node, container => {
 		return container.dataset[disabledKey] !== 'true';
-	}).reduce(and, true);
+	}).reduce((a, b) => a && b, true);
 };
 
 /**

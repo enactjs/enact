@@ -10,7 +10,7 @@ import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
 import {checkPropTypes} from '@enact/core/util';
 import {Component} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from '../src/internal/PropTypes';
 
 import useSpotlightContainer from './useSpotlightContainer';
 

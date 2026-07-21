@@ -1,5 +1,5 @@
-import curry from 'ramda/src/curry';
-import warning from 'warning';
+import {curry} from './internal/fp';
+import warning from './internal/warning';
 
 import {getContainerNode} from './container';
 

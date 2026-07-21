@@ -12,7 +12,7 @@ import hoc from '@enact/core/hoc';
 import {checkPropTypes} from '@enact/core/util';
 import {WithRef} from '@enact/core/internal/WithRef';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
+import PropTypes from '../src/internal/PropTypes';
 import {useCallback, useReducer, useRef} from 'react';
 
 import {spottableClass, useSpottable} from './useSpottable';

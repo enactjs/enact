@@ -1,8 +1,6 @@
-import R from 'ramda';
-
 import {containerAttribute} from '../container';
 
-const join = R.unapply(R.join('\n'));
+const join = (...args) => args.join('\n');
 
 const testScenario = (scenario, callback) => () => {
 	const rootId = 'test-root';
@@ -67,11 +65,12 @@ const container = (props) => node({
 	...coerceProps(props)
 });
 
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const someNodes = R.useWith(R.compose(R.join('\n'), R.map), [R.identity, R.range(0)]);
-const someSpottables = someNodes(spottable);
-const someContainers = someNodes(container);
-const someSpottablesAndContainers = R.converge(R.concat, [someSpottables, someContainers]);
+const someNodes = (fn, count) => Array.from({length: count}, (_, i) => fn(i)).join('\n');
+const someSpottables = (count) => someNodes(spottable, count);
+const someContainers = (count) => someNodes(container, count);
+const someSpottablesAndContainers = (count) => {
+	return someSpottables(count) + '\n' + someContainers(count);
+};
 
 export {
 	container,

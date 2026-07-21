@@ -1,5 +1,4 @@
-import clamp from 'ramda/src/clamp';
-import last from 'ramda/src/last';
+import {clamp, last} from './internal/fp';
 
 import {
 	getAllContainerIds,

@@ -21,7 +21,7 @@
 import {is} from '@enact/core/keymap';
 import {isWindowReady} from '@enact/core/snapshot';
 import platform from '@enact/core/platform';
-import last from 'ramda/src/last';
+import {last} from './internal/fp';
 
 import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
