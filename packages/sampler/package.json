@@ -28,5 +28,10 @@
     "react-dom": "^19.2.7",
     "react-is": "^19.2.7",
     "storybook": "^10.4.6"
+  },
+  "overrides": {
+    "brace-expansion": ">=1.1.16",
+    "fast-uri": ">=3.1.4",
+    "js-yaml": ">=4.2.1"
   }
 }
