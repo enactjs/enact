@@ -1,4 +1,4 @@
-import {useState, useCallback, use, useEffect} from 'react';
+import {useState, useCallback, useContext, useEffect} from 'react';
 
 import {FloatingLayerContext} from './FloatingLayerDecorator';
 
@@ -10,7 +10,7 @@ function useFloatingLayer () {
 		}
 	}, [setId]);
 
-	const registerFloatingLayer = use(FloatingLayerContext);
+	const registerFloatingLayer = useContext(FloatingLayerContext);
 
 	useEffect(() => {
 		if (registerFloatingLayer) {

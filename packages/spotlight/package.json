@@ -27,10 +27,9 @@
   "dependencies": {
     "@enact/core": "^5.5.2",
     "classnames": "^2.5.1",
+    "preact": "^10.29.7",
     "prop-types": "^15.8.1",
     "ramda": "^0.32.0",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
     "warning": "^4.0.3"
   }
 }

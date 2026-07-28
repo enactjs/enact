@@ -20,7 +20,7 @@ import {forward, forwardCustom} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {checkPropTypes, Job} from '@enact/core/util';
-import {use, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
+import {useContext, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
@@ -389,7 +389,7 @@ function Transition ({
 	}, []);
 
 	// ResizeContext registration — the context value is itself the register fn.
-	const resizeRegister = use(ResizeContext);
+	const resizeRegister = useContext(ResizeContext);
 
 	const handleResize = useCallback(() => {
 		// Null initialHeight so the next layout commit re-measures in a separate tick.

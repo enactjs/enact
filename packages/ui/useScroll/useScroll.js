@@ -17,7 +17,7 @@ import {platform} from '@enact/core/platform'; // scrollMode 'native'
 import Registry from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
-import {useCallback, use, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
+import {useCallback, useContext, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
 import warning from 'warning';
 
 import {ResizeContext} from '../Resizable';
@@ -169,7 +169,7 @@ const useScrollBase = (props) => {
 
 	const [, forceUpdate] = useForceUpdate();
 
-	const context = use(ResizeContext);
+	const context = useContext(ResizeContext);
 
 	const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(horizontalScrollbar === 'visible');
 	const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(verticalScrollbar === 'visible');
