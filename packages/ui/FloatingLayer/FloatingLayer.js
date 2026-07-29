@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
 import {cloneElement, Component} from 'react';
-import ReactDOM from 'react-dom';
+import {createPortal} from 'react-dom';
 
 import Cancelable from '../Cancelable';
 
@@ -248,7 +248,7 @@ class FloatingLayerBase extends Component {
 		delete rest.onOpen;
 
 		if (open && this.state.readyToRender) {
-			return ReactDOM.createPortal(
+			return createPortal(
 				<div className={mergedClassName} {...rest}>
 					{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
 					{cloneElement(children, {onClick: this.stopPropagation})}

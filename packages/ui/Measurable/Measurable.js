@@ -41,7 +41,7 @@ const useMeasurable = () => {
 
 	useLayoutEffect(
 		() => {
-			const refToMeasure = ref.current;
+			const refToMeasure = ref.current.base;
 			if (!refToMeasure) {
 				return;
 			}

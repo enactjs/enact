@@ -12,14 +12,14 @@ import componentCss from './Scrollbar.module.less';
 const scrollbarTrackHidingDelay = 900; // 900ms + 100ms(fade out duration) = 1000ms.
 
 const addClass = (element, className) => {
-	if (element) {
-		element.classList.add(className);
+	if (element && element.base) {
+		element.base.classList.add(className);
 	}
 };
 
 const removeClass = (element, className) => {
-	if (element) {
-		element.classList.remove(className);
+	if (element && element.base) {
+		element.base.classList.remove(className);
 	}
 };
 
@@ -32,7 +32,9 @@ const removeClass = (element, className) => {
  * @param {String} value - CSS Variable value.
  */
 const setCSSVariable = (element, variable, value) => {
-	element.style.setProperty(variable, value);
+	if (element && element.base) {
+		element.base.style.setProperty(variable, value);
+	}
 };
 
 /**

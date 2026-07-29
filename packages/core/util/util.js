@@ -391,20 +391,21 @@ const shallowEqual = (a, b) => {
  * @memberof core/util
  * @public
  */
-const checkPropTypes = (component, props, prevProps) => {
-	if (__DEV__ && !(prevProps && prevProps === props)) {
-		const isFunctional = typeof component === 'function';
-		const {displayName, name, propTypes} = isFunctional ? component : component.constructor; // eslint-disable-line react/forbid-foreign-prop-types
-
-		check(propTypes, props, 'prop', displayName || name, () => {
-			// Create a new error to capture the current stack trace
-			const checkPropsError = new Error();
-			if (Error.captureStackTrace) {
-				Error.captureStackTrace(checkPropsError, checkPropTypes);
-			}
-			return checkPropsError.stack.split('@')[0];
-		});
-	}
+const checkPropTypes = async (component, props, prevProps) => {
+	// if (__DEV__) import('preact/debug');
+	// if (__DEV__ && !(prevProps && prevProps === props)) {
+	// 	const isFunctional = typeof component === 'function';
+	// 	const {displayName, name, propTypes} = isFunctional ? component : component.constructor; // eslint-disable-line react/forbid-foreign-prop-types
+	//
+	// 	check(propTypes, props, 'prop', displayName || name, () => {
+	// 		// Create a new error to capture the current stack trace
+	// 		const checkPropsError = new Error();
+	// 		if (Error.captureStackTrace) {
+	// 			Error.captureStackTrace(checkPropsError, checkPropTypes);
+	// 		}
+	// 		return checkPropsError.stack.split('@')[0];
+	// 	});
+	// }
 };
 
 /**
