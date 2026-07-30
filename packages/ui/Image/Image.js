@@ -70,10 +70,10 @@ const ImageBase = kind({
 		'aria-label': PropTypes.string,
 
 		/**
-		 *	A color to render behind the image.
-		 *	Accepts any valid CSS `background-color` value (named color, hex, `rgb()`, etc.).
-		 *	Gradients are not supported here; they are CSS images, not colors; use
-		 *	`backgroundSrc` for an image background instead.
+		 * A color to render behind the image.
+		 * Accepts any valid CSS `background-color` value (named color, hex, `rgb()`, etc.).
+		 * Gradients are not supported here; they are CSS images, not colors; use
+		 * `backgroundSrc` for an image background instead.
 		 *
 		 * @type {String}
 		 * @public
@@ -198,7 +198,6 @@ const ImageBase = kind({
 			if (imageSrc) layers.push(`url("${imageSrc}")`);
 			if (backgroundImageSrc) layers.push(`url("${backgroundImageSrc}")`);
 			if (placeholder && imageSrc !== placeholder) layers.push(`url("${placeholder}")`);
-
 
 			return layers.length ? layers.join(', ') : null;
 		},
