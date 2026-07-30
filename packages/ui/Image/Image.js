@@ -197,8 +197,9 @@ Gradients are not supported here; they are CSS images, not colors; use
 
 			const layers = [];
 			if (imageSrc) layers.push(`url("${imageSrc}")`);
-			if (placeholder && imageSrc !== placeholder) layers.push(`url("${placeholder}")`);
 			if (backgroundImageSrc) layers.push(`url("${backgroundImageSrc}")`);
+			if (placeholder && imageSrc !== placeholder) layers.push(`url("${placeholder}")`);
+
 
 			return layers.length ? layers.join(', ') : null;
 		},
@@ -220,7 +221,7 @@ Gradients are not supported here; they are CSS images, not colors; use
 				{...rest}
 				aria-label={ariaLabel || alt}
 				ref={componentRef}
-				style={{...style, backgroundColor, backgroundImage: bgImage}}
+				style={{...style, ...(backgroundColor ? {backgroundColor} : null), backgroundImage: bgImage}}
 			>
 				{children}
 				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
