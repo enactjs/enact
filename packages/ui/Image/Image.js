@@ -84,8 +84,8 @@ Gradients are not supported here; they are CSS images, not colors; use
 		 * A second image to render behind the main `src` image.
 		 *
 		 * This is useful when `src` points to an image with transparent areas — this image
-		 * will show through those transparent regions, layered above `backgroundColor` (if
-		 * both are set). Accepts the same string or screen-size-keyed object format as `src`.
+		 * will show through those transparent regions, layered above `backgroundColor` and
+		 * `placeholder` but below `src`. Accepts the same string or screen-size-keyed object format as `src`.
 		 *
 		 * @type {String|Object}
 		 * @public
