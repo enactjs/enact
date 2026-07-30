@@ -69,11 +69,11 @@ const ImageBase = kind({
 		 */
 		'aria-label': PropTypes.string,
 
-A color to render behind the image.
-
-Accepts any valid CSS `background-color` value (named color, hex, `rgb()`, etc.).
-Gradients are not supported here; they are CSS images, not colors; use
-`backgroundSrc` for an image background instead.
+		/**
+		 *	A color to render behind the image.
+		 *	Accepts any valid CSS `background-color` value (named color, hex, `rgb()`, etc.).
+		 *	Gradients are not supported here; they are CSS images, not colors; use
+		 *	`backgroundSrc` for an image background instead.
 		 *
 		 * @type {String}
 		 * @public
@@ -178,7 +178,6 @@ Gradients are not supported here; they are CSS images, not colors; use
 	},
 
 	defaultProps: {
-		backgroundColor: 'transparent',
 		placeholder: '',
 		sizing: 'fill'
 	},
@@ -210,10 +209,10 @@ Gradients are not supported here; they are CSS images, not colors; use
 	},
 
 	render: ({alt, 'aria-label': ariaLabel, backgroundColor, bgImage, children, componentRef, css, imgSrc, onError, onLoad, style, ...rest}) => {
+		delete rest.backgroundSrc;
 		delete rest.placeholder;
 		delete rest.sizing;
 		delete rest.src;
-		delete rest.backgroundSrc;
 
 		return (
 			<div
