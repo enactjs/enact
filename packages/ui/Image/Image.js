@@ -69,14 +69,11 @@ const ImageBase = kind({
 		 */
 		'aria-label': PropTypes.string,
 
-		/**
-		 * A color (or any valid CSS `background-color` value, including gradients) to render
-		 * behind the image.
-		 *
-		 * This is useful when `src` (or `backgroundSrc`) points to an image with transparent
-		 * areas — set this to change what shows through those transparent regions. Changing
-		 * this value dynamically (e.g. via state) will update what's visible behind the image
-		 * without affecting the image itself.
+A color to render behind the image.
+
+Accepts any valid CSS `background-color` value (named color, hex, `rgb()`, etc.).
+Gradients are not supported here; they are CSS images, not colors; use
+`backgroundSrc` for an image background instead.
 		 *
 		 * @type {String}
 		 * @public
