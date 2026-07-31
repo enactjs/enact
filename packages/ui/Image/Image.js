@@ -70,6 +70,29 @@ const ImageBase = kind({
 		'aria-label': PropTypes.string,
 
 		/**
+		 * A color to render behind the image.
+		 * Accepts any valid CSS `background-color` value (named color, hex, `rgb()`, etc.).
+		 * Gradients are not supported here; they are CSS images, not colors; use
+		 * `backgroundSrc` for an image background instead.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		backgroundColor: PropTypes.string,
+
+		/**
+		 * A second image to render behind the main `src` image.
+		 *
+		 * This is useful when `src` points to an image with transparent areas — this image
+		 * will show through those transparent regions, layered above `backgroundColor` and
+		 * `placeholder` but below `src`. Accepts the same string or screen-size-keyed object format as `src`.
+		 *
+		 * @type {String|Object}
+		 * @public
+		 */
+		backgroundSrc: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+
+		/**
 		 * Node for the children of an `Image`. Useful for overlays.
 		 *
 		 * @type {Node}
@@ -166,11 +189,17 @@ const ImageBase = kind({
 	},
 
 	computed: {
-		bgImage: ({placeholder, src}) => {
+		bgImage: ({backgroundSrc, placeholder, src}) => {
 			const imageSrc = selectSrc(src) || placeholder;
-			warning(imageSrc, 'Image requires that either the "placeholder" or "src" props be specified.');
-			if (!imageSrc) return null;
-			return placeholder && imageSrc !== placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
+			const backgroundImageSrc = selectSrc(backgroundSrc);
+			warning(imageSrc || backgroundImageSrc, 'Image requires that either the "src", "placeholder", or "backgroundSrc" props be specified.');
+
+			const layers = [];
+			if (imageSrc) layers.push(`url("${imageSrc}")`);
+			if (backgroundImageSrc) layers.push(`url("${backgroundImageSrc}")`);
+			if (placeholder && imageSrc !== placeholder) layers.push(`url("${placeholder}")`);
+
+			return layers.length ? layers.join(', ') : null;
 		},
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
@@ -178,13 +207,20 @@ const ImageBase = kind({
 		imgSrc: ({src}) => selectSrc(src) || null
 	},
 
-	render: ({alt, 'aria-label': ariaLabel, bgImage, children, componentRef, css, imgSrc, onError, onLoad, style, ...rest}) => {
+	render: ({alt, 'aria-label': ariaLabel, backgroundColor, bgImage, children, componentRef, css, imgSrc, onError, onLoad, style, ...rest}) => {
+		delete rest.backgroundSrc;
 		delete rest.placeholder;
 		delete rest.sizing;
 		delete rest.src;
 
 		return (
-			<div role="img" {...rest} aria-label={ariaLabel || alt} ref={componentRef} style={{...style, backgroundImage: bgImage}}>
+			<div
+				role="img"
+				{...rest}
+				aria-label={ariaLabel || alt}
+				ref={componentRef}
+				style={{...style, ...(backgroundColor ? {backgroundColor} : null), backgroundImage: bgImage}}
+			>
 				{children}
 				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
 			</div>
