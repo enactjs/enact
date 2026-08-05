@@ -13,9 +13,23 @@ import PropTypes from 'prop-types';
 import '../src/glue';
 
 import useI18n from './useI18n';
+import type {Resource} from './I18n';
 import {useI18nContext, I18nContext} from './useI18nContext';
 
-const join = (a, b) => a && b ? a + ' ' + b : (a || b || '');
+const join = (a?: string | null, b?: string | null): string => a && b ? a + ' ' + b : (a || b || '');
+
+interface I18nDecoratorConfig {
+	latinLanguageOverrides: string[] | null;
+	nonLatinLanguageOverrides: string[] | null;
+	resources: Resource[] | null;
+	sync: boolean;
+}
+
+interface I18nDecoratorProps {
+	className?: string;
+	locale?: string;
+	[prop: string]: any;
+}
 
 /**
  * Default config for `I18nDecorator`.
@@ -23,7 +37,7 @@ const join = (a, b) => a && b ? a + ' ' + b : (a || b || '');
  * @memberof i18n/I18nDecorator.I18nDecorator
  * @hocconfig
  */
-const defaultConfig = {
+const defaultConfig: I18nDecoratorConfig = {
 	/**
 	 * Array of locales that should be treated as latin regardless of their script.
 	 *
@@ -102,9 +116,9 @@ const defaultConfig = {
  * @hoc
  * @public
  */
-const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	// eslint-disable-next-line no-shadow
-	function I18nDecorator (props) {
+const I18nDecorator = hoc(defaultConfig, (config: I18nDecoratorConfig, Wrapped) => {
+	// eslint-disable-next-line no-shadow, @typescript-eslint/no-shadow
+	function I18nDecorator (props: I18nDecoratorProps) {
 		checkPropTypes(I18nDecorator, props);
 		const {locale, ...rest} = props;
 		const {className: i18nClassName, ...i18n} = useI18n({
@@ -146,12 +160,22 @@ const I18nDecorator = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 /**
+ * Configuration for `I18nContextDecorator`.
+ */
+interface I18nContextDecoratorConfig {
+	loadedProp?: string | null;
+	localeProp?: string | null;
+	rtlProp?: string | null;
+	updateLocaleProp?: string | null;
+}
+
+/**
  * Default config for `I18nContextDecorator`.
  *
  * @memberof i18n/I18nDecorator.I18nContextDecorator
  * @hocconfig
  */
-const contextDefaultConfig = {
+const contextDefaultConfig: I18nContextDecoratorConfig = {
 	/**
 	 * The prop name for `locale` property of i18nContext.
 	 *
@@ -212,11 +236,11 @@ const contextDefaultConfig = {
  * @hoc
  * @public
  */
-const I18nContextDecorator = hoc(contextDefaultConfig, (config, Wrapped) => {
+const I18nContextDecorator = hoc(contextDefaultConfig, (config: I18nContextDecoratorConfig, Wrapped) => {
 	const {loadedProp, localeProp, rtlProp, updateLocaleProp} = config;
 
-	// eslint-disable-next-line no-shadow
-	return function I18nContextDecorator (props) {
+	// eslint-disable-next-line no-shadow, @typescript-eslint/no-shadow
+	return function I18nContextDecorator (props: {[prop: string]: any}) {
 		const i18nContext = useI18nContext();
 
 		if (i18nContext) {
@@ -253,4 +277,9 @@ export {
 	I18nDecorator,
 	useI18n,
 	useI18nContext
+};
+export type {
+	I18nContextDecoratorConfig,
+	I18nDecoratorConfig,
+	I18nDecoratorProps
 };

@@ -1,12 +1,46 @@
 import {on, off} from '@enact/core/dispatcher';
 import {Job} from '@enact/core/util';
+import type ResBundle from 'ilib/lib/ResBundle';
 
 import {isRtlLocale, updateLocale} from '../locale';
 import {createResBundle, setResBundle} from '../src/resBundle';
 import wrapIlibCallback from '../src/wrapIlibCallback';
+import type {IlibCallbackFn, IlibCallbackOptions} from '../src/wrapIlibCallback';
 
 import getI18nClasses from './getI18nClasses';
 import {onWindowFocus} from './windowFocus';
+
+/**
+ * The published i18n state.
+ */
+interface I18nSnapshot {
+	className: string | null;
+	loaded: boolean;
+	locale: string | null;
+	rtl: boolean;
+}
+
+/**
+ * A resource loader invoked after a locale change.
+ */
+type ResourceFn = (options: IlibCallbackOptions<unknown>) => unknown;
+
+interface ResourceDescriptor {
+	resource: ResourceFn;
+	onLoad?: (res: unknown) => void;
+}
+
+type Resource = ResourceFn | ResourceDescriptor | null | undefined;
+
+/**
+ * Configuration for the {@link i18n/I18nDecorator.I18n} store.
+ */
+interface I18nConfig {
+	latinLanguageOverrides?: string[] | null;
+	nonLatinLanguageOverrides?: string[] | null;
+	resources?: Resource[] | null;
+	sync?: boolean;
+}
 
 /**
  * Manages i18n resource loading.
@@ -18,16 +52,28 @@ import {onWindowFocus} from './windowFocus';
  * @private
  */
 class I18n {
+	latinLanguageOverrides?: string[] | null;
+	nonLatinLanguageOverrides?: string[] | null;
+	resources: ResourceDescriptor[];
+	sync: boolean;
+	loadResourceJob: Job<[I18nSnapshot]>;
+
+	private _locale: string | null;
+	private _ready: boolean;
+	private _updatingFromRender: boolean;
+	private _listeners: Set<() => void>;
+	private _snapshot: I18nSnapshot;
+
 	constructor ({
 		latinLanguageOverrides,
 		nonLatinLanguageOverrides,
 		resources,
 		sync = true
-	}) {
+	}: I18nConfig) {
 		this._locale = null;
 		this._ready = sync;
 		this._updatingFromRender = false;
-		this.loadResourceJob = new Job(state => this._updateSnapshot(state));
+		this.loadResourceJob = new Job((state: I18nSnapshot) => this._updateSnapshot(state));
 		this._listeners = new Set();
 		this._snapshot = {
 			className: null,
@@ -51,7 +97,7 @@ class I18n {
 	 * @returns {Function} Unsubscribe function
 	 * @public
 	 */
-	subscribe = (listener) => {
+	subscribe = (listener: () => void) => {
 		this._listeners.add(listener);
 		return () => this._listeners.delete(listener);
 	};
@@ -62,7 +108,7 @@ class I18n {
 	 * @returns {{className: String, loaded: Boolean, locale: String, rtl: Boolean}}
 	 * @public
 	 */
-	getSnapshot = () => this._snapshot;
+	getSnapshot = (): I18nSnapshot => this._snapshot;
 
 	/**
 	 * Returns the server-side snapshot (for SSR).
@@ -72,7 +118,7 @@ class I18n {
 	 * @returns {{className: String, loaded: Boolean, locale: String, rtl: Boolean}}
 	 * @public
 	 */
-	getServerSnapshot = () => ({
+	getServerSnapshot = (): I18nSnapshot => ({
 		className: null,
 		loaded: true,
 		locale: this._locale,
@@ -106,7 +152,7 @@ class I18n {
 	 * @param {Object} newState New snapshot values
 	 * @private
 	 */
-	_updateSnapshot (newState) {
+	_updateSnapshot (newState: I18nSnapshot) {
 		this._snapshot = newState;
 		if (this._ready && !this._updatingFromRender) {
 			this._notifyListeners();
@@ -121,7 +167,7 @@ class I18n {
 	 * @param {String} locale BCP 47 locale identifier
 	 * @public
 	 */
-	setContext (locale) {
+	setContext (locale: string) {
 		if (this._locale !== locale) {
 			this._locale = locale;
 
@@ -142,17 +188,16 @@ class I18n {
 	 *
 	 * @private
 	 */
-	normalizeResources (resources) {
+	normalizeResources (resources?: Resource[] | null): ResourceDescriptor[] {
 		return Array.isArray(resources) ? resources.map(res => {
 			if (!res) return;
 
-			const fn = res.resource || res;
-			const onLoad = res.onLoad;
+			const {resource: fn, onLoad}: ResourceDescriptor = typeof res === 'function' ? {resource: res} : res;
 
 			if (typeof fn !== 'function') return;
 
 			return {resource: fn, onLoad};
-		}).filter(Boolean) : [];
+		}).filter(Boolean) as ResourceDescriptor[] : [];
 	}
 
 	/**
@@ -194,7 +239,7 @@ class I18n {
 	 *
 	 * @private
 	 */
-	loadResources (spec) {
+	loadResources (spec?: string | null) {
 		if (!this._ready) return;
 
 		const locale = updateLocale(spec);
@@ -208,7 +253,7 @@ class I18n {
 		const bundle = wrapIlibCallback(createResBundle, options);
 
 		if (this.sync) {
-			setResBundle(bundle);
+			setResBundle(bundle as ResBundle | null);
 
 			this.resources.forEach(({resource, onLoad}) => {
 				const result = resource(options);
@@ -216,26 +261,26 @@ class I18n {
 			});
 
 			this._updateSnapshot({
-				className,
+				className: className as string | null,
 				loaded: true,
 				locale,
-				rtl
+				rtl: rtl as boolean
 			});
 		} else {
 			const resources = Promise.all([
 				rtl,
 				className,
 				bundle,
-				...this.resources.map(res => wrapIlibCallback(res.resource, options))
+				...this.resources.map(res => wrapIlibCallback(res.resource as IlibCallbackFn<unknown>, options))
 			]).then(([rtlResult, classNameResult, bundleResult, ...userResources]) => {
-				setResBundle(bundleResult);
+				setResBundle(bundleResult as ResBundle | null);
 				this.resources.forEach(({onLoad}, i) => onLoad && onLoad(userResources[i]));
 
 				return {
-					className: classNameResult,
+					className: classNameResult as string | null,
 					loaded: true,
 					locale,
-					rtl: rtlResult
+					rtl: rtlResult as boolean
 				};
 			});
 			// TODO: Resolve how to handle failed resource requests
@@ -262,7 +307,7 @@ class I18n {
 	 * @returns {undefined}
 	 * @public
 	 */
-	updateLocale = (newLocale) => {
+	updateLocale = (newLocale?: string) => {
 		this.loadResources(newLocale);
 	};
 }
@@ -270,4 +315,11 @@ class I18n {
 export default I18n;
 export {
 	I18n
+};
+export type {
+	I18nConfig,
+	I18nSnapshot,
+	Resource,
+	ResourceDescriptor,
+	ResourceFn
 };

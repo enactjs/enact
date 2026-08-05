@@ -2,19 +2,19 @@ import {on} from '@enact/core/dispatcher';
 import {onWindowReady} from '@enact/core/snapshot';
 
 let focused = false;
-const queue = new Set();
+const queue = new Set<() => void>();
 
-const invoke = (fn) => {
+const invoke = (fn: () => void) => {
 	try {
 		fn();
-	} catch (e) {
+	} catch {
 		// failing silently
 	}
 };
 
 const flush = () => queue.forEach(invoke);
 
-const onWindowFocus = (handler) => {
+const onWindowFocus = (handler: () => void) => {
 	if (focused) {
 		handler();
 	} else {

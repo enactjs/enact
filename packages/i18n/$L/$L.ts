@@ -13,8 +13,18 @@
  * @exports $toIString
  */
 
+import type IString from 'ilib/lib/IString';
+
 import '../src/glue';
 import {getIStringFromBundle, getResBundle} from '../src/resBundle';
+
+/**
+ * A source string with an explicit translation key.
+ */
+interface TranslatableString {
+	key?: string;
+	value: string;
+}
 
 /**
  * Maps a string or key/value object to a translated string for the current locale.
@@ -25,7 +35,7 @@ import {getIStringFromBundle, getResBundle} from '../src/resBundle';
  *
  * @returns {ilib.IString} The translated string
  */
-function toIString (str) {
+function toIString (str: string | TranslatableString): IString {
 	const rb = getResBundle();
 
 	return getIStringFromBundle(str, rb);
@@ -40,7 +50,7 @@ function toIString (str) {
  *
  * @returns {String} The translated string
  */
-function $L (str) {
+function $L (str: string | TranslatableString): string {
 	return String(toIString(str));
 }
 
@@ -48,4 +58,7 @@ export default $L;
 export {
 	$L,
 	toIString
+};
+export type {
+	TranslatableString
 };

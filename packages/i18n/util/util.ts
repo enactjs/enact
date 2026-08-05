@@ -30,7 +30,7 @@ const rtlPattern = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-
  * @returns {Boolean} `true` if `str` should be RTL; `false` if not.
  * @public
  */
-const isRtlText = function (str) {
+const isRtlText = function (str: string): boolean {
 	if (typeof str === 'string') {
 		return rtlPattern.test(str);
 	}
@@ -47,7 +47,7 @@ const isRtlText = function (str) {
  * @returns {String} The capitalized string.
  * @public
  */
-const toCapitalized = function (str) {
+const toCapitalized = function (str: string): string {
 	return toUpperCase(str.slice(0, 1)) + str.slice(1);
 };
 
@@ -61,7 +61,7 @@ const toCapitalized = function (str) {
  * @returns {String} The word-cased string.
  * @public
  */
-const toWordCase = (str) => {
+const toWordCase = (str: string): string => {
 	return str.split(' ').map(toCapitalized).join(' ');
 };
 

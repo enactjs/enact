@@ -1,7 +1,5 @@
 import {createContext, use} from 'react';
 
-const I18nContext = createContext(null);
-
 /**
  * Object returned by `useI18nContext`
  *
@@ -13,6 +11,14 @@ const I18nContext = createContext(null);
  * @property {String}   locale       Current locale
  * @private
  */
+interface I18nContextValue {
+	loaded: boolean;
+	locale: string | null;
+	rtl: boolean;
+	updateLocale: (newLocale?: string) => void;
+}
+
+const I18nContext = createContext<I18nContextValue | null>(null);
 
 /**
  * Retrieves the current locale and a method to update the current locale
@@ -30,4 +36,7 @@ export default useI18nContext;
 export {
 	useI18nContext,
 	I18nContext
+};
+export type {
+	I18nContextValue
 };

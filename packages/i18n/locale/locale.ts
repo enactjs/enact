@@ -7,17 +7,41 @@
  */
 
 import ilib from 'ilib';
+import type Locale from 'ilib/lib/Locale';
 import LocaleInfo from 'ilib/lib/LocaleInfo';
 import ScriptInfo from 'ilib/lib/ScriptInfo';
 
 import {initCaseMappers} from '../src/case';
 
+interface IsNonLatinLocaleOptions {
+	/** Called with the result. If omitted, the request is a no-op. */
+	onLoad?: (isNonLatin: boolean) => void;
+	/** Locales that should be treated as latin regardless of their script */
+	latinLanguageOverrides?: string[];
+	/** Locales that should be treated as non-latin regardless of their script */
+	nonLatinLanguageOverrides?: string[];
+	sync?: boolean;
+	/** Any remaining options are passed through to `LocaleInfo` */
+	[key: string]: unknown;
+}
+
+interface IsRtlLocaleOptions {
+	/** Called with the result. If omitted, the request is a no-op. */
+	onLoad?: (rtl: boolean) => void;
+	sync?: boolean;
+	/** Any remaining options are passed through to `LocaleInfo` */
+	[key: string]: unknown;
+}
+
 // Returns `true` if a locale list is provided and it includes either the language (the first part
 // of the spec e.g. ko) or the entire spec (e.g. ko-KR)
-const includesLocale = (localeList, locale) => Array.isArray(localeList) && (
-	localeList.includes(locale.getLanguage()) ||
-	localeList.includes(locale.toString())
-);
+const includesLocale = (localeList: string[] | null | undefined, locale: Locale): boolean => {
+	if (!Array.isArray(localeList)) return false;
+
+	const language = locale.getLanguage();
+
+	return (language != null && localeList.includes(language)) || localeList.includes(locale.toString());
+};
 
 /**
  * Tell whether or not the given locale is considered a non-Latin locale for webOS purposes. This
@@ -30,7 +54,7 @@ const includesLocale = (localeList, locale) => Array.isArray(localeList) && (
  * @param {Object} [options] An object configuring the request. Must include an `onLoad` member to
  *                           receive the result.
  */
-function isNonLatinLocale (spec, options = {}) {
+function isNonLatinLocale (spec?: string | Locale, options: IsNonLatinLocaleOptions = {}) {
 	const {onLoad, latinLanguageOverrides, nonLatinLanguageOverrides, ...rest} = options;
 
 	if (!onLoad) return;
@@ -58,7 +82,7 @@ function isNonLatinLocale (spec, options = {}) {
  * @param {Object} [options] An object configuring the request. Must include an `onLoad` member to
  *                           receive the result.
  */
-function isRtlLocale (options = {}) {
+function isRtlLocale (options: IsRtlLocaleOptions = {}) {
 	const {onLoad, sync} = options;
 
 	if (!onLoad) return;
@@ -91,7 +115,7 @@ function isRtlLocale (options = {}) {
  * @param {String} locale Locale identifier
  * @returns {undefined}
  */
-const updateLocale = function (locale) {
+const updateLocale = function (locale?: string | null): string {
 	// blow away the cache to force it to reload the manifest files for the new app
 	// eslint-disable-next-line no-undefined
 	if (ilib._load) ilib._load.manifest = undefined;
@@ -115,4 +139,8 @@ export {
 	isNonLatinLocale,
 	isRtlLocale,
 	updateLocale
+};
+export type {
+	IsNonLatinLocaleOptions,
+	IsRtlLocaleOptions
 };

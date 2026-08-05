@@ -1,7 +1,5 @@
-/* global ILIB_ADDITIONAL_RESOURCES_PATH */
-
 /*
- * glue.js - glue code to fit ilib into enyo
+ * glue.ts - glue code to fit ilib into enyo
  *
  * Copyright © 2013-2014 LG Electronics, Inc.
  *
@@ -38,4 +36,4 @@ if (typeof window === 'object' && typeof window.UILocale !== 'undefined') {
 
 // we go ahead and run this once during loading of iLib settings are valid
 // during the loads of later libraries.
-updateLocale(null, true);
+updateLocale(null);

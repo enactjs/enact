@@ -4,12 +4,29 @@ import {isNonLatinLocale, isRtlLocale} from '../locale';
 
 const base = 'enact-locale-';
 
+type DoneCallback = (value: string) => void;
+
+/**
+ * Options for {@link i18n/I18nDecorator.getI18nClasses}.
+ */
+interface GetI18nClassesOptions {
+	/** Perform a synchronous request for the classes */
+	sync?: boolean;
+	/** Called with a string of i18n classes */
+	onLoad?: (classes: string) => void;
+	/** Array of locales to treat as latin */
+	latinLanguageOverrides?: string[];
+	/** Array of locales to treat as non-latin */
+	nonLatinLanguageOverrides?: string[];
+	[key: string]: unknown;
+}
+
 // Callback-friendly version of Promise.all()
-function all (fns, callback) {
-	const result = [];
+function all (fns: Array<(done: DoneCallback) => void>, callback: (result: string[]) => void) {
+	const result: string[] = [];
 	let complete = 0;
 
-	const done = (index) => (value) => {
+	const done = (index: number) => (value: string) => {
 		result[index] = value;
 		complete++;
 
@@ -21,7 +38,7 @@ function all (fns, callback) {
 	fns.forEach((fn, index) => fn(done(index)));
 }
 
-function getClassesForLocale (li, options) {
+function getClassesForLocale (li: LocaleInfo, options: GetI18nClassesOptions) {
 	const locale = li.getLocale();
 
 	const {latinLanguageOverrides, nonLatinLanguageOverrides, ...rest} = options;
@@ -70,7 +87,7 @@ function getClassesForLocale (li, options) {
 			classes.push(base + locale.getRegion());
 		}
 
-		options.onLoad(classes.filter(Boolean).join(' '));
+		options.onLoad!(classes.filter(Boolean).join(' '));
 	});
 }
 
@@ -84,7 +101,7 @@ function getClassesForLocale (li, options) {
  * @param {options.nonLatinLanguageOverrides} Array of locales to treat as non-latin
  * @private
  */
-function getI18nClasses (options = {}) {
+function getI18nClasses (options: GetI18nClassesOptions = {}) {
 	const {sync, onLoad} = options;
 	if (!onLoad) return;
 
@@ -99,3 +116,6 @@ function getI18nClasses (options = {}) {
 }
 
 export default getI18nClasses;
+export type {
+	GetI18nClassesOptions
+};

@@ -1,4 +1,4 @@
-import '../../src/glue.js';
+import '../../src/glue';
 import {isNonLatinLocale} from '../locale';
 
 const validate = (expected) => (actual) => {

@@ -1,0 +1,34 @@
+{
+	"compilerOptions": {
+		"target": "es2022",
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"jsx": "react-jsx",
+		"allowJs": true,
+		"checkJs": false,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"noFallthroughCasesInSwitch": true,
+		"noEmit": true
+	},
+	"include": [
+		"$L/**/*",
+		"I18nDecorator/**/*",
+		"Text/**/*",
+		"locale/**/*",
+		"src/**/*",
+		"util/**/*",
+		"types/**/*"
+	],
+	"exclude": [
+		"node_modules",
+		"build",
+		"**/tests/**"
+	]
+}
