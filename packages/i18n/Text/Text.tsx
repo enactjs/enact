@@ -29,11 +29,17 @@ interface MapPropsToTextObject {
 type MapPropsToText = {[prop: string]: string | MapPropsToTextObject | null | undefined};
 
 interface TextMapEntry {
-	/** the translated text, or `false` while the translation is pending */
+	/**
+	 * The translated text, or `false` while the translation is pending
+	 */
 	translated: string | false;
-	/** the untranslated source text */
+	/**
+	 * The untranslated source text
+	 */
 	text: string;
-	/** value rendered while the translation is pending, or `false` for none */
+	/**
+	 * Value rendered while the translation is pending, or `false` for none
+	 */
 	defaultText: string | false | undefined;
 }
 

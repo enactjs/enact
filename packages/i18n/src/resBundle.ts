@@ -10,10 +10,21 @@ interface TranslatableString {
 }
 
 interface CreateResBundleOptions {
+	/**
+	 * Locale for the resource bundle
+	 */
 	locale?: string;
+	/**
+	 * Perform the request synchronously
+	 */
 	sync?: boolean;
-	/** Called with the new bundle, or `null` if one could not be created */
+	/**
+	 * Called with the new bundle, or `null` if one could not be created
+	 */
 	onLoad?: (bundle: ResBundle | null) => void;
+	/**
+	 * Any remaining options are passed through to `ResBundle`
+	 */
 	[key: string]: unknown;
 }
 

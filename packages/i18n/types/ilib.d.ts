@@ -3,6 +3,18 @@
  *
  * ilib ships no TypeScript definitions, so the surface consumed by this
  * package is declared here. Extend these as more of the ilib API is used.
+ *
+ * Risk: these `declare module` blocks have no top-level import/export, so
+ * TypeScript treats them as ambient modules that fully shadow any real
+ * declarations resolving to the same specifiers: they don't merge with or
+ * defer to real types, they replace them. If ilib ever ships its own types
+ * (a `types`/`typings` field) or a `@types/ilib` package is published on
+ * DefinitelyTyped, this file would silently hide that real surface instead
+ * of erroring, and any signature drift between it and the hand-written
+ * declarations here would go uncaught by tsc. Neither exists as of ilib
+ * 14.22.0 (checked 2026-08-06), so nothing to do today, but if either
+ * appears, delete the corresponding blocks here rather than leave them
+ * layered on top.
  */
 
 declare module 'ilib' {

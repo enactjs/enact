@@ -1,5 +1,5 @@
 /*
- * glue.ts - glue code to fit ilib into enyo
+ * glue.ts - glue code to fit ilib into enact
  *
  * Copyright © 2013-2014 LG Electronics, Inc.
  *

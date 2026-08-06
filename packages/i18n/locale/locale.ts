@@ -14,22 +14,40 @@ import ScriptInfo from 'ilib/lib/ScriptInfo';
 import {initCaseMappers} from '../src/case';
 
 interface IsNonLatinLocaleOptions {
-	/** Called with the result. If omitted, the request is a no-op. */
+	/**
+	 * Called with the result. If omitted, the request is a no-op.
+	 */
 	onLoad?: (isNonLatin: boolean) => void;
-	/** Locales that should be treated as latin regardless of their script */
+	/**
+	 * Locales that should be treated as latin regardless of their script
+	 */
 	latinLanguageOverrides?: string[];
-	/** Locales that should be treated as non-latin regardless of their script */
+	/**
+	 * Locales that should be treated as non-latin regardless of their script
+	 */
 	nonLatinLanguageOverrides?: string[];
+	/**
+	 * Perform the request synchronously
+	 */
 	sync?: boolean;
-	/** Any remaining options are passed through to `LocaleInfo` */
+	/**
+	 * Any remaining options are passed through to `LocaleInfo`
+	 */
 	[key: string]: unknown;
 }
 
 interface IsRtlLocaleOptions {
-	/** Called with the result. If omitted, the request is a no-op. */
+	/**
+	 * Called with the result. If omitted, the request is a no-op.
+	 */
 	onLoad?: (rtl: boolean) => void;
+	/**
+	 * Perform the request synchronously
+	 */
 	sync?: boolean;
-	/** Any remaining options are passed through to `LocaleInfo` */
+	/**
+	 * Any remaining options are passed through to `LocaleInfo`
+	 */
 	[key: string]: unknown;
 }
 

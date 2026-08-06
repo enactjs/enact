@@ -1,21 +1,21 @@
 {
 	"compilerOptions": {
-		"target": "es2022",
+		"allowJs": true,
+		"allowSyntheticDefaultImports": true,
+		"checkJs": false,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"isolatedModules": true,
+		"jsx": "react-jsx",
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"module": "esnext",
 		"moduleResolution": "bundler",
-		"jsx": "react-jsx",
-		"allowJs": true,
-		"checkJs": false,
-		"skipLibCheck": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"resolveJsonModule": true,
-		"isolatedModules": true,
-		"forceConsistentCasingInFileNames": true,
-		"strict": true,
+		"noEmit": true,
 		"noFallthroughCasesInSwitch": true,
-		"noEmit": true
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"target": "es2022"
 	},
 	"include": [
 		"$L/**/*",
@@ -23,12 +23,12 @@
 		"Text/**/*",
 		"locale/**/*",
 		"src/**/*",
-		"util/**/*",
-		"types/**/*"
+		"types/**/*",
+		"util/**/*"
 	],
 	"exclude": [
-		"node_modules",
+		"**/tests/**",
 		"build",
-		"**/tests/**"
+		"node_modules"
 	]
 }

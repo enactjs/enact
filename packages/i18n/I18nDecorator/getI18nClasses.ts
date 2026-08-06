@@ -10,13 +10,21 @@ type DoneCallback = (value: string) => void;
  * Options for {@link i18n/I18nDecorator.getI18nClasses}.
  */
 interface GetI18nClassesOptions {
-	/** Perform a synchronous request for the classes */
+	/**
+	 * Perform a synchronous request for the classes
+	 * */
 	sync?: boolean;
-	/** Called with a string of i18n classes */
+	/**
+	 * Called with a string of i18n classes
+	 */
 	onLoad?: (classes: string) => void;
-	/** Array of locales to treat as latin */
+	/**
+	 * Array of locales to treat as latin
+	 */
 	latinLanguageOverrides?: string[];
-	/** Array of locales to treat as non-latin */
+	/**
+	 * Array of locales to treat as non-latin
+	 */
 	nonLatinLanguageOverrides?: string[];
 	[key: string]: unknown;
 }

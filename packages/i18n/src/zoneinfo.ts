@@ -98,9 +98,9 @@ class ZoneInfoFile {
 	constructor (path: string) {
 		switch (_platform) {
 			/*
-			Uncomment and use this when enyo works for binary load.
-			case 'enyo':
-				let ajax = new enyo.Ajax({
+			Uncomment and use this when enact works for binary load.
+			case 'enact':
+				let ajax = new enact.Ajax({
 					xhrFields: {
 						responseType:'arraybuffer'
 					},

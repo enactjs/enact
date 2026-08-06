@@ -82,7 +82,7 @@ function setLocalStorageItem (keyName: string, keyValue: string) {
 	}
 }
 
-class EnyoLoader extends Loader {
+class EnactLoader extends Loader {
 	base: string;
 	webos?: boolean;
 	manifest?: {[dirpath: string]: ManifestEntry};
@@ -91,7 +91,7 @@ class EnyoLoader extends Loader {
 	constructor () {
 		super();
 		this.base = iLibBase;
-		// TODO: full enyo.platform implementation for improved accuracy
+		// TODO: full enact.platform implementation for improved accuracy
 		if (typeof window === 'object' && typeof (window.webOSSystem ?? window.PalmSystem) === 'object') {
 			this.webos = true;
 		}
@@ -459,7 +459,7 @@ class EnyoLoader extends Loader {
 	}
 
 	isAvailable (_root: string, path: string): boolean {
-		// util.print('enyo loader: isAvailable ' + path + '? ');
+		// util.print('enact loader: isAvailable ' + path + '? ');
 		// star means attempt to load everything because there was no manifest in that dir
 		if (this.manifest![_root] === '*' || (this.manifest![_root] && this.manifest![_root].indexOf(path) !== -1)) {
 			// util.print('true\n');
@@ -471,5 +471,5 @@ class EnyoLoader extends Loader {
 	}
 }
 
-export default EnyoLoader;
-export {EnyoLoader as Loader};
+export default EnactLoader;
+export {EnactLoader as Loader};
