@@ -1,0 +1,1 @@
+export type CallbackObject<T = any> = Record<string, T>;
