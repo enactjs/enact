@@ -51,9 +51,13 @@ const _platform = (typeof window !== 'undefined' && (window.webOSSystem || windo
  * A local time type parsed from the zone info file (ttinfo).
  */
 interface ZoneInfoEntry {
-	/** offset from UTC in minutes */
+	/**
+	 * offset from UTC in minutes
+	 */
 	offset: number;
-	/** whether this time type is daylight savings time */
+	/**
+	 * whether this time type is daylight savings time
+	 */
 	isdst: boolean;
 	abbreviationIndex?: number;
 	abbreviation?: string;
@@ -66,7 +70,9 @@ interface ZoneRule {
 	offset: number;
 	isdst: boolean;
 	abbreviation?: string;
-	/** DST savings in minutes, calculated for daylight rules */
+	/**
+	 * DST savings in minutes, calculated for daylight rules
+	 */
 	savings?: number;
 }
 
