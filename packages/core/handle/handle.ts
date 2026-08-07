@@ -79,12 +79,10 @@
 
 import cond from 'ramda/src/cond';
 import curry from 'ramda/src/curry';
-import {SyntheticEvent} from 'react';
-
-import {CurriedForProp, CurriedForward, EventAdapter, EventHandler, HandlerFunction} from './types';
+import {Context, SyntheticEvent} from 'react';
 
 import {is} from '../keymap';
-import {CallbackObject} from '../types';
+import {Callback, CallbackObject} from '../types';
 
 /**
  * The signature for event handling functions supported by `handle` and related functions
@@ -95,6 +93,7 @@ import {CallbackObject} from '../types';
  * @param {Object<string, any>} props
  * @param {Object<string, any>} context
  */
+export type HandlerFunction = (event: Event, props: CallbackObject, context: Context<any>) => any;
 
 /**
  * The signature for {@link core/handle.adaptEvent} parameter `adapter`
@@ -106,6 +105,12 @@ import {CallbackObject} from '../types';
  * @param {Object<string, any>} context
  * @returns {any}
  */
+export type EventAdapter = (event: Event, props: CallbackObject, context: Context<any>) => any;
+
+export interface EventHandler extends HandlerFunction {
+	named: (name: string) => HandlerFunction;
+	bindAs: (obj: CallbackObject, name?: string) => HandlerFunction;
+}
 
 /*
  * Accepts an array of handlers, sanitizes them, and returns a handler function
@@ -147,7 +152,7 @@ const hasPropsAndContext = (obj: CallbackObject): boolean => (
  * @memberof core/handle
  * @private
  */
-const named = <T extends Function>(fn: T, name: string): T => {
+const named = (fn: Callback, name: string) => {
 	if (__DEV__) {
 		try {
 			Object.defineProperty(fn, 'name', {
@@ -167,7 +172,7 @@ const named = <T extends Function>(fn: T, name: string): T => {
  * @memberof core/handle
  * @private
  */
-const bindAs = <T extends Function>(fn: Function, obj: CallbackObject, name?: string): T => {
+const bindAs = (fn: Callback, obj: CallbackObject, name?: string) => {
 	const namedFunction = name ? named(fn, name) : fn;
 	const bound = namedFunction.bind(obj);
 
@@ -207,7 +212,7 @@ const decorateHandleFunction = (fn: HandlerFunction) => {
  * @memberof core/handle
  * @public
  */
-const handle = function (this: CallbackObject, ...handlers: HandlerFunction[]): EventHandler {
+const handle = function (this: any, ...handlers: HandlerFunction[]): EventHandler {
 	const h = makeHandler(handlers);
 
 	// In order to support binding either handle (handle.bind(this)) or a handler
@@ -215,7 +220,7 @@ const handle = function (this: CallbackObject, ...handlers: HandlerFunction[]): 
 	// context if fn() doesn't have its own `this`.
 	const _outer = this;
 
-	const fn = function prepareHandleArgs (this: CallbackObject, ev: Event, props?: CallbackObject, context?: CallbackObject) {
+	const fn = function prepareHandleArgs (this: any, ev: Event, props?: CallbackObject, context?: CallbackObject) {
 		let caller = null;
 
 		// if handle() was bound to a class, use its props and context. otherwise, we accept
@@ -233,8 +238,8 @@ const handle = function (this: CallbackObject, ...handlers: HandlerFunction[]): 
 		return h.call(caller, ev, props, context);
 	};
 
-	fn.finally = function (cleanup: Function) {
-		return decorateHandleFunction(function handleWithFinally (this: CallbackObject, ev: Event, props: CallbackObject, context: CallbackObject) {
+	fn.finally = function (cleanup: Callback) {
+		return decorateHandleFunction(function handleWithFinally (this: any, ev: Event, props: CallbackObject, context: CallbackObject) {
 			let result = false;
 
 			if (hasPropsAndContext(this)) {
@@ -378,7 +383,7 @@ const callOnEvent = handle.callOnEvent = curry((methodName: string, ev: Callback
  */
 const forEventProp = handle.forEventProp = curry((prop: string, value: any, ev: CallbackObject) => {
 	return ev[prop] === value;
-}) as CurriedForward;
+});
 
 /**
  * Forwards the event to a function at `name` on `props`. If the specified prop is `undefined` or
@@ -412,7 +417,7 @@ const forward = handle.forward = curry(named((name: string, ev?: CallbackObject,
 	}
 
 	return true;
-}, 'forward')) as CurriedForward;
+}, 'forward'));
 
 /**
  * Calls `event.preventDefault()` and returns `true`.
@@ -598,7 +603,7 @@ const forKey = handle.forKey = curry((name: string, ev: KeyboardEvent): boolean 
  */
 const forProp = handle.forProp = curry((prop: string, value, ev: Event, props: CallbackObject): boolean => {
 	return props[prop] === value;
-}) as CurriedForProp;
+});
 
 /**
  * Logs the event, props, and context optionally preceded by a custom message. Will only log in
@@ -672,7 +677,7 @@ const log = handle.log = curry((message: string, ev: SyntheticEvent, ...args): b
  * @public
  */
 const call = function (method: string): HandlerFunction {
-	return named(function (this: CallbackObject, ...args) {
+	return named(function (this: any, ...args) {
 		if (this && this[method]) {
 			return this[method](...args);
 		}
@@ -712,8 +717,8 @@ const call = function (method: string): HandlerFunction {
  * @public
  */
 const adaptEvent = handle.adaptEvent = curry(function (adapter: EventAdapter, handler: HandlerFunction): HandlerFunction {
-	return named(function (this: CallbackObject, ev, ...args) {
-		return handler.call(this, adapter.call(this, ev, ...args), ...args);
+	return named(function (this: any, ev, ...args) {
+		return handler.call(this, adapter.call(this, ev, args[0], args[1]), args[0], args[1]);
 	}, 'adaptEvent');
 });
 
@@ -752,7 +757,7 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter: EventAdapter, ha
  */
 const forwardCustom = handle.forwardCustom = function (name: string, adapter?: EventAdapter): HandlerFunction {
 	return named(adaptEvent(
-		function (this: CallbackObject, ev, ...args) {
+		function (this: any, ev, ...args) {
 			let customEventPayload = adapter ? adapter.call(this, ev, ...args) : null;
 
 			// Handle either no adapter or a non-object return from the adapter
@@ -816,11 +821,11 @@ const forwardCustom = handle.forwardCustom = function (name: string, adapter?: E
  * @private
  */
 const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = function (name: string, adapter?: EventAdapter): HandlerFunction {
-	return named(function (this: CallbackObject, ev, ...args) {
+	return named(function (this: any, ev, ...args) {
 		let prevented = false;
 
-		function adapterWithPrevent (this: CallbackObject) {
-			let customEventPayload = adapter ? adapter.call(this, ev, ...args) : null;
+		function adapterWithPrevent (this: any) {
+			let customEventPayload = adapter ? adapter.call(this, ev, args[0], args[1]) : null;
 			let existingPreventDefault = null;
 
 			// Handle either no adapter or a non-object return from the adapter
@@ -844,7 +849,7 @@ const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = function (nam
 			return customEventPayload;
 		}
 
-		return forwardCustom.call(this, name, adapterWithPrevent.bind(this))(ev, ...args) && !prevented;
+		return forwardCustom.call(this, name, adapterWithPrevent.bind(this))(ev, args[0], args[1]) && !prevented;
 	}, 'forwardCustomWithPrevent');
 };
 

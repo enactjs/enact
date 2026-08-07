@@ -28,9 +28,20 @@ import * as ReactIs from 'react-is';
 
 import Job from './Job';
 
-import {ClassNames, ClassNamesObject, FilterCallback} from './types';
+import {Callback, CallbackObject} from '../types';
 
-import {CallbackObject} from '../types';
+export type ClassNames = boolean | string | string[];
+
+export type FilterCallback<T> = (
+	value: T,
+	index: number,
+	array: T[]
+) => boolean;
+
+export interface ClassNamesObject {
+	[key: string]: string
+}
+
 
 /**
  * Capitalizes a given string (not locale-aware).
@@ -280,7 +291,7 @@ const applyDefaultProps = (target: CallbackObject, defaultProps: CallbackObject,
  * @memberof core/util
  * @public
  */
-const memoize = (fn: Function) => {
+const memoize = (fn: Callback) => {
 	let cache: CallbackObject = {};
 	return (...args: any[]) => {
 		let n = args[0];
@@ -312,7 +323,7 @@ const memoize = (fn: Function) => {
  * @see https://react.dev/reference/react/Children#children-map
  * @public
  */
-const mapAndFilterChildren = (children: ReactNode, callback: Function, filter: FilterCallback<any>) => {
+const mapAndFilterChildren = (children: ReactNode, callback: Callback, filter: FilterCallback<any>) => {
 	const result = Children.map(children, (child, ...rest) => {
 		if (child != null) {
 			return callback(child, ...rest);
@@ -397,7 +408,13 @@ const shallowEqual = (a: CallbackObject, b: CallbackObject) => {
  */
 const checkPropTypes = (component: ComponentType<any>, props: CallbackObject, prevProps?: CallbackObject) => {
 	if (__DEV__ && !(prevProps && prevProps === props)) {
-		const {displayName, name, propTypes} = component;
+		let currentComponent = component;
+
+		if (component.constructor) {
+			currentComponent = component.constructor as ComponentType<any>;
+		}
+
+		const {displayName, name, propTypes} = currentComponent;
 
 		check(propTypes, props, 'prop', displayName || name, () => {
 			// Create a new error to capture the current stack trace

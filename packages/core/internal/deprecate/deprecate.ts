@@ -5,7 +5,16 @@
  * @private
  */
 
-import {Config, ConfigMsg} from './types';
+export interface Config {
+	name?: string;
+	message?: string;
+	since?: string;
+	until?: string;
+	replacedBy?: string;
+	alwaysWarn?: boolean;
+}
+
+export type ConfigMsg = Omit<Config, 'alwaysWarn'>
 
 // Utility method to format deprecate message
 const formatMsg = ({message, name, until, replacedBy, since}: ConfigMsg) => {

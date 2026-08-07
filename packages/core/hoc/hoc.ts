@@ -7,8 +7,8 @@
 
 import mergeDeepWithKey from 'ramda/src/mergeDeepWithKey';
 
+import {Callback, CallbackObject} from '../types';
 import {isRenderable} from '../util';
-import {CallbackObject} from '../types';
 
 const mergeFn = (key: string, defaultValue: any, userValue: any) => {
 	// eslint-disable-next-line no-undefined
@@ -62,17 +62,17 @@ const mergeFn = (key: string, defaultValue: any, userValue: any) => {
  * @memberof core/hoc
  * @public
  */
-const hoc = (defaultConfig: CallbackObject, hawk: Function) => {
+const hoc = (defaultConfig: CallbackObject, hawk: Callback) => {
 
 	// normalize arguments to allow defaultConfig to be omitted
 	let factory = hawk;
 	let defaults: CallbackObject | null = defaultConfig;
 	if (!factory && typeof defaultConfig === 'function') {
-		factory = defaultConfig;
+		factory = defaultConfig as Callback;
 		defaults = null;
 	}
 
-	const Component = (config: CallbackObject, maybeWrapped: Function) => {
+	const Component = (config: CallbackObject, maybeWrapped: Callback) => {
 		if (isRenderable(config)) {
 			return factory(defaults, config);
 		} else {

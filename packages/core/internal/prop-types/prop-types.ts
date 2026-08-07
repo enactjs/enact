@@ -1,10 +1,9 @@
 import PropTypes, {Requireable, Validator} from 'prop-types';
 
+import {CallbackObject} from '../../types';
 import {isRenderable} from '../../util';
 
 import deprecate from '../deprecate';
-
-import {CallbackObject} from '../../types';
 
 const isRequired = (fn: Validator<any>): Requireable<any> => {
 	(fn as Requireable<any>).isRequired = function (props: CallbackObject, key: string, componentName: string, location: string, propFullName: string, ...rest: []) {

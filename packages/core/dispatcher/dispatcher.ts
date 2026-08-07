@@ -9,6 +9,8 @@
 
 import curry from 'ramda/src/curry';
 
+import {Callback} from '../types';
+
 import {getListeners, addListener} from './listeners';
 
 let defaultTarget: Node | null = typeof document === 'object' ? document : null;
@@ -22,7 +24,7 @@ let rootId: string;
  * @memberof core/dispatcher
  * @private
  */
-const setDefaultTargetById = (id: string): undefined => {
+const setDefaultTargetById = (id: string) => {
 	defaultTarget = typeof document === 'object' && document.querySelector('#' + id) || defaultTarget;
 	rootId = id;
 };
@@ -52,7 +54,7 @@ const getDefaultTarget = () => {
  * @memberof core/dispatcher
  * @private
  */
-const invoker = curry(function (ev: Event, fn: Function) {
+const invoker = curry(function (ev: Event, fn: Callback) {
 	try {
 		fn(ev);
 	} catch (e: unknown) {
@@ -95,7 +97,7 @@ const dispatcher = function (ev: Event): undefined {
  * @memberof core/dispatcher
  * @public
  */
-const on = function (name: string, fn: Function, target: Node | Window | null = getDefaultTarget()): undefined {
+const on = function (name: string, fn: Callback, target: Node | Window | null = getDefaultTarget()) {
 	if (target) {
 		const added = addListener(target, name, fn);
 
@@ -115,7 +117,7 @@ const on = function (name: string, fn: Function, target: Node | Window | null = 
  * @memberof core/dispatcher
  * @public
  */
-const off = function (name: string, fn: Function, target = getDefaultTarget()): undefined {
+const off = function (name: string, fn: Callback, target = getDefaultTarget()) {
 	if (target) {
 		const listeners = getListeners(target, name);
 		const index = listeners.indexOf(fn);
@@ -141,7 +143,7 @@ const off = function (name: string, fn: Function, target = getDefaultTarget()): 
  * @memberof core/dispatcher
  * @public
  */
-const once = function (name: string, fn: Function, target: Node): Function {
+const once = function (name: string, fn: Callback, target: Node): Function {
 	const onceFn = function (ev: Event) {
 		fn(ev);
 		off(name, onceFn, target);

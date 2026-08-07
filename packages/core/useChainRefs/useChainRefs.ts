@@ -7,10 +7,10 @@
  * @private
  */
 
-import {useCallback} from 'react';
+import {RefCallback, RefObject, useCallback} from 'react';
 import warning from 'warning';
 
-import {Ref} from './types';
+export type Ref = RefObject<{}> | RefCallback<{}>
 
 // Safely handles functional and object refs (and ignores invalid refs)
 function updateRef (ref: Ref, node: Node) {
@@ -48,7 +48,7 @@ function chainRefs (...refs: Ref[]): Function {
  * @returns {Function}                   A memoized callback that updates each reference
  * @public
  */
-function useChainRefs (...refs: Ref[]): Function {
+function useChainRefs (...refs: Ref[]) {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	return useCallback(chainRefs(...refs), refs);
 }

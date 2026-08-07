@@ -7,9 +7,32 @@
  * @public
  */
 
-import {PlatformDescription} from './types';
-
 import deprecate from '../internal/deprecate';
+
+/**
+ * @typedef {Object} PlatformDescription
+ * @property {String} browserName - The name of the detected browser
+ * @property {Number} browserVersion - The version of the detected browser
+ * @property {Number} chrome - The version of the detected browser, if chrome browser is detected
+ * @property {Number} firefox - The version of the detected browser, if firefox browser is detected
+ * @property {Number} safari - The version of the detected browser, if safari browser is detected
+ * @property {Boolean} touchEvent - `true` if the browser has native touch events
+ * @property {Boolean} touchScreen - `true` if the platform has a touch screen
+ * @property {String} type - The type of the detected platform. One of 'desktop', 'mobile', 'webos', 'node', or 'unknown'
+ *
+ * @memberof core/platform
+ * @public
+ */
+export type PlatformDescription = {
+	browserName: string;
+	browserVersion: number;
+	chrome?: number;
+	firefox?: number;
+	safari?: number;
+	touchEvent?: boolean;
+	touchScreen?: boolean;
+	type: string;
+}
 
 // Refer the following for more details: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis
 const browserEnvironment = () => !!globalThis.window;
@@ -79,20 +102,6 @@ const parseUserAgent = (userAgent: string) => {
 	return detectedInfo;
 };
 
-/**
- * @typedef {Object} PlatformDescription
- * @property {String} browserName - The name of the detected browser
- * @property {Number} browserVersion - The version of the detected browser
- * @property {Number} chrome - The version of the detected browser, if chrome browser is detected
- * @property {Number} firefox - The version of the detected browser, if firefox browser is detected
- * @property {Number} safari - The version of the detected browser, if safari browser is detected
- * @property {Boolean} touchEvent - `true` if the browser has native touch events
- * @property {Boolean} touchScreen - `true` if the platform has a touch screen
- * @property {String} type - The type of the detected platform. One of 'desktop', 'mobile', 'webos', 'node', or 'unknown'
- *
- * @memberof core/platform
- * @public
- */
 let detectedPlatform: PlatformDescription | null = null;
 
 /**

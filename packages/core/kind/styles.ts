@@ -3,8 +3,8 @@ import classnames from 'classnames/bind';
 import {CallbackObject} from '../types';
 import {mergeClassNameMaps, normalizePublicClassNames} from '../util';
 
-import {addInternalProp} from './util';
 import {ComputedPropFunction} from './types';
+import {addInternalProp} from './util';
 
 /**
  * Merges external and internal CSS classes and style objects. Internal CSS classes can be

@@ -1,6 +1,10 @@
-import {PublicClassNames} from './types';
-
 import {mergeClassNameMaps, normalizePublicClassNames} from '../util';
+
+export interface PublicClassNames {
+	componentCss: {[key: string]: string},
+	customCss: {[key: string]: string},
+	publicClassNames: boolean | string | string[],
+}
 
 /**
  * A hook for supporting `publicClassNames` to functional components.

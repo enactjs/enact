@@ -1,5 +1,7 @@
 import invariant from 'invariant';
 
+import {Callback} from '../types';
+
 /**
  * Provides a convenient way to manage timed execution of functions.
  *
@@ -20,7 +22,7 @@ class Job {
 	 *
 	 * @memberof core/util.Job.prototype
 	 */
-	constructor (fn: Function, timeout: number) {
+	constructor (fn: Callback, timeout: number) {
 		this.fn = fn;
 		this.timeout = timeout;
 	}
@@ -40,10 +42,8 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	start = (...args: any) => {
-		if (this.timeout) {
-			this.startAfter(this.timeout, ...args);
-		}
+	start = (...args: any[]) => {
+		this.startAfter(this.timeout as number, ...args);
 	};
 
 	/**
@@ -58,7 +58,7 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	startAfter = (timeout: number, ...args: any) => {
+	startAfter = (timeout: number, ...args: any[]) => {
 		this.stop();
 		this.type = 'timeout';
 		this.id = setTimeout(() => this.run(args), timeout);
@@ -97,10 +97,8 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	throttle = (...args: any) => {
-		if (this.timeout) {
-			this.throttleUntil(this.timeout, ...args);
-		}
+	throttle = (...args: any[]) => {
+		this.throttleUntil(this.timeout as number, ...args);
 	};
 
 	/**
@@ -116,7 +114,7 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	throttleUntil = (timeout: number, ...args: any) => {
+	throttleUntil = (timeout: number, ...args: any[]) => {
 		if (!this.id) {
 			this.type = 'timeout';
 			this.run(args);
@@ -134,7 +132,7 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	idle = (...args: any) => {
+	idle = (...args: any[]) => {
 		this.idleUntil(0, ...args);
 	};
 
@@ -151,7 +149,7 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	idleUntil = (timeout: number, ...args: any) => {
+	idleUntil = (timeout: number, ...args: any[]) => {
 		if (typeof window !== 'undefined' && window.requestIdleCallback) {
 			this.stop();
 			this.type = 'idle';
@@ -172,10 +170,8 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	startRaf = (...args: any) => {
-		if (this.timeout) {
-			this.startRafAfter(this.timeout, ...args);
-		}
+	startRaf = (...args: any[]) => {
+		this.startRafAfter(this.timeout as number, ...args);
 	};
 
 	/**
@@ -189,7 +185,7 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	startRafAfter = (timeout?: number, ...args: any) => {
+	startRafAfter = (timeout?: number, ...args: any[]) => {
 		this.type = 'raf';
 		if (typeof window !== 'undefined') {
 			let time: number | null = null;
@@ -202,9 +198,7 @@ class Job {
 				} else {
 					time = null;
 					this.run(args);
-					if (this.id) {
-						window.cancelAnimationFrame(this.id as number);
-					}
+					window.cancelAnimationFrame(this.id as number);
 					this.id = null;
 				}
 			};

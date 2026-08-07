@@ -1,1 +1,0 @@
-export type HandlersType = Record<string, Function>;

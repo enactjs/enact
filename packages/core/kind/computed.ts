@@ -1,4 +1,5 @@
 import {CallbackObject} from '../types';
+
 import {ComputedPropFunction} from './types';
 
 /**

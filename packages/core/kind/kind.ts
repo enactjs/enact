@@ -183,7 +183,7 @@ const kind = (config: KindConfig) => {
 	} else {
 		Component = class extends ReactComponent {
 			static contextType = contextType;
-			declare context: Context<any>;
+			context = contextType;
 			handlers;
 
 			constructor (props: CallbackObject) {

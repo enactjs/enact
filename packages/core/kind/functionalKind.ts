@@ -7,14 +7,14 @@
 
 import {Context, createContext, useContext} from 'react';
 
+import {CallbackObject} from '../types';
 import useHandlers from '../useHandlers';
 import {checkPropTypes, applyDefaultProps} from '../util';
 
 import computed from './computed';
 import styles from './styles';
-import {bindInlineHandlers} from './util';
 import {KindConfig, RenderFunction} from './types';
-import {CallbackObject} from '../types';
+import {bindInlineHandlers} from './util';
 
 // Fallback context when none is specified.
 const NoContext = createContext(null);

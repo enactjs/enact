@@ -1,6 +1,6 @@
 import {Context} from 'react';
 
-import {CallbackObject} from '../types';
+import {Callback, CallbackObject} from '../types';
 import useClass from '../useClass';
 
 import Handlers from './Handlers';
@@ -19,7 +19,7 @@ import Handlers from './Handlers';
  * @returns {Object}                            A map of bound handlers
  * @private
  */
-function useHandlers (handlers: CallbackObject<Function>, props?: any, context?: Context<any>) {
+function useHandlers (handlers: CallbackObject<Callback>, props?: any, context?: Context<any>) {
 	const h = useClass(Handlers, handlers);
 	h.setContext(props, context);
 

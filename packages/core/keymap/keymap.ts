@@ -1,6 +1,15 @@
 import curry from 'ramda/src/curry';
 
-import {KeyCode, KeyMapRegistry, ObjectRegistry} from './types';
+import {Callback} from '../types';
+
+export interface ObjectRegistry {
+	[key: string]: KeyCode;
+}
+export interface KeyMapRegistry {
+	[key: string]: number[];
+}
+
+export type KeyCode = number | number[];
 
 /*
  * The singleton map of names to keyCodes. If a name doesn't have any keyCodes mapped to it, it will
@@ -34,7 +43,7 @@ const toLowerCase = (name: string) => name ? name.toLowerCase() : '';
  * @memberof core/keymap
  * @private
  */
-const forEachObj = curry(function (fn: Function, set: ObjectRegistry) {
+const forEachObj = curry(function (fn: Callback, set: ObjectRegistry) {
 	Object.keys(set).forEach(name => fn(name, set[name]));
 });
 
@@ -51,7 +60,7 @@ const forEachObj = curry(function (fn: Function, set: ObjectRegistry) {
  * @memberof core/keymap
  * @private
  */
-const oneOrArray = curry(function (fn: Function, name: string, keyCode: KeyCode) {
+const oneOrArray = curry(function (fn: Callback, name: string, keyCode: KeyCode) {
 	if (Array.isArray(keyCode)) {
 		keyCode.forEach(fn(name));
 	} else {

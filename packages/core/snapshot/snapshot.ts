@@ -10,6 +10,8 @@
 
 import invariant from 'invariant';
 
+import {Callback} from '../types';
+
 const windowCallbacks: Function[] = [];
 
 /**
@@ -46,7 +48,7 @@ function isWindowReady (): boolean {
  * @memberof core/snapshot
  * @public
  */
-function onWindowReady (callback: Function): undefined {
+function onWindowReady (callback: Callback): undefined {
 	if (isWindowReady()) {
 		callback();
 	} else {

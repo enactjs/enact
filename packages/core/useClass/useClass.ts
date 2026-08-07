@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-import {Constructor} from './types';
+export type Constructor<T> = new (...args: any[]) => T;
 
 /**
  * Creates one instance of the class, `Ctor` with the provided `args`, for the life of the

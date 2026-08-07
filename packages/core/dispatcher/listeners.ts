@@ -1,8 +1,8 @@
-import {ListenerMap} from './types';
+import {Callback, CallbackObject} from '../types';
 
 // Simple Map polyfill mapping targets to a hash of names->handler[]
 const targets: EventTarget[] = [];
-const events: ListenerMap[] = [];
+const events: CallbackObject<Callback[]>[] = [];
 
 const getListeners = function (target: EventTarget, name: string) {
 	let targetIndex = targets.indexOf(target);
@@ -13,7 +13,7 @@ const getListeners = function (target: EventTarget, name: string) {
 	return (listeners[name] = listeners[name] || []);
 };
 
-const addListener = function (target: EventTarget, name: string, fn: Function) {
+const addListener = function (target: EventTarget, name: string, fn: Callback) {
 	const listeners = getListeners(target, name);
 
 	if (listeners.indexOf(fn) === -1) {

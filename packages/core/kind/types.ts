@@ -1,4 +1,4 @@
-import {ComponentClass, ComponentType, Context, FunctionComponent, ReactElement} from 'react';
+import {ComponentType, Context, ReactElement} from 'react';
 
 import {CallbackObject} from '../types';
 
