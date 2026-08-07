@@ -19,12 +19,14 @@ let rootId: string;
 /*
  * Sets a selector for the default target. If no selector is set, `document` is the default target.
  *
+ * @function
  * @param	{String}	id	Node id of the default target
  *
+ * @returns {undefined}
  * @memberof core/dispatcher
  * @private
  */
-const setDefaultTargetById = (id: string) => {
+const setDefaultTargetById = (id: string): undefined => {
 	defaultTarget = typeof document === 'object' && document.querySelector('#' + id) || defaultTarget;
 	rootId = id;
 };
@@ -34,27 +36,32 @@ const setDefaultTargetById = (id: string) => {
  * If the default target is falsy and the stored id of the root exists, it tries to find the
  * default target based on the id.
  *
+ * @function
+ *
+ * @returns {Node|Boolean}
  * @memberof core/dispatcher
  * @private
  */
-const getDefaultTarget = () => {
+const getDefaultTarget = (): Node | Boolean => {
 	if (!defaultTarget && rootId) {
 		setDefaultTargetById(rootId);
 	}
 
-	return defaultTarget;
+	return defaultTarget as Node | Boolean;
 };
 
 /*
  * Wraps event callbacks with a try-catch block to prevent unrelated code from blocking.
  *
+ * @function
  * @param	{Event}		ev	Event payload
  * @param	{Function}	fn	Event callback
  *
+ * @returns {undefined}
  * @memberof core/dispatcher
  * @private
  */
-const invoker = curry(function (ev: Event, fn: Callback) {
+const invoker = curry(function (ev: Event, fn: Callback): undefined {
 	try {
 		fn(ev);
 	} catch (e: unknown) {
@@ -68,8 +75,10 @@ const invoker = curry(function (ev: Event, fn: Callback) {
 /*
  * Dispatches an event to the registered handlers.
  *
+ * @function
  * @param	{Event}		ev	Event payload
  *
+ * @returns {undefined}
  * @memberof core/dispatcher
  * @private
  */
@@ -90,15 +99,17 @@ const dispatcher = function (ev: Event): undefined {
 /**
  * Adds a new global event listener. Duplicate event handlers will be discarded.
  *
+ * @function
  * @param	{String}	name				Event name
  * @param	{Function}	fn					Event handler
  * @param	{Node}		[target='document']	Event listener target
  *
+ * @returns {undefined}
  * @memberof core/dispatcher
  * @public
  */
-const on = function (name: string, fn: Callback, target: Node | Window | null = getDefaultTarget()) {
-	if (target) {
+const on = function (name: string, fn: Callback, target = getDefaultTarget()): undefined {
+	if (target && !(target instanceof Boolean)) {
 		const added = addListener(target, name, fn);
 
 		if (added && getListeners(target, name).length === 1) {
@@ -110,15 +121,17 @@ const on = function (name: string, fn: Callback, target: Node | Window | null = 
 /**
  * Removes a global event listener.
  *
+ * @function
  * @param	{String}	name				Event name
  * @param	{Function}	fn					Event handler
  * @param	{Node}		[target=`document`]	Event listener target
  *
+ * @returns {undefined}
  * @memberof core/dispatcher
  * @public
  */
-const off = function (name: string, fn: Callback, target = getDefaultTarget()) {
-	if (target) {
+const off = function (name: string, fn: Callback, target = getDefaultTarget()): undefined {
+	if (target && !(target instanceof Boolean)) {
 		const listeners = getListeners(target, name);
 		const index = listeners.indexOf(fn);
 
@@ -134,6 +147,7 @@ const off = function (name: string, fn: Callback, target = getDefaultTarget()) {
 /**
  * Adds a new global event listener that removes itself after handling one event.
  *
+ * @function
  * @param	{String}	name		Event name
  * @param	{Function}	fn			Event handler
  * @param	{Node}		[target]	Event listener target

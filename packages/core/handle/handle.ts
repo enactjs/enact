@@ -107,6 +107,13 @@ export type HandlerFunction = (event: Event, props: CallbackObject, context: Con
  */
 export type EventAdapter = (event: Event, props: CallbackObject, context: Context<any>) => any;
 
+/**
+ * The signature for event handlers
+ *
+ * @callback EventHandler
+ * @memberof core/handle
+ * @param {any} event
+ */
 export interface EventHandler extends HandlerFunction {
 	named: (name: string) => HandlerFunction;
 	bindAs: (obj: CallbackObject, name?: string) => HandlerFunction;
@@ -568,7 +575,7 @@ const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
  * @param    {String}    name   Name from {@link core/keymap}
  * @param    {Object}    ev     Event payload
  *
- * @returns  {Boolean}          Returns `true` if `event.key` is mapped to `name`
+ * @returns  {Boolean}          Returns `true` if `event.keyCode` is mapped to `name`
  * @curried
  * @memberof core/handle
  * @public
