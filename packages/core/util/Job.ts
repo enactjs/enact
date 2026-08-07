@@ -11,7 +11,7 @@ import {Callback} from '../types';
  */
 class Job {
 	id: number | Promise<unknown> | NodeJS.Timeout | null = null;
-	fn: Function | null = null;
+	fn: Callback | null = null;
 	timeout: number | null = null;
 	type: string | null = null;
 

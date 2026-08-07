@@ -71,7 +71,7 @@ const styles = (cfg: CallbackObject, optProps?: CallbackObject): ComputedPropFun
 		addInternalProp(props, 'css', css);
 		addInternalProp(props, 'styler', {
 			join: cn,
-			append: (...args: any) => cn(joinedClassName, ...args)
+			append: (...args: any[]) => cn(joinedClassName, ...args)
 		});
 
 		return props;

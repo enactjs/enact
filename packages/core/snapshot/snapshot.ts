@@ -12,7 +12,7 @@ import invariant from 'invariant';
 
 import {Callback} from '../types';
 
-const windowCallbacks: Function[] = [];
+const windowCallbacks: Callback[] = [];
 
 /**
  * Determines if the `window` is available

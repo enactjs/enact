@@ -80,7 +80,7 @@ const hoc = (defaultConfig: CallbackObject, hawk: Callback) => {
 			if (isRenderable(maybeWrapped)) {
 				return factory(cfg, maybeWrapped);
 			} else {
-				return (Wrapped: Function) => factory(cfg, Wrapped);
+				return (Wrapped: Callback) => factory(cfg, Wrapped);
 			}
 		}
 	};

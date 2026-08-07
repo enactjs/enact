@@ -31,7 +31,7 @@ import {ComputedPropFunction} from './types';
 const computed = (cfg: CallbackObject, optProps?: CallbackObject): ComputedPropFunction | CallbackObject => {
 	const keys = Object.keys(cfg);
 
-	const renderComputed = (props: CallbackObject, ...args: any): CallbackObject => {
+	const renderComputed = (props: CallbackObject, ...args: any[]): CallbackObject => {
 		const updated: CallbackObject = {};
 		for (let i = keys.length - 1; i >= 0; i--) {
 			updated[keys[i]] = cfg[keys[i]](props, ...args);

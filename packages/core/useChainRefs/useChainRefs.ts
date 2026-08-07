@@ -10,6 +10,8 @@
 import {RefCallback, RefObject, useCallback} from 'react';
 import warning from 'warning';
 
+import {Callback} from '../types';
+
 export type Ref = RefObject<{}> | RefCallback<{}>
 
 // Safely handles functional and object refs (and ignores invalid refs)
@@ -34,7 +36,7 @@ function updateRef (ref: Ref, node: Node) {
  * @returns {Function}                     A callback that updates each reference
  * @public
  */
-function chainRefs (...refs: Ref[]): Function {
+function chainRefs (...refs: Ref[]): Callback {
 	return (node: Node) => {
 		refs.forEach(ref => updateRef(ref, node));
 	};

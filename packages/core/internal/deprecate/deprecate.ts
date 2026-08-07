@@ -82,7 +82,7 @@ const deprecate = function (thing: any, config?: Config): any {
 			return thing;
 		} else {
 			let displayed: boolean, msg: string;
-			return (...args: any) => {
+			return (...args: any[]) => {
 				if (!displayed || config.alwaysWarn) {
 					if (!msg) {
 						msg = formatMsg(config);

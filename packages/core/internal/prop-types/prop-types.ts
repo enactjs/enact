@@ -1,6 +1,6 @@
 import PropTypes, {Requireable, Validator} from 'prop-types';
 
-import {CallbackObject} from '../../types';
+import {Callback, CallbackObject} from '../../types';
 import {isRenderable} from '../../util';
 
 import deprecate from '../deprecate';
@@ -60,7 +60,7 @@ const ref = PropTypes.oneOfType([PropTypes.shape({
  * @param {Function} base Prop type validator
  * @param {Object} config deprecatioon configuration
  */
-const deprecated = (base: Function, config: CallbackObject) => {
+const deprecated = (base: Callback, config: CallbackObject) => {
 	// Wrap in a no-op so deprecate only warns once
 	const warn = deprecate(() => true, config);
 	return (props: CallbackObject, key: string, ...rest: any) => {

@@ -143,7 +143,7 @@ const off = function (name: string, fn: Callback, target = getDefaultTarget()) {
  * @memberof core/dispatcher
  * @public
  */
-const once = function (name: string, fn: Callback, target: Node): Function {
+const once = function (name: string, fn: Callback, target: Node): Callback {
 	const onceFn = function (ev: Event) {
 		fn(ev);
 		off(name, onceFn, target);
