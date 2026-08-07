@@ -23,7 +23,7 @@ import {checkPropTypes as check} from 'prop-types';
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
 import unless from 'ramda/src/unless';
-import {Children, ComponentType, ReactNode, useState} from 'react';
+import {Children, Component, ComponentType, ReactNode, useState} from 'react';
 import * as ReactIs from 'react-is';
 
 import Job from './Job';
@@ -406,15 +406,11 @@ const shallowEqual = (a: CallbackObject, b: CallbackObject) => {
  * @memberof core/util
  * @public
  */
-const checkPropTypes = (component: ComponentType<any>, props: CallbackObject, prevProps?: CallbackObject) => {
+const checkPropTypes = (component: ComponentType | Component, props: CallbackObject, prevProps?: CallbackObject) => {
 	if (__DEV__ && !(prevProps && prevProps === props)) {
-		let currentComponent = component;
+		const isFunction = typeof component === 'function';
 
-		if (component.constructor) {
-			currentComponent = component.constructor as ComponentType<any>;
-		}
-
-		const {displayName, name, propTypes} = currentComponent; // eslint-disable-line react/forbid-foreign-prop-types
+		const {displayName, name, propTypes} = isFunction ? component : component.constructor as ComponentType; // eslint-disable-line react/forbid-foreign-prop-types
 
 		check(propTypes, props, 'prop', displayName || name, () => {
 			// Create a new error to capture the current stack trace

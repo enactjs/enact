@@ -5,7 +5,7 @@
  * @exports kind
  */
 
-import {createContext, use, Component as ReactComponent, Context, ReactElement, ComponentType} from 'react';
+import {createContext, use, Component as ReactComponent, Context, ReactElement} from 'react';
 
 import {CallbackObject} from '../types';
 import useHandlers from '../useHandlers';
@@ -188,13 +188,13 @@ const kind = (config: KindConfig) => {
 
 			constructor (props: CallbackObject) {
 				super(props);
-				checkPropTypes(this.constructor as ComponentType<any>, props);
+				checkPropTypes(this, props);
 
 				this.handlers = new Handlers(handlers);
 			}
 
 			componentDidUpdate (prevProps: CallbackObject) {
-				checkPropTypes(this.constructor as ComponentType<any>, this.props, prevProps);
+				checkPropTypes(this, this.props, prevProps);
 			}
 
 			render () {

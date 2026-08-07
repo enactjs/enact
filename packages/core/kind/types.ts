@@ -1,4 +1,4 @@
-import {ComponentType, Context, ReactElement} from 'react';
+import {Component, ComponentType, Context, ReactElement} from 'react';
 
 import {CallbackObject} from '../types';
 
@@ -8,7 +8,7 @@ export type StylesBlock = {
 	publicClassNames: boolean | string | string[];
 }
 
-export type KindComponent = ComponentType<any> & {
+export type KindComponent = (ComponentType | Component) & {
 	computed?: CallbackObject;
 	defaultProps?: CallbackObject;
 	inline?: ComputedPropFunction;
