@@ -1,16 +1,5 @@
-/**
- * Options for an ilib-style asynchronous request.
- */
-interface IlibCallbackOptions<T> {
-	sync?: boolean;
-	onLoad?: (result: T) => void;
-	[key: string]: unknown;
-}
-
-/**
- * An ilib-style function that reports its result via `options.onLoad`.
- */
-type IlibCallbackFn<T> = (options: IlibCallbackOptions<T>) => void;
+import type {IlibCallbackFn} from '../types/IlibCallbackFn';
+import type {IlibCallbackOptions} from '../types/IlibCallbackOptions';
 
 const invoke = <T>(fn: IlibCallbackFn<T>, options: IlibCallbackOptions<T>, callback: (result: T) => void) => {
 	const {onLoad} = options;
@@ -48,8 +37,4 @@ function wrapIlibCallback <T = unknown> (fn: IlibCallbackFn<T> | null | undefine
 export default wrapIlibCallback;
 export {
 	wrapIlibCallback
-};
-export type {
-	IlibCallbackFn,
-	IlibCallbackOptions
 };

@@ -5,7 +5,9 @@ import type ResBundle from 'ilib/lib/ResBundle';
 import {isRtlLocale, updateLocale} from '../locale';
 import {createResBundle, setResBundle} from '../src/resBundle';
 import wrapIlibCallback from '../src/wrapIlibCallback';
-import type {IlibCallbackFn, IlibCallbackOptions} from '../src/wrapIlibCallback';
+import type {I18nConfig} from '../types/I18nConfig';
+import type {IlibCallbackFn} from '../types/IlibCallbackFn';
+import type {Resource, ResourceDescriptor} from '../types/Resource';
 
 import getI18nClasses from './getI18nClasses';
 import {onWindowFocus} from './windowFocus';
@@ -18,28 +20,6 @@ interface I18nSnapshot {
 	loaded: boolean;
 	locale: string | null;
 	rtl: boolean;
-}
-
-/**
- * A resource loader invoked after a locale change.
- */
-type ResourceFn = (options: IlibCallbackOptions<unknown>) => unknown;
-
-interface ResourceDescriptor {
-	resource: ResourceFn;
-	onLoad?: (res: unknown) => void;
-}
-
-type Resource = ResourceFn | ResourceDescriptor | null | undefined;
-
-/**
- * Configuration for the {@link i18n/I18nDecorator.I18n} store.
- */
-interface I18nConfig {
-	latinLanguageOverrides?: string[] | null;
-	nonLatinLanguageOverrides?: string[] | null;
-	resources?: Resource[] | null;
-	sync?: boolean;
 }
 
 /**
@@ -316,10 +296,4 @@ export default I18n;
 export {
 	I18n
 };
-export type {
-	I18nConfig,
-	I18nSnapshot,
-	Resource,
-	ResourceDescriptor,
-	ResourceFn
-};
+export type {I18nSnapshot};

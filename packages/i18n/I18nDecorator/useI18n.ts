@@ -4,7 +4,7 @@ import {useEffect, useSyncExternalStore} from 'react';
 import ilib from '../src/index';
 
 import I18n from './I18n';
-import type {I18nConfig} from './I18n';
+import type {I18nConfig} from '../types/I18nConfig';
 
 /**
  * Configuration for `useI18n`

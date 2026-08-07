@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import '../src/glue';
 
 import useI18n from './useI18n';
-import type {Resource} from './I18n';
+import type {Resource} from '../types/Resource';
 import {useI18nContext, I18nContext} from './useI18nContext';
 
 const join = (a?: string | null, b?: string | null): string => a && b ? a + ' ' + b : (a || b || '');

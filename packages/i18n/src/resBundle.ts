@@ -1,31 +1,14 @@
 import IString from 'ilib/lib/IString';
 import ResBundle from 'ilib/lib/ResBundle';
 
-/**
- * A source string with an explicit translation key.
- */
-interface TranslatableString {
-	key?: string;
-	value: string;
-}
+import type {IlibCallbackOptions} from '../types/IlibCallbackOptions';
+import type {TranslatableString} from '../types/TranslatableString';
 
-interface CreateResBundleOptions {
+interface CreateResBundleOptions extends IlibCallbackOptions<ResBundle | null> {
 	/**
 	 * Locale for the resource bundle
 	 */
 	locale?: string;
-	/**
-	 * Perform the request synchronously
-	 */
-	sync?: boolean;
-	/**
-	 * Called with the new bundle, or `null` if one could not be created
-	 */
-	onLoad?: (bundle: ResBundle | null) => void;
-	/**
-	 * Any remaining options are passed through to `ResBundle`
-	 */
-	[key: string]: unknown;
 }
 
 // The ilib.ResBundle for the active locale used by $L
@@ -112,7 +95,4 @@ export {
 	getResBundle,
 	setResBundle
 };
-export type {
-	CreateResBundleOptions,
-	TranslatableString
-};
+export type {CreateResBundleOptions};

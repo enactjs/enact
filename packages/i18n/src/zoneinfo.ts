@@ -44,6 +44,7 @@
  */
 
 import PackedBuffer from './packedbuffer';
+import type {IlibZoneInfo} from '../types/IlibZoneInfo';
 
 const _platform = (typeof window !== 'undefined' && (window.webOSSystem || window.PalmSystem)) ? 'webos' : 'browser';
 
@@ -74,16 +75,6 @@ interface ZoneRule {
 	 * DST savings in minutes, calculated for daylight rules
 	 */
 	savings?: number;
-}
-
-/**
- * Zone information for a given date in the format that ilib can use directly.
- */
-interface IlibZoneInfo {
-	o: string;
-	f?: string;
-	e?: {c?: string; j: number};
-	s?: {c?: string; j: number; v: string};
 }
 
 /**
@@ -592,7 +583,6 @@ class ZoneInfoFile {
 
 export default ZoneInfoFile;
 export type {
-	IlibZoneInfo,
 	ZoneInfoEntry,
 	ZoneRule
 };

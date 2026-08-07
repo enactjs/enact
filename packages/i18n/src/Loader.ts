@@ -6,7 +6,7 @@ import LocaleInfo from 'ilib/lib/LocaleInfo';
 import xhr from 'xhr';
 
 import ZoneInfoFile from './zoneinfo';
-import type {IlibZoneInfo} from './zoneinfo';
+import type {IlibZoneInfo} from '../types/IlibZoneInfo';
 
 type LoadCallback = (json: any, error?: unknown) => void;
 

@@ -17,14 +17,7 @@ import type IString from 'ilib/lib/IString';
 
 import '../src/glue';
 import {getIStringFromBundle, getResBundle} from '../src/resBundle';
-
-/**
- * A source string with an explicit translation key.
- */
-interface TranslatableString {
-	key?: string;
-	value: string;
-}
+import type {TranslatableString} from '../types/TranslatableString';
 
 /**
  * Maps a string or key/value object to a translated string for the current locale.
@@ -58,7 +51,4 @@ export default $L;
 export {
 	$L,
 	toIString
-};
-export type {
-	TranslatableString
 };

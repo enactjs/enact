@@ -12,12 +12,9 @@ import LocaleInfo from 'ilib/lib/LocaleInfo';
 import ScriptInfo from 'ilib/lib/ScriptInfo';
 
 import {initCaseMappers} from '../src/case';
+import type {IlibCallbackOptions} from '../types/IlibCallbackOptions';
 
-interface IsNonLatinLocaleOptions {
-	/**
-	 * Called with the result. If omitted, the request is a no-op.
-	 */
-	onLoad?: (isNonLatin: boolean) => void;
+interface IsNonLatinLocaleOptions extends IlibCallbackOptions<boolean> {
 	/**
 	 * Locales that should be treated as latin regardless of their script
 	 */
@@ -26,30 +23,9 @@ interface IsNonLatinLocaleOptions {
 	 * Locales that should be treated as non-latin regardless of their script
 	 */
 	nonLatinLanguageOverrides?: string[];
-	/**
-	 * Perform the request synchronously
-	 */
-	sync?: boolean;
-	/**
-	 * Any remaining options are passed through to `LocaleInfo`
-	 */
-	[key: string]: unknown;
 }
 
-interface IsRtlLocaleOptions {
-	/**
-	 * Called with the result. If omitted, the request is a no-op.
-	 */
-	onLoad?: (rtl: boolean) => void;
-	/**
-	 * Perform the request synchronously
-	 */
-	sync?: boolean;
-	/**
-	 * Any remaining options are passed through to `LocaleInfo`
-	 */
-	[key: string]: unknown;
-}
+type IsRtlLocaleOptions = IlibCallbackOptions<boolean>;
 
 // Returns `true` if a locale list is provided and it includes either the language (the first part
 // of the spec e.g. ko) or the entire spec (e.g. ko-KR)
