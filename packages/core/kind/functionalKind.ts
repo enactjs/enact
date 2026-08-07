@@ -145,7 +145,7 @@ const functionalKind = (config: KindConfig) => {
 		if (renderStyles && typeof renderStyles === 'function')   props = renderStyles(props, context);
 		if (renderComputed && typeof renderComputed === 'function') props = renderComputed(props, context);
 
-		return (useRender as RenderFunction)(props, context); // eslint-disable-line react-hooks/rules-of-hooks
+		return (useRender as RenderFunction)(props, context);
 	};
 
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
