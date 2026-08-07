@@ -30,7 +30,7 @@ export type Constructor<T> = new (...args: any[]) => T;
  * @returns {Object}      An instance of `Ctor`
  * @private
  */
-function useClass <T>(Ctor: Constructor<T>, ...args: any[]): T {
+function useClass <T> (Ctor: Constructor<T>, ...args: any[]): T {
 	const [state] = useState(() => new Ctor(...args));
 
 	return state;

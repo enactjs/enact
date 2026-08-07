@@ -160,7 +160,7 @@ const named = (fn: Callback, name: string) => {
 				writable: false,
 				enumerable: false
 			});
-		} catch (err) {
+		} catch (err) { // eslint-disable-line @typescript-eslint/no-unused-vars
 			// unable to set name of function
 		}
 	}

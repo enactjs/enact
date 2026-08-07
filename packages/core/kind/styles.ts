@@ -82,7 +82,7 @@ const styles = (cfg: CallbackObject, optProps?: CallbackObject): ComputedPropFun
 	}
 
 	return renderStyles;
-}
+};
 
 export default styles;
 export {styles};

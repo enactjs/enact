@@ -1,4 +1,4 @@
-import {ElementType, RefObject, useId, useImperativeHandle, useRef} from 'react';
+import {ElementType, useId, useImperativeHandle, useRef} from 'react';
 import {CallbackObject} from '../../types';
 
 const WithRef = (WrappedComponent: ElementType) => {

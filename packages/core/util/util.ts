@@ -111,7 +111,7 @@ const coerceFunction = unless(isType(Function), always);
  * @memberof core/util
  * @public
  */
-const coerceArray = function <T>(array: Array<T>): Array<T> {
+const coerceArray = function <T> (array: Array<T>): Array<T> {
 	return Array.isArray(array) ? array : [array];
 };
 
@@ -414,7 +414,7 @@ const checkPropTypes = (component: ComponentType<any>, props: CallbackObject, pr
 			currentComponent = component.constructor as ComponentType<any>;
 		}
 
-		const {displayName, name, propTypes} = currentComponent;
+		const {displayName, name, propTypes} = currentComponent; // eslint-disable-line react/forbid-foreign-prop-types
 
 		check(propTypes, props, 'prop', displayName || name, () => {
 			// Create a new error to capture the current stack trace
