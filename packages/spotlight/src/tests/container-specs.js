@@ -10,13 +10,18 @@ import {
 	getContainerLastFocusedElement,
 	getContainerNavigableElements,
 	getContainersForNode,
+	getContainerNode,
 	getDefaultContainer,
 	getLastContainer,
 	getNavigableContainersForNode,
+	getOwnedSelfOnlyContainerIds,
+	getPopupOwnerElement,
 	getPositionTargetOnFocus,
 	getSpottableDescendants,
+	getSpottableDescendantsForTab,
 	isContainer,
 	isNavigable,
+	isNavigableForTab,
 	unmountContainer,
 	removeContainer,
 	removeAllContainers,
@@ -25,6 +30,7 @@ import {
 	setLastContainer,
 	setLastContainerFromTarget
 } from '../container';
+import * as spotlightUtils from '../utils';
 
 import {
 	container,
@@ -1297,5 +1303,185 @@ describe('container', () => {
 				}
 			)
 		);
+	});
+
+	describe('Tab traversal container helpers', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		describe('#getContainerNode', () => {
+			test('returns null for a falsy container id', () => {
+				expect(getContainerNode('')).toBeNull();
+				expect(getContainerNode(null)).toBeNull();
+			});
+
+			test('returns null for an unknown container id', () => {
+				expect(getContainerNode('missing-container')).toBeNull();
+			});
+		});
+
+		describe('#getPopupOwnerElement', () => {
+			test('returns null when no aria-owns owner contains the container', () => {
+				document.body.innerHTML = `
+					<div data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+						<button id="owner" aria-owns="layerA">Owner</button>
+						<div id="layerA">
+							<div data-spotlight-container="true" data-spotlight-id="popup-a">
+								<button class="spottable">A</button>
+							</div>
+						</div>
+						<div data-spotlight-container="true" data-spotlight-id="popup-b">
+							<button class="spottable">B</button>
+						</div>
+					</div>
+				`;
+				configureContainer('popup-a', {restrict: 'self-only', selector: '.spottable'});
+				configureContainer('popup-b', {restrict: 'self-only', selector: '.spottable'});
+
+				expect(
+					getPopupOwnerElement(document.querySelector('[data-spotlight-id="popup-b"]'))
+				).toBeNull();
+			});
+		});
+
+		describe('#getOwnedSelfOnlyContainerIds', () => {
+			test('returns self-only ids from aria-owns layers and excludes the current popup', () => {
+				document.body.innerHTML = `
+					<div data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+						<button id="owner" aria-owns="layerA layerB">Owner</button>
+						<div id="layerA">
+							<div data-spotlight-container="true" data-spotlight-id="popup-a">
+								<button class="spottable">A</button>
+							</div>
+						</div>
+						<div id="layerB">
+							<div data-spotlight-container="true" data-spotlight-id="popup-b">
+								<button class="spottable">B</button>
+							</div>
+						</div>
+					</div>
+				`;
+				configureContainer('popup-a', {restrict: 'self-only', selector: '.spottable'});
+				configureContainer('popup-b', {restrict: 'self-only', selector: '.spottable'});
+
+				const ids = getOwnedSelfOnlyContainerIds(document.getElementById('owner'), 'popup-a');
+
+				expect(ids).toEqual(['popup-b']);
+			});
+
+			test('includes owned spotlight containers when the owned node is itself a container', () => {
+				document.body.innerHTML = `
+					<div data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+						<button id="owner" aria-owns="popup-b-node">Owner</button>
+						<div id="popup-b-node" data-spotlight-container="true" data-spotlight-id="popup-b">
+							<button class="spottable">B</button>
+						</div>
+					</div>
+				`;
+				configureContainer('popup-b', {restrict: 'self-only', selector: '.spottable'});
+
+				expect(getOwnedSelfOnlyContainerIds(document.getElementById('owner'), '')).toEqual(['popup-b']);
+			});
+
+			test('skips owned containers that are not self-only', () => {
+				document.body.innerHTML = `
+					<div data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+						<button id="owner" aria-owns="layerZ">Owner</button>
+						<div id="layerZ">
+							<div data-spotlight-container="true" data-spotlight-id="popup-z">
+								<button class="spottable">Z</button>
+							</div>
+						</div>
+					</div>
+				`;
+				configureContainer('popup-z', {restrict: 'self-first', selector: '.spottable'});
+
+				expect(getOwnedSelfOnlyContainerIds(document.getElementById('owner'), '')).toEqual([]);
+			});
+		});
+
+		describe('#getSpottableDescendantsForTab', () => {
+			test('includes nodes filtered out by navigableFilter', () => {
+				document.body.innerHTML = `
+					<div data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+						<button class="spottable tab" id="tab">Tab</button>
+						<button class="spottable" id="content">Content</button>
+					</div>
+				`;
+				configureContainer(rootContainerId, {
+					navigableFilter: (elem) => !elem.classList.contains('tab'),
+					selector: '.spottable'
+				});
+
+				expect(getSpottableDescendants(rootContainerId)).toHaveLength(1);
+				expect(getSpottableDescendantsForTab(rootContainerId)).toHaveLength(2);
+			});
+		});
+
+		describe('#isNavigableForTab', () => {
+			test('returns false for a null node', () => {
+				expect(isNavigableForTab(null, rootContainerId, true)).toBe(false);
+			});
+
+			test('returns false for nodes in a disabled container', () => {
+				document.body.innerHTML = `
+					<div data-spotlight-container="true" data-spotlight-id="${rootContainerId}" data-spotlight-container-disabled="true">
+						<button class="spottable" id="btn">Btn</button>
+					</div>
+				`;
+				configureContainer(rootContainerId, {selector: '.spottable'});
+
+				expect(isNavigableForTab(document.getElementById('btn'), rootContainerId, true)).toBe(false);
+			});
+
+			test('returns false for hidden nodes', () => {
+				document.body.innerHTML = `
+					<div data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+						<button class="spottable" id="btn" style="display: none">Btn</button>
+					</div>
+				`;
+				configureContainer(rootContainerId, {selector: '.spottable'});
+
+				expect(isNavigableForTab(document.getElementById('btn'), rootContainerId, true)).toBe(false);
+			});
+
+			test('returns false when verify is true and the node does not match the selector', () => {
+				document.body.innerHTML = `
+					<div data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+						<button id="btn">Btn</button>
+					</div>
+				`;
+				configureContainer(rootContainerId, {selector: '.spottable'});
+
+				expect(isNavigableForTab(document.getElementById('btn'), rootContainerId, true)).toBe(false);
+			});
+
+			test('returns false for zero-size nodes outside test mode', () => {
+				document.body.innerHTML = `
+					<div data-spotlight-container="true" data-spotlight-id="${rootContainerId}">
+						<button class="spottable" id="btn">Btn</button>
+					</div>
+				`;
+				configureContainer(rootContainerId, {selector: '.spottable'});
+
+				const nodeEnv = process.env.NODE_ENV;
+				const rectSpy = jest.spyOn(spotlightUtils, 'getRect').mockReturnValue({
+					width: 0,
+					height: 0,
+					left: 0,
+					top: 0,
+					right: 0,
+					bottom: 0,
+					center: {x: 0, y: 0}
+				});
+				process.env.NODE_ENV = 'production';
+				try {
+					expect(isNavigableForTab(document.getElementById('btn'), rootContainerId, true)).toBe(false);
+				} finally {
+					process.env.NODE_ENV = nodeEnv;
+					rectSpy.mockRestore();
+				}
+			});
+		});
 	});
 });

@@ -18,7 +18,7 @@
  * @exports getDirection
  */
 
-import {is} from '@enact/core/keymap';
+import {add as addKeyCode, is} from '@enact/core/keymap';
 import {isWindowReady} from '@enact/core/snapshot';
 import platform from '@enact/core/platform';
 import last from 'ramda/src/last';
@@ -28,6 +28,7 @@ import {spottableClass} from '../Spottable';
 import {getPausedInstance, isPaused, pause, resume} from '../Pause';
 
 import {getInputType} from './inputType';
+import {createTabTraversal} from './tabTraversal';
 import {contains} from './utils';
 
 import {
@@ -85,10 +86,15 @@ import {
 	parseSelector
 } from './utils';
 
+// Tab (9) is not part of the default Enact keymap (which only covers 5-way keys registered
+// by the platform/app). Spotlight owns Tab navigation, so it registers the key code here.
+addKeyCode('tab', 9);
+
 const isDown = is('down');
 const isEnter = is('enter');
 const isLeft = is('left');
 const isRight = is('right');
+const isTab = is('tab');
 const isUp = is('up');
 
 /**
@@ -303,6 +309,12 @@ const Spotlight = (function () {
 		return next.reduce((focused, target) => focused || Spotlight.focus(target), false);
 	}
 
+	const {runWithLinearTargetsCache, spotLinear} = createTabTraversal({
+		focusElement,
+		getCurrent,
+		restoreFocus
+	});
+
 	// The below should be gated on non-production environment only.
 	function assignFocusPreview (elem) {
 		const directions = ['up', 'right', 'down', 'left'],
@@ -464,7 +476,30 @@ const Spotlight = (function () {
 		}
 	}
 
-	function onKeyDown (evt) {
+	/*
+	 * Tab/Shift+Tab handler. Runs spotLinear with a per-keypress target cache and calls
+	 * preventDefault when focus moved or when paused (to keep Tab inside a modal overlay).
+	 */
+	function handleTab (evt) {
+		const blocked = shouldPreventNavigation();
+
+		if (blocked) {
+			notifyKeyDown(evt.keyCode);
+		} else {
+			notifyKeyDown(evt.keyCode, handlePointerHide);
+			if (_pointerMoveDuringKeyPress) {
+				return;
+			}
+		}
+
+		const handled = runWithLinearTargetsCache(() => spotLinear(!evt.shiftKey));
+
+		if (handled || (blocked && isPaused())) {
+			preventDefault(evt);
+		}
+	}
+
+	function handleFiveWayKeyDown (evt) {
 		if (shouldPreventNavigation()) {
 			notifyKeyDown(evt.keyCode);
 			return;
@@ -490,6 +525,15 @@ const Spotlight = (function () {
 		if (direction) {
 			preventDefault(evt);
 		}
+	}
+
+	function onKeyDown (evt) {
+		if (isTab(evt.keyCode)) {
+			handleTab(evt);
+			return;
+		}
+
+		handleFiveWayKeyDown(evt);
 	}
 
 	function onMouseMove ({target, clientX, clientY}) {
@@ -989,7 +1033,9 @@ const Spotlight = (function () {
 		resetKeyHoldState: function () {
 			SpotlightAccelerator.reset();
 			_5WayKeyHold = false;
+			_pointerMoveDuringKeyPress = false;
 		}
+
 	};
 
 	return exports;
