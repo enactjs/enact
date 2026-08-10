@@ -1,25 +1,15 @@
 import IString from 'ilib/lib/IString';
 import ResBundle from 'ilib/lib/ResBundle';
 
-import type {IlibCallbackOptions} from '../types/IlibCallbackOptions';
-import type {TranslatableString} from '../types/TranslatableString';
-
-interface CreateResBundleOptions extends IlibCallbackOptions<ResBundle | null> {
-	/**
-	 * Locale for the resource bundle
-	 */
-	locale?: string;
-}
-
 // The ilib.ResBundle for the active locale used by $L
-let resBundle: ResBundle | null | undefined;
+let resBundle;
 
 /**
  * Returns the current ilib.ResBundle
  *
  * @returns {ilib.ResBundle} Current ResBundle
  */
-function getResBundle (): ResBundle | null | undefined {
+function getResBundle () {
 	return resBundle;
 }
 
@@ -30,7 +20,7 @@ function getResBundle (): ResBundle | null | undefined {
  *
  * @returns {Promise|ResBundle} Resolves with a new ilib.ResBundle
  */
-function createResBundle (options: CreateResBundleOptions) {
+function createResBundle (options) {
 	const opts = {
 		type: 'html',
 		name: 'strings',
@@ -44,7 +34,7 @@ function createResBundle (options: CreateResBundleOptions) {
 	new ResBundle({
 		...opts,
 		onLoad: (bundle) => {
-			opts.onLoad!(bundle || null);
+			opts.onLoad(bundle || null);
 		}
 	});
 }
@@ -56,7 +46,7 @@ function createResBundle (options: CreateResBundleOptions) {
  * @param {string} spec the locale specifier
  * @returns {ilib.ResBundle} Current ResBundle
  */
-function setResBundle (bundle: ResBundle | null): ResBundle | null {
+function setResBundle (bundle) {
 	return (resBundle = bundle);
 }
 
@@ -76,10 +66,10 @@ function clearResBundle () {
  * If the bundle doesn't exist, the key is returned wrapped by IString.
  *
  * @param {String|Object} str Key for localized string
- * @param {ResBundle} rb ilib resource bundle
+ * @param {ResBundl} rb ilib resource bundle
  * @returns	{IString} The string value wrapped by an IString
  */
-function getIStringFromBundle (str: string | TranslatableString, rb?: ResBundle | null): IString {
+function getIStringFromBundle (str, rb) {
 	const isObject = typeof str === 'object';
 	if (rb) {
 		return isObject ? rb.getString(str.value, str.key) : rb.getString(str);
@@ -95,4 +85,3 @@ export {
 	getResBundle,
 	setResBundle
 };
-export type {CreateResBundleOptions};
