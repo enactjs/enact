@@ -2,9 +2,9 @@ import useClass from '@enact/core/useClass';
 import {useEffect, useSyncExternalStore} from 'react';
 
 import ilib from '../src/index';
+import type {I18nConfig} from '../types/I18nConfig';
 
 import I18n from './I18n';
-import type {I18nConfig} from '../types/I18nConfig';
 
 /**
  * Configuration for `useI18n`
