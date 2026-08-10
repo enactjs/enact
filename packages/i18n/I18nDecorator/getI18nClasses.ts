@@ -1,7 +1,7 @@
 import LocaleInfo from 'ilib/lib/LocaleInfo';
 
 import {isNonLatinLocale, isRtlLocale} from '../locale';
-import type {IlibCallbackOptions} from '../types/IlibCallbackOptions';
+import type {LocaleOptions} from '../types/LocaleOptions';
 
 const base = 'enact-locale-';
 
@@ -10,16 +10,7 @@ type DoneCallback = (value: string) => void;
 /**
  * Options for {@link i18n/I18nDecorator.getI18nClasses}.
  */
-interface GetI18nClassesOptions extends IlibCallbackOptions<string> {
-	/**
-	 * Array of locales to treat as latin
-	 */
-	latinLanguageOverrides?: string[];
-	/**
-	 * Array of locales to treat as non-latin
-	 */
-	nonLatinLanguageOverrides?: string[];
-}
+type GetI18nClassesOptions = LocaleOptions<string>;
 
 // Callback-friendly version of Promise.all()
 function all (fns: Array<(done: DoneCallback) => void>, callback: (result: string[]) => void) {

@@ -13,17 +13,9 @@ import ScriptInfo from 'ilib/lib/ScriptInfo';
 
 import {initCaseMappers} from '../src/case';
 import type {IlibCallbackOptions} from '../types/IlibCallbackOptions';
+import type {LocaleOptions} from '../types/LocaleOptions';
 
-interface IsNonLatinLocaleOptions extends IlibCallbackOptions<boolean> {
-	/**
-	 * Locales that should be treated as latin regardless of their script
-	 */
-	latinLanguageOverrides?: string[];
-	/**
-	 * Locales that should be treated as non-latin regardless of their script
-	 */
-	nonLatinLanguageOverrides?: string[];
-}
+type IsNonLatinLocaleOptions = LocaleOptions<boolean>;
 
 type IsRtlLocaleOptions = IlibCallbackOptions<boolean>;
 
