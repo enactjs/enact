@@ -43,8 +43,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import PackedBuffer from './packedbuffer';
 import type {IlibZoneInfo} from '../types/IlibZoneInfo';
+
+import PackedBuffer from './packedbuffer';
 
 const _platform = (typeof window !== 'undefined' && (window.webOSSystem || window.PalmSystem)) ? 'webos' : 'browser';
 
