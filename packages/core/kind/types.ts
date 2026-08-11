@@ -1,6 +1,6 @@
 import {Component, ComponentType, Context, ReactElement} from 'react';
 
-import {CallbackObject} from '../types';
+import {CallbackObject, HandlerFunction} from '../types';
 
 export type StylesBlock = {
 	css: CallbackObject<string>;
@@ -18,10 +18,6 @@ export interface ComputedPropFunction {
 	(props: CallbackObject, context: Context<any>): any;
 }
 
-export interface HandlerFunction {
-	(event: any, props: CallbackObject, context: Context<any>): unknown;
-}
-
 export interface RenderFunction {
 	(props: CallbackObject, context: Context<any>): ReactElement | null;
 }
@@ -35,6 +31,9 @@ export interface KindConfig {
 	styles?: StylesBlock;
 	handlers?: CallbackObject<HandlerFunction>;
 	computed?: CallbackObject;
-	render?: RenderFunction;
-	useRender?: RenderFunction;
+	render: RenderFunction;
+}
+
+export interface FunctionalKindConfig extends Omit<KindConfig, 'functional' | 'render'> {
+	useRender: RenderFunction;
 }

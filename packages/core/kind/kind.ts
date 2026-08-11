@@ -5,6 +5,7 @@
  * @exports kind
  */
 
+import invariant from 'invariant';
 import {createContext, use, Component as ReactComponent, Context, ReactElement} from 'react';
 
 import {CallbackObject} from '../types';
@@ -14,7 +15,7 @@ import {checkPropTypes, applyDefaultProps} from '../util';
 
 import computed from './computed';
 import styles from './styles';
-import {KindComponent, KindConfig, RenderFunction} from './types';
+import {KindComponent, KindConfig} from './types';
 import {bindInlineHandlers} from './util';
 
 // Because contextType is optional and hooks must be called in the same order, we need a fallback
@@ -144,13 +145,15 @@ const kind = (config: KindConfig) => {
 		styles: cfgStyles
 	} = config;
 
+	invariant(typeof render === 'function', 'kind() requires a `render` function');
+
 	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
 	const renderKind = (props: CallbackObject, context: Context<any>): ReactElement | null => {
 		if (renderStyles && typeof renderStyles === 'function') props = renderStyles(props, context);
 		if (renderComputed && typeof renderComputed === 'function') props = renderComputed(props, context);
 
-		return (render as RenderFunction)(props, context);
+		return render(props, context);
 	};
 
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;

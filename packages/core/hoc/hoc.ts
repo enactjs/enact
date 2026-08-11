@@ -62,7 +62,9 @@ const mergeFn = (key: string, defaultValue: any, userValue: any) => {
  * @memberof core/hoc
  * @public
  */
-const hoc = (defaultConfig: CallbackObject, hawk: Callback) => {
+function hoc(defaultConfig: CallbackObject, hawk: Callback): Callback
+function hoc(hawk: Callback): Callback
+function hoc(defaultConfig: CallbackObject | Callback, hawk?: Callback) {
 
 	// normalize arguments to allow defaultConfig to be omitted
 	let factory = hawk;
@@ -70,6 +72,10 @@ const hoc = (defaultConfig: CallbackObject, hawk: Callback) => {
 	if (!factory && typeof defaultConfig === 'function') {
 		factory = defaultConfig as Callback;
 		defaults = null;
+	}
+
+	if (!factory) {
+		throw new TypeError('hoc requires a factory function');
 	}
 
 	const Component = (config: CallbackObject, maybeWrapped: Callback) => {

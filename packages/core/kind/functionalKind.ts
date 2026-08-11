@@ -5,6 +5,7 @@
  * @exports functionalKind
  */
 
+import invariant from 'invariant';
 import {Context, createContext, useContext} from 'react';
 
 import {CallbackObject} from '../types';
@@ -13,7 +14,7 @@ import {checkPropTypes, applyDefaultProps} from '../util';
 
 import computed from './computed';
 import styles from './styles';
-import {KindConfig, RenderFunction} from './types';
+import {FunctionalKindConfig} from './types';
 import {bindInlineHandlers} from './util';
 
 // Fallback context when none is specified.
@@ -126,7 +127,7 @@ const NoContext = createContext(null);
  * @memberof core/kind
  * @private
  */
-const functionalKind = (config: KindConfig) => {
+const functionalKind = (config: FunctionalKindConfig) => {
 	const {
 		computed: cfgComputed,
 		contextType = NoContext,
@@ -138,6 +139,8 @@ const functionalKind = (config: KindConfig) => {
 		styles: cfgStyles
 	} = config;
 
+	invariant(typeof useRender === 'function', 'functionalKind() requires a `useRender` function');
+
 	const renderStyles  = cfgStyles   ? styles(cfgStyles)     : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
 
@@ -145,7 +148,7 @@ const functionalKind = (config: KindConfig) => {
 		if (renderStyles && typeof renderStyles === 'function')   props = renderStyles(props, context);
 		if (renderComputed && typeof renderComputed === 'function') props = renderComputed(props, context);
 
-		return (useRender as RenderFunction)(props, context);
+		return useRender(props, context);
 	};
 
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;

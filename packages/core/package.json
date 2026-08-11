@@ -8,7 +8,7 @@
     "directory": "packages/core"
   },
   "homepage": "https://enactjs.com",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "clean": "enact clean",
     "interlink": "echo \"No interlink\" && exit 0",

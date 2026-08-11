@@ -82,18 +82,7 @@ import curry from 'ramda/src/curry';
 import {Context, SyntheticEvent} from 'react';
 
 import {is} from '../keymap';
-import {Callback, CallbackObject} from '../types';
-
-/**
- * The signature for event handling functions supported by `handle` and related functions
- *
- * @callback HandlerFunction
- * @memberof core/handle
- * @param {any} event
- * @param {Object<string, any>} props
- * @param {Object<string, any>} context
- */
-export type HandlerFunction = (event: Event, props: CallbackObject, context: Context<any>) => any;
+import {Callback, CallbackObject, HandlerFunction} from '../types';
 
 /**
  * The signature for {@link core/handle.adaptEvent} parameter `adapter`
@@ -105,7 +94,7 @@ export type HandlerFunction = (event: Event, props: CallbackObject, context: Con
  * @param {Object<string, any>} context
  * @returns {any}
  */
-export type EventAdapter = (event: Event, props: CallbackObject, context: Context<any>) => any;
+export type EventAdapter = HandlerFunction;
 
 /**
  * The signature for event handlers
@@ -227,7 +216,7 @@ const handle = function (this: any, ...handlers: HandlerFunction[]): EventHandle
 	// context if fn() doesn't have its own `this`.
 	const _outer = this;
 
-	const fn = function prepareHandleArgs (this: any, ev: Event, props?: CallbackObject, context?: CallbackObject) {
+	const fn = function prepareHandleArgs (this: any, ev: Event, props?: CallbackObject, context?: Context<any>) {
 		let caller = null;
 
 		// if handle() was bound to a class, use its props and context. otherwise, we accept
@@ -246,7 +235,7 @@ const handle = function (this: any, ...handlers: HandlerFunction[]): EventHandle
 	};
 
 	fn.finally = function (cleanup: Callback) {
-		return decorateHandleFunction(function handleWithFinally (this: any, ev: Event, props: CallbackObject, context: CallbackObject) {
+		return decorateHandleFunction(function handleWithFinally (this: any, ev: Event, props: CallbackObject, context: Context<any>) {
 			let result = false;
 
 			if (hasPropsAndContext(this)) {
@@ -290,7 +279,7 @@ const handle = function (this: any, ...handlers: HandlerFunction[]): EventHandle
  * @memberof core/handle
  * @public
  */
-const oneOf = handle.oneOf = function (...handlers: Array<[HandlerFunction, HandlerFunction]>): EventHandler {
+const oneOf = handle.oneOf = function (...handlers: Array<[HandlerFunction, HandlerFunction]>): HandlerFunction {
 	return handle.call(this, cond(handlers));
 };
 
