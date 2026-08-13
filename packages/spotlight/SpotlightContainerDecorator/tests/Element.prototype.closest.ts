@@ -36,7 +36,6 @@ export default function (set: LifecycleHook, remove: LifecycleHook): void {
 
 	remove(() => {
 		if (polyfilled) {
-			// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
 			delete (Element.prototype as Partial<Element>).closest;
 		}
 	});

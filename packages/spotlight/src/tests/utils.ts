@@ -42,7 +42,7 @@ const generateContainerId = (): string => `${containerAttribute}=${_id++}`;
 const coerceProps = (v?: string | NodeProps | number): NodeProps | undefined => {
 	if (typeof v === 'object') {
 		return v;
-	} else if (typeof v !== 'undefined') { // eslint-disable-line no-undefined
+	} else if (typeof v !== 'undefined') {
 		return {children: String(v)};
 	}
 };
