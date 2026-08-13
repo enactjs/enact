@@ -1,0 +1,389 @@
+import handle, {forward} from '@enact/core/handle';
+import {WithRef} from '@enact/core/internal/WithRef';
+import useHandlers from '@enact/core/useHandlers';
+import '@testing-library/jest-dom';
+import {fireEvent, render, screen} from '@testing-library/react';
+import classNames from 'classnames';
+import {useCallback, useRef} from 'react';
+import type {ComponentPropsWithoutRef, ComponentType} from 'react';
+
+import Spotlight from '../../src/spotlight';
+import useSpottable from '../useSpottable';
+
+const
+	forwardMouseUp = forward('onMouseUp'),
+	forwardMouseDown = forward('onMouseDown'),
+	forwardKeyDown = forward('onKeyDown'),
+	forwardKeyUp = forward('onKeyUp'),
+	id = 'test-useSpot';
+
+const makeKeyEvent = (keyCode: number) => {
+	return {
+		keyCode,
+		which: keyCode
+	};
+};
+
+const REMOTE_OK_KEY = 16777221;
+
+let compRef: HTMLElement | null = null;
+let getCurrent = Spotlight.getCurrent;
+
+const callContext = (name: string) => (ev: unknown, props: unknown, context: Record<string, (ev: unknown, props: unknown) => void>) => context[name](ev, props);
+const spotHandlers = {
+	onKeyDown: handle(
+		forwardKeyDown,
+		callContext('onKeyDown'),
+		forwardMouseDown
+	),
+	onKeyUp: handle(
+		forwardKeyUp,
+		callContext('onKeyUp'),
+		forwardMouseUp
+	),
+	onBlur: callContext('onBlur'),
+	onFocus: callContext('onFocus'),
+	onMouseEnter: callContext('onMouseEnter'),
+	onMouseLeave: callContext('onMouseLeave')
+};
+
+describe('useSpottable', () => {
+	type SpottableComponentProps = ComponentPropsWithoutRef<'div'> & {
+		className?: string;
+		component?: ComponentType<any>;
+		disabled?: boolean;
+		emulateMouse?: boolean;
+		onSelectionCancel?: () => void;
+		onSpotlightDisappear?: () => void;
+		onSpotlightDown?: () => void;
+		onSpotlightLeft?: () => void;
+		onSpotlightRight?: () => void;
+		onSpotlightUp?: () => void;
+		selectionKeys?: number[];
+		spotlightDisabled?: boolean;
+		spotlightId?: string;
+	};
+
+	function SpottableComponent (props: SpottableComponentProps) {
+		const nodeRef = useRef<HTMLElement>(null);
+		const getSpotRef = useCallback(() => nodeRef.current, []);
+
+		const {className, component, disabled, emulateMouse, onSelectionCancel, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, selectionKeys, spotlightDisabled, spotlightId, ...rest} = props;
+		const spot = useSpottable({
+			disabled,
+			emulateMouse,
+			getSpotRef,
+			onSelectionCancel,
+			onSpotlightDisappear,
+			onSpotlightDown,
+			onSpotlightLeft,
+			onSpotlightRight,
+			onSpotlightUp,
+			selectionKeys,
+			spotlightDisabled,
+			spotlightId
+		});
+		const Comp = component || 'div';
+		const CompWithRef = WithRef(Comp);
+
+		rest.tabIndex = -1;
+
+		const handlers = useHandlers(spotHandlers, rest, spot);
+
+		compRef = nodeRef.current;
+
+		return (
+			<CompWithRef
+				{...rest}
+				{...spot.attributes}
+				{...handlers}
+				className={classNames(className, spot.className)}
+				disabled={disabled}
+				outermostRef={nodeRef}
+			/>
+		);
+	}
+
+	beforeEach(() => {
+		// Spotlight.getCurrent() did not work in unit tests. It always returns `undefined`.
+		// So Spotlight.getCurrent() is replaced with the function returning the wrapped component by the Component
+		// including `useSpottable`.
+		Spotlight.getCurrent = () => (compRef as unknown as Element);
+	});
+
+	afterEach(() => {
+		Spotlight.getCurrent = getCurrent;
+	});
+
+	test('should add the spottable class', () => {
+		render(<SpottableComponent data-testid={id} />);
+		const div = screen.getByTestId(id);
+
+		const expected = 'spottable';
+
+		expect(div).toHaveClass(expected);
+	});
+
+	test('should add the spottable class to a {disabled} component', () => {
+		render(<SpottableComponent data-testid={id} disabled />);
+		const div = screen.getByTestId(id);
+
+		const expected = 'spottable';
+
+		expect(div).toHaveClass(expected);
+	});
+
+	test('should not add the spottable class to a {spotlightDisabled} component', () => {
+		render(<SpottableComponent data-testid={id} spotlightDisabled />);
+		const div = screen.getByTestId(id);
+
+		const expected = 'spottable';
+
+		expect(div).not.toHaveClass(expected);
+	});
+
+	describe('should emit event properly', () => {
+		test('should emit {onSpotlightUp} when the the {keydown} is emitted with 38 keycode', () => {
+			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} onSpotlightUp={spy} />);
+			const div = screen.getByTestId(id);
+
+			fireEvent.keyDown(div, makeKeyEvent(38));
+
+			const expected = 1;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
+		});
+
+		test('should emit {onSpotlightDown} when the the {keydown} is emitted with 40 keycode', () => {
+			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} onSpotlightDown={spy} />);
+			const div = screen.getByTestId(id);
+
+			fireEvent.keyDown(div, makeKeyEvent(40));
+
+			const expected = 1;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
+		});
+
+		test('should emit {onSpotlightLeft} when the the {keydown} is emitted with 37 keycode', () => {
+			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} onSpotlightLeft={spy} />);
+			const div = screen.getByTestId(id);
+
+			fireEvent.keyDown(div, makeKeyEvent(37));
+
+			const expected = 1;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
+		});
+
+		test('should emit {onSpotlightRight} when the the {keydown} is emitted with 39 keycode', () => {
+			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} onSpotlightRight={spy} />);
+			const div = screen.getByTestId(id);
+
+			fireEvent.keyDown(div, makeKeyEvent(39));
+
+			const expected = 1;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
+		});
+
+		test('should emulate {onMouseDown} when REMOTE_OK_KEY key is pressed', () => {
+			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} emulateMouse onMouseDown={spy} selectionKeys={[13]} />);
+			const div = screen.getByTestId(id);
+
+			fireEvent.keyDown(div, makeKeyEvent(REMOTE_OK_KEY));
+
+			const expected = 1;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
+		});
+
+		test('should emulate {onMouseUp} when {REMOTE_OK_KEY} key is pressed and released', () => {
+			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} emulateMouse onMouseUp={spy} selectionKeys={[13]} />);
+			const div = screen.getByTestId(id);
+
+			fireEvent.keyDown(div, makeKeyEvent(REMOTE_OK_KEY));
+			fireEvent.keyUp(div, makeKeyEvent(REMOTE_OK_KEY));
+
+			const expected = 1;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
+		});
+
+		test('should not emulate {onMouseUp} if the default behavior is prevented even though {REMOTE_OK_KEY} key is pressed', () => {
+			const spy = jest.fn();
+			function onKeyUp (ev: {keyCode: number; preventDefault: () => void}) {
+				ev.preventDefault();
+			}
+			render(
+				<SpottableComponent
+					data-testid={id}
+					emulateMouse
+					onKeyUp={onKeyUp}
+					onMouseUp={spy}
+					selectionKeys={[13]}
+				/>
+			);
+			const div = screen.getByTestId(id);
+
+			fireEvent.keyDown(div, makeKeyEvent(REMOTE_OK_KEY));
+			fireEvent.keyUp(div, makeKeyEvent(REMOTE_OK_KEY));
+
+			expect(spy).not.toHaveBeenCalled();
+		});
+
+		test('should emulate {onMouseDown} for a custom selection key', () => {
+			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} emulateMouse onMouseDown={spy} selectionKeys={[32]} />);
+			const div = screen.getByTestId(id);
+
+			fireEvent.keyDown(div, makeKeyEvent(32));
+
+			expect(spy).toHaveBeenCalledTimes(1);
+		});
+
+		test('should not emulate {onMouseDown} for a non-selection key', () => {
+			const spy = jest.fn();
+			render(<SpottableComponent data-testid={id} emulateMouse onMouseDown={spy} selectionKeys={[13]} />);
+			const div = screen.getByTestId(id);
+
+			fireEvent.keyDown(div, makeKeyEvent(65));
+
+			expect(spy).not.toHaveBeenCalled();
+		});
+	});
+
+	describe('shouldComponentUpdate', () => {
+		test('should re-render when a non-Component prop changes', () => {
+			const spy = jest.fn((props) => <div {...props} />);
+			const {rerender} = render(<SpottableComponent component={spy} data-testid={id} />);
+
+			rerender(<SpottableComponent component={spy} data-id="123" data-testid={id} />);
+
+			const expected = 2;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
+		});
+
+		test('should re-render when {selectionKeys} changes', () => {
+			const spy = jest.fn((props) => <div {...props} />);
+			const {rerender} = render(
+				<SpottableComponent
+					component={spy}
+					data-testid={id}
+					selectionKeys={[1, 2, 3]}
+				/>
+			);
+
+			rerender(<SpottableComponent component={spy} data-testid={id} selectionKeys={[2, 1, 3]} />);
+
+			const expected = 2;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
+		});
+
+		test('should update when {spotlightDisabled} changes', () => {
+			const spy = jest.fn((props) => <div {...props} />);
+			const {rerender} = render(
+				<SpottableComponent component={spy} data-testid={id} spotlightDisabled />
+			);
+
+			rerender(<SpottableComponent component={spy} data-testid={id} spotlightDisabled={false} />);
+
+			expect(spy).toHaveBeenCalledTimes(2);
+		});
+
+		test('should not re-render when focused', () => {
+			const spy = jest.fn((props) => <div {...props} />);
+			render(<SpottableComponent component={spy} data-testid={id} />);
+			const div = screen.getByTestId(id);
+
+			div.focus();
+
+			const expected = 1;
+
+			expect(spy).toHaveBeenCalledTimes(expected);
+		});
+	});
+
+	describe('focus restoration on spotlightDisabled transition', () => {
+		let focusSpy: jest.SpiedFunction<typeof Spotlight.focus>;
+		let isPausedSpy: jest.SpiedFunction<typeof Spotlight.isPaused>;
+		let pointerModeSpy: jest.SpiedFunction<typeof Spotlight.getPointerMode>;
+		let setPointerModeSpy: jest.SpiedFunction<typeof Spotlight.setPointerMode>;
+
+		beforeEach(() => {
+			focusSpy = jest.spyOn(Spotlight, 'focus').mockImplementation(() => true);
+			isPausedSpy = jest.spyOn(Spotlight, 'isPaused').mockReturnValue(false);
+			// Drive the pointer-mode + hover branch of focus restoration;
+			pointerModeSpy = jest.spyOn(Spotlight, 'getPointerMode').mockReturnValue(true);
+			setPointerModeSpy = jest.spyOn(Spotlight, 'setPointerMode').mockImplementation(() => {});
+			// Override the wrapper's getCurrent mock: simulate "focus is on something outside Spotlight's tracking"
+			Spotlight.getCurrent = () => null as unknown as Element;
+		});
+
+		afterEach(() => {
+			focusSpy.mockRestore();
+			isPausedSpy.mockRestore();
+			pointerModeSpy.mockRestore();
+			setPointerModeSpy.mockRestore();
+		});
+
+		test('should restore focus exactly once on a true→false transition', () => {
+			const {rerender} = render(<SpottableComponent data-testid={id} spotlightDisabled />);
+			// isHovered must be true for the pointer-mode restoration branch to fire.
+			fireEvent.mouseEnter(screen.getByTestId(id));
+
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+
+			expect(focusSpy).toHaveBeenCalledTimes(1);
+		});
+
+		test('should not re-restore focus on no-change rerenders after the transition', () => {
+			const {rerender} = render(<SpottableComponent data-testid={id} spotlightDisabled />);
+			fireEvent.mouseEnter(screen.getByTestId(id));
+
+			// Transition true → false: legitimate restore, fires once.
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+			expect(focusSpy).toHaveBeenCalledTimes(1);
+
+			// Subsequent no-change rerenders simulate the parent re-rendering for
+			// reasons unrelated to spotlightDisabled (e.g. a sibling prop changing_
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+
+			expect(focusSpy).toHaveBeenCalledTimes(1);
+		});
+
+		test('should restore focus again on a second true→false transition', () => {
+			const {rerender} = render(<SpottableComponent data-testid={id} spotlightDisabled />);
+			fireEvent.mouseEnter(screen.getByTestId(id));
+
+			// First transition.
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+			expect(focusSpy).toHaveBeenCalledTimes(1);
+
+			// No-change rerender between transitions
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+			expect(focusSpy).toHaveBeenCalledTimes(1);
+
+			// Toggle back to disabled (no restoration on this direction).
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled />);
+			expect(focusSpy).toHaveBeenCalledTimes(1);
+
+			// Second true → false transition — restoration must fire again.
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+			expect(focusSpy).toHaveBeenCalledTimes(2);
+
+			rerender(<SpottableComponent data-testid={id} spotlightDisabled={false} />);
+			expect(focusSpy).toHaveBeenCalledTimes(2);
+		});
+	});
+});
