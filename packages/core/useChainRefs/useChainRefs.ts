@@ -7,11 +7,15 @@
  * @private
  */
 
-import {useCallback} from 'react';
+import {RefCallback, RefObject, useCallback} from 'react';
 import warning from 'warning';
 
+import {Callback} from '../types';
+
+export type Ref = RefObject<{}> | RefCallback<{}>
+
 // Safely handles functional and object refs (and ignores invalid refs)
-function updateRef (ref, node) {
+function updateRef (ref: Ref, node: Node) {
 	if (ref) {
 		if (typeof ref === 'function') {
 			ref(node);
@@ -28,12 +32,12 @@ function updateRef (ref, node) {
  * Creates a reference callback that updates each of the provided references
  *
  * @memberof core/useChainRefs
- * @param {Object|Function} ...handlers  List of references to be updated.
- * @returns {Function}                   A callback that updates each reference
+ * @param {...Object[]|...Function[]} refs List of references to be updated.
+ * @returns {Function}                     A callback that updates each reference
  * @public
  */
-function chainRefs (...refs) {
-	return (node) => {
+function chainRefs (...refs: Ref[]): Callback {
+	return (node: Node) => {
 		refs.forEach(ref => updateRef(ref, node));
 	};
 }
@@ -42,11 +46,11 @@ function chainRefs (...refs) {
  * Creates a memoized reference callback that updates each of the provided references
  *
  * @memberof core/useChainRefs
- * @param {Object|Function} ...handlers  List of references to be updated.
+ * @param {Object|Function} refs         List of references to be updated.
  * @returns {Function}                   A memoized callback that updates each reference
  * @public
  */
-function useChainRefs (...refs) {
+function useChainRefs (...refs: Ref[]) {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	return useCallback(chainRefs(...refs), refs);
 }

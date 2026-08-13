@@ -1,5 +1,7 @@
 import {useState} from 'react';
 
+export type Constructor<T> = new (...args: any[]) => T;
+
 /**
  * Creates one instance of the class, `Ctor` with the provided `args`, for the life of the
  * component.
@@ -28,7 +30,7 @@ import {useState} from 'react';
  * @returns {Object}      An instance of `Ctor`
  * @private
  */
-function useClass (Ctor, ...args) {
+function useClass <T> (Ctor: Constructor<T>, ...args: any[]): T {
 	const [state] = useState(() => new Ctor(...args));
 
 	return state;

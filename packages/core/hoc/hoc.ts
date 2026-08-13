@@ -5,10 +5,12 @@
  * @exports hoc
  */
 
-import {isRenderable} from '../util';
 import mergeDeepWithKey from 'ramda/src/mergeDeepWithKey';
 
-const mergeFn = (key, defaultValue, userValue) => {
+import {Callback, CallbackObject} from '../types';
+import {isRenderable} from '../util';
+
+const mergeFn = (key: string, defaultValue: any, userValue: any) => {
 	// eslint-disable-next-line no-undefined
 	if (userValue === undefined) {
 		return defaultValue;
@@ -60,17 +62,23 @@ const mergeFn = (key, defaultValue, userValue) => {
  * @memberof core/hoc
  * @public
  */
-const hoc = (defaultConfig, hawk) => {
+function hoc(defaultConfig: CallbackObject, hawk: Callback): Callback
+function hoc(hawk: Callback): Callback
+function hoc(defaultConfig: CallbackObject | Callback, hawk?: Callback) {
 
 	// normalize arguments to allow defaultConfig to be omitted
 	let factory = hawk;
-	let defaults = defaultConfig;
+	let defaults: CallbackObject | null = defaultConfig;
 	if (!factory && typeof defaultConfig === 'function') {
-		factory = defaultConfig;
+		factory = defaultConfig as Callback;
 		defaults = null;
 	}
 
-	const Component = (config, maybeWrapped) => {
+	if (!factory) {
+		throw new TypeError('hoc requires a factory function');
+	}
+
+	const Component = (config: CallbackObject, maybeWrapped: Callback) => {
 		if (isRenderable(config)) {
 			return factory(defaults, config);
 		} else {
@@ -78,7 +86,7 @@ const hoc = (defaultConfig, hawk) => {
 			if (isRenderable(maybeWrapped)) {
 				return factory(cfg, maybeWrapped);
 			} else {
-				return (Wrapped) => factory(cfg, Wrapped);
+				return (Wrapped: Callback) => factory(cfg, Wrapped);
 			}
 		}
 	};

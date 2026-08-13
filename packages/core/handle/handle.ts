@@ -79,26 +79,10 @@
 
 import cond from 'ramda/src/cond';
 import curry from 'ramda/src/curry';
+import {Context, SyntheticEvent} from 'react';
 
 import {is} from '../keymap';
-
-/**
- * The signature for event handlers
- *
- * @callback EventHandler
- * @memberof core/handle
- * @param {any} event
- */
-
-/**
- * The signature for event handling functions supported by `handle` and related functions
- *
- * @callback HandlerFunction
- * @memberof core/handle
- * @param {any} event
- * @param {Object<string, any>} props
- * @param {Object<string, any>} context
- */
+import {Callback, CallbackObject, HandlerFunction} from '../types';
 
 /**
  * The signature for {@link core/handle.adaptEvent} parameter `adapter`
@@ -110,13 +94,31 @@ import {is} from '../keymap';
  * @param {Object<string, any>} context
  * @returns {any}
  */
+export type EventAdapter = HandlerFunction;
 
-// Accepts an array of handlers, sanitizes them, and returns a handler function
-// compose(allPass, map(makeSafeHandler));
-const makeHandler = (handlers) => {
+/**
+ * The signature for event handlers
+ *
+ * @callback EventHandler
+ * @memberof core/handle
+ * @param {any} event
+ */
+export interface EventHandler extends HandlerFunction {
+	named: (name: string) => HandlerFunction;
+	bindAs: (obj: CallbackObject, name?: string) => HandlerFunction;
+}
+
+/*
+ * Accepts an array of handlers, sanitizes them, and returns a handler function
+ * compose(allPass, map(makeSafeHandler));
+ *
+ * @memberof core/handle
+ * @private
+ */
+const makeHandler = (handlers: HandlerFunction[]) => {
 	// allowing shadowing here to provide a meaningful function name in dev tools
 	// eslint-disable-next-line no-shadow
-	return function handle (...args) {
+	return function handle (this: any, ...args: any) {
 		for (let i = 0; i < handlers.length; i++) {
 			const fn = handlers[i];
 			if (typeof fn !== 'function' || fn.apply(this, args)) {
@@ -130,22 +132,31 @@ const makeHandler = (handlers) => {
 	};
 };
 
-// Loose check to determine if obj is component-ish if it has both props and context members
-const hasPropsAndContext = (obj) => (
+/*
+ * Loose check to determine if obj is component-ish if it has both props and context members
+ *
+ * @memberof core/handle
+ * @private
+ */
+const hasPropsAndContext = (obj: CallbackObject): boolean => (
 	obj &&
 		Object.prototype.hasOwnProperty.call(obj, 'props') &&
 		Object.prototype.hasOwnProperty.call(obj, 'context')
 );
 
-const named = (fn, name) => {
+/*
+ * @memberof core/handle
+ * @private
+ */
+const named = (fn: Callback, name: string) => {
 	if (__DEV__) {
 		try {
 			Object.defineProperty(fn, 'name', {
 				value: name,
-				writeable: false,
+				writable: false,
 				enumerable: false
 			});
-		} catch (err) {
+		} catch (err) { // eslint-disable-line @typescript-eslint/no-unused-vars
 			// unable to set name of function
 		}
 	}
@@ -153,7 +164,11 @@ const named = (fn, name) => {
 	return fn;
 };
 
-const bindAs = (fn, obj, name) => {
+/*
+ * @memberof core/handle
+ * @private
+ */
+const bindAs = (fn: Callback, obj: CallbackObject, name?: string) => {
 	const namedFunction = name ? named(fn, name) : fn;
 	const bound = namedFunction.bind(obj);
 
@@ -164,11 +179,17 @@ const bindAs = (fn, obj, name) => {
 	return bound;
 };
 
-const decorateHandleFunction = (fn) => {
-	fn.named = (name) => named(fn, name);
-	fn.bindAs = (obj, name) => bindAs(fn, obj, name);
+/*
+ * @memberof core/handle
+ * @private
+ */
+const decorateHandleFunction = (fn: HandlerFunction) => {
+	const decorated = fn as EventHandler;
 
-	return fn;
+	decorated.named = (name: string) => named(decorated, name);
+	decorated.bindAs = (obj: CallbackObject, name?: string) => bindAs(decorated, obj, name);
+
+	return decorated;
 };
 
 /**
@@ -187,7 +208,7 @@ const decorateHandleFunction = (fn) => {
  * @memberof core/handle
  * @public
  */
-const handle = function (...handlers) {
+const handle = function (this: any, ...handlers: HandlerFunction[]): EventHandler {
 	const h = makeHandler(handlers);
 
 	// In order to support binding either handle (handle.bind(this)) or a handler
@@ -195,7 +216,7 @@ const handle = function (...handlers) {
 	// context if fn() doesn't have its own `this`.
 	const _outer = this;
 
-	const fn = function prepareHandleArgs (ev, props, context) {
+	const fn = function prepareHandleArgs (this: any, ev: Event, props?: CallbackObject, context?: Context<any>) {
 		let caller = null;
 
 		// if handle() was bound to a class, use its props and context. otherwise, we accept
@@ -213,8 +234,8 @@ const handle = function (...handlers) {
 		return h.call(caller, ev, props, context);
 	};
 
-	fn.finally = function (cleanup) {
-		return decorateHandleFunction(function handleWithFinally (ev, props, context) {
+	fn.finally = function (cleanup: Callback) {
+		return decorateHandleFunction(function handleWithFinally (this: any, ev: Event, props: CallbackObject, context: Context<any>) {
 			let result = false;
 
 			if (hasPropsAndContext(this)) {
@@ -258,7 +279,7 @@ const handle = function (...handlers) {
  * @memberof core/handle
  * @public
  */
-const oneOf = handle.oneOf = function (...handlers) {
+const oneOf = handle.oneOf = function (...handlers: Array<[HandlerFunction, HandlerFunction]>): HandlerFunction {
 	return handle.call(this, cond(handlers));
 };
 
@@ -288,9 +309,9 @@ const oneOf = handle.oneOf = function (...handlers) {
  * @memberof core/handle
  * @public
  */
-const returnsTrue = handle.returnsTrue = function (handler) {
+const returnsTrue = handle.returnsTrue = function (handler?: HandlerFunction) {
 	if (handler && typeof handler === 'function') {
-		return named(function (...args) {
+		return named(function (this: any, ...args: any) {
 			handler.apply(this, args);
 
 			return true;
@@ -322,7 +343,7 @@ const returnsTrue = handle.returnsTrue = function (handler) {
  * @memberof core/handle
  * @private
  */
-const callOnEvent = handle.callOnEvent = curry((methodName, ev) => {
+const callOnEvent = handle.callOnEvent = curry((methodName: string, ev: CallbackObject) => {
 	if (ev[methodName]) {
 		ev[methodName]();
 	} else if (ev.nativeEvent && ev.nativeEvent[methodName]) {
@@ -356,7 +377,7 @@ const callOnEvent = handle.callOnEvent = curry((methodName, ev) => {
  * @memberof core/handle
  * @public
  */
-const forEventProp = handle.forEventProp = curry((prop, value, ev) => {
+const forEventProp = handle.forEventProp = curry((prop: string, value: any, ev: CallbackObject) => {
 	return ev[prop] === value;
 });
 
@@ -385,7 +406,7 @@ const forEventProp = handle.forEventProp = curry((prop, value, ev) => {
  * @memberof core/handle
  * @public
  */
-const forward = handle.forward = curry(named((name, ev, props) => {
+const forward = handle.forward = curry(named((name: string, ev?: CallbackObject, props?: CallbackObject): boolean => {
 	const fn = props && props[name];
 	if (typeof fn === 'function') {
 		fn(ev);
@@ -441,7 +462,7 @@ const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
  * @memberof core/handle
  * @private
  */
-const forwardWithPrevent = handle.forwardWithPrevent = curry(named((name, ev, props) => {
+const forwardWithPrevent = handle.forwardWithPrevent = curry(named((name: string, ev: CallbackObject, props: CallbackObject) => {
 	let prevented = false;
 	const wrappedEvent = Object.assign({}, ev, {
 		preventDefault: () => {
@@ -548,7 +569,7 @@ const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
  * @memberof core/handle
  * @public
  */
-const forKey = handle.forKey = curry((name, ev) => {
+const forKey = handle.forKey = curry((name: string, ev: KeyboardEvent): boolean => {
 	return is(name, ev.keyCode);
 });
 
@@ -576,7 +597,7 @@ const forKey = handle.forKey = curry((name, ev) => {
  * @memberof core/handle
  * @public
  */
-const forProp = handle.forProp = curry((prop, value, ev, props) => {
+const forProp = handle.forProp = curry((prop: string, value, ev: Event, props: CallbackObject): boolean => {
 	return props[prop] === value;
 });
 
@@ -604,7 +625,7 @@ const forProp = handle.forProp = curry((prop, value, ev, props) => {
  * @memberof core/handle
  * @public
  */
-const log = handle.log = curry((message, ev, ...args) => {
+const log = handle.log = curry((message: string, ev: SyntheticEvent, ...args): boolean => {
 	if (__DEV__) {
 		// eslint-disable-next-line no-console
 		console.log(message, ev, ...args);
@@ -651,8 +672,8 @@ const log = handle.log = curry((message, ev, ...args) => {
  * @memberof core/handle
  * @public
  */
-const call = function (method) {
-	return named(function (...args) {
+const call = function (method: string): HandlerFunction {
+	return named(function (this: any, ...args) {
 		if (this && this[method]) {
 			return this[method](...args);
 		}
@@ -691,9 +712,9 @@ const call = function (method) {
  * @memberof core/handle
  * @public
  */
-const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
-	return named(function (ev, ...args) {
-		return handler.call(this, adapter.call(this, ev, ...args), ...args);
+const adaptEvent = handle.adaptEvent = curry(function (adapter: EventAdapter, handler: HandlerFunction): HandlerFunction {
+	return named(function (this: any, ev, ...args) {
+		return handler.call(this, adapter.call(this, ev, args[0], args[1]), args[0], args[1]);
 	}, 'adaptEvent');
 });
 
@@ -730,9 +751,9 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter, handler) {
  * @memberof core/handle
  * @public
  */
-const forwardCustom = handle.forwardCustom = function (name, adapter) {
+const forwardCustom = handle.forwardCustom = function (name: string, adapter?: EventAdapter): HandlerFunction {
 	return named(adaptEvent(
-		function (ev, ...args) {
+		function (this: any, ev, ...args) {
 			let customEventPayload = adapter ? adapter.call(this, ev, ...args) : null;
 
 			// Handle either no adapter or a non-object return from the adapter
@@ -795,12 +816,12 @@ const forwardCustom = handle.forwardCustom = function (name, adapter) {
  * @memberof core/handle
  * @private
  */
-const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = function (name, adapter) {
-	return named(function (ev, ...args) {
+const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = function (name: string, adapter?: EventAdapter): HandlerFunction {
+	return named(function (this: any, ev, ...args) {
 		let prevented = false;
 
-		function adapterWithPrevent () {
-			let customEventPayload = adapter ? adapter.call(this, ev, ...args) : null;
+		function adapterWithPrevent (this: any) {
+			let customEventPayload = adapter ? adapter.call(this, ev, args[0], args[1]) : null;
 			let existingPreventDefault = null;
 
 			// Handle either no adapter or a non-object return from the adapter
@@ -824,7 +845,7 @@ const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = function (nam
 			return customEventPayload;
 		}
 
-		return forwardCustom.call(this, name, adapterWithPrevent.bind(this))(ev, ...args) && !prevented;
+		return forwardCustom.call(this, name, adapterWithPrevent.bind(this))(ev, args[0], args[1]) && !prevented;
 	}, 'forwardCustomWithPrevent');
 };
 
@@ -852,7 +873,7 @@ const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = function (nam
  * @memberof core/handle
  * @public
  */
-const not = handle.not = (handler) => (...args) => !handler(...args);
+const not = handle.not = (handler: HandlerFunction): HandlerFunction => (...args) => !handler(...args);
 
 export default handle;
 export {

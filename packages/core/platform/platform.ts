@@ -9,6 +9,31 @@
 
 import deprecate from '../internal/deprecate';
 
+/**
+ * @typedef {Object} PlatformDescription
+ * @property {String} browserName - The name of the detected browser
+ * @property {Number} browserVersion - The version of the detected browser
+ * @property {Number} chrome - The version of the detected browser, if chrome browser is detected
+ * @property {Number} firefox - The version of the detected browser, if firefox browser is detected
+ * @property {Number} safari - The version of the detected browser, if safari browser is detected
+ * @property {Boolean} touchEvent - `true` if the browser has native touch events
+ * @property {Boolean} touchScreen - `true` if the platform has a touch screen
+ * @property {String} type - The type of the detected platform. One of 'desktop', 'mobile', 'webos', 'node', or 'unknown'
+ *
+ * @memberof core/platform
+ * @public
+ */
+export type PlatformDescription = {
+	browserName: string;
+	browserVersion: number;
+	chrome?: number;
+	firefox?: number;
+	safari?: number;
+	touchEvent?: boolean;
+	touchScreen?: boolean;
+	type: string;
+}
+
 // Refer the following for more details: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis
 const browserEnvironment = () => !!globalThis.window;
 
@@ -36,8 +61,8 @@ const userAgentPatterns = [
 // The base supported versions: Used in DEPRECATED warning
 const supportedVersions = {safari: 16.6, chrome: 119, firefox: 128};
 
-const parseUserAgent = (userAgent) => {
-	const detectedInfo = {
+const parseUserAgent = (userAgent: string) => {
+	const detectedInfo: PlatformDescription = {
 		type: 'unknown',
 		browserName: 'unknown',
 		browserVersion: 0
@@ -65,32 +90,19 @@ const parseUserAgent = (userAgent) => {
 			detectedInfo.type = 'desktop';
 		}
 
-		detectedInfo[detectedInfo.browserName] = detectedInfo.browserVersion;
+		detectedInfo[detectedInfo.browserName as keyof typeof supportedVersions] = detectedInfo.browserVersion;
 	}
 
 	// deprecation warning for browser versions older than our support policy
-	if (supportedVersions[detectedInfo.browserName] > detectedInfo.browserVersion) {
-		deprecate({name: `supporting ${detectedInfo.browserName} version older than ${supportedVersions[detectedInfo.browserName]}`, until: '6.0.0'});
+	const supportedVersion = supportedVersions[detectedInfo.browserName as keyof typeof supportedVersions];
+	if (supportedVersion > detectedInfo.browserVersion) {
+		deprecate({name: `supporting ${detectedInfo.browserName} version older than ${supportedVersion}`, until: '6.0.0'});
 	}
 
 	return detectedInfo;
 };
 
-/**
- * @typedef {Object} PlatformDescription
- * @property {String} browserName - The name of the detected browser
- * @property {Number} browserVersion - The version of the detected browser
- * @property {Number} chrome - The version of the detected browser, if chrome browser is detected
- * @property {Number} firefox - The version of the detected browser, if firefox browser is detected
- * @property {Number} safari - The version of the detected browser, if safari browser is detected
- * @property {Boolean} touchEvent - `true` if the browser has native touch events
- * @property {Boolean} touchScreen - `true` if the platform has a touch screen
- * @property {String} type - The type of the detected platform. One of 'desktop', 'mobile', 'webos', 'node', or 'unknown'
- *
- * @memberof core/platform
- * @public
- */
-let detectedPlatform = null;
+let detectedPlatform: PlatformDescription | null = null;
 
 /**
  * Returns the {@link core/platform.platform} object.
@@ -136,7 +148,7 @@ const detect = () => {
  */
 const platform = {};
 
-[
+const platformKeys: Array<keyof PlatformDescription> = [
 	'browserName',
 	'browserVersion',
 	'chrome',
@@ -145,7 +157,9 @@ const platform = {};
 	'touchEvent',
 	'touchScreen',
 	'type'
-].forEach(name => {
+];
+
+platformKeys.forEach(name => {
 	Object.defineProperty(platform, name, {
 		enumerable: true,
 		get: () => {

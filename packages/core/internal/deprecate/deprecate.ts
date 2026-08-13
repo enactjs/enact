@@ -5,8 +5,19 @@
  * @private
  */
 
+export interface Config {
+	name?: string;
+	message?: string;
+	since?: string;
+	until?: string;
+	replacedBy?: string;
+	alwaysWarn?: boolean;
+}
+
+export type ConfigMsg = Omit<Config, 'alwaysWarn'>
+
 // Utility method to format deprecate message
-const formatMsg = ({message, name, until, replacedBy, since}) => {
+const formatMsg = ({message, name, until, replacedBy, since}: ConfigMsg) => {
 	let msg = 'DEPRECATED:';
 
 	if (name) {
@@ -37,7 +48,7 @@ const formatMsg = ({message, name, until, replacedBy, since}) => {
 };
 
 // Utility method for console warning
-const warn = (msg) => {
+const warn = (msg: string) => {
 	if (typeof console !== 'undefined') {
 		console.warn(msg);	// eslint-disable-line no-console
 	}
@@ -63,15 +74,15 @@ const warn = (msg) => {
  * @memberof core/internal/deprecate
  * @private
  */
-const deprecate = function (thing, config) {
+const deprecate = function (thing: any, config?: Config): any {
 	if (__DEV__) {
 		if (!config) {	// If no config, config only invocation, just log message
 			const msg = formatMsg(thing);
 			warn(msg);
 			return thing;
 		} else {
-			let displayed, msg;
-			return (...args) => {
+			let displayed: boolean, msg: string;
+			return (...args: any[]) => {
 				if (!displayed || config.alwaysWarn) {
 					if (!msg) {
 						msg = formatMsg(config);

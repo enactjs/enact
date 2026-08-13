@@ -5,13 +5,16 @@
  * @exports functionalKind
  */
 
-import {createContext, useContext} from 'react';
+import invariant from 'invariant';
+import {Context, createContext, useContext} from 'react';
 
+import {CallbackObject} from '../types';
 import useHandlers from '../useHandlers';
 import {checkPropTypes, applyDefaultProps} from '../util';
 
 import computed from './computed';
 import styles from './styles';
+import {FunctionalKindConfig} from './types';
 import {bindInlineHandlers} from './util';
 
 // Fallback context when none is specified.
@@ -124,7 +127,7 @@ const NoContext = createContext(null);
  * @memberof core/kind
  * @private
  */
-const functionalKind = (config) => {
+const functionalKind = (config: FunctionalKindConfig) => {
 	const {
 		computed: cfgComputed,
 		contextType = NoContext,
@@ -136,24 +139,28 @@ const functionalKind = (config) => {
 		styles: cfgStyles
 	} = config;
 
+	invariant(typeof useRender === 'function', 'functionalKind() requires a `useRender` function');
+
 	const renderStyles  = cfgStyles   ? styles(cfgStyles)     : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
 
-	const renderKind = (props, context) => {
-		if (renderStyles)   props = renderStyles(props, context);
-		if (renderComputed) props = renderComputed(props, context);
+	const renderKind = (props: CallbackObject, context: Context<any>) => {
+		if (renderStyles && typeof renderStyles === 'function')   props = renderStyles(props, context);
+		if (renderComputed && typeof renderComputed === 'function') props = renderComputed(props, context);
 
-		return useRender(props, context); // eslint-disable-line react-hooks/rules-of-hooks
+		return useRender(props, context);
 	};
 
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
 	const handlerKeys     = handlers     ? Object.keys(handlers)     : null;
 
-	const Component = function (props) {
+	const Component = function (props: CallbackObject) {
 		// Hooks must always be called unconditionally and in the same order.
 		// useContext only accepts Context and never suspends (unlike use(), which can suspend on Promises and break SSR).
-		const ctx = useContext(contextType);
-		const boundHandlers = useHandlers(handlers, props, ctx);
+		const ctx: Context<any> = useContext(contextType);
+		const componentHandlers = handlers || {};
+
+		const boundHandlers = useHandlers(componentHandlers, props, ctx);
 
 		// Merge incoming props with bound handlers.
 		let merged = {
@@ -163,7 +170,9 @@ const functionalKind = (config) => {
 
 		// Apply defaultProps manually so functional components
 		// receive defaults even when React's own defaultProps is set.
-		applyDefaultProps(merged, defaultProps, defaultPropKeys);
+		if (defaultProps && Array.isArray(defaultPropKeys)) {
+			applyDefaultProps(merged, defaultProps, defaultPropKeys);
+		}
 
 		checkPropTypes(Component, merged);
 
@@ -180,10 +189,15 @@ const functionalKind = (config) => {
 	// ── inline ──────────────────────────────────────────────────────────────
 	// A synchronous, hook-free path for calling the component logic outside
 	// of the React render cycle (e.g. in tests or server-side utilities).
-	Component.inline = (props, context) => {
-		const updated = applyDefaultProps({...props}, defaultProps, defaultPropKeys);
+	Component.inline = (props: CallbackObject, context: Context<any>) => {
+		const inlineDefaultProps = defaultProps || {};
+		const inlineDefaultPropKeys = defaultPropKeys || [];
+		const inlineHandlers = handlers || {};
+		const inlineHandlerKeys = handlerKeys || [];
 
-		return renderKind(bindInlineHandlers(updated, handlers, handlerKeys, context), context);
+		const updated = applyDefaultProps({...props}, inlineDefaultProps, inlineDefaultPropKeys);
+
+		return renderKind(bindInlineHandlers(updated, inlineHandlers, inlineHandlerKeys, context), context);
 	};
 
 	return Component;

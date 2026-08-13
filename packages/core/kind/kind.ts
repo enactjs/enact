@@ -5,20 +5,23 @@
  * @exports kind
  */
 
-import {createContext, use, Component as ReactComponent} from 'react';
+import invariant from 'invariant';
+import {createContext, use, Component as ReactComponent, Context, ReactElement} from 'react';
 
+import {CallbackObject} from '../types';
 import useHandlers from '../useHandlers';
 import Handlers from '../useHandlers/Handlers';
 import {checkPropTypes, applyDefaultProps} from '../util';
 
 import computed from './computed';
 import styles from './styles';
+import {KindComponent, KindConfig} from './types';
 import {bindInlineHandlers} from './util';
 
 // Because contextType is optional and hooks must be called in the same order, we need a fallback
 // context when none is specified. This likely has some overhead so we may want to deprecate and
 // remove contextType support for 4.0 since the context APIs have improved since this was added.
-const NoContext = createContext(null);
+const NoContext: Context<any> = createContext(null);
 
 /**
  * @callback RenderFunction
@@ -129,7 +132,7 @@ const NoContext = createContext(null);
  * @see {@link core/handle}
  * @public
  */
-const kind = (config) => {
+const kind = (config: KindConfig) => {
 	const {
 		computed: cfgComputed,
 		contextType = NoContext,
@@ -142,11 +145,13 @@ const kind = (config) => {
 		styles: cfgStyles
 	} = config;
 
+	invariant(typeof render === 'function', 'kind() requires a `render` function');
+
 	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
-	const renderKind = (props, context) => {
-		if (renderStyles) props = renderStyles(props, context);
-		if (renderComputed) props = renderComputed(props, context);
+	const renderKind = (props: CallbackObject, context: Context<any>): ReactElement | null => {
+		if (renderStyles && typeof renderStyles === 'function') props = renderStyles(props, context);
+		if (renderComputed && typeof renderComputed === 'function') props = renderComputed(props, context);
 
 		return render(props, context);
 	};
@@ -154,21 +159,25 @@ const kind = (config) => {
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
 	const handlerKeys = handlers ? Object.keys(handlers) : null;
 
-	let Component;
+	let Component: KindComponent;
 
 	// In 4.x, this branch will become the only supported version and the class branch will be
 	// removed.
 	if (functional) {
-		Component = function (props) {
-			const ctx = use(contextType);
-			const boundHandlers = useHandlers(handlers, props, ctx);
+		Component = function (props: CallbackObject) {
+			const ctx: Context<any> = use(contextType);
+			const componentHandlers = handlers || {};
+
+			const boundHandlers = useHandlers(componentHandlers, props, ctx);
 
 			const merged = {
 				...props,
 				...boundHandlers
 			};
 
-			applyDefaultProps(merged, defaultProps, defaultPropKeys);
+			if (defaultProps && Array.isArray(defaultPropKeys)) {
+				applyDefaultProps(merged, defaultProps, defaultPropKeys);
+			}
 
 			checkPropTypes(Component, merged);
 
@@ -177,15 +186,17 @@ const kind = (config) => {
 	} else {
 		Component = class extends ReactComponent {
 			static contextType = contextType;
+			context = contextType;
+			handlers;
 
-			constructor (props) {
+			constructor (props: CallbackObject) {
 				super(props);
 				checkPropTypes(this, props);
 
 				this.handlers = new Handlers(handlers);
 			}
 
-			componentDidUpdate (prevProps) {
+			componentDidUpdate (prevProps: CallbackObject) {
 				checkPropTypes(this, this.props, prevProps);
 			}
 
@@ -210,9 +221,14 @@ const kind = (config) => {
 	if (__DEV__ && cfgComputed) Component.computed = cfgComputed;
 
 	Component.inline = (props, context) => {
-		const updated = applyDefaultProps({...props}, defaultProps, defaultPropKeys);
+		const inlineDefaultProps = defaultProps || {};
+		const inlineDefaultPropKeys = defaultPropKeys || [];
+		const inlineHandlers = handlers || {};
+		const inlineHandlerKeys = handlerKeys || [];
 
-		return renderKind(bindInlineHandlers(updated, handlers, handlerKeys, context), context);
+		const updated = applyDefaultProps({...props}, inlineDefaultProps, inlineDefaultPropKeys);
+
+		return renderKind(bindInlineHandlers(updated, inlineHandlers, inlineHandlerKeys, context), context);
 	};
 
 	return Component;

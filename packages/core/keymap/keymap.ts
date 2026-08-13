@@ -1,5 +1,16 @@
 import curry from 'ramda/src/curry';
 
+import {Callback} from '../types';
+
+export interface ObjectRegistry {
+	[key: string]: KeyCode;
+}
+export interface KeyMapRegistry {
+	[key: string]: number[];
+}
+
+export type KeyCode = number | number[];
+
 /*
  * The singleton map of names to keyCodes. If a name doesn't have any keyCodes mapped to it, it will
  * not exist in this map. If it does, its value will be an array of its keyCodes.
@@ -7,7 +18,7 @@ import curry from 'ramda/src/curry';
  * @type {Object}
  * @private
  */
-const map = {};
+const map: KeyMapRegistry = {};
 
 /*
  * Safely converts keymap name to lowercase.
@@ -19,7 +30,7 @@ const map = {};
  * @memberof core/keymap
  * @private
  */
-const toLowerCase = (name) => name ? name.toLowerCase() : '';
+const toLowerCase = (name: string) => name ? name.toLowerCase() : '';
 
 /*
  * Iterates over `set` and invokes `fn` with the key and value of each item.
@@ -32,7 +43,7 @@ const toLowerCase = (name) => name ? name.toLowerCase() : '';
  * @memberof core/keymap
  * @private
  */
-const forEachObj = curry(function (fn, set) {
+const forEachObj = curry(function (fn: Callback, set: ObjectRegistry) {
 	Object.keys(set).forEach(name => fn(name, set[name]));
 });
 
@@ -49,7 +60,7 @@ const forEachObj = curry(function (fn, set) {
  * @memberof core/keymap
  * @private
  */
-const oneOrArray = curry(function (fn, name, keyCode) {
+const oneOrArray = curry(function (fn: Callback, name: string, keyCode: KeyCode) {
 	if (Array.isArray(keyCode)) {
 		keyCode.forEach(fn(name));
 	} else {
@@ -69,7 +80,7 @@ const oneOrArray = curry(function (fn, name, keyCode) {
  * @memberof core/keymap
  * @private
  */
-const addOne = curry(function (name, keyCode) {
+const addOne = curry(function (name: string, keyCode: number) {
 	name = toLowerCase(name);
 	if (name in map) {
 		const index = map[name].indexOf(keyCode);
@@ -93,7 +104,7 @@ const addOne = curry(function (name, keyCode) {
  * @memberof core/keymap
  * @private
  */
-const removeOne = curry(function (name, keyCode) {
+const removeOne = curry(function (name: string, keyCode: number) {
 	name = toLowerCase(name);
 	if (name in map) {
 		const keys = map[name];
@@ -172,7 +183,7 @@ const removeAll = forEachObj(remove);
  * @memberof core/keymap
  * @public
  */
-const is = curry(function (name, keyCode) {
+const is = curry(function (name: string, keyCode: number) {
 	name = toLowerCase(name);
 	return name in map && map[name].indexOf(keyCode) >= 0;
 });

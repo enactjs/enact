@@ -1,11 +1,12 @@
-import PropTypes from 'prop-types';
+import PropTypes, {Requireable, Validator} from 'prop-types';
 
+import {Callback, CallbackObject} from '../../types';
 import {isRenderable} from '../../util';
 
 import deprecate from '../deprecate';
 
-const isRequired = (fn) => {
-	fn.isRequired = function (props, key, componentName, location, propFullName, ...rest) {
+const isRequired = (fn: Validator<any>): Requireable<any> => {
+	(fn as Requireable<any>).isRequired = function (props: CallbackObject, key: string, componentName: string, location: string, propFullName: string, ...rest: []) {
 		const propValue = props[key];
 		if (typeof propValue === 'undefined') {
 			return new Error(
@@ -16,10 +17,10 @@ const isRequired = (fn) => {
 		return fn(propValue, key, componentName, location, propFullName, ...rest);
 	};
 
-	return fn;
+	return fn as Requireable<any>;
 };
 
-const renderable = isRequired(function (props, key, componentName) {
+const renderable = isRequired(function (props: CallbackObject, key: string, componentName: string) {
 	const propValue = props[key];
 	if (propValue && !isRenderable(propValue)) {
 		return new Error(
@@ -27,9 +28,9 @@ const renderable = isRequired(function (props, key, componentName) {
 			`Expected a renderable value but received '${typeof propValue}' instead.`
 		);
 	}
-});
+} as Validator<any>);
 
-const component = isRequired(function (props, key, componentName) {
+const component = isRequired(function (props: CallbackObject, key: string, componentName: string) {
 	const propValue = props[key];
 	if (propValue && (typeof propValue === 'string' || !isRenderable(propValue))) {
 		return new Error(
@@ -37,7 +38,7 @@ const component = isRequired(function (props, key, componentName) {
 			`Expected a function but received '${typeof propValue}' instead.`
 		);
 	}
-});
+} as Validator<any>);
 
 const renderableOverride = PropTypes.oneOfType([
 	PropTypes.element,
@@ -59,10 +60,10 @@ const ref = PropTypes.oneOfType([PropTypes.shape({
  * @param {Function} base Prop type validator
  * @param {Object} config deprecatioon configuration
  */
-const deprecated = (base, config) => {
+const deprecated = (base: Callback, config: CallbackObject) => {
 	// Wrap in a no-op so deprecate only warns once
 	const warn = deprecate(() => true, config);
-	return (props, key, ...rest) => {
+	return (props: CallbackObject, key: string, ...rest: any) => {
 		// Warn on a non-null value for the prop
 		if (props[key] != null) warn();
 

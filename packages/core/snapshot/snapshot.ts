@@ -10,7 +10,9 @@
 
 import invariant from 'invariant';
 
-const windowCallbacks = [];
+import {Callback} from '../types';
+
+const windowCallbacks: Callback[] = [];
 
 /**
  * Determines if the `window` is available
@@ -21,7 +23,7 @@ const windowCallbacks = [];
  * @memberof core/snapshot
  * @public
  */
-function isWindowReady () {
+function isWindowReady (): boolean {
 	return typeof window !== 'undefined';
 }
 
@@ -46,7 +48,7 @@ function isWindowReady () {
  * @memberof core/snapshot
  * @public
  */
-function onWindowReady (callback) {
+function onWindowReady (callback: Callback): undefined {
 	if (isWindowReady()) {
 		callback();
 	} else {
@@ -65,7 +67,7 @@ function onWindowReady (callback) {
  * @memberof core/snapshot
  * @public
  */
-function windowReady () {
+function windowReady (): undefined {
 	invariant(
 		isWindowReady(),
 		'windowReady cannot be run until the window is available'

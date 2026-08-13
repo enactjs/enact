@@ -1,3 +1,7 @@
+import {CallbackObject} from '../types';
+
+import {ComputedPropFunction} from './types';
+
 /**
  * Accepts an object of computed property configurations and a property object, passes the property
  * object through each computed property handler, and merges the resulting computed properties with
@@ -18,16 +22,17 @@
  *
  * @method computed
  * @param   {Object}    cfg  Configuration object mapping transformation functions to property names
+ * @param	{Object}	optProps
  *
  * @returns {Function}       Function that accepts a props object and mutates it to include the
  *                           computed props
  * @private
  */
-const computed = (cfg, optProps) => {
+const computed = (cfg: CallbackObject, optProps?: CallbackObject): ComputedPropFunction | CallbackObject => {
 	const keys = Object.keys(cfg);
 
-	const renderComputed = (props, ...args) => {
-		const updated = {};
+	const renderComputed = (props: CallbackObject, ...args: any[]): CallbackObject => {
+		const updated: CallbackObject = {};
 		for (let i = keys.length - 1; i >= 0; i--) {
 			updated[keys[i]] = cfg[keys[i]](props, ...args);
 		}

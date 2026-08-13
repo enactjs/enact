@@ -23,10 +23,25 @@ import {checkPropTypes as check} from 'prop-types';
 import always from 'ramda/src/always';
 import isType from 'ramda/src/is';
 import unless from 'ramda/src/unless';
-import {Children, useState} from 'react';
+import {Children, Component, ComponentType, ReactNode, useState} from 'react';
 import * as ReactIs from 'react-is';
 
 import Job from './Job';
+
+import {Callback, CallbackObject} from '../types';
+
+export type ClassNames = boolean | string | string[];
+
+export type FilterCallback<T> = (
+	value: T,
+	index: number,
+	array: T[]
+) => boolean;
+
+export interface ClassNamesObject {
+	[key: string]: string
+}
+
 
 /**
  * Capitalizes a given string (not locale-aware).
@@ -38,7 +53,7 @@ import Job from './Job';
  * @memberof core/util
  * @public
  */
-const cap = function (str) {
+const cap = function (str: string) {
 	return str.slice(0, 1).toUpperCase() + str.slice(1);
 };
 
@@ -56,7 +71,7 @@ const cap = function (str) {
  * @memberof core/util
  * @public
  */
-const clamp = (min, max, value) => {
+const clamp = (min: number, max: number, value: number) => {
 	if (min > max || value < min) return min;
 	if (value > max) return max;
 	return value;
@@ -96,7 +111,7 @@ const coerceFunction = unless(isType(Function), always);
  * @memberof core/util
  * @public
  */
-const coerceArray = function (array) {
+const coerceArray = function <T> (array: Array<T>): Array<T> {
 	return Array.isArray(array) ? array : [array];
 };
 
@@ -110,7 +125,7 @@ const coerceArray = function (array) {
  * @memberof core/util
  * @public
  */
-const isRenderable = function (tag) {
+const isRenderable = function (tag: any): boolean {
 	return ReactIs.isValidElementType(tag);
 };
 
@@ -127,8 +142,8 @@ const isRenderable = function (tag) {
  * @memberof core/util
  * @public
  */
-const extractAriaProps = function (props) {
-	const aria = {};
+const extractAriaProps = function (props: CallbackObject) {
+	const aria: CallbackObject = {};
 	Object.keys(props).forEach(key => {
 		if (key === 'role' || key.indexOf('aria-') === 0) {
 			aria[key] = props[key];
@@ -186,7 +201,7 @@ const perfNow = function () {
  * @memberof core/util
  * @public
  */
-const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
+const mergeClassNameMaps = (baseMap: CallbackObject, additiveMap: CallbackObject, allowedClassNames?: string[]) => {
 	let css = baseMap;
 	if (baseMap && additiveMap) {
 		allowedClassNames = allowedClassNames || Object.keys(additiveMap);
@@ -200,7 +215,7 @@ const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
 
 		if (process.env.NODE_ENV === 'test') {
 			return new Proxy({}, {
-				get (target, key) {
+				get (target, key: string) {
 					// use the merged value if it exists and the key otherwise
 					return css[key] || key;
 				}
@@ -223,7 +238,7 @@ const mergeClassNameMaps = (baseMap, additiveMap, allowedClassNames) => {
  * @memberof core/util
  * @public
  */
-const normalizePublicClassNames = (publicClassNames, css) => {
+const normalizePublicClassNames = (publicClassNames?: ClassNames, css?: ClassNamesObject): ClassNames | undefined => {
 	let allowedClassNames = publicClassNames;
 
 	if (css && allowedClassNames === true) {
@@ -250,7 +265,7 @@ const normalizePublicClassNames = (publicClassNames, css) => {
  * @memberof core/util
  * @public
  */
-const applyDefaultProps = (target, defaultProps, keys) => {
+const applyDefaultProps = (target: CallbackObject, defaultProps: CallbackObject, keys?: string[]) => {
 	if (keys?.length) {
 		keys.forEach(key => {
 			// eslint-disable-next-line no-undefined
@@ -276,9 +291,9 @@ const applyDefaultProps = (target, defaultProps, keys) => {
  * @memberof core/util
  * @public
  */
-const memoize = (fn) => {
-	let cache = {};
-	return (...args) => {
+const memoize = (fn: Callback) => {
+	let cache: CallbackObject = {};
+	return (...args: any[]) => {
 		let n = args[0];
 		if (n in cache) {
 			return cache[n];
@@ -308,7 +323,7 @@ const memoize = (fn) => {
  * @see https://react.dev/reference/react/Children#children-map
  * @public
  */
-const mapAndFilterChildren = (children, callback, filter) => {
+const mapAndFilterChildren = (children: ReactNode, callback: Callback, filter: FilterCallback<any>) => {
 	const result = Children.map(children, (child, ...rest) => {
 		if (child != null) {
 			return callback(child, ...rest);
@@ -334,7 +349,7 @@ const mapAndFilterChildren = (children, callback, filter) => {
  * @memberof core/util
  * @public
  */
-const setDefaultProps = (props, defaultProps = {}) => {
+const setDefaultProps = (props: CallbackObject, defaultProps: CallbackObject = {}) => {
 	return applyDefaultProps(Object.assign({}, props), defaultProps, Object.keys(defaultProps));
 };
 
@@ -349,7 +364,7 @@ const setDefaultProps = (props, defaultProps = {}) => {
  * @memberof core/util
  * @public
  */
-const shallowEqual = (a, b) => {
+const shallowEqual = (a: CallbackObject, b: CallbackObject) => {
 	if (Object.is(a, b)) {
 		return true;
 	}
@@ -391,10 +406,11 @@ const shallowEqual = (a, b) => {
  * @memberof core/util
  * @public
  */
-const checkPropTypes = (component, props, prevProps) => {
+const checkPropTypes = (component: ComponentType | Component, props: CallbackObject, prevProps?: CallbackObject) => {
 	if (__DEV__ && !(prevProps && prevProps === props)) {
-		const isFunctional = typeof component === 'function';
-		const {displayName, name, propTypes} = isFunctional ? component : component.constructor; // eslint-disable-line react/forbid-foreign-prop-types
+		const isFunction = typeof component === 'function';
+
+		const {displayName, name, propTypes} = isFunction ? component : component.constructor as ComponentType; // eslint-disable-line react/forbid-foreign-prop-types
 
 		check(propTypes, props, 'prop', displayName || name, () => {
 			// Create a new error to capture the current stack trace
@@ -402,7 +418,7 @@ const checkPropTypes = (component, props, prevProps) => {
 			if (Error.captureStackTrace) {
 				Error.captureStackTrace(checkPropsError, checkPropTypes);
 			}
-			return checkPropsError.stack.split('@')[0];
+			return checkPropsError?.stack && checkPropsError.stack.split('@')[0];
 		});
 	}
 };
@@ -417,7 +433,7 @@ const checkPropTypes = (component, props, prevProps) => {
  * @memberof core/util
  * @public
  */
-const usePrevious = (value) => {
+const usePrevious = <T>(value: T): T => {
 	const [previousTrackedValue, setPreviousTrackedValue] = useState(value);
 	const [previousValue, setPreviousValue] = useState(value);
 

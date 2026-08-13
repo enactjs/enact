@@ -1,5 +1,11 @@
 import {mergeClassNameMaps, normalizePublicClassNames} from '../util';
 
+export interface PublicClassNames {
+	componentCss: {[key: string]: string},
+	customCss: {[key: string]: string},
+	publicClassNames: boolean | string | string[],
+}
+
 /**
  * A hook for supporting `publicClassNames` to functional components.
  * It returns merged CSS of given two CSS objects according to `publicClassNames` option.
@@ -13,7 +19,7 @@ import {mergeClassNameMaps, normalizePublicClassNames} from '../util';
  * @returns {Object}                                        A merged CSS
  * @private
  */
-function usePublicClassNames ({componentCss, customCss, publicClassNames}) {
+function usePublicClassNames ({componentCss, customCss, publicClassNames}: PublicClassNames) {
 	if (!componentCss || !customCss) {
 		return componentCss;
 	}
@@ -21,7 +27,8 @@ function usePublicClassNames ({componentCss, customCss, publicClassNames}) {
 	const allowedClassNames = normalizePublicClassNames(publicClassNames, componentCss);
 
 	if (allowedClassNames) {
-		return mergeClassNameMaps(componentCss, customCss, allowedClassNames);
+		const allowed = Array.isArray(allowedClassNames) ? allowedClassNames : [allowedClassNames as string];
+		return mergeClassNameMaps(componentCss, customCss, allowed);
 	}
 
 	return componentCss;

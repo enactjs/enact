@@ -1,3 +1,15 @@
+import {CallbackObject} from '../../types';
+
+export interface RegistryController {
+	notify: (ev?: RegistryEvent) => void;
+	unregister: () => void;
+}
+
+export type RegistryEvent = {action: string} & CallbackObject;
+export type RegistryInstance = (ev?: RegistryEvent) => void;
+export type RegistryHandler = (ev: RegistryEvent, instance: RegistryInstance) => void;
+export type RegisterFunction = (instance: RegistryInstance) => RegistryController;
+
 /**
  * Allows components to register parents to cascade context changes and trigger functions
  *
@@ -6,12 +18,12 @@
  * @private
  */
 const Registry = {
-	create: (handler) => {
-		const instances = [];
-		let currentParent;
+	create: (handler: RegistryHandler) => {
+		const instances: RegistryInstance[] = [];
+		let currentParent: RegistryController;
 
 		const registry = Object.freeze({
-			set parent (register) {
+			set parent (register: RegisterFunction) {
 				if (currentParent && currentParent.unregister) {
 					currentParent.unregister();
 				}
@@ -19,10 +31,10 @@ const Registry = {
 					currentParent = register(registry.notify);
 				}
 			},
-			notify (ev, exclude = () => true) {
+			notify (ev?: RegistryEvent, exclude: (instance: RegistryInstance) => boolean = () => true) {
 				instances.filter(exclude).forEach(f => f(ev));
 			},
-			register (instance) {
+			register (instance: RegistryInstance) {
 				if (instances.indexOf(instance) === -1) {
 					instances.push(instance);
 
@@ -32,7 +44,7 @@ const Registry = {
 				}
 
 				return {
-					notify (ev) {
+					notify (ev: RegistryEvent) {
 						if (handler) {
 							handler(ev, instance);
 						}

@@ -8,7 +8,7 @@
     "directory": "packages/core"
   },
   "homepage": "https://enactjs.com",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "clean": "enact clean",
     "interlink": "echo \"No interlink\" && exit 0",
@@ -39,6 +39,16 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-is": "^19.2.7",
+    "typescript": "^7.0.2",
     "warning": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/invariant": "^2.2.37",
+    "@types/node": "^26.1.2",
+    "@types/prop-types": "^15.7.15",
+    "@types/ramda": "^0.32.0",
+    "@types/react": "^19.2.18",
+    "@types/react-is": "^19.2.0",
+    "@types/warning": "^3.0.4"
   }
 }

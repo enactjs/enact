@@ -1,7 +1,9 @@
 import classnames from 'classnames/bind';
 
+import {CallbackObject} from '../types';
 import {mergeClassNameMaps, normalizePublicClassNames} from '../util';
 
+import {ComputedPropFunction} from './types';
 import {addInternalProp} from './util';
 
 /**
@@ -34,19 +36,20 @@ import {addInternalProp} from './util';
  * ```
  *
  * @method styles
- * @param   {Object}    cfg  Configuration object containing one of `css`, `className`,
- *                           `publicClassNames`, and/or `style`
+ * @param   {Object}    cfg  		Configuration object containing one of `css`, `className`,
+ *                           		`publicClassNames`, and/or `style`
+ * @param   {Object}    optProps
  *
- * @returns {Function}       Function that accepts a props object and mutates it to merge class
- *                           names and style objects and provide the `styler` utility function and
- *                           `css` merged class name map
+ * @returns {Function}       		Function that accepts a props object and mutates it to merge class
+ *                           		names and style objects and provide the `styler` utility function and
+ *                           		`css` merged class name map
  * @private
  */
-const styles = (cfg, optProps) => {
+const styles = (cfg: CallbackObject, optProps?: CallbackObject): ComputedPropFunction | CallbackObject => {
 	const {className, css: configCss, prop = 'className', style} = cfg;
 	const allowedClassNames = normalizePublicClassNames(cfg.publicClassNames, configCss);
 
-	const renderStyles = (props) => {
+	const renderStyles = (props: CallbackObject): CallbackObject => {
 		let css = configCss;
 
 		if (style) {
@@ -54,12 +57,13 @@ const styles = (cfg, optProps) => {
 		}
 
 		// if the props includes a css map, merge them together now
-		if (css && allowedClassNames && props.css) {
+		if (css && allowedClassNames && Array.isArray(allowedClassNames) && props.css) {
 			css = mergeClassNameMaps(css, props.css, allowedClassNames);
 		}
 
+		const cx = classnames as (...args: unknown[]) => string;
 		const cn = css ? classnames.bind(css) : classnames;
-		const joinedClassName = props[prop] = classnames(
+		const joinedClassName = props[prop] = cx(
 			className ? cn(className.split(' ')) : null,
 			props.className
 		);
@@ -67,7 +71,7 @@ const styles = (cfg, optProps) => {
 		addInternalProp(props, 'css', css);
 		addInternalProp(props, 'styler', {
 			join: cn,
-			append: (...args) => cn(joinedClassName, ...args)
+			append: (...args: any[]) => cn(joinedClassName, ...args)
 		});
 
 		return props;

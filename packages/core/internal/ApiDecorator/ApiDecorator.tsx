@@ -6,19 +6,20 @@
  */
 
 import invariant from 'invariant';
-import {Component} from 'react';
+import {Component, ElementType} from 'react';
 
 import hoc from '../../hoc';
+import {CallbackObject} from '../../types';
 
 // Gets a property from `provider`
-const get = (provider, name) => () => {
+const get = (provider: CallbackObject, name: string) => () => {
 	if (provider) {
 		return provider[name];
 	}
 };
 
 // Sets a property on `provider`
-const set = (provider, name) => (value) => {
+const set = (provider: CallbackObject, name: string) => (value: any) => {
 	if (provider && typeof provider[name] !== 'function') {
 		return (provider[name] = value);
 	}
@@ -30,7 +31,7 @@ const set = (provider, name) => (value) => {
  * @memberof core/internal/ApiDecorator.ApiDecorator
  * @hocconfig
  */
-const defaultConfig = {
+const defaultConfig: {api: string[] | null} = {
 	/**
 	 * Configures the API endpoints to be exposed
 	 *
@@ -63,7 +64,7 @@ const defaultConfig = {
  * @hoc
  * @private
  */
-const ApiDecorator = hoc(defaultConfig, (config, Wrapped) => {
+const ApiDecorator = hoc(defaultConfig, (config: CallbackObject, Wrapped: ElementType) => {
 	const {api} = config;
 
 	invariant(
@@ -74,8 +75,8 @@ const ApiDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends Component {
 		static displayName = 'ApiDecorator';
 
-		setProvider = (provider) => {
-			api.forEach(key => {
+		setProvider = (provider: CallbackObject) => {
+			api.forEach((key: string) => {
 				Object.defineProperty(this, key, {
 					get: get(provider, key),
 					set: set(provider, key),

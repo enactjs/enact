@@ -1,15 +1,16 @@
-import {useId, useImperativeHandle, useRef} from 'react';
+import {ElementType, useId, useImperativeHandle, useRef} from 'react';
+import {CallbackObject} from '../../types';
 
-const WithRef = (WrappedComponent) => {
-	const HoC = function (props) {
+const WithRef = (WrappedComponent: ElementType) => {
+	const HoC = function (props: CallbackObject) {
 		const {findOutermostRef, ['data-withref-id']: givenId, outermostRef, ref = null, referrerName, ...rest} = props;
-		const divRef = useRef();
+		const divRef = useRef<HTMLDivElement>(null);
 		const generatedId = useId();
 		const id = givenId || generatedId;
 
 		const findOutermostNode = () => {
 			const refNode = divRef.current;
-			const attributeSelector = `[data-withref-id="${refNode.getAttribute('data-withref-target')}"]`;
+			const attributeSelector = `[data-withref-id="${refNode?.getAttribute('data-withref-target')}"]`;
 			/* The intended code is to search for the referrer element via a single querySelector call. But unit tests cannot handle :has() properly.
 			const selector = `:scope ${attributeSelector}, :scope :has(${attributeSelector})`;
 			return refNode?.parentElement?.querySelector(selector) || null;

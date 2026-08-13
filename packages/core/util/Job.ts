@@ -1,5 +1,7 @@
 import invariant from 'invariant';
 
+import {Callback} from '../types';
+
 /**
  * Provides a convenient way to manage timed execution of functions.
  *
@@ -8,10 +10,10 @@ import invariant from 'invariant';
  * @public
  */
 class Job {
-	id = null;
-	fn = null;
-	timeout = null;
-	type = null;
+	id: number | Promise<unknown> | NodeJS.Timeout | null = null;
+	fn: Callback | null = null;
+	timeout: number | null = null;
+	type: string | null = null;
 
 	/**
 	 * @constructor
@@ -20,14 +22,14 @@ class Job {
 	 *
 	 * @memberof core/util.Job.prototype
 	 */
-	constructor (fn, timeout) {
+	constructor (fn: Callback, timeout: number) {
 		this.fn = fn;
 		this.timeout = timeout;
 	}
 
-	run (args) {
+	run (args: any[]) {
 		// don't want to inadvertently apply Job's context on `fn`
-		return this.fn.apply(null, args);
+		return this.fn && this.fn.apply(null, args);
 	}
 
 	/**
@@ -40,8 +42,8 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	start = (...args) => {
-		this.startAfter(this.timeout, ...args);
+	start = (...args: any[]) => {
+		this.startAfter(this.timeout as number, ...args);
 	};
 
 	/**
@@ -56,7 +58,7 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	startAfter = (timeout, ...args) => {
+	startAfter = (timeout: number, ...args: any[]) => {
 		this.stop();
 		this.type = 'timeout';
 		this.id = setTimeout(() => this.run(args), timeout);
@@ -74,11 +76,11 @@ class Job {
 	stop = () => {
 		if (this.id) {
 			if (this.type === 'idle') {
-				window.cancelIdleCallback(this.id);
+				window.cancelIdleCallback(this.id as number);
 			} else if (this.type === 'raf') {
-				window.cancelAnimationFrame(this.id);
+				window.cancelAnimationFrame(this.id as number);
 			} else if (this.type === 'timeout') {
-				clearTimeout(this.id);
+				clearTimeout(this.id as number);
 			}
 			this.id = this.type = null;
 		}
@@ -95,8 +97,8 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	throttle = (...args) => {
-		this.throttleUntil(this.timeout, ...args);
+	throttle = (...args: any[]) => {
+		this.throttleUntil(this.timeout as number, ...args);
 	};
 
 	/**
@@ -112,7 +114,7 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	throttleUntil = (timeout, ...args) => {
+	throttleUntil = (timeout: number, ...args: any[]) => {
 		if (!this.id) {
 			this.type = 'timeout';
 			this.run(args);
@@ -130,8 +132,8 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	idle = (...args) => {
-		this.idleUntil(null, ...args);
+	idle = (...args: any[]) => {
+		this.idleUntil(0, ...args);
 	};
 
 	/**
@@ -147,7 +149,7 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	idleUntil = (timeout, ...args) => {
+	idleUntil = (timeout: number, ...args: any[]) => {
 		if (typeof window !== 'undefined' && window.requestIdleCallback) {
 			this.stop();
 			this.type = 'idle';
@@ -168,8 +170,8 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	startRaf = (...args) => {
-		this.startRafAfter(this.timeout, ...args);
+	startRaf = (...args: any[]) => {
+		this.startRafAfter(this.timeout as number, ...args);
 	};
 
 	/**
@@ -183,11 +185,11 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	startRafAfter = (timeout, ...args) => {
+	startRafAfter = (timeout?: number, ...args: any[]) => {
 		this.type = 'raf';
 		if (typeof window !== 'undefined') {
-			let time = null;
-			const callback = (timestamp) => {
+			let time: number | null = null;
+			const callback = (timestamp: number) => {
 				if (time === null) {
 					time = timestamp;
 				}
@@ -196,7 +198,7 @@ class Job {
 				} else {
 					time = null;
 					this.run(args);
-					window.cancelAnimationFrame(this.id);
+					window.cancelAnimationFrame(this.id as number);
 					this.id = null;
 				}
 			};
@@ -227,7 +229,7 @@ class Job {
 	 * @memberof core/util.Job.prototype
 	 * @public
 	 */
-	promise = (promise) => {
+	promise = <T>(promise: Promise<T>) => {
 		invariant(
 			promise && typeof promise.then === 'function',
 			'promise expects a thenable'

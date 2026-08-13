@@ -9,10 +9,12 @@
 
 import curry from 'ramda/src/curry';
 
+import {Callback} from '../types';
+
 import {getListeners, addListener} from './listeners';
 
-let defaultTarget = typeof document === 'object' && document;
-let rootId;
+let defaultTarget: Node | null = typeof document === 'object' ? document : null;
+let rootId: string;
 
 /*
  * Sets a selector for the default target. If no selector is set, `document` is the default target.
@@ -24,7 +26,7 @@ let rootId;
  * @memberof core/dispatcher
  * @private
  */
-const setDefaultTargetById = (id) => {
+const setDefaultTargetById = (id: string): undefined => {
 	defaultTarget = typeof document === 'object' && document.querySelector('#' + id) || defaultTarget;
 	rootId = id;
 };
@@ -40,12 +42,12 @@ const setDefaultTargetById = (id) => {
  * @memberof core/dispatcher
  * @private
  */
-const getDefaultTarget = () => {
+const getDefaultTarget = (): Node | Boolean => {
 	if (!defaultTarget && rootId) {
 		setDefaultTargetById(rootId);
 	}
 
-	return defaultTarget;
+	return defaultTarget as Node | Boolean;
 };
 
 /*
@@ -55,16 +57,18 @@ const getDefaultTarget = () => {
  * @param	{Event}		ev	Event payload
  * @param	{Function}	fn	Event callback
  *
- * @returns	{undefined}
+ * @returns {undefined}
  * @memberof core/dispatcher
  * @private
  */
-const invoker = curry(function (ev, fn) {
+const invoker = curry(function (ev: Event, fn: Callback): undefined {
 	try {
 		fn(ev);
-	} catch (e) {
-		// eslint-disable-next-line no-console
-		console.error(`A ${e.name} occurred during event handling with the message '${e.message}'`);
+	} catch (e: unknown) {
+		if (e instanceof Error) {
+			// eslint-disable-next-line no-console
+			console.error(`A ${e.name} occurred during event handling with the message '${e.message}'`);
+		}
 	}
 });
 
@@ -78,13 +82,17 @@ const invoker = curry(function (ev, fn) {
  * @memberof core/dispatcher
  * @private
  */
-const dispatcher = function (ev) {
+const dispatcher = function (ev: Event): undefined {
 	const name = ev.type;
-	const listeners = getListeners(ev.currentTarget, name);
+	const target = ev.currentTarget;
 
-	if (listeners) {
-		const inv = invoker(ev);
-		listeners.forEach(inv);
+	if (target) {
+		const listeners = getListeners(target, name);
+
+		if (listeners.length > 0) {
+			const inv = invoker(ev);
+			listeners.forEach(inv);
+		}
 	}
 };
 
@@ -100,8 +108,8 @@ const dispatcher = function (ev) {
  * @memberof core/dispatcher
  * @public
  */
-const on = function (name, fn, target = getDefaultTarget()) {
-	if (target) {
+const on = function (name: string, fn: Callback, target = getDefaultTarget()): undefined {
+	if (target && !(target instanceof Boolean)) {
 		const added = addListener(target, name, fn);
 
 		if (added && getListeners(target, name).length === 1) {
@@ -122,8 +130,8 @@ const on = function (name, fn, target = getDefaultTarget()) {
  * @memberof core/dispatcher
  * @public
  */
-const off = function (name, fn, target = getDefaultTarget()) {
-	if (target) {
+const off = function (name: string, fn: Callback, target = getDefaultTarget()): undefined {
+	if (target && !(target instanceof Boolean)) {
 		const listeners = getListeners(target, name);
 		const index = listeners.indexOf(fn);
 
@@ -149,8 +157,8 @@ const off = function (name, fn, target = getDefaultTarget()) {
  * @memberof core/dispatcher
  * @public
  */
-const once = function (name, fn, target) {
-	const onceFn = function (ev) {
+const once = function (name: string, fn: Callback, target: Node): Callback {
+	const onceFn = function (ev: Event) {
 		fn(ev);
 		off(name, onceFn, target);
 	};

@@ -1,3 +1,6 @@
+import {Context} from 'react';
+
+import {Callback, CallbackObject} from '../types';
 import useClass from '../useClass';
 
 import Handlers from './Handlers';
@@ -10,13 +13,13 @@ import Handlers from './Handlers';
  * work well with {@link core/handle} which generates handlers with this function signature.
  *
  * @param {Object.<String, Function>} handlers  Map of handler names to functions.
- * @params {any}                      [props]   Typically, the props for the component but that is
+ * @param {any}                      [props]   Typically, the props for the component but that is
  *                                              not required.
- * @params {any}                      [context] Additional data or methods the handlers may need.
+ * @param {any}                      [context] Additional data or methods the handlers may need.
  * @returns {Object}                            A map of bound handlers
  * @private
  */
-function useHandlers (handlers, props, context) {
+function useHandlers (handlers: CallbackObject<Callback>, props?: any, context?: Context<any>) {
 	const h = useClass(Handlers, handlers);
 	h.setContext(props, context);
 
