@@ -10,17 +10,52 @@ import hoc from '@enact/core/hoc';
 import {checkPropTypes} from '@enact/core/util';
 import ilib from 'ilib';
 import IString from 'ilib/lib/IString';
+import type ResBundle from 'ilib/lib/ResBundle';
 import PropTypes from 'prop-types';
 import {useEffect, useState} from 'react';
 
 import {I18nContextDecorator} from '../I18nDecorator';
 import {createResBundle, getIStringFromBundle, getResBundle} from '../src/resBundle';
 
-function getTextMap (mapPropsToText, props) {
+/**
+ * A text value in `mapPropsToText` with an optional default used while the
+ * translation is pending.
+ */
+interface MapPropsToTextObject {
+	text: string;
+	defaultText?: string;
+}
+
+type MapPropsToText = {[prop: string]: string | MapPropsToTextObject | null | undefined};
+
+interface TextMapEntry {
+	/**
+	 * The translated text, or `false` while the translation is pending
+	 */
+	translated: string | false;
+	/**
+	 * The untranslated source text
+	 */
+	text: string;
+	/**
+	 * Value rendered while the translation is pending, or `false` for none
+	 */
+	defaultText: string | false | undefined;
+}
+
+type TextMap = {[prop: string]: TextMapEntry};
+
+interface TextDecoratorProps {
+	children?: any;
+	locale?: string;
+	[prop: string]: any;
+}
+
+function getTextMap (mapPropsToText: MapPropsToText | null | undefined, props: TextDecoratorProps): TextMap | undefined {
 	const {children, defaultText} = props;
 
 	if (mapPropsToText) {
-		const map = {};
+		const map: TextMap = {};
 		Object.keys(mapPropsToText).forEach(prop => {
 			const text = mapPropsToText[prop];
 
@@ -65,7 +100,7 @@ const STRING_ONLY = function () {};
  * @memberof i18n/Text.TextDecorator
  * @hocconfig
  */
-const defaultConfig = {
+const defaultConfig: {mapPropsToText: MapPropsToText | null} = {
 	/**
 	 * Configures the translated text passed to the wrapped component.
 	 *
@@ -111,7 +146,7 @@ const defaultConfig = {
 const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {mapPropsToText} = config;
 
-	function Decorator (props) {
+	function Decorator (props: TextDecoratorProps) {
 		checkPropTypes(Decorator, props);
 
 		const {locale} = props;
@@ -130,7 +165,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const bundle = getResBundle();
 
 			Promise.all([
-				new Promise((resolve) => {
+				new Promise<ResBundle | null | undefined>((resolve) => {
 					if (bundle) {
 						resolve(bundle);
 					}
@@ -138,14 +173,14 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				}),
 				// ResBundle.getString will try to synchronously fetch the plurals resource so need
 				// to proactively fetch it to avoid the sync XHR
-				new Promise(resolve => IString.loadPlurals(false, null, null, resolve))
+				new Promise<void>(resolve => IString.loadPlurals(false, null, null, resolve))
 			]).then(([resBundle]) => {
 				if (!active || !resBundle) return;
 
-				setMap(prevMap => Object.keys(prevMap).reduce((obj, prop) => {
+				setMap(prevMap => Object.keys(prevMap!).reduce((obj, prop) => {
 					obj[prop].translated = String(getIStringFromBundle(obj[prop].text, resBundle));
 					return obj;
-				}, {...prevMap}));
+				}, {...prevMap!}));
 			});
 
 			return () => {
@@ -162,7 +197,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			);
 		}
 
-		const canRender = Object.values(map).every(
+		const canRender = Object.values(map!).every(
 			entry => !(entry.translated === false && entry.defaultText === false)
 		);
 
@@ -170,8 +205,8 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return null;
 		}
 
-		const getTextForProp = (prop) => {
-			const {defaultText = '', translated} = map[prop];
+		const getTextForProp = (prop: string) => {
+			const {defaultText = '', translated} = map![prop];
 
 			return translated === false ? defaultText : translated;
 		};
@@ -183,7 +218,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		const outProps = {...props};
 		delete outProps.locale;
 
-		Object.keys(map).forEach(prop => {
+		Object.keys(map!).forEach(prop => {
 			outProps[prop] = getTextForProp(prop);
 		});
 
@@ -255,4 +290,9 @@ export default Text;
 export {
 	Text,
 	TextDecorator
+};
+export type {
+	MapPropsToText,
+	MapPropsToTextObject,
+	TextDecoratorProps
 };

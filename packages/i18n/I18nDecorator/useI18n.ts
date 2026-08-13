@@ -1,7 +1,8 @@
 import useClass from '@enact/core/useClass';
 import {useEffect, useSyncExternalStore} from 'react';
 
-import ilib from '../src/index.js';
+import ilib from '../src/index';
+import type {I18nConfig} from '../types/I18nConfig';
 
 import I18n from './I18n';
 
@@ -17,6 +18,9 @@ import I18n from './I18n';
  * @property {Boolean}    [sync = false]              Load the resources synchronously
  * @private
  */
+interface UseI18nConfig extends I18nConfig {
+	locale?: string;
+}
 
 /**
  * Object returned by `useI18n`
@@ -36,7 +40,7 @@ import I18n from './I18n';
  * @returns {useI18nInterface}
  * @private
  */
-function useI18n ({locale, ...config} = {}) {
+function useI18n ({locale, ...config}: UseI18nConfig = {}) {
 	const ilibLocale = ilib.getLocale();
 	locale = locale && locale !== ilibLocale ? locale : ilibLocale;
 
@@ -67,4 +71,7 @@ function useI18n ({locale, ...config} = {}) {
 export default useI18n;
 export {
 	useI18n
+};
+export type {
+	UseI18nConfig
 };
