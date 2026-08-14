@@ -62,13 +62,11 @@ const mergeFn = (key: string, defaultValue: any, userValue: any) => {
  * @memberof core/hoc
  * @public
  */
-function hoc(defaultConfig: CallbackObject, hawk: Callback): Callback
-function hoc(hawk: Callback): Callback
-function hoc(defaultConfig: CallbackObject | Callback, hawk?: Callback) {
+const hoc = (defaultConfig: CallbackObject | Callback, hawk?: Callback): Callback => {
 
 	// normalize arguments to allow defaultConfig to be omitted
 	let factory = hawk;
-	let defaults: CallbackObject | null = defaultConfig;
+	let defaults: CallbackObject | null = defaultConfig as CallbackObject | null;
 	if (!factory && typeof defaultConfig === 'function') {
 		factory = defaultConfig as Callback;
 		defaults = null;
