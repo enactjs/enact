@@ -143,15 +143,13 @@ const functionalKind = (config) => {
 		if (renderStyles)   props = renderStyles(props, context);
 		if (renderComputed) props = renderComputed(props, context);
 
-		return useRender(props, context); // eslint-disable-line react-hooks/rules-of-hooks
+		return props;
 	};
 
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
 	const handlerKeys     = handlers     ? Object.keys(handlers)     : null;
 
 	const Component = function (props) {
-		"use no memo"; // Added to remove react-compiler optimizations
-
 		// Hooks must always be called unconditionally and in the same order.
 		// useContext only accepts Context and never suspends (unlike use(), which can suspend on Promises and break SSR).
 		const ctx = useContext(contextType);
@@ -169,7 +167,8 @@ const functionalKind = (config) => {
 
 		checkPropTypes(Component, merged);
 
-		return renderKind(merged, ctx);
+		renderKind(merged, ctx);
+		return useRender(merged, ctx);
 	};
 
 	if (name)         Component.displayName = name;
@@ -184,8 +183,9 @@ const functionalKind = (config) => {
 	// of the React render cycle (e.g. in tests or server-side utilities).
 	Component.inline = (props, context) => {
 		const updated = applyDefaultProps({...props}, defaultProps, defaultPropKeys);
+		const merged = renderKind(bindInlineHandlers(updated, handlers, handlerKeys, context), context);
 
-		return renderKind(bindInlineHandlers(updated, handlers, handlerKeys, context), context);
+		return useRender(merged, context); // eslint-disable-line react-hooks/rules-of-hooks
 	};
 
 	return Component;
