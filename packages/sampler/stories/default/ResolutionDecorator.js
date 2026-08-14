@@ -4,7 +4,7 @@ import Card from '@enact/ui/Card';
 import Item from '@enact/ui/Item';
 import VirtualList from '@enact/ui/VirtualList';
 import ri, {ResolutionDecorator, getScreenTypeObject, getScreenType} from '@enact/ui/resolution';
-import {Fragment, useCallback, useState, useEffect} from 'react';
+import {Fragment, useCallback, useEffect, useReducer} from 'react';
 
 Card.displayName = 'Card';
 ResolutionDecorator.displayName = 'ResolutionDecorator';
@@ -13,13 +13,6 @@ VirtualList.displayName = 'VirtualList';
 export default {
 	title: 'UI/ResolutionDecorator',
 	component: ResolutionDecorator
-};
-
-const config = {
-	linearScaling: {
-		active: false,
-		type: 'currentScreen'
-	}
 };
 
 const screenTypes = [
@@ -86,20 +79,32 @@ const ResolutionDecoratorView = ({
 };
 
 export const ResolutionDecorator_ = (args) => {
-	const [currentFontSize, setCurrentFontSize] = useState('');
-	const [screenInfo, setScreenInfo] = useState({name: '', width: 0, height: 0});
+	const reducer = (reducerState, payload) => {
+		return {...reducerState, ...payload};
+	};
+
+	const createInitialState = () => {
+		return {
+			currentFontSize: '',
+			height: 0,
+			name: '',
+			width: 0
+		};
+	};
+
+	const [screenInfo, dispatch] = useReducer(reducer, null, createInitialState);
 
 	const updateInfo = useCallback(() => {
 		const type = getScreenType({width: window.innerWidth, height: window.innerHeight});
 		const screenTypeObject = getScreenTypeObject(type);
 		if (screenTypeObject) {
-			setScreenInfo({
+			dispatch({
 				name: screenTypeObject.name,
 				width: window.innerWidth,
 				height: window.innerHeight
 			});
 		}
-		setCurrentFontSize(document.documentElement.style.fontSize);
+		dispatch({currentFontSize: document.documentElement.style.fontSize});
 	}, []);
 
 	useEffect(() => {
@@ -108,23 +113,29 @@ export const ResolutionDecorator_ = (args) => {
 		return () => window.removeEventListener('resize', updateInfo);
 	}, [updateInfo]);
 
-	config.linearScaling.type = args['scalingType'];
-	config.linearScaling.active = args['linearScaling'];
+	// Config is derived in render (not via a post-render effect) so `View` and the config stay
+	// consistent within the same render pass and the controls take effect immediately.
+	const resolutionConfig = {
+		linearScaling: {
+			active: args['linearScaling'],
+			type: args['scalingType']
+		},
+		screenTypes
+	};
 
-	if (!config.linearScaling.active) {
-		config.fontSizeHandling = args['fontSizeHandling'];
-		config.orientationHandling = args['orientationHandling'];
+	if (!resolutionConfig.linearScaling.active) {
+		resolutionConfig.fontSizeHandling = args['fontSizeHandling'];
+		resolutionConfig.orientationHandling = args['orientationHandling'];
 	}
 
-	const View = ResolutionDecorator({
-		...config,
-		screenTypes: screenTypes
-	}, ResolutionDecoratorView);
+	// ResolutionDecorator bakes its config in at decoration time, so the demo must re-decorate when
+	// the controls change. This inherently creates the component during render for this sampler story.
+	const View = ResolutionDecorator(resolutionConfig, ResolutionDecoratorView);
 
 	return (
 		<View
 			args={args}
-			currentFontSize={currentFontSize}
+			currentFontSize={screenInfo.currentFontSize}
 			screenInfo={screenInfo}
 		/>
 	);
