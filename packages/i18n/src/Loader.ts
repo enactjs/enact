@@ -51,7 +51,9 @@ const getImpl = (url: string, callback: LoadCallback, sync?: boolean) => {
 
 const getSync = (url: string, callback: LoadCallback) => getImpl(url, callback, true);
 
-const get = memoize((url: string) => new Promise<any>((resolve, reject) => {
+// @enact/core's memoize doesn't preserve its argument's type (it's typed via the generic,
+// any-collapsing `Callback`), so the annotation here restores what memoize erases
+const get: (url: string) => Promise<any> = memoize((url: string) => new Promise<any>((resolve, reject) => {
 	getImpl(url, (json, error) => {
 		if (error) {
 			reject(error);

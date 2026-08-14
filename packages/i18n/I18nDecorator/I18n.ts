@@ -36,7 +36,7 @@ class I18n {
 	nonLatinLanguageOverrides?: string[] | null;
 	resources: ResourceDescriptor[];
 	sync: boolean;
-	loadResourceJob: Job<[I18nSnapshot]>;
+	loadResourceJob: Job;
 
 	private _locale: string | null;
 	private _ready: boolean;
@@ -53,7 +53,7 @@ class I18n {
 		this._locale = null;
 		this._ready = sync;
 		this._updatingFromRender = false;
-		this.loadResourceJob = new Job((state: I18nSnapshot) => this._updateSnapshot(state));
+		this.loadResourceJob = new Job((state: I18nSnapshot) => this._updateSnapshot(state), 0);
 		this._listeners = new Set();
 		this._snapshot = {
 			className: null,
@@ -191,7 +191,10 @@ class I18n {
 		this._ready = true;
 
 		if (typeof window === 'object') {
-			on('languagechange', this.handleLocaleChange, window);
+			// @enact/core's dispatcher types `target` as Node-only, excluding Window despite it
+			// being a standard event target (window.addEventListener); cast needed until that's
+			// widened upstream
+			on('languagechange', this.handleLocaleChange, window as unknown as Node);
 		}
 
 		// When async, we defer loading resources until DOM is ready
@@ -210,7 +213,7 @@ class I18n {
 
 		this.loadResourceJob.stop();
 		if (typeof window === 'object') {
-			off('languagechange', this.handleLocaleChange, window);
+			off('languagechange', this.handleLocaleChange, window as unknown as Node);
 		}
 	}
 

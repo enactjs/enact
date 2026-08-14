@@ -28,11 +28,11 @@ onWindowReady(() => {
 	on('focus', () => {
 		focused = true;
 		flush();
-	}, window);
+	}, window as unknown as Node);
 
 	on('blur', () => {
 		focused = false;
-	}, window);
+	}, window as unknown as Node);
 });
 
 export {
