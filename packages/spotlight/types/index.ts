@@ -3,7 +3,7 @@ export type {Direction} from './Direction';
 export type {ExtSelector} from './ExtSelector';
 export type {PreferredEnterTo} from './PreferredEnterTo';
 export type {Position} from './Position';
-export type {Rect, RectCenter} from './Rect';
+export type {Rect, RectCenter, RectEdges} from './Rect';
 export type {InputType, InputInfo} from './InputType';
 export type {
 	ContainerConfig,
@@ -11,6 +11,7 @@ export type {
 	ContainerNavigationEvent,
 	EnterTo,
 	LeaveFor,
+	LeaveForTarget,
 	LastFocusedPersist,
 	LastFocusedPersistResult,
 	LastFocusedRestore,

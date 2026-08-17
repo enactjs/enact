@@ -1,3 +1,5 @@
+import {Context} from 'react';
+
 import {Callback, CallbackObject} from '../types';
 import useClass from '../useClass';
 
@@ -17,6 +19,7 @@ import Handlers from './Handlers';
  * @returns {Object}                            A map of bound handlers
  * @private
  */
+// `context` is an arbitrary bag of values for handlers (not React.createContext()).
 function useHandlers (handlers: CallbackObject<Callback>, props?: any, context?: any) {
 	const h = useClass(Handlers, handlers);
 	h.setContext(props, context);

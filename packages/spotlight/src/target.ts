@@ -32,13 +32,13 @@ import type {ContainerTarget} from '../types/ContainerTarget';
 import type {Direction} from '../types/Direction';
 import type {PreferredEnterTo} from '../types/PreferredEnterTo';
 import type {Position} from '../types/Position';
-import type {Rect} from '../types/Rect';
+import type {Rect, RectEdges} from '../types/Rect';
 
 /** A candidate target discovered while searching for the nearest element in a direction. */
 interface DirectionalTarget {
 	direction: Direction;
 	target: Element;
-	distance?: number;
+	distance: number;
 }
 
 function isFocusable (elem: Element): boolean {
@@ -504,10 +504,11 @@ function getLeaveForTarget (containerId: string, direction: Direction): Containe
 	const config = getContainerConfig(containerId);
 
 	if (config) {
-		// `leaveFor` is documented as an <extSelector> per direction but, in practice, is only
-		// ever a CSS selector string or a single Element.
-		const target = (config.restrict !== 'self-only' && config.leaveFor && config.leaveFor[direction]) as
-			string | Element | false | null | undefined;
+		if (config.restrict === 'self-only' || !config.leaveFor) {
+			return null;
+		}
+
+		const target = config.leaveFor[direction];
 		if (typeof target === 'string') {
 			if (target === '') {
 				return false;
@@ -571,7 +572,7 @@ const getOffsetDistanceToTargetFromPosition = (
 		distance: number,
 		direction: Direction,
 		{x, y}: Position,
-		{left, right, top, bottom}: Pick<Rect, 'left' | 'right' | 'top' | 'bottom'>
+		{left, right, top, bottom}: RectEdges
 ): number => {
 	if (direction === 'left' || direction === 'right') {
 		if (y > bottom) {
@@ -612,7 +613,8 @@ const getNearestTargetsInContainerFromPosition = (position: Position, containerI
 		if (target) {
 			result.push({
 				direction,
-				target
+				target,
+				distance: getDistanceToTargetFromPosition(direction, position, getRect(target))
 			});
 		}
 
@@ -627,12 +629,7 @@ const getNearestTargetInContainerFromPosition = (position: Position, containerId
 		return;
 	}
 
-	targets.forEach((item) => {
-		const {direction, target} = item;
-		item.distance = getDistanceToTargetFromPosition(direction, position, getRect(target));
-	});
-
-	targets.sort((a, b) => (a.distance as number) - (b.distance as number));
+	targets.sort((a, b) => a.distance - b.distance);
 	return targets[0].target;
 };
 

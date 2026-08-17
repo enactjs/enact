@@ -2,7 +2,7 @@
 import type {Direction} from '../types/Direction';
 import type {NavigableConfig} from '../types/NavigableConfig';
 import type {Position} from '../types/Position';
-import type {Rect, RectCenter} from '../types/Rect';
+import type {Rect, RectCenter, RectEdges} from '../types/Rect';
 
 const obliqueMinDistance = 1;
 const straightMinDistance = 0;
@@ -25,8 +25,6 @@ interface DestCandidate {
 type TargetEdge = 'left' | 'right' | 'top' | 'bottom';
 
 type GroupIdFunction = (rect: Rect, destRect: Rect | RectCenter) => number;
-
-type RectEdges = Pick<Rect, 'left' | 'right' | 'top' | 'bottom'>;
 
 /** Rect or center point; width/height are absent when a center is used for partitioning. */
 type PartitionTarget = Rect | RectCenter;
@@ -138,8 +136,8 @@ function prioritize (priorities: Priority[], targetEdge: number): DestCandidate[
 }
 
 function partition (rects: Rect[], targetRect: PartitionTarget, straightOverlapThreshold: number, getGroupId: GroupIdFunction): Rect[][] {
-	const targetWidth = (targetRect as Rect).width;
-	const targetHeight = (targetRect as Rect).height;
+	const targetWidth = 'width' in targetRect ? targetRect.width : 0;
+	const targetHeight = 'height' in targetRect ? targetRect.height : 0;
 	// a matrix of elements where the center of the element in relation to targetRect is:
 	const groups: Rect[][] = [
 		[/* [0] => above/left */],  [/* [1] => above/within */],     [/* [2] => above/right */],

@@ -1,4 +1,5 @@
 import handle, {forward} from '@enact/core/handle';
+import type {HandlerFunction} from '@enact/core/types';
 import {WithRef} from '@enact/core/internal/WithRef';
 import useHandlers from '@enact/core/useHandlers';
 import '@testing-library/jest-dom';
@@ -29,7 +30,9 @@ const REMOTE_OK_KEY = 16777221;
 let compRef: HTMLElement | null = null;
 let getCurrent = Spotlight.getCurrent;
 
-const callContext = (name: string) => (ev: unknown, props: unknown, context: Record<string, (ev: unknown, props: unknown) => void>) => context[name](ev, props);
+const callContext = (name: string): HandlerFunction => (ev, props, context) => (
+	(context as unknown as Record<string, (event: Event, props: object) => unknown>)[name](ev, props)
+);
 const spotHandlers = {
 	onKeyDown: handle(
 		forwardKeyDown,

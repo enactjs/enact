@@ -5,7 +5,13 @@ export type EnterTo = 'last-focused' | 'default-element' | null;
 
 export type Restrict = 'self-first' | 'self-only' | 'none';
 
-export type LeaveFor = Partial<Record<Direction, ExtSelector>> | null;
+/**
+ * Per-direction leave target for a container.
+ * Unlike {@link ExtSelector}, arrays/NodeLists are not supported for `leaveFor`.
+ */
+export type LeaveForTarget = string | Element | null | undefined;
+
+export type LeaveFor = Partial<Record<Direction, LeaveForTarget>> | null;
 
 export type NavigableFilter = ((elem: Element) => boolean | void) | null;
 

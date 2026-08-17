@@ -79,7 +79,7 @@
 
 import cond from 'ramda/src/cond';
 import curry from 'ramda/src/curry';
-import {SyntheticEvent} from 'react';
+import {Context, SyntheticEvent} from 'react';
 
 import {is} from '../keymap';
 import {Callback, CallbackObject, HandlerFunction} from '../types';
@@ -216,7 +216,7 @@ const handle = function (this: any, ...handlers: HandlerFunction[]): EventHandle
 	// context if fn() doesn't have its own `this`.
 	const _outer = this;
 
-	const fn = function prepareHandleArgs (this: any, ev: any, props?: any, context?: any) {
+	const fn = function prepareHandleArgs (this: any, ev: Event, props?: CallbackObject, context?: Context<any>) {
 		let caller = null;
 
 		// if handle() was bound to a class, use its props and context. otherwise, we accept
@@ -235,7 +235,7 @@ const handle = function (this: any, ...handlers: HandlerFunction[]): EventHandle
 	};
 
 	fn.finally = function (cleanup: Callback) {
-		return decorateHandleFunction(function handleWithFinally (this: any, ev: any, props: any, context: any) {
+		return decorateHandleFunction(function handleWithFinally (this: any, ev: Event, props: CallbackObject, context: Context<any>) {
 			let result = false;
 
 			if (hasPropsAndContext(this)) {

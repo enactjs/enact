@@ -23,3 +23,8 @@ export interface Rect {
 	center: RectCenter;
 	element?: Element;
 }
+
+/**
+ * Edge bounds shared by intersection and navigation helpers.
+ */
+export type RectEdges = Pick<Rect, 'left' | 'right' | 'top' | 'bottom'>;

@@ -97,7 +97,7 @@ class SpottableCore {
 	unload () {
 		const isFocusedNow = this.node && this.node === Spotlight.getCurrent();
 		if (isFocusedNow) {
-			forwardCustom('onSpotlightDisappear')(null, this.props);
+			(forwardCustom('onSpotlightDisappear') as (ev: Event | null, props: object) => void)(null, this.props);
 		}
 		if (lastSelectTarget === this) {
 			lastSelectTarget = null;
@@ -124,7 +124,7 @@ class SpottableCore {
 		// if the component is focused and became disabled
 		if (this.isFocused && this.props.disabled && lastSelectTarget === this && !selectCancelled) {
 			selectCancelled = true;
-			forwardCustom('onSelectionCancel')(null, this.props);
+			(forwardCustom('onSelectionCancel') as (ev: Event | null, props: object) => void)(null, this.props);
 		}
 
 		// if the component became enabled, notify spotlight to enable restoring "lost" focus

@@ -4,7 +4,7 @@ import warning from 'warning';
 import {getContainerNode} from './container';
 import type {ExtSelector} from '../types/ExtSelector';
 import type {Position} from '../types/Position';
-import type {Rect, RectCenter} from '../types/Rect';
+import type {Rect, RectCenter, RectEdges} from '../types/Rect';
 
 type ElementMatchesSelectorThis = Element | Document;
 
@@ -50,8 +50,6 @@ function parseSelector (selector: ExtSelector): Element[] {
 }
 
 type IntersectionType = 'intersects' | 'contains';
-
-type RectEdges = Pick<Rect, 'left' | 'right' | 'top' | 'bottom'>;
 
 const testIntersection = (type: IntersectionType, containerRect: RectEdges, elementRect: RectEdges): boolean => {
 	const {
