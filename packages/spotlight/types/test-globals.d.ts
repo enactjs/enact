@@ -5,10 +5,6 @@ declare module '*.less' {
 	export default classes;
 }
 
-interface Element {
-	closest?: (selectors: string) => Element | null;
-}
-
 declare namespace jest {
 	interface Matchers<R> {
 		toHaveAttribute(attr: string, value?: string): R;

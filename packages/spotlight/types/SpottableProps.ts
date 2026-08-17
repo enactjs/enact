@@ -1,3 +1,5 @@
+import type {HandlerFunction} from '@enact/core/types';
+
 /**
  * Props consumed by {@link spotlight/Spottable.SpottableCore}.
  */
@@ -28,10 +30,8 @@ export interface SpottableCoreContext {
  */
 export interface UseSpottableConfig extends SpottableCoreProps {
 	emulateMouse?: boolean;
-	getSpotRef?: () => HTMLElement | null | undefined;
+	getSpotRef: () => HTMLElement | null | undefined;
 }
-
-type SpottableHandler = (ev: any, props?: any, context?: any) => any;
 
 /**
  * Object returned by {@link spotlight/Spottable.useSpottable}.
@@ -39,12 +39,12 @@ type SpottableHandler = (ev: any, props?: any, context?: any) => any;
 export interface UseSpottableResult {
 	attributes: Record<string, string>;
 	className: string | null;
-	onBlur: SpottableHandler;
-	onFocus: SpottableHandler;
-	onKeyDown: SpottableHandler;
-	onKeyUp: SpottableHandler;
-	onMouseEnter: SpottableHandler;
-	onMouseLeave: SpottableHandler;
+	onBlur: HandlerFunction;
+	onFocus: HandlerFunction;
+	onKeyDown: HandlerFunction;
+	onKeyUp: HandlerFunction;
+	onMouseEnter: HandlerFunction;
+	onMouseLeave: HandlerFunction;
 }
 
 /**

@@ -79,7 +79,7 @@
 
 import cond from 'ramda/src/cond';
 import curry from 'ramda/src/curry';
-import {Context, SyntheticEvent} from 'react';
+import {SyntheticEvent} from 'react';
 
 import {is} from '../keymap';
 import {Callback, CallbackObject, HandlerFunction} from '../types';
@@ -216,7 +216,7 @@ const handle = function (this: any, ...handlers: HandlerFunction[]): EventHandle
 	// context if fn() doesn't have its own `this`.
 	const _outer = this;
 
-	const fn = function prepareHandleArgs (this: any, ev: Event, props?: CallbackObject, context?: Context<any>) {
+	const fn = function prepareHandleArgs (this: any, ev: any, props?: any, context?: any) {
 		let caller = null;
 
 		// if handle() was bound to a class, use its props and context. otherwise, we accept
@@ -235,7 +235,7 @@ const handle = function (this: any, ...handlers: HandlerFunction[]): EventHandle
 	};
 
 	fn.finally = function (cleanup: Callback) {
-		return decorateHandleFunction(function handleWithFinally (this: any, ev: Event, props: CallbackObject, context: Context<any>) {
+		return decorateHandleFunction(function handleWithFinally (this: any, ev: any, props: any, context: any) {
 			let result = false;
 
 			if (hasPropsAndContext(this)) {
@@ -309,17 +309,23 @@ const oneOf = handle.oneOf = function (...handlers: Array<[HandlerFunction, Hand
  * @memberof core/handle
  * @public
  */
-const returnsTrue = handle.returnsTrue = function (handler?: HandlerFunction) {
+interface ReturnsTrue {
+	(handler: HandlerFunction): HandlerFunction;
+	(): true;
+}
+
+const returnsTrue = ((handler?: HandlerFunction): HandlerFunction | true => {
 	if (handler && typeof handler === 'function') {
 		return named(function (this: any, ...args: any) {
 			handler.apply(this, args);
 
 			return true;
-		}, 'returnsTrue');
+		}, 'returnsTrue') as HandlerFunction;
 	}
 
 	return true;
-};
+}) as ReturnsTrue;
+handle.returnsTrue = returnsTrue;
 
 /**
  * Calls a named function on the event and returns `true`.

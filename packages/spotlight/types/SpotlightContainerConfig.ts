@@ -1,20 +1,20 @@
 import type {
 	ContainerConfig,
-	EnterTo,
-	LeaveFor,
-	NavigableFilter,
-	Restrict
+	NavigableFilter
 } from './ContainerConfig';
-import type {ExtSelector} from './ExtSelector';
+
+type SpotlightContainerConfigKeys =
+	| 'continue5WayHold'
+	| 'defaultElement'
+	| 'enterTo'
+	| 'leaveFor'
+	| 'restrict';
 
 /**
  * Container configuration passed to {@link spotlight/SpotlightContainerDecorator.SpotlightContainer}.
  */
 export type SpotlightContainerRuntimeConfig = Partial<
-	Pick<
-		ContainerConfig,
-		'continue5WayHold' | 'defaultElement' | 'enterTo' | 'leaveFor' | 'restrict'
-	>
+	Pick<ContainerConfig, SpotlightContainerConfigKeys>
 >;
 
 /**
@@ -30,15 +30,12 @@ export interface SpotlightContainerConfig {
  * Default configuration for
  * {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}.
  */
-export interface SpotlightContainerDecoratorConfig {
-	continue5WayHold: boolean;
-	defaultElement: ExtSelector;
-	enterTo: EnterTo;
-	leaveFor: LeaveFor;
-	navigableFilter: NavigableFilter;
+export type SpotlightContainerDecoratorConfig = Pick<
+	ContainerConfig,
+	SpotlightContainerConfigKeys | 'navigableFilter'
+> & {
 	preserveId: boolean;
-	restrict: Restrict;
-}
+};
 
 /**
  * Default configuration for

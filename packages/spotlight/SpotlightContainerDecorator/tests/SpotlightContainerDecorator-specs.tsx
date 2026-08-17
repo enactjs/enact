@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type {ComponentPropsWithoutRef} from 'react';
+import type {ComponentPropsWithoutRef, ReactElement} from 'react';
 
 import SpotlightContainerDecorator from '../SpotlightContainerDecorator';
 import {updatePointerPosition} from '../../src/pointer';
@@ -10,6 +10,11 @@ import Spotlight from '../../src/spotlight';
 import closest from './Element.prototype.closest';
 
 const testId = 'test-spotlightContainerDecorator';
+
+const renderInto = (ui: ReactElement) => {
+	const node = document.body.appendChild(document.createElement('div'));
+	return render(ui, {container: node});
+};
 
 describe('SpotlightContainerDecorator', () => {
 	const hoverPosition = {clientX: 0, clientY: 1};
@@ -42,13 +47,11 @@ describe('SpotlightContainerDecorator', () => {
 
 	test('should set active container to parent container on mouse leave', async () => {
 		const Component = SpotlightContainerDecorator(Div);
-		const node = document.createElement('div');
 		const user = userEvent.setup();
-		render(
+		renderInto(
 			<Component spotlightId="outer-container">
 				<Component data-testid={testId} spotlightId="inner-container" />
-			</Component>,
-			{attachTo: node} as any as any
+			</Component>
 		);
 		const component = screen.getByTestId(testId);
 
@@ -67,14 +70,12 @@ describe('SpotlightContainerDecorator', () => {
 
 	test('should not set active container on mouse leave if another container is active', async () => {
 		const Component = SpotlightContainerDecorator(Div);
-		const node = document.createElement('div');
 		const user = userEvent.setup();
-		render(
+		renderInto(
 			<Component spotlightId="outer-container">
 				<Component data-testid={testId} spotlightId="inner-container" />
 				<Component spotlightId="self-only-container" />
-			</Component>,
-			{attachTo: node} as any
+			</Component>
 		);
 		const component = screen.getByTestId(testId);
 

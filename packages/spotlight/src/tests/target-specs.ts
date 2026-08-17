@@ -471,8 +471,8 @@ describe('target', () => {
 				const expected = null;
 
 				// eslint-disable-next-line no-undefined
-				expect(getTargetBySelector(undefined as unknown as string)).toBe(expected);
-				expect(getTargetBySelector(null as unknown as string)).toBe(expected);
+				expect(getTargetBySelector(undefined)).toBe(expected);
+				expect(getTargetBySelector(null)).toBe(expected);
 				expect(getTargetBySelector('')).toBe(expected);
 			}
 		));

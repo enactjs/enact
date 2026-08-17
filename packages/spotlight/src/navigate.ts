@@ -1,17 +1,13 @@
 
 import type {Direction} from '../types/Direction';
 import type {NavigableConfig} from '../types/NavigableConfig';
+import type {Position} from '../types/Position';
 import type {Rect, RectCenter} from '../types/Rect';
 
 const obliqueMinDistance = 1;
 const straightMinDistance = 0;
 
 type DistanceFunction = (rect: Rect) => number;
-
-interface GridPosition {
-	x: number;
-	y: number;
-}
 
 interface Priority {
 	group: Rect[];
@@ -48,9 +44,9 @@ interface DistanceFunctions {
 	rightIsBetter: DistanceFunction;
 }
 
-const calcGroupId = ({x, y}: GridPosition): number => y * 3 + x;
+const calcGroupId = ({x, y}: Position): number => y * 3 + x;
 
-const calcNextGridPosition = (current: Rect, next: RectEdges): GridPosition => {
+const calcNextGridPosition = (current: Rect, next: RectEdges): Position => {
 	const center = current.center;
 	let x: number, y: number;
 
@@ -73,7 +69,7 @@ const calcNextGridPosition = (current: Rect, next: RectEdges): GridPosition => {
 	return {x, y};
 };
 
-const calcNextExtendedGridPosition = (current: Rect, next: Rect): GridPosition => {
+const calcNextExtendedGridPosition = (current: Rect, next: Rect): Position => {
 	let x: number, y: number;
 
 	if (current.right <= next.left) {
@@ -543,7 +539,7 @@ function navigate (targetRect: Rect | null, direction: Direction | null, rects: 
 		return null;
 	}
 
-	return destGroup[0].target.element as Element | null;
+	return destGroup[0].target.element ?? null;
 }
 
 export default navigate;

@@ -51,7 +51,9 @@ function parseSelector (selector: ExtSelector): Element[] {
 
 type IntersectionType = 'intersects' | 'contains';
 
-const testIntersection = (type: IntersectionType, containerRect: Rect, elementRect: Rect): boolean => {
+type RectEdges = Pick<Rect, 'left' | 'right' | 'top' | 'bottom'>;
+
+const testIntersection = (type: IntersectionType, containerRect: RectEdges, elementRect: RectEdges): boolean => {
 	const {
 		left: L,
 		right: R,
@@ -84,18 +86,18 @@ const testIntersection = (type: IntersectionType, containerRect: Rect, elementRe
 	return true;
 };
 
-const intersects = curry((containerRect: Rect, elementRect: Rect): boolean => {
+const intersects = curry((containerRect: RectEdges, elementRect: RectEdges): boolean => {
 	return testIntersection('intersects', containerRect, elementRect);
 }) as {
-	(containerRect: Rect, elementRect: Rect): boolean;
-	(containerRect: Rect): (elementRect: Rect) => boolean;
+	(containerRect: RectEdges, elementRect: RectEdges): boolean;
+	(containerRect: RectEdges): (elementRect: RectEdges) => boolean;
 };
 
-const contains = curry((containerRect: Rect, elementRect: Rect): boolean => {
+const contains = curry((containerRect: RectEdges, elementRect: RectEdges): boolean => {
 	return testIntersection('contains', containerRect, elementRect);
 }) as {
-	(containerRect: Rect, elementRect: Rect): boolean;
-	(containerRect: Rect): (elementRect: Rect) => boolean;
+	(containerRect: RectEdges, elementRect: RectEdges): boolean;
+	(containerRect: RectEdges): (elementRect: RectEdges) => boolean;
 };
 
 function getIntersectionRect (container: Element, element: Element): Rect {
@@ -111,69 +113,62 @@ function getIntersectionRect (container: Element, element: Element): Rect {
 		width: w,
 		height: h
 	} = element.getBoundingClientRect();
-	const intersectionRect: Rect = {
-		element,
-		left: Math.max(l, L),
-		right: Math.min(l + w, L + W),
-		top: Math.max(t, T),
-		bottom: Math.min(t + h, T + H),
-		width: 0,
-		height: 0,
-		center: {
-			x: 0,
-			y: 0,
-			left: 0,
-			right: 0,
-			top: 0,
-			bottom: 0
-		}
+	const left = Math.max(l, L);
+	const right = Math.min(l + w, L + W);
+	const top = Math.max(t, T);
+	const bottom = Math.min(t + h, T + H);
+	const width = right - left;
+	const height = bottom - top;
+	const centerX = left + Math.floor(width / 2);
+	const centerY = top + Math.floor(height / 2);
+	const center: RectCenter = {
+		x: centerX,
+		y: centerY,
+		left: centerX,
+		right: centerX,
+		top: centerY,
+		bottom: centerY
 	};
-	intersectionRect.width = intersectionRect.right - intersectionRect.left;
-	intersectionRect.height = intersectionRect.bottom - intersectionRect.top;
-	intersectionRect.center = {
-		x: intersectionRect.left + Math.floor(intersectionRect.width / 2),
-		y: intersectionRect.top + Math.floor(intersectionRect.height / 2),
-		left: 0,
-		right: 0,
-		top: 0,
-		bottom: 0
-	};
-	intersectionRect.center.left = intersectionRect.center.right = intersectionRect.center.x;
-	intersectionRect.center.top = intersectionRect.center.bottom = intersectionRect.center.y;
 
-	return intersectionRect;
+	return {
+		element,
+		left,
+		right,
+		top,
+		bottom,
+		width,
+		height,
+		center
+	};
 }
 
 function getRect (elem: Element): Rect {
 	const cr = elem.getBoundingClientRect();
-	const rect: Rect = {
-		left: cr.left,
-		top: cr.top,
-		width: cr.width,
-		height: cr.height,
-		right: cr.left + cr.width,
-		bottom: cr.top + cr.height,
+	const left = cr.left;
+	const top = cr.top;
+	const width = cr.width;
+	const height = cr.height;
+	const centerX = left + Math.floor(width / 2);
+	const centerY = top + Math.floor(height / 2);
+	const center: RectCenter = {
+		x: centerX,
+		y: centerY,
+		left: centerX,
+		right: centerX,
+		top: centerY,
+		bottom: centerY
+	};
+
+	return {
+		left,
+		top,
+		width,
+		height,
+		right: left + width,
+		bottom: top + height,
 		element: elem,
-		center: {
-			x: 0,
-			y: 0,
-			left: 0,
-			right: 0,
-			top: 0,
-			bottom: 0
-		}
+		center
 	};
-	rect.center = {
-		x: rect.left + Math.floor(rect.width / 2),
-		y: rect.top + Math.floor(rect.height / 2),
-		left: 0,
-		right: 0,
-		top: 0,
-		bottom: 0
-	};
-	rect.center.left = rect.center.right = rect.center.x;
-	rect.center.top = rect.center.bottom = rect.center.y;
-	return rect;
 }
 
 function getPointRect (position: Position): Rect {

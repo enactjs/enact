@@ -8,6 +8,7 @@ export type {InputType, InputInfo} from './InputType';
 export type {
 	ContainerConfig,
 	ContainerConfigUpdate,
+	ContainerNavigationEvent,
 	EnterTo,
 	LeaveFor,
 	LastFocusedPersist,

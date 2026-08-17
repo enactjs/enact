@@ -1,7 +1,3 @@
-import {Context} from 'react';
-
-import {CallbackObject} from './callback.type';
-
 /**
  * The signature for event handling functions
  *
@@ -10,4 +6,5 @@ import {CallbackObject} from './callback.type';
  * @param {Object<string, any>} props
  * @param {Object<string, any>} context
  */
-export type HandlerFunction<C = unknown> = (event: Event, props: CallbackObject, context: Context<C>) => any;
+// Parameters stay `any` so consumers can pass narrower event/prop shapes into handle().
+export type HandlerFunction = (event?: any, props?: any, context?: any) => any;

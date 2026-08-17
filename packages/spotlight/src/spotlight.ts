@@ -36,6 +36,7 @@ import {
 	configureDefaults,
 	getAllContainerIds,
 	getContainerConfig,
+	getContainerConfigOrThrow,
 	getContainerId,
 	getContainerLastFocusedElement,
 	getContainerNode,
@@ -85,12 +86,10 @@ import {
 	parseSelector
 } from './utils';
 
-import type {ContainerConfig} from '../types/ContainerConfig';
 import type {ContainerTarget} from '../types/ContainerTarget';
 import type {Direction} from '../types/Direction';
 import type {FocusOptions} from '../types/FocusOptions';
 import type {Position} from '../types/Position';
-import type {Rect} from '../types/Rect';
 import type {SpotlightApi} from '../types/SpotlightApi';
 
 const isDown = is('down');
@@ -290,12 +289,20 @@ const Spotlight = (function (): SpotlightApi {
 			let lastFocusedElement: ContainerTarget | null | undefined | false = getContainerLastFocusedElement(lastContainerId);
 
 			while (isContainer(lastFocusedElement)) {
-				({lastFocusedElement} = getContainerConfig(lastFocusedElement as string) as ContainerConfig);
+				({lastFocusedElement} = getContainerConfigOrThrow(lastFocusedElement as string));
 			}
 
 			const lastContainerNode = getContainerNode(lastContainerId);
+			const lastFocusedNode = lastFocusedElement as Element | null | undefined;
 
-			if (!lastFocusedElement || ((lastContainerNode as Element).getBoundingClientRect && (lastFocusedElement as Element).getBoundingClientRect && !contains((lastContainerNode as Element).getBoundingClientRect() as unknown as Rect, (lastFocusedElement as Element).getBoundingClientRect() as unknown as Rect))) {
+			if (!lastFocusedNode || (
+				typeof (lastContainerNode as Element | null)?.getBoundingClientRect === 'function' &&
+				typeof lastFocusedNode.getBoundingClientRect === 'function' &&
+				!contains(
+					(lastContainerNode as Element).getBoundingClientRect(),
+					lastFocusedNode.getBoundingClientRect()
+				)
+			)) {
 				lastFocusedElement = getContainerConfig(lastContainerId)?.overflow && getNearestTargetFromPosition(position as Position, lastContainerId);
 			}
 
@@ -452,7 +459,7 @@ const Spotlight = (function (): SpotlightApi {
 			// to the last focused element of the last active containerId, so we use rootContainerId instead
 			let lastFocusedElement = getContainerLastFocusedElement(rootContainerId);
 			while (isContainer(lastFocusedElement)) {
-				({lastFocusedElement} = getContainerConfig(lastFocusedElement as string) as ContainerConfig);
+				({lastFocusedElement} = getContainerConfigOrThrow(lastFocusedElement as string));
 			}
 
 			if (!Spotlight.focus(lastFocusedElement)) {

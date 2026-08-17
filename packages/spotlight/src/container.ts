@@ -29,14 +29,6 @@ interface PreviousTarget {
 	reverse: Direction;
 }
 
-/** Event-like object passed to the `onEnterContainer`/`onLeaveContainer`/`onLeaveContainerFail` callbacks. */
-interface ContainerNavigationEvent {
-	type: string;
-	direction: Direction;
-	target: Document | Element | null | undefined;
-	relatedTarget: Document | Element | null | undefined;
-}
-
 const containerAttribute = 'data-spotlight-id';
 const containerConfigs   = new Map<string, ContainerConfig>();
 const containerKey       = 'spotlightId';
@@ -179,6 +171,24 @@ const mapContainers = <T>(node: Document | Element | null | undefined, fn: (node
  */
 const getContainerConfig = (id: string): ContainerConfig | undefined => {
 	return containerConfigs.get(id);
+};
+
+/**
+ * Like {@link spotlight/container.getContainerConfig} but throws when the container is not
+ * registered. Use at call sites that have already established the container exists.
+ *
+ * @param   {String}  id  Container ID
+ *
+ * @returns {Object}      Container config
+ * @memberof spotlight/container
+ * @private
+ */
+const getContainerConfigOrThrow = (id: string): ContainerConfig => {
+	const config = getContainerConfig(id);
+	if (!config) {
+		throw new Error(`No container registered for id "${id}"`);
+	}
+	return config;
 };
 
 /**
@@ -559,7 +569,7 @@ const configureContainer = (...args: (string | ContainerConfigUpdate)[]): string
  */
 const addContainer = (...args: (string | ContainerConfigUpdate)[]): string => {
 	const containerId = configureContainer(...args);
-	const config = getContainerConfig(containerId) as ContainerConfig;
+	const config = getContainerConfigOrThrow(containerId);
 	config.active = true;
 
 	return containerId;
@@ -677,7 +687,7 @@ function getContainerDefaultElement (containerId: string, preferredEnterTo?: Pre
 
 	// `defaultElement` is documented as an <extSelector> but, in practice, is only ever a CSS
 	// selector string, a single Element, or an array of either.
-	const defaultElementSelector: (string | Element)[] = coerceArray(
+	const defaultElementSelector = coerceArray<string | Element>(
 		configuredDefaultElement as string | Element | (string | Element)[]
 	);
 
@@ -749,7 +759,7 @@ function setContainerLastFocusedElement (node: Element | string, containerIds: s
 
 		// If any container in the stack is controlling entering focus, use its container id as the
 		// lastFocusedElement instead of the node
-		const config = getContainerConfig(id) as ContainerConfig;
+		const config = getContainerConfigOrThrow(id);
 		if (config.enterTo) {
 			lastFocusedElement = id;
 		}
@@ -774,7 +784,7 @@ function getContainerNavigableElements (containerId: string, preferredEnterTo?: 
 		return [];
 	}
 
-	const config = getContainerConfig(containerId) as ContainerConfig;
+	const config = getContainerConfigOrThrow(containerId);
 	const {enterTo, overflow} = config;
 
 	const enterLast = preferredEnterTo === 'last-focused' || (enterTo === 'last-focused' && !preferredEnterTo);
@@ -822,7 +832,7 @@ function getContainerNavigableElements (containerId: string, preferredEnterTo?: 
 		}
 	}
 
-	return next ? coerceArray(next as ContainerTarget | ContainerTarget[]) : [];
+	return next ? coerceArray<ContainerTarget>(next) : [];
 }
 
 /**
@@ -1078,8 +1088,7 @@ function notifyLeaveContainer (direction: Direction, current: Document | Element
 			const config = getContainerConfig(containerId);
 
 			if (config && config.onLeaveContainer) {
-				const onLeaveContainer = config.onLeaveContainer as unknown as (ev: ContainerNavigationEvent) => void;
-				onLeaveContainer({
+				config.onLeaveContainer({
 					type: 'onLeaveContainer',
 					direction,
 					target: current,
@@ -1103,8 +1112,7 @@ function notifyLeaveContainerFail (direction: Direction, current: Document | Ele
 		const config = getContainerConfig(containerId);
 
 		if (config && config.onLeaveContainerFail) {
-			const onLeaveContainerFail = config.onLeaveContainerFail as unknown as (ev: Omit<ContainerNavigationEvent, 'relatedTarget'>) => void;
-			onLeaveContainerFail({
+			config.onLeaveContainerFail({
 				type: 'onLeaveContainerFail',
 				direction,
 				target: current
@@ -1129,8 +1137,7 @@ function notifyEnterContainer (direction: Direction, previous: Document | Elemen
 			const config = getContainerConfig(containerId);
 
 			if (config && config.onEnterContainer) {
-				const onEnterContainer = config.onEnterContainer as unknown as (ev: ContainerNavigationEvent) => void;
-				onEnterContainer({
+				config.onEnterContainer({
 					type: 'onEnterContainer',
 					direction,
 					target: current,
@@ -1164,6 +1171,7 @@ export {
 
 	// Maybe
 	getContainerConfig,
+	getContainerConfigOrThrow,
 	getContainerDefaultElement,
 	getContainerLastFocusedElement,
 	getContainerNavigableElements,

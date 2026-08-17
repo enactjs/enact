@@ -10,7 +10,7 @@ import {
 } from '../pointer';
 
 const reset = () => {
-	updatePointerPosition(null as unknown as number, null as unknown as number);
+	updatePointerPosition(null, null);
 	setPointerMode(true);
 };
 
@@ -94,7 +94,7 @@ describe('pointer', () => {
 		test('should update the pointer position if x changes', () => {
 			const x = 20;
 
-			notifyPointerMove(null, null, x, null as unknown as number);
+			notifyPointerMove(null, null, x, null);
 
 			const expected = 20;
 			const actual = getLastPointerPosition().x;
@@ -105,7 +105,7 @@ describe('pointer', () => {
 		test('should update the pointer position if y changes', () => {
 			const y = 20;
 
-			notifyPointerMove(null, null, null as unknown as number, y);
+			notifyPointerMove(null, null, null, y);
 
 			const expected = 20;
 			const actual = getLastPointerPosition().y;

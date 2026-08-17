@@ -26,6 +26,16 @@ export type LastFocusedRestore = (
 ) => Element | string | undefined;
 
 /**
+ * Event-like object passed to container enter/leave navigation callbacks.
+ */
+export interface ContainerNavigationEvent {
+	type: string;
+	direction: Direction;
+	target: Document | Element | null | undefined;
+	relatedTarget: Document | Element | null | undefined;
+}
+
+/**
  * Per-container and global spotlight configuration.
  */
 export interface ContainerConfig {
@@ -41,9 +51,9 @@ export interface ContainerConfig {
 	leaveFor: LeaveFor;
 	navigableFilter: NavigableFilter;
 	obliqueMultiplier: number;
-	onEnterContainer: ((direction: Direction) => void) | null;
-	onLeaveContainer: ((direction: Direction) => void) | null;
-	onLeaveContainerFail: ((direction: Direction) => void) | null;
+	onEnterContainer: ((ev: ContainerNavigationEvent) => void) | null;
+	onLeaveContainer: ((ev: ContainerNavigationEvent) => void) | null;
+	onLeaveContainerFail: ((ev: Omit<ContainerNavigationEvent, 'relatedTarget'>) => void) | null;
 	overflow: boolean;
 	partition: boolean;
 	positionTargetOnFocus: boolean;

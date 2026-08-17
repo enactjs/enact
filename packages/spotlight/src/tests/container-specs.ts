@@ -522,7 +522,7 @@ describe('container', () => {
 					configureContainer('container', {
 						enterTo: 'default-element',
 						defaultElement: ['.does-not-exist', '.spottable-default']
-					} as any);
+					});
 
 					const expected = 'spottableDefault';
 					const actual = focusTargetId('container');
@@ -542,7 +542,7 @@ describe('container', () => {
 					configureContainer('container', {
 						enterTo: 'default-element',
 						defaultElement: [queryEl(root, '#lastFocused'), '.spottable-default']
-					} as any);
+					});
 
 					const expected = 'lastFocused';
 					const actual = focusTargetId('container');
@@ -903,7 +903,8 @@ describe('container', () => {
 					unmountContainer(rootContainerId);
 
 					const expected = true;
-					const actual = (getContainerConfig(rootContainerId) as any).lastFocusedKey.element;
+					const lastFocusedKey = getContainerConfig(rootContainerId)!.lastFocusedKey;
+					const actual = typeof lastFocusedKey === 'object' && lastFocusedKey !== null && lastFocusedKey.element;
 
 					expect(actual).toBe(expected);
 				}
@@ -929,7 +930,8 @@ describe('container', () => {
 					unmountContainer(rootContainerId);
 
 					const expected = true;
-					const actual = (getContainerConfig(rootContainerId) as any).lastFocusedKey.container;
+					const lastFocusedKey = getContainerConfig(rootContainerId)!.lastFocusedKey;
+					const actual = typeof lastFocusedKey === 'object' && lastFocusedKey !== null && lastFocusedKey.container;
 
 					expect(actual).toBe(expected);
 				}
@@ -951,7 +953,8 @@ describe('container', () => {
 					unmountContainer(rootContainerId);
 
 					const expected = index;
-					const actual = (getContainerConfig(rootContainerId) as any).lastFocusedKey.key;
+					const lastFocusedKey = getContainerConfig(rootContainerId)!.lastFocusedKey;
+					const actual = typeof lastFocusedKey === 'object' && lastFocusedKey !== null && lastFocusedKey.key;
 
 					expect(actual).toBe(expected);
 				}
@@ -966,11 +969,12 @@ describe('container', () => {
 					const index = 3;
 					const item = root.querySelectorAll('.spottable').item(3)!;
 					configureContainer(rootContainerId, {
-						lastFocusedPersist: (n: string | Element, all: (string | Element)[]) => ({
+						lastFocusedPersist: (n, all) => ({
+							container: false,
 							element: true,
 							key: `item-${all.indexOf(n)}`
 						})
-					} as any);
+					});
 					setContainerLastFocusedElement(
 						item,
 						getContainersForNode(item)
@@ -979,7 +983,8 @@ describe('container', () => {
 					unmountContainer(rootContainerId);
 
 					const expected = `item-${index}`;
-					const actual = (getContainerConfig(rootContainerId) as any).lastFocusedKey.key;
+					const lastFocusedKey = getContainerConfig(rootContainerId)!.lastFocusedKey;
+					const actual = typeof lastFocusedKey === 'object' && lastFocusedKey !== null && lastFocusedKey.key;
 
 					expect(actual).toBe(expected);
 				}
@@ -1005,7 +1010,8 @@ describe('container', () => {
 					unmountContainer(rootContainerId);
 
 					const expected = 'first-container';
-					const actual = (getContainerConfig(rootContainerId) as any).lastFocusedKey.key;
+					const lastFocusedKey = getContainerConfig(rootContainerId)!.lastFocusedKey;
+					const actual = typeof lastFocusedKey === 'object' && lastFocusedKey !== null && lastFocusedKey.key;
 
 					expect(actual).toBe(expected);
 				}
@@ -1028,7 +1034,8 @@ describe('container', () => {
 					unmountContainer(rootContainerId);
 
 					const expected = 4;
-					const actual = (getContainerConfig(rootContainerId) as any).lastFocusedKey.key;
+					const lastFocusedKey = getContainerConfig(rootContainerId)!.lastFocusedKey;
+					const actual = typeof lastFocusedKey === 'object' && lastFocusedKey !== null && lastFocusedKey.key;
 
 					expect(actual).toBe(expected);
 				}

@@ -12,13 +12,15 @@ function containerExists (id: string) {
 
 const testId = 'test-useSpotlightContainer';
 
+import type {Restrict} from '../../types/ContainerConfig';
+
 type ComponentProps = ComponentPropsWithoutRef<'div'> & {
 	containerConfig?: object;
 	preserveId?: boolean;
 	spotlightDisabled?: boolean;
 	spotlightId?: string;
 	spotlightMuted?: boolean;
-	spotlightRestrict?: string;
+	spotlightRestrict?: Restrict;
 };
 
 describe('useSpotlightContainer', () => {
@@ -39,7 +41,7 @@ describe('useSpotlightContainer', () => {
 			id: spotlightId,
 			muted: spotlightMuted,
 			disabled: spotlightDisabled,
-			restrict: spotlightRestrict as any,
+			restrict: spotlightRestrict,
 
 			// continue5WayHold, defaultElement, and enterTo can be in the containerConfig object
 			containerConfig,
@@ -177,7 +179,7 @@ describe('useSpotlightContainer', () => {
 			const config = {
 				restrict: 'self-only',
 				defaultElement: 'my-element'
-			};
+			} as const;
 
 			render(
 				<Component

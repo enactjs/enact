@@ -1,6 +1,6 @@
-import type {KeyboardEventHandler} from 'react';
 import Accelerator from '../Accelerator';
 import {fireEvent, render, screen} from '@testing-library/react';
+import type {KeyboardEvent} from 'react';
 
 describe('Accelerator', () => {
 	test('should invoke callback function passed by processKey method', () => {
@@ -8,13 +8,13 @@ describe('Accelerator', () => {
 
 		const acceleratorCallback = jest.fn();
 
-		const handleKeyDown = (ev: Parameters<typeof SpotlightAccelerator.processKey>[0]) => {
-			SpotlightAccelerator.processKey(ev, acceleratorCallback);
+		const handleKeyDown = (ev: KeyboardEvent<HTMLButtonElement>) => {
+			SpotlightAccelerator.processKey(ev.nativeEvent, acceleratorCallback);
 		};
 
 		render (
 			<div>
-				<button onKeyDown={handleKeyDown as unknown as KeyboardEventHandler<HTMLButtonElement>}>
+				<button onKeyDown={handleKeyDown}>
 					button
 				</button>
 			</div>
@@ -31,13 +31,13 @@ describe('Accelerator', () => {
 		const acceleratorCallback = jest.fn();
 		let actual = 0;
 
-		const handleKeyDown = (ev: Parameters<typeof SpotlightAccelerator.processKey>[0]) => {
-			SpotlightAccelerator.processKey(ev, acceleratorCallback);
+		const handleKeyDown = (ev: KeyboardEvent<HTMLButtonElement>) => {
+			SpotlightAccelerator.processKey(ev.nativeEvent, acceleratorCallback);
 		};
 
 		render (
 			<div>
-				<button onKeyDown={handleKeyDown as unknown as KeyboardEventHandler<HTMLButtonElement>}>
+				<button onKeyDown={handleKeyDown}>
 					button
 				</button>
 			</div>

@@ -1,7 +1,7 @@
+import type {HandlerFunction} from '@enact/core/types';
+
 import type {Restrict} from './ContainerConfig';
 import type {SpotlightContainerConfig} from './SpotlightContainerConfig';
-
-type SpotlightContainerHandler = (ev: any, props?: any, context?: any) => any;
 
 /**
  * Props managed by {@link spotlight/SpotlightContainerDecorator.SpotlightContainer}.
@@ -33,10 +33,10 @@ export interface UseSpotlightContainerConfig extends SpotlightContainerConfig, S
  */
 export interface UseSpotlightContainerResult {
 	attributes: SpotlightContainerAttributes;
-	onBlurCapture: SpotlightContainerHandler;
-	onFocusCapture: SpotlightContainerHandler;
-	onPointerEnter: SpotlightContainerHandler;
-	onPointerLeave: SpotlightContainerHandler;
+	onBlurCapture: HandlerFunction;
+	onFocusCapture: HandlerFunction;
+	onPointerEnter: HandlerFunction;
+	onPointerLeave: HandlerFunction;
 }
 
 /**

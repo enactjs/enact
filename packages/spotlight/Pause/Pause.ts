@@ -50,7 +50,7 @@ let paused: PausedState = false;
 // Private, exported methods used by Spotlight to set and query the pause state from its public API
 
 function getPausedInstance (): string | null {
-	return paused === false || paused === true ? null : paused.name;
+	return paused instanceof Pause ? paused.name : null;
 }
 
 function pause (): void {

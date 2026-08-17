@@ -1,30 +1,41 @@
 import navigate from '../navigate';
+import type {Direction} from '../../types/Direction';
+import type {NavigableConfig} from '../../types/NavigableConfig';
+import type {Rect} from '../../types/Rect';
+
+const emptyConfig: NavigableConfig = {
+	obliqueMultiplier: 0,
+	straightMultiplier: 0,
+	straightOnly: false,
+	straightOverlapThreshold: 0
+};
 
 // loose copy from utils/getRect to fabricate a rect for navigation
-function getRect (top: number, left: number, height: number, width: number, elem?: string) {
-	const rect = {
+function getRect (top: number, left: number, height: number, width: number, id?: string): Rect {
+	const centerX = left + Math.floor(width / 2);
+	const centerY = top + Math.floor(height / 2);
+	const element = document.createElement('div');
+	if (id) {
+		element.id = id;
+	}
+
+	return {
 		left,
 		top,
 		width,
-		height
-	};
-	const navigateRect = {
-		...rect,
-		element: elem,
-		right: rect.left + rect.width,
-		bottom: rect.top + rect.height,
+		height,
+		element,
+		right: left + width,
+		bottom: top + height,
 		center: {
-			x: rect.left + Math.floor(rect.width / 2),
-			y: rect.top + Math.floor(rect.height / 2),
-			left: 0,
-			right: 0,
-			top: 0,
-			bottom: 0
+			x: centerX,
+			y: centerY,
+			left: centerX,
+			right: centerX,
+			top: centerY,
+			bottom: centerY
 		}
 	};
-	navigateRect.center.left = navigateRect.center.right = navigateRect.center.x;
-	navigateRect.center.top = navigateRect.center.bottom = navigateRect.center.y;
-	return navigateRect;
 }
 
 describe('navigate', () => {
@@ -37,15 +48,14 @@ describe('navigate', () => {
 			[110, 100, 10, 10, 'below']
 		].map(args => getRect(...args as [number, number, number, number, string]));
 
-		const expected = 'above';
 		const actual = navigate(
-			targetRect as any,
+			targetRect,
 			'up',
-			rects as any,
-			{} as any
+			rects,
+			emptyConfig
 		);
 
-		expect(actual).toBe(expected);
+		expect(actual?.id).toBe('above');
 	});
 
 	test('should return the element to the left when direction="left"', () => {
@@ -57,15 +67,14 @@ describe('navigate', () => {
 			[110, 100, 10, 10, 'below']
 		].map(args => getRect(...args as [number, number, number, number, string]));
 
-		const expected = 'left';
 		const actual = navigate(
-			targetRect as any,
+			targetRect,
 			'left',
-			rects as any,
-			{} as any
+			rects,
+			emptyConfig
 		);
 
-		expect(actual).toBe(expected);
+		expect(actual?.id).toBe('left');
 	});
 
 	test('should return the element below when direction="down"', () => {
@@ -77,15 +86,14 @@ describe('navigate', () => {
 			[110, 100, 10, 10, 'below']
 		].map(args => getRect(...args as [number, number, number, number, string]));
 
-		const expected = 'below';
 		const actual = navigate(
-			targetRect as any,
+			targetRect,
 			'down',
-			rects as any,
-			{} as any
+			rects,
+			emptyConfig
 		);
 
-		expect(actual).toBe(expected);
+		expect(actual?.id).toBe('below');
 	});
 
 	test('should return the element to the right when direction="right"', () => {
@@ -97,15 +105,14 @@ describe('navigate', () => {
 			[110, 100, 10, 10, 'below']
 		].map(args => getRect(...args as [number, number, number, number, string]));
 
-		const expected = 'right';
 		const actual = navigate(
-			targetRect as any,
+			targetRect,
 			'right',
-			rects as any,
-			{} as any
+			rects,
+			emptyConfig
 		);
 
-		expect(actual).toBe(expected);
+		expect(actual?.id).toBe('right');
 	});
 
 	test(
@@ -119,33 +126,21 @@ describe('navigate', () => {
 				[110, 100, 10, 10, 'below']
 			].map(args => getRect(...args as [number, number, number, number, string]));
 
-			expect(navigate(
-				targetRect as any,
-				'up',
-				rects as any,
-				{} as any
-			)).toBe('under');
+			const cases: Array<[Direction, string]> = [
+				['up', 'under'],
+				['down', 'below'],
+				['left', 'left'],
+				['right', 'right']
+			];
 
-			expect(navigate(
-				targetRect as any,
-				'down',
-				rects as any,
-				{} as any
-			)).toBe('below');
-
-			expect(navigate(
-				targetRect as any,
-				'left',
-				rects as any,
-				{} as any
-			)).toBe('left');
-
-			expect(navigate(
-				targetRect as any,
-				'right',
-				rects as any,
-				{} as any
-			)).toBe('right');
+			cases.forEach(([direction, expected]) => {
+				expect(navigate(
+					targetRect,
+					direction,
+					rects,
+					emptyConfig
+				)?.id).toBe(expected);
+			});
 		}
 	);
 });

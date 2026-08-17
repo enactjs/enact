@@ -86,7 +86,7 @@ function getTargetByContainer (containerId?: string, enterTo?: PreferredEnterTo)
 		}, null);
 }
 
-function getTargetBySelector (selector: string): ContainerTarget | null {
+function getTargetBySelector (selector?: string | null): ContainerTarget | null {
 	if (!selector) return null;
 
 	if (selector.charAt(0) === '@') {
@@ -130,7 +130,7 @@ function filterRects (elementRects: Rect[], boundingRect?: Rect | null): Rect[] 
 			return intersects(boundingRect, rect);
 		} else {
 			// For elements, use contains with the center to include mostly visible elements
-			return contains(boundingRect, rect.center as unknown as Rect);
+			return contains(boundingRect, rect.center);
 		}
 	}).map(rect => {
 		let topUpdate = rect.top < boundingRect.top;

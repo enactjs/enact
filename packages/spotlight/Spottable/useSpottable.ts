@@ -64,7 +64,7 @@ const useSpottable = ({
 	selectionKeys = [ENTER_KEY, REMOTE_OK_KEY],
 	spotlightDisabled,
 	...props
-}: UseSpottableConfig = {}): UseSpottableResult => {
+}: UseSpottableConfig): UseSpottableResult => {
 	const hook = useClass(SpottableCore, {emulateMouse});
 	const contextRef = useRef<SpottableCoreContext>({
 		prevSpotlightDisabled: spotlightDisabled,
@@ -81,7 +81,7 @@ const useSpottable = ({
 	hook.setPropsAndContext({selectionKeys, spotlightDisabled, ...props}, context); // eslint-disable-line react-hooks/refs
 
 	useLayoutEffect(() => {
-		hook.load(getSpotRef?.() || null);
+		hook.load(getSpotRef() || null);
 
 		return () => {
 			hook.unload();

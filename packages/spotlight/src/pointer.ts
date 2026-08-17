@@ -68,7 +68,7 @@ const hasPointerMoved = (x: number | null, y: number | null): boolean => (
  * @memberof spotlight/pointer
  * @private
  */
-const updatePointerPosition = (x: number, y: number): boolean => {
+const updatePointerPosition = (x: number | null, y: number | null): boolean => {
 	// Chrome emits mousemove on scroll, but client coordinates do not change.
 	if (hasPointerMoved(x, y)) {
 		setPointerMode(true);
@@ -121,8 +121,8 @@ const hidePointerJob = new Job(function (callback?: () => void) {
 const notifyPointerMove = (
 		current: Node | null | undefined,
 		target: Node | null | undefined,
-		x: number,
-		y: number
+		x: number | null,
+		y: number | null
 ): boolean => {
 	const priorPointerMode = getPointerMode();
 

@@ -136,7 +136,7 @@ const defaultConfig: SpotlightContainerDecoratorConfig = {
 	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
-	restrict: PropTypes.oneOf(['none', 'self-first', 'self-only']) as unknown as SpotlightContainerDecoratorConfig['restrict']
+	restrict: 'self-first'
 };
 
 /**

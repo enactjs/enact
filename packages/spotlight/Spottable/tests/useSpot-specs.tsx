@@ -108,7 +108,8 @@ describe('useSpottable', () => {
 		// Spotlight.getCurrent() did not work in unit tests. It always returns `undefined`.
 		// So Spotlight.getCurrent() is replaced with the function returning the wrapped component by the Component
 		// including `useSpottable`.
-		Spotlight.getCurrent = () => (compRef as unknown as Element);
+		// eslint-disable-next-line no-undefined
+		Spotlight.getCurrent = () => compRef ?? undefined;
 	});
 
 	afterEach(() => {
@@ -325,7 +326,8 @@ describe('useSpottable', () => {
 			pointerModeSpy = jest.spyOn(Spotlight, 'getPointerMode').mockReturnValue(true);
 			setPointerModeSpy = jest.spyOn(Spotlight, 'setPointerMode').mockImplementation(() => {});
 			// Override the wrapper's getCurrent mock: simulate "focus is on something outside Spotlight's tracking"
-			Spotlight.getCurrent = () => null as unknown as Element;
+			// eslint-disable-next-line no-undefined
+			Spotlight.getCurrent = () => undefined;
 		});
 
 		afterEach(() => {
