@@ -79,7 +79,7 @@
 
 import cond from 'ramda/src/cond';
 import curry from 'ramda/src/curry';
-import {Context, SyntheticEvent} from 'react';
+import {SyntheticEvent} from 'react';
 
 import {is} from '../keymap';
 import {Callback, CallbackObject, HandlerFunction} from '../types';
@@ -216,7 +216,7 @@ const handle = function (this: any, ...handlers: HandlerFunction[]): EventHandle
 	// context if fn() doesn't have its own `this`.
 	const _outer = this;
 
-	const fn = function prepareHandleArgs (this: any, ev: Event, props?: CallbackObject, context?: Context<any>) {
+	const fn = function prepareHandleArgs (this: any, ev: Event | null, props?: CallbackObject, context?: unknown) {
 		let caller = null;
 
 		// if handle() was bound to a class, use its props and context. otherwise, we accept
@@ -235,7 +235,7 @@ const handle = function (this: any, ...handlers: HandlerFunction[]): EventHandle
 	};
 
 	fn.finally = function (cleanup: Callback) {
-		return decorateHandleFunction(function handleWithFinally (this: any, ev: Event, props: CallbackObject, context: Context<any>) {
+		return decorateHandleFunction(function handleWithFinally (this: any, ev: Event | null, props: CallbackObject, context?: unknown) {
 			let result = false;
 
 			if (hasPropsAndContext(this)) {
@@ -603,7 +603,7 @@ const forKey = handle.forKey = curry((name: string, ev: KeyboardEvent): boolean 
  * @memberof core/handle
  * @public
  */
-const forProp = handle.forProp = curry((prop: string, value, ev: Event, props: CallbackObject): boolean => {
+const forProp = handle.forProp = curry((prop: string, value, ev: any, props: CallbackObject): boolean => { // eslint-disable-line @typescript-eslint/no-explicit-any
 	return props[prop] === value;
 });
 

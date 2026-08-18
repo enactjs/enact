@@ -64,7 +64,7 @@ const useSpottable = ({
 	selectionKeys = [ENTER_KEY, REMOTE_OK_KEY],
 	spotlightDisabled,
 	...props
-}: UseSpottableConfig): UseSpottableResult => {
+}: UseSpottableConfig = {getSpotRef: () => null}): UseSpottableResult => {
 	const hook = useClass(SpottableCore, {emulateMouse});
 	const contextRef = useRef<SpottableCoreContext>({
 		prevSpotlightDisabled: spotlightDisabled,

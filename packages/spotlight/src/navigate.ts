@@ -136,8 +136,6 @@ function prioritize (priorities: Priority[], targetEdge: number): DestCandidate[
 }
 
 function partition (rects: Rect[], targetRect: PartitionTarget, straightOverlapThreshold: number, getGroupId: GroupIdFunction): Rect[][] {
-	const targetWidth = 'width' in targetRect ? targetRect.width : 0;
-	const targetHeight = 'height' in targetRect ? targetRect.height : 0;
 	// a matrix of elements where the center of the element in relation to targetRect is:
 	const groups: Rect[][] = [
 		[/* [0] => above/left */],  [/* [1] => above/within */],     [/* [2] => above/right */],
@@ -150,7 +148,9 @@ function partition (rects: Rect[], targetRect: PartitionTarget, straightOverlapT
 		const groupId = getGroupId(rect, targetRect);
 		groups[groupId].push(rect);
 
-		if ([0, 2, 6, 8].indexOf(groupId) !== -1) {
+		if ('width' in targetRect && [0, 2, 6, 8].indexOf(groupId) !== -1) {
+			const {width: targetWidth, height: targetHeight} = targetRect;
+
 			if (rect.left <= targetRect.right - targetWidth * straightOverlapThreshold) {
 				if (groupId === 2) {
 					groups[1].push(rect);

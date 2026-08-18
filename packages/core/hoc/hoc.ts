@@ -72,15 +72,23 @@ const hoc = (defaultConfig: CallbackObject | Callback, hawk?: Callback): Callbac
 		defaults = null;
 	}
 
+	if (!factory) {
+		throw new TypeError('hoc requires a factory function');
+	}
+
+	// Bind to a const so the non-undefined narrowing above survives into the closures below --
+	// TS doesn't retain narrowing on a reassignable `let` captured by a nested function.
+	const hawkFn = factory;
+
 	const Component = (config: CallbackObject, maybeWrapped?: Callback) => {
 		if (isRenderable(config)) {
-			return (factory as Callback)(defaults, config);
+			return hawkFn(defaults, config);
 		} else {
 			const cfg = mergeDeepWithKey(mergeFn, defaults, config);
 			if (isRenderable(maybeWrapped)) {
-				return (factory as Callback)(cfg, maybeWrapped);
+				return hawkFn(cfg, maybeWrapped);
 			} else {
-				return (Wrapped: Callback) => (factory as Callback)(cfg, Wrapped);
+				return (Wrapped: Callback) => hawkFn(cfg, Wrapped);
 			}
 		}
 	};

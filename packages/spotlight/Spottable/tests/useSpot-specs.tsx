@@ -31,7 +31,7 @@ let compRef: HTMLElement | null = null;
 let getCurrent = Spotlight.getCurrent;
 
 const callContext = (name: string): HandlerFunction => (ev, props, context) => (
-	(context as unknown as Record<string, (event: Event, props: object) => unknown>)[name](ev, props)
+	(context as Record<string, (event: Event | null, props: object) => unknown>)[name](ev, props)
 );
 const spotHandlers = {
 	onKeyDown: handle(

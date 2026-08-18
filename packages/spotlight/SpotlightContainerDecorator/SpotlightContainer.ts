@@ -9,7 +9,9 @@ import type {
 	SpotlightContainerProps
 } from '../types/SpotlightContainerProps';
 
-const isNewPointerPosition = (ev: Event) => {
+const isNewPointerPosition = (ev: Event | null) => {
+	if (!ev) return false;
+
 	const {clientX, clientY} = ev as MouseEvent;
 	return hasPointerMoved(clientX, clientY);
 };
@@ -138,8 +140,8 @@ class SpotlightContainer {
 	onPointerLeave = handle(
 		not(forProp('restrict', 'self-only')),
 		isNewPointerPosition,
-		(ev: Event) => {
-			const parentContainer = ((ev.currentTarget as HTMLElement | null)?.parentNode as Element | null)?.closest('[data-spotlight-container]') as HTMLElement | null;
+		(ev: Event | null) => {
+			const parentContainer = ((ev?.currentTarget as HTMLElement | null)?.parentNode as Element | null)?.closest('[data-spotlight-container]') as HTMLElement | null;
 			let activeContainer = Spotlight.getActiveContainer();
 
 			// if this container is wrapped by another and this is the currently active
