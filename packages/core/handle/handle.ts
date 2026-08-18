@@ -603,7 +603,7 @@ const forKey = handle.forKey = curry((name: string, ev: KeyboardEvent): boolean 
  * @memberof core/handle
  * @public
  */
-const forProp = handle.forProp = curry((prop: string, value, ev: any, props: CallbackObject): boolean => { // eslint-disable-line @typescript-eslint/no-explicit-any
+const forProp = handle.forProp = curry((prop: string, value, ev: any, props: CallbackObject): boolean => {
 	return props[prop] === value;
 });
 
