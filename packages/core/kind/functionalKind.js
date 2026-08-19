@@ -146,6 +146,12 @@ const functionalKind = (config) => {
 		return useRender(props, context); // eslint-disable-line react-hooks/rules-of-hooks
 	};
 
+	// `useRender` is user-supplied and may call hooks, so the render path taken during an actual
+	// React render must itself be a hook. The `use` prefix is what tells React Compiler (and the
+	// rules-of-hooks lint) that this call may run hooks. Without it, the compiler treats
+	// `renderKind` as an ordinary function and caches its result, which skips `useRender`
+	const useRenderKind = (props, context) => renderKind(props, context);
+
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
 	const handlerKeys     = handlers     ? Object.keys(handlers)     : null;
 
@@ -167,7 +173,7 @@ const functionalKind = (config) => {
 
 		checkPropTypes(Component, merged);
 
-		return renderKind(merged, ctx);
+		return useRenderKind(merged, ctx);
 	};
 
 	if (name)         Component.displayName = name;
