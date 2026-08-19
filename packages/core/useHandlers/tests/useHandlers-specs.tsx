@@ -5,13 +5,13 @@ import {useEffect} from 'react';
 import useHandlers from '../useHandlers';
 
 describe('useHandlers', () => {
-	let data = {};
+	let data: any = {};
 
 	const context = {
 		value: 1
 	};
 
-	function Component (props) {
+	function Component (props: any) {
 		const handlers = useHandlers({
 			testEvent: (ev, p, c) => {
 				return ev(p, c);

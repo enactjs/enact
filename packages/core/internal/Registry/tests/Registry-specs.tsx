@@ -5,14 +5,14 @@ import userEvent from '@testing-library/user-event';
 
 import Registry from '../Registry';
 
-const SomeContext = createContext();
+const SomeContext = createContext<any>(null);
 
 describe('Registry', () => {
-	class NotifiesTree extends Component {
+	class NotifiesTree extends Component<any> {
 		static contextType = SomeContext;
 
-		constructor () {
-			super();
+		constructor (props: any) {
+			super(props);
 			this.registry = Registry.create(this.handleNotify);
 		}
 
@@ -20,7 +20,9 @@ describe('Registry', () => {
 			this.registry.parent = this.context;
 		}
 
-		handleNotify = ({action}) => {
+		registry?: any;
+
+		handleNotify = ({action}: {action: string}) => {
 			if (action === 'update') {
 				this.registry.parent = this.context;
 			}
@@ -40,7 +42,7 @@ describe('Registry', () => {
 		}
 	}
 
-	class HandlesNotification extends Component {
+	class HandlesNotification extends Component<any, {number: number}> {
 		static contextType = SomeContext;
 
 		state = {
@@ -58,6 +60,8 @@ describe('Registry', () => {
 				this.registry.unregister();
 			}
 		}
+
+		registry?: any;
 
 		handleResize = () => {
 			this.setState((prevState) => {

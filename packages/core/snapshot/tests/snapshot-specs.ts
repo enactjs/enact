@@ -12,7 +12,7 @@ describe('snapshot', () => {
 		});
 
 		test('should return `false` if window is not ready', () => {
-			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(returnsUndefined);
+			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(returnsUndefined as any);
 
 			const expected = false;
 			const actual = isWindowReady();
@@ -33,7 +33,7 @@ describe('snapshot', () => {
 		});
 
 		test('should not call a given callback function if window is not ready', () => {
-			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(returnsUndefined);
+			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(returnsUndefined as any);
 
 			const spy = jest.fn();
 
@@ -47,7 +47,7 @@ describe('snapshot', () => {
 
 	describe('windowReady', () => {
 		test('should call queued callbacks if window is ready', () => {
-			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(returnsUndefined);
+			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(returnsUndefined as any);
 			const spy = jest.fn();
 
 			onWindowReady(spy);
@@ -64,7 +64,7 @@ describe('snapshot', () => {
 
 		test('should throw an error if window is not ready', () => {
 			const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
-			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(returnsUndefined);
+			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(returnsUndefined as any);
 			const spy = jest.fn();
 
 			onWindowReady(spy);

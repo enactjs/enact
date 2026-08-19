@@ -5,12 +5,14 @@ import useClass from '../useClass';
 
 describe('useClass', () => {
 	class Class {
-		constructor (arg) {
+		arg: any;
+
+		constructor (arg: any) {
 			this.arg = arg;
 		}
 	}
 
-	function Component (props) {
+	function Component (props: any) {
 		const instance = useClass(Class, props.arg);
 
 		return (
