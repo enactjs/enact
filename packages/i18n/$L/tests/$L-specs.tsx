@@ -9,7 +9,7 @@ import {$L} from '../$L';
 describe('$L', () => {
 	test('should get the key string when there is no translated value', () => {
 		const expected = 'hello';
-		const Component = (props) => (
+		const Component = (props: {className?: string}) => (
 			<div className={props.className}>{$L(expected)}</div>
 		);
 
@@ -23,7 +23,7 @@ describe('$L', () => {
 
 	test('should clear ResBundle with calling `clearResBundle`', () => {
 		const expected = null;
-		const Component = (props) => (
+		const Component = (props: {className?: string}) => (
 			<div className={props.className}>{$L('hello')}</div>
 		);
 

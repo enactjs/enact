@@ -5,7 +5,7 @@ import {createRef} from 'react';
 import useChainRefs from '../useChainRefs';
 
 describe('useChainRefs', () => {
-	function Component (props) {
+	function Component (props: any) {
 		const ref = useChainRefs(...props.refs);
 
 		return (
@@ -21,7 +21,7 @@ describe('useChainRefs', () => {
 	});
 
 	test('should call a single object ref', () => {
-		const ref = createRef();
+		const ref = createRef<any>();
 		render(<Component refs={[ref]} />);
 
 		const expected = 'DIV';

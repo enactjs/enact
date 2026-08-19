@@ -9,7 +9,7 @@ describe('prop-types', () => {
 	const DummyRenderable = () => DummyElement;
 	const dummyString = 'Some String';
 
-	class TestComponent extends Component {
+	class TestComponent extends Component<any> {
 		static displayName = 'TestComponent';
 
 		static propTypes = {
@@ -20,7 +20,7 @@ describe('prop-types', () => {
 			typeRenderableOverride: EnactPropTypes.renderableOverride
 		};
 
-		constructor (props) {
+		constructor (props: any) {
 			super(props);
 			checkPropTypes(this, props);
 		}
@@ -30,8 +30,8 @@ describe('prop-types', () => {
 		}
 	}
 
-	let consoleWarnMock = null;
-	let consoleErrorMock = null;
+	let consoleWarnMock: jest.SpyInstance;
+	let consoleErrorMock: jest.SpyInstance;
 
 	beforeEach(() => {
 		consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();
@@ -204,19 +204,19 @@ describe('prop-types', () => {
 	});
 
 	describe('isRequired', () => {
-		class RequiredComponent extends Component {
+		class RequiredComponent extends Component<any> {
 			static displayName = 'RequiredComponent';
 
 			static propTypes = {
 				typeRequired: EnactPropTypes.renderable.isRequired
 			};
 
-			constructor (props) {
+			constructor (props: any) {
 				super(props);
 				checkPropTypes(this, props);
 			}
 
-			render ({...rest} = {}) {
+			render ({...rest}: any = {}) {
 				delete rest.typeRequired;
 
 				return (<div>Test</div>);
@@ -240,14 +240,14 @@ describe('prop-types', () => {
 		test('should call console.warn when prop value is given for EnactPropTypes.deprecated', () => {
 			const ref = createRef();
 
-			class DeprecatedComponent extends Component {
+			class DeprecatedComponent extends Component<any> {
 				static displayName = 'DeprecatedComponent';
 
 				static propTypes = {
-					typeDeprecated: EnactPropTypes.deprecated(EnactPropTypes.ref)
+					typeDeprecated: (EnactPropTypes.deprecated as any)(EnactPropTypes.ref)
 				};
 
-				render ({...rest} = {}) {
+				render ({...rest}: any = {}) {
 					delete rest.typeDeprecated;
 					return (<div>Test</div>);
 				}
@@ -259,14 +259,14 @@ describe('prop-types', () => {
 		});
 
 		test('should call console.warn even when prop value is not given for EnactPropTypes.deprecated', () => {
-			class DeprecatedComponent extends Component {
+			class DeprecatedComponent extends Component<any> {
 				static displayName = 'DeprecatedComponent';
 
 				static propTypes = {
-					typeDeprecated: EnactPropTypes.deprecated(EnactPropTypes.ref)
+					typeDeprecated: (EnactPropTypes.deprecated as any)(EnactPropTypes.ref)
 				};
 
-				render ({...rest} = {}) {
+				render ({...rest}: any = {}) {
 					delete rest.typeDeprecated;
 					return (<div>Test</div>);
 				}

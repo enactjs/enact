@@ -1,4 +1,5 @@
 import {updateLocale} from '../../locale';
+import type {ResourceFn} from '../../types/Resource';
 import {I18n} from '../I18n';
 
 describe('I18n', () => {
@@ -22,7 +23,7 @@ describe('I18n', () => {
 
 		test('should omit entries whose resource is not a function', () => {
 			const validResource = jest.fn();
-			const i18n = new I18n({resources: [{resource: 'not-a-function'}, validResource]});
+			const i18n = new I18n({resources: [{resource: 'not-a-function' as unknown as ResourceFn}, validResource]});
 
 			expect(i18n.resources).toHaveLength(1);
 			expect(i18n.resources[0].resource).toBe(validResource);

@@ -4,11 +4,11 @@ import {createRef, Component as ReactComponent} from 'react';
 import ApiDecorator from '../ApiDecorator';
 
 describe('ApiDecorator', () => {
-	const ApiProvider = class extends ReactComponent {
+	const ApiProvider = class extends ReactComponent<any> {
 		static displayName = 'ApiProvider';
 
-		constructor (props) {
-			super();
+		constructor (props: any) {
+			super(props);
 
 			props.setApiProvider(this);
 		}
@@ -26,11 +26,11 @@ describe('ApiDecorator', () => {
 		}
 	};
 
-	const WrongApiProvider = class extends ReactComponent {
+	const WrongApiProvider = class extends ReactComponent<any> {
 		static displayName = 'WrongApiProvider';
 
-		constructor (props) {
-			super();
+		constructor (props: any) {
+			super(props);
 
 			props.setApiProvider();
 		}
@@ -41,7 +41,7 @@ describe('ApiDecorator', () => {
 	};
 
 	test('should invoke arrow function on wrapped component', () => {
-		const ref = createRef();
+		const ref = createRef<any>();
 
 		const Component = ApiDecorator(
 			{api: ['arrowFunction']},
@@ -57,7 +57,7 @@ describe('ApiDecorator', () => {
 	});
 
 	test('should invoke instance function on wrapped component', () => {
-		const ref = createRef();
+		const ref = createRef<any>();
 
 		const Component = ApiDecorator(
 			{api: ['instanceFunction']},
@@ -73,7 +73,7 @@ describe('ApiDecorator', () => {
 	});
 
 	test('should get an instance property on wrapped component', () => {
-		const ref = createRef();
+		const ref = createRef<any>();
 
 		const Component = ApiDecorator(
 			{api: ['instanceProperty']},
@@ -89,7 +89,7 @@ describe('ApiDecorator', () => {
 	});
 
 	test('should set an instance property on wrapped component', () => {
-		const ref = createRef();
+		const ref = createRef<any>();
 
 		const Component = ApiDecorator(
 			{api: ['instanceProperty']},
@@ -107,7 +107,7 @@ describe('ApiDecorator', () => {
 	});
 
 	test('should not get an instance property on wrapped component if the parameter of setApiProvider is missing', () => {
-		const ref = createRef();
+		const ref = createRef<any>();
 
 		const Component = ApiDecorator(
 			{api: ['instanceProperty']},
@@ -124,7 +124,7 @@ describe('ApiDecorator', () => {
 	});
 
 	test('should not set an instance property on wrapped component if the parameter of setApiProvider is missing', () => {
-		const ref = createRef();
+		const ref = createRef<any>();
 
 		const Component = ApiDecorator(
 			{api: ['instanceProperty']},

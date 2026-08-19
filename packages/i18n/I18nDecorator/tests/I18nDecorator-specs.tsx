@@ -17,7 +17,7 @@ describe('I18nDecorator', () => {
 	});
 
 	test('should add rtl context parameter', () => {
-		const Component = (props) => (
+		const Component = (props: {rtl?: boolean}) => (
 			<div data-testid="i18n">{'rtl' in props ? 'has rtl prop' : 'does not have rtl prop'}</div>
 		);
 
@@ -37,7 +37,7 @@ describe('I18nDecorator', () => {
 	});
 
 	test('should add updateLocale context parameter', () => {
-		const Component = ({updateLocale: update}) => (
+		const Component = ({updateLocale: update}: {updateLocale?: (locale?: string) => void}) => (
 			<div data-testid="i18n">{typeof update}</div>
 		);
 
@@ -58,7 +58,7 @@ describe('I18nDecorator', () => {
 
 	test('should update the current locale when updateLocale is called', async () => {
 		const user = userEvent.setup();
-		const Component = ({_updateLocale}) => {
+		const Component = ({_updateLocale}: {_updateLocale: (locale?: string) => void}) => {
 			const handleClick = () => _updateLocale('ar-SA');
 
 			return (
@@ -85,7 +85,7 @@ describe('I18nDecorator', () => {
 
 	test('should update the rtl context parameter when RTL changes', async () => {
 		const user = userEvent.setup();
-		const Component = ({rtl, _updateLocale}) => {
+		const Component = ({rtl, _updateLocale}: {rtl?: boolean; _updateLocale: (locale?: string) => void}) => {
 			const handleClick = () => _updateLocale('ar-SA');
 
 			return (
@@ -111,7 +111,7 @@ describe('I18nDecorator', () => {
 	});
 
 	test('should set locale via props', () => {
-		const Component = (props) => (
+		const Component = (props: {className?: string}) => (
 			<div className={props.className} />
 		);
 
@@ -125,7 +125,7 @@ describe('I18nDecorator', () => {
 	});
 
 	test('should add locale classes to Wrapped', () => {
-		const Component = (props) => (
+		const Component = (props: {className?: string}) => (
 			<div className={props.className} data-testid="i18nDiv" />
 		);
 
@@ -140,7 +140,7 @@ describe('I18nDecorator', () => {
 	});
 
 	test('should treat "en-US" as latin locale', () => {
-		const Component = (props) => (
+		const Component = (props: {className?: string}) => (
 			<div className={props.className} data-testid="i18nDiv" />
 		);
 
@@ -154,7 +154,7 @@ describe('I18nDecorator', () => {
 	});
 
 	test('should treat "ja-JP" as non-latin locale', () => {
-		const Component = (props) => (
+		const Component = (props: {className?: string}) => (
 			<div className={props.className} data-testid="i18nDiv" />
 		);
 
