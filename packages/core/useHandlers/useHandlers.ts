@@ -1,5 +1,3 @@
-import {Context} from 'react';
-
 import {Callback, CallbackObject} from '../types';
 import useClass from '../useClass';
 
@@ -15,11 +13,12 @@ import Handlers from './Handlers';
  * @param {Object.<String, Function>} handlers  Map of handler names to functions.
  * @param {any}                      [props]   Typically, the props for the component but that is
  *                                              not required.
- * @param {any}                      [context] Additional data or methods the handlers may need.
+ * @param {any}                      [context] Arbitrary bag of values for handlers (not React
+ *                                              createContext).
  * @returns {Object}                            A map of bound handlers
  * @private
  */
-function useHandlers (handlers: CallbackObject<Callback>, props?: any, context?: Context<any>) {
+function useHandlers (handlers: CallbackObject<Callback>, props?: any, context?: any) {
 	const h = useClass(Handlers, handlers);
 	h.setContext(props, context);
 

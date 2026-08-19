@@ -1,0 +1,35 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"allowSyntheticDefaultImports": true,
+		"checkJs": false,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"isolatedModules": true,
+		"jsx": "react-jsx",
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"noEmit": true,
+		"noFallthroughCasesInSwitch": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"target": "es2022",
+		"types": ["jest", "node"]
+	},
+	"include": [
+		"Accelerator/**/*",
+		"Pause/**/*",
+		"Spottable/**/*",
+		"SpotlightContainerDecorator/**/*",
+		"SpotlightRootDecorator/**/*",
+		"src/**/*",
+		"types/**/*"
+	],
+	"exclude": [
+		"build",
+		"coverage",
+		"node_modules"
+	]
+}

@@ -1,8 +1,6 @@
 import {Context} from 'react';
 
-import {CallbackObject} from '../types';
-
-import {HandlerFunction} from './types';
+import {CallbackObject, HandlerFunction} from '../types';
 
 export const bindInlineHandlers = (props: CallbackObject, handlers: CallbackObject<HandlerFunction>, handlerKeys: string[], context: Context<any>) => {
 	if (!handlerKeys?.length) {

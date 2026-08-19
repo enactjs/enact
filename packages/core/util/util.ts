@@ -111,7 +111,7 @@ const coerceFunction = unless(isType(Function), always);
  * @memberof core/util
  * @public
  */
-const coerceArray = function <T> (array: Array<T>): Array<T> {
+const coerceArray = function <T> (array: T | Array<T>): Array<T> {
 	return Array.isArray(array) ? array : [array];
 };
 

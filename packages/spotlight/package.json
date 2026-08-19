@@ -8,7 +8,7 @@
     "directory": "packages/spotlight"
   },
   "homepage": "https://enactjs.com",
-  "main": "src/spotlight.js",
+  "main": "src/spotlight.ts",
   "scripts": {
     "clean": "enact clean",
     "interlink": "npm link ../core",
@@ -24,6 +24,12 @@
       "baseSize": 24
     }
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "**/*.{js,jsx,ts,tsx}",
+      "!**/*.d.ts"
+    ]
+  },
   "dependencies": {
     "@enact/core": "^5.5.2",
     "classnames": "^2.5.1",
@@ -31,6 +37,15 @@
     "ramda": "^0.32.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "typescript": "^7.0.2",
     "warning": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^22.0.0",
+    "@types/prop-types": "^15.7.15",
+    "@types/ramda": "^0.32.0",
+    "@types/react": "^19.2.18",
+    "@types/warning": "^3.0.4"
   }
 }

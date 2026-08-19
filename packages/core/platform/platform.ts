@@ -146,7 +146,7 @@ const detect = () => {
  * @memberof core/platform
  * @public
  */
-const platform = {};
+const platform: PlatformDescription = {} as PlatformDescription;
 
 const platformKeys: Array<keyof PlatformDescription> = [
 	'browserName',

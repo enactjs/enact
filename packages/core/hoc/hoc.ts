@@ -62,31 +62,34 @@ const mergeFn = (key: string, defaultValue: any, userValue: any) => {
  * @memberof core/hoc
  * @public
  */
-function hoc(defaultConfig: CallbackObject, hawk: Callback): Callback
-function hoc(hawk: Callback): Callback
-function hoc(defaultConfig: CallbackObject | Callback, hawk?: Callback) {
+const hoc = (defaultConfig: CallbackObject | Callback, hawk?: Callback): Callback => {
 
 	// normalize arguments to allow defaultConfig to be omitted
 	let factory = hawk;
-	let defaults: CallbackObject | null = defaultConfig;
+	let defaults: CallbackObject | null = defaultConfig as CallbackObject | null;
 	if (!factory && typeof defaultConfig === 'function') {
 		factory = defaultConfig as Callback;
 		defaults = null;
 	}
 
-	if (!factory) {
-		throw new TypeError('hoc requires a factory function');
-	}
+	const factoryFn = factory;
+	const callFactory: Callback = (config, wrapped) => {
+		if (!factoryFn) {
+			throw new TypeError('hoc requires a factory function');
+		}
 
-	const Component = (config: CallbackObject, maybeWrapped: Callback) => {
+		return factoryFn(config, wrapped);
+	};
+
+	const Component = (config: CallbackObject, maybeWrapped?: Callback) => {
 		if (isRenderable(config)) {
-			return factory(defaults, config);
+			return callFactory(defaults, config);
 		} else {
 			const cfg = mergeDeepWithKey(mergeFn, defaults, config);
 			if (isRenderable(maybeWrapped)) {
-				return factory(cfg, maybeWrapped);
+				return callFactory(cfg, maybeWrapped);
 			} else {
-				return (Wrapped: Callback) => factory(cfg, Wrapped);
+				return (Wrapped: Callback) => callFactory(cfg, Wrapped);
 			}
 		}
 	};

@@ -1,0 +1,116 @@
+import Pause, {getPausedInstance, isPaused, pause, resume} from '../Pause';
+
+const PAUSED = 'Paused';
+const NOT_PAUSED = 'Not Paused';
+const createPause = (name?: string): Pause => new Pause(name as string);
+
+describe('Pause', () => {
+	test('should pause spotlight', () => {
+		const subject = createPause();
+
+		subject.pause();
+
+		const expected = PAUSED;
+		const actual = isPaused() ? PAUSED : NOT_PAUSED;
+
+		subject.resume();
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should resume spotlight', () => {
+		const subject = createPause();
+
+		subject.pause();
+		subject.resume();
+
+		const expected = NOT_PAUSED;
+		const actual = isPaused() ? PAUSED : NOT_PAUSED;
+
+		expect(actual).toBe(expected);
+	});
+
+	test(
+		'should not resume spotlight when another Paused instance is in control',
+		() => {
+			const subject = createPause();
+			const another = createPause();
+
+			another.pause();
+			subject.pause();
+
+			const expected = PAUSED;
+			const actual = isPaused() ? PAUSED : NOT_PAUSED;
+
+			another.resume();
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should not report paused when another Paused instance is in control',
+		() => {
+			const subject = createPause();
+			const another = createPause();
+
+			another.pause();
+			subject.pause();
+
+			const expected = NOT_PAUSED;
+			const actual = subject.isPaused() ? PAUSED : NOT_PAUSED;
+
+			another.resume();
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test(
+		'should not report paused when the global Spotlight is paused',
+		() => {
+			const subject = createPause();
+
+			pause();
+			subject.pause();
+
+			const expected = NOT_PAUSED;
+			const actual = subject.isPaused() ? PAUSED : NOT_PAUSED;
+
+			resume();
+
+			expect(actual).toBe(expected);
+		}
+	);
+
+	test('should allow the global Spotlight to resume', () => {
+		const subject = createPause();
+
+		subject.pause();
+		resume();
+
+		const expected = NOT_PAUSED;
+		const actual = isPaused() ? PAUSED : NOT_PAUSED;
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should return name of the pause instance', () => {
+		const subject = createPause('paused');
+
+		const expected = 'Pause<paused>';
+		const actual = subject.toString();
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should return the name of the pause instance when Spotlight is paused', () => {
+		const subject = createPause('paused');
+		subject.pause();
+
+		const expected = 'paused';
+		const actual = getPausedInstance();
+
+		expect(actual).toBe(expected);
+	});
+});
