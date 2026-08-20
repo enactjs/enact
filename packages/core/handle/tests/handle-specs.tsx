@@ -307,7 +307,7 @@ describe('handle', () => {
 
 			try {
 				callback(makeEvent());
-			} catch (e) {
+			} catch {
 				// we don't want the error to interrupt the test
 			}
 
@@ -654,10 +654,6 @@ describe('handle', () => {
 					onCustomEvent: PropTypes.func
 				};
 
-				data: string;
-
-				handleCustomEvent!: TestHandler;
-
 				constructor (props: CallbackObject) {
 					super(props);
 
@@ -670,6 +666,10 @@ describe('handle', () => {
 				componentDidMount () {
 					this.handleCustomEvent(null, this.props, this.context);
 				}
+
+				data!: string;
+
+				handleCustomEvent!: TestHandler;
 
 				adapter () {
 					return {
@@ -821,10 +821,6 @@ describe('handle', () => {
 					onCustomEvent: PropTypes.func
 				};
 
-				data: string;
-
-				handleCustomEvent!: TestHandler;
-
 				constructor (props: CallbackObject) {
 					super(props);
 
@@ -837,6 +833,10 @@ describe('handle', () => {
 				componentDidMount () {
 					this.handleCustomEvent(null, this.props, this.context);
 				}
+
+				data!: string;
+
+				handleCustomEvent!: TestHandler;
 
 				adapter () {
 					return {
@@ -873,11 +873,11 @@ describe('handle', () => {
 
 			const callback = handle(forwardCustomWithPrevent(event), handler);
 
-		// should stop chain when `preventDefault()` has been called
-		callback({}, {
-			'onMyClick': (ev: CallbackObject) => ev.preventDefault()
+			// should stop chain when `preventDefault()` has been called
+			callback({}, {
+				'onMyClick': (ev: CallbackObject) => ev.preventDefault()
+			});
+			expect(handler).not.toHaveBeenCalled();
 		});
-		expect(handler).not.toHaveBeenCalled();
 	});
-});
 });
