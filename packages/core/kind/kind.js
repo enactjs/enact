@@ -154,6 +154,12 @@ const kind = (config) => {
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
 	const handlerKeys = handlers ? Object.keys(handlers) : null;
 
+	// The functional branch below renders through this wrapper rather than `renderKind` directly.
+	// `render` is user-supplied and may call hooks, so the render path taken during an actual React
+	// render must itself be a hook. The `use` prefix is what tells React Compiler (and the
+	// rules-of-hooks lint) that this call may run hooks.
+	const useRenderKind = (props, context) => renderKind(props, context);
+
 	let Component;
 
 	// In 4.x, this branch will become the only supported version and the class branch will be
@@ -172,7 +178,7 @@ const kind = (config) => {
 
 			checkPropTypes(Component, merged);
 
-			return renderKind(merged, ctx);
+			return useRenderKind(merged, ctx);
 		};
 	} else {
 		Component = class extends ReactComponent {

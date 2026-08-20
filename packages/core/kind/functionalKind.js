@@ -143,8 +143,10 @@ const functionalKind = (config) => {
 		if (renderStyles)   props = renderStyles(props, context);
 		if (renderComputed) props = renderComputed(props, context);
 
-		return props;
+		return useRender(props, context); // eslint-disable-line react-hooks/rules-of-hooks
 	};
+
+	const useRenderKind = (props, context) => renderKind(props, context);
 
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
 	const handlerKeys     = handlers     ? Object.keys(handlers)     : null;
@@ -154,6 +156,12 @@ const functionalKind = (config) => {
 		// useContext only accepts Context and never suspends (unlike use(), which can suspend on Promises and break SSR).
 		const ctx = useContext(contextType);
 		const boundHandlers = useHandlers(handlers, props, ctx);
+
+		// The functional branch below renders through this wrapper rather than `renderKind` directly.
+		// `render` is user-supplied and may call hooks, so the render path taken during an actual React
+		// render must itself be a hook. The `use` prefix is what tells React Compiler (and the
+		// rules-of-hooks lint) that this call may run hooks.
+
 
 		// Merge incoming props with bound handlers.
 		let merged = {
@@ -167,8 +175,7 @@ const functionalKind = (config) => {
 
 		checkPropTypes(Component, merged);
 
-		renderKind(merged, ctx);
-		return useRender(merged, ctx);
+		return useRenderKind(merged, ctx);
 	};
 
 	if (name)         Component.displayName = name;
@@ -183,9 +190,8 @@ const functionalKind = (config) => {
 	// of the React render cycle (e.g. in tests or server-side utilities).
 	Component.inline = (props, context) => {
 		const updated = applyDefaultProps({...props}, defaultProps, defaultPropKeys);
-		const merged = renderKind(bindInlineHandlers(updated, handlers, handlerKeys, context), context);
 
-		return useRender(merged, context); // eslint-disable-line react-hooks/rules-of-hooks
+		return renderKind(bindInlineHandlers(updated, handlers, handlerKeys, context), context);
 	};
 
 	return Component;
