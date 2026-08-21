@@ -244,8 +244,13 @@ describe('prop-types', () => {
 				static displayName = 'DeprecatedComponent';
 
 				static propTypes = {
-					typeDeprecated: (EnactPropTypes.deprecated as any)(EnactPropTypes.ref)
+					typeDeprecated: EnactPropTypes.deprecated(EnactPropTypes.ref, {name: 'typeDeprecated', replacedBy: 'ref'})
 				};
+
+				constructor (props: any) {
+					super(props);
+					checkPropTypes(this, props);
+				}
 
 				render ({...rest}: any = {}) {
 					delete rest.typeDeprecated;
@@ -253,18 +258,27 @@ describe('prop-types', () => {
 				}
 			}
 
+			expect(consoleWarnMock).not.toHaveBeenCalled();
+
 			render(<DeprecatedComponent typeDeprecated={ref} />);
 
-			expect(consoleWarnMock).toHaveBeenCalled();
+			expect(consoleWarnMock).toHaveBeenCalledWith(
+				expect.stringContaining('DEPRECATED: typeDeprecated. Replaced by ref.')
+			);
 		});
 
-		test('should call console.warn even when prop value is not given for EnactPropTypes.deprecated', () => {
+		test('should not call console.warn when prop value is not given for EnactPropTypes.deprecated', () => {
 			class DeprecatedComponent extends Component<any> {
 				static displayName = 'DeprecatedComponent';
 
 				static propTypes = {
-					typeDeprecated: (EnactPropTypes.deprecated as any)(EnactPropTypes.ref)
+					typeDeprecated: EnactPropTypes.deprecated(EnactPropTypes.ref, {name: 'typeDeprecated', replacedBy: 'ref'})
 				};
+
+				constructor (props: any) {
+					super(props);
+					checkPropTypes(this, props);
+				}
 
 				render ({...rest}: any = {}) {
 					delete rest.typeDeprecated;
@@ -274,7 +288,7 @@ describe('prop-types', () => {
 
 			render(<DeprecatedComponent />);
 
-			expect(consoleWarnMock).toHaveBeenCalled();
+			expect(consoleWarnMock).not.toHaveBeenCalled();
 		});
 	});
 });

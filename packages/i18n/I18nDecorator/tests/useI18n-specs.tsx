@@ -4,13 +4,7 @@ import {useState} from 'react';
 
 import {updateLocale} from '../../locale';
 import {I18n} from '../I18n';
-import useI18n from '../useI18n';
-
-interface ComponentProps {
-	latinLanguageOverrides?: string[];
-	locale?: string;
-	nonLatinLanguageOverrides?: string[];
-}
+import useI18n, {type UseI18nConfig} from '../useI18n';
 
 describe('useI18n', () => {
 	// Suite-wide setup
@@ -22,7 +16,7 @@ describe('useI18n', () => {
 		updateLocale();
 	});
 
-	function Component ({locale, latinLanguageOverrides, nonLatinLanguageOverrides}: ComponentProps) {
+	function Component ({locale, latinLanguageOverrides, nonLatinLanguageOverrides}: UseI18nConfig) {
 		const {className, rtl} = useI18n({
 			latinLanguageOverrides,
 			locale,
@@ -99,7 +93,7 @@ describe('useI18n', () => {
 
 	// Async mode (sync: false) — tests the Promise.all path in loadResources
 	describe('async mode', () => {
-		function AsyncComponent ({locale}: Pick<ComponentProps, 'locale'>) {
+		function AsyncComponent ({locale}: Pick<UseI18nConfig, 'locale'>) {
 			const {className, loaded, rtl} = useI18n({locale, sync: false});
 
 			return (

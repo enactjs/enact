@@ -1,10 +1,11 @@
 import {act} from '@testing-library/react';
 
+import type {Callback} from '../../types';
 import JobBase from '../Job';
 
 describe('Job', () => {
 	// `timeout` is optional at runtime
-	const Job = JobBase as unknown as new (fn: (...args: any[]) => any, timeout?: number) => JobBase;
+	const Job = JobBase as unknown as new (fn: Callback, timeout?: number) => JobBase;
 
 	beforeEach(() => {
 		jest.useFakeTimers();

@@ -16,45 +16,36 @@ import {
 	handle as handleBase,
 	oneOf as oneOfBase,
 	preventDefault,
-	stop
+	stop,
+	type EventHandler
 } from '../handle';
-import type {Callback, CallbackObject} from '../../types';
+import type {CallbackObject} from '../../types';
 
-// The published types require a DOM `Event` and a props object on every handler while the runtime
-// contract accepts partial event payloads, non-functions, and omitted arguments. These tests
-// exercise that runtime contract, so the entry points are retyped with the looser signature rather
-// than casting at each of the call sites below.
-type TestHandler = {
-	(ev?: unknown, props?: unknown, context?: unknown): boolean;
-	bind: (obj: unknown) => TestHandler;
-	bindAs: (obj: unknown, name?: string) => TestHandler;
-	finally: (cleanup: Callback) => TestHandler;
-};
-
-type TestHandlerFactory = {
-	(...handlers: unknown[]): TestHandler;
-	bind: (obj: unknown) => TestHandlerFactory;
-};
-
-type TestCustomForwarder = (name: string, adapter?: Callback) => TestHandler;
-
-type TestEvent = CallbackObject & {
+type TestEvent = Event & CallbackObject & {
 	preventDefault: jest.Mock;
 	stopPropagation: jest.Mock;
 };
 
-const handle = handleBase as unknown as TestHandlerFactory;
-const oneOf = oneOfBase as unknown as TestHandlerFactory;
-const adaptEvent = adaptEventBase as unknown as (adapter: Callback, handler: Callback) => TestHandler;
-const forwardCustom = forwardCustomBase as unknown as TestCustomForwarder;
-const forwardCustomWithPrevent = forwardCustomWithPreventBase as unknown as TestCustomForwarder;
+// handle()/oneOf() still accept omitted arguments, partial event payloads, and non-functions at
+// runtime. EventHandler now includes .finally(); these aliases only loosen the call signature.
+type LooseEventHandler = EventHandler & ((ev?: unknown, props?: unknown, context?: unknown) => any);
+type LooseFactory = {
+	(...handlers: unknown[]): LooseEventHandler;
+	bind: (obj: unknown) => LooseFactory;
+};
+
+const handle = handleBase as unknown as LooseFactory;
+const oneOf = oneOfBase as unknown as LooseFactory;
+const adaptEvent = adaptEventBase as unknown as (adapter: unknown, handler: unknown) => LooseEventHandler;
+const forwardCustom = forwardCustomBase as unknown as (name: string, adapter?: unknown) => LooseEventHandler;
+const forwardCustomWithPrevent = forwardCustomWithPreventBase as unknown as (name: string, adapter?: unknown) => LooseEventHandler;
 
 describe('handle', () => {
 	const makeEvent = (payload?: CallbackObject): TestEvent => ({
 		preventDefault: jest.fn(),
 		stopPropagation: jest.fn(),
 		...payload
-	});
+	} as TestEvent);
 
 	const returnsTrue = () => true;
 	const returnsFalse = () => false;
@@ -281,7 +272,7 @@ describe('handle', () => {
 			const finallyCallback = jest.fn();
 			const callback = handle(returnsTrue).finally(finallyCallback);
 
-			callback(makeEvent());
+			callback(makeEvent(), {});
 
 			const expected = 1;
 
@@ -292,7 +283,7 @@ describe('handle', () => {
 			const finallyCallback = jest.fn();
 			const callback = handle(returnsFalse).finally(finallyCallback);
 
-			callback(makeEvent());
+			callback(makeEvent(), {});
 
 			const expected = 1;
 
@@ -306,7 +297,7 @@ describe('handle', () => {
 			}).finally(finallyCallback);
 
 			try {
-				callback(makeEvent());
+				callback(makeEvent(), {});
 			} catch {
 				// we don't want the error to interrupt the test
 			}
@@ -479,7 +470,7 @@ describe('handle', () => {
 				[returnsFalse, returnsTrue]
 			).finally(handler);
 
-			callback();
+			callback(null, {});
 
 			const expected = 1;
 
@@ -669,7 +660,7 @@ describe('handle', () => {
 
 				data!: string;
 
-				handleCustomEvent!: TestHandler;
+				handleCustomEvent!: EventHandler;
 
 				adapter () {
 					return {
@@ -836,7 +827,7 @@ describe('handle', () => {
 
 				data!: string;
 
-				handleCustomEvent!: TestHandler;
+				handleCustomEvent!: EventHandler;
 
 				adapter () {
 					return {

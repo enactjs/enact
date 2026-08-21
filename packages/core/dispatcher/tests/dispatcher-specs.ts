@@ -3,7 +3,7 @@ import {off, on, once} from '../dispatcher';
 describe('dispatcher', () => {
 	test('should register handlers on target', () => {
 		const handler = jest.fn();
-		on('localechange', handler, window as any);
+		on('localechange', handler, window);
 
 		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
@@ -15,8 +15,8 @@ describe('dispatcher', () => {
 
 	test('should not register duplicate handlers on target', () => {
 		const handler = jest.fn();
-		on('localechange', handler, window as any);
-		on('localechange', handler, window as any);
+		on('localechange', handler, window);
+		on('localechange', handler, window);
 
 		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
@@ -28,12 +28,12 @@ describe('dispatcher', () => {
 
 	test('should unregister handlers on target', () => {
 		const handler = jest.fn();
-		on('localechange', handler, window as any);
+		on('localechange', handler, window);
 
 		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
 
-		off('localechange', handler, window as any);
+		off('localechange', handler, window);
 		window.dispatchEvent(ev);
 
 		const expected = 1;
@@ -43,7 +43,7 @@ describe('dispatcher', () => {
 
 	test('should only call a "once" handler once', () => {
 		const handler = jest.fn();
-		once('localechange', handler, window as any);
+		once('localechange', handler, window);
 
 		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
@@ -56,8 +56,8 @@ describe('dispatcher', () => {
 
 	test('should allow unregistering a "once" before it is called', () => {
 		const handler = jest.fn();
-		const onceHandler = once('localechange', handler, window as any);
-		off('localechange', onceHandler, window as any);
+		const onceHandler = once('localechange', handler, window);
+		off('localechange', onceHandler, window);
 
 		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);
@@ -75,8 +75,8 @@ describe('dispatcher', () => {
 			throw new Error('Thrown from handler');
 		};
 		const handler = jest.fn();
-		on('localechange', throws, window as any);
-		on('localechange', handler, window as any);
+		on('localechange', throws, window);
+		on('localechange', handler, window);
 
 		const ev = new window.CustomEvent('localechange', {});
 		window.dispatchEvent(ev);

@@ -1,6 +1,6 @@
 import {render, renderHook, act} from '@testing-library/react';
 import PropTypes from 'prop-types';
-import {forwardRef, memo, lazy, Component} from 'react';
+import {forwardRef, memo, lazy, Component, type ReactNode} from 'react';
 
 import {
 	applyDefaultProps,
@@ -17,8 +17,10 @@ import {
 	setDefaultProps,
 	shallowEqual,
 	checkPropTypes,
-	usePrevious
+	usePrevious,
+	type FilterCallback
 } from '../util';
+import type {Callback} from '../../types';
 
 describe('util', () => {
 	describe('cap', () => {
@@ -244,7 +246,7 @@ describe('util', () => {
 
 	describe('mapAndFilterChildren', () => {
 		// the `filter` argument is optional at runtime
-		const mapAndFilter = mapAndFilterChildren as (children: any, callback: (value: any, index?: number) => any, filter?: (value: any) => boolean) => any;
+		const mapAndFilter = mapAndFilterChildren as (children: ReactNode, callback: Callback, filter?: FilterCallback<any>) => ReactNode;
 
 		test('Returns null if null passed', () => {
 			const expected = null;

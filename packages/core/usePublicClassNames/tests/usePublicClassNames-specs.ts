@@ -17,7 +17,7 @@ describe('usePublicClassNames', () => {
 
 	test('should return `componentCss` if `customCss` is undefined', () => {
 		const testComponentCss = {test: 'test-class'};
-		const {result} = renderHook(() => usePublicClassNames({componentCss: testComponentCss, customCss: null as any, publicClassNames: true}));
+		const {result} = renderHook(() => usePublicClassNames({componentCss: testComponentCss, publicClassNames: true}));
 
 		expect(result.current).toEqual(testComponentCss);
 	});
@@ -51,7 +51,7 @@ describe('usePublicClassNames', () => {
 	});
 
 	test('should return `componentCss` when `publicClassNames` is not set', () => {
-		const {result} = renderHook(() => usePublicClassNames({componentCss, customCss} as any));
+		const {result} = renderHook(() => usePublicClassNames({componentCss, customCss}));
 
 		expect(result.current).toBe(componentCss);
 	});
