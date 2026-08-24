@@ -60,6 +60,7 @@ const ComponentOverride = ({component: Component, ...props}) => {
 	// Despite its capitalized, component-like signature, this is also called directly as a plain
 	// function, including from the render of a class `kind`. React Compiler would otherwise compile it as a component and emit a `useMemoCache`
 	// call, which throws "Invalid hook call" on those direct-call paths.
+	// TODO: rewrite this component to work properly with babel-plugin-react-compiler
 	'use no memo';
 
 	return Component && (
