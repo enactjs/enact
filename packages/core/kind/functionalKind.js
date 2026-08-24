@@ -184,7 +184,7 @@ const functionalKind = (config) => {
 	Component.inline = (props, context) => {
 		const updated = applyDefaultProps({...props}, defaultProps, defaultPropKeys);
 
-		return useRender(prepareKindProps(bindInlineHandlers(updated, handlers, handlerKeys, context), context));
+		return useRender(prepareKindProps(bindInlineHandlers(updated, handlers, handlerKeys, context), context)); // eslint-disable-line react-hooks/rules-of-hooks
 	};
 
 	return Component;
