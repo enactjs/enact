@@ -1,28 +1,31 @@
-import {createContext, Component} from 'react';
+import {createContext, Component, type ComponentPropsWithoutRef} from 'react';
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import Registry from '../Registry';
+import type {RegisterFunction, RegistryController, RegistryEvent, RegistryHandle} from '../Registry';
 
-const SomeContext = createContext();
+const SomeContext = createContext<RegisterFunction | null>(null);
 
 describe('Registry', () => {
-	class NotifiesTree extends Component {
+	class NotifiesTree extends Component<ComponentPropsWithoutRef<'button'>> {
 		static contextType = SomeContext;
 
-		constructor () {
-			super();
+		constructor (props: ComponentPropsWithoutRef<'button'>) {
+			super(props);
 			this.registry = Registry.create(this.handleNotify);
 		}
 
 		componentDidMount () {
-			this.registry.parent = this.context;
+			this.registry.parent = this.context as RegisterFunction | null;
 		}
 
-		handleNotify = ({action}) => {
+		registry: RegistryHandle;
+
+		handleNotify = ({action}: RegistryEvent) => {
 			if (action === 'update') {
-				this.registry.parent = this.context;
+				this.registry.parent = this.context as RegisterFunction | null;
 			}
 		};
 
@@ -40,7 +43,7 @@ describe('Registry', () => {
 		}
 	}
 
-	class HandlesNotification extends Component {
+	class HandlesNotification extends Component<ComponentPropsWithoutRef<'div'>, {number: number}> {
 		static contextType = SomeContext;
 
 		state = {
@@ -48,8 +51,9 @@ describe('Registry', () => {
 		};
 
 		componentDidMount () {
-			if (this.context && typeof this.context === 'function') {
-				this.registry = this.context(this.handleResize);
+			const register = this.context as RegisterFunction | null;
+			if (register && typeof register === 'function') {
+				this.registry = register(this.handleResize);
 			}
 		}
 
@@ -59,11 +63,13 @@ describe('Registry', () => {
 			}
 		}
 
+		registry?: RegistryController;
+
 		handleResize = () => {
 			this.setState((prevState) => {
 				const number = prevState.number + 1;
 
-				this.registry.notify({action: 'update'});
+				this.registry?.notify({action: 'update'});
 
 				return ({
 					number

@@ -1,7 +1,7 @@
 import '../../src/glue';
 import {isNonLatinLocale} from '../locale';
 
-const validate = (expected) => (actual) => {
+const validate = (expected: string) => (actual: boolean) => {
 	expect(actual ? 'non-latin' : 'latin').toBe(expected);
 };
 

@@ -18,7 +18,7 @@ describe('util', () => {
 
 		test('should return `false` for a non string value', () => {
 			const expected = false;
-			const actual = isRtlText(123);
+			const actual = isRtlText(123 as unknown as string);
 
 			expect(actual).toEqual(expected);
 		});

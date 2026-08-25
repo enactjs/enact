@@ -1,6 +1,6 @@
 import {render, renderHook, act} from '@testing-library/react';
 import PropTypes from 'prop-types';
-import {forwardRef, memo, lazy, Component} from 'react';
+import {forwardRef, memo, lazy, Component, type ReactNode} from 'react';
 
 import {
 	applyDefaultProps,
@@ -17,8 +17,10 @@ import {
 	setDefaultProps,
 	shallowEqual,
 	checkPropTypes,
-	usePrevious
+	usePrevious,
+	type FilterCallback
 } from '../util';
+import type {Callback} from '../../types';
 
 describe('util', () => {
 	describe('cap', () => {
@@ -39,7 +41,7 @@ describe('util', () => {
 	});
 
 	describe('checkPropTypes', () => {
-		class TestComponent extends Component {
+		class TestComponent extends Component<any> {
 			static displayName = 'TestComponent';
 
 			static propTypes = {
@@ -47,7 +49,7 @@ describe('util', () => {
 				string: PropTypes.string
 			};
 
-			constructor (props) {
+			constructor (props: any) {
 				super(props);
 				checkPropTypes(this, this.props);
 			}
@@ -57,8 +59,8 @@ describe('util', () => {
 			}
 		}
 
-		let consoleWarnMock = null;
-		let consoleErrorMock = null;
+		let consoleWarnMock: jest.SpyInstance;
+		let consoleErrorMock: jest.SpyInstance;
 
 		beforeEach(() => {
 			consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();
@@ -151,7 +153,7 @@ describe('util', () => {
 
 		test('should return {true} for React.lazy', () => {
 			const expected = true;
-			const view = isRenderable(lazy(() => {}));
+			const view = isRenderable(lazy((() => {}) as any));
 
 			expect(view).toEqual(expected);
 		});
@@ -159,8 +161,8 @@ describe('util', () => {
 
 	describe('memoize', () => {
 		test('should memoize function', () => {
-			const obj = {},
-				testMethod = key => {
+			const obj: Record<string, number> = {},
+				testMethod = (key: string) => {
 					obj[key] = (obj[key] || 0) + 1;
 				},
 				memoizedTest = memoize(testMethod);
@@ -198,9 +200,9 @@ describe('util', () => {
 		};
 
 		// Helper function to get an object from the proxy object that has only getters for properties to make testing easier
-		const getResultFromProxy = (proxy) => {
+		const getResultFromProxy = (proxy: any) => {
 			const keys = ['class-base-only', 'class-shared', 'class-shared-another', 'class-additive-only'];
-			const obj = {};
+			const obj: Record<string, string> = {};
 
 			for (let i = 0; i < keys.length; i++) {
 				if (keys[i] !== proxy[keys[i]]) {
@@ -212,7 +214,7 @@ describe('util', () => {
 		};
 
 		test('should return a base map if an additive map is not given', () => {
-			const actual = mergeClassNameMaps(baseMap);
+			const actual = (mergeClassNameMaps as any)(baseMap);
 
 			expect(actual).toEqual(baseMap);
 		});
@@ -243,9 +245,12 @@ describe('util', () => {
 	});
 
 	describe('mapAndFilterChildren', () => {
+		// the `filter` argument is optional at runtime
+		const mapAndFilter = mapAndFilterChildren as (children: ReactNode, callback: Callback, filter?: FilterCallback<any>) => ReactNode;
+
 		test('Returns null if null passed', () => {
 			const expected = null;
-			const actual = mapAndFilterChildren(null, val => val);
+			const actual = mapAndFilter(null, val => val);
 
 			expect(actual).toBe(expected);
 		});
@@ -254,7 +259,7 @@ describe('util', () => {
 			const children = [1, 2, 3];
 
 			const expected = children;
-			const actual = mapAndFilterChildren(children, val => val);
+			const actual = mapAndFilter(children, val => val);
 
 			expect(actual).toEqual(expected);
 		});
@@ -264,7 +269,7 @@ describe('util', () => {
 			const children = [1, 2, null, 3, undefined, false];
 
 			const expected = [1, 2, 3];
-			const actual = mapAndFilterChildren(children, val => val);
+			const actual = mapAndFilter(children, val => val);
 
 			expect(actual).toEqual(expected);
 		});
@@ -274,7 +279,7 @@ describe('util', () => {
 			// eslint-disable-next-line no-undefined
 			const children = [1, 2, null, 3, undefined, false];
 
-			mapAndFilterChildren(children, spy);
+			mapAndFilter(children, spy);
 
 			const expected = 3;
 			const actual = spy.mock.calls.length;
@@ -286,7 +291,7 @@ describe('util', () => {
 			const children = [1, 2, 3];
 
 			const expected = [1, 3];
-			const actual = mapAndFilterChildren(children, val => val === 2 ? null : val);
+			const actual = mapAndFilter(children, val => val === 2 ? null : val);
 
 			expect(actual).toEqual(expected);
 		});
@@ -295,7 +300,7 @@ describe('util', () => {
 			const children = [1, 2, 3];
 
 			const expected = [1];
-			const actual = mapAndFilterChildren(
+			const actual = mapAndFilter(
 				children,
 				val => val === 2 ? null : val,
 				(val) => val === 1
@@ -306,7 +311,7 @@ describe('util', () => {
 
 		test('should forward value and index to callback', () => {
 			const spy = jest.fn();
-			mapAndFilterChildren([1], spy);
+			mapAndFilter([1], spy);
 
 			const expected = [
 				1, // value
@@ -353,7 +358,7 @@ describe('util', () => {
 		test('should return target unchanged when keys are not provided', () => {
 			const target = {size: 'small'};
 
-			expect(applyDefaultProps(target, {size: 'large'}, null)).toBe(target);
+			expect(applyDefaultProps(target, {size: 'large'}, null as any)).toBe(target);
 			expect(target).toEqual({size: 'small'});
 		});
 
@@ -419,7 +424,7 @@ describe('util', () => {
 		test('should return `true` if the values of all keys are strictly equal', () => {
 			expect(shallowEqual(child, child)).toBe(true);
 
-			expect(shallowEqual(child, null)).toBe(false);
+			expect(shallowEqual(child, null as any)).toBe(false);
 
 			const fakeChild = {
 				name: 'fake'
@@ -430,8 +435,8 @@ describe('util', () => {
 			fakeChild.name = 'child';
 			expect(shallowEqual(child, fakeChild)).toBe(true);
 
-			child.toString = (...args) => {
-				child.toString(...args);
+			(child as any).toString = (...args: any[]) => {
+				(child as any).toString(...args);
 			};
 			expect(shallowEqual(child, fakeChild)).toBe(false);
 		});

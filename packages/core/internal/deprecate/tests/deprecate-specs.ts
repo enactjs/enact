@@ -11,7 +11,7 @@ describe('deprecate', () => {
 		alwaysWarn: true
 	};
 	const expectedMessage = 'DEPRECATED: DeprecatedThing since 0.0.0. Will be removed in 0.0.1. Replaced by ValidThing. No more information.';
-	let consoleWarnMock = null;
+	let consoleWarnMock: jest.SpyInstance;
 
 	beforeEach(() => {
 		consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();

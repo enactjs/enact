@@ -4,7 +4,7 @@ import {useState} from 'react';
 
 import {updateLocale} from '../../locale';
 import {I18n} from '../I18n';
-import useI18n from '../useI18n';
+import useI18n, {type UseI18nConfig} from '../useI18n';
 
 describe('useI18n', () => {
 	// Suite-wide setup
@@ -16,14 +16,14 @@ describe('useI18n', () => {
 		updateLocale();
 	});
 
-	function Component ({locale, latinLanguageOverrides, nonLatinLanguageOverrides}) {
+	function Component ({locale, latinLanguageOverrides, nonLatinLanguageOverrides}: UseI18nConfig) {
 		const {className, rtl} = useI18n({
 			latinLanguageOverrides,
 			locale,
 			nonLatinLanguageOverrides
 		});
 
-		return <div className={className} data-testid="i18nDiv">{rtl ? 'rtl' : 'ltr'}</div>;
+		return <div className={className ?? ''} data-testid="i18nDiv">{rtl ? 'rtl' : 'ltr'}</div>;
 	}
 
 	test('should return rtl=false by default', () => {
@@ -93,12 +93,12 @@ describe('useI18n', () => {
 
 	// Async mode (sync: false) — tests the Promise.all path in loadResources
 	describe('async mode', () => {
-		function AsyncComponent ({locale}) {
+		function AsyncComponent ({locale}: Pick<UseI18nConfig, 'locale'>) {
 			const {className, loaded, rtl} = useI18n({locale, sync: false});
 
 			return (
 				<div
-					className={className}
+					className={className ?? ''}
 					data-loaded={loaded}
 					data-testid="i18nDiv"
 				>
@@ -141,7 +141,7 @@ describe('useI18n', () => {
 
 			return (
 				<div>
-					<div className={className} data-testid="i18nDiv">{rtl ? 'rtl' : 'ltr'}</div>
+					<div className={className ?? ''} data-testid="i18nDiv">{rtl ? 'rtl' : 'ltr'}</div>
 					<button data-testid="switchBtn" onClick={() => setLocale('ar-SA')}>switch</button>
 				</div>
 			);
@@ -186,7 +186,7 @@ describe('useI18n', () => {
 
 			return (
 				<div>
-					<div className={className} data-testid="i18nDiv">{rtl ? 'rtl' : 'ltr'}</div>
+					<div className={className ?? ''} data-testid="i18nDiv">{rtl ? 'rtl' : 'ltr'}</div>
 					<button data-testid="updateBtn" onClick={() => changeLocale('ar-SA')}>update</button>
 				</div>
 			);

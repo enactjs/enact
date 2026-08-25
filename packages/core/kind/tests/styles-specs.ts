@@ -1,6 +1,10 @@
 import styles from '../styles';
+import type {CallbackObject} from '../../types';
 
 describe('styles', () => {
+	// `styles()` returns either the updated props or a render function depending on whether props
+	// are passed. These tests always pass props so they always receive the props object.
+	const applyStyles = (cfg: CallbackObject, props: CallbackObject) => styles(cfg, props) as CallbackObject;
 
 	const css = {
 		button: 'unambiguous-button-class-name',
@@ -14,7 +18,7 @@ describe('styles', () => {
 			className: 'button'
 		};
 
-		const updated = styles(cfg, {});
+		const updated = applyStyles(cfg, {});
 
 		const expected = cfg.className;
 		const actual = updated.className;
@@ -28,7 +32,7 @@ describe('styles', () => {
 			className: 'button'
 		};
 
-		const updated = styles(cfg, {});
+		const updated = applyStyles(cfg, {});
 
 		const expected = css.button;
 		const actual = updated.className;
@@ -42,7 +46,7 @@ describe('styles', () => {
 			const props = {
 				className: 'button'
 			};
-			const updated = styles({}, props);
+			const updated = applyStyles({}, props);
 
 			const expected = props.className;
 			const actual = updated.className;
@@ -59,7 +63,7 @@ describe('styles', () => {
 			className: 'button'
 		};
 
-		const updated = styles(cfg, props);
+		const updated = applyStyles(cfg, props);
 
 		const expected = props.className;
 		const actual = updated.className;
@@ -78,7 +82,7 @@ describe('styles', () => {
 				className: 'button'
 			};
 
-			const updated = styles(cfg, props);
+			const updated = applyStyles(cfg, props);
 
 			const expected = props.className;
 			const actual = updated.className;
@@ -96,7 +100,7 @@ describe('styles', () => {
 			}
 		};
 
-		const updated = styles(cfg, {});
+		const updated = applyStyles(cfg, {});
 
 		const expected = cfg.style.color;
 		const actual = updated.style.color;
@@ -110,7 +114,7 @@ describe('styles', () => {
 				color: 'green'
 			}
 		};
-		const updated = styles({}, props);
+		const updated = applyStyles({}, props);
 
 		const expected = props.style.color;
 		const actual = updated.style.color;
@@ -130,7 +134,7 @@ describe('styles', () => {
 			}
 		};
 
-		const updated = styles(cfg, props);
+		const updated = applyStyles(cfg, props);
 
 		const expected = 2;
 		const actual = Object.keys(updated.style).length;
@@ -152,7 +156,7 @@ describe('styles', () => {
 			}
 		};
 
-		const updated = styles(cfg, props);
+		const updated = applyStyles(cfg, props);
 
 		const expected = 1;
 		const actual = Object.keys(updated.style).length;
@@ -163,7 +167,7 @@ describe('styles', () => {
 	// styler tests
 
 	test('should add styler.join() to props', () => {
-		const updated = styles({}, {});
+		const updated = applyStyles({}, {});
 
 		const expected = 'function';
 		const actual = typeof updated.styler.join;
@@ -172,7 +176,7 @@ describe('styles', () => {
 	});
 
 	test('should join classes together with a space', () => {
-		const updated = styles({}, {});
+		const updated = applyStyles({}, {});
 
 		const expected = 'abc def';
 		const actual = updated.styler.join('abc', 'def');
@@ -181,7 +185,7 @@ describe('styles', () => {
 	});
 
 	test('should resolve join classes to css map', () => {
-		const updated = styles({css}, {});
+		const updated = applyStyles({css}, {});
 
 		const expected = css.button + ' ' + css.client;
 		const actual = updated.styler.join('button', 'client');
@@ -197,7 +201,7 @@ describe('styles', () => {
 		const props = {
 			className: 'button'
 		};
-		const updated = styles(cfg, props);
+		const updated = applyStyles(cfg, props);
 
 		const expected = css.button + ' button';
 		const actual = updated.className;
@@ -213,7 +217,7 @@ describe('styles', () => {
 		const props = {
 			className: 'button'
 		};
-		const updated = styles(cfg, props);
+		const updated = applyStyles(cfg, props);
 
 		const expected = css.button + ' button ' + css.client;
 		const actual = updated.styler.append('client');

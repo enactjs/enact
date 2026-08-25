@@ -3,28 +3,49 @@ import {Component} from 'react';
 import {render} from '@testing-library/react';
 
 import {
-	adaptEvent,
+	adaptEvent as adaptEventBase,
 	call,
 	callOnEvent,
 	forEventProp,
 	forKeyCode,
 	forProp,
 	forward,
-	forwardCustom,
-	forwardCustomWithPrevent,
+	forwardCustom as forwardCustomBase,
+	forwardCustomWithPrevent as forwardCustomWithPreventBase,
 	forwardWithPrevent,
-	handle,
-	oneOf,
+	handle as handleBase,
+	oneOf as oneOfBase,
 	preventDefault,
-	stop
+	stop,
+	type EventHandler
 } from '../handle';
+import type {CallbackObject} from '../../types';
+
+type TestEvent = Event & CallbackObject & {
+	preventDefault: jest.Mock;
+	stopPropagation: jest.Mock;
+};
+
+// handle()/oneOf() still accept omitted arguments, partial event payloads, and non-functions at
+// runtime. EventHandler now includes .finally(); these aliases only loosen the call signature.
+type LooseEventHandler = EventHandler & ((ev?: unknown, props?: unknown, context?: unknown) => any);
+type LooseFactory = {
+	(...handlers: unknown[]): LooseEventHandler;
+	bind: (obj: unknown) => LooseFactory;
+};
+
+const handle = handleBase as unknown as LooseFactory;
+const oneOf = oneOfBase as unknown as LooseFactory;
+const adaptEvent = adaptEventBase as unknown as (adapter: unknown, handler: unknown) => LooseEventHandler;
+const forwardCustom = forwardCustomBase as unknown as (name: string, adapter?: unknown) => LooseEventHandler;
+const forwardCustomWithPrevent = forwardCustomWithPreventBase as unknown as (name: string, adapter?: unknown) => LooseEventHandler;
 
 describe('handle', () => {
-	const makeEvent = (payload) => ({
+	const makeEvent = (payload?: CallbackObject): TestEvent => ({
 		preventDefault: jest.fn(),
 		stopPropagation: jest.fn(),
 		...payload
-	});
+	} as TestEvent);
 
 	const returnsTrue = () => true;
 	const returnsFalse = () => false;
@@ -205,7 +226,7 @@ describe('handle', () => {
 
 		// should stop chain when `preventDefault()` has been called
 		callback({}, {
-			'onMyClick': (ev) => ev.preventDefault()
+			'onMyClick': (ev: CallbackObject) => ev.preventDefault()
 		});
 		expect(handler).not.toHaveBeenCalled();
 	});
@@ -251,7 +272,7 @@ describe('handle', () => {
 			const finallyCallback = jest.fn();
 			const callback = handle(returnsTrue).finally(finallyCallback);
 
-			callback(makeEvent());
+			callback(makeEvent(), {});
 
 			const expected = 1;
 
@@ -262,7 +283,7 @@ describe('handle', () => {
 			const finallyCallback = jest.fn();
 			const callback = handle(returnsFalse).finally(finallyCallback);
 
-			callback(makeEvent());
+			callback(makeEvent(), {});
 
 			const expected = 1;
 
@@ -276,8 +297,8 @@ describe('handle', () => {
 			}).finally(finallyCallback);
 
 			try {
-				callback(makeEvent());
-			} catch (e) {
+				callback(makeEvent(), {});
+			} catch {
 				// we don't want the error to interrupt the test
 			}
 
@@ -321,7 +342,7 @@ describe('handle', () => {
 		});
 
 		test('should pass args to condition', () => {
-			const handler = jest.fn(returnsTrue);
+			const handler: jest.Mock = jest.fn(returnsTrue);
 			const callback = oneOf(
 				[handler, returnsTrue]
 			);
@@ -335,7 +356,7 @@ describe('handle', () => {
 		});
 
 		test('should pass args to handlers', () => {
-			const handler = jest.fn(returnsTrue);
+			const handler: jest.Mock = jest.fn(returnsTrue);
 			const callback = oneOf(
 				[returnsTrue, handler]
 			);
@@ -449,7 +470,7 @@ describe('handle', () => {
 				[returnsFalse, returnsTrue]
 			).finally(handler);
 
-			callback();
+			callback(null, {});
 
 			const expected = 1;
 
@@ -460,7 +481,7 @@ describe('handle', () => {
 	describe('#adaptEvent', () => {
 		test('should pass the adapted event payload to the provided handler', () => {
 			const handler = jest.fn();
-			const onlyValue = ({value}) => ({value});
+			const onlyValue = ({value}: CallbackObject) => ({value});
 			const ev = {
 				value: 1,
 				message: 'ok'
@@ -559,7 +580,7 @@ describe('handle', () => {
 
 		test('should pass event, props, and context args to adapter', () => {
 			const adapter = jest.fn();
-			const args = [
+			const args: [number, number, number] = [
 				1, // ev,
 				2, // props,
 				3  // context
@@ -619,12 +640,12 @@ describe('handle', () => {
 			const handler = jest.fn();
 			const expected = 'ok';
 
-			class TestComponent extends Component {
+			class TestComponent extends Component<CallbackObject> {
 				static propTypes = {
 					onCustomEvent: PropTypes.func
 				};
 
-				constructor (props) {
+				constructor (props: CallbackObject) {
 					super(props);
 
 					this.data = expected;
@@ -636,6 +657,10 @@ describe('handle', () => {
 				componentDidMount () {
 					this.handleCustomEvent(null, this.props, this.context);
 				}
+
+				data!: string;
+
+				handleCustomEvent!: EventHandler;
 
 				adapter () {
 					return {
@@ -722,7 +747,7 @@ describe('handle', () => {
 
 		test('should pass event, props, and context args to adapter', () => {
 			const adapter = jest.fn();
-			const args = [
+			const args: [number, number, number] = [
 				1, // ev,
 				2, // props,
 				3  // context
@@ -782,12 +807,12 @@ describe('handle', () => {
 			const handler = jest.fn();
 			const expected = 'ok';
 
-			class TestComponent extends Component {
+			class TestComponent extends Component<CallbackObject> {
 				static propTypes = {
 					onCustomEvent: PropTypes.func
 				};
 
-				constructor (props) {
+				constructor (props: CallbackObject) {
 					super(props);
 
 					this.data = expected;
@@ -799,6 +824,10 @@ describe('handle', () => {
 				componentDidMount () {
 					this.handleCustomEvent(null, this.props, this.context);
 				}
+
+				data!: string;
+
+				handleCustomEvent!: EventHandler;
 
 				adapter () {
 					return {
@@ -837,7 +866,7 @@ describe('handle', () => {
 
 			// should stop chain when `preventDefault()` has been called
 			callback({}, {
-				'onMyClick': (ev) => ev.preventDefault()
+				'onMyClick': (ev: CallbackObject) => ev.preventDefault()
 			});
 			expect(handler).not.toHaveBeenCalled();
 		});

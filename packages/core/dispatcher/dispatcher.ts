@@ -102,13 +102,13 @@ const dispatcher = function (ev: Event): undefined {
  * @function
  * @param	{String}	name				Event name
  * @param	{Function}	fn					Event handler
- * @param	{Node}		[target='document']	Event listener target
+ * @param	{EventTarget}	[target='document']	Event listener target
  *
  * @returns {undefined}
  * @memberof core/dispatcher
  * @public
  */
-const on = function (name: string, fn: Callback, target = getDefaultTarget()): undefined {
+const on = function (name: string, fn: Callback, target: EventTarget | Boolean = getDefaultTarget()): undefined {
 	if (target && !(target instanceof Boolean)) {
 		const added = addListener(target, name, fn);
 
@@ -124,13 +124,13 @@ const on = function (name: string, fn: Callback, target = getDefaultTarget()): u
  * @function
  * @param	{String}	name				Event name
  * @param	{Function}	fn					Event handler
- * @param	{Node}		[target=`document`]	Event listener target
+ * @param	{EventTarget}	[target=`document`]	Event listener target
  *
  * @returns {undefined}
  * @memberof core/dispatcher
  * @public
  */
-const off = function (name: string, fn: Callback, target = getDefaultTarget()): undefined {
+const off = function (name: string, fn: Callback, target: EventTarget | Boolean = getDefaultTarget()): undefined {
 	if (target && !(target instanceof Boolean)) {
 		const listeners = getListeners(target, name);
 		const index = listeners.indexOf(fn);
@@ -150,14 +150,14 @@ const off = function (name: string, fn: Callback, target = getDefaultTarget()): 
  * @function
  * @param	{String}	name		Event name
  * @param	{Function}	fn			Event handler
- * @param	{Node}		[target]	Event listener target
+ * @param	{EventTarget}	[target]	Event listener target
  *
  * @returns {Function}				The single-use handler. To remove the handler manually, call
  *									the `off()` function with this as the 2nd parameter.
  * @memberof core/dispatcher
  * @public
  */
-const once = function (name: string, fn: Callback, target: Node): Callback {
+const once = function (name: string, fn: Callback, target: EventTarget): Callback {
 	const onceFn = function (ev: Event) {
 		fn(ev);
 		off(name, onceFn, target);

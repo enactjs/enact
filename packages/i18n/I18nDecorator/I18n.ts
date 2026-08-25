@@ -191,10 +191,7 @@ class I18n {
 		this._ready = true;
 
 		if (typeof window === 'object') {
-			// @enact/core's dispatcher types `target` as Node-only, excluding Window despite it
-			// being a standard event target (window.addEventListener); cast needed until that's
-			// widened upstream
-			on('languagechange', this.handleLocaleChange, window as unknown as Node);
+			on('languagechange', this.handleLocaleChange, window);
 		}
 
 		// When async, we defer loading resources until DOM is ready
@@ -213,7 +210,7 @@ class I18n {
 
 		this.loadResourceJob.stop();
 		if (typeof window === 'object') {
-			off('languagechange', this.handleLocaleChange, window as unknown as Node);
+			off('languagechange', this.handleLocaleChange, window);
 		}
 	}
 

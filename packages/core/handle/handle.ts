@@ -106,6 +106,7 @@ export type EventAdapter = HandlerFunction;
 export interface EventHandler extends HandlerFunction {
 	named: (name: string) => HandlerFunction;
 	bindAs: (obj: CallbackObject, name?: string) => HandlerFunction;
+	finally: (cleanup: Callback) => EventHandler;
 }
 
 /*
@@ -274,12 +275,12 @@ const handle = function (this: any, ...handlers: HandlerFunction[]): EventHandle
  * @method   oneOf
  * @param    {...[HandlerFunction, HandlerFunction]}  handlers List of conditions and handlers to process the event
  *
- * @returns  {HandlerFunction} A function that accepts an event which is dispatched to each of the
+ * @returns  {EventHandler} A function that accepts an event which is dispatched to each of the
  *                             conditions and, if it passes, onto the provided handler.
  * @memberof core/handle
  * @public
  */
-const oneOf = handle.oneOf = function (...handlers: Array<[HandlerFunction, HandlerFunction]>): HandlerFunction {
+const oneOf = handle.oneOf = function (...handlers: Array<[HandlerFunction, HandlerFunction]>): EventHandler {
 	return handle.call(this, cond(handlers));
 };
 

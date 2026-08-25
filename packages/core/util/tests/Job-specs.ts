@@ -1,8 +1,12 @@
 import {act} from '@testing-library/react';
 
-import Job from '../Job';
+import type {Callback} from '../../types';
+import JobBase from '../Job';
 
 describe('Job', () => {
+	// `timeout` is optional at runtime
+	const Job = JobBase as unknown as new (fn: Callback, timeout?: number) => JobBase;
+
 	beforeEach(() => {
 		jest.useFakeTimers();
 	});
@@ -18,7 +22,7 @@ describe('Job', () => {
 
 		test('should pass args to fn', done => {
 			const value = 'argument';
-			const fn = function (arg) {
+			const fn = function (arg: any) {
 				if (arg === value) {
 					done();
 				} else {
@@ -92,7 +96,7 @@ describe('Job', () => {
 
 		test('should pass args to fn', done => {
 			const value = 'argument';
-			const fn = function (arg) {
+			const fn = function (arg: any) {
 				if (arg === value) {
 					done();
 				} else {
@@ -132,7 +136,7 @@ describe('Job', () => {
 
 		test('should pass args to fn', done => {
 			const value = 'argument';
-			const fn = function (arg) {
+			const fn = function (arg: any) {
 				if (arg === value) {
 					done();
 				} else {
@@ -146,7 +150,7 @@ describe('Job', () => {
 		});
 
 		test('should clear an existing job id before starting job', done => {
-			const fn = function (arg) {
+			const fn = function (arg: any) {
 				if (arg === 'first') {
 					done(new Error('First job ran'));
 				} else {
@@ -161,7 +165,7 @@ describe('Job', () => {
 
 		test('should start job when it cannot request idle callback', done => {
 			const backup = window.requestIdleCallback;
-			window.requestIdleCallback = null;
+			(window as any).requestIdleCallback = null;
 
 			const j = new Job(done, 0);
 			j.idle();
@@ -180,7 +184,7 @@ describe('Job', () => {
 
 		test('should pass args to fn', done => {
 			const value = 'argument';
-			const fn = function (arg) {
+			const fn = function (arg: any) {
 				if (arg === value) {
 					done();
 				} else {
@@ -195,7 +199,7 @@ describe('Job', () => {
 
 		test('should start job immediately when window is not defined', done => {
 			function returnsUndefined () {}
-			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(returnsUndefined);
+			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(returnsUndefined as any);
 
 			const j = new Job(done, 0);
 			j.startRaf();
@@ -208,8 +212,8 @@ describe('Job', () => {
 		test('should throw when passed a non-thenable argument', done => {
 			const j = new Job(() => done(new Error('Unexpected job execution')));
 			try {
-				j.promise({});
-			} catch (msg) {
+				j.promise({} as any);
+			} catch {
 				done();
 			}
 		});
@@ -218,8 +222,8 @@ describe('Job', () => {
 			const j = new Job(() => done());
 			try {
 				j.promise({
-					then: (fn) => fn(true)
-				});
+					then: (fn: any) => fn(true)
+				} as any);
 			} catch (msg) {
 				done(msg);
 			}

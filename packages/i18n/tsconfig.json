@@ -16,7 +16,7 @@
 		"skipLibCheck": true,
 		"strict": true,
 		"target": "es2022",
-		"types": ["node"]
+		"types": ["jest", "node"]
 	},
 	"include": [
 		"$L/**/*",
@@ -28,7 +28,6 @@
 		"util/**/*"
 	],
 	"exclude": [
-		"**/tests/**",
 		"build",
 		"node_modules"
 	]

@@ -6,7 +6,7 @@ import {render, screen} from '@testing-library/react';
 import hoc from '../hoc';
 
 describe('hoc', () => {
-	let data;
+	let data: any;
 	const testID = 'test-HoC';
 	const defaultConfig = {
 		color: 'blue'
@@ -14,10 +14,10 @@ describe('hoc', () => {
 
 	const HoC = hoc(defaultConfig, (config, Wrapped) => {
 		data = Wrapped;
-		return (props) => <Wrapped {...props} {...config} data-testid={testID} />;
+		return (props: any) => <Wrapped {...props} {...config} data-testid={testID} />;
 	});
 
-	const NullHoC = hoc(null, (config, Wrapped) => {
+	const NullHoC = hoc(null as any, (config, Wrapped) => {
 		return () => <Wrapped {...config} data-testid={testID} />;
 	});
 
