@@ -1,6 +1,54 @@
-import {createContext, use, useCallback, useMemo} from 'react';
+import {createContext, JSX, ReactElement, ReactNode, use, useCallback, useMemo} from 'react';
 
-import {determineSkin, determineVariants, getClassName} from './util';
+import {CallbackObject} from '../types';
+
+
+import {determineSkin, determineVariants, getClassName, VariantsType} from './util';
+
+/**
+ * Configuration for `useSkins`
+ *
+ * @typedef {Object} useSkinsConfig
+ * @memberof ui/Skinnable
+ * @property {String}   defaultSkin       Default skin name when none has been specified or inherited.
+ * @property {String[]} [defaultVariants] Default variants when none have been specified or inherited.
+ * @property {String}   [skin]            Specific skin to apply to this instance which will take precedence over the default or the inherited value.
+ * @property {String[]} skins             List of allowed skins
+ * @property {String[]} [skinVariants]    Specific variants to apply to this instance which will take precedence over the default or the inherited value.
+ * @property {String[]} [variants]        List of allowed variants
+ * @private
+ */
+export interface SkinsConfig {
+	defaultSkin: string;
+	defaultVariants: VariantsType;
+	skin?: string;
+	skins: CallbackObject;
+	skinVariants: VariantsType;
+	variants: string[];
+}
+
+/**
+ * Object returned by `useSkins`
+ *
+ * @typedef {Object} useSkinsInterface
+ * @memberof ui/Skinnable
+ * @property {String}   className    CSS classes for the effective skin and variants.
+ * @property {String}   skin         Effective skin based on the allowed skins, the configured.
+ *                                   `skin`, the default skin, and the inherited `skin` from up the
+ *                                   component tree.
+ * @property {String[]} variants     Effective skins variant based on the allowed variants, the
+ *                                   configured variants, the default variants, and the inherited
+ *                                   variants from up the component tree.
+ * @property {Function} provideSkins Wraps a component tree with a skin provider to allow that tree
+ *                                   to inherit the effective skin configured at this level.
+ * @private
+ */
+export interface SkinsInterface {
+	className: string;
+	skin: string;
+	variants: CallbackObject;
+	provideSkins: (children: ReactElement) => ReactElement;
+}
 
 /**
  * Allows a component to respond to skin changes via the Context API
@@ -21,38 +69,7 @@ import {determineSkin, determineVariants, getClassName} from './util';
  * @memberof ui/Skinnable
  * @private
  */
-const SkinContext = createContext(null);
-
-/**
- * Configuration for `useSkins`
- *
- * @typedef {Object} useSkinsConfig
- * @memberof ui/Skinnable
- * @property {String}   defaultSkin       Default skin name when none has been specified or inherited.
- * @property {String[]} [defaultVariants] Default variants when none have been specified or inherited.
- * @property {String}   [skin]            Specific skin to apply to this instance which will take precedence over the default or the inherited value.
- * @property {String[]} skins             List of allowed skins
- * @property {String[]} [skinVariants]    Specific variants to apply to this instance which will take precedence over the default or the inherited value.
- * @property {String[]} [variants]        List of allowed variants
- * @private
- */
-
-/**
- * Object returned by `useSkins`
- *
- * @typedef {Object} useSkinsInterface
- * @memberof ui/Skinnable
- * @property {String}   className    CSS classes for the effective skin and variants.
- * @property {String}   skin         Effective skin based on the allowed skins, the configured.
- *                                   `skin`, the default skin, and the inherited `skin` from up the
- *                                   component tree.
- * @property {String[]} variants     Effective skins variant based on the allowed variants, the
- *                                   configured variants, the default variants, and the inherited
- *                                   variants from up the component tree.
- * @property {Function} provideSkins Wraps a component tree with a skin provider to allow that tree
- *                                   to inherit the effective skin configured at this level.
- * @private
- */
+const SkinContext = createContext<{parentSkin: string, parentVariants: VariantsType} | null>(null);
 
 /**
  * Determines the effective skin and skin variants for a component and provides a method to provide
@@ -79,12 +96,12 @@ const SkinContext = createContext(null);
  * @returns {useSkinsInterface}
  * @private
  */
-function useSkins (config) {
+function useSkins (config: SkinsConfig): SkinsInterface {
 	const {defaultSkin, defaultVariants, skin, skins, skinVariants, variants} = config;
 
 	const {parentSkin, parentVariants} = use(SkinContext) || {};
 
-	const currentParentVariants = useMemo(() => parentVariants, [parentVariants]);
+	const currentParentVariants: VariantsType = useMemo(() => parentVariants || '', [parentVariants]);
 
 	const effectiveSkin = determineSkin(defaultSkin, skin, parentSkin);
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -92,7 +109,7 @@ function useSkins (config) {
 	const className = getClassName(skins, effectiveSkin, effectiveVariants);
 	const value = useMemo(() => ({parentSkin: effectiveSkin, parentVariants: effectiveVariants}), [effectiveSkin, effectiveVariants]);
 
-	const provideSkins = useCallback((children) => {
+	const provideSkins = useCallback((children: ReactElement) => {
 		return (
 			<SkinContext value={value}>
 				{children}

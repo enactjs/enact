@@ -1,11 +1,29 @@
-import {createElement, isValidElement, Children} from 'react';
+import {createElement, isValidElement, Children, ReactNode, ReactElement} from 'react';
 import warning from 'warning';
+
+export type ChildElement = {
+	props: Record<string, any>;
+	type: string;
+}
+
+export type SlottableChildElement = {
+	type: {
+		name?: string;
+		displayName?: string;
+		defaultSlot?: string;
+	}
+}
+
+export type ChildConfig = {
+	children: ReactElement;
+	[key: string]: any;
+}
 
 // ** WARNING ** This is an intentional but likely dangerous hack necessary to clone a child while
 // omitting the `slot` property. It relies on the black box structure of a React element which could
 // change breaking this code. Without it, the slot property will cascade to a DOM node causing a
 // React warning.
-function cloneElement (child, index) {
+function cloneElement (child: ChildElement, index: number) {
 	const newProps = Object.assign({}, child.props);
 	delete newProps.slot;
 	newProps.key = `slot-${index}`;
@@ -13,16 +31,19 @@ function cloneElement (child, index) {
 	return createElement(child.type, newProps);
 }
 
-function distributeChild (child, index, slots, props) {
-	let c, slot;
-	const hasSlot = (name) => slots.indexOf(name) !== -1;
-
+function distributeChild (child: ReactNode, index: number, slots: string[], props: Record<string, any>) {
 	if (!isValidElement(child)) {
 		return false;
-	} else if (child.props.slot) {
-		const hasUserSlot = hasSlot(slot = child.props.slot);
-		warning(hasUserSlot, 'The slot "%s" specified on %s does not exist', child.props.slot,
-			typeof child.type === 'string' ? child.type : (child.type.name || child.type.displayName || 'component')
+	}
+
+	let c, slot;
+	const hasSlot = (name: string) => slots.indexOf(name) !== -1;
+	const slottableChild = child as unknown as SlottableChildElement;
+
+	if (slottableChild.props.slot) {
+		const hasUserSlot = hasSlot(slot = slottableChild.props.slot);
+		warning(hasUserSlot, 'The slot "%s" specified on %s does not exist', slottableChild.props.slot,
+			typeof slottableChild.type === 'string' ? slottableChild.type : (slottableChild.type.name || slottableChild.type.displayName || 'component')
 		);
 
 		if (hasUserSlot) {
@@ -30,7 +51,7 @@ function distributeChild (child, index, slots, props) {
 		}
 	} else if (hasSlot(slot = child.type.defaultSlot)) {
 		c = child;
-	} else if (hasSlot(slot = child.type)) {
+	} else if (typeof child.type === 'string' && hasSlot(slot = child.type)) {
 		const propNames = Object.keys(child.props);
 		if (propNames.length === 1 && propNames[0] === 'children') {
 			c = child.props.children;
@@ -58,7 +79,7 @@ function distributeChild (child, index, slots, props) {
 	return false;
 }
 
-function distribute ({children, ...slots}) {
+function distribute({children, ...slots}: ChildConfig): Record<string, any> {
 	const slotNames = Object.keys(slots);
 	const props = {
 		children
@@ -150,8 +171,8 @@ function distribute ({children, ...slots}) {
  * @memberof ui/Slottable
  * @private
  */
-function useSlots (slots) {
-	return distribute(slots);
+function useSlots (config: ChildConfig) {
+	return distribute(config);
 }
 
 export default useSlots;

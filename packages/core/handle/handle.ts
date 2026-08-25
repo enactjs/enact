@@ -89,7 +89,7 @@ import {Callback, CallbackObject, HandlerFunction} from '../types';
  *
  * @callback EventAdapter
  * @memberof core/handle
- * @param {any} event
+ * @param {Event|null} event
  * @param {Object<string, any>} props
  * @param {Object<string, any>} context
  * @returns {any}
@@ -115,7 +115,7 @@ export interface EventHandler extends HandlerFunction {
  * @memberof core/handle
  * @private
  */
-const makeHandler = (handlers: HandlerFunction[]) => {
+const makeHandler = <C = unknown>(handlers: HandlerFunction<C>[]) => {
 	// allowing shadowing here to provide a meaningful function name in dev tools
 	// eslint-disable-next-line no-shadow
 	return function handle (this: any, ...args: any) {
@@ -208,8 +208,8 @@ const decorateHandleFunction = (fn: HandlerFunction) => {
  * @memberof core/handle
  * @public
  */
-const handle = function (this: any, ...handlers: HandlerFunction[]): EventHandler {
-	const h = makeHandler(handlers);
+const handle = function<C = unknown> (this: any, ...handlers: HandlerFunction<C>[]): EventHandler {
+	const h = makeHandler<C>(handlers);
 
 	// In order to support binding either handle (handle.bind(this)) or a handler
 	// (a = handle(), a.bind(this)), we cache `this` here and use it as the fallback for props and
@@ -314,13 +314,13 @@ interface ReturnsTrue {
 	(): true;
 }
 
-const returnsTrue = ((handler?: HandlerFunction): HandlerFunction | true => {
+const returnsTrue = (function <C = unknown>(handler?: HandlerFunction<C>): HandlerFunction<C> | true {
 	if (handler && typeof handler === 'function') {
-		return named(function (this: any, ...args: any) {
+		return named(function (this: any, ...args: Parameters<HandlerFunction<C>>) {
 			handler.apply(this, args);
 
 			return true;
-		}, 'returnsTrue') as HandlerFunction;
+		}, 'returnsTrue') as HandlerFunction<C>;
 	}
 
 	return true;

@@ -1,16 +1,18 @@
 import {useState, useMemo} from 'react';
 
+import {Callback} from '../types';
+
 function nop () {}
 
 // Generate a handler that hides the controlled value from users, supports functional callbacks,
 // and is memoized by the onChange provided by useState
-function createHandler () {
-	return (onChange, currentValue, controlled) => {
+function createHandler<T> () {
+	return (onChange: Callback, currentValue: T, controlled: boolean) => {
 		if (controlled) {
 			return nop;
 		}
 
-		return (value) => {
+		return (value: T) => {
 			if (value !== currentValue) {
 				onChange(value);
 			}
@@ -19,7 +21,7 @@ function createHandler () {
 }
 
 // always return the prop value when controlled and the state value when not
-function calcValue (defaultValue, propValue, stateValue, controlled) {
+function calcValue<T> (defaultValue: T, propValue: T, stateValue: T, controlled: boolean) {
 	if (!controlled) {
 		return stateValue;
 	}
@@ -28,7 +30,7 @@ function calcValue (defaultValue, propValue, stateValue, controlled) {
 	return propValue !== undefined ? propValue : defaultValue;
 }
 
-function useControlledState (defaultValue, propValue, controlled) {
+function useControlledState<T = any> (defaultValue: T, propValue: T, controlled: boolean): [T, Callback] {
 	const [isControlled] = useState(controlled);
 
 	// Store both the value and the "controlled" flag in a state hook

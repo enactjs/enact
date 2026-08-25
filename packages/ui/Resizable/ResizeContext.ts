@@ -1,4 +1,4 @@
-import {createContext} from 'react';
+import {Context, createContext} from 'react';
 
 /**
  * Used internally for things to notify children that they need to resize because of a parent
@@ -7,6 +7,6 @@ import {createContext} from 'react';
  * @type Object
  * @private
  */
-const ResizeContext = createContext();
+const ResizeContext: Context<any> = createContext(null);
 
 export default ResizeContext;

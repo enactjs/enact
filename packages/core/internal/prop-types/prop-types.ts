@@ -1,4 +1,5 @@
 import PropTypes, {Requireable, Validator} from 'prop-types';
+import {ComponentType, ReactElement} from 'react';
 
 import {Callback, CallbackObject} from '../../types';
 import {isRenderable} from '../../util';
@@ -82,3 +83,9 @@ const EnactPropTypes = {
 };
 
 export default EnactPropTypes;
+
+export namespace EnactPropTypes {
+	export type ref = {current: any} | Callback;
+	export type componentOverride = ComponentType<any> | ReactElement;
+	export type renderable = ComponentType<any> | string;
+}

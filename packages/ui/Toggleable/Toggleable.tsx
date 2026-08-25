@@ -9,12 +9,80 @@ import handle, {forwardCustom} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import useHandlers from '@enact/core/useHandlers';
 import {cap, checkPropTypes} from '@enact/core/util';
-import PropTypes from 'prop-types';
 import pick from 'ramda/src/pick';
-import {useRef} from 'react';
+import {ElementType, SyntheticEvent, useRef} from 'react';
 import warning from 'warning';
 
+import {CallbackObject} from '../types';
+
 import {useToggle} from './useToggle';
+
+export interface ToggleableConfig {
+	activate: string;
+	deactivate: string;
+	eventProps: string[];
+	prop: string;
+	toggle: string;
+	toggleProp: string;
+}
+
+export type DynamicToggleableProps<
+	PropKey extends string = 'selected',
+	DefaultPropKey extends string = 'defaultSelected',
+	ToggleKey extends string = 'onToggle'
+> = {
+	/**
+	 * Whether or not the component is in a disabled state.
+	 *
+	 * @memberof ui/Toggleable.Toggleable.prototype
+	 * @type {Boolean}
+	 * @public
+	 */
+	disabled?: boolean;
+
+	}
+	/**
+	 * Default toggled state applied at construction when the toggled prop is `undefined` or
+	 * `null`.
+	 *
+	 * @name defaultSelected
+	 * @memberof ui/Toggleable.Toggleable.prototype
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
+	& {[K in PropKey]?: boolean}
+
+	/**
+	 * Current toggled state.
+	 *
+	 * When set at construction, the component is considered 'controlled' and will only
+	 * update its internal value when updated by new props. If undefined, the component
+	 * is 'uncontrolled' and `Toggleable` will manage the toggled state using callbacks
+	 * defined by its configuration.
+	 *
+	 * @name selected
+	 * @memberof ui/Toggleable.Toggleable.prototype
+	 * @type {Boolean}
+	 * @public
+	 */
+	& {[K in DefaultPropKey]?: boolean}
+
+	/**
+	 * Event callback to notify that state should be toggled.
+	 *
+	 * @name onToggle
+	 * @memberof ui/Toggleable.Toggleable.prototype
+	 * @type {Function}
+	 * @public
+	 */
+	& {[K in ToggleKey]?: (event?: SyntheticEvent | null) => void};
+
+export type ContextType = {
+	toggle: () => void;
+	activate: () => void;
+	deactivate: () => void;
+}
 
 /**
  * Default config for `Toggleable`.
@@ -132,28 +200,28 @@ const defaultConfig = {
  * @hoc
  * @public
  */
-const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
+const ToggleableHOC = hoc(defaultConfig, (config: ToggleableConfig, Wrapped: ElementType) => {
 	const {activate, deactivate, eventProps, prop, toggle, toggleProp} = config;
 	const defaultPropKey = 'default' + cap(prop);
-	const adapter = (ev, props) => ({...pick(eventProps, props), ...ev});
+	const adapter = (ev: Event | null, props: CallbackObject) => ({...pick(eventProps, props), ...ev});
 
 	const toggleHandlers = {
-		onToggle: handle(
-			(ev, props, context) => (context.toggle()),
+		onToggle: handle<ContextType>(
+			(ev, props, context) => (context?.toggle()),
 			forwardCustom(toggleProp, adapter)
 		),
-		onActivate: handle(
-			(ev, props, context) => (context.activate()),
+		onActivate: handle<ContextType>(
+			(ev, props, context) => (context?.activate()),
 			forwardCustom(activate, adapter)
 		),
-		onDeactivate: handle(
-			(ev, props, context) => (context.deactivate()),
+		onDeactivate: handle<ContextType>(
+			(ev, props, context) => (context?.deactivate()),
 			forwardCustom(deactivate, adapter)
 		)
 	};
 
-	function Toggleable ({disabled = false, ...rest}) {
-		const props = {disabled, ...rest};
+	function Toggleable ({disabled = false, ...rest}: DynamicToggleableProps) {
+		const props: Record<string, any> = {disabled, ...rest};
 		const updated = {...props};
 		const propSelected = props[prop];
 		checkPropTypes(Toggleable, props);
@@ -161,7 +229,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		const hook = useToggle({
 			defaultSelected: props[defaultPropKey],
 			disabled,
-			onToggle: (ev) => forwardCustom(toggle, adapter)(ev, props),
+			onToggle: (ev: Event) => forwardCustom(toggle, adapter)(ev, props),
 			prop,
 
 			// FIXME: Current behavior for Toggleable treats `null` as undefined so we coerce it
@@ -206,54 +274,6 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			<Wrapped {...updated} />
 		);
 	}
-
-	Toggleable.propTypes = {
-		/**
-		 * Default toggled state applied at construction when the toggled prop is `undefined` or
-		 * `null`.
-		 *
-		 * @name defaultSelected
-		 * @memberof ui/Toggleable.Toggleable.prototype
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		[defaultPropKey]: PropTypes.bool,
-
-		/**
-		 * Whether or not the component is in a disabled state.
-		 *
-		 * @memberof ui/Toggleable.Toggleable.prototype
-		 * @type {Boolean}
-		 * @public
-		 */
-		disabled: PropTypes.bool,
-
-		/**
-		 * Current toggled state.
-		 *
-		 * When set at construction, the component is considered 'controlled' and will only
-		 * update its internal value when updated by new props. If undefined, the component
-		 * is 'uncontrolled' and `Toggleable` will manage the toggled state using callbacks
-		 * defined by its configuration.
-		 *
-		 * @name selected
-		 * @memberof ui/Toggleable.Toggleable.prototype
-		 * @type {Boolean}
-		 * @public
-		 */
-		[prop]: PropTypes.bool,
-
-		/**
-		 * Event callback to notify that state should be toggled.
-		 *
-		 * @name onToggle
-		 * @memberof ui/Toggleable.Toggleable.prototype
-		 * @type {Function}
-		 * @public
-		 */
-		[toggle]: PropTypes.func
-	};
 
 	return Toggleable;
 });

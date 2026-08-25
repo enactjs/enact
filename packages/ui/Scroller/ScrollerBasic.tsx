@@ -1,11 +1,62 @@
-import EnactPropTypes from '@enact/core/internal/prop-types';
 import {platform} from '@enact/core/platform';
-import {checkPropTypes} from '@enact/core/util';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
-import {Component} from 'react';
+import {Component, CSSProperties, ReactElement, RefObject} from 'react';
+
+import {ScrollToFunction} from './Scroller';
 
 import css from './Scroller.module.less';
+
+interface ScrollerBasicProps {
+	/**
+	 * Callback method of scrollTo.
+	 * Normally, `useScroll` should set this value.
+	 *
+	 * @type {Function}
+	 * @private
+	 */
+	cbScrollTo: ScrollToFunction;
+	isHorizontalScrollbarVisible?: boolean;
+	/**
+	 * Prop to check context value if Scrollbar exists or not.
+	 *
+	 * @type {Boolean}
+	 * @private
+	 */
+	isVerticalScrollbarVisible: boolean;
+	/**
+	 * `true` if RTL, `false` if LTR.
+	 *
+	 * @type {Boolean}
+	 * @private
+	 */
+	rtl: boolean;
+	scrollContainerContainsDangerously?: boolean;
+	/**
+	 * Ref for scroll content
+	 *
+	 * @type {Object}
+	 * @private
+	 */
+	scrollContentRef: RefObject<HTMLDivElement>;
+	scrollMode?: 'translate' | 'native';
+	setThemeScrollContentHandle?: (handle: unknown) => void;
+	/**
+	 * Direction of the scroller.
+	 *
+	 * Valid values are:
+	 * * `'both'`,
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'both'
+	 * @public
+	 */
+	direction: 'both' | 'horizontal' | 'vertical';
+	className?: string;
+	style?: CSSProperties;
+	children: ReactElement;
+}
 
 /**
  * An unstyled base scroller component.
@@ -15,78 +66,25 @@ import css from './Scroller.module.less';
  * @ui
  * @public
  */
-class ScrollerBasic extends Component {
+class ScrollerBasic extends Component<ScrollerBasicProps> {
 	static displayName = 'ui:ScrollerBasic';
 
-	static propTypes = /** @lends ui/Scroller.ScrollerBasic.prototype */ {
-		children: PropTypes.node.isRequired,
-
-		/**
-		 * Callback method of scrollTo.
-		 * Normally, `useScroll` should set this value.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		cbScrollTo: PropTypes.func,
-
-		/**
-		 * Direction of the scroller.
-		 *
-		 * Valid values are:
-		 * * `'both'`,
-		 * * `'horizontal'`, and
-		 * * `'vertical'`.
-		 *
-		 * @type {String}
-		 * @default 'both'
-		 * @public
-		 */
-		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
-
-		/**
-		 * Prop to check context value if Scrollbar exists or not.
-		 *
-		 * @type {Boolean}
-		 * @private
-		 */
-		isVerticalScrollbarVisible: PropTypes.bool,
-
-		/**
-		 * `true` if RTL, `false` if LTR.
-		 *
-		 * @type {Boolean}
-		 * @private
-		 */
-		rtl: PropTypes.bool,
-
-		/**
-		 * Ref for scroll content
-		 *
-		 * @type {Object|Function}
-		 * @private
-		 */
-		scrollContentRef: EnactPropTypes.ref
-	};
-
-	constructor (props) {
+	constructor (props: ScrollerBasicProps) {
 		super(props);
-		checkPropTypes(this, props);
 	}
 
 	componentDidMount () {
 		this.calculateMetrics();
 	}
 
-	componentDidUpdate (prevProps) {
-		checkPropTypes(this, this.props, prevProps);
+	componentDidUpdate (prevProps: ScrollerBasicProps) {
 		this.calculateMetrics();
 		if (this.props.isVerticalScrollbarVisible && !prevProps.isVerticalScrollbarVisible) {
 			this.forceUpdate();
 		}
 	}
 
-	scrollAnimationId = null;
+	scrollAnimationId: number | null = null;
 
 	scrollBounds = {
 		clientWidth: 0,
@@ -104,16 +102,18 @@ class ScrollerBasic extends Component {
 
 	getScrollBounds = () => this.scrollBounds;
 
-	getRtlPositionX = (x) => {
+	getRtlPositionX = (x: number) => {
 		if (this.props.rtl) {
-			return (platform.chrome < 85) ? this.scrollBounds.maxLeft - x : -x; // Chrome lower than 85 has a bug with RTL scrollLeft
+			return (platform.chrome && platform.chrome < 85) ? this.scrollBounds.maxLeft - x : -x; // Chrome lower than 85 has a bug with RTL scrollLeft
 		}
 		return x;
 	};
 
 	// scrollMode 'translate'
-	setScrollPosition (x, y) {
+	setScrollPosition (x: number, y: number) {
 		const node = this.props.scrollContentRef.current;
+
+		if (!node) return;
 
 		if (this.isVertical()) {
 			node.scrollTop = y;
@@ -126,9 +126,11 @@ class ScrollerBasic extends Component {
 	}
 
 	// scrollMode 'native'
-	scrollToPosition (left, top, behavior, repeat) {
+	scrollToPosition (left: number, top: number, behavior: 'smooth' | 'instant', repeat: boolean) {
 		const node = this.props.scrollContentRef.current;
 		const smoothBehavior = behavior === 'smooth';
+
+		if (!node) return;
 
 		if (platform.chrome && smoothBehavior && repeat) {
 			this.animateScroll(this.getRtlPositionX(left), top, node);
@@ -147,12 +149,12 @@ class ScrollerBasic extends Component {
 	 * calls `scrollBy` with a dynamic step (10% of remaining distance, minimum 8px) until the target is reached
 	 * or 1s has elapsed. Used as a Chrome fallback when repeating a smooth scroll.
 	 */
-	animateScroll (left, top, node) {
+	animateScroll (left: number, top: number, node: HTMLElement) {
 		const directionX = Math.sign(left - node.scrollLeft);
 		const directionY = Math.sign(top - node.scrollTop);
 		const startTime = performance.now();
 
-		const animateScroll = (currentTime) => {
+		const animateScroll = (currentTime: number) => {
 			const elapsed = (currentTime - startTime) / 1000;
 			const scrollLeft = directionX > 0 ? node.scrollLeft < left : node.scrollLeft > left;
 			const scrollTop = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
@@ -182,12 +184,12 @@ class ScrollerBasic extends Component {
 	}
 
 	// scrollMode 'native'
-	didScroll (x, y) {
+	didScroll (x: number, y: number) {
 		this.scrollPos.left = x;
 		this.scrollPos.top = y;
 	}
 
-	getNodePosition = (node) => {
+	getNodePosition = (node: HTMLElement) => {
 		const
 			{left: nodeLeft, top: nodeTop, height: nodeHeight, width: nodeWidth} = node.getBoundingClientRect(),
 			{left: containerLeft, top: containerTop} = this.props.scrollContentRef.current.getBoundingClientRect(),
@@ -245,19 +247,23 @@ class ScrollerBasic extends Component {
 
 	render () {
 		const
-			{className, style, ...rest} = this.props,
+			{
+				cbScrollTo,
+				className,
+				direction,
+				isVerticalScrollbarVisible,
+				rtl,
+				scrollContentRef,
+				style,
+				...rest
+			} = this.props,
 			mergedStyle = Object.assign({}, style, {
 				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
 				overflowY: this.isVertical() ? 'auto' : 'hidden'
 			});
 
-		delete rest.cbScrollTo;
-		delete rest.direction;
 		delete rest.isHorizontalScrollbarVisible;
-		delete rest.isVerticalScrollbarVisible;
-		delete rest.rtl;
 		delete rest.scrollContainerContainsDangerously;
-		delete rest.scrollContentRef;
 		delete rest.scrollMode;
 		delete rest.setThemeScrollContentHandle;
 
@@ -265,7 +271,7 @@ class ScrollerBasic extends Component {
 			<div
 				{...rest}
 				className={classNames(className, css.scroller)}
-				ref={this.props.scrollContentRef}
+				ref={scrollContentRef}
 				style={mergedStyle}
 			/>
 		);

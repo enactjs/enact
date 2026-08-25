@@ -17,6 +17,13 @@ import Toggle from './Toggle';
  * @property {Function} [onToggle]                Called when the state is changed
  * @private
  */
+export interface useToggleConfig {
+	defaultSelected?: boolean;
+	disabled?: boolean;
+	prop?: string;
+	selected?: boolean;
+	onToggle?: (ev: Event) => void;
+}
 
 /**
  * Object returned by `useToggle`
@@ -29,6 +36,19 @@ import Toggle from './Toggle';
  * @property {Function} toggle     Toggles the current state to the opposite value
  * @private
  */
+export interface useToggleInterface {
+	selected: boolean;
+	activate: () => void;
+	deactivate: () => void;
+	toggle: () => void;
+}
+
+const useToggleConfigDefaultValues = {
+	defaultSelected: false,
+	disabled: false,
+	prop: 'selected',
+	selected: false
+};
 
 /**
  * Manages a boolean state value.
@@ -40,15 +60,18 @@ import Toggle from './Toggle';
  * @returns {useToggleInterface}
  * @private
  */
-function useToggle ({defaultSelected, selected, ...config} = {}) {
-	const toggle = useClass(Toggle, config);
-	const state = useControlledState(
+function useToggle (config: useToggleConfig) {
+	const finalConfig = {...useToggleConfigDefaultValues, ...config};
+	const {defaultSelected, selected, ...rest} = finalConfig;
+
+	const toggle = useClass(Toggle, rest);
+	const state = useControlledState<typeof defaultSelected>(
 		defaultSelected,
 		selected,
 		typeof selected !== 'undefined'
 	);
 
-	const props = {disabled: config.disabled, onToggle: config.onToggle};
+	const props = {disabled: rest.disabled, onToggle: rest.onToggle};
 	toggle.setContext(props, ...state);
 
 	return {

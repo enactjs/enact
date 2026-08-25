@@ -11,22 +11,16 @@
  * @public
  */
 
-import classnames from 'classnames';
 import hoc from '@enact/core/hoc';
-import {checkPropTypes} from '@enact/core/util';
-import PropTypes from 'prop-types';
+import classnames from 'classnames';
+import {ElementType} from 'react';
+
+import {CallbackObject} from '../types';
 
 import useSkins from './useSkins';
 import {objectify} from './util';
 
-/**
- * Default config for `Skinnable`.
- *
- * @memberof ui/Skinnable.Skinnable
- * @hocconfig
- * @public
- */
-const defaultConfig = {
+export interface SkinnableConfig {
 	/**
 	 * The prop in which to pass the skinVariants value to the wrapped component. The recommended
 	 * value is "skinVariants".
@@ -36,7 +30,7 @@ const defaultConfig = {
 	 * @type {String}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
-	variantsProp: null,
+	variantsProp?: string,
 
 	/**
 	 * The prop in which to pass the effective skin to the wrapped component.
@@ -46,7 +40,7 @@ const defaultConfig = {
 	 * @type {String}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
-	prop: null,
+	prop?: string,
 
 	/**
 	 * A hash mapping the available skin names to their CSS class name.
@@ -56,7 +50,7 @@ const defaultConfig = {
 	 * @type {Object}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
-	skins: null,
+	skins: CallbackObject,
 
 	/**
 	 * Assign a default skin from the `skins` list.
@@ -67,7 +61,7 @@ const defaultConfig = {
 	 * @type {String}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
-	defaultSkin: null,
+	defaultSkin: string,
 
 	/**
 	 * Initial collection of applied variants
@@ -78,7 +72,7 @@ const defaultConfig = {
 	 * @type {String|String[]}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
-	defaultVariants: null,
+	defaultVariants: string | string[],
 
 	/**
 	 * A complete list of all supported variants.
@@ -89,7 +83,68 @@ const defaultConfig = {
 	 * @type {String[]}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
-	allowedVariants: null
+	allowedVariants: string[],
+}
+
+export interface SkinnableProps {
+	className?: string,
+
+	/**
+	 * The name of the skin a component should use to render itself. Available skins are
+	 * defined in the "defaultConfig" for this HOC.
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	skin: string,
+
+	/**
+	 * The variant(s) on a skin that a component should use when rendering. These will
+	 * typically alter the appearance of a skin's existing definition in a way that does not
+	 * override that skin's general styling.
+	 *
+	 * Multiple data types are supported by this prop, which afford different conveniences
+	 * and abilities. String and Array are effectively the same, supporting just additions
+	 * to the variants being applied to a component, and are much more convenient. Objects
+	 * may also be used, and have the ability to disable variants being passed by their
+	 * ancestors. Objects take the format of a basic hash, with variants as key names and
+	 * true/false Booleans as values, depicting their state. If a variant is excluded from
+	 * any version of data type used to set this prop, that variant will ignored, falling
+	 * back to the defaultVariant or parent variant, in that order.
+	 *
+	 * skinVariants examples:
+	 * ```
+	 *  // String
+	 *  skinVariants="highContrast"
+	 *
+	 *  // Array
+	 *  skinVariants={['highContrast']}
+	 *
+	 *  // Object
+	 *  skinVariants={{
+	 *  	highContrast: true,
+	 *  	grayscale: false
+	 *  }}
+	 * ```
+	 *
+	 * @type {String|String[]|Object}
+	 * @public
+	 */
+	skinVariants: string | string[] | CallbackObject,
+}
+
+/**
+ * Default config for `Skinnable`.
+ *
+ * @memberof ui/Skinnable.Skinnable
+ * @hocconfig
+ * @public
+ */
+const defaultConfig: SkinnableConfig = {
+	allowedVariants: [],
+	defaultSkin: '',
+	defaultVariants: '',
+	skins: {}
 };
 
 /**
@@ -122,13 +177,12 @@ const defaultConfig = {
  * @hoc
  * @public
  */
-const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
+const Skinnable = hoc(defaultConfig, (config: SkinnableConfig, Wrapped: ElementType) => {
 	const {prop, skins, defaultSkin, allowedVariants: variants, variantsProp} = config;
 	const defaultVariants = objectify(config.defaultVariants);
 
 	// eslint-disable-next-line no-shadow
-	function Skinnable (props) {
-		checkPropTypes(Skinnable, props);
+	function Skinnable (props: SkinnableProps) {
 		const {className, skin, skinVariants, ...rest} = props;
 		const hook = useSkins({
 			defaultSkin,
@@ -141,70 +195,21 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 
 		const allClassNames = classnames(hook.className, className);
 		if (allClassNames) {
-			rest.className = allClassNames;
+			Object.assign(rest, {className: allClassNames});
 		}
 
 		if (prop) {
-			rest[prop] = hook.skin;
+			Object.assign(rest, {[prop]: hook.skin});
 		}
 
 		if (variantsProp) {
-			rest[variantsProp] = hook.variants;
+			Object.assign(rest, {[variantsProp]: hook.variants});
 		}
 
 		return hook.provideSkins(
 			<Wrapped {...rest} />
 		);
 	}
-
-	Skinnable.propTypes = /** @lends ui/Skinnable.Skinnable.prototype */ {
-		/**
-		 * The name of the skin a component should use to render itself. Available skins are
-		 * defined in the "defaultConfig" for this HOC.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		skin: PropTypes.string,
-
-		/**
-		 * The variant(s) on a skin that a component should use when rendering. These will
-		 * typically alter the appearance of a skin's existing definition in a way that does not
-		 * override that skin's general styling.
-		 *
-		 * Multiple data types are supported by this prop, which afford different conveniences
-		 * and abilities. String and Array are effectively the same, supporting just additions
-		 * to the variants being applied to a component, and are much more convenient. Objects
-		 * may also be used, and have the ability to disable variants being passed by their
-		 * ancestors. Objects take the format of a basic hash, with variants as key names and
-		 * true/false Booleans as values, depicting their state. If a variant is excluded from
-		 * any version of data type used to set this prop, that variant will ignored, falling
-		 * back to the defaultVariant or parent variant, in that order.
-		 *
-		 * skinVariants examples:
-		 * ```
-		 *  // String
-		 *  skinVariants="highContrast"
-		 *
-		 *  // Array
-		 *  skinVariants={['highContrast']}
-		 *
-		 *  // Object
-		 *  skinVariants={{
-		 *  	highContrast: true,
-		 *  	grayscale: false
-		 *  }}
-		 * ```
-		 *
-		 * @type {String|String[]|Object}
-		 * @public
-		 */
-		skinVariants: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.array,
-			PropTypes.object
-		])
-	};
 
 	return Skinnable;
 });

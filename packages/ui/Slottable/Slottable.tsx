@@ -6,8 +6,14 @@
  */
 
 import hoc from '@enact/core/hoc';
+import {ElementType} from 'react';
 
 import useSlots from './useSlots';
+import {CallbackObject} from '../types';
+
+export interface SlottableConfig {
+	slots: string[]
+}
 
 /**
  * Default config for `Slottable`.
@@ -38,11 +44,11 @@ const defaultConfig = {
  * @hoc
  * @public
  */
-const Slottable = hoc(defaultConfig, (config, Wrapped) => {
+const Slottable = hoc(defaultConfig, (config: SlottableConfig, Wrapped: ElementType) => {
 	const slots = config.slots;
 
 	// eslint-disable-next-line no-shadow
-	return function Slottable (props) {
+	return function Slottable (props: CallbackObject) {
 		// extract the slots into a new object but populating the default value to be undefined so
 		// the key exists in order to allow the current "harmful" behavior below. Must be undefined
 		// in order to trigger defaultProps on downstream components.
