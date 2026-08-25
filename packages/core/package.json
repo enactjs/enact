@@ -31,6 +31,12 @@
       "baseSize": 24
     }
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "**/*.{js,jsx,ts,tsx}",
+      "!**/*.d.ts"
+    ]
+  },
   "dependencies": {
     "classnames": "^2.5.1",
     "invariant": "^2.2.4",
@@ -44,6 +50,7 @@
   },
   "devDependencies": {
     "@types/invariant": "^2.2.37",
+    "@types/jest": "^30.0.0",
     "@types/node": "^26.1.2",
     "@types/prop-types": "^15.7.15",
     "@types/ramda": "^0.32.0",

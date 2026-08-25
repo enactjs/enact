@@ -1,7 +1,7 @@
 import {CallbackObject} from '../../types';
 
 export interface RegistryController {
-	notify: (ev?: RegistryEvent) => void;
+	notify: (ev: RegistryEvent) => void;
 	unregister: () => void;
 }
 
@@ -11,6 +11,17 @@ export type RegistryHandler = (ev: RegistryEvent, instance: RegistryInstance) =>
 export type RegisterFunction = (instance: RegistryInstance) => RegistryController;
 
 /**
+ * Handle returned by {@link core/Registry.Registry.create}.
+ *
+ * @private
+ */
+export interface RegistryHandle {
+	parent: RegisterFunction | null;
+	notify: (ev?: RegistryEvent, exclude?: (instance: RegistryInstance) => boolean) => void;
+	register: RegisterFunction;
+}
+
+/**
  * Allows components to register parents to cascade context changes and trigger functions
  *
  * @type Object
@@ -18,12 +29,12 @@ export type RegisterFunction = (instance: RegistryInstance) => RegistryControlle
  * @private
  */
 const Registry = {
-	create: (handler: RegistryHandler) => {
+	create: (handler: RegistryHandler): RegistryHandle => {
 		const instances: RegistryInstance[] = [];
 		let currentParent: RegistryController;
 
-		const registry = Object.freeze({
-			set parent (register: RegisterFunction) {
+		const registry = {
+			set parent (register: RegisterFunction | null) {
 				if (currentParent && currentParent.unregister) {
 					currentParent.unregister();
 				}
@@ -61,9 +72,11 @@ const Registry = {
 					}
 				};
 			}
-		});
+		};
 
-		return registry;
+		Object.freeze(registry);
+
+		return registry as RegistryHandle;
 	}
 };
 

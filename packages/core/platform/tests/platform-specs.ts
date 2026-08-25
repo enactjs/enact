@@ -4,7 +4,7 @@ describe('platform', () => {
 
 	describe('parseUserAgent for User-Agent Reduction', () => {
 		const testVersion = '113';
-		const uaGenerator = (unifiedPlatform, deviceCompatibility = '', majorVersion = testVersion) => (
+		const uaGenerator = (unifiedPlatform: string, deviceCompatibility = '', majorVersion = testVersion) => (
 			`Mozilla/5.0 (${unifiedPlatform}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${majorVersion}.0.0.0 ${deviceCompatibility} Safari/537.36`
 		);
 		const testCases = [
@@ -18,7 +18,7 @@ describe('platform', () => {
 
 		test(`should return object including chrome ${testVersion}`, () => {
 			for (let i = 0; i < testCases.length; i++) {
-				expect(parseUserAgent(testCases[i][0])?.[testCases[i][1]]?.toString()).toBe(testVersion);
+				expect((parseUserAgent(testCases[i][0]) as any)?.[testCases[i][1]]?.toString()).toBe(testVersion);
 			}
 		});
 	});
@@ -151,7 +151,7 @@ describe('platform', () => {
 
 	describe('platform', () => {
 		test('should detect node environment if \'window\' does not exist', () => {
-			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation(() => {});
+			const windowSpy = jest.spyOn(window, 'window', 'get').mockImplementation((() => {}) as any);
 
 			const expected = {
 				type: 'node',
@@ -171,7 +171,7 @@ describe('platform', () => {
 
 			expect(platform.type).toBe('webos');
 
-			delete globalThis.navigator.userAgent;
+			delete (globalThis.navigator as any).userAgent;
 		});
 	});
 });

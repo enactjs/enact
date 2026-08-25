@@ -1,18 +1,27 @@
-/* eslint-disable enact/display-name */
-
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import PropTypes from 'prop-types';
 import {createContext, useState} from 'react';
+import type {ComponentType, ReactElement} from 'react';
 
-import functionalKind from '../functionalKind';
+import kind from '../kind';
+import type {StylesBlock} from '../types';
+import type {CallbackObject} from '../../types';
 
-describe('functionalKind', () => {
-	const TestContext = createContext({
+// `kind()` is typed as a union that can't be used directly in JSX and declares `inline` as
+// optional with required arguments, neither of which reflects how components are used here.
+type TestKind = ComponentType<CallbackObject> & {
+	inline: (props?: CallbackObject, context?: unknown) => ReactElement<CallbackObject>;
+};
+
+type TestContextValue = {value: string};
+
+describe('kind', () => {
+	const TestContext = createContext<TestContextValue>({
 		value: 'initial'
 	});
-	const FunctionalKind = functionalKind({
+	const Kind = kind({
 		name: 'Kind',
 		propTypes: {
 			prop: PropTypes.number.isRequired,
@@ -24,19 +33,19 @@ describe('functionalKind', () => {
 		contextType: TestContext,
 		styles: {
 			className: 'kind'
-		},
+		} as StylesBlock,
 		handlers: {
 			onClick: (ev, props, context) => {
-				props.onClick(context.value);
+				props.onClick((context as TestContextValue).value);
 			}
 		},
 		computed: {
-			value: ({prop}) => prop + 1,
-			contextValue: (props, context) => {
+			value: ({prop}: {prop: number}) => prop + 1,
+			contextValue: (props: CallbackObject, context?: TestContextValue) => {
 				return context ? `context${context.value}` : 'unknown';
 			}
 		},
-		useRender: ({contextValue, label, value, ...rest}) => {
+		render: ({contextValue, label, value, ...rest}) => {
 			delete rest.prop;
 			return (
 				<div {...rest} data-context={contextValue} title={label}>
@@ -44,20 +53,54 @@ describe('functionalKind', () => {
 				</div>
 			);
 		}
-	});
+	}) as TestKind;
+	const FunctionalKind = kind({
+		name: 'Kind',
+		functional: true,
+		propTypes: {
+			prop: PropTypes.number.isRequired,
+			label: PropTypes.string
+		},
+		defaultProps: {
+			label: 'Label'
+		},
+		contextType: TestContext,
+		styles: {
+			className: 'kind'
+		} as StylesBlock,
+		handlers: {
+			onClick: (ev, props, context) => {
+				props.onClick((context as TestContextValue).value);
+			}
+		},
+		computed: {
+			value: ({prop}: {prop: number}) => prop + 1,
+			contextValue: (props: CallbackObject, context?: TestContextValue) => {
+				return context ? `context${context.value}` : 'unknown';
+			}
+		},
+		render: ({contextValue, label, value, ...rest}) => {
+			delete rest.prop;
+			return (
+				<div {...rest} data-context={contextValue} title={label}>
+					{value}
+				</div>
+			);
+		}
+	}) as TestKind;
 
 	test('should assign name to displayName', () => {
 		const expected = 'Kind';
-		const actual = FunctionalKind.displayName;
+		const actual = Kind.displayName;
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should support undefined handlers', () => {
-		const Minimal = functionalKind({
+		const Minimal = kind({
 			name: 'Minimal',
-			useRender: () => <div data-testid="minimal" />
-		});
+			render: () => <div data-testid="minimal" />
+		}) as TestKind;
 
 		render(<Minimal />);
 
@@ -67,13 +110,13 @@ describe('functionalKind', () => {
 	});
 
 	test('should detect invalid proType on component rerender', () => {
-		const Minimal = functionalKind({
+		const Minimal = kind({
 			name: 'Minimal',
 			propTypes: {
 				value: PropTypes.number
 			},
-			useRender: (props) => <div data-testid="minimal" {...props} />
-		});
+			render: (props) => <div data-testid="minimal" {...props} />
+		}) as TestKind;
 
 		const {rerender} = render(<Minimal value={0} />);
 
@@ -91,10 +134,19 @@ describe('functionalKind', () => {
 	});
 
 	test('should default {label} property', () => {
+		render(<Kind prop={1} data-testid="unlabeled" />);
+
+		const expected = 'Label';
+		const actual = screen.queryByTestId('unlabeled')!.getAttribute('title');
+
+		expect(actual).toBe(expected);
+	});
+
+	test('should default {label} property for `functional` is `true`', () => {
 		render(<FunctionalKind prop={1} data-testid="unlabeled" />);
 
 		const expected = 'Label';
-		const actual = screen.queryByTestId('unlabeled').getAttribute('title');
+		const actual = screen.queryByTestId('unlabeled')!.getAttribute('title');
 
 		expect(actual).toBe(expected);
 	});
@@ -102,16 +154,16 @@ describe('functionalKind', () => {
 	test('should default {label} property when explicitly undefined', () => {
 		// Explicitly testing for undefined
 		// eslint-disable-next-line no-undefined
-		render(<FunctionalKind label={undefined} data-testid="unlabeled" prop={1} />);
+		render(<Kind label={undefined} data-testid="unlabeled" prop={1} />);
 
 		const expected = 'Label';
-		const actual = screen.queryByTestId('unlabeled').getAttribute('title');
+		const actual = screen.queryByTestId('unlabeled')!.getAttribute('title');
 
 		expect(actual).toBe(expected);
 	});
 
 	test('should add className defined in styles', () => {
-		render(<FunctionalKind prop={1} />);
+		render(<Kind prop={1} />);
 
 		const expected = 'kind';
 		const kindDiv = screen.getByTitle('Label');
@@ -120,7 +172,7 @@ describe('functionalKind', () => {
 	});
 
 	test('should compute {value} property', () => {
-		render(<FunctionalKind prop={1} />);
+		render(<Kind prop={1} />);
 
 		const expected = '2';
 		const kindDiv = screen.getByTitle('Label');
@@ -131,7 +183,7 @@ describe('functionalKind', () => {
 	test('should support contextType in handlers', async () => {
 		const onClick = jest.fn();
 		const user = userEvent.setup();
-		render(<FunctionalKind onClick={onClick} prop={1} />);
+		render(<Kind onClick={onClick} prop={1} />);
 
 		const kindDiv = screen.getByTitle('Label');
 		await user.click(kindDiv);
@@ -143,7 +195,7 @@ describe('functionalKind', () => {
 	});
 
 	test('should support contextType in computed', () => {
-		render(<FunctionalKind prop={1} />);
+		render(<Kind prop={1} />);
 
 		const expected = 'contextinitial';
 		const kindDiv = screen.getByTitle('Label');
@@ -153,15 +205,16 @@ describe('functionalKind', () => {
 
 	test('support using hooks within kind instances', async () => {
 		const user = userEvent.setup();
-		const Comp = functionalKind({
+		const Comp = kind({
 			name: 'Comp',
 			functional: true,
-			useRender: () => {
+			render: () => {
+				// eslint-disable-next-line react-hooks/rules-of-hooks
 				const [state, setState] = useState(0);
 
 				return <button data-testid="button" onClick={() => setState(state + 1)}>{state}</button>;
 			}
-		});
+		}) as TestKind;
 
 		render(<Comp />);
 
@@ -175,10 +228,10 @@ describe('functionalKind', () => {
 
 	describe('inline', () => {
 		test('should support a minimal kind', () => {
-			const Minimal = functionalKind({
+			const Minimal = kind({
 				name: 'Minimal',
-				useRender: () => <div />
-			});
+				render: () => <div />
+			}) as TestKind;
 
 			const component = Minimal.inline();
 
@@ -189,7 +242,7 @@ describe('functionalKind', () => {
 		});
 
 		test('should set default props when prop is not passed', () => {
-			const component = FunctionalKind.inline();
+			const component = Kind.inline();
 
 			// since we're inlining the output, we have to reference where the label prop lands --
 			// the title prop of the <div> -- rather than the label prop on the component (which
@@ -201,7 +254,7 @@ describe('functionalKind', () => {
 		});
 
 		test('should set default props when passed prop is undefined', () => {
-			const component = FunctionalKind.inline({
+			const component = Kind.inline({
 				// explicitly testing settings undefined in this test case
 				// eslint-disable-next-line no-undefined
 				label: undefined
@@ -214,7 +267,7 @@ describe('functionalKind', () => {
 		});
 
 		test('should include handlers', () => {
-			const component = FunctionalKind.inline();
+			const component = Kind.inline();
 
 			const expected = 'function';
 			const actual = typeof component.props.onClick;
@@ -223,7 +276,7 @@ describe('functionalKind', () => {
 		});
 
 		test('should not support context', () => {
-			const component = FunctionalKind.inline();
+			const component = Kind.inline();
 
 			const expected = 'unknown';
 			const actual = component.props['data-context'];

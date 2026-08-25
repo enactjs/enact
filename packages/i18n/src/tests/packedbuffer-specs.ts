@@ -133,7 +133,7 @@ describe('PackedBuffer', () => {
 		});
 
 		test('should return an empty array when fewer than 4 bytes remain', () => {
-			const expected = [];
+			const expected: number[] = [];
 			const actual = new PackedBuffer([1, 2, 3]).getLongs(1);
 
 			expect(actual).toEqual(expected);

@@ -69,7 +69,7 @@ describe('dispatcher', () => {
 		// Modify the console spy to silence error output with
 		// an empty mock implementation
 		// eslint-disable-next-line no-console
-		console.error.mockImplementation();
+		(console.error as jest.Mock).mockImplementation();
 
 		const throws = function () {
 			throw new Error('Thrown from handler');

@@ -1,9 +1,9 @@
 import {mergeClassNameMaps, normalizePublicClassNames} from '../util';
 
 export interface PublicClassNames {
-	componentCss: {[key: string]: string},
-	customCss: {[key: string]: string},
-	publicClassNames: boolean | string | string[],
+	componentCss?: {[key: string]: string},
+	customCss?: {[key: string]: string},
+	publicClassNames?: boolean | string | string[],
 }
 
 /**
