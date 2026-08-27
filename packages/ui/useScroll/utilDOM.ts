@@ -1,18 +1,25 @@
 import warning from 'warning';
+import {RefObject} from 'react';
+
+type ContainableRef = RefObject<HTMLElement> | HTMLElement | null;
+
+function isRefObject<T>(ref: any): ref is RefObject<T> {
+	return typeof ref === 'object' && 'current' in ref;
+}
 
 // At the end, wes should not use DOM APIs as well as the APIs in the `utilDOM`. If we use them, we have to try to remove them first if possible.
 
 const utilDOM = (function () {
 	// Functions
 
-	function containsDangerously (ref, target) {
+	function containsDangerously (ref: ContainableRef, target: HTMLElement) {
 		if (!target) {
 			return false;
-		} else if (typeof ref?.current?.contains === 'function') {
+		} else if (isRefObject(ref) && typeof ref?.current?.contains === 'function') {
 			warning(ref.current.contains, 'The `contains` function of the Ref is not supported.');
 
 			return ref.current.contains(target);
-		} else if (typeof ref?.contains === 'function') {
+		} else if (!isRefObject(ref) && typeof ref?.contains === 'function') {
 			warning(ref.contains, 'The `contains` function of the Ref is not supported.');
 
 			return ref.contains(target);

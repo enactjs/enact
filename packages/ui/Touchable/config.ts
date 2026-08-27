@@ -1,7 +1,14 @@
-import {defaultDragConfig} from './Drag.js';
-import {defaultFlickConfig} from './Flick.js';
-import {defaultHoldConfig} from './Hold.js';
-import {defaultPinchConfig} from './Pinch';
+import {defaultDragConfig, dragConfigPropType} from './Drag';
+import {defaultFlickConfig, flickConfigPropType} from './Flick';
+import {defaultHoldConfig, holdConfigPropType} from './Hold';
+import {defaultPinchConfig, pinchConfigPropType} from './Pinch';
+
+export interface TouchableConfig {
+	drag: dragConfigPropType;
+	flick: flickConfigPropType;
+	hold: holdConfigPropType;
+	pinch: pinchConfigPropType;
+}
 
 const allowedDragKeys = Object.keys(defaultDragConfig);
 const allowedFlickKeys = Object.keys(defaultFlickConfig);
@@ -14,14 +21,14 @@ const allowedPinchKeys = Object.keys(defaultPinchConfig);
  * @private
  * @memberof ui/Touchable
  */
-let config = {};
+let config: TouchableConfig = {} as TouchableConfig;
 
 // map-friendly clone method
-const clone = o => Object.assign({}, o);
+const clone = <T>(o: T) => Object.assign({}, o);
 
 // Merges two configuration objects while retaining only the allowed keys
-const mergeGestureConfig = (current, update, allowed) => {
-	const cfg = {...current, ...update};
+const mergeGestureConfig = <T>(current: T, update: T, allowed: string[]) => {
+	const cfg = {...current, ...update} as Record<string, any>;
 
 	Object.keys(cfg).forEach(key => {
 		if (allowed.indexOf(key) === -1) {
@@ -29,11 +36,11 @@ const mergeGestureConfig = (current, update, allowed) => {
 		}
 	});
 
-	return cfg;
+	return cfg as T;
 };
 
 // Merges the current global config with the provided `cfg` and returns the result
-const mergeConfig = (cfg) => {
+const mergeConfig = (cfg: TouchableConfig) => {
 	const merged = {
 		drag: mergeGestureConfig(config.drag, cfg.drag, allowedDragKeys),
 		flick: mergeGestureConfig(config.flick, cfg.flick, allowedFlickKeys),
@@ -121,7 +128,7 @@ const mergeConfig = (cfg) => {
  * @public
  * @memberof ui/Touchable
  */
-const configure = (cfg) => {
+const configure = (cfg: TouchableConfig) => {
 	config = mergeConfig(cfg);
 };
 

@@ -1,15 +1,31 @@
 import clamp from 'ramda/src/clamp';
-import PropTypes from 'prop-types';
+
+import {BoundsType} from './Drag';
+import {TouchableProps} from './Touchable';
+
+export interface pinchConfigPropType {
+	boxSizing: 'border-box' | 'content-box';
+	global: boolean;
+	maxScale: number;
+	minScale: number;
+	moveTolerance: number;
+}
 
 class Pinch {
-	pinchConfig = null;
-	startScale = 1.0;
-	scale = 1.0;
+	bounds: BoundsType | DOMRect | null = null;
+	pinchConfig: pinchConfigPropType & {resume?: boolean, node?: HTMLElement} | null = null;
+	scale: number = 1.0;
+	startScale: number = 1.0;
+	startDist: number = 0;
+	previousDist: number = 0;
+	onPinch?: TouchableProps['onPinch'];
+	onPinchStart?: TouchableProps['onPinchStart'];
+	onPinchEnd?: TouchableProps['onPinchEnd'];
 
 	isPinching = () => this.pinchConfig != null;
 
-	setContainerBounds = (node) => {
-		const {global: isGlobal, boxSizing} = this.pinchConfig;
+	setContainerBounds = (node: HTMLElement) => {
+		const {global: isGlobal, boxSizing} = this.pinchConfig || {};
 		let bounds = null;
 
 		if (typeof window === 'undefined' || !node) return;
@@ -46,13 +62,13 @@ class Pinch {
 		this.bounds = bounds;
 	};
 
-	getBoundsCoords = ({x, y}) => {
-		const {maxX, maxY, minX, minY} = this.bounds;
+	getBoundsCoords = ({x, y}: {x: number, y: number}) => {
+		const {maxX, maxY, minX, minY} = this.bounds as BoundsType;
 
 		return {x: clamp(minX, maxX, x) - minX, y: clamp(minY, maxY, y) - minY};
 	};
 
-	getDistance = (coords) => {
+	getDistance = (coords: Array<{x: number, y: number}>) => {
 		if (Array.isArray(coords)) {
 			const {x: x1, y: y1} = this.getBoundsCoords(coords[0]);
 			const {x: x2, y: y2} = this.getBoundsCoords(coords[1]);
@@ -64,8 +80,8 @@ class Pinch {
 		return 0;
 	};
 
-	updateScale = (scale) => {
-		const {maxScale, minScale} = this.pinchConfig;
+	updateScale = (scale: number) => {
+		const {maxScale, minScale} = this.pinchConfig || defaultPinchConfig;
 		const newScale = clamp(minScale, maxScale, scale);
 
 		if (newScale !== this.scale) {
@@ -76,7 +92,7 @@ class Pinch {
 		return false;
 	};
 
-	begin = (config, {noResume, onPinch, onPinchEnd, onPinchStart}, coords, node) => {
+	begin = (config: pinchConfigPropType, {noResume, onPinch, onPinchEnd, onPinchStart}: Partial<TouchableProps>, coords: Array<{x: number; y: number}>, node: HTMLElement) => {
 		if (!onPinch && !onPinchStart && !onPinchEnd) {
 			return;
 		}
@@ -106,7 +122,7 @@ class Pinch {
 	};
 
 	// This method will get the `onPinch`, `onPinchEnd`, and `onPinchStart` props.
-	updateProps = ({onPinch, onPinchEnd, onPinchStart}) => {
+	updateProps = ({onPinch, onPinchEnd, onPinchStart}: Partial<TouchableProps>) => {
 		// Check `isPinching` gesture is not in progress. Check if gesture exists before updating the references to the `pinchConfig`
 		if (!this.isPinching()) return;
 
@@ -116,10 +132,10 @@ class Pinch {
 		this.onPinchEnd = onPinchEnd;
 	};
 
-	move = (coords) => {
+	move = (coords:  Array<{ x: number; y: number; }>) => {
 		if (!this.isPinching()) return;
 
-		const {moveTolerance} = this.pinchConfig;
+		const {moveTolerance} = this.pinchConfig || defaultPinchConfig;
 
 		const currentDist = this.getDistance(coords);
 		const scale = (currentDist / this.startDist) * this.startScale;
@@ -139,7 +155,7 @@ class Pinch {
 	blur = () => {
 		if (!this.isPinching()) return;
 
-		if (!this.pinchConfig.global) {
+		if (!this.pinchConfig?.global) {
 			this.end();
 		}
 	};
@@ -155,7 +171,7 @@ class Pinch {
 	};
 }
 
-const defaultPinchConfig = {
+const defaultPinchConfig: pinchConfigPropType = {
 	boxSizing: 'border-box',
 	global: false,
 	maxScale: 4,
@@ -163,17 +179,8 @@ const defaultPinchConfig = {
 	moveTolerance: 16
 };
 
-const pinchConfigPropType = PropTypes.shape({
-	boxSizing: PropTypes.string,
-	global: PropTypes.bool,
-	maxScale: PropTypes.number,
-	minScale: PropTypes.number,
-	moveTolerance: PropTypes.number
-});
-
 export default Pinch;
 export {
 	defaultPinchConfig,
-	Pinch,
-	pinchConfigPropType
+	Pinch
 };

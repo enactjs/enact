@@ -1,22 +1,57 @@
-import {call, forward, forwardCustom, forwardCustomWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
+import {
+	call, forward, forwardCustom, forwardCustomWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue
+} from '@enact/core/handle';
 import {on, off} from '@enact/core/dispatcher';
 import complement from 'ramda/src/complement';
 import platform from '@enact/core/platform';
+import {Dispatch, PointerEvent, SetStateAction} from 'react';
 
-import {mergeConfig} from './config';
+import {mergeConfig, TouchableConfig} from './config';
 import {States} from './state';
-import ClickAllow from './ClickAllow';
+import ClickAllow, {EventLike} from './ClickAllow';
+import {Drag, dragConfigPropType} from './Drag';
+import {Flick, flickConfigPropType} from './Flick';
+import {Hold, holdConfigPropType} from './Hold';
+import {Pinch, pinchConfigPropType} from './Pinch';
+import {TouchableProps} from './Touchable';
+import {useTouchConfig} from './useTouch';
 
-import {Drag} from './Drag';
-import {Flick} from './Flick';
-import {Hold} from './Hold';
-import {Pinch} from './Pinch';
+export interface PointerOrTouchEvent {
+	type: string;
+	clientX: number;
+	clientY: number;
+	targetTouches: ArrayLike<{
+		clientX: number;
+		clientY: number
+	}>;
+}
 
-const getEventCoordinates = (ev) => {
+export interface SourceEvent {
+	target: EventTarget | null;
+	currentTarget: EventTarget | null;
+	clientX?: number;
+	clientY?: number;
+	pageX?: number;
+	pageY?: number;
+	changedTouches?: ArrayLike<{
+		clientX: number;
+		clientY: number;
+		pageX: number;
+		pageY: number;
+	}>;
+}
+
+
+export interface TouchConfig extends Partial<TouchableConfig>, Partial<useTouchConfig> {
+	disabled?: boolean;
+	getActive?: boolean;
+}
+
+const getEventCoordinates = (ev: PointerOrTouchEvent) => {
 	let {clientX: x, clientY: y, type} = ev;
 	if (type.indexOf('touch') === 0) {
 		if (ev.targetTouches.length >= 2) {
-			return Array.from(ev.targetTouches, (targetTouch) => ({
+			return Array.from(ev.targetTouches, (targetTouch: {clientX: number, clientY: number}) => ({
 				x: targetTouch.clientX,
 				y: targetTouch.clientY
 			}));
@@ -30,7 +65,9 @@ const getEventCoordinates = (ev) => {
 };
 
 // Establish a standard payload for onDown/onUp/onTap events and pass it along to a handler
-const makeTouchableEvent = (type) => (ev) => {
+const makeTouchableEvent = (type: string) => (ev: SourceEvent | null) => {
+	if (!ev) return;
+
 	const {target, currentTarget} = ev;
 	let {clientX, clientY, pageX, pageY} = ev;
 
@@ -56,7 +93,7 @@ const isEnabled = forProp('disabled', false);
 
 const handleDown = handle(
 	isEnabled,
-	forwardCustomWithPrevent('onDown', makeTouchableEvent('onDown')),
+	forwardCustomWithPrevent<SourceEvent>('onDown', makeTouchableEvent('onDown')),
 	call('activate'),
 	call('startGesture')
 ).named('handleDown');
@@ -65,8 +102,8 @@ const handleUp = handle(
 	isEnabled,
 	call('endGesture'),
 	call('isTracking'),
-	forwardCustomWithPrevent('onUp', makeTouchableEvent('onUp')),
-	forwardCustom('onTap', makeTouchableEvent('onTap'))
+	forwardCustomWithPrevent<SourceEvent>('onUp', makeTouchableEvent('onUp')),
+	forwardCustom<SourceEvent>('onTap', makeTouchableEvent('onTap'))
 ).finally(call('deactivate')).named('handleUp');
 
 const handleEnter = handle(
@@ -177,6 +214,25 @@ const handleBlur = handle(
 );
 
 class Touch {
+	context: {
+		state?: number;
+		setState?: Dispatch<SetStateAction<number>>;
+	} = {};
+	target: HTMLElement | null = null;
+	targetHadFocus;
+	handle;
+	drag;
+	flick;
+	hold;
+	pinch;
+	clickAllow;
+	handlers;
+	config: TouchConfig = {} as TouchConfig;
+	props: TouchConfig | null = null;
+	targetBounds: DOMRect | null = null
+	handleGlobalUp: typeof handleGlobalUp | null = null;
+	handleGlobalMove: typeof handleGlobalMove | null = null;
+
 	constructor () {
 		this.context = {};
 
@@ -212,14 +268,14 @@ class Touch {
 		handleGlobalMove.bindAs(this, 'handleGlobalMove');
 	}
 
-	setPropsAndContext (config, state, setState) {
+	setPropsAndContext (config: TouchConfig, state: number, setState: Dispatch<SetStateAction<number>>) {
 		// remapping to props for better compatibility with core/handle and binding
 		this.props = config;
 		this.context.state = state;
 		this.context.setState = setState;
 	}
 
-	updateGestureConfig (dragConfig, flickConfig, holdConfig, pinchConfig) {
+	updateGestureConfig (dragConfig: dragConfigPropType, flickConfig: flickConfigPropType, holdConfig: holdConfigPropType, pinchConfig: pinchConfigPropType) {
 		this.config = mergeConfig({
 			drag: dragConfig,
 			flick: flickConfig,
@@ -230,24 +286,32 @@ class Touch {
 
 	addGlobalHandlers () {
 		// ensure we clean up our internal state
-		if (platform.touchEvent) {
-			on('touchend', this.handleGlobalUp, document);
+		if (this.handleGlobalUp) {
+			if (platform.touchEvent) {
+				on('touchend', this.handleGlobalUp, document);
+			}
+			on('mouseup', this.handleGlobalUp, document);
 		}
-		on('mouseup', this.handleGlobalUp, document);
-		on('mousemove', this.handleGlobalMove, document);
+		if (this.handleGlobalMove) {
+			on('mousemove', this.handleGlobalMove, document);
+		}
 	}
 
 	removeGlobalHandlers () {
-		if (platform.touchEvent) {
-			off('touchend', this.handleGlobalUp, document);
+		if (this.handleGlobalUp) {
+			if (platform.touchEvent) {
+				off('touchend', this.handleGlobalUp, document);
+			}
+			off('mouseup', this.handleGlobalUp, document);
 		}
-		off('mouseup', this.handleGlobalUp, document);
-		off('mousemove', this.handleGlobalMove, document);
+		if (this.handleGlobalMove) {
+			off('mousemove', this.handleGlobalMove, document);
+		}
 	}
 
 	// State Management
 
-	setTarget (target) {
+	setTarget (target: HTMLElement) {
 		this.target = target;
 	}
 
@@ -255,9 +319,9 @@ class Touch {
 		this.target = null;
 	}
 
-	activate (ev) {
+	activate (ev: PointerEvent<HTMLElement>) {
 		this.setTarget(ev.currentTarget);
-		if (this.props.getActive) {
+		if (this.props?.getActive && this.context.setState) {
 			this.context.setState(States.Active);
 		}
 
@@ -266,7 +330,7 @@ class Touch {
 
 	deactivate () {
 		this.clearTarget();
-		if (this.props.getActive) {
+		if (this.props?.getActive && this.context.setState) {
 			this.context.setState(States.Inactive);
 		}
 
@@ -274,7 +338,7 @@ class Touch {
 	}
 
 	pause () {
-		if (this.props.getActive && this.context.state === States.Active) {
+		if (this.context.setState && this.props?.getActive && this.context.state === States.Active) {
 			this.context.setState(States.Paused);
 		}
 
@@ -286,7 +350,7 @@ class Touch {
 		this.hold.end();
 	}
 
-	updateProps (props) {
+	updateProps (props: Partial<TouchableProps>) {
 		// Update the props onHoldStart, onHold, and onHoldEnd on any gesture (pinch, hold, flick, drag).
 		this.pinch.updateProps(props);
 		this.hold.updateProps(props);
@@ -296,7 +360,7 @@ class Touch {
 
 	// Gesture Support
 
-	startTouch ({target, currentTarget}) {
+	startTouch ({target, currentTarget}: {target: HTMLElement, currentTarget: HTMLElement}) {
 		if (currentTarget.contains(target)) {
 			on('contextmenu', preventDefault);
 			this.targetBounds = currentTarget.getBoundingClientRect();
@@ -310,23 +374,31 @@ class Touch {
 		this.targetBounds = null;
 	}
 
-	startGesture (ev, props) {
+	startGesture (ev: PointerOrTouchEvent, props: Partial<TouchableProps>) {
 		const coords = getEventCoordinates(ev);
 		let {pinch, hold, flick, drag} = this.config;
 
 		if (Array.isArray(coords)) {
-			this.pinch.begin(pinch, props, coords, this.target);
-		} else {
-			this.hold.begin(hold, props, coords);
-			this.flick.begin(flick, props, coords);
-			this.drag.begin(drag, props, coords, this.target);
+			if (pinch && this.target) {
+				this.pinch.begin(pinch, props, coords, this.target);
+			}
+		} else if (!Array.isArray(coords)) {
+			if (hold && this.target) {
+				this.hold.begin(hold, props, coords);
+			}
+			if (flick && this.target) {
+				this.flick.begin(flick, props, coords);
+			}
+			if (drag && this.target) {
+				this.drag.begin(drag, props, coords, this.target);
+			}
 		}
 		this.targetHadFocus = this.target === document.activeElement;
 
 		return true;
 	}
 
-	moveGesture (ev) {
+	moveGesture (ev: PointerOrTouchEvent) {
 		const coords = getEventCoordinates(ev);
 
 		if (Array.isArray(coords)) {
@@ -390,30 +462,30 @@ class Touch {
 		return this.targetHadFocus;
 	}
 
-	hasTouchLeftTarget (ev) {
+	hasTouchLeftTarget (ev: TouchEvent) {
 		return Array.from(ev.changedTouches).reduce((hasLeft, {pageX, pageY}) => {
-			const {left, right, top, bottom} = this.targetBounds;
+			const {left = 0, right = 0, top = 0, bottom = 0} = this.targetBounds || {};
 			return hasLeft && left > pageX || right < pageX || top > pageY || bottom < pageY;
 		}, true);
 	}
 
-	containsCurrentTarget ({target}) {
-		return !this.target.contains(target);
+	containsCurrentTarget ({target}: {target: HTMLElement}) {
+		return !this.target?.contains(target);
 	}
 
-	shouldAllowMouseEvent (ev) {
+	shouldAllowMouseEvent (ev: EventLike) {
 		return this.clickAllow.shouldAllowMouseEvent(ev);
 	}
 
-	shouldAllowTap (ev) {
+	shouldAllowTap (ev: EventLike) {
 		return this.clickAllow.shouldAllowTap(ev);
 	}
 
-	setLastMouseUp (ev) {
+	setLastMouseUp (ev: EventLike) {
 		this.clickAllow.setLastMouseUp(ev);
 	}
 
-	setLastTouchEnd (ev) {
+	setLastTouchEnd (ev: EventLike) {
 		this.clickAllow.setLastTouchEnd(ev);
 	}
 

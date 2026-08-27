@@ -94,7 +94,7 @@ import {Callback, CallbackObject, HandlerFunction} from '../types';
  * @param {Object<string, any>} context
  * @returns {any}
  */
-export type EventAdapter = HandlerFunction;
+export type EventAdapter<E = Event> = HandlerFunction<unknown, E>;
 
 /**
  * The signature for event handlers
@@ -758,10 +758,10 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter: EventAdapter, ha
  * @memberof core/handle
  * @public
  */
-const forwardCustom = handle.forwardCustom = function (name: string, adapter?: EventAdapter): HandlerFunction {
+const forwardCustom = handle.forwardCustom = function <E = Event>(name: string, adapter?: EventAdapter<E>): HandlerFunction {
 	return named(adaptEvent(
 		function (this: any, ev, ...args) {
-			let customEventPayload = adapter ? adapter.call(this, ev, ...args) : null;
+			let customEventPayload = adapter ? adapter.call(this, ev as E, ...args) : null;
 
 			// Handle either no adapter or a non-object return from the adapter
 			if (!customEventPayload || typeof customEventPayload !== 'object') {
@@ -823,7 +823,7 @@ const forwardCustom = handle.forwardCustom = function (name: string, adapter?: E
  * @memberof core/handle
  * @private
  */
-const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = function (name: string, adapter?: EventAdapter): HandlerFunction {
+const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = function <E = Event>(name: string, adapter?: EventAdapter<E>): HandlerFunction {
 	return named(function (this: any, ev, ...args) {
 		let prevented = false;
 

@@ -1,30 +1,23 @@
 import {createElement, isValidElement, Children, ReactNode, ReactElement} from 'react';
 import warning from 'warning';
 
-export type ChildElement = {
-	props: Record<string, any>;
-	type: string;
-}
-
-export type SlottableChildElement = {
-	type: {
-		name?: string;
-		displayName?: string;
-		defaultSlot?: string;
-	}
-}
-
-export type ChildConfig = {
-	children: ReactElement;
+export interface ChildConfig {
+	children?: ReactNode;
 	[key: string]: any;
+}
+
+interface SlottableComponent {
+	name?: string;
+	displayName?: string;
+	defaultSlot?: string;
 }
 
 // ** WARNING ** This is an intentional but likely dangerous hack necessary to clone a child while
 // omitting the `slot` property. It relies on the black box structure of a React element which could
 // change breaking this code. Without it, the slot property will cascade to a DOM node causing a
 // React warning.
-function cloneElement (child: ChildElement, index: number) {
-	const newProps = Object.assign({}, child.props);
+function cloneElement (child: ReactElement, index: number) {
+	const newProps = Object.assign({}, child.props) as Record<string, any>;
 	delete newProps.slot;
 	newProps.key = `slot-${index}`;
 
@@ -38,12 +31,11 @@ function distributeChild (child: ReactNode, index: number, slots: string[], prop
 
 	let c, slot;
 	const hasSlot = (name: string) => slots.indexOf(name) !== -1;
-	const slottableChild = child as unknown as SlottableChildElement;
 
-	if (slottableChild.props.slot) {
-		const hasUserSlot = hasSlot(slot = slottableChild.props.slot);
-		warning(hasUserSlot, 'The slot "%s" specified on %s does not exist', slottableChild.props.slot,
-			typeof slottableChild.type === 'string' ? slottableChild.type : (slottableChild.type.name || slottableChild.type.displayName || 'component')
+	if (child.props.slot) {
+		const hasUserSlot = hasSlot(slot = child.props.slot);
+		warning(hasUserSlot, 'The slot "%s" specified on %s does not exist', child.props.slot,
+			typeof child.type === 'string' ? child.type : (child.type.name || child.type.displayName || 'component')
 		);
 
 		if (hasUserSlot) {
@@ -86,8 +78,8 @@ function distribute({children, ...slots}: ChildConfig): Record<string, any> {
 	};
 
 	if (slotNames.length > 0) {
-		const remaining = [];
-		Children.forEach(children, (child, index) => {
+		const remaining: ReactNode[] = [];
+		Children.forEach(children, (child: ReactNode, index) => {
 			if (!distributeChild(child, index, slotNames, props)) {
 				remaining.push(child);
 			}

@@ -1,17 +1,28 @@
 import {platform} from '@enact/core/platform';
 
+export interface EventLike {
+	type: string;
+	timeStamp: number;
+	target?: EventTarget | null;
+}
+
+interface TouchEndState {
+	target?: EventTarget | null;
+	timeStamp: number;
+}
+
 // It's possible that emitting `onTap` will cause a DOM change before the mousedown fires resulting
 // in multiple tap/click events for the same user action. To avoid this, we store the last touchend
 // target and timestamp to compare against the next mouse down. If the timestamp is different (e.g.
 // we're on a hybrid device that emitted a touch event but the next was a mouse event) or the target
 // is the same (or no previous target was set if no touch events have been emitted), we allow the
 // mousedown *across Touchable instances*.
-let _lastTouchEnd = {
+let _lastTouchEnd: TouchEndState = {
 	target: null,
 	timeStamp: 0
 };
 
-const shouldAllowMouseDown = (ev) => {
+const shouldAllowMouseDown = (ev: EventLike) => {
 	return ev.timeStamp !== _lastTouchEnd.timeStamp || (
 		ev.target === _lastTouchEnd.target ||
 		_lastTouchEnd.target === null
@@ -19,12 +30,15 @@ const shouldAllowMouseDown = (ev) => {
 };
 
 class ClickAllow {
+	lastTouchEndTime: number;
+	lastMouseUpTime: number;
+
 	constructor () {
 		this.lastTouchEndTime = 0;
 		this.lastMouseUpTime = 0;
 	}
 
-	setLastTouchEnd (ev) {
+	setLastTouchEnd (ev: EventLike) {
 		if (ev && ev.type === 'touchend') {
 			this.lastTouchEndTime = ev.timeStamp;
 			_lastTouchEnd.timeStamp = ev.timeStamp;
@@ -32,20 +46,20 @@ class ClickAllow {
 		}
 	}
 
-	setLastMouseUp (ev) {
+	setLastMouseUp (ev: EventLike) {
 		if (ev && ev.type === 'mouseup') {
 			this.lastMouseUpTime = ev.timeStamp;
 		}
 	}
 
-	shouldAllowMouseEvent (ev) {
+	shouldAllowMouseEvent (ev: EventLike) {
 		const {timeStamp} = ev;
 
 		// iOS Safari sends both touch and mouse events (with differing timestamps)
 		return !(platform.browserName === 'safari' && platform.type === 'mobile') && this.lastTouchEndTime !== timeStamp && shouldAllowMouseDown(ev);
 	}
 
-	shouldAllowTap (ev) {
+	shouldAllowTap (ev: EventLike) {
 		const {type, timeStamp} = ev;
 
 		// Allow the custom tap event for a “click” when it’s actually a click and it’s not from the

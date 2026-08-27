@@ -2,19 +2,41 @@
  * Exports a number of pre-defined arrangers for use with {@link ui/ViewManager}.
  * note: not jsdoc on purpose
  */
+import {Callback} from '../types';
 
-import PropTypes from 'prop-types';
+export type SlideArrangeDirection = 'bottom' | 'left' | 'right' | 'top';
 
-const slideInOut = (direction, total, orientation) => {
+export interface SlideArrangerConfig {
+	amount?: number;
+	direction: SlideArrangeDirection;
+}
+
+export interface ArrangerCallback {
+	duration: number;
+	fill?: FillMode;
+	from?: number;
+	node: HTMLElement;
+	reverse?: boolean;
+	rtl?: boolean;
+	to?: number;
+}
+
+export interface Arranger {
+	enter: (config: ArrangerCallback) => Animation;
+	leave: (config: ArrangerCallback) => Animation;
+	stay?: (config: ArrangerCallback) => Animation;
+}
+
+const slideInOut = (direction: 'in' | 'out', total: number, orientation: SlideArrangeDirection): string => {
 	const p = direction === 'out' ? total : -total;
 
 	return	orientation === 'top'    && 'translateY(' + -p + '%)' ||
 			orientation === 'bottom' && 'translateY(' + p + '%)'  ||
 			orientation === 'left'   && 'translateX(' + -p + '%)' ||
-			orientation === 'right'  && 'translateX(' + p + '%)';
+			orientation === 'right'  && 'translateX(' + p + '%)' || '';
 };
 
-export const arrange = ({duration, node, reverse}, keyframes, options) => {
+export const arrange = ({duration, node, reverse}: ArrangerCallback, keyframes: Keyframe[], options?: KeyframeAnimationOptions): Animation => {
 	return node.animate(keyframes, {
 		duration,
 		direction: reverse ? 'reverse' : 'normal',
@@ -77,16 +99,16 @@ export const arrange = ({duration, node, reverse}, keyframes, options) => {
  * @returns {Arranger}            An arranger
  * @public
  */
-export const SlideArranger = ({amount = 100, direction}) => ({
-	enter: (config) => arrange(config, [
+export const SlideArranger = ({amount = 100, direction}: SlideArrangerConfig) => ({
+	enter: (config: ArrangerCallback) => arrange(config, [
 		{transform: slideInOut('in', amount, direction)},
 		{transform: slideInOut('in', 0, direction)}
 	]),
-	leave: (config) => arrange(config, [
+	leave: (config: ArrangerCallback) => arrange(config, [
 		{transform: slideInOut('out', 0, direction)},
 		{transform: slideInOut('out', amount, direction)}
 	]),
-	stay: (config) => arrange(config, [
+	stay: (config: ArrangerCallback) => arrange(config, [
 		{transform: slideInOut('in', 0, direction)},
 		{transform: slideInOut('in', 0, direction)}
 	])
@@ -133,7 +155,4 @@ export const SlideBottomArranger = SlideArranger({direction: 'bottom'});
  * @memberof ui/ViewManager
  * @private
  */
-export const shape = PropTypes.shape({
-	enter: PropTypes.func,
-	leave: PropTypes.func
-});
+export type shape = {enter: Callback, leave: Callback};

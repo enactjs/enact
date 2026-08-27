@@ -1,8 +1,11 @@
 import useClass from '@enact/core/useClass';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, FocusEvent, PointerEvent, TouchEvent, MouseEvent} from 'react';
+
+import {Callback, HandlerFunction} from '../types';
 
 import {States} from './state';
 import Touch from './Touch';
+import {TouchableProps} from './Touchable';
 
 /**
  * Configuration for `useTouch`
@@ -43,6 +46,33 @@ import Touch from './Touch';
  * @see {@link ui/Touchable.configure}
  * @private
  */
+export interface useTouchConfig extends TouchableProps {
+	getActive?: boolean;
+	/** Disables a hook */
+	disabled?: boolean;
+	/** Prevents resuming the touch events and gestures when re-entering the component */
+	noResume?: boolean;
+	/** Event handler for a blur event */
+	onBlur?: Callback<void, FocusEvent<HTMLElement>>;
+	/** Event handler for a click event */
+	onClick?: Callback<void, PointerEvent<HTMLElement>>;
+	/** Event handler for a mousedown event */
+	onMouseDown?: Callback<void, MouseEvent<HTMLElement>>;
+	/** Event handler for a mouseenter event */
+	onMouseEnter?: Callback<void, MouseEvent<HTMLElement>>;
+	/** Event handler for a mouseleave event */
+	onMouseLeave?: Callback<void, MouseEvent<HTMLElement>>;
+	/** Event handler for a mousemove event */
+	onMouseMove?: Callback<void, MouseEvent<HTMLElement>>;
+	/** Event handler for a mouseup event */
+	onMouseUp?: Callback<void, MouseEvent<HTMLElement>>;
+	/** Event handler for a touchend event */
+	onTouchEnd?: Callback<void, TouchEvent<HTMLElement>>;
+	/** Event handler for a touchmove event */
+	onTouchMove?: Callback<void, TouchEvent<HTMLElement>>;
+	/** Event handler for a touchstart event */
+	onTouchStart?: Callback<void, TouchEvent<HTMLElement>>;
+}
 
 /**
  * Object returned by `useTouch`
@@ -53,6 +83,18 @@ import Touch from './Touch';
  * @property {Object}  handlers Event handlers that need to be passed to DOM node
  * @private
  */
+export interface useTouchInterface {
+	active: boolean;
+	handlers: {
+		onClick: HandlerFunction,
+		onBlur: HandlerFunction,
+		onMouseDown: HandlerFunction,
+		onMouseEnter: HandlerFunction,
+		onMouseMove: HandlerFunction,
+		onMouseLeave: HandlerFunction,
+		onMouseUp: HandlerFunction
+	}
+}
 
 /**
  * Provides a consistent set of pointer events -- `onDown`, `onUp`, and `onTap` --
@@ -63,7 +105,7 @@ import Touch from './Touch';
  * @returns {useTouchInterface}
  * @private
  */
-function useTouch (config = {}) {
+function useTouch (config: useTouchConfig): useTouchInterface {
 	const {
 		getActive = false, disabled,
 		dragConfig, flickConfig, holdConfig, pinchConfig,
@@ -71,8 +113,8 @@ function useTouch (config = {}) {
 	} = config;
 
 	const touch = useClass(Touch);
-	const [state, setState] = useState(States.Inactive);
-	const [prevTouchState, setPrevTouchState] = useState(null);
+	const [state, setState] = useState<number>(States.Inactive);
+	const [prevTouchState, setPrevTouchState] = useState<number>();
 
 	touch.setPropsAndContext({...config, disabled: !!disabled}, state, setState);
 

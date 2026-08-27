@@ -27,7 +27,7 @@ class Job {
 		this.timeout = timeout;
 	}
 
-	run (args: any[]) {
+	run (...args: any[]) {
 		// don't want to inadvertently apply Job's context on `fn`
 		return this.fn && this.fn.apply(null, args);
 	}

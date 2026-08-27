@@ -19,7 +19,7 @@
 import {forward, forwardCustom} from '@enact/core/handle';
 import {EnactPropTypes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import {checkPropTypes, Job} from '@enact/core/util';
+import {Job} from '@enact/core/util';
 import {
 	ReactElement,
 	use,
@@ -46,7 +46,7 @@ export interface TransitionBaseProps {
 	 * @default null
 	 * @public
 	 */
-	childRef?: EnactPropTypes.ref,
+	childRef: EnactPropTypes.ref | null,
 
 	/**
 	 * The node to be transitioned.
@@ -54,7 +54,7 @@ export interface TransitionBaseProps {
 	 * @type {Node}
 	 * @public
 	 */
-	children?: ReactElement,
+	children: ReactElement,
 
 	/**
 	 * The height of the transition when `type` is set to `'clip'`, used when direction is
@@ -153,7 +153,7 @@ export interface TransitionBaseProps {
 	 * @default 'ease-in-out'
 	 * @public
 	 */
-	timingFunction?: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'ease-in-quart' | 'ease-out-quart' | 'linear',
+	timingFunction: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'ease-in-quart' | 'ease-out-quart' | 'linear',
 
 	/**
 	 * The type of transition to affect the content.
@@ -180,7 +180,7 @@ export interface TransitionBaseProps {
 	 * @default 'slide'
 	 * @public
 	 */
-	type?: 'slide' | 'clip' | 'fade',
+	type: 'slide' | 'clip' | 'fade',
 
 	/**
 	 * Sets the visibility of the component, which determines whether it's on screen or off.
@@ -218,7 +218,7 @@ export interface TransitionProps {
 	 * @default 'up'
 	 * @public
 	 */
-	direction: 'up' | 'right' | 'down' | 'left',
+	direction?: 'up' | 'right' | 'down' | 'left',
 
 	/**
 	 * Controls how long the transition should take.
@@ -233,7 +233,7 @@ export interface TransitionProps {
 	 * @default 'medium'
 	 * @public
 	 */
-	duration: string | number,
+	duration?: string | number,
 
 	/**
 	 * Disables transition animation.
@@ -244,7 +244,7 @@ export interface TransitionProps {
 	 * @default false
 	 * @public
 	 */
-	noAnimation: boolean,
+	noAnimation?: boolean,
 
 	/**
 	 * Called after transition for hiding is finished.
@@ -271,7 +271,7 @@ export interface TransitionProps {
 	 * @default 'ease-in-out'
 	 * @public
 	 */
-	timingFunction: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'ease-in-quart' | 'ease-out-quart' | 'linear',
+	timingFunction?: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'ease-in-quart' | 'ease-out-quart' | 'linear',
 
 	/**
 	 * The type of transition to affect the content.
@@ -298,7 +298,7 @@ export interface TransitionProps {
 	 * @default 'slide'
 	 * @public
 	 */
-	type: 'slide' | 'clip' | 'fade',
+	type?: 'slide' | 'clip' | 'fade',
 
 	/**
 	 * The visibility of the component, which determines whether it's on the screen or off.
@@ -307,7 +307,7 @@ export interface TransitionProps {
 	 * @default true
 	 * @public
 	 */
-	visible: boolean
+	visible?: boolean
 }
 
 const formatter = (duration: string | number) => (typeof duration === 'number' ? duration + 'ms' : duration);
@@ -331,9 +331,12 @@ const TransitionBase = kind({
 	_propTypes: /** @lends ui/Transition.TransitionBase.prototype */ {} as TransitionBaseProps,
 
 	defaultProps: {
-		noAnimation: false,
+		childRef: null,
+		clipHeight: null,
+		clipWidth: null,
 		direction: 'up',
 		duration: 'medium',
+		noAnimation: false,
 		timingFunction: 'ease-in-out',
 		type: 'slide',
 		visible: true
@@ -368,7 +371,7 @@ const TransitionBase = kind({
 
 			const merged = style ? {...style, overflow: 'hidden'} : {overflow: 'hidden'};
 
-			if (visible && (direction === 'up' || direction === 'down')) {
+			if (visible && clipHeight && (direction === 'up' || direction === 'down')) {
 				merged.height = clipHeight;
 			}
 			// If duration isn't a known named string, assume it is a CSS duration value
@@ -380,16 +383,7 @@ const TransitionBase = kind({
 		}
 	},
 
-	render: ({css, childRef, children, innerStyle, ...rest}) => {
-		delete rest.clipHeight;
-		delete rest.clipWidth;
-		delete rest.direction;
-		delete rest.duration;
-		delete rest.noAnimation;
-		delete rest.timingFunction;
-		delete rest.type;
-		delete rest.visible;
-
+	render: ({clipHeight, clipWidth, css, childRef, children, direction, duration, innerStyle, noAnimation, onTransitionEnd, timingFunction, type, visible, ...rest}) => {
 		return (
 			<div {...rest}>
 				<div className={css.inner} style={innerStyle} ref={childRef}>
@@ -449,14 +443,11 @@ function Transition ({
 
 	// Latest props for handlers that fire asynchronously (transitionend, observer callbacks)
 	const currentProps = {children, direction, duration, noAnimation, onHide, onShow, timingFunction, type, visible, ...rest};
-	checkPropTypes(Transition, currentProps);
-
 	const propsRef = useRef<TransitionProps>(currentProps);
 	propsRef.current = currentProps; // eslint-disable-line react-hooks/refs
 
-
 	const childNodeRef = useRef<HTMLDivElement>(null);
-	const measuringJobRef = useRef<Job | undefined>();
+	const measuringJobRef = useRef<Job>(null);
 
 	if (measuringJobRef.current == null) {
 		measuringJobRef.current = new Job(() => {
@@ -491,7 +482,7 @@ function Transition ({
 	// re-measure path (handleResize nulls initialHeight, this re-fires).
 	useLayoutEffect(() => {
 		if (state.renderState === TRANSITION_STATE.MEASURE) {
-			measuringJobRef.current.stop();
+			if (measuringJobRef.current) measuringJobRef.current.stop();
 			measureInner();
 		} else if (visible && state.initialHeight == null) {
 			// Component should be visible but doesn't have a height — measure now.
@@ -501,11 +492,13 @@ function Transition ({
 
 	useEffect(() => {
 		const job = measuringJobRef.current;
-		if (!propsRef.current.visible) {
+		if (!propsRef.current.visible && job) {
 			job.idle();
 		}
 
-		return () => job.stop();
+		return () => {
+			if (job) job.stop();
+		};
 	}, []);
 
 	// ResizeContext registration — the context value is itself the register fn.

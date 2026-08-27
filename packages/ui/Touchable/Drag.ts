@@ -1,5 +1,18 @@
 import clamp from 'ramda/src/clamp';
-import PropTypes from 'prop-types';
+import {TouchableProps} from './Touchable';
+
+export interface dragConfigPropType {
+	boxSizing: 'border-box' | 'content-box';
+	global: boolean;
+	moveTolerance: number;
+}
+
+export type BoundsType = {
+	maxX: number,
+	maxY: number
+	minX: number,
+	minY: number,
+};
 
 const Tracking = {
 	Untracked: 0,
@@ -8,12 +21,21 @@ const Tracking = {
 };
 
 class Drag {
-	dragConfig = null;
+	bounds: BoundsType | DOMRect | null = null;
+	dragConfig: dragConfigPropType & {resume?: boolean, node?: HTMLElement} | null = null;
+	startX: number = 0;
+	startY: number = 0;
+	tracking: number | null = null;
+	x: number = 0;
+	y: number = 0;
+	onDrag?: TouchableProps['onDrag'] | null = null;
+	onDragStart?: TouchableProps['onDragStart'] | null = null;
+	onDragEnd?: TouchableProps['onDragEnd'] | null = null;
 
 	isDragging = () => this.dragConfig != null;
 
-	setContainerBounds = (node) => {
-		const {global: isGlobal, boxSizing} = this.dragConfig;
+	setContainerBounds = (node: HTMLElement) => {
+		const {global: isGlobal, boxSizing} = this.dragConfig || {};
 		let bounds = null;
 
 		if (!node) return;
@@ -43,8 +65,8 @@ class Drag {
 		this.bounds = bounds;
 	};
 
-	updatePosition = (clientX, clientY) => {
-		const {maxX, maxY, minX, minY} = this.bounds;
+	updatePosition = (clientX: number, clientY: number) => {
+		const {maxX, maxY, minX, minY} = this.bounds as BoundsType;
 
 		const x = clamp(minX, maxX, clientX) - minX;
 		const y = clamp(minY, maxY, clientY) - minY;
@@ -59,7 +81,7 @@ class Drag {
 		return false;
 	};
 
-	begin = (config, {noResume, onDrag, onDragEnd, onDragStart}, coords, node) => {
+	begin = (config: dragConfigPropType, {noResume, onDrag, onDragEnd, onDragStart}: Partial<TouchableProps>, coords: {x: number, y: number}, node: HTMLElement) => {
 		if (!onDrag && !onDragStart && !onDragEnd) return;
 
 		const {x, y} = coords;
@@ -83,7 +105,7 @@ class Drag {
 	};
 
 	// This method will get the `onDrag`, `onDragEnd`, `onDragStart` props.
-	updateProps = ({onDrag, onDragEnd, onDragStart}) => {
+	updateProps = ({onDrag, onDragEnd, onDragStart}: Partial<TouchableProps>) => {
 		// Check `isDragging` gesture is not in progress. Check if gesture exists before updating the references to the `dragConfig`
 		if (!this.isDragging()) return;
 
@@ -93,10 +115,10 @@ class Drag {
 		this.onDragEnd = onDragEnd;
 	};
 
-	move = (coords) => {
+	move = (coords: {x: number, y: number}) => {
 		if (!this.isDragging()) return;
 
-		const {moveTolerance} = this.dragConfig;
+		const {moveTolerance} = this.dragConfig || defaultDragConfig;
 
 		if (this.tracking === Tracking.Untracked) {
 			const dx = coords.x - this.startX;
@@ -112,7 +134,7 @@ class Drag {
 					});
 				}
 			}
-		} else if (this.onDrag && this.tracking === Tracking.Active && this.updatePosition(coords)) {
+		} else if (this.onDrag && this.tracking === Tracking.Active && this.updatePosition(coords.x, coords.y)) {
 			this.onDrag({
 				type: 'onDrag',
 				...coords
@@ -123,7 +145,7 @@ class Drag {
 	blur = () => {
 		if (!this.isDragging()) return;
 
-		if (!this.dragConfig.global) {
+		if (!this.dragConfig?.global) {
 			this.end();
 		}
 	};
@@ -142,7 +164,7 @@ class Drag {
 	enter = () => {
 		if (!this.isDragging()) return;
 
-		if (this.dragConfig.resume && this.tracking === Tracking.Paused) {
+		if (this.dragConfig?.resume && this.tracking === Tracking.Paused) {
 			this.tracking = Tracking.Active;
 		}
 	};
@@ -150,28 +172,21 @@ class Drag {
 	leave = () => {
 		if (!this.isDragging()) return;
 
-		if (!this.dragConfig.global && this.tracking === Tracking.Active) {
+		if (!this.dragConfig?.global && this.tracking === Tracking.Active) {
 			this.tracking = Tracking.Paused;
 		}
 	};
 
 }
 
-const defaultDragConfig = {
+const defaultDragConfig: dragConfigPropType = {
 	boxSizing: 'border-box',
 	global: false,
 	moveTolerance: 16
 };
 
-const dragConfigPropType = PropTypes.shape({
-	boxSizing: PropTypes.string,
-	global: PropTypes.bool,
-	moveTolerance: PropTypes.number
-});
-
 export default Drag;
 export {
 	defaultDragConfig,
-	Drag,
-	dragConfigPropType
+	Drag
 };

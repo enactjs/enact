@@ -1,7 +1,7 @@
 /*
  * Create a cubic-bezier easing function evaluator.
  */
-const utilAnimation = (x1, y1, x2, y2) => {
+const utilAnimation = (x1: number, y1: number, x2: number, y2: number) => {
 	const AX = 1 + 3 * x1 - 3 * x2;
 	const BX = 3 * x2 - 6 * x1;
 	const CX = 3 * x1;
@@ -10,19 +10,19 @@ const utilAnimation = (x1, y1, x2, y2) => {
 	const BY = 3 * y2 - 6 * y1;
 	const CY = 3 * y1;
 
-	function sampleCurveX (t) {
+	function sampleCurveX (t: number) {
 		return ((AX * t + BX) * t + CX) * t;
 	}
 
-	function sampleCurveY (t) {
+	function sampleCurveY (t: number) {
 		return ((AY * t + BY) * t + CY) * t;
 	}
 
-	function sampleCurveDerivativeX (t) {
+	function sampleCurveDerivativeX (t: number) {
 		return (3 * AX * t + 2 * BX) * t + CX;
 	}
 
-	function solveCurveX (x) {
+	function solveCurveX (x: number) {
 		let t0 = x;
 		let t1, t2;
 
@@ -38,7 +38,7 @@ const utilAnimation = (x1, y1, x2, y2) => {
 	}
 
 	return {
-		cubicBezier (x) {
+		cubicBezier (x: number) {
 			if (x === 0) return 0;
 			if (x === 1) return 1;
 

@@ -2,10 +2,14 @@ import {perfNow} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
 
 import utilAnimation from './utilAnimation';
+import {Callback} from '../types';
+
+export type TimingFunctionType = 'linear' | 'ease-in' | 'ease-out' | 'ease-out-cubic' | 'ease-in-out';
+export type TimingFunction = Record<TimingFunctionType, Callback<number, number>>
 
 const
 	// Use eases library
-	timingFunctions = {
+	timingFunctions: TimingFunction = {
 		'linear': function (source, target, duration, curTime) {
 			curTime /= duration;
 			return (target - source) * curTime + source;
@@ -54,8 +58,9 @@ const
  * @private
  */
 class ScrollAnimator {
-	rAFId = null;
-	type = 'ease-out-cubic';
+	rAFId: number | null = null;
+	type: TimingFunctionType = 'ease-out-cubic';
+	timingFunction: Callback<number, number>;
 
 	/**
 	 * @param {String|null} type - Timing function type for list scroll animation.  Must be one of
@@ -64,11 +69,11 @@ class ScrollAnimator {
 	 * @constructor
 	 * @memberof ui/useScroll.ScrollAnimator
 	 */
-	constructor (type) {
+	constructor (type?: TimingFunctionType) {
 		this.timingFunction = timingFunctions[type || this.type];
 	}
 
-	simulate (sourceX, sourceY, velocityX, velocityY) {
+	simulate (sourceX: number, sourceY: number, velocityX: number, velocityY: number) {
 		let
 			stepX = clampVelocity(velocityX * frameTime),
 			stepY = clampVelocity(velocityY * frameTime),
@@ -91,7 +96,7 @@ class ScrollAnimator {
 		};
 	}
 
-	animate (rAFCallbackFuntion) {
+	animate (rAFCallbackFunction: Callback) {
 		const
 			rAF = window.requestAnimationFrame,
 			startTimeStamp = perfNow(),
@@ -105,7 +110,7 @@ class ScrollAnimator {
 					curTime = curTimeStamp - startTimeStamp;
 
 				this.rAFId = rAFId;
-				rAFCallbackFuntion(curTime);
+				rAFCallbackFunction(curTime);
 			};
 
 		this.rAFId = rAF(fn);

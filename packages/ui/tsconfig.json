@@ -31,6 +31,9 @@
     "Transition/**/*",
     "types/**/*",
     "useControlledState/**/*",
+    "useScroll/**/*",
+    "VirtualList/**/*",
+    "VirtualGridList/**/*",
     "index.ts"
   ],
   "exclude": [

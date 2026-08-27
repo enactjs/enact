@@ -1,7 +1,19 @@
 import {Job} from '@enact/core/util';
-import PropTypes from 'prop-types';
+import {TouchableProps} from './Touchable';
+
+export interface flickConfigPropType {
+	maxDuration: number;
+	maxMoves: number;
+	maxVelocity?: number;
+	minVelocity?: number;
+}
 
 class Flick {
+	tracking: boolean;
+	moves: Array<{x: number, y: number, t: number}>
+	flickConfig: flickConfigPropType | null = null;
+	onFlick?: TouchableProps['onFlick'];
+
 	constructor () {
 		this.tracking = false;
 		this.moves = [];
@@ -11,7 +23,7 @@ class Flick {
 		return this.tracking;
 	}
 
-	begin = (config, {onFlick}, coords) => {
+	begin = (config: flickConfigPropType, {onFlick}: Partial<TouchableProps>, coords: {x: number, y: number}) => {
 		this.flickConfig = {
 			...config
 		};
@@ -28,7 +40,7 @@ class Flick {
 	};
 
 	// This method will get the `onFlick` props.
-	updateProps = ({onFlick}) => {
+	updateProps = ({onFlick}: Partial<TouchableProps>) => {
 		// Check `tracking` gesture is not in progress. Check if gesture exists before updating the references to the `onFlick`
 		if (!this.tracking) return;
 
@@ -36,10 +48,10 @@ class Flick {
 		this.onFlick = onFlick;
 	};
 
-	move = ({x, y}) => {
+	move = ({x, y}: {x: number, y: number}) => {
 		if (!this.tracking) return;
 
-		const {maxMoves} = this.flickConfig;
+		const {maxMoves} = this.flickConfig || defaultFlickConfig;
 
 		this.moves.push({
 			x,
@@ -66,7 +78,7 @@ class Flick {
 	end = () => {
 		if (!this.tracking) return;
 
-		const {minVelocity} = this.flickConfig;
+		const {minVelocity = 0.1} = this.flickConfig || {};
 
 		this.cancelJob.stop();
 
@@ -98,13 +110,15 @@ class Flick {
 				const vertical = Math.abs(y) > Math.abs(x);
 				// generate the flick using the start event so it has those coordinates
 				// this.sendFlick(ti.startEvent, x, y, v);
-				this.onFlick({
-					type: 'onFlick',
-					direction: vertical ? 'vertical' : 'horizontal',
-					velocityX: x,
-					velocityY: y,
-					velocity: v
-				});
+				if (this.onFlick) {
+					this.onFlick({
+						type: 'onFlick',
+						direction: vertical ? 'vertical' : 'horizontal',
+						velocityX: x,
+						velocityY: y,
+						velocity: v
+					});
+				}
 			}
 		}
 
@@ -112,21 +126,14 @@ class Flick {
 	};
 }
 
-const defaultFlickConfig = {
+const defaultFlickConfig: flickConfigPropType = {
 	maxDuration: 250,
 	maxMoves: 5,
 	minVelocity: 0.1
 };
 
-const flickConfigPropType = PropTypes.shape({
-	maxDuration: PropTypes.number,
-	maxMoves: PropTypes.number,
-	maxVelocity: PropTypes.number
-});
-
 export default Flick;
 export {
 	defaultFlickConfig,
-	Flick,
-	flickConfigPropType
+	Flick
 };

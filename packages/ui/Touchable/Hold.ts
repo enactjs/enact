@@ -1,6 +1,25 @@
-import PropTypes from 'prop-types';
+import {TouchableProps} from './Touchable';
+
+export interface holdConfigPropType {
+	cancelOnMove: boolean;
+	events: Array<{name: string, time: number}>;
+	frequency: number;
+	global: boolean;
+	moveTolerance: number;
+}
 
 class Hold {
+	holdConfig: holdConfigPropType & {resume: boolean} | null = null;
+	holdJob: number | null = null;
+	holdStart: number | null = null;
+	pulsing: boolean = false;
+	next?: {name: string, time: number} | null = null;
+	startX: number = 0;
+	startY: number = 0;
+	onHold?: TouchableProps['onHold'];
+	onHoldStart?: TouchableProps['onHoldStart'];
+	onHoldEnd?: TouchableProps['onHoldEnd'];
+
 	constructor () {
 		this.holdJob = null;
 		this.holdStart = null;
@@ -10,15 +29,15 @@ class Hold {
 
 	isHolding = () => this.holdConfig != null;
 
-	isWithinTolerance = ({x, y}) => {
-		const {moveTolerance} = this.holdConfig;
+	isWithinTolerance = ({x, y}: {x: number, y: number}) => {
+		const {moveTolerance} = this.holdConfig || defaultHoldConfig;
 		const dx = this.startX - x;
 		const dy = this.startY - y;
 
 		return Math.sqrt(dx * dx + dy * dy) < moveTolerance;
 	};
 
-	begin = (defaultConfig, {holdConfig, noResume, onHoldStart, onHoldEnd, onHold}, {x, y}) => {
+	begin = (defaultConfig: holdConfigPropType, {holdConfig, noResume, onHoldStart, onHoldEnd, onHold}: Partial<TouchableProps>, {x, y}: {x: number, y: number}) => {
 		if (!onHoldStart && !onHold) return;
 
 		this.startX = x;
@@ -51,7 +70,7 @@ class Hold {
 	};
 
 	// This method will get the `onHoldStart`, `onHoldEnd`, `onHold` props.
-	updateProps = ({onHoldStart, onHoldEnd, onHold}) => {
+	updateProps = ({onHoldStart, onHoldEnd, onHold}: Partial<TouchableProps>) => {
 		// check `isHolding` gesture is not in progress. Check if gesture exists before updating the references to the `holdConfig`
 		if (!this.isHolding()) return;
 
@@ -61,10 +80,10 @@ class Hold {
 		this.onHoldEnd = onHoldEnd;
 	};
 
-	move = (coords) => {
+	move = (coords: {x: number, y: number}) => {
 		if (!this.isHolding()) return;
 
-		const {cancelOnMove, resume} = this.holdConfig;
+		const {cancelOnMove, resume = false} = this.holdConfig || {};
 
 		if (cancelOnMove) {
 			const shouldEnd = !this.isWithinTolerance(coords);
@@ -84,7 +103,7 @@ class Hold {
 	blur = () => {
 		if (!this.isHolding()) return;
 
-		if (!this.holdConfig.global) {
+		if (!this.holdConfig?.global) {
 			this.end();
 		}
 	};
@@ -93,7 +112,7 @@ class Hold {
 		if (!this.isHolding()) return;
 
 		if (this.pulsing && this.onHoldEnd) {
-			const time = window.performance.now() - this.holdStart;
+			const time = window.performance.now() - (this.holdStart || 0);
 			this.onHoldEnd({
 				type: 'onHoldEnd',
 				time
@@ -108,7 +127,7 @@ class Hold {
 	enter = () => {
 		if (!this.isHolding()) return;
 
-		const {cancelOnMove, resume} = this.holdConfig;
+		const {cancelOnMove, resume} = this.holdConfig || {};
 
 		if (resume && !cancelOnMove) {
 			this.resume();
@@ -118,7 +137,7 @@ class Hold {
 	leave = () => {
 		if (!this.isHolding()) return;
 
-		const {global: isGlobal, resume} = this.holdConfig;
+		const {global: isGlobal, resume} = this.holdConfig || {};
 
 		if (isGlobal) return;
 
@@ -130,7 +149,9 @@ class Hold {
 	};
 
 	suspend = () => {
-		clearInterval(this.holdJob);
+		if (this.holdJob) {
+			clearInterval(this.holdJob);
+		}
 		this.holdJob = null;
 	};
 
@@ -142,7 +163,7 @@ class Hold {
 	};
 
 	startJob () {
-		const {frequency} = this.holdConfig;
+		const {frequency} = this.holdConfig || {};
 
 		if (!this.holdJob) {
 			this.holdJob = setInterval(this.handlePulse, frequency);
@@ -150,11 +171,11 @@ class Hold {
 	}
 
 	handlePulse = () => {
-		const holdTime = window.performance.now() - this.holdStart;
+		const holdTime = window.performance.now() - (this.holdStart || 0);
 
 		let n = this.next;
 		while (n && n.time <= holdTime) {
-			const {events} = this.holdConfig;
+			const {events} = this.holdConfig || {};
 			this.pulsing = true;
 			if (this.onHoldStart) {
 				this.onHoldStart({
@@ -184,7 +205,7 @@ class Hold {
 	};
 }
 
-const defaultHoldConfig = {
+const defaultHoldConfig: holdConfigPropType = {
 	cancelOnMove: false,
 	events: [
 		{name: 'hold', time: 200}
@@ -194,22 +215,8 @@ const defaultHoldConfig = {
 	moveTolerance: 16
 };
 
-const holdConfigPropType = PropTypes.shape({
-	cancelOnMove: PropTypes.bool,
-	events: PropTypes.arrayOf(
-		PropTypes.shape({
-			name: PropTypes.string,
-			time: PropTypes.number
-		})
-	),
-	frequency: PropTypes.number,
-	global: PropTypes.bool,
-	moveTolerance: PropTypes.number
-});
-
 export default Hold;
 export {
 	defaultHoldConfig,
-	Hold,
-	holdConfigPropType
+	Hold
 };

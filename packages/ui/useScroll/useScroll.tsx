@@ -14,10 +14,10 @@ import classNames from 'classnames';
 import {forward, forwardWithPrevent} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform'; // scrollMode 'native'
-import Registry from '@enact/core/internal/Registry';
+import Registry, {RegistryEvent} from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
-import {useCallback, use, useEffect, useLayoutEffect, useReducer, useRef, useState} from 'react';
+import {useCallback, use, useEffect, useLayoutEffect, useReducer, useRef, useState, RefObject} from 'react';
 import warning from 'warning';
 
 import {ResizeContext} from '../Resizable';
@@ -29,6 +29,15 @@ import utilDOM from './utilDOM';
 import utilEvent from './utilEvent';
 
 import css from './useScroll.module.less';
+import {
+	AnimationInfo,
+	CustomScrollEvent, FlickEvent,
+	LegacyWheelEvent,
+	MutableScrollState, OverscrollEdge, OverscrollOrientation, ReachedEdgeInfo, ScrollBounds, ScrollEventData,
+	ScrollToOptions,
+	UseScrollProps
+} from './useScroll.types';
+import {Callback} from '../types';
 
 const
 	constants = {
@@ -67,7 +76,7 @@ const
 		scrollWheelPageMultiplierForMaxPixel
 	} = constants;
 
-const TouchableDiv = Touchable(({ref, ...rest}) => (<div {...rest} ref={ref} />));
+const TouchableDiv = Touchable(({ref, ...rest}: {ref: RefObject<HTMLDivElement>}) => (<div {...rest} ref={ref} />));
 
 const useForceUpdate = () => (useReducer(x => x + 1, 0));
 
@@ -84,10 +93,10 @@ const useForceUpdate = () => (useReducer(x => x + 1, 0));
  * @memberof ui/useScroll
  * @private
  */
-function roundTarget (currentPosition, targetX, targetY) {
+function roundTarget (currentPosition: CustomScrollEvent, targetX: number, targetY: number) {
 	let roundedTargetX, roundedTargetY;
 
-	if (currentPosition?.scrollPos && platform.chrome > 120) {
+	if (currentPosition?.scrollPos && platform.chrome && platform.chrome > 120) {
 		roundedTargetX = currentPosition?.scrollPos?.left < targetX ? Math.ceil(targetX) : Math.floor(targetX);
 		roundedTargetY = currentPosition?.scrollPos?.top < targetY ? Math.ceil(targetY) : Math.floor(targetY);
 	} else {
@@ -106,7 +115,7 @@ function roundTarget (currentPosition, targetX, targetY) {
  * @ui
  * @private
  */
-const useScrollBase = (props) => {
+const useScrollBase = (props: UseScrollProps) => {
 	const
 		{
 			childProps,
@@ -176,7 +185,7 @@ const useScrollBase = (props) => {
 	const [riRatio, setRiRatio] = useState(ri.scale(1));
 	const [originalItemSize, setOriginalItemSize] = useState(props.itemSize);
 	const [itemSize, setItemSize] = useState(props.itemSize);
-	const scaledItemSizesRef = useRef(null);
+	const scaledItemSizesRef = useRef<number[] | null>(null);
 	const scaledItemSizesSourceRef = useRef(props.itemSizes);
 
 	if (scaledItemSizesSourceRef.current !== props.itemSizes) {
@@ -184,7 +193,7 @@ const useScrollBase = (props) => {
 		scaledItemSizesSourceRef.current = props.itemSizes;
 	}
 
-	const mutableRef = useRef({
+	const mutableRef = useRef<MutableScrollState>({
 		overscrollEnabled: !!(props.applyOverscrollEffect),
 
 		// Enable the early bail out of repeated scrolling to the same position
@@ -243,11 +252,11 @@ const useScrollBase = (props) => {
 		observerOnScroll: [],
 
 		// non-declared-variable.
-		accumulatedTargetX: null,
-		accumulatedTargetY: null,
+		accumulatedTargetX: 0,
+		accumulatedTargetY: 0,
 		flickTarget: null,
-		dragStartX: null,
-		dragStartY: null,
+		dragStartX: 0,
+		dragStartY: 0,
 		scrollStopJob: null,
 
 		prevState: {isHorizontalScrollbarVisible, isVerticalScrollbarVisible}
@@ -310,12 +319,14 @@ const useScrollBase = (props) => {
 
 	if ((originalItemSize || originalItemSize === 0 || props.itemSize || props.itemSize === 0) && (originalItemSize !== props.itemSize)) {
 		setOriginalItemSize(props.itemSize);
-		if (typeof props.itemSize === 'object') {
+		if (typeof props.itemSize === 'object' && typeof itemSize === 'object') {
 			if ((ri.scale(1) / riRatio !== props.itemSize.minWidth / itemSize.minWidth) || (ri.scale(1) / riRatio !== props.itemSize.minHeight / itemSize.minHeight)) {
 				setItemSize(props.itemSize);
 			}
-		} else if (ri.scale(1) / riRatio !== props.itemSize / itemSize) {
-			setItemSize(props.itemSize);
+		} else if (typeof props.itemSize === 'number' && typeof itemSize === 'number') {
+			if (ri.scale(1) / riRatio !== props.itemSize / itemSize) {
+				setItemSize(props.itemSize);
+			}
 		}
 	}
 
@@ -356,13 +367,13 @@ const useScrollBase = (props) => {
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useLayoutEffect(() => {
-		const containerRef = scrollContainerRef.current;
+		const containerRef = scrollContainerRef?.current;
 		if (!containerRef) {
 			return;
 		}
 		if (typeof ResizeObserver === 'function') {
-			let resizeObserver = new ResizeObserver(() => {
-				if (scrollContentHandle.current && scrollContentHandle.current.syncClientSize) {
+			let resizeObserver: ResizeObserver | null = new ResizeObserver(() => {
+				if (scrollContentHandle?.current && scrollContentHandle.current.syncClientSize) {
 					scrollContentHandle.current.syncClientSize();
 				}
 			});
@@ -392,7 +403,7 @@ const useScrollBase = (props) => {
 				forwardScrollEvent('onScrollStop', getReachedEdgeInfo());
 			}
 
-			scrollStopJob.stop();
+			scrollStopJob?.stop();
 
 			// scrollMode 'translate' [
 			if (animator.isAnimating()) {
@@ -414,7 +425,7 @@ const useScrollBase = (props) => {
 	// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 	// state member.
 	const enqueueForceUpdate = useCallback(() => {
-		scrollContentHandle.current.calculateMetrics(scrollContentHandle.current.props);
+		scrollContentHandle?.current.calculateMetrics(scrollContentHandle.current.props);
 		forceUpdate();
 	}, [forceUpdate, scrollContentHandle]);
 	// scrollMode 'translate' ]]
@@ -440,16 +451,18 @@ const useScrollBase = (props) => {
 		if (ri.scale(1) !== riRatio) {
 			if (scrollContentProps.itemSize) {
 				const ratio = ri.scale(1) / riRatio;
-				if (scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
+				if (typeof scrollContentProps.itemSize === 'object' && scrollContentProps.itemSize.minWidth && scrollContentProps.itemSize.minHeight) {
 					scrollContentProps.itemSize = {
 						...scrollContentProps.itemSize,
 						minWidth: scrollContentProps.itemSize.minWidth * ratio,
 						minHeight: scrollContentProps.itemSize.minHeight * ratio
 					};
 				} else {
-					scrollContentProps.itemSize *= ratio;
-					if (scrollContentProps.itemSizes) {
-						scaledItemSizesRef.current = scrollContentProps.itemSizes.map((s) => s * ratio);
+					if (typeof scrollContentProps.itemSize === 'number') {
+						scrollContentProps.itemSize *= ratio;
+					}
+					if (scrollContentProps.itemSizes && Array.isArray(scrollContentProps.itemSizes)) {
+						scaledItemSizesRef.current = scrollContentProps.itemSizes.map((s: number) => s * ratio);
 					}
 				}
 				setItemSize(scrollContentProps.itemSize);
@@ -465,7 +478,7 @@ const useScrollBase = (props) => {
 				if (scrollMode === 'translate') {
 					scrollTo({position: {x: 0, y: 0}, animate: false});
 				} else {
-					scrollContentHandle.current.scrollToPosition(0, 0, 'instant');
+					scrollContentHandle?.current.scrollToPosition(0, 0, 'instant');
 				}
 			}
 			enqueueForceUpdate();
@@ -473,7 +486,7 @@ const useScrollBase = (props) => {
 	}
 
 	// scrollMode 'translate' [[
-	const handleResize = useCallback((ev) => {
+	const handleResize = useCallback((ev: RegistryEvent) => {
 		if (ev.action === 'invalidateBounds') {
 			enqueueForceUpdate();
 		}
@@ -495,19 +508,19 @@ const useScrollBase = (props) => {
 
 		return () => {
 			if (ref.scrolling) {
-				ref.scrollStopJob.run();
+				ref.scrollStopJob?.run();
 			}
-			ref.scrollStopJob.stop();
+			ref.scrollStopJob?.stop();
 		};
 	}, [direction, isHorizontalScrollbarVisible, isVerticalScrollbarVisible, rtl, scrollMode, spotlightContainerDisabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useLayoutEffect(() => {
 		const
-			{hasDataSizeChanged} = scrollContentHandle.current,
+			{hasDataSizeChanged} = scrollContentHandle?.current,
 			{prevState, resizeRegistry, scrollToInfo} = mutableRef.current;
 
 		// Need to sync calculated client size if it is different from the real size
-		if (scrollContentHandle.current.syncClientSize) {
+		if (scrollContentHandle?.current.syncClientSize) {
 			// If we actually synced, we need to reset scroll position.
 			if (scrollContentHandle.current.syncClientSize()) {
 				setScrollLeft(0);
@@ -557,11 +570,11 @@ const useScrollBase = (props) => {
 
 	// drag/flick event handlers
 
-	function getRtlX (x) {
+	function getRtlX (x: number) {
 		return (rtl ? -x : x);
 	}
 
-	function onMouseDown (ev) {
+	function onMouseDown (ev: MouseEvent) {
 		if (snapToCenter) {
 			ev.preventDefault();
 		}
@@ -577,7 +590,7 @@ const useScrollBase = (props) => {
 	}
 	// scrollMode 'native' ]]
 
-	function onDragStart (ev) {
+	function onDragStart (ev: PointerEvent) {
 		if (scrollMode === 'translate' ) {
 			if (ev.type === 'dragstart') return;
 
@@ -598,7 +611,7 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	function onDrag (ev) {
+	function onDrag (ev: PointerEvent) {
 		if (scrollMode === 'translate') {
 			if (ev.type === 'drag') {
 				return;
@@ -628,7 +641,7 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	function onDragEnd (ev) {
+	function onDragEnd (ev: DragEvent) {
 		if (scrollMode === 'translate') {
 			if (ev.type === 'dragend') {
 				return;
@@ -680,7 +693,7 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	function onFlick (ev) {
+	function onFlick (ev: FlickEvent) {
 		const isVerticalFlick = ev.direction === 'vertical';
 
 		if (scrollMode === 'translate' || !mutableRef.current.isTouching) { // except touch input in 'native' mode
@@ -702,7 +715,7 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	function calculateDistanceByWheel (deltaMode, delta, maxPixel) {
+	function calculateDistanceByWheel (deltaMode: WheelEvent['deltaMode'], delta: number, maxPixel: number) {
 		if (deltaMode === 0) {
 			delta = clamp(-maxPixel, maxPixel, ri.scale(delta * mutableRef.current.scrollWheelMultiplierForDeltaPixel));
 		} else if (deltaMode === 1) { // line; firefox
@@ -719,7 +732,7 @@ const useScrollBase = (props) => {
 	 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot support this
 	 * - for vertical scroll, supports wheel action on scrollbars only
 	 */
-	function onWheel (ev) {
+	function onWheel (ev: LegacyWheelEvent) {
 		if (mutableRef.current.isDragging) {
 			ev.preventDefault();
 			ev.stopPropagation();
@@ -729,7 +742,7 @@ const useScrollBase = (props) => {
 				canScrollH = canScrollHorizontally(bounds),
 				canScrollV = canScrollVertically(bounds),
 				eventDeltaMode = ev.deltaMode,
-				eventDelta = (-ev.wheelDeltaY || ev.deltaY);
+				eventDelta = ev.wheelDeltaY ? -ev.wheelDeltaY : ev.deltaY;
 			let delta = 0;
 
 			mutableRef.current.lastInputType = 'wheel';
@@ -767,7 +780,7 @@ const useScrollBase = (props) => {
 				forward('onWheel', {delta, horizontalScrollbarHandle, verticalScrollbarHandle}, props);
 
 				if (delta !== 0) {
-					scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn && overscrollEffectOn.wheel);
+					scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn && overscrollEffectOn.wheel || false);
 					ev.preventDefault();
 					ev.stopPropagation();
 				}
@@ -788,8 +801,8 @@ const useScrollBase = (props) => {
 					if (eventDelta < 0 && mutableRef.current.scrollTop > 0 || eventDelta > 0 && mutableRef.current.scrollTop < bounds.maxTop) {
 						// Not to check if ev.target is a descendant of a wrapped component which may have a lot of nodes in it.
 						if (
-							horizontalScrollbarHandle.current && horizontalScrollbarHandle.current.getContainerRef && utilDOM.containsDangerously(horizontalScrollbarHandle.current.getContainerRef(), ev.target) ||
-							verticalScrollbarHandle.current && verticalScrollbarHandle.current.getContainerRef && utilDOM.containsDangerously(verticalScrollbarHandle.current.getContainerRef(), ev.target)
+							horizontalScrollbarHandle?.current && horizontalScrollbarHandle.current.getContainerRef && utilDOM.containsDangerously(horizontalScrollbarHandle.current.getContainerRef(), ev.target as HTMLElement) ||
+							verticalScrollbarHandle?.current && verticalScrollbarHandle.current.getContainerRef && utilDOM.containsDangerously(verticalScrollbarHandle.current.getContainerRef(), ev.target as HTMLElement)
 						) {
 							delta = calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 							needToHideScrollbarTrack = !delta;
@@ -832,7 +845,7 @@ const useScrollBase = (props) => {
 						mutableRef.current.wheelDirection = dir;
 					}
 
-					scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn && overscrollEffectOn.wheel);
+					scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn && overscrollEffectOn.wheel || false);
 				}
 
 				if (needToHideScrollbarTrack) {
@@ -843,7 +856,7 @@ const useScrollBase = (props) => {
 	}
 
 	// scrollMode 'translate' [[
-	function scrollByPage (keyCode) {
+	function scrollByPage (keyCode: number) {
 		const
 			bounds = getScrollBounds(),
 			canScrollV = canScrollVertically(bounds),
@@ -851,7 +864,7 @@ const useScrollBase = (props) => {
 
 		mutableRef.current.lastInputType = 'pageKey';
 
-		scrollToAccumulatedTarget(pageDistance, canScrollV, overscrollEffectOn && overscrollEffectOn.pageKey);
+		scrollToAccumulatedTarget(pageDistance, canScrollV, overscrollEffectOn && overscrollEffectOn.pageKey || false);
 	}
 	// scrollMode 'translate' ]]
 
@@ -863,15 +876,18 @@ const useScrollBase = (props) => {
 	 * @param {Event} ev - Scroll event
 	 * @private
 	 */
-	function updateScrollPosition (ev) {
-		let {scrollLeft, scrollTop} = ev.target;
+	function updateScrollPosition (ev: Event) {
+		const target = ev.target as HTMLElement | null;
+		if (!target) return;
+
+		let {scrollLeft, scrollTop} = target;
 
 		const
 			bounds = getScrollBounds(),
 			canScrollH = canScrollHorizontally(bounds);
 
 		if (rtl && canScrollH) {
-			scrollLeft = (platform.chrome < 85) ? bounds.maxLeft - scrollLeft : -scrollLeft;
+			scrollLeft = (platform.chrome && platform.chrome < 85) ? bounds.maxLeft - scrollLeft : -scrollLeft;
 		}
 
 		if (scrollLeft !== mutableRef.current.scrollLeft) {
@@ -881,12 +897,12 @@ const useScrollBase = (props) => {
 			setScrollTop(scrollTop);
 		}
 
-		if (scrollContentHandle.current.didScroll) {
+		if (scrollContentHandle?.current.didScroll) {
 			scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
 		}
 	}
 
-	function onScroll (ev) {
+	function onScroll (ev: Event) {
 		// Track if we had a grace timer active before clearing it
 		const hadGraceTimer = !!mutableRef.current.scrollEndGraceTimer;
 
@@ -908,22 +924,22 @@ const useScrollBase = (props) => {
 		forwardScrollEvent('onScroll');
 
 		if (!hadGraceTimer) {
-			mutableRef.current.scrollStopJob.start();
+			mutableRef.current.scrollStopJob?.start();
 		}
 	}
 
 	/*
 	 * Handler for scrollend event
 	 */
-	function onScrollEnd (ev) {
-		if (!mutableRef.current.scrolling || mutableRef.current.keyPressed || scrollContentHandle.current?.scrolling) {
+	function onScrollEnd (ev: Event) {
+		if (!mutableRef.current.scrolling || mutableRef.current.keyPressed || scrollContentHandle?.current.scrolling) {
 			return;
 		}
 
 		updateScrollPosition(ev);
 
 		// Stop the fallback timer since the native scrollend has fired
-		mutableRef.current.scrollStopJob.stop();
+		mutableRef.current.scrollStopJob?.stop();
 
 		// stop for non-accumulating scrolls (mouse/touch)
 		if (!mutableRef.current.isScrollAnimationTargetAccumulated && !mutableRef.current.keyScroll) {
@@ -944,7 +960,7 @@ const useScrollBase = (props) => {
 	}
 	// scrollMode 'native' ]]
 
-	function onKeyDown (ev) {
+	function onKeyDown (ev: KeyboardEvent) {
 		mutableRef.current.keyPressed = ev.repeat;
 
 		if (scrollMode === 'translate') {
@@ -965,13 +981,13 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	function onKeyUp (ev) {
+	function onKeyUp (ev: Event) {
 		mutableRef.current.keyPressed = false;
 		mutableRef.current.keyScroll = true;
 		forward('onKeyUp', ev, props);
 	}
 
-	function scrollToAccumulatedTarget (delta, vertical, overscrollEffect) {
+	function scrollToAccumulatedTarget (delta: number, vertical: boolean, overscrollEffect: boolean) {
 		if (!mutableRef.current.isScrollAnimationTargetAccumulated) {
 			mutableRef.current.accumulatedTargetX = mutableRef.current.scrollLeft;
 			mutableRef.current.accumulatedTargetY = mutableRef.current.scrollTop;
@@ -989,7 +1005,7 @@ const useScrollBase = (props) => {
 
 	// overscroll effect
 
-	function getEdgeFromPosition (position, maxPosition) {
+	function getEdgeFromPosition (position: number, maxPosition: number) {
 		if (position <= 0) {
 			return 'before';
 		} else if (position >= maxPosition - epsilon) {
@@ -999,17 +1015,17 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	function setOverscrollStatus (orientation, edge, overscrollEffectType, ratio) {
+	function setOverscrollStatus (orientation: OverscrollOrientation, edge: OverscrollEdge, overscrollEffectType: number, ratio: number) {
 		const status = mutableRef.current.overscrollStatus[orientation][edge];
 		status.type = overscrollEffectType;
 		status.ratio = ratio;
 	}
 
-	function getOverscrollStatus (orientation, edge) {
+	function getOverscrollStatus (orientation: OverscrollOrientation, edge: OverscrollEdge) {
 		return (mutableRef.current.overscrollStatus[orientation][edge]);
 	}
 
-	function calculateOverscrollRatio (orientation, position) {
+	function calculateOverscrollRatio (orientation: OverscrollOrientation, position: number) {
 		const
 			bounds = getScrollBounds(),
 			isVertical = (orientation === 'vertical'),
@@ -1028,12 +1044,12 @@ const useScrollBase = (props) => {
 		return Math.min(1, 2 * overDistance / baseSize);
 	}
 
-	function applyOverscrollEffect (orientation, edge, overscrollEffectType, ratio = overscrollDefaultRatio) {
-		props.applyOverscrollEffect(orientation, edge, overscrollEffectType, ratio);
+	function applyOverscrollEffect (orientation: OverscrollOrientation, edge: OverscrollEdge, overscrollEffectType: number, ratio = overscrollDefaultRatio) {
+		props.applyOverscrollEffect?.(orientation, edge, overscrollEffectType, ratio);
 		setOverscrollStatus(orientation, edge, overscrollEffectType === overscrollTypeOnce ? overscrollTypeDone : overscrollEffectType, ratio);
 	}
 
-	function checkAndApplyOverscrollEffect (orientation, edge, overscrollEffectType, ratio = overscrollDefaultRatio) {
+	function checkAndApplyOverscrollEffect (orientation: OverscrollOrientation, edge: OverscrollEdge, overscrollEffectType: number, ratio = overscrollDefaultRatio) {
 		const
 			isVertical = (orientation === 'vertical'),
 			curPos = isVertical ? mutableRef.current.scrollTop : mutableRef.current.scrollLeft,
@@ -1046,7 +1062,7 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	function clearOverscrollEffect (orientation, edge) {
+	function clearOverscrollEffect (orientation: OverscrollOrientation, edge: OverscrollEdge) {
 		if (getOverscrollStatus(orientation, edge).type !== overscrollTypeNone) {
 			if (props.clearOverscrollEffect) {
 				props.clearOverscrollEffect(orientation, edge);
@@ -1057,14 +1073,14 @@ const useScrollBase = (props) => {
 	}
 
 	function clearAllOverscrollEffects () {
-		['horizontal', 'vertical'].forEach((orientation) => {
-			['before', 'after'].forEach((edge) => {
+		(['horizontal', 'vertical'] as const).forEach((orientation) => {
+			(['before', 'after'] as const).forEach((edge) => {
 				clearOverscrollEffect(orientation, edge);
 			});
 		});
 	}
 
-	function applyOverscrollEffectOnDrag (orientation, edge, targetPosition, overscrollEffectType) {
+	function applyOverscrollEffectOnDrag (orientation: OverscrollOrientation, edge: OverscrollEdge | null, targetPosition: number, overscrollEffectType: number) {
 		if (edge) {
 			const
 				oppositeEdge = edge === 'before' ? 'after' : 'before',
@@ -1079,7 +1095,7 @@ const useScrollBase = (props) => {
 	}
 
 	// scrollMode 'native' [[
-	function checkAndApplyOverscrollEffectOnDrag (targetX, targetY, overscrollEffectType) {
+	function checkAndApplyOverscrollEffectOnDrag (targetX: number, targetY: number, overscrollEffectType: number) {
 		const bounds = getScrollBounds();
 
 		if (canScrollHorizontally(bounds)) {
@@ -1092,8 +1108,8 @@ const useScrollBase = (props) => {
 	}
 	// scrollMode 'native' ]]
 
-	function checkAndApplyOverscrollEffectOnScroll (orientation) {
-		['before', 'after'].forEach((edge) => {
+	function checkAndApplyOverscrollEffectOnScroll (orientation: OverscrollOrientation) {
+		(['before', 'after'] as const).forEach((edge) => {
 			const {ratio, type: overscrollEffectType} = getOverscrollStatus(orientation, edge);
 
 			if (overscrollEffectType === overscrollTypeOnce) {
@@ -1102,7 +1118,7 @@ const useScrollBase = (props) => {
 		});
 	}
 
-	function checkAndApplyOverscrollEffectOnStart (orientation, edge, targetPosition) {
+	function checkAndApplyOverscrollEffectOnStart (orientation: OverscrollOrientation, edge: OverscrollEdge | null, targetPosition: number) {
 		if (mutableRef.current.isDragging) {
 			applyOverscrollEffectOnDrag(orientation, edge, targetPosition, overscrollTypeHold);
 		} else if (edge) {
@@ -1112,14 +1128,14 @@ const useScrollBase = (props) => {
 
 	// call scroll callbacks
 
-	const addObserverOnScroll = useCallback((fn) => {
+	const addObserverOnScroll = useCallback((fn: Callback) => {
 		const {observerOnScroll} = mutableRef.current;
 		if (typeof fn === 'function' && !observerOnScroll.includes(fn)) {
 			observerOnScroll.push(fn);
 		}
 	}, []);
 
-	const removeObserverOnScroll = useCallback((fn) => {
+	const removeObserverOnScroll = useCallback((fn: Callback) => {
 		const {observerOnScroll} = mutableRef.current;
 		const index = observerOnScroll.indexOf(fn);
 		if (index !== -1) {
@@ -1127,7 +1143,7 @@ const useScrollBase = (props) => {
 		}
 	}, []);
 
-	function forwardScrollEvent (type, reachedEdgeInfo) {
+	function forwardScrollEvent (type: string, reachedEdgeInfo?: ReachedEdgeInfo) {
 		const data = {scrollLeft: mutableRef.current.scrollLeft, scrollTop: mutableRef.current.scrollTop, moreInfo: getMoreInfo(), reachedEdgeInfo};
 		forward(type, data, props);
 		if (type === 'onScroll') {
@@ -1161,30 +1177,30 @@ const useScrollBase = (props) => {
 
 	// update scroll position
 
-	function setScrollLeft (value) {
+	function setScrollLeft (value: number) {
 		const bounds = getScrollBounds();
 
 		mutableRef.current.scrollLeft = clamp(0, bounds.maxLeft, value);
 
-		if (mutableRef.current.overscrollEnabled && overscrollEffectOn && overscrollEffectOn[mutableRef.current.lastInputType]) {
+		if (mutableRef.current.overscrollEnabled && overscrollEffectOn && mutableRef.current.lastInputType && overscrollEffectOn[mutableRef.current.lastInputType]) {
 			checkAndApplyOverscrollEffectOnScroll('horizontal');
 		}
 
-		if (isHorizontalScrollbarVisible) {
+		if (isHorizontalScrollbarVisible && horizontalScrollbarHandle) {
 			updateScrollbarTrack(horizontalScrollbarHandle, bounds);
 		}
 	}
 
-	function setScrollTop (value) {
+	function setScrollTop (value: number) {
 		const bounds = getScrollBounds();
 
 		mutableRef.current.scrollTop = clamp(0, bounds.maxTop, value);
 
-		if (mutableRef.current.overscrollEnabled && overscrollEffectOn && overscrollEffectOn[mutableRef.current.lastInputType]) {
+		if (mutableRef.current.overscrollEnabled && overscrollEffectOn && mutableRef.current.lastInputType && overscrollEffectOn[mutableRef.current.lastInputType]) {
 			checkAndApplyOverscrollEffectOnScroll('vertical');
 		}
 
-		if (isVerticalScrollbarVisible) {
+		if (isVerticalScrollbarVisible && verticalScrollbarHandle) {
 			updateScrollbarTrack(verticalScrollbarHandle, bounds);
 		}
 	}
@@ -1228,7 +1244,7 @@ const useScrollBase = (props) => {
 	}
 	// scrollMode 'translate' ]]
 
-	function start ({targetX, targetY, animate = true, duration = animationDuration, overscrollEffect = false}) {
+	function start ({targetX = 0, targetY = 0, animate = true, duration = animationDuration, overscrollEffect = false}) {
 		const
 			{scrollLeft, scrollTop} = mutableRef.current,
 			bounds = getScrollBounds(),
@@ -1267,7 +1283,7 @@ const useScrollBase = (props) => {
 				forwardScrollEvent('onScrollStart');
 			}
 
-			mutableRef.current.scrollStopJob.stop();
+			mutableRef.current.scrollStopJob?.stop();
 		}
 
 		if (Math.abs(maxLeft - targetX) < epsilon) {
@@ -1289,7 +1305,7 @@ const useScrollBase = (props) => {
 
 		if (scrollMode === 'translate') {
 			showScrollbarTrack(bounds);
-			if (scrollContentHandle.current && scrollContentHandle.current.setScrollPositionTarget) {
+			if (scrollContentHandle?.current && scrollContentHandle.current.setScrollPositionTarget) {
 				scrollContentHandle.current.setScrollPositionTarget(targetX, targetY);
 			}
 
@@ -1300,13 +1316,13 @@ const useScrollBase = (props) => {
 				stop();
 			}
 		} else { // scrollMode 'native'
-			let {roundedTargetX, roundedTargetY} = roundTarget(scrollContentHandle.current, targetX, targetY);
+			let {roundedTargetX, roundedTargetY} = roundTarget(scrollContentHandle?.current, targetX, targetY);
 
 			if (animate) {
 				scrollContentRef.current.lastInputType = mutableRef.current.lastInputType;
-				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth', mutableRef.current.repeat);
+				scrollContentHandle?.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth', mutableRef.current.repeat);
 			} else {
-				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
+				scrollContentHandle?.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
 			}
 
 			if (props.start) {
@@ -1316,20 +1332,20 @@ const useScrollBase = (props) => {
 	}
 
 	// scrollMode 'translate' [[
-	function scrollAnimation (animationInfo) {
-		return (curTime) => {
+	function scrollAnimation (animationInfo: AnimationInfo) {
+		return (curTime: number) => {
 			const
-				{sourceX, sourceY, targetX, targetY, duration} = animationInfo,
+				{sourceX = 0, sourceY = 0, targetX, targetY, duration} = animationInfo,
 				bounds = getScrollBounds(),
 				scrollAnimationDuration = mutableRef.current.keyPressed ? minAnimationDuration : duration;
 
-			const dynamicScrollDuration = (target, source) => {
+			const dynamicScrollDuration = (target: number, source: number) => {
 				const customDuration = Math.max(minAnimationDuration, Math.abs(target - source));
 				if (mutableRef.current.keyPressed) return minAnimationDuration;
 				return animationDuration !== duration ? duration : Math.min(customDuration, duration);
 			};
 
-			if (curTime < scrollAnimationDuration) {
+			if (scrollAnimationDuration && curTime < scrollAnimationDuration) {
 				let
 					toBeContinued = false,
 					curTargetX = sourceX,
@@ -1369,7 +1385,7 @@ const useScrollBase = (props) => {
 		};
 	}
 
-	function scroll (left, top) {
+	function scroll (left: number, top: number) {
 		if (left !== mutableRef.current.scrollLeft) {
 			setScrollLeft(left);
 		}
@@ -1378,7 +1394,7 @@ const useScrollBase = (props) => {
 			setScrollTop(top);
 		}
 
-		scrollContentHandle.current.setScrollPosition(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
+		scrollContentHandle?.current.setScrollPosition(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
 		forwardScrollEvent('onScroll');
 	}
 	// scrollMode 'translate' ]]
@@ -1398,12 +1414,12 @@ const useScrollBase = (props) => {
 		}
 
 		if (mutableRef.current.scrolling) {
-			mutableRef.current.scrollStopJob.start();
+			mutableRef.current.scrollStopJob?.start();
 		}
 	}
 
 	function stopForNative () {
-		scrollContentHandle.current.scrollToPosition(
+		scrollContentHandle?.current.scrollToPosition(
 			mutableRef.current.scrollLeft + (rtl ? -0.1 : 0.1),
 			mutableRef.current.scrollTop + 0.1,
 			'instant'
@@ -1420,7 +1436,7 @@ const useScrollBase = (props) => {
 
 	// scrollTo API
 
-	function getPositionForScrollTo (opt) {
+	function getPositionForScrollTo (opt: ScrollToOptions) {
 		const
 			bounds = getScrollBounds(),
 			canScrollH = canScrollHorizontally(bounds),
@@ -1462,10 +1478,10 @@ const useScrollBase = (props) => {
 					}
 				}
 			} else {
-				if (typeof opt.index === 'number' && typeof scrollContentHandle.current.getItemPosition === 'function') {
+				if (typeof opt.index === 'number' && typeof scrollContentHandle?.current.getItemPosition === 'function') {
 					itemPos = scrollContentHandle.current.getItemPosition(opt.index, opt.stickTo, opt.offset, opt.disallowNegativeOffset);
 				} else if (opt.node instanceof Object) {
-					if (opt.node.nodeType === 1 && typeof scrollContentHandle.current.getNodePosition === 'function') {
+					if (opt.node.nodeType === 1 && typeof scrollContentHandle?.current.getNodePosition === 'function') {
 						itemPos = scrollContentHandle.current.getNodePosition(opt.node);
 					}
 				}
@@ -1484,7 +1500,7 @@ const useScrollBase = (props) => {
 		return {left, top};
 	}
 
-	function scrollTo (opt) {
+	function scrollTo (opt: ScrollToOptions) {
 		if (!mutableRef.current.deferScrollTo) {
 			const {left, top} = getPositionForScrollTo(opt);
 			const targetX = (left !== null) ? left : mutableRef.current.scrollLeft;
@@ -1496,7 +1512,7 @@ const useScrollBase = (props) => {
 
 			mutableRef.current.scrollToInfo = null;
 
-			if (scrollMode === 'native' && scrollContentHandle.current && scrollContentHandle.current.setScrollToPositionTarget) {
+			if (scrollMode === 'native' && scrollContentHandle?.current && scrollContentHandle.current.setScrollToPositionTarget) {
 				scrollContentHandle.current.setScrollToPositionTarget(targetX, targetY);
 			}
 
@@ -1510,27 +1526,27 @@ const useScrollBase = (props) => {
 		}
 	}
 
-	function canScrollHorizontally (bounds) {
+	function canScrollHorizontally (bounds: ScrollBounds) {
 		return (direction === 'horizontal' || direction === 'both') && (bounds.scrollWidth > bounds.clientWidth) && !isNaN(bounds.scrollWidth);
 	}
 
-	function canScrollVertically (bounds) {
+	function canScrollVertically (bounds: ScrollBounds) {
 		return (direction === 'vertical' || direction === 'both') && (bounds.scrollHeight > bounds.clientHeight) && !isNaN(bounds.scrollHeight);
 	}
 
 	// scroll bar
 
-	function showScrollbarTrack (bounds) {
-		if (isHorizontalScrollbarVisible && canScrollHorizontally(bounds) && horizontalScrollbarHandle.current) {
+	function showScrollbarTrack (bounds: ScrollBounds) {
+		if (isHorizontalScrollbarVisible && canScrollHorizontally(bounds) && horizontalScrollbarHandle?.current) {
 			horizontalScrollbarHandle.current.showScrollbarTrack();
 		}
 
-		if (isVerticalScrollbarVisible && canScrollVertically(bounds) && verticalScrollbarHandle.current) {
+		if (isVerticalScrollbarVisible && canScrollVertically(bounds) && verticalScrollbarHandle?.current) {
 			verticalScrollbarHandle.current.showScrollbarTrack();
 		}
 	}
 
-	function updateScrollbarTrack (scrollbarRef, bounds) {
+	function updateScrollbarTrack (scrollbarRef: RefObject<any>, bounds: ScrollBounds) {
 		scrollbarRef.current.update({
 			...bounds,
 			scrollLeft: mutableRef.current.scrollLeft,
@@ -1539,11 +1555,11 @@ const useScrollBase = (props) => {
 	}
 
 	function startHidingScrollbarTrack () {
-		if (isHorizontalScrollbarVisible && horizontalScrollbarHandle.current) {
+		if (isHorizontalScrollbarVisible && horizontalScrollbarHandle?.current) {
 			horizontalScrollbarHandle.current.startHidingScrollbarTrack();
 		}
 
-		if (isVerticalScrollbarVisible && verticalScrollbarHandle.current) {
+		if (isVerticalScrollbarVisible && verticalScrollbarHandle?.current) {
 			verticalScrollbarHandle.current.startHidingScrollbarTrack();
 		}
 	}
@@ -1590,11 +1606,11 @@ const useScrollBase = (props) => {
 				scrollTop: mutableRef.current.scrollTop
 			};
 
-			if (curHorizontalScrollbarVisible && horizontalScrollbarHandle.current) {
+			if (curHorizontalScrollbarVisible && horizontalScrollbarHandle?.current) {
 				horizontalScrollbarHandle.current.update(updatedBounds);
 			}
 
-			if (curVerticalScrollbarVisible && verticalScrollbarHandle.current) {
+			if (curVerticalScrollbarVisible && verticalScrollbarHandle?.current) {
 				verticalScrollbarHandle.current.update(updatedBounds);
 			}
 
@@ -1607,13 +1623,13 @@ const useScrollBase = (props) => {
 	// ref
 
 	function getScrollBounds () {
-		if (scrollContentHandle.current && typeof scrollContentHandle.current.getScrollBounds === 'function') {
+		if (scrollContentHandle?.current && typeof scrollContentHandle.current.getScrollBounds === 'function') {
 			return scrollContentHandle.current.getScrollBounds();
 		}
 	}
 
 	function getMoreInfo () {
-		if (scrollContentHandle.current && typeof scrollContentHandle.current.getMoreInfo === 'function') {
+		if (scrollContentHandle?.current && typeof scrollContentHandle.current.getMoreInfo === 'function') {
 			return scrollContentHandle.current.getMoreInfo();
 		}
 	}
@@ -1667,7 +1683,7 @@ const useScrollBase = (props) => {
 		// Prevent scroll by focus.
 		// VirtualList and VirtualGridList DO NOT receive `onscroll` event.
 		// Only Scroller could get `onscroll` event.
-		if (!mutableRef.current.animator.isAnimating() && scrollContentHandle.current && scrollContentRef.current && scrollContentHandle.current.getRtlPositionX && !mutableRef.current.isDragging) {
+		if (!mutableRef.current.animator.isAnimating() && scrollContentHandle?.current && scrollContentRef.current && scrollContentHandle.current.getRtlPositionX && !mutableRef.current.isDragging) {
 			// For Scroller
 			scrollContentRef.current.scrollTop = mutableRef.current.scrollTop;
 			scrollContentRef.current.scrollLeft = scrollContentHandle.current.getRtlPositionX(mutableRef.current.scrollLeft);
@@ -1675,8 +1691,12 @@ const useScrollBase = (props) => {
 	}
 	// scrollMode 'translate' ]]
 
-	function scrollContainerContainsDangerously (target) {
-		return utilDOM.containsDangerously(scrollContainerRef, target);
+	function scrollContainerContainsDangerously (target: HTMLElement) {
+		if (scrollContainerRef) {
+			return utilDOM.containsDangerously(scrollContainerRef, target);
+		}
+
+		return false;
 	}
 
 	assignProperties('scrollContainerProps', {
@@ -1752,7 +1772,7 @@ const useScrollBase = (props) => {
 	};
 };
 
-const assignPropertiesOf = (instance) => (name, properties) => {
+const assignPropertiesOf = (instance: Record<string, any>) => (name: string, properties: Record<string, any>) => {
 	if (!instance[name]) {
 		instance[name] = {};
 	}
@@ -1779,7 +1799,7 @@ const assignPropertiesOf = (instance) => (name, properties) => {
 	}
 };
 
-const useScroll = (props) => {
+const useScroll = (props: Partial<UseScrollProps>): Partial<UseScrollProps> => {
 	// Mutable value
 
 	const scrollContainerRef = useRef({});
