@@ -181,10 +181,10 @@ const functionalKind = (config) => {
 	// ── inline ──────────────────────────────────────────────────────────────
 	// A synchronous, hook-free path for calling the component logic outside
 	// of the React render cycle (e.g. in tests or server-side utilities).
-	Component.inline = (props, context) => {
+	Component.inline = function Inline (props, context) {
 		const updated = applyDefaultProps({...props}, defaultProps, defaultPropKeys);
 
-		return useRender(prepareKindProps(bindInlineHandlers(updated, handlers, handlerKeys, context), context)); // eslint-disable-line react-hooks/rules-of-hooks
+		return useRender(prepareKindProps(bindInlineHandlers(updated, handlers, handlerKeys, context), context));
 	};
 
 	return Component;
