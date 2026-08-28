@@ -1,4 +1,5 @@
-import {ComponentType, Context, CSSProperties, HTMLAttributes, ReactElement } from 'react';
+import {WeakValidationMap} from 'prop-types';
+import {ComponentType, Context, CSSProperties, HTMLAttributes, ReactElement} from 'react';
 
 import {Callback, CallbackObject, HandlerFunction} from '../types';
 
@@ -95,6 +96,12 @@ export interface KindConfig<P = CallbackObject, C = {}, D = {}> {
 	 * of `defaultProps` and `computed`.
 	 */
 	_propTypes?: P;
+	/**
+	 * Real `prop-types` validators, checked at runtime (in DEV) via `checkPropTypes` on mount
+	 * and on every update. Unlike `_propTypes`, this is actually assigned to the component and
+	 * used to validate props — pass real validators here (e.g. `PropTypes.string`).
+	 */
+	propTypes?: WeakValidationMap<P>;
 	/** The display name of the component, used for debugging and React DevTools. */
 	name?: string;
 	/** If `true`, returns a functional React component instead of a Class component. */

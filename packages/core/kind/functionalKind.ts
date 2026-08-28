@@ -134,6 +134,7 @@ const functionalKind = (config: FunctionalKindConfig) => {
 		defaultProps,
 		handlers,
 		name,
+		propTypes, // eslint-disable-line react/forbid-foreign-prop-types
 		useRender,
 		styles: cfgStyles
 	} = config;
@@ -179,6 +180,7 @@ const functionalKind = (config: FunctionalKindConfig) => {
 	};
 
 	if (name)         Component.displayName = name;
+	if (propTypes)    Component.propTypes = propTypes;
 	if (defaultProps) Component.defaultProps = defaultProps;
 
 	// Expose computed map in DEV for easier testability.

@@ -84,6 +84,7 @@ const EnactPropTypes = {
 
 export default EnactPropTypes;
 
+// eslint-disable-next-line no-redeclare
 export namespace EnactPropTypes {
 	export type ref = {current: any} | Callback;
 	export type componentOverride = ComponentType<any> | ReactElement;

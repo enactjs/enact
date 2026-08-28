@@ -758,7 +758,7 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter: EventAdapter, ha
  * @memberof core/handle
  * @public
  */
-const forwardCustom = handle.forwardCustom = function <C = unknown>(name: string, adapter?: EventAdapter<C>): HandlerFunction<C> {
+const forwardCustom = handle.forwardCustom = function <C = unknown> (name: string, adapter?: EventAdapter<C>): HandlerFunction<C> {
 	return named(adaptEvent(
 		function (this: any, ev, ...args: any[]) {
 			let customEventPayload = adapter ? adapter.call(this, ev, ...(args as [CallbackObject, C])) : null;
