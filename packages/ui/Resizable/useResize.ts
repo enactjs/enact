@@ -1,7 +1,8 @@
 import {forward} from '@enact/core/handle';
+import type {RegistryController} from '@enact/core/internal/Registry';
 import {useCallback, use, useEffect, useRef} from 'react';
 
-import ResizeContext, {type ResizeRegistryHandle} from './ResizeContext';
+import ResizeContext from './ResizeContext';
 
 interface UseResizeConfig {
 	/**
@@ -41,7 +42,7 @@ const useResize = (props: Record<string, any>, config: UseResizeConfig): Record<
 	const {filter = null, resize = null} = config;
 
 	const resizeContextValue = use(ResizeContext);
-	const mutableRef = useRef<{resizeRegistry: ResizeRegistryHandle | null}>({
+	const mutableRef = useRef<{resizeRegistry: RegistryController | null}>({
 		resizeRegistry: null
 	});
 

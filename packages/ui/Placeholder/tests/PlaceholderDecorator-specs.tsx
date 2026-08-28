@@ -10,7 +10,7 @@ describe('PlaceholderDecorator', () => {
 
 	describe('config', () => {
 		test('should configure the default style of the placeholder element', () => {
-			const controllerRegistry = Registry.create();
+			const controllerRegistry = Registry.create(() => {});
 			render(
 				<PlaceholderContext value={controllerRegistry.register}>
 					<div data-testid="wrapper">

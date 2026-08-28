@@ -149,18 +149,47 @@ declare module '@enact/core/internal/prop-types' {
 }
 
 declare module '@enact/core/internal/Registry' {
-	export interface RegistryInstance {
-		notify: (payload?: Record<string, any>) => void;
-		register: (fn: (...args: any[]) => any) => any;
-		unregister: (handle: any) => void;
+	/**
+	 * Mirrors the real shape in `packages/core/internal/Registry/Registry.ts`. `Registry` is a
+	 * plain object (not a class) whose `create()` returns a `RegistryHandle`. Note that
+	 * `RegistryInstance` is the *callback function* type passed to `register()` -- not the object
+	 * `Registry.create()` returns (that's `RegistryHandle`). An earlier version of this ambient
+	 * declaration inverted these, which silently type-checked but didn't reflect the real API.
+	 */
+	interface CallbackObject {
+		[key: string]: any;
 	}
-	export default class Registry {
-		static create(handler?: (...args: any[]) => any): RegistryInstance;
-		constructor(handler?: (...args: any[]) => any);
-		notify: (payload?: Record<string, any>) => void;
-		register: (fn: (...args: any[]) => any) => any;
-		unregister: (handle: any) => void;
+
+	interface RegistryController {
+		notify: (ev: RegistryEvent) => void;
+		unregister: () => void;
 	}
+
+	type RegistryEvent = {action: string} & CallbackObject;
+	type RegistryInstance = (ev?: RegistryEvent) => void;
+	type RegistryHandler = (ev: RegistryEvent, instance: RegistryInstance) => void;
+	type RegisterFunction = (instance: RegistryInstance) => RegistryController;
+
+	interface RegistryHandle {
+		parent: RegisterFunction | null;
+		notify: (ev?: RegistryEvent, exclude?: (instance: RegistryInstance) => boolean) => void;
+		register: RegisterFunction;
+	}
+
+	const Registry: {
+		create: (handler: RegistryHandler) => RegistryHandle;
+	};
+
+	export default Registry;
+	export type {
+		CallbackObject,
+		RegistryController,
+		RegistryEvent,
+		RegistryInstance,
+		RegistryHandler,
+		RegisterFunction,
+		RegistryHandle
+	};
 }
 
 declare module '@enact/core/internal/WithRef' {

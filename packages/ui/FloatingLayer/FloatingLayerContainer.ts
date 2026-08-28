@@ -1,11 +1,11 @@
-import Registry, {type RegistryInstance} from '@enact/core/internal/Registry';
+import Registry, {type RegistryEvent, type RegistryHandle} from '@enact/core/internal/Registry';
 
 interface FloatingLayerContainerConfig {
 	floatLayerId?: string;
 }
 
 class FloatingLayerContainer {
-	registry: RegistryInstance;
+	registry: RegistryHandle;
 	floatingLayer: HTMLElement | null;
 	config: FloatingLayerContainerConfig;
 
@@ -34,7 +34,8 @@ class FloatingLayerContainer {
 		);
 	};
 
-	handleNotify = ({action}: {action: string}) => {
+	handleNotify = (ev: RegistryEvent) => {
+		const {action} = ev;
 		if (action === 'register') {
 			this.notifyMount();
 		} else if (action === 'closeAll') {

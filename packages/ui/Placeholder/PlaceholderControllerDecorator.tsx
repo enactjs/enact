@@ -1,8 +1,8 @@
 import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {WithRef} from '@enact/core/internal/WithRef';
+import Registry, {type RegistryEvent} from '@enact/core/internal/Registry';
 import {Job} from '@enact/core/util';
-import Registry from '@enact/core/internal/Registry';
 import {Component, createContext, createRef} from 'react';
 
 /**
@@ -111,10 +111,16 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		notifyAll = (topThreshold: number, leftThreshold: number) => {
+			// `RegistryEvent` (from `core/internal/Registry`) requires an `action: string` field,
+			// but this registry pairing (this controller <-> `PlaceholderDecorator`'s `update`) is a
+			// purpose-built threshold-notification channel, not one of the `{action}`-shaped
+			// register/unregister lifecycle events -- the payload here is intentionally just
+			// `{leftThreshold, topThreshold}`, which is all `update()` ever reads. Worth revisiting
+			// in `core` (e.g. a generic `RegistryEvent<T>`) rather than papering over it in `ui`.
 			this.registry.notify({
 				leftThreshold,
 				topThreshold
-			});
+			} as unknown as RegistryEvent);
 		};
 
 		// queue up notifications when placeholders are first created
