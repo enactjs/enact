@@ -56,13 +56,8 @@ import {isValidElementType} from 'react-is';
  * @ui
  * @public
  */
-const ComponentOverride = ({component: Component, ...props}) => {
-	// Despite its capitalized, component-like signature, this is also called directly as a plain
-	// function, including from the render of a class `kind`. React Compiler would otherwise compile it as a component and emit a `useMemoCache`
-	// call, which throws "Invalid hook call" on those direct-call paths.
-	// TODO: rewrite this component to work properly with babel-plugin-react-compiler
-	'use no memo';
 
+const getComponentOverride = ({component: Component, ...props}) => {
 	return Component && (
 		isValidElementType(Component) && (
 			<Component {...props} />
@@ -72,7 +67,19 @@ const ComponentOverride = ({component: Component, ...props}) => {
 	) || null;
 };
 
+const ComponentOverride = (props) => {
+	return getComponentOverride(props);
+
+	return Component && (
+		isValidElementType(Component) && (
+			<Component {...props} />
+		) || isValidElement(Component) && (
+			cloneElement(Component, props)
+		)
+};
+
 export default ComponentOverride;
 export {
+	getComponentOverride,
 	ComponentOverride
 };
