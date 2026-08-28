@@ -140,7 +140,7 @@ const kind = <P extends CallbackObject = CallbackObject, C extends CallbackObjec
 		functional,
 		handlers,
 		name,
-		propTypes, // eslint-disable-line react/forbid-foreign-prop-types
+		propTypes,	// eslint-disable-line react/forbid-foreign-prop-types
 		render,
 		styles: cfgStyles
 	} = config;
