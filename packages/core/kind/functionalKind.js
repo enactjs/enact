@@ -139,12 +139,13 @@ const functionalKind = (config) => {
 	const renderStyles  = cfgStyles   ? styles(cfgStyles)     : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
 
-	const renderKind = (props, context) => {
-		if (renderStyles)   props = renderStyles(props, context);
+	const prepareKindProps = (props, context) => {
+		if (renderStyles) props = renderStyles(props, context);
 		if (renderComputed) props = renderComputed(props, context);
-
-		return useRender(props, context); // eslint-disable-line react-hooks/rules-of-hooks
+		return props;
 	};
+
+	const useRenderKind = (props, context) => useRender(prepareKindProps(props, context), context);
 
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
 	const handlerKeys     = handlers     ? Object.keys(handlers)     : null;
@@ -167,7 +168,7 @@ const functionalKind = (config) => {
 
 		checkPropTypes(Component, merged);
 
-		return renderKind(merged, ctx);
+		return useRenderKind(merged, ctx);
 	};
 
 	if (name)         Component.displayName = name;
@@ -180,10 +181,10 @@ const functionalKind = (config) => {
 	// ── inline ──────────────────────────────────────────────────────────────
 	// A synchronous, hook-free path for calling the component logic outside
 	// of the React render cycle (e.g. in tests or server-side utilities).
-	Component.inline = (props, context) => {
+	Component.inline = function Inline (props, context) {
 		const updated = applyDefaultProps({...props}, defaultProps, defaultPropKeys);
 
-		return renderKind(bindInlineHandlers(updated, handlers, handlerKeys, context), context);
+		return useRender(prepareKindProps(bindInlineHandlers(updated, handlers, handlerKeys, context), context));
 	};
 
 	return Component;
