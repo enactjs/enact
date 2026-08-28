@@ -69,17 +69,9 @@ const getComponentOverride = ({component: Component, ...props}) => {
 
 const ComponentOverride = (props) => {
 	return getComponentOverride(props);
-
-	return Component && (
-		isValidElementType(Component) && (
-			<Component {...props} />
-		) || isValidElement(Component) && (
-			cloneElement(Component, props)
-		)
 };
 
 export default ComponentOverride;
 export {
-	getComponentOverride,
 	ComponentOverride
 };
