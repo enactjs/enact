@@ -180,7 +180,7 @@ const functionalKind = (config: FunctionalKindConfig) => {
 	};
 
 	if (name)         Component.displayName = name;
-	if (propTypes)    Component.propTypes	= propTypes;
+	if (propTypes)    Component.propTypes   = propTypes;
 	if (defaultProps) Component.defaultProps = defaultProps;
 
 	// Expose computed map in DEV for easier testability.
