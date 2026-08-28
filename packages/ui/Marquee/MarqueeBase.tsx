@@ -173,7 +173,7 @@ const MarqueeBase = kind({
 			const root = node.parentNode;
 			new global.IntersectionObserver(function (entries, observer) {
 				const {left, right} = entries[0].boundingClientRect as DOMRectReadOnly;
-				const {left: rootLeft, right: rootRight} = entries[0].rootBounds as DOMRectReadOnly;
+				const {left: rootLeft, right: rootRight} = entries[0].rootBounds ?? {left: 0, right: 0} as DOMRectReadOnly;
 				const scale = (root.getBoundingClientRect().width / root.offsetWidth) || 1;
 
 				const textWidth = (rtl ? rootRight - right : left - rootLeft) / scale;

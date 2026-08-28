@@ -8,9 +8,8 @@ function useLink () {
 		({path}: {path: string}) => {
 			if (!navigate) return;
 
-			navigate({
-				path: resolve(currentPath, path) as string
-			});
+			const resolvedPath = resolve(currentPath, path);
+			if (resolvedPath) navigate({path: resolvedPath});
 		},
 		// omitting currentPath in order to cache the value used a mount time to avoid evaluating
 		// relative paths against updated currentPath values

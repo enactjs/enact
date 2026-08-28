@@ -95,8 +95,8 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else {
 				this.node = this.nodeRef.current;
 				this.bounds = {
-					height: this.node!.offsetHeight,
-					width: this.node!.offsetWidth
+					height: this.node?.offsetHeight ?? 0,
+					width: this.node?.offsetWidth ?? 0
 				};
 			}
 		}
