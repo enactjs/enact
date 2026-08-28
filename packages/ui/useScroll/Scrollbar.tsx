@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import {checkPropTypes, Job} from '@enact/core/util';
-import {memo, MutableRefObject, RefObject, useCallback, useEffect, useLayoutEffect, useRef} from 'react';
+import {memo, RefObject, useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 
 import ri from '../resolution';
 

@@ -4,7 +4,7 @@ import {CallbackObject} from '../types';
 
 export type VariantsType = string | string[] | CallbackObject;
 
-const objectify = (arg: null | VariantsType): CallbackObject | string[] => {
+const objectify = (arg?: VariantsType | null): CallbackObject | string[] => {
 	// undefined, null, empty string case
 	// bail early
 	if (!arg) return {};

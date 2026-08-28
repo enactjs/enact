@@ -262,7 +262,7 @@ interface SliderProps {
 const SliderBase = kind({
 	name: 'ui:Slider',
 
-	_propTypes: {} as SliderProps,
+	_propTypes: /** @lends ui/Slider.SliderBase.prototype */ {} as SliderProps,
 
 	defaultProps: {
 		backgroundProgress: 0,

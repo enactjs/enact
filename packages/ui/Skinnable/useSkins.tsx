@@ -1,7 +1,6 @@
-import {createContext, JSX, ReactElement, ReactNode, use, useCallback, useMemo} from 'react';
+import {createContext, ReactElement, use, useCallback, useMemo} from 'react';
 
 import {CallbackObject} from '../types';
-
 
 import {determineSkin, determineVariants, getClassName, VariantsType} from './util';
 
@@ -20,11 +19,11 @@ import {determineSkin, determineVariants, getClassName, VariantsType} from './ut
  */
 export interface SkinsConfig {
 	defaultSkin: string;
-	defaultVariants: VariantsType;
+	defaultVariants?: VariantsType;
 	skin?: string;
 	skins: CallbackObject;
-	skinVariants: VariantsType;
-	variants: string[];
+	skinVariants?: VariantsType;
+	variants?: string[];
 }
 
 /**
@@ -97,7 +96,7 @@ const SkinContext = createContext<{parentSkin: string, parentVariants: VariantsT
  * @private
  */
 function useSkins (config: SkinsConfig): SkinsInterface {
-	const {defaultSkin, defaultVariants, skin, skins, skinVariants, variants} = config;
+	const {defaultSkin, defaultVariants = '', skin = '', skins, skinVariants = '', variants = []} = config;
 
 	const {parentSkin, parentVariants} = use(SkinContext) || {};
 

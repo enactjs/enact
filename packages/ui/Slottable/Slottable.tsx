@@ -47,12 +47,12 @@ const defaultConfig = {
 const Slottable = hoc(defaultConfig, (config: SlottableConfig, Wrapped: ElementType) => {
 	const slots = config.slots;
 
-	// eslint-disable-next-line no-shadow
+	// eslint-disable-next-line no-shadow, @typescript-eslint/no-shadow
 	return function Slottable (props: CallbackObject) {
 		// extract the slots into a new object but populating the default value to be undefined so
 		// the key exists in order to allow the current "harmful" behavior below. Must be undefined
 		// in order to trigger defaultProps on downstream components.
-		const slotProps = {children: props.children};
+		const slotProps: Record<string, any> = {children: props.children};
 		slots.forEach(k => (slotProps[k] = undefined)); // eslint-disable-line no-undefined
 
 		// Slottable allows there to be other values in the destination slot and merges them.

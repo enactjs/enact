@@ -33,7 +33,7 @@ import {
 	AnimationInfo,
 	CustomScrollEvent, FlickEvent,
 	LegacyWheelEvent,
-	MutableScrollState, OverscrollEdge, OverscrollOrientation, ReachedEdgeInfo, ScrollBounds, ScrollEventData,
+	MutableScrollState, OverscrollEdge, OverscrollOrientation, ReachedEdgeInfo, ScrollBounds,
 	ScrollToOptions,
 	UseScrollProps
 } from './useScroll.types';
@@ -516,7 +516,7 @@ const useScrollBase = (props: UseScrollProps) => {
 
 	useLayoutEffect(() => {
 		const
-			{hasDataSizeChanged} = scrollContentHandle?.current,
+			{hasDataSizeChanged} = scrollContentHandle?.current || {},
 			{prevState, resizeRegistry, scrollToInfo} = mutableRef.current;
 
 		// Need to sync calculated client size if it is different from the real size

@@ -10,7 +10,7 @@ export interface flickConfigPropType {
 
 class Flick {
 	tracking: boolean;
-	moves: Array<{x: number, y: number, t: number}>
+	moves: Array<{x: number, y: number, t: number}>;
 	flickConfig: flickConfigPropType | null = null;
 	onFlick?: TouchableProps['onFlick'];
 

@@ -3,10 +3,8 @@
  */
 
 import {checkPropTypes, Job} from '@enact/core/util';
-import {cloneElement, Children, Component, ReactNode, ReactElement} from 'react';
-import PropTypes from 'prop-types';
+import {cloneElement, Children, Component, ReactElement} from 'react';
 
-import {shape} from './Arranger';
 import {Callback, CallbackObject} from '../types';
 
 interface ViewProps {
@@ -27,7 +25,7 @@ interface ViewProps {
 	 * @type {Boolean}
 	 * @public
 	 */
-	appearing: boolean,
+	appearing?: boolean,
 
 	/**
 	 * Arranger to control the animation
@@ -53,7 +51,7 @@ interface ViewProps {
 	 * @default 0
 	 * @public
 	 */
-	enteringDelay: number,
+	enteringDelay?: number,
 
 	/**
 	 * Name of the property to pass to the wrapped view to indicate when it is entering the
@@ -71,24 +69,30 @@ interface ViewProps {
 	/**
 	 * A getter function for a DOM node of the parent element
 	 *
+	 * Supplied by `TransitionGroup` when it clones the element `wrapWithView` produces, not by
+	 * the caller of `wrapWithView` itself.
+	 *
 	 * @type {Function}
 	 * @private
 	 */
-	getParentRef: Callback,
+	getParentRef?: Callback,
 
 	/**
 	 * Index of the currently 'active' view.
 	 *
 	 * @type {Number}
 	 */
-	index: number,
+	index?: number,
 
 	/**
 	 * When `true`, indicates if a view is currently leaving.
 	 *
+	 * Supplied by `TransitionGroup` when it clones the element `wrapWithView` produces, not by
+	 * the caller of `wrapWithView` itself.
+	 *
 	 * @type {Boolean}
 	 */
-	leaving: boolean,
+	leaving?: boolean,
 
 	/**
 	 * When `true`, indicates if the transition should be animated
@@ -109,10 +113,13 @@ interface ViewProps {
 	/**
 	 * Index of the view node among the rendered children of the parent node
 	 *
+	 * Supplied by `TransitionGroup` when it clones the element `wrapWithView` produces, not by
+	 * the caller of `wrapWithView` itself.
+	 *
 	 * @type {Number}
 	 * @private
 	 */
-	renderedIndex: number,
+	renderedIndex?: number,
 
 	/**
 	 * When `true`, indicates if the transition should be reversed. The effect depends on how the provided
@@ -121,7 +128,7 @@ interface ViewProps {
 	 * @type {Boolean}
 	 * @default false
 	 */
-	reverseTransition: boolean,
+	reverseTransition?: boolean,
 
 	/**
 	 * When `true`, indicates the current locale uses right-to-left reading order.
@@ -149,11 +156,6 @@ const clearEntering = ({entering}: {entering: boolean}) => {
  * @private
  */
 class View extends Component<ViewProps> {
-	animation: Animation | null;
-	changeDirection: boolean = false;
-	node: ReactElement | null = null;
-	state: {entering: boolean};
-
 	static defaultProps = {
 		appearing: false,
 		enteringDelay: 0,
@@ -170,6 +172,8 @@ class View extends Component<ViewProps> {
 			entering: !props.appearing
 		};
 	}
+
+	state: {entering: boolean};
 
 	shouldComponentUpdate (nextProps: ViewProps) {
 		if (nextProps.leaving) {
@@ -195,6 +199,10 @@ class View extends Component<ViewProps> {
 			this.animation.cancel();
 		}
 	}
+
+	animation: Animation | null;
+	changeDirection: boolean = false;
+	node: ReactElement | null = null;
 
 	shouldChangeDirection (prevProps: ViewProps, nextProps: ViewProps) {
 		return this.animation ? prevProps.reverseTransition !== nextProps.reverseTransition : false;
@@ -336,7 +344,7 @@ class View extends Component<ViewProps> {
 // with a TransitionGroup-compatible child that supports animation
 //
 // eslint-disable-next-line enact/display-name
-const wrapWithView = (config: ViewProps) => (child: ReactElement) => {
+const wrapWithView = (config: Omit<ViewProps, 'children'>) => (child: ReactElement) => {
 	return <View {...config}>{child}</View>;
 };
 

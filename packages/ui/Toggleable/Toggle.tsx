@@ -37,19 +37,19 @@ class Toggle {
 	handleActivate = handle<ToggleContext>(
 		isEnabled,
 		forwardCustom('onToggle', (ev, props) => makeEvent(props, true)),
-		returnsTrue((ev, props, context) => context.onToggle(true))
+		returnsTrue((ev, props, context) => context?.onToggle?.(true))
 	).bindAs(this, 'handleActivate');
 
 	handleDeactivate = handle<ToggleContext>(
 		isEnabled,
 		forwardCustom('onToggle', (ev, props) => makeEvent(props, false)),
-		returnsTrue((ev, props, context) => context.onToggle(false))
+		returnsTrue((ev, props, context) => context?.onToggle?.(false))
 	).bindAs(this, 'handleDeactivate');
 
 	handleToggle = handle<ToggleContext>(
 		isEnabled,
-		forwardCustom('onToggle', (ev, props, {value}) => makeEvent(props, !value)),
-		returnsTrue((ev, props, {onToggle, value}) => onToggle(!value))
+		forwardCustom('onToggle', (ev, props, context) => makeEvent(props, !context?.value)),
+		returnsTrue((ev, props, context) => context?.onToggle?.(!context.value))
 	).bindAs(this, 'handleToggle');
 }
 

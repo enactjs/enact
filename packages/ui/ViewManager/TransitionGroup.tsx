@@ -7,16 +7,9 @@
 import {EnactPropTypes} from '@enact/core/internal/prop-types';
 import {forward, forwardCustom} from '@enact/core/handle';
 import {checkPropTypes} from '@enact/core/util';
-import PropTypes from 'prop-types';
-import eqBy from 'ramda/src/eqBy';
-import findIndex from 'ramda/src/findIndex';
 import identity from 'ramda/src/identity';
-import prop from 'ramda/src/prop';
-import propEq from 'ramda/src/propEq';
 import remove from 'ramda/src/remove';
-import unionWith from 'ramda/src/unionWith';
-import useWith from 'ramda/src/useWith';
-import {Children, cloneElement, createElement, createRef, Component, ReactNode, RefObject} from 'react';
+import {Children, cloneElement, createElement, createRef, Component, ReactNode, ReactElement, RefObject} from 'react';
 
 import {Callback} from '../types';
 
@@ -28,7 +21,7 @@ export interface TransitionGroupProps /** @lends ui/ViewManager.TransitionGroup.
 	 *
 	 * @type {Function}
 	 */
-	childFactory: Callback,
+	childFactory?: Callback,
 
 	/**
 	 * Type of component wrapping the children.
@@ -38,7 +31,7 @@ export interface TransitionGroupProps /** @lends ui/ViewManager.TransitionGroup.
 	 * @type {String|Component}
 	 * @default 'div'
 	 */
-	component: EnactPropTypes.renderable,
+	component?: EnactPropTypes.renderable,
 
 	/**
 	 * Called with a reference to {@link ui/ViewManager.TransitionGroup.component|component}
@@ -108,13 +101,27 @@ export interface TransitionGroupProps /** @lends ui/ViewManager.TransitionGroup.
 	 * @type {Number}
 	 * @default 2
 	 */
-	size: number
+	size?: number
 }
 
 export interface TransitionGroupState {
+	activeChildren: TransitionGroupChild[],
 	firstRender: boolean,
-	children: ReactNode[]
+	children: TransitionGroupChild[]
 }
+
+interface TransitionRef {
+	componentWillAppear?: (callback: () => void) => void;
+	componentDidAppear?: () => void;
+	componentWillEnter?: (callback: () => void) => void;
+	componentDidEnter?: () => void;
+	componentWillStay?: (callback: () => void) => void;
+	componentDidStay?: () => void;
+	componentWillLeave?: (callback: () => void) => void;
+	componentDidLeave?: () => void;
+}
+
+type TransitionGroupChild = ReactElement<Record<string, unknown>>;
 
 /**
  * Returns the index of a child in an array found by `key` matching
@@ -125,8 +132,8 @@ export interface TransitionGroupState {
  * @method
  * @private
  */
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const indexOfChild = useWith(findIndex, [propEq('key'), identity]);
+const indexOfChild = (key: string, children: TransitionGroupChild[]) =>
+	children.findIndex(child => child.key === key);
 
 /**
  * Returns an array of non-null children
@@ -136,9 +143,9 @@ const indexOfChild = useWith(findIndex, [propEq('key'), identity]);
  * @returns {Object[]}          Array of children
  * @private
  */
-const mapChildren = function (children: ReactNode) {
+const mapChildren = function (children: ReactNode): TransitionGroupChild[] {
 	const result = children && Children.toArray(children);
-	return result ? result.filter(c => !!c) : [];
+	return result ? (result.filter(c => !!c) as TransitionGroupChild[]) : [];
 };
 
 /**
@@ -150,7 +157,10 @@ const mapChildren = function (children: ReactNode) {
  * @method
  * @private
  */
-const mergeChildren = unionWith(eqBy(prop('key')));
+const mergeChildren = (a: TransitionGroupChild[], b: TransitionGroupChild[]): TransitionGroupChild[] => {
+	const existingKeys = new Set(a.map(child => child.key));
+	return [...a, ...b.filter(child => !existingKeys.has(child.key))];
+};
 
 // Cached event forwarders
 const forwardOnAppear = forward('onAppear');
@@ -171,28 +181,19 @@ const forwardOnStay = forward('onStay');
  * @private
  */
 
-class TransitionGroup extends Component<TransitionGroupProps> {
+class TransitionGroup extends Component<TransitionGroupProps, TransitionGroupState> {
 	static defaultProps = {
 		childFactory: identity,
 		component: 'div',
 		size: 2
 	};
 
-	hasMounted: boolean;
-	currentlyTransitioningKeys: {[key: string]: boolean};
-	keysToEnter: string[];
-	keysToLeave: string[];
-	keysToStay: string[];
-	groupRefs: {[key: string]: ReactNode};
-	nodeRef;
-	refNodeId: string;
-	state: TransitionGroupState;
-
 	constructor (props: TransitionGroupProps) {
 		super(props);
 		checkPropTypes(this, props);
 
 		this.state = {
+			activeChildren: [],
 			firstRender: true,
 			children: []
 		};
@@ -203,7 +204,7 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 		this.keysToLeave = [];
 		this.keysToStay = [];
 		this.groupRefs = {};
-		this.nodeRef = createRef();
+		this.nodeRef = createRef<HTMLDivElement>();
 		this.refNodeId = '#transition#group#';
 	}
 
@@ -229,18 +230,32 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 
 		// this isn't used by ViewManager or View at the moment but leaving it around for future
 		// flexibility
-		this.state.children.forEach(child => this.performAppear(child.key));
+		this.state.children.forEach((child) => this.performAppear(child.key || ''));
 	}
 
-	componentDidUpdate (prevProps, prevState) {
+	componentDidUpdate (prevProps: TransitionGroupProps, prevState: TransitionGroupState) {
 		checkPropTypes(this, this.props, prevProps);
 		this.reconcileUnmountedChildren(prevState.children, this.state.children);
 		this.reconcileChildren(prevState.activeChildren, this.state.activeChildren);
 	}
 
-	reconcileUnmountedChildren (prevChildMapping, nextChildMapping) {
-		const nextChildKeys = nextChildMapping.map(c => c.key);
-		const prevChildKeys = prevChildMapping.map(c => c.key);
+	hasMounted: boolean;
+	currentlyTransitioningKeys: {[key: string]: boolean};
+	keysToEnter: string[];
+	keysToLeave: string[];
+	keysToStay: string[];
+	groupRefs: {[key: string]: TransitionRef | null};
+	nodeRef: RefObject<HTMLDivElement | null>;
+	refNodeId: string;
+
+	// Merges optional props with defaultProps so TypeScript knows they are never undefined inside the class.
+	private get safeProps () {
+		return this.props as Readonly<TransitionGroupProps> & typeof TransitionGroup.defaultProps;
+	}
+
+	reconcileUnmountedChildren (prevChildMapping: TransitionGroupChild[], nextChildMapping: TransitionGroupChild[]) {
+		const nextChildKeys = nextChildMapping.map(c => c.key || '');
+		const prevChildKeys = prevChildMapping.map(c => c.key || '');
 
 		// `state.children` represents the mounted children. if a view change happens during a
 		// transition causing the View to be unmounted before it fires its callback, the
@@ -251,11 +266,11 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 			.forEach(key => this.completeTransition({key}));
 	}
 
-	reconcileChildren (prevActiveChildMapping, nextActiveChildMapping) {
-		const {size} = this.props;
+	reconcileChildren (prevActiveChildMapping: TransitionGroupChild[], nextActiveChildMapping: TransitionGroupChild[]) {
+		const {size} = this.safeProps;
 
-		const nextChildKeys = nextActiveChildMapping.map(c => c.key);
-		const prevChildKeys = prevActiveChildMapping.map(c => c.key);
+		const nextChildKeys = nextActiveChildMapping.map(c => c.key || '');
+		const prevChildKeys = prevActiveChildMapping.map(c => c.key || '');
 		const droppedKeys = prevChildKeys.filter(key => !nextChildKeys.includes(key));
 
 		// if children haven't changed, there's nothing to reconcile
@@ -267,7 +282,7 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 		droppedKeys.forEach(key => this.completeTransition({key}));
 
 		// mark any new child as entering
-		nextChildKeys.forEach((key, index) => {
+		nextChildKeys.forEach((key: string, index: number) => {
 			const hasPrev = prevChildKeys.includes(key);
 
 			if (!hasPrev || this.currentlyTransitioningKeys[key]) {
@@ -313,7 +328,7 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 		keysToLeave.forEach(this.performLeave);
 	}
 
-	completeTransition ({key, noForwarding = false}) {
+	completeTransition ({key, noForwarding = false}: {key: string, noForwarding?: boolean}) {
 		if (key in this.currentlyTransitioningKeys) {
 			delete this.currentlyTransitioningKeys[key];
 
@@ -323,12 +338,12 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 		}
 	}
 
-	performAppear = (key) => {
+	performAppear = (key: string) => {
 		this.currentlyTransitioningKeys[key] = true;
 
 		const component = this.groupRefs[key];
 
-		if (component.componentWillAppear) {
+		if (component?.componentWillAppear) {
 			component.componentWillAppear(
 				this._handleDoneAppearing.bind(this, key)
 			);
@@ -337,9 +352,9 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 		}
 	};
 
-	_handleDoneAppearing = (key) => {
+	_handleDoneAppearing = (key: string) => {
 		const component = this.groupRefs[key];
-		if (component.componentDidAppear) {
+		if (component?.componentDidAppear) {
 			component.componentDidAppear();
 		}
 
@@ -358,12 +373,12 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 		}
 	};
 
-	performEnter = (key) => {
+	performEnter = (key: string) => {
 		this.currentlyTransitioningKeys[key] = true;
 
 		const component = this.groupRefs[key];
 
-		if (component.componentWillEnter) {
+		if (component?.componentWillEnter) {
 			component.componentWillEnter(
 				this._handleDoneEntering.bind(this, key)
 			);
@@ -372,9 +387,9 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 		}
 	};
 
-	_handleDoneEntering = (key) => {
+	_handleDoneEntering = (key: string) => {
 		const component = this.groupRefs[key];
-		if (component.componentDidEnter) {
+		if (component?.componentDidEnter) {
 			component.componentDidEnter();
 		}
 
@@ -386,10 +401,10 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 		this.completeTransition({key});
 	};
 
-	performStay = (key) => {
+	performStay = (key: string) => {
 		const component = this.groupRefs[key];
 
-		if (component.componentWillStay) {
+		if (component?.componentWillStay) {
 			component.componentWillStay(
 				this._handleDoneStaying.bind(this, key)
 			);
@@ -398,9 +413,9 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 		}
 	};
 
-	_handleDoneStaying = (key) => {
+	_handleDoneStaying = (key: string) => {
 		const component = this.groupRefs[key];
-		if (component.componentDidStay) {
+		if (component?.componentDidStay) {
 			component.componentDidStay();
 		}
 
@@ -410,11 +425,11 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 		}, this.props);
 	};
 
-	performLeave = (key) => {
+	performLeave = (key: string) => {
 		this.currentlyTransitioningKeys[key] = true;
 
 		const component = this.groupRefs[key];
-		if (component.componentWillLeave) {
+		if (component?.componentWillLeave) {
 			component.componentWillLeave(this._handleDoneLeaving.bind(this, key));
 		} else {
 			// Note that this is somewhat dangerous b/c it calls setState()
@@ -424,10 +439,10 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 		}
 	};
 
-	_handleDoneLeaving = (key) => {
+	_handleDoneLeaving = (key: string) => {
 		const component = this.groupRefs[key];
 
-		if (component.componentDidLeave) {
+		if (component?.componentDidLeave) {
 			component.componentDidLeave();
 		}
 
@@ -444,13 +459,15 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 		});
 	};
 
-	storeRefs = key => node => {
+	storeRefs = (key: string) => (node: TransitionRef | null) => {
 		this.groupRefs[key] = node;
 	};
 
 	/* This code is the same as @enact/core/WithRef. */
 	getNodeRef = () => {
 		const refNode = this.nodeRef.current;
+		if (!refNode) return;
+
 		const attributeSelector = `[data-transitiongroup-id="${refNode.getAttribute('data-transitiongroup-target')}"]`;
 		/* The intended code is to search for the referrer element via a single querySelector call. But unit tests cannot handle :has() properly.
 		const selector = `:scope ${attributeSelector}, :scope :has(${attributeSelector})`;
@@ -471,13 +488,13 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 			const isLeaving = child.props['data-index'] !== this.props.currentIndex && typeof child.props['data-index'] !== 'undefined';
 
 			return cloneElement(
-				this.props.childFactory(child),
-				{key: child.key, ref: this.storeRefs(child.key), leaving: isLeaving, appearing: !this.hasMounted, getParentRef: this.getNodeRef, renderedIndex: index}
+				this.safeProps.childFactory(child),
+				{key: child.key, ref: this.storeRefs(child.key || ''), leaving: isLeaving, appearing: !this.hasMounted, getParentRef: this.getNodeRef, renderedIndex: index}
 			);
 		});
 
 		// Do not forward TransitionGroup props to primitive DOM nodes
-		const props = Object.assign({}, this.props);
+		const props = Object.assign({}, this.props) as Record<string, unknown>;
 
 		props.ref = this.props.componentRef;
 		props['data-transitiongroup-id'] = this.refNodeId;
@@ -496,7 +513,7 @@ class TransitionGroup extends Component<TransitionGroupProps> {
 
 		return (
 			<>
-				{createElement(this.props.component, props, childrenToRender)}
+				{createElement(this.safeProps.component, props, childrenToRender)}
 				<div data-transitiongroup-target={this.refNodeId} ref={this.nodeRef} style={{display: 'none'}} />
 			</>
 		);

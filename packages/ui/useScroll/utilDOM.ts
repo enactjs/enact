@@ -3,7 +3,7 @@ import {RefObject} from 'react';
 
 type ContainableRef = RefObject<HTMLElement> | HTMLElement | null;
 
-function isRefObject<T>(ref: any): ref is RefObject<T> {
+function isRefObject<T> (ref: any): ref is RefObject<T> {
 	return typeof ref === 'object' && 'current' in ref;
 }
 

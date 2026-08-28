@@ -10,7 +10,7 @@ import {Callback} from '../types';
 
 export type EventTargetRef = RefObject<HTMLElement | null> | EventTarget | null | undefined;
 
-function isRefObject<T>(ref: any): ref is RefObject<T> {
+function isRefObject<T> (ref: any): ref is RefObject<T> {
 	return ref !== null && typeof ref === 'object' && 'current' in ref;
 }
 

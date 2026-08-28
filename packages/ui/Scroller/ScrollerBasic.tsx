@@ -15,14 +15,23 @@ interface ScrollerBasicProps {
 	 * @private
 	 */
 	cbScrollTo: ScrollToFunction;
-	isHorizontalScrollbarVisible?: boolean;
+
 	/**
-	 * Prop to check context value if Scrollbar exists or not.
+	 * Prop to check context value if the horizontal Scrollbar exists or not.
+	 *
+	 * @type {Boolean}
+	 * @private
+	 */
+	isHorizontalScrollbarVisible?: boolean;
+
+	/**
+	 * Prop to check context value if the vertical Scrollbar exists or not.
 	 *
 	 * @type {Boolean}
 	 * @private
 	 */
 	isVerticalScrollbarVisible: boolean;
+
 	/**
 	 * `true` if RTL, `false` if LTR.
 	 *
@@ -30,7 +39,16 @@ interface ScrollerBasicProps {
 	 * @private
 	 */
 	rtl: boolean;
+
+	/**
+	 * Indicates whether the scroll container should perform a dangerously permissive
+	 * DOM containment check.
+	 *
+	 * @type {Boolean}
+	 * @private
+	 */
 	scrollContainerContainsDangerously?: boolean;
+
 	/**
 	 * Ref for scroll content
 	 *
@@ -38,8 +56,27 @@ interface ScrollerBasicProps {
 	 * @private
 	 */
 	scrollContentRef: RefObject<HTMLDivElement>;
+
+	/**
+	 * Specifies the mechanism used to scroll the content.
+	 *
+	 * Valid values are:
+	 * * `'translate'`, and
+	 * * `'native'`.
+	 *
+	 * @type {String}
+	 * @public
+	 */
 	scrollMode?: 'translate' | 'native';
+
+	/**
+	 * Callback function to pass the scroll content handle up to the theme or higher-order components.
+	 *
+	 * @type {Function}
+	 * @private
+	 */
 	setThemeScrollContentHandle?: (handle: unknown) => void;
+
 	/**
 	 * Direction of the scroller.
 	 *
@@ -53,8 +90,29 @@ interface ScrollerBasicProps {
 	 * @public
 	 */
 	direction: 'both' | 'horizontal' | 'vertical';
+
+	/**
+	 * Customizes the component by mapping the supplied class name to its root element.
+	 *
+	 * @type {String}
+	 * @public
+	 */
 	className?: string;
+
+	/**
+	 * Customizes the component by applying the supplied styles to its root element.
+	 *
+	 * @type {Object}
+	 * @public
+	 */
 	style?: CSSProperties;
+
+	/**
+	 * The contents to be rendered within the scroller.
+	 *
+	 * @type {Element}
+	 * @public
+	 */
 	children: ReactElement;
 }
 
@@ -68,10 +126,6 @@ interface ScrollerBasicProps {
  */
 class ScrollerBasic extends Component<ScrollerBasicProps> {
 	static displayName = 'ui:ScrollerBasic';
-
-	constructor (props: ScrollerBasicProps) {
-		super(props);
-	}
 
 	componentDidMount () {
 		this.calculateMetrics();

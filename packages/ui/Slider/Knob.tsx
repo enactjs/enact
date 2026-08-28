@@ -11,7 +11,7 @@ interface KnobProps {
 	 * @default "horizontal"
 	 * @public
 	 */
-	orientation: 'horizontal' | 'vertical';
+	orientation?: 'horizontal' | 'vertical';
 
 	/**
 	 * A number between 0 and 1 representing the proportion of the `value` in terms of `min`
@@ -20,7 +20,7 @@ interface KnobProps {
 	 * @type {Boolean}
 	 * @public
 	 */
-	proportion: number;
+	proportion?: number;
 
 	/**
 	 * Adds a tooltip to the knob using the provided component.
@@ -40,7 +40,7 @@ interface KnobProps {
 	 * @type {Function|Element}
 	 * @public
 	 */
-	tooltipComponent: EnactPropTypes.componentOverride;
+	tooltipComponent?: EnactPropTypes.componentOverride;
 
 	/**
 	 * The value of the slider.
@@ -49,7 +49,7 @@ interface KnobProps {
 	 * @default 0
 	 * @public
 	 */
-	value: number;
+	value?: number;
 }
 
 /**
@@ -63,7 +63,7 @@ interface KnobProps {
 const Knob = kind({
 	name: 'Knob',
 
-	_propTypes: {} as KnobProps,
+	_propTypes: /** @lends ui/Slider.Knob.prototype */ {} as KnobProps,
 
 	render: ({orientation = 'horizontal', proportion, tooltipComponent, value = 0, ...rest}) => {
 		return (

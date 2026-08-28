@@ -105,7 +105,7 @@ export interface useTouchInterface {
  * @returns {useTouchInterface}
  * @private
  */
-function useTouch (config: useTouchConfig): useTouchInterface {
+function useTouch (config: useTouchConfig = {} as useTouchConfig): useTouchInterface {
 	const {
 		getActive = false, disabled,
 		dragConfig, flickConfig, holdConfig, pinchConfig,

@@ -6,28 +6,16 @@
  * @exports ScrollerBasic
  */
 
-import {checkPropTypes, setDefaultProps} from '@enact/core/util';
+import {setDefaultProps} from '@enact/core/util';
 
 import {ResizeContext} from '../Resizable';
 import useScroll from '../useScroll';
+import type {ScrollToOptions as EngineScrollToOptions} from '../useScroll/useScroll.types';
 import Scrollbar from '../useScroll/Scrollbar';
 
 import ScrollerBasic from './ScrollerBasic';
 
-type ScrollAlign =
-	| 'left'
-	| 'right'
-	| 'top'
-	| 'bottom'
-	| 'topleft'
-	| 'topright'
-	| 'bottomleft'
-	| 'bottomright';
-type ScrollToOptions =
-	| {position: {x?: number; y?: number}; animate?: boolean}
-	| {align: ScrollAlign; animate?: boolean}
-	| {node: HTMLElement; animate?: boolean; focus?: boolean};
-
+export type ScrollToOptions = Pick<EngineScrollToOptions, 'position' | 'align' | 'node'> & {animate?: boolean, focus?: boolean};
 export type OnScrollFunction = (event: {scrollLeft: number, scrollTop: number}) => void;
 export type ScrollToFunction = (options: ScrollToOptions) => void;
 
@@ -59,7 +47,7 @@ export interface ScrollerProps {
 	 * @type {Function}
 	 * @public
 	 */
-	cbScrollTo: ScrollToFunction,
+	cbScrollTo?: ScrollToFunction,
 
 	/**
 	 * Direction of the scroller.
@@ -73,7 +61,7 @@ export interface ScrollerProps {
 	 * @default 'both'
 	 * @public
 	 */
-	direction: 'both' | 'horizontal' | 'vertical',
+	direction?: 'both' | 'horizontal' | 'vertical',
 
 	/**
 	 * Specifies how to show horizontal scrollbar.
@@ -87,7 +75,7 @@ export interface ScrollerProps {
 	 * @default 'auto'
 	 * @public
 	 */
-	horizontalScrollbar: 'auto' | 'visible' | 'hidden',
+	horizontalScrollbar?: 'auto' | 'visible' | 'hidden',
 
 	/**
 	 * Prevents scroll by dragging or flicking on the scroller.
@@ -96,7 +84,7 @@ export interface ScrollerProps {
 	 * @default false
 	 * @private
 	 */
-	noScrollByDrag: boolean,
+	noScrollByDrag?: boolean,
 
 	/**
 	 * Prevents scroll by wheeling on the scroller.
@@ -105,7 +93,7 @@ export interface ScrollerProps {
 	 * @default false
 	 * @public
 	 */
-	noScrollByWheel: boolean,
+	noScrollByWheel?: boolean,
 
 	/**
 	 * Called when scrolling.
@@ -120,7 +108,7 @@ export interface ScrollerProps {
 	 * @param {Number} event.scrollTop Scroll top value.
 	 * @public
 	 */
-	onScroll: OnScrollFunction,
+	onScroll?: OnScrollFunction,
 
 	/**
 	 * Called when scroll starts.
@@ -148,7 +136,7 @@ export interface ScrollerProps {
 	 * @param {Number} event.scrollTop Scroll top value.
 	 * @public
 	 */
-	onScrollStart: OnScrollFunction,
+	onScrollStart?: OnScrollFunction,
 
 	/**
 	 * Called when scroll stops.
@@ -176,7 +164,7 @@ export interface ScrollerProps {
 	 * @param {Number} event.scrollTop Scroll top value.
 	 * @public
 	 */
-	onScrollStop: OnScrollFunction,
+	onScrollStop?: OnScrollFunction,
 
 	/**
 	 * Specifies overscroll effects shows on which type of inputs.
@@ -185,7 +173,7 @@ export interface ScrollerProps {
 	 * @default {drag: false, pageKey: false, wheel: false}
 	 * @private
 	 */
-	readonly overscrollEffectOn: {
+	overscrollEffectOn?: {
 		drag: boolean,
 		pageKey: boolean,
 		wheel: boolean
@@ -202,7 +190,7 @@ export interface ScrollerProps {
 	 * @default 'translate'
 	 * @public
 	 */
-	scrollMode: 'translate' | 'native',
+	scrollMode?: 'translate' | 'native',
 
 	/**
 	 * Specifies how to show vertical scrollbar.
@@ -216,7 +204,7 @@ export interface ScrollerProps {
 	 * @default 'auto'
 	 * @public
 	 */
-	verticalScrollbar: 'auto' | 'visible' | 'hidden'
+	verticalScrollbar?: 'auto' | 'visible' | 'hidden'
 }
 
 const nop = () => {};
@@ -253,7 +241,7 @@ const scrollerDefaultProps: ScrollerProps = {
  * @ui
  * @public
  */
-const Scroller = (props: ScrollerProps = scrollerDefaultProps) => {
+const Scroller = (props: ScrollerProps) => {
 	// Hooks
 
 	const scrollerProps = setDefaultProps(props, scrollerDefaultProps);
@@ -291,6 +279,8 @@ const Scroller = (props: ScrollerProps = scrollerDefaultProps) => {
 };
 
 Scroller.displayName = 'ui:Scroller';
+
+Scroller.defaultPropValues = scrollerDefaultProps;
 
 export default Scroller;
 export {

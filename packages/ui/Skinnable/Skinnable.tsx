@@ -87,6 +87,12 @@ export interface SkinnableConfig {
 }
 
 export interface SkinnableProps {
+	/**
+	 * Customizes the component by mapping the supplied class name to its root element.
+	 *
+	 * @type {String}
+	 * @public
+	 */
 	className?: string,
 
 	/**
@@ -181,9 +187,9 @@ const Skinnable = hoc(defaultConfig, (config: SkinnableConfig, Wrapped: ElementT
 	const {prop, skins, defaultSkin, allowedVariants: variants, variantsProp} = config;
 	const defaultVariants = objectify(config.defaultVariants);
 
-	// eslint-disable-next-line no-shadow
+	// eslint-disable-next-line no-shadow, @typescript-eslint/no-shadow
 	function Skinnable (props: SkinnableProps) {
-		const {className, skin, skinVariants, ...rest} = props;
+		const {className, skin, skinVariants, ...rest} = props as Record<string, any>;
 		const hook = useSkins({
 			defaultSkin,
 			defaultVariants,
@@ -195,15 +201,15 @@ const Skinnable = hoc(defaultConfig, (config: SkinnableConfig, Wrapped: ElementT
 
 		const allClassNames = classnames(hook.className, className);
 		if (allClassNames) {
-			Object.assign(rest, {className: allClassNames});
+			rest.className = allClassNames;
 		}
 
 		if (prop) {
-			Object.assign(rest, {[prop]: hook.skin});
+			rest[prop] = hook.skin;
 		}
 
 		if (variantsProp) {
-			Object.assign(rest, {[variantsProp]: hook.variants});
+			rest[variantsProp] = hook.variants;
 		}
 
 		return hook.provideSkins(

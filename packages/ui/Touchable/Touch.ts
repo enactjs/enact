@@ -93,7 +93,7 @@ const isEnabled = forProp('disabled', false);
 
 const handleDown = handle(
 	isEnabled,
-	forwardCustomWithPrevent<SourceEvent>('onDown', makeTouchableEvent('onDown')),
+	forwardCustomWithPrevent('onDown', makeTouchableEvent('onDown')),
 	call('activate'),
 	call('startGesture')
 ).named('handleDown');
@@ -102,8 +102,8 @@ const handleUp = handle(
 	isEnabled,
 	call('endGesture'),
 	call('isTracking'),
-	forwardCustomWithPrevent<SourceEvent>('onUp', makeTouchableEvent('onUp')),
-	forwardCustom<SourceEvent>('onTap', makeTouchableEvent('onTap'))
+	forwardCustomWithPrevent('onUp', makeTouchableEvent('onUp')),
+	forwardCustom('onTap', makeTouchableEvent('onTap'))
 ).finally(call('deactivate')).named('handleUp');
 
 const handleEnter = handle(
@@ -229,7 +229,7 @@ class Touch {
 	handlers;
 	config: TouchConfig = {} as TouchConfig;
 	props: TouchConfig | null = null;
-	targetBounds: DOMRect | null = null
+	targetBounds: DOMRect | null = null;
 	handleGlobalUp: typeof handleGlobalUp | null = null;
 	handleGlobalMove: typeof handleGlobalMove | null = null;
 

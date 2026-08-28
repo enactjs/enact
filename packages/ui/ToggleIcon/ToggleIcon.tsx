@@ -41,7 +41,7 @@ export interface ToggleIconProps {
 	 * @type {Object|Function}
 	 * @public
 	 */
-	componentRef: EnactPropTypes.ref,
+	componentRef?: EnactPropTypes.ref,
 
 	/**
 	 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -56,7 +56,7 @@ export interface ToggleIconProps {
 	 * @type {Object}
 	 * @public
 	 */
-	css: CallbackObject,
+	css?: CallbackObject,
 
 	/**
 	 * Disables `ToggleIcon`.
@@ -65,7 +65,7 @@ export interface ToggleIconProps {
 	 * @default false
 	 * @public
 	 */
-	disabled: boolean,
+	disabled?: boolean,
 
 	/**
 	 * CSS classes to be used on the Icon component
@@ -73,7 +73,7 @@ export interface ToggleIconProps {
 	 * @type {String}
 	 * @public
 	 */
-	iconClasses: string,
+	iconClasses?: string,
 
 	/**
 	 * The component used to render the icon.
@@ -82,7 +82,7 @@ export interface ToggleIconProps {
 	 * @default 'div'
 	 * @public
 	 */
-	iconComponent: EnactPropTypes.renderable,
+	iconComponent?: EnactPropTypes.renderable,
 
 	/**
 	 * Sets whether this control is in the 'on' or 'off' state. `true` for 'on', `false` for 'off'.
@@ -91,7 +91,7 @@ export interface ToggleIconProps {
 	 * @default false
 	 * @public
 	 */
-	selected: boolean
+	selected?: boolean
 }
 
 /**
@@ -121,7 +121,7 @@ const ToggleIconBase = kind({
 
 	computed: {
 		className: ({selected, styler}) => styler.append({selected}),
-		iconClassName: ({iconClasses, css}) => iconClasses ? `${css.icon} ${iconClasses}` : css.icon
+		iconClassName: ({iconClasses, css}) => iconClasses ? `${css?.icon} ${iconClasses}` : css?.icon
 	},
 
 	render: ({children, componentRef, iconComponent: IconComponent, iconClasses, iconClassName, selected, ...rest}) => {

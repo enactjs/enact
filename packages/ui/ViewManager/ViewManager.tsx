@@ -62,7 +62,7 @@ export interface ViewManagerProps {
 	 * @type {String|Component}
 	 * @default 'div'
 	 */
-	component: EnactPropTypes.renderable,
+	component?: EnactPropTypes.renderable,
 
 	/**
 	 * Called with a reference to the root component.
@@ -81,7 +81,7 @@ export interface ViewManagerProps {
 	 * @type {Number}
 	 * @default 300
 	 */
-	duration: number,
+	duration?: number,
 
 	/**
 	 * Index of last visible view.
@@ -91,7 +91,7 @@ export interface ViewManagerProps {
 	 * @type {Number}
 	 * @default value of index
 	 */
-	end: number,
+	end?: number,
 
 	/**
 	 * Time, in milliseconds, to wait after a view has entered to inform it by pass the
@@ -122,7 +122,7 @@ export interface ViewManagerProps {
 	 * @type {Number}
 	 * @default 0
 	 */
-	index: number,
+	index?: number,
 
 	/**
 	 * Indicates if the transition should be animated
@@ -182,7 +182,7 @@ export interface ViewManagerProps {
 	 *
 	 * @type {Boolean}
 	 */
-	reverseTransition: boolean,
+	reverseTransition?: boolean,
 
 	/**
 	 * Indicates the current locale uses right-to-left reading order.
@@ -200,7 +200,7 @@ export interface ViewManagerProps {
 	 * @type {Number}
 	 * @default value of index
 	 */
-	start: number
+	start?: number
 }
 
 /**
@@ -212,7 +212,7 @@ export interface ViewManagerProps {
  * @ui
  * @public
  */
-const ViewManagerBase = class extends Component<ViewManagerProps> {
+const ViewManagerBase = class extends Component<ViewManagerProps, ViewManagerState> {
 	static displayName = 'ViewManager';
 
 	static defaultProps = {
@@ -220,8 +220,6 @@ const ViewManagerBase = class extends Component<ViewManagerProps> {
 		duration: 300,
 		index: 0
 	};
-
-	state: ViewManagerState;
 
 	constructor (props: ViewManagerProps) {
 		super(props);
@@ -239,13 +237,13 @@ const ViewManagerBase = class extends Component<ViewManagerProps> {
 			return {
 				index: props.index,
 				prevIndex: state.index,
-				reverseTransition: !!props.reverseTransition
+				reverseTransition: props.reverseTransition
 			};
 		} else if (props.index !== state.index) {
 			return {
 				index: props.index,
 				prevIndex: state.index,
-				reverseTransition: state.index > props.index
+				reverseTransition: (state.index ?? 0) > (props.index || 0)
 			};
 		}
 
@@ -254,6 +252,11 @@ const ViewManagerBase = class extends Component<ViewManagerProps> {
 
 	componentDidUpdate (prevProps: ViewManagerProps) {
 		checkPropTypes(this, this.props, prevProps);
+	}
+
+	// Merges optional props with defaultProps so TypeScript knows they are never undefined inside the class.
+	private get safeProps () {
+		return this.props as Readonly<ViewManagerProps> & typeof ViewManagerBase.defaultProps;
 	}
 
 	makeTransitionEvent = () => {
@@ -269,7 +272,7 @@ const ViewManagerBase = class extends Component<ViewManagerProps> {
 	).bindAs(this, 'handleWillTransition');
 
 	render () {
-		const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, rtl, ...rest} = this.props;
+		const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, rtl, ...rest} = this.safeProps;
 		let {end = index, start = index} = this.props;
 		const {prevIndex: previousIndex, reverseTransition} = this.state;
 		const childrenList = Children.toArray(children);
@@ -286,8 +289,8 @@ const ViewManagerBase = class extends Component<ViewManagerProps> {
 			duration,
 			index,
 			noAnimation,
-			previousIndex,
-			reverseTransition,
+			previousIndex: previousIndex ?? index,
+			reverseTransition: !!reverseTransition,
 			enteringDelay,
 			enteringProp,
 			childProps,

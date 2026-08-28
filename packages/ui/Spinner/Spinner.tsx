@@ -54,7 +54,7 @@ interface SpinnerProps {
 	 * @type {String|null}
 	 * @public
 	 */
-	blockClickOn: 'screen' | 'container' | null,
+	blockClickOn?: 'screen' | 'container' | null,
 
 	/**
 	 * Centers the spinner horizontally and vertically relative to its containing component.
@@ -63,7 +63,7 @@ interface SpinnerProps {
 	 * @default false
 	 * @public
 	 */
-	centered: boolean,
+	centered?: boolean,
 
 	/**
 	 * Called with a reference to the root component.
@@ -74,7 +74,7 @@ interface SpinnerProps {
 	 * @type {Object|Function}
 	 * @public
 	 */
-	componentRef: EnactPropTypes.ref,
+	componentRef?: EnactPropTypes.ref,
 
 	/**
 	 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -92,7 +92,7 @@ interface SpinnerProps {
 	 * @type {Object}
 	 * @public
 	 */
-	css: CSSProperties,
+	css?: CSSProperties,
 
 	/**
 	 * Halts the animation of the spinner
@@ -101,7 +101,7 @@ interface SpinnerProps {
 	 * @default false
 	 * @public
 	 */
-	paused: boolean,
+	paused?: boolean,
 
 	/**
 	 * Sets a scrim behind the spinner with the `css.scrim` class applied.
@@ -113,7 +113,7 @@ interface SpinnerProps {
 	 * @default false
 	 * @public
 	 */
-	scrim: boolean
+	scrim?: boolean
 }
 
 /**

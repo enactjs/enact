@@ -26,7 +26,7 @@ export interface ScrollEventData {
 
 export interface ScrollToOptions {
 	position?: {x?: number; y?: number};
-	align?: string;
+	align?: ScrollAlign;
 	index?: number;
 	stickTo?: string;
 	offset?: number;
@@ -174,3 +174,7 @@ export interface FlickEvent {
 export type OverscrollOrientation = 'horizontal' | 'vertical';
 
 export type OverscrollEdge = 'before' | 'after';
+
+export type ScrollAlign =
+	| 'left' | 'right' | 'top' | 'bottom'
+	| 'topleft' | 'topright' | 'bottomleft' | 'bottomright';

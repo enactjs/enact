@@ -10,4 +10,4 @@ import {CallbackObject} from './callback.type';
  * @param {Object<string, any>} [context] - An arbitrary bag of values (not a React `Context`
  *  object); omitted when the handler isn't bound to a component instance or `kind()` context.
  */
-export type HandlerFunction<C = unknown, E = Event> = (event: E | null, props: CallbackObject, context?: C) => any;
+export type HandlerFunction<C = unknown> = (event: Event | null, props: CallbackObject, context?: C) => any;

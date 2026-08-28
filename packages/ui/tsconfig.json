@@ -17,7 +17,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "types": ["jest"]
+    "types": ["jest", "node"]
   },
   "include": [
     "Scroller/**/*",
@@ -32,8 +32,8 @@
     "types/**/*",
     "useControlledState/**/*",
     "useScroll/**/*",
+    "ViewManager/**/*",
     "VirtualList/**/*",
-    "VirtualGridList/**/*",
     "index.ts"
   ],
   "exclude": [

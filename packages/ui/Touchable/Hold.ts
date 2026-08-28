@@ -10,7 +10,7 @@ export interface holdConfigPropType {
 
 class Hold {
 	holdConfig: holdConfigPropType & {resume: boolean} | null = null;
-	holdJob: number | null = null;
+	holdJob: number | NodeJS.Timeout | null = null;
 	holdStart: number | null = null;
 	pulsing: boolean = false;
 	next?: {name: string, time: number} | null = null;

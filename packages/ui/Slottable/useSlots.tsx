@@ -6,10 +6,16 @@ export interface ChildConfig {
 	[key: string]: any;
 }
 
-interface SlottableComponent {
-	name?: string;
-	displayName?: string;
-	defaultSlot?: string;
+export interface DistributedChild {
+	props: {
+		children?: ReactNode;
+		slot?: string;
+	}
+	type: string | {
+		name?: string;
+		displayName?: string;
+		defaultSlot?: string;
+	}
 }
 
 // ** WARNING ** This is an intentional but likely dangerous hack necessary to clone a child while
@@ -29,41 +35,45 @@ function distributeChild (child: ReactNode, index: number, slots: string[], prop
 		return false;
 	}
 
-	let c, slot;
-	const hasSlot = (name: string) => slots.indexOf(name) !== -1;
+	let c: ReactNode;
+	let slot: string | undefined;
+	const element = child as unknown as DistributedChild;
+	const hasSlot = (name?: string) => name ? slots.indexOf(name) !== -1 : false;
 
-	if (child.props.slot) {
-		const hasUserSlot = hasSlot(slot = child.props.slot);
-		warning(hasUserSlot, 'The slot "%s" specified on %s does not exist', child.props.slot,
-			typeof child.type === 'string' ? child.type : (child.type.name || child.type.displayName || 'component')
+	if (element.props.slot) {
+		const hasUserSlot = hasSlot(slot = element.props.slot);
+		warning(hasUserSlot, 'The slot "%s" specified on %s does not exist', element.props.slot,
+			typeof element.type === 'string' ? element.type : (element.type.name || element.type.displayName || 'component')
 		);
 
 		if (hasUserSlot) {
 			c = cloneElement(child, index);
 		}
-	} else if (hasSlot(slot = child.type.defaultSlot)) {
+	} else if (typeof element.type !== 'string' && hasSlot(slot = element.type.defaultSlot)) {
 		c = child;
-	} else if (typeof child.type === 'string' && hasSlot(slot = child.type)) {
-		const propNames = Object.keys(child.props);
+	} else if (typeof element.type === 'string' && hasSlot(slot = element.type)) {
+		const propNames = Object.keys(element.props);
 		if (propNames.length === 1 && propNames[0] === 'children') {
-			c = child.props.children;
+			c = element.props.children;
 		} else {
 			c = child;
 		}
 	}
 
 	if (c) {
-		let prop = props[slot];
-		if (prop) {
-			if (Array.isArray(prop)) {
-				prop.push(c);
+		if (slot) {
+			let prop = props[slot];
+			if (prop) {
+				if (Array.isArray(prop)) {
+					prop.push(c);
+				} else {
+					prop = [prop, c];
+				}
 			} else {
-				prop = [prop, c];
+				prop = c;
 			}
-		} else {
-			prop = c;
+			props[slot] = prop;
 		}
-		props[slot] = prop;
 
 		return true;
 	}
@@ -71,7 +81,7 @@ function distributeChild (child: ReactNode, index: number, slots: string[], prop
 	return false;
 }
 
-function distribute({children, ...slots}: ChildConfig): Record<string, any> {
+function distribute ({children, ...slots}: ChildConfig): ChildConfig {
 	const slotNames = Object.keys(slots);
 	const props = {
 		children

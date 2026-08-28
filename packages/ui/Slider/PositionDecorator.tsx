@@ -12,12 +12,12 @@ import css from './Slider.module.less';
 
 interface PositionDecoratorProps {
 	colorPicker?: boolean,
-	disabled: boolean,
-	max: number,
-	min: number,
+	disabled?: boolean,
+	max?: number,
+	min?: number,
 	onChange: Callback,
-	orientation: string,
-	step: number,
+	orientation?: string,
+	step?: number,
 	value: number
 }
 
@@ -25,20 +25,19 @@ const validateRange = validateRangeOnce((props: PositionDecoratorProps) => props
 const validateStepValue = validateSteppedOnce((props: PositionDecoratorProps) => props, {'component': 'PositionDecorator'});
 const validateStepMax = validateSteppedOnce((props: PositionDecoratorProps) => props, {'component': 'PositionDecorator', valueName: 'max'});
 
+const positionDecoratorDefaultProps = {
+	disabled: false,
+	max: 100,
+	min: 0,
+	orientation: 'horizontal',
+	step: 1
+};
+
 const PositionDecorator = hoc((config, Wrapped) => {
 	return class extends Component<PositionDecoratorProps> {
 		static displayName = 'PositionDecorator';
 
-		static defaultProps = {
-			disabled: false,
-			max: 100,
-			min: 0,
-			orientation: 'horizontal',
-			step: 1
-		};
-
-		bounds: {offsetX: number, offsetY: number, min: number, max: number};
-		dragConfig: {};
+		static defaultProps = positionDecoratorDefaultProps;
 
 		constructor (props: PositionDecoratorProps) {
 			super(props);
@@ -62,8 +61,16 @@ const PositionDecorator = hoc((config, Wrapped) => {
 			checkPropTypes(this, this.props, prevProps);
 		}
 
+		bounds: {offsetX: number, offsetY: number, min: number, max: number};
+		dragConfig: {};
+
+		// Merges optional props with defaultProps so TypeScript knows they are never undefined inside the class.
+		private get safeProps () {
+			return this.props as Readonly<PositionDecoratorProps> & typeof positionDecoratorDefaultProps;
+		}
+
 		emitChangeForPosition (x: number, y: number) {
-			const {colorPicker, max, min, orientation, step} = this.props;
+			const {colorPicker, max, min, orientation, step} = this.safeProps;
 			let position = x;
 			let offset = this.bounds.offsetX;
 

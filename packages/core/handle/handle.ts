@@ -94,7 +94,7 @@ import {Callback, CallbackObject, HandlerFunction} from '../types';
  * @param {Object<string, any>} context
  * @returns {any}
  */
-export type EventAdapter<E = Event> = HandlerFunction<unknown, E>;
+export type EventAdapter<C = unknown> = HandlerFunction<C>;
 
 /**
  * The signature for event handlers
@@ -311,17 +311,17 @@ const oneOf = handle.oneOf = function (...handlers: Array<[HandlerFunction, Hand
  * @public
  */
 interface ReturnsTrue {
-	(handler: HandlerFunction): HandlerFunction;
+	<C = unknown>(handler: HandlerFunction<C>): HandlerFunction<C>;
 	(): true;
 }
 
-const returnsTrue = (function <C = unknown>(handler?: HandlerFunction<C>): HandlerFunction<C> | true {
+const returnsTrue = (function (handler?: HandlerFunction): HandlerFunction | true {
 	if (handler && typeof handler === 'function') {
-		return named(function (this: any, ...args: Parameters<HandlerFunction<C>>) {
+		return named(function (this: any, ...args: Parameters<HandlerFunction>) {
 			handler.apply(this, args);
 
 			return true;
-		}, 'returnsTrue') as HandlerFunction<C>;
+		}, 'returnsTrue') as HandlerFunction;
 	}
 
 	return true;
@@ -758,10 +758,10 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter: EventAdapter, ha
  * @memberof core/handle
  * @public
  */
-const forwardCustom = handle.forwardCustom = function <E = Event>(name: string, adapter?: EventAdapter<E>): HandlerFunction {
+const forwardCustom = handle.forwardCustom = function <C = unknown>(name: string, adapter?: EventAdapter<C>): HandlerFunction<C> {
 	return named(adaptEvent(
-		function (this: any, ev, ...args) {
-			let customEventPayload = adapter ? adapter.call(this, ev as E, ...args) : null;
+		function (this: any, ev, ...args: any[]) {
+			let customEventPayload = adapter ? adapter.call(this, ev, ...(args as [CallbackObject, C])) : null;
 
 			// Handle either no adapter or a non-object return from the adapter
 			if (!customEventPayload || typeof customEventPayload !== 'object') {
@@ -823,7 +823,7 @@ const forwardCustom = handle.forwardCustom = function <E = Event>(name: string, 
  * @memberof core/handle
  * @private
  */
-const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = function <E = Event>(name: string, adapter?: EventAdapter<E>): HandlerFunction {
+const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = function (name: string, adapter?: EventAdapter): HandlerFunction {
 	return named(function (this: any, ev, ...args) {
 		let prevented = false;
 
