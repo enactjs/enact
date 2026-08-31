@@ -104,7 +104,7 @@ const Linkable = hoc({navigate: 'onClick'}, (config, Wrapped) => {
 	const navHandlers = {
 		[navigate]: handle(
 			forward(navigate),
-			(ev: any, props: Record<string, any>, hook: {navigate: (props: any) => void}) => {
+			(ev: any, props: Record<string, any>, hook: any) => {
 				hook.navigate(props);
 			}
 		)

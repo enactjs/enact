@@ -167,7 +167,7 @@ const MarqueeBase = kind({
 	},
 
 	handlers: {
-		applyOffset: (node, {distance, rtl, spacing}) => {
+		applyOffset: (node: any, {distance, rtl, spacing}: Record<string, any>) => {
 			if (!node || !global.IntersectionObserver) return;
 
 			const root = node.parentNode;
@@ -193,7 +193,7 @@ const MarqueeBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({'aria-label': aria, children, distance, willAnimate}) => {
+		'aria-label': ({'aria-label': aria, children, distance, willAnimate}: Record<string, any>) => {
 			if (children != null && aria == null && willAnimate && distance > 0) {
 				return Children.map(children, c => typeof c === 'string' && c)
 					.filter(Boolean)
@@ -202,12 +202,12 @@ const MarqueeBase = kind({
 				return aria;
 			}
 		},
-		clientClassName: ({animating, willAnimate, styler}) => styler.join({
+		clientClassName: ({animating, willAnimate, styler}: Record<string, any>) => styler.join({
 			animate: animating,
 			text: true,
 			willAnimate
 		}),
-		clientStyle: ({alignment, animating, distance, overflow, rtl, spacing, speed}) => {
+		clientStyle: ({alignment, animating, distance, overflow, rtl, spacing, speed}: Record<string, any>) => {
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
 			const direction = rtl ? 'rtl' : 'ltr';
@@ -230,7 +230,7 @@ const MarqueeBase = kind({
 
 			return style;
 		},
-		duplicate: ({distance, willAnimate}) => {
+		duplicate: ({distance, willAnimate}: Record<string, any>) => {
 			return willAnimate && distance > 0;
 		}
 	},

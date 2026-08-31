@@ -342,11 +342,12 @@ const LayoutBase = kind({
 
 	styles: {
 		css,
-		className: 'layout'
+		className: 'layout',
+		publicClassNames: false
 	},
 
 	computed: {
-		className: ({inline, orientation, wrap, styler}) => {
+		className: ({inline, orientation, wrap, styler}: Record<string, any>) => {
 			return styler.append(
 				orientation,
 				{
@@ -357,7 +358,7 @@ const LayoutBase = kind({
 				}
 			);
 		},
-		style: ({align, style}) => {
+		style: ({align, style}: Record<string, any>) => {
 			if (!align) return style;
 
 			// This is effectively a polyfill for the upcoming `place-items` prop which is shorthand
@@ -446,10 +447,10 @@ const Layout = LayoutDecorator(LayoutBase);
  * @public
  */
 const Column = LayoutDecorator((props: Omit<LayoutBaseProps, 'orientation'>) => (
-	LayoutBase.inline({
+	LayoutBase.inline!({
 		...props,
 		orientation: 'vertical'
-	})
+	}, undefined as any)
 ));
 Column.displayName = 'Column';
 
@@ -470,11 +471,11 @@ Column.displayName = 'Column';
  * @public
  */
 const Row = LayoutDecorator((props: Omit<LayoutBaseProps, 'orientation'>) => (
-	LayoutBase.inline({
+	LayoutBase.inline!({
 		...props,
 
 		orientation: 'horizontal'
-	})
+	}, undefined as any)
 ));
 Row.displayName = 'Row';
 

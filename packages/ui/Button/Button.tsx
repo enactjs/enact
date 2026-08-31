@@ -191,13 +191,13 @@ const ButtonBase = kind({
 	},
 
 	computed: {
-		className: ({icon, minWidth, pressed, selected, size, styler}) => styler.append({
+		className: ({icon, minWidth, pressed, selected, size, styler}: Record<string, any>) => styler.append({
 			hasIcon: (!!icon),
 			minWidth,
 			pressed,
 			selected
 		}, size),
-		icon: ({css, icon, iconComponent, iconFlip, size}) => {
+		icon: ({css, icon, iconComponent, iconFlip, size}: Record<string, any>) => {
 			if (icon == null || icon === false) return;
 
 			// Establish the base collection of props for the most basic `iconComponent` type, an
@@ -233,7 +233,13 @@ const ButtonBase = kind({
 		delete rest.size;
 
 		return (
-			<div role="button" {...rest} aria-disabled={disabled} disabled={disabled} ref={componentRef}>
+			<div
+				role="button"
+				{...rest}
+				aria-disabled={disabled}
+				ref={componentRef}
+				{...({disabled} as any)}
+			>
 				{decoration ? (
 					<div className={css.decoration}>{decoration}</div>
 				) : null}

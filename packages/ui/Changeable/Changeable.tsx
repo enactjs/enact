@@ -179,7 +179,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 		handleChange = this.handle(
 			forProp('disabled', false),
 			forward(change),
-			({[prop]: value}: Record<string, any>) => {
+			({[prop]: value}: any) => {
 				if (!this.state.controlled) {
 					this.setState(({value: oldValue}) => value !== oldValue ? {value} : null);
 				}

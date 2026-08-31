@@ -189,7 +189,7 @@ const ImageBase = kind({
 	},
 
 	computed: {
-		bgImage: ({backgroundSrc, placeholder, src}) => {
+		bgImage: ({backgroundSrc, placeholder, src}: Record<string, any>) => {
 			const imageSrc = selectSrc(src) || placeholder;
 			const backgroundImageSrc = selectSrc(backgroundSrc);
 			warning(imageSrc || backgroundImageSrc, 'Image requires that either the "src", "placeholder", or "backgroundSrc" props be specified.');
@@ -201,10 +201,10 @@ const ImageBase = kind({
 
 			return layers.length ? layers.join(', ') : null;
 		},
-		className: ({className, sizing, styler}) => {
+		className: ({className, sizing, styler}: Record<string, any>) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
 		},
-		imgSrc: ({src}) => selectSrc(src) || null
+		imgSrc: ({src}: Record<string, any>) => selectSrc(src) || null
 	},
 
 	render: ({alt, 'aria-label': ariaLabel, backgroundColor, bgImage, children, componentRef, css, imgSrc, onError, onLoad, style, ...rest}) => {

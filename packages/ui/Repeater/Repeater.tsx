@@ -114,7 +114,7 @@ const RepeaterBase = kind({
 	},
 
 	computed: {
-		children: ({childComponent: Component, children, childProp, indexProp, itemProps}) => {
+		children: ({childComponent: Component, children, childProp, indexProp, itemProps}: Record<string, any>) => {
 			return children.map((data: any, index: number) => {
 				let props: Record<string, any> = {};
 				if (typeof data === 'object') {

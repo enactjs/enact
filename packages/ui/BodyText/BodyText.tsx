@@ -86,7 +86,7 @@ const BodyTextBase = kind({
 	},
 
 	computed: {
-		className: ({centered, styler}) => styler.append({centered})
+		className: ({centered, styler}: Record<string, any>) => styler.append({centered})
 	},
 
 	render: ({component: Component, componentRef, ...rest}) => {

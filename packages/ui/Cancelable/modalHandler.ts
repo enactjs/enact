@@ -1,7 +1,7 @@
 import {on, off} from '@enact/core/dispatcher';
 
 interface ModalCancelable {
-	handleCancel: (ev: any) => boolean;
+	handleCancel: (...args: any[]) => any;
 }
 
 // Contains references to modal Cancelable instances in LIFO order to allow multiple modals to be

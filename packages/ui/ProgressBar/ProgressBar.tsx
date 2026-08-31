@@ -155,11 +155,11 @@ const ProgressBarBase = kind({
 	},
 
 	computed: {
-		className: ({backgroundProgress, orientation, progress, styler}) => styler.append(orientation, {
+		className: ({backgroundProgress, orientation, progress, styler}: Record<string, any>) => styler.append(orientation, {
 			fillOverHalf: (progress > 0.5),
 			loadOverHalf: (backgroundProgress > 0.5)
 		}),
-		style: ({backgroundProgress, progress, progressAnchor, style}) => {
+		style: ({backgroundProgress, progress, progressAnchor, style}: Record<string, any>) => {
 			return {
 				...style,
 				'--ui-progressbar-proportion-anchor': progressAnchor,

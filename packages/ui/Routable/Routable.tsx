@@ -84,7 +84,7 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 		},
 
 		handlers: {
-			handleNavigate: ({path}, {path: currentPath, [navigate]: handler}) => {
+			handleNavigate: ({path}: any, {path: currentPath, [navigate]: handler}: Record<string, any>) => {
 				path = resolve(currentPath, path);
 
 				warning(path, `Path "${path}" was invalid from current path "${currentPath}"`);
@@ -93,7 +93,7 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 			},
 			// Adds `path` to the payload of navigate handler in the same format (String, or
 			// String[]) as the current path prop.
-			[navigate]: ({index, ...rest}, {path, [navigate]: handler}) => {
+			[navigate]: ({index, ...rest}: any, {path, [navigate]: handler}: Record<string, any>) => {
 				if (handler) {
 					const p = toSegments(path).slice(0, index + 1);
 					handler({
@@ -107,7 +107,7 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 
 		computed: {
 			// Determines the `index` as 1 less than the number of segments in the path
-			index: ({path}) => toSegments(path).length - 1
+			index: ({path}: Record<string, any>) => toSegments(path).length - 1
 		},
 
 		render: ({children, handleNavigate, index, path, ...rest}) => {

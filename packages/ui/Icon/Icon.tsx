@@ -162,7 +162,7 @@ const IconBase = kind({
 	},
 
 	computed: {
-		className: ({children: icon, flip, iconList, pressed, size, styler}) => {
+		className: ({children: icon, flip, iconList, pressed, size, styler}: Record<string, any>) => {
 			return styler.append(
 				{
 					// If the icon isn't in our known set, apply our custom font class
@@ -173,7 +173,7 @@ const IconBase = kind({
 				size
 			);
 		},
-		iconProps: ({children: iconProp, iconList, style}) => {
+		iconProps: ({children: iconProp, iconList, style}: Record<string, any>) => {
 			let icon = iconList[iconProp];
 
 			if (!icon) {

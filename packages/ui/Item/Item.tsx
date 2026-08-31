@@ -102,7 +102,7 @@ const ItemBase = kind({
 	},
 
 	computed: {
-		className: ({inline, styler}) => styler.append({inline})
+		className: ({inline, styler}: Record<string, any>) => styler.append({inline})
 	},
 
 	render: ({component: Component, componentRef, disabled, children, ...rest}) => {

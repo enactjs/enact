@@ -152,7 +152,7 @@ const CardBase = kind({
 	},
 
 	computed: {
-		className: ({captionOverlay, fitImage, orientation, splitCaption, selected, styler}) => styler.append({
+		className: ({captionOverlay, fitImage, orientation, splitCaption, selected, styler}: Record<string, any>) => styler.append({
 			captionOverlay: captionOverlay && orientation === 'vertical',
 			selected,
 			fitImage,

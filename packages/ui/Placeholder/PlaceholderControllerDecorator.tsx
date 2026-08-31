@@ -95,8 +95,8 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else {
 				this.node = this.nodeRef.current;
 				this.bounds = {
-					height: this.node?.offsetHeight ?? 0,
-					width: this.node?.offsetWidth ?? 0
+					height: this.node!.offsetHeight,
+					width: this.node!.offsetWidth
 				};
 			}
 		}
@@ -142,7 +142,7 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleNotify = this.handle(
 			forward(notify),
-			({scrollLeft, scrollTop}: {scrollLeft: number; scrollTop: number}) => {
+			({scrollLeft, scrollTop}: any) => {
 				this.setThresholds(scrollTop, scrollLeft);
 			}
 		);

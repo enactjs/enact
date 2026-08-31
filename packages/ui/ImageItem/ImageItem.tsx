@@ -145,7 +145,7 @@ const ImageItemBase = kind({
 	},
 
 	computed: {
-		className: ({orientation, selected, styler}) => styler.append({
+		className: ({orientation, selected, styler}: Record<string, any>) => styler.append({
 			selected,
 			horizontal: orientation === 'horizontal',
 			vertical: orientation === 'vertical'

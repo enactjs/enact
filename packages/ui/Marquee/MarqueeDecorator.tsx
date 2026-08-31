@@ -475,11 +475,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.contentFits === false) {
 				this.setState(state => state.promoted ? null : {promoted: true});
 			}
-		});
+		}, 0);
 
 		demoteJob = new Job(() => {
 			this.setState(state => (!state.animating && state.promoted) ? {promoted: false} : null);
-		});
+		}, 0);
 
 		demote () {
 			this.promoteJob.stop();

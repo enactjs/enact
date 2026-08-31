@@ -127,8 +127,8 @@ const HeadingBase = kind({
 		// This logic is intended to have the following result:
 		// Apply a class for the current 'size'. Use the 'size' to determine the spacing, unless a
 		// "non-auto" spacing value was specified.
-		className: ({size, spacing, styler}) => styler.append(size, {[(spacing !== 'auto' ? spacing : (size || 'none')) + 'Spacing']: true}),
-		Tag: ({size}) => {
+		className: ({size, spacing, styler}: Record<string, any>) => styler.append(size, {[(spacing !== 'auto' ? spacing : (size || 'none')) + 'Spacing']: true}),
+		Tag: ({size}: Record<string, any>) => {
 			switch (size) {
 				case 'title':    return 'h1';
 				case 'subtitle': return 'h2';

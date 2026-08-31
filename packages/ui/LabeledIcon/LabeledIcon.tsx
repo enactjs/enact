@@ -173,8 +173,8 @@ const LabeledIconBase = kind({
 	},
 
 	computed: {
-		className: ({inline, labelPosition, styler}) => styler.append(labelPosition, {inline}),
-		orientation: ({labelPosition}) => {
+		className: ({inline, labelPosition, styler}: Record<string, any>) => styler.append(labelPosition, {inline}),
+		orientation: ({labelPosition}: Record<string, any>) => {
 			const vertical = labelPosition === 'above' || labelPosition === 'below';
 			return vertical ? 'vertical' : 'horizontal';
 		}
@@ -205,14 +205,14 @@ const LabeledIconBase = kind({
 		delete rest.inline;
 		delete rest.labelPosition;
 
-		return LayoutBase.inline({
+		return LayoutBase.inline!({
 			...rest,
 			align: 'center center',
 			componentRef,
 			disabled,
 			orientation,
 			children: [
-				CellBase.inline({
+				CellBase.inline!({
 					key: 'icon',
 					shrink: true,
 					size: '100%',
@@ -226,17 +226,17 @@ const LabeledIconBase = kind({
 						>
 							{icon}
 						</Icon> : icon
-				}),
-				CellBase.inline({
+				}, undefined as any),
+				CellBase.inline!({
 					key: 'label',
 					shrink: true,
 					component: 'label',
 					className: css.label,
 					disabled,
 					children
-				})
+				}, undefined as any)
 			]
-		});
+		}, undefined as any);
 	}
 });
 

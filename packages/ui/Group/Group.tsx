@@ -172,9 +172,9 @@ const GroupBase = kind({
 	},
 
 	computed: {
-		'aria-multiselectable': ({select}) => select === 'multiple',
+		'aria-multiselectable': ({select}: Record<string, any>) => select === 'multiple',
 
-		itemProps: (props) => Object.assign({},
+		itemProps: (props: Record<string, any>) => Object.assign({},
 			pickGroupItemProps(props),
 			props.itemProps
 		)
