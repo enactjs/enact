@@ -6,6 +6,8 @@
  * @exports platform
  */
 
+import type {WebOSPlatform} from '../types';
+
 const webOSVersion = [
 	// Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.2.1 Chrome/38.0.2125.122 Safari/537.36 WebAppManager
 	{chrome: 38, version: 3},
@@ -27,7 +29,13 @@ const webOSVersion = [
 	{chrome: 132, version: 26}
 ];
 
-const platforms = [
+type PlatformPattern = {
+	regex: RegExp;
+	version?: number;
+	chrome?: number;
+};
+
+const platforms: PlatformPattern[] = [
 	// LG webOS using Chrome (from version 3)
 	...webOSVersion.map(({chrome, version}) => ({regex: new RegExp(`Web0S;.*Chrome/${chrome}`), version, chrome})),
 	{regex: /Web0S;.*Chrome\/(\d+)/},
@@ -35,22 +43,22 @@ const platforms = [
 	{regex: /Web0S;/}
 ];
 
-const parseUserAgent = (userAgent) => {
+const parseUserAgent = (userAgent: string) => {
 	// build out our cached platform determination for future usage
-	const platformInfo = {webos: false};
+	const platformInfo: WebOSPlatform = {webos: false};
 
 	if (userAgent.indexOf('SmartTV') > -1) {
 		platformInfo.tv = true;
 	} else {
 		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
 		try {
-			let legacyInfo = JSON.parse(webOSSystem.deviceInfo || '{}');
+			let legacyInfo = JSON.parse(webOSSystem!.deviceInfo || '{}');
 			if (typeof legacyInfo.platformVersionMajor !== 'undefined' && typeof legacyInfo.platformVersionMinor !== 'undefined') {
 				platformInfo.open = true;
 			} else {
 				platformInfo.unknown = true;
 			}
-		} catch (e) {
+		} catch {
 			platformInfo.open = true;
 		}
 
@@ -77,7 +85,7 @@ const parseUserAgent = (userAgent) => {
 	return platformInfo;
 };
 
-let _platform = null;
+let _platform: WebOSPlatform | null = null;
 
 /**
  * Returns the {@link webos/platform.platform} object.
@@ -118,15 +126,17 @@ function detect () {
  * @memberof webos/platform
  * @public
  */
-const platform = {};
+const platform: WebOSPlatform = {} as WebOSPlatform;
 
-[
-	'tv',
-	'open',
-	'unknown',
-	'version',
-	'chrome'
-].forEach(name => {
+(
+	[
+		'tv',
+		'open',
+		'unknown',
+		'version',
+		'chrome'
+	] as Array<keyof WebOSPlatform>
+).forEach(name => {
 	Object.defineProperty(platform, name, {
 		enumerable: true,
 		get: () => {
