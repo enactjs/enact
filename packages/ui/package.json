@@ -43,5 +43,10 @@
     "react-dom": "^19.2.7",
     "react-is": "^19.2.7",
     "warning": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.0",
+    "@types/prop-types": "^15.7.15",
+    "@types/react": "^19.2.18"
   }
 }
