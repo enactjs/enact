@@ -3,9 +3,9 @@
 import LS2Request from '../LS2Request';
 import {platform} from '../platform';
 
-let audioGuidanceEnabled = null;
+let audioGuidanceEnabled: boolean | null = null;
 
-const checkAudioGuidance = () => new Promise((resolve, reject) => {
+const checkAudioGuidance = () => new Promise<void>((resolve, reject) => {
 	if (audioGuidanceEnabled === null) {
 		new LS2Request().send({
 			service: 'luna://com.webos.settingsservice',
@@ -36,7 +36,7 @@ const checkAudioGuidance = () => new Promise((resolve, reject) => {
 	}
 });
 
-const readAlertMessage = (string, clear) => () => new Promise((resolve, reject) => {
+const readAlertMessage = (string: string, clear: boolean) => () => new Promise((resolve, reject) => {
 	new LS2Request().send({
 		service: 'luna://com.webos.service.tts',
 		method: 'speak',
@@ -58,7 +58,7 @@ const readAlertMessage = (string, clear) => () => new Promise((resolve, reject) 
  * @memberof webos/speech
  * @public
  */
-const readAlert = (string, clear = true) => {
+const readAlert = (string: string, clear = true) => {
 	if (platform.tv) {
 		checkAudioGuidance()
 			.then(readAlertMessage(string, clear))

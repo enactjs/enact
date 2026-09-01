@@ -24,10 +24,10 @@ const levelNotice = 5;
 const levelInfo = 6;
 const levelDebug = 7;
 
-const isObject = (obj) => !!obj && (typeof obj === 'object') && (Object.prototype.toString.call(obj) !== '[object Array]');
+const isObject = (obj: unknown): obj is Record<string, unknown> => !!obj && (typeof obj === 'object') && (Object.prototype.toString.call(obj) !== '[object Array]');
 
 // Log function stringifies and escapes keyVals, and passes to PmLogString
-const log = (level, messageId, keyVals, freeText) => {
+const log = (level: number, messageId: string, keyVals: any, freeText?: string | null) => {
 	if (typeof window !== 'undefined' && (window.webOSSystem || window.PalmSystem)) {
 		if (keyVals && !isObject(keyVals)) {
 			level = levelError;
@@ -43,7 +43,7 @@ const log = (level, messageId, keyVals, freeText) => {
 			keyVals = JSON.stringify(keyVals);
 		}
 		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
-		if (webOSSystem.PmLogString) {
+		if (webOSSystem && webOSSystem.PmLogString) {
 			if (level === levelDebug) { // debug only accepts 2 arguments
 				webOSSystem.PmLogString(level, null, null, freeText);
 			} else {
@@ -66,7 +66,7 @@ const log = (level, messageId, keyVals, freeText) => {
  * @memberof webos/pmloglib
  * @public
  */
-const emergency = (messageId, keyVals, freeText) => {
+const emergency = (messageId: string, keyVals: Record<string, any>, freeText: string) => {
 	log(levelEmergency, messageId, keyVals, freeText);
 };
 
@@ -81,7 +81,7 @@ const emergency = (messageId, keyVals, freeText) => {
  * @memberof webos/pmloglib
  * @public
  */
-const alert = (messageId, keyVals, freeText) => {
+const alert = (messageId: string, keyVals: Record<string, any>, freeText: string) => {
 	log(levelAlert, messageId, keyVals, freeText);
 };
 
@@ -96,7 +96,7 @@ const alert = (messageId, keyVals, freeText) => {
  * @memberof webos/pmloglib
  * @public
  */
-const critical = (messageId, keyVals, freeText) => {
+const critical = (messageId: string, keyVals: Record<string, any>, freeText: string) => {
 	log(levelCritical, messageId, keyVals, freeText);
 };
 
@@ -111,7 +111,7 @@ const critical = (messageId, keyVals, freeText) => {
  * @memberof webos/pmloglib
  * @public
  */
-const error = (messageId, keyVals, freeText) => {
+const error = (messageId: string, keyVals: Record<string, any>, freeText: string) => {
 	log(levelError, messageId, keyVals, freeText);
 };
 
@@ -126,7 +126,7 @@ const error = (messageId, keyVals, freeText) => {
  * @memberof webos/pmloglib
  * @public
  */
-const warning = (messageId, keyVals, freeText) => {
+const warning = (messageId: string, keyVals: Record<string, any>, freeText: string) => {
 	log(levelWarning, messageId, keyVals, freeText);
 };
 
@@ -141,7 +141,7 @@ const warning = (messageId, keyVals, freeText) => {
  * @memberof webos/pmloglib
  * @public
  */
-const notice = (messageId, keyVals, freeText) => {
+const notice = (messageId: string, keyVals: Record<string, any>, freeText: string) => {
 	log(levelNotice, messageId, keyVals, freeText);
 };
 
@@ -156,7 +156,7 @@ const notice = (messageId, keyVals, freeText) => {
  * @memberof webos/pmloglib
  * @public
  */
-const info = (messageId, keyVals, freeText) => {
+const info = (messageId: string, keyVals: Record<string, any>, freeText: string) => {
 	log(levelInfo, messageId, keyVals, freeText);
 };
 
@@ -169,7 +169,7 @@ const info = (messageId, keyVals, freeText) => {
  * @memberof webos/pmloglib
  * @public
  */
-const debug = (freeText) => {
+const debug = (freeText: string) => {
 	log(levelDebug, '', '', freeText);
 };
 
@@ -185,13 +185,13 @@ const debug = (freeText) => {
  * @memberof webos/pmloglib
  * @public
  */
-const perfLog = (messageId, perfType, perfGroup) => {
+const perfLog = (messageId: string, perfType: string, perfGroup: string) => {
 	if (typeof window !== 'undefined' && (window.webOSSystem || window.PalmSystem)) {
 		if (!messageId) {
 			console.warn('PmLogInfoWithClock called with invalid format: messageId was empty');
 		}
 		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
-		if (webOSSystem.PmLogInfoWithClock) {
+		if (webOSSystem && webOSSystem.PmLogInfoWithClock) {
 			webOSSystem.PmLogInfoWithClock(messageId, perfType ? perfType : '',
 				perfGroup ? perfGroup : '');
 		} else {

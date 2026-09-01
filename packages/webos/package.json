@@ -8,7 +8,7 @@
     "directory": "packages/webos"
   },
   "homepage": "https://enactjs.com",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "clean": "enact clean",
     "interlink": "npm link ../core",
@@ -31,10 +31,23 @@
       "baseSize": 24
     }
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "**/*.{js,jsx,ts,tsx}",
+      "!**/*.d.ts"
+    ]
+  },
   "dependencies": {
     "@enact/core": "^5.5.2",
     "prop-types": "^15.8.1",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "typescript": "^7.0.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.1.2",
+    "@types/prop-types": "^15.7.15",
+    "@types/react": "^19.2.18"
   }
 }

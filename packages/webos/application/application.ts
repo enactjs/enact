@@ -10,7 +10,7 @@
  * @exports platformBack
  */
 
-let appInfo = {};
+let appInfo: Record<string, unknown> = {};
 
 /**
  * Fetches the appID of the caller app.
@@ -35,6 +35,7 @@ const fetchAppId = () => {
  * @param {?object} info - JSON data object read from the app's *appinfo.json* file. `undefined` if not found.
  * @memberof webos/application
  */
+type AppInfoCallback = (info?: Record<string, unknown>) => void;
 
 /**
  * Fetches the *appinfo.json* data of the caller app.
@@ -46,14 +47,14 @@ const fetchAppId = () => {
  * @memberof webos/application
  * @public
  */
-const fetchAppInfo = (callback, path) => {
+const fetchAppInfo = (callback?: AppInfoCallback, path?: string) => {
 	if (Object.keys(appInfo).length === 0) {
-		const parseInfo = (err, info) => {
+		const parseInfo = (err: {status: number} | null, info?: string) => {
 			if (!err && info) {
 				try {
 					appInfo = JSON.parse(info);
 					if (callback) callback(appInfo);
-				} catch (e) {
+				} catch {
 					console.error('Unable to parse appinfo.json file for ' + fetchAppId);
 					if (callback) callback();
 				}
@@ -74,7 +75,7 @@ const fetchAppInfo = (callback, path) => {
 		try {
 			req.open('GET', path || 'appinfo.json', true);
 			req.send(null);
-		} catch (e) {
+		} catch {
 			parseInfo({status: 404});
 		}
 	} else if (callback) {
@@ -95,7 +96,7 @@ const fetchAppRootPath = () => {
 	if ('baseURI' in window.document) {
 		base = window.document.baseURI;
 	} else {
-		const baseTags = window.document.getElementsByTagName('base');
+		const baseTags = (window.document as Document).getElementsByTagName('base');
 		if (baseTags.length > 0) {
 			base = baseTags[0].href;
 		}

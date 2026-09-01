@@ -6,6 +6,16 @@ import {Component} from 'react';
 
 import {startSignLang, stopSignLang} from './signLang';
 
+type SignLangDecoratorConfig = {
+	signLangDelay: number;
+};
+
+type SignLangDecoratorProps = {
+	signLangId?: string;
+	signLangOption?: Record<string, any>;
+	[prop: string]: any;
+};
+
 /**
  * Default config for {@link webos/signLang.SignLangDecorator}
  *
@@ -13,7 +23,7 @@ import {startSignLang, stopSignLang} from './signLang';
  * @hocconfig
  * @memberof webos/signLang.SignLangDecorator
  */
-const defaultConfig = {
+const defaultConfig: SignLangDecoratorConfig = {
 	/**
 	 * Time to wait (in milliseconds) before calling Sign Language API.
 	 *
@@ -53,12 +63,12 @@ const defaultConfig = {
  * @hoc
  * @public
  */
-const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
+const SignLangDecorator = hoc(defaultConfig, (config: SignLangDecoratorConfig, Wrapped) => {
 	const {signLangDelay} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
 
-	return class extends Component {
+	return class extends Component<SignLangDecoratorProps> {
 		static displayName = 'SignLangDecorator';
 
 		static propTypes = /** @lends webos/signLang.SignLangDecorator.prototype */ {
@@ -79,18 +89,18 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			signLangOption: PropTypes.object
 		};
 
-		constructor (props) {
+		constructor (props: SignLangDecoratorProps) {
 			super(props);
 			checkPropTypes(this, props);
-
-			this.signLangDelayId = null;
 		}
 
-		componentDidUpdate (prevProps) {
+		componentDidUpdate (prevProps: SignLangDecoratorProps) {
 			checkPropTypes(this, this.props, prevProps);
 		}
 
-		requestSignLang = (active) => {
+		signLangDelayId: ReturnType<typeof setTimeout> | null = null;
+
+		requestSignLang = (active: boolean) => {
 			const {signLangId = '', signLangOption = {}} = this.props;
 
 			if (signLangId.length > 0) {
@@ -98,30 +108,30 @@ const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					if (signLangDelay === 0) {
 						startSignLang(signLangId, signLangOption);
 					} else {
-						clearTimeout(this.signLangDelayId);
+						clearTimeout(this.signLangDelayId as unknown as number);
 						this.signLangDelayId = setTimeout(() => {
 							startSignLang(signLangId, signLangOption);
 						}, signLangDelay);
 					}
 				} else {
-					if (signLangDelay > 0) clearTimeout(this.signLangDelayId);
+					if (signLangDelay > 0) clearTimeout(this.signLangDelayId as unknown as number);
 					stopSignLang(signLangId, signLangOption);
 				}
 			}
 		};
 
-		onFocus = (ev) => {
+		onFocus = (ev: any) => {
 			forwardFocus(ev, this.props);
 			this.requestSignLang(true);
 		};
 
-		onBlur = (ev) => {
+		onBlur = (ev: any) => {
 			forwardBlur(ev, this.props);
 			this.requestSignLang(false);
 		};
 
 		render () {
-			const props = Object.assign({}, this.props);
+			const props: Record<string, any> = Object.assign({}, this.props);
 			delete props.onBlur;
 			delete props.onFocus;
 			delete props.signLangId;

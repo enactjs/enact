@@ -8,17 +8,24 @@
 
 import {Job} from '@enact/core/util';
 
-const refs = {};
+import type {LS2Callback, LS2RequestOptions, LS2Response} from '../types';
 
-const adjustPath = (path) => {
+const refs: Record<number, LS2Request> = {};
+
+const adjustPath = (path: string) => {
 	if (!/^(luna|palm):\/\//.test(path)) path = 'luna://' + path;
 	if (path.slice(-1) !== '/') path += '/';
 	return path;
 };
 
 // default handlers
-const failureHandler = ({errorText}) => console.error(`LS2Request: ${errorText}`);
-const timeoutHandler = ({errorText}) => console.warn(`LS2Request: ${errorText}`);
+const failureHandler: LS2Callback = ({errorText}) => console.error(`LS2Request: ${errorText}`);
+const timeoutHandler: LS2Callback = ({errorText}) => console.warn(`LS2Request: ${errorText}`);
+
+type TimeoutJobArgs = {
+	onTimeout: LS2Callback;
+	timeout: number;
+};
 
 /**
  * A class for managing LS2 Requests.
@@ -27,11 +34,16 @@ const timeoutHandler = ({errorText}) => console.warn(`LS2Request: ${errorText}`)
  * @class
  */
 export default class LS2Request {
-	timeoutJob = new Job(({onTimeout, timeout}) => {
+	timeoutJob = new Job(({onTimeout, timeout}: TimeoutJobArgs) => {
 		onTimeout({errorCode: -2, errorText: `Request timed out after ${timeout} ms.`, returnValue: false});
 		// cancel the request
 		this.cancel();
-	});
+	}, 0);
+
+	bridge: WebOSServiceBridge | null;
+	subscribe: boolean;
+	cancelled?: boolean;
+	ts?: number;
 
 	/**
 	 * Create a new LS2 request
@@ -74,7 +86,7 @@ export default class LS2Request {
 		onTimeout = timeoutHandler,
 		subscribe = false,
 		timeout = 0
-	}) {
+	}: LS2RequestOptions) {
 		const WebOSServiceBridge = typeof window === 'object' ? (window.WebOSServiceBridge ?? window.PalmServiceBridge) : null;
 
 		this.cancelled = false;
@@ -116,7 +128,7 @@ export default class LS2Request {
 		return this;
 	}
 
-	callback (onSuccess, onFailure, onComplete, msg) {
+	callback (onSuccess: LS2Callback | null, onFailure: LS2Callback | null, onComplete: LS2Callback | null, msg?: string | null) {
 		if (this.cancelled) {
 			return;
 		}
@@ -124,7 +136,7 @@ export default class LS2Request {
 		// remove timeout job
 		this.timeoutJob.stop();
 
-		let parsedMsg;
+		let parsedMsg: LS2Response;
 
 		if (msg == null) {
 			parsedMsg = {
@@ -135,7 +147,7 @@ export default class LS2Request {
 		} else {
 			try {
 				parsedMsg = JSON.parse(msg);
-			} catch (e) {
+			} catch {
 				parsedMsg = {
 					errorCode: -1,
 					errorText: msg,

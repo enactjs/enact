@@ -6,8 +6,9 @@
  */
 import LS2Request from '../LS2Request';
 import {platform} from '../platform';
+import type {DeviceInfo} from '../types';
 
-const device = {};
+const device: DeviceInfo = {};
 
 /**
  * Callback signature for `deviceinfo`
@@ -36,11 +37,11 @@ const device = {};
  * @memberof webos/deviceinfo
  * @public
  */
-const deviceinfo = (callback) => {
+const deviceinfo = (callback: (info: DeviceInfo) => void) => {
 	if (Object.keys(device).length === 0) {
 		try {
 			const webOSSystem = window.webOSSystem ?? window.PalmSystem;
-			const info = JSON.parse(webOSSystem.deviceInfo);
+			const info = JSON.parse(webOSSystem!.deviceInfo as string);
 			device.modelName = info.modelName;
 			device.modelNameAscii = info.modelNameAscii;
 			device.version = info.platformVersion;
@@ -50,7 +51,7 @@ const deviceinfo = (callback) => {
 			device.sdkVersion = info.platformVersion;
 			device.screenWidth = info.screenWidth;
 			device.screenHeight = info.screenHeight;
-		} catch (e) {
+		} catch {
 			device.modelName = device.modelNameAscii = 'webOS Device';
 		}
 		device.screenHeight = device.screenHeight || window.screen.height;
@@ -71,12 +72,12 @@ const deviceinfo = (callback) => {
 					}
 					if (response.firmwareVersion) {
 						device.version = response.firmwareVersion;
-						const segments = device.version.split('.');
-						const keys = ['versionMajor', 'versionMinor', 'versionDot'];
+						const segments = (device.version as string).split('.');
+						const keys = ['versionMajor', 'versionMinor', 'versionDot'] as const;
 						for (let i = 0; i < keys.length; i++) {
 							try {
 								device[keys[i]] = parseInt(segments[i]);
-							} catch (e) {
+							} catch {
 								device[keys[i]] = segments[i];
 							}
 						}
