@@ -1,20 +1,20 @@
 {
   "name": "enact-sampler",
-  "version": "5.5.2",
+  "version": "5.6.0",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
       "name": "enact-sampler",
-      "version": "5.5.2",
+      "version": "5.6.0",
       "license": "Apache-2.0",
       "dependencies": {
-        "@enact/core": "^5.5.2",
-        "@enact/i18n": "^5.5.2",
-        "@enact/spotlight": "^5.5.2",
+        "@enact/core": "^5.6.0",
+        "@enact/i18n": "^5.6.0",
+        "@enact/spotlight": "^5.6.0",
         "@enact/storybook-utils": "^8.0.4",
-        "@enact/ui": "^5.5.2",
-        "@enact/webos": "^5.5.2",
+        "@enact/ui": "^5.6.0",
+        "@enact/webos": "^5.6.0",
         "@github-ui/storybook-addon-performance-panel": "^1.2.0",
         "@storybook/react-webpack5": "^10.5.10",
         "classnames": "^2.5.1",
@@ -315,32 +315,32 @@
       }
     },
     "node_modules/@enact/core": {
-      "version": "5.5.2",
-      "resolved": "https://registry.npmjs.org/@enact/core/-/core-5.5.2.tgz",
-      "integrity": "sha512-X6JRA+J4iBgj0xyt/ecfrfU075yHlz6IC+QRqXyvvTh0Zh6QEiIwNerfOqHKwe4rtAfRy68S6sZE1y+B0rVK/Q==",
+      "version": "5.6.0",
+      "resolved": "https://registry.npmjs.org/@enact/core/-/core-5.6.0.tgz",
+      "integrity": "sha512-rgoBLzRJK7brzzzPOUAFqIAGOe7BGzOCXVB2bIawhD4Yipy1K4zQrKSZIrJxDTN/MDp5ULmYcUx8WUQbgkCXHQ==",
       "license": "Apache-2.0",
       "dependencies": {
         "classnames": "^2.5.1",
         "invariant": "^2.2.4",
         "prop-types": "^15.8.1",
         "ramda": "^0.32.0",
-        "react": "^19.2.7",
-        "react-dom": "^19.2.7",
-        "react-is": "^19.2.7",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+        "react-is": "^19.2.8",
         "warning": "^4.0.3"
       }
     },
     "node_modules/@enact/i18n": {
-      "version": "5.5.2",
-      "resolved": "https://registry.npmjs.org/@enact/i18n/-/i18n-5.5.2.tgz",
-      "integrity": "sha512-ayoBt0xm/jVamTJDUuWy88KpEGqugxNr7j354B9t/vPmsE3u3K2LefrnLBjYD9GVi7nCy263DKhkLifBeKWh4Q==",
+      "version": "5.6.0",
+      "resolved": "https://registry.npmjs.org/@enact/i18n/-/i18n-5.6.0.tgz",
+      "integrity": "sha512-rCfkqQUokGCYnmSAaKYOxQaF8Q7zQbQ/GVzknGTGKlaHRGM4PYcg2J8dYrGhp1pM83Zb1tBigSd7z8uRP0WHjA==",
       "license": "Apache-2.0",
       "dependencies": {
-        "@enact/core": "^5.5.2",
+        "@enact/core": "^5.6.0",
         "prop-types": "^15.8.1",
         "ramda": "^0.32.0",
-        "react": "^19.2.7",
-        "react-dom": "^19.2.7",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
         "xhr": "^2.6.0"
       },
       "peerDependencies": {
@@ -348,17 +348,17 @@
       }
     },
     "node_modules/@enact/spotlight": {
-      "version": "5.5.2",
-      "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-5.5.2.tgz",
-      "integrity": "sha512-InvcnJyJFTb6/EkCeWkCJSJ+JlGvRK4CqkB+CLfws8P544w3T2WkkzCyGpwVX4I8ReZD1MiQdqM9iLyGJ1NWDw==",
+      "version": "5.6.0",
+      "resolved": "https://registry.npmjs.org/@enact/spotlight/-/spotlight-5.6.0.tgz",
+      "integrity": "sha512-3ftqR5d68EGofZy5r2DcPGZ+rudqzOHnXRP+OQ1skGecIQ7PcfROLn57neJUCl1xCKYF9QDoU9FDsB/u4ufiMA==",
       "license": "Apache-2.0",
       "dependencies": {
-        "@enact/core": "^5.5.2",
+        "@enact/core": "^5.6.0",
         "classnames": "^2.5.1",
         "prop-types": "^15.8.1",
         "ramda": "^0.32.0",
-        "react": "^19.2.7",
-        "react-dom": "^19.2.7",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
         "warning": "^4.0.3"
       }
     },
@@ -32300,34 +32300,34 @@
       }
     },
     "node_modules/@enact/ui": {
-      "version": "5.5.2",
-      "resolved": "https://registry.npmjs.org/@enact/ui/-/ui-5.5.2.tgz",
-      "integrity": "sha512-CbAkEvbr/TiwjzJOok6akFUdAH87Ha5rqbLjikrZxf/nQt484quvI4QI3nA07Nz+yPhqyBp3hmQ7d8quEHbszA==",
+      "version": "5.6.0",
+      "resolved": "https://registry.npmjs.org/@enact/ui/-/ui-5.6.0.tgz",
+      "integrity": "sha512-A5n/QHr6vUp+NNTexj4uolBsJec//AAXkx6yjnLcpRIAwArHcG9e/ZVQztP3p1J5gld+JQGb1ZIFdjHYFFyivg==",
       "license": "Apache-2.0",
       "dependencies": {
-        "@enact/core": "^5.5.2",
-        "@enact/i18n": "^5.5.2",
+        "@enact/core": "^5.6.0",
+        "@enact/i18n": "^5.6.0",
         "classnames": "^2.5.1",
         "ilib": "^14.22.0",
         "invariant": "^2.2.4",
         "prop-types": "^15.8.1",
         "ramda": "^0.32.0",
-        "react": "^19.2.7",
-        "react-dom": "^19.2.7",
-        "react-is": "^19.2.7",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+        "react-is": "^19.2.8",
         "warning": "^4.0.3"
       }
     },
     "node_modules/@enact/webos": {
-      "version": "5.5.2",
-      "resolved": "https://registry.npmjs.org/@enact/webos/-/webos-5.5.2.tgz",
-      "integrity": "sha512-3ou2/1tyWmrTm9WJhKqvZCqpRPoZ2WXeoS6mm5Usu02t0n4V+3IJbcNtB1z+Dh68QyLyKOKAZrkUJcmr1i6g7g==",
+      "version": "5.6.0",
+      "resolved": "https://registry.npmjs.org/@enact/webos/-/webos-5.6.0.tgz",
+      "integrity": "sha512-Hw52UIzRdNH7JAkUNM7b5EtgIH3EU6FP02pAP5vGIBhmJS4WIIA4aBqHGY2aKrfozEekr82q7fb3kFJs2oOjow==",
       "license": "Apache-2.0",
       "dependencies": {
-        "@enact/core": "^5.5.2",
+        "@enact/core": "^5.6.0",
         "prop-types": "^15.8.1",
-        "react": "^19.2.7",
-        "react-dom": "^19.2.7"
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8"
       }
     },
     "node_modules/@esbuild/aix-ppc64": {
