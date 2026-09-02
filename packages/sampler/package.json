@@ -16,7 +16,7 @@
     "@enact/core": "^5.5.2",
     "@enact/i18n": "^5.5.2",
     "@enact/spotlight": "^5.5.2",
-    "@enact/storybook-utils": "^8.0.3",
+    "@enact/storybook-utils": "^8.0.4",
     "@enact/ui": "^5.5.2",
     "@enact/webos": "^5.5.2",
     "@github-ui/storybook-addon-performance-panel": "^1.2.0",
