@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [5.6.0] - 2026-09-02
+
+### Added
+
+- `ui/Image` props `backgroundColor` and `backgroundSrc` to be able to change the background of a transparent image
+
 ## [5.5.2] - 2026-07-08
 
 ### Added
