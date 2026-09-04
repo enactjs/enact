@@ -19,7 +19,7 @@ import {Children, Component, ReactElement} from 'react';
 
 import ForwardRef from '../ForwardRef';
 
-import {shape} from './Arranger';
+import {type shapeType} from './Arranger';
 import TransitionGroup from './TransitionGroup';
 import {wrapWithView} from './View';
 import {Callback, CallbackObject} from '../types';
@@ -36,7 +36,7 @@ export interface ViewManagerProps {
 	 *
 	 * @type {Arranger}
 	 */
-	arranger: shape,
+	arranger: shapeType,
 
 	/**
 	 * An object containing properties to be passed to each child.

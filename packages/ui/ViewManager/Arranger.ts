@@ -2,6 +2,9 @@
  * Exports a number of pre-defined arrangers for use with {@link ui/ViewManager}.
  * note: not jsdoc on purpose
  */
+
+import PropTypes from 'prop-types';
+
 import {Callback} from '../types';
 
 export type SlideArrangeDirection = 'bottom' | 'left' | 'right' | 'top';
@@ -155,4 +158,8 @@ export const SlideBottomArranger = SlideArranger({direction: 'bottom'});
  * @memberof ui/ViewManager
  * @private
  */
-export type shape = {enter: Callback, leave: Callback};
+export const shape = PropTypes.shape({
+	enter: PropTypes.func,
+	leave: PropTypes.func
+});
+export type shapeType = {enter: Callback, leave: Callback};

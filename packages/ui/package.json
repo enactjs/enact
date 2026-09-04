@@ -8,7 +8,7 @@
     "directory": "packages/ui"
   },
   "homepage": "https://enactjs.com",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "clean": "enact clean",
     "interlink": "npm link ../core ../i18n",
@@ -51,6 +51,7 @@
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^26.4.1",
+    "@types/prop-types": "^15.7.15",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4"
   }

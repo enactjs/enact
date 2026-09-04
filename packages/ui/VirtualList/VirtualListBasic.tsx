@@ -3,6 +3,7 @@ import {EnactPropTypes} from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import {checkPropTypes, clamp, shallowEqual} from '@enact/core/util';
+import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import {createRef, Component, RefObject, ReactElement, ReactNode} from 'react';
 
@@ -44,7 +45,7 @@ export interface VirtualListBasicProps /** @lends ui/VirtualList.VirtualListBasi
 	 * @required
 	 * @private
 	 */
-	itemSize: number | gridListItemSizeShape,
+	itemSize: number | gridListItemSizeShapeType,
 
 	/**
 	 * Callback method of scrollTo.
@@ -301,7 +302,12 @@ const nop = () => {};
  * @property {Number} minHeight The minimum height of the grid list item.
  * @public
  */
-export type gridListItemSizeShape = {
+const gridListItemSizeShape = PropTypes.shape({
+	minHeight: PropTypes.number.isRequired,
+	minWidth: PropTypes.number.isRequired
+});
+
+export type gridListItemSizeShapeType = {
 	minHeight: number,
 	minWidth: number
 };
@@ -316,7 +322,11 @@ export type gridListItemSizeShape = {
  * @property {Number[]} size An array of the list item size. If it is not defined, the list items will render with the `minSize` size.
  * @public
  */
-export type itemSizesShape = {
+const itemSizesShape = PropTypes.shape({
+	minSize: PropTypes.number.isRequired,
+	size: PropTypes.arrayOf(PropTypes.number)
+});
+export type itemSizesShapeType = {
 	minSize: number,
 	size: number[]
 };
@@ -332,8 +342,8 @@ export type VirtualListBasicState = {
 
 type DimensionMetrics = {
 	clientSize: number,
-	minItemSize: number | gridListItemSizeShape | null,
-	itemSize: number | gridListItemSizeShape,
+	minItemSize: number | gridListItemSizeShapeType | null,
+	itemSize: number | gridListItemSizeShapeType,
 	gridSize: number
 };
 
@@ -1483,4 +1493,8 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 }
 
 export default VirtualListBasic;
-export {VirtualListBasic};
+export {
+	gridListItemSizeShape,
+	itemSizesShape,
+	VirtualListBasic
+};
