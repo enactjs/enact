@@ -15,7 +15,7 @@ import {ResizeContext} from '../Resizable';
 import useScroll from '../useScroll';
 import Scrollbar from '../useScroll/Scrollbar';
 
-import {type gridListItemSizeShape, type itemSizesShape, VirtualListBasic} from './VirtualListBasic';
+import {gridListItemSizeShape, itemSizesShape, VirtualListBasic} from './VirtualListBasic';
 import {Callback} from '../types';
 
 export interface ScrollToProps {
@@ -437,8 +437,8 @@ VirtualGridList.defaultPropValues = virtualGridListDefaultProps;
 
 export default VirtualList;
 export {
-	type gridListItemSizeShape,
-	type itemSizesShape,
+	gridListItemSizeShape,
+	itemSizesShape,
 	VirtualGridList,
 	VirtualList,
 	VirtualListBasic
