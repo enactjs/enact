@@ -373,7 +373,7 @@ const TransitionBase = kind({
 			const merged = style ? {...style, overflow: 'hidden'} : {overflow: 'hidden'};
 
 			if (visible && (direction === 'up' || direction === 'down')) {
-				merged.height = clipHeight || '';
+				merged.height = clipHeight ?? '';
 			}
 			// If duration isn't a known named string, assume it is a CSS duration value
 			if (duration && !css[duration]) {

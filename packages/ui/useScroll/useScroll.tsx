@@ -932,7 +932,7 @@ const useScrollBase = (props: UseScrollProps) => {
 	 * Handler for scrollend event
 	 */
 	function onScrollEnd (ev: Event) {
-		if (!mutableRef.current.scrolling || mutableRef.current.keyPressed || scrollContentHandle?.current.scrolling) {
+		if (!mutableRef.current.scrolling || mutableRef.current.keyPressed || scrollContentHandle?.current?.scrolling) {
 			return;
 		}
 

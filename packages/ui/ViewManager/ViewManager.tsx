@@ -15,7 +15,6 @@
 
 import {EnactPropTypes} from '@enact/core/internal/prop-types';
 import handle, {forwardCustom} from '@enact/core/handle';
-import {checkPropTypes} from '@enact/core/util';
 import {Children, Component, ReactElement} from 'react';
 
 import ForwardRef from '../ForwardRef';
@@ -27,8 +26,8 @@ import {Callback, CallbackObject} from '../types';
 
 export type ViewManagerState = {
 	index: number | null,
-	prevIndex: number | null,
-	reverseTransition: boolean | null
+	prevIndex?: number,
+	reverseTransition?: boolean
 };
 
 export interface ViewManagerProps {
@@ -223,17 +222,14 @@ const ViewManagerBase = class extends Component<ViewManagerProps, ViewManagerSta
 
 	constructor (props: ViewManagerProps) {
 		super(props);
-		checkPropTypes(this, props);
 
 		this.state = {
-			index: null,
-			prevIndex: null,
-			reverseTransition: null
+			index: null
 		};
 	}
 
 	static getDerivedStateFromProps (props: ViewManagerProps, state: ViewManagerState) {
-		if (props.reverseTransition != null) {
+		if (props.reverseTransition) {
 			return {
 				index: props.index,
 				prevIndex: state.index,
@@ -248,10 +244,6 @@ const ViewManagerBase = class extends Component<ViewManagerProps, ViewManagerSta
 		}
 
 		return null;
-	}
-
-	componentDidUpdate (prevProps: ViewManagerProps) {
-		checkPropTypes(this, this.props, prevProps);
 	}
 
 	// Merges optional props with defaultProps so TypeScript knows they are never undefined inside the class.
@@ -289,8 +281,8 @@ const ViewManagerBase = class extends Component<ViewManagerProps, ViewManagerSta
 			duration,
 			index,
 			noAnimation,
-			previousIndex: previousIndex ?? index,
-			reverseTransition: !!reverseTransition,
+			previousIndex,
+			reverseTransition,
 			enteringDelay,
 			enteringProp,
 			childProps,

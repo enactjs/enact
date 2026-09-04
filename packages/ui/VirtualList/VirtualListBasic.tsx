@@ -963,7 +963,7 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 				}
 			}
 
-			if (firstVisibleIndex && lastVisibleIndex && firstVisibleIndex > lastVisibleIndex) {
+			if ((firstVisibleIndex !== null && lastVisibleIndex !== null) && (firstVisibleIndex > lastVisibleIndex)) {
 				firstVisibleIndex = null;
 				lastVisibleIndex = null;
 			}
@@ -1464,7 +1464,7 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 				className
 			);
 		let contentClasses;
-		if (scrollModeNative) {
+		if (!scrollModeNative) {
 			contentClasses = css.content;
 		}
 

@@ -382,11 +382,11 @@ class Touch {
 			if (pinch && this.target) {
 				this.pinch.begin(pinch, props, coords, this.target);
 			}
-		} else if (!Array.isArray(coords)) {
-			if (hold && this.target) {
+		} else {
+			if (hold) {
 				this.hold.begin(hold, props, coords);
 			}
-			if (flick && this.target) {
+			if (flick) {
 				this.flick.begin(flick, props, coords);
 			}
 			if (drag && this.target) {

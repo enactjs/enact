@@ -108,7 +108,7 @@ interface ViewProps {
 	 *
 	 * @type {Number}
 	 */
-	previousIndex: number,
+	previousIndex?: number,
 
 	/**
 	 * Index of the view node among the rendered children of the parent node

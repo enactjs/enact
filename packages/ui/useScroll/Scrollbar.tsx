@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import {checkPropTypes, Job} from '@enact/core/util';
+import {Job} from '@enact/core/util';
 import {memo, RefObject, useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 
 import ri from '../resolution';
@@ -138,13 +138,13 @@ const useScrollbar = (props: UseScrollbarProps) => {
 	const update = useCallback((bounds: HTMLDivElement) => {
 		const
 			primaryDimension = vertical ? 'clientHeight' : 'clientWidth',
-			trackSize = (clientSize ? clientSize[primaryDimension] : scrollbarContainerRef.current?.[primaryDimension]) || 1,
+			trackSize = (clientSize ? clientSize[primaryDimension] : scrollbarContainerRef.current?.[primaryDimension]),
 			scrollViewSize = vertical ? bounds.clientHeight : bounds.clientWidth,
 			scrollContentSize = vertical ? bounds.scrollHeight : bounds.scrollWidth,
 			scrollOrigin = vertical ? bounds.scrollTop : bounds.scrollLeft,
 			scrollbarThumbSizeRatioBase = scrollContentSize !== 0 ? (scrollViewSize / scrollContentSize) : 1,
 			scrollbarThumbProgressRatio = (scrollContentSize - scrollViewSize) !== 0 ? (scrollOrigin / (scrollContentSize - scrollViewSize)) : 0,
-			scrollbarThumbSizeRatio = trackSize !== 0 ? Math.max(ri.scale(minThumbSize) / trackSize, Math.min(1, scrollbarThumbSizeRatioBase)) : 1;
+			scrollbarThumbSizeRatio = trackSize !== 0 ? Math.max(ri.scale(minThumbSize) / (trackSize ?? 1), Math.min(1, scrollbarThumbSizeRatioBase)) : 1;
 
 		if (scrollbarTrackRef.current) {
 			setCSSVariable(scrollbarTrackRef.current, '--scrollbar-thumb-size-ratio', `${scrollbarThumbSizeRatio}`);
@@ -206,7 +206,6 @@ const Scrollbar = memo(({corner = false, css = componentCss, minThumbSize = 18, 
 		scrollbarProps,
 		scrollbarTrackProps
 	} = useScrollbar(props);
-	checkPropTypes(Scrollbar, props);
 
 	return (
 		<div {...restProps} {...scrollbarProps}>
