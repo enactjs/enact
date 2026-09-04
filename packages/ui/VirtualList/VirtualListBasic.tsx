@@ -1,0 +1,1500 @@
+import classNames from 'classnames';
+import {EnactPropTypes} from '@enact/core/internal/prop-types';
+import {forward} from '@enact/core/handle';
+import {platform} from '@enact/core/platform';
+import {checkPropTypes, clamp, shallowEqual} from '@enact/core/util';
+import PropTypes from 'prop-types';
+import equals from 'ramda/src/equals';
+import {createRef, Component, RefObject, ReactElement, ReactNode} from 'react';
+
+import css from './VirtualList.module.less';
+import {Callback, CallbackObject} from '../types';
+
+export interface VirtualListBasicProps /** @lends ui/VirtualList.VirtualListBasic.prototype */ {
+	/**
+	 * The rendering function called for each item in the list.
+	 *
+	 * > **Note**: The list does **not** always render a component whenever its render function is called
+	 * due to performance optimization.
+	 *
+	 * Example:
+	 * ```
+	 * renderItem = ({index, ...rest}) => {
+	 *
+	 * 	return (
+	 * 		<MyComponent index={index} {...rest} />
+	 * 	);
+	 * }
+	 * ```
+	 *
+	 * @type {Function}
+	 * @param {Object} event
+	 * @param {Number} event.data-index It is required for `Spotlight` 5-way navigation. Pass to the root element in the component.
+	 * @param {Number} event.index The index number of the component to render
+	 *
+	 * @required
+	 * @public
+	 */
+	itemRenderer: Callback<ReactNode, {index: number, 'data-index'?: number}>,
+
+	/**
+	 * The size of an item for the list; valid values are either a number for `VirtualList`
+	 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
+	 *
+	 * @type {Number|ui/VirtualList.gridListItemSizeShape}
+	 * @required
+	 * @private
+	 */
+	itemSize: number | gridListItemSizeShapeType,
+
+	/**
+	 * Callback method of scrollTo.
+	 * Normally, useScroll should set this value.
+	 *
+	 * @type {Function}
+	 * @private
+	 */
+	cbScrollTo?: Callback,
+
+	/**
+	 * Additional props included in the object passed to the `itemRenderer` callback.
+	 *
+	 * @type {Object}
+	 * @public
+	 */
+	childProps: CallbackObject,
+
+	/**
+	 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
+	 *
+	 * @type {Object}
+	 * @property {Number} clientHeight The client height of the list.
+	 * @property {Number} clientWidth The client width of the list.
+	 * @public
+	 */
+	clientSize: {
+		clientHeight: number,
+		clientWidth: number
+	},
+
+	/**
+	 * An object with properties to be passed to the container DOM.
+	 *
+	 * @type {Object}
+	 * @private
+	 */
+	containerProps: CallbackObject,
+
+	/**
+	 * The number of items of data the list contains.
+	 *
+	 * @type {Number}
+	 * @default 0
+	 * @public
+	 */
+	dataSize?: number,
+
+	/**
+	 * The layout direction of the list.
+	 *
+	 * Valid values are:
+	 * * `'horizontal'`, and
+	 * * `'vertical'`.
+	 *
+	 * @type {String}
+	 * @default 'vertical'
+	 * @public
+	 */
+	direction?: 'horizontal' | 'vertical',
+
+	/**
+	 * Called to get the scroll affordance from themed component.
+	 *
+	 * @type {Function}
+	 * @private
+	 */
+	getAffordance?: Callback,
+
+	/**
+	 * Called to get the props for list items.
+	 *
+	 * @type {Function}
+	 * @private
+	 */
+	getComponentProps: Callback,
+
+	/**
+	 * Ref for items
+	 *
+	 * @type {Object}
+	 * @private
+	 */
+	itemRefs: RefObject<Array<HTMLElement | null>>,
+
+	/**
+	 * The array for individually sized items.
+	 *
+	 * @type {Number[]}
+	 * @private
+	 */
+	itemSizes: number[],
+
+	/**
+	 * Called when the range of items has updated.
+	 *
+	 * Event payload includes the `firstIndex` and `lastIndex` of the list.
+	 *
+	 * @type {Function}
+	 * @private
+	 */
+	onUpdateItems: Callback,
+
+	/**
+	 * Number of spare DOM node.
+	 * `3` is good for the default value experimentally and
+	 * this value is highly recommended not to be changed by developers.
+	 *
+	 * @type {Number}
+	 * @default 3
+	 * @private
+	 */
+	overhang?: number,
+
+	/**
+	 * When `true`, the list will scroll by page. Otherwise the list will scroll by item.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @private
+	 */
+	pageScroll?: boolean,
+
+	/**
+	 * The render function for the placeholder elements.
+	 *
+	 * @type {Function}
+	 * @required
+	 * @private
+	 */
+	placeholderRenderer: Callback,
+
+	/**
+	 * The ARIA role for the list.
+	 *
+	 * @type {String}
+	 * @default 'list'
+	 * @public
+	 */
+	role?: string,
+
+	/**
+	 * `true` if RTL, `false` if LTR.
+	 *
+	 * @type {Boolean}
+	 * @private
+	 */
+	rtl: boolean,
+
+	/**
+	 * Ref for scroll content
+	 *
+	 * @type {Object|Function}}
+	 * @private
+	 */
+	scrollContentRef: EnactPropTypes.ref,
+
+	/**
+	 * Specifies how to scroll.
+	 *
+	 * Valid values are:
+	 * * `'translate'`,
+	 * * `'native'`.
+	 *
+	 * @type {String}
+	 * @default 'translate'
+	 * @public
+	 */
+	scrollMode?: 'translate' | 'native',
+
+	/**
+	 * The spacing between items.
+	 *
+	 * @type {Number}
+	 * @default 0
+	 * @public
+	 */
+	spacing?: number,
+
+	/**
+	 * Called to execute additional logic in a themed component when updating states and bounds.
+	 *
+	 * @type {Function}
+	 * @private
+	 */
+	updateStatesAndBounds?: Callback<boolean, {cbScrollTo: Callback, numOfItems: number, dataSize: number, moreInfo: {firstVisibleIndex: number | null, lastVisibleIndex: number | null}}>,
+
+	/**
+	 * Additional className for the container.
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	className?: string,
+
+	/**
+	 * An object with additional style properties.
+	 *
+	 * @type {Object}
+	 * @public
+	 */
+	style?: React.CSSProperties,
+
+	/**
+	 * Indicates if horizontal scrollbar is visible.
+	 *
+	 * @type {Boolean}
+	 * @private
+	 */
+	isHorizontalScrollbarVisible?: boolean,
+
+	/**
+	 * Indicates if vertical scrollbar is visible.
+	 *
+	 * @type {Boolean}
+	 * @private
+	 */
+	isVerticalScrollbarVisible?: boolean,
+
+	/**
+	 * Callback for update events.
+	 *
+	 * @type {Function}
+	 * @private
+	 */
+	onUpdate?: Callback,
+
+	/**
+	 * Whether the scroll container contains dangerous content.
+	 *
+	 * @type {Boolean}
+	 * @private
+	 */
+	scrollContainerContainsDangerously?: boolean,
+
+	/**
+	 * Sets theme scroll content handle.
+	 *
+	 * @type {Function}
+	 * @private
+	 */
+	setThemeScrollContentHandle?: Callback
+}
+
+const nop = () => {};
+
+/**
+ * The shape for the grid list item size
+ * in a list for {@link ui/VirtualList.VirtualGridList|VirtualGridList}.
+ *
+ * @typedef {Object} gridListItemSizeShape
+ * @memberof ui/VirtualList
+ * @property {Number} minWidth The minimum width of the grid list item.
+ * @property {Number} minHeight The minimum height of the grid list item.
+ * @public
+ */
+const gridListItemSizeShape = PropTypes.shape({
+	minHeight: PropTypes.number.isRequired,
+	minWidth: PropTypes.number.isRequired
+});
+
+export type gridListItemSizeShapeType = {
+	minHeight: number,
+	minWidth: number
+};
+
+/**
+ * The shape for the list different item size
+ * in a list for {@link ui/VirtualList.VirtualList|VirtualList}.
+ *
+ * @typedef {Object} itemSizesShape
+ * @memberof ui/VirtualList
+ * @property {Number} minSize The minimum size of the list item.
+ * @property {Number[]} size An array of the list item size. If it is not defined, the list items will render with the `minSize` size.
+ * @public
+ */
+const itemSizesShape = PropTypes.shape({
+	minSize: PropTypes.number.isRequired,
+	size: PropTypes.arrayOf(PropTypes.number)
+});
+export type itemSizesShapeType = {
+	minSize: number,
+	size: number[]
+};
+
+export type VirtualListBasicState = {
+	firstIndex: number,
+	numOfItems: number,
+	prevChildProps: CallbackObject | null,
+	prevFirstIndex: number,
+	updateFrom: number,
+	updateTo: number
+}
+
+type DimensionMetrics = {
+	clientSize: number,
+	minItemSize: number | gridListItemSizeShapeType | null,
+	itemSize: number | gridListItemSizeShapeType,
+	gridSize: number
+};
+
+type Threshold = {
+	min: number,
+	max: number,
+	base: number
+};
+
+type MoreInfo = {
+	firstVisibleIndex: number | null,
+	lastVisibleIndex: number | null
+}
+
+/**
+ * A basic base component for
+ * {@link ui/VirtualList.VirtualList|VirtualList} and {@link ui/VirtualList.VirtualGridList|VirtualGridList}.
+ *
+ * @class VirtualListBasic
+ * @memberof ui/VirtualList
+ * @ui
+ * @public
+ */
+class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasicState> {
+	static displayName = 'ui:VirtualListBasic';
+
+	static defaultProps = {
+		cbScrollTo: nop,
+		dataSize: 0,
+		direction: 'vertical',
+		getAffordance: () => (0),
+		overhang: 3,
+		pageScroll: false,
+		scrollMode: 'translate',
+		spacing: 0
+	};
+
+	constructor (props: VirtualListBasicProps) {
+		super(props);
+		checkPropTypes(this, props);
+
+		this.contentRef = createRef();
+		this.itemContainerRefs = [];
+
+		this.state = {
+			firstIndex: 0,
+			numOfItems: 0,
+			prevChildProps: null,
+			prevFirstIndex: 0,
+			updateFrom: 0,
+			updateTo: 0
+		};
+
+		if (props.clientSize) {
+			this.calculateMetrics(props);
+			Object.assign(this.state, this.getStatesAndUpdateBounds(props));
+		}
+	}
+
+	state: VirtualListBasicState;
+
+	static getDerivedStateFromProps (props: VirtualListBasicProps, state: VirtualListBasicState) {
+		const
+			shouldInvalidate = (
+				state.prevFirstIndex === state.firstIndex ||
+				state.prevChildProps !== props.childProps
+			),
+			diff = state.firstIndex - state.prevFirstIndex,
+			updateTo = (-state.numOfItems >= diff || diff > 0 || shouldInvalidate) ? state.firstIndex + state.numOfItems : state.prevFirstIndex,
+			updateFrom = (0 >= diff || diff >= state.numOfItems || shouldInvalidate) ? state.firstIndex : state.prevFirstIndex + state.numOfItems,
+			nextUpdateFromAndTo = (state.updateFrom !== updateFrom || state.updateTo !== updateTo) ? {updateFrom, updateTo} : null;
+
+		return {
+			...nextUpdateFromAndTo,
+			prevChildProps: props.childProps,
+			prevFirstIndex: state.firstIndex
+		};
+	}
+
+	// Calculate metrics for VirtualList after the 1st render to know client W/H.
+	componentDidMount () {
+		if (!this.props.clientSize) {
+			this.calculateMetrics(this.props);
+			this.setState(this.getStatesAndUpdateBounds(this.props));
+		} else {
+			this.emitUpdateItems();
+		}
+
+		if (this.props.itemSizes) {
+			this.adjustItemPositionWithItemSize();
+		} else {
+			this.setContainerSize();
+		}
+	}
+
+	componentDidUpdate (prevProps: VirtualListBasicProps, prevState: VirtualListBasicState) {
+		const items = this.props.itemRefs.current;
+
+		checkPropTypes(this, this.props, prevProps);
+		if (!this.itemMarginTop && this.itemMarginTop !== 0 && items[0]) {
+			const firstItemStyle = window.getComputedStyle(items[0]);
+			this.itemMarginTop = Number(firstItemStyle.getPropertyValue('margin-top').slice(0, -2));
+			this.itemMarginBottom = Number(firstItemStyle.getPropertyValue('margin-bottom').slice(0, -2));
+			this.itemMarginLeft = Number(firstItemStyle.getPropertyValue('margin-left').slice(0, -2));
+			this.itemMarginRight = Number(firstItemStyle.getPropertyValue('margin-right').slice(0, -2));
+			if (this.isPrimaryDirectionVertical) {
+				const marginSum = this.itemMarginTop + this.itemMarginBottom;
+				this.scrollBounds.scrollHeight += marginSum;
+				this.scrollBounds.maxTop += marginSum;
+			} else {
+				const marginSum = this.itemMarginLeft + this.itemMarginRight;
+				this.scrollBounds.scrollWidth += marginSum;
+				this.scrollBounds.maxLeft += marginSum;
+			}
+			this.setContainerSize();
+		}
+
+		let deferScrollTo = false;
+		const {firstIndex, numOfItems} = this.state;
+
+		this.shouldUpdateBounds = false;
+
+		// TODO: remove `this.hasDataSizeChanged` and fix useScroll
+		this.hasDataSizeChanged = (prevProps.dataSize !== this.props.dataSize);
+
+		if (prevState.firstIndex !== firstIndex || prevState.numOfItems !== numOfItems) {
+			this.emitUpdateItems();
+		}
+
+		// When an item expands or shrinks,
+		// we need to calculate the item position again and
+		// the item needs to scroll into view if the item does not show fully.
+		if (this.props.itemSizes) {
+			if (this.itemPositions.length > this.props.itemSizes.length) {
+				// The item with `this.props.itemSizes.length` index is not rendered yet.
+				// So the item could scroll into view after it rendered.
+				// To do it, `this.props.itemSizes.length` value is cached in `this.indexToScrollIntoView`.
+				this.indexToScrollIntoView = this.props.itemSizes.length;
+
+				this.itemPositions = [...this.itemPositions.slice(0, this.props.itemSizes.length)];
+				this.adjustItemPositionWithItemSize();
+			} else {
+				const {indexToScrollIntoView} = this;
+
+				this.adjustItemPositionWithItemSize();
+
+				if (indexToScrollIntoView !== -1) {
+					// Currently we support expandable items in only vertical VirtualList.
+					// So the top and bottom of the boundaries are checked.
+					const
+						scrollBounds = {top: this.scrollPosition, bottom: this.scrollPosition + this.scrollBounds.clientHeight},
+						itemBounds = {top: this.getGridPosition(indexToScrollIntoView).primaryPosition, bottom: this.getItemBottomPosition(indexToScrollIntoView)};
+
+					if (itemBounds.top < scrollBounds.top) {
+						this.safeProps.cbScrollTo({
+							index: indexToScrollIntoView,
+							stickTo: 'start',
+							animate: true
+						});
+					} else if (itemBounds.bottom > scrollBounds.bottom) {
+						this.safeProps.cbScrollTo({
+							index: indexToScrollIntoView,
+							stickTo: 'end',
+							animate: true
+						});
+					}
+				}
+
+				this.indexToScrollIntoView = -1;
+			}
+		}
+
+		if (
+			prevProps.direction !== this.props.direction ||
+			prevProps.overhang !== this.props.overhang ||
+			prevProps.spacing !== this.props.spacing ||
+			!equals(prevProps.itemSize, this.props.itemSize) ||
+			(!this.hasDataSizeChanged && !shallowEqual(prevProps.itemSizes, this.props.itemSizes))
+		) {
+			const {clientHeight, clientWidth, scrollHeight, scrollWidth} = this.scrollBounds;
+
+			/* istanbul ignore next */
+			if (this.scrollPosition === 0 && this.moreInfo.firstVisibleIndex !== 0) {
+				this.scrollPosition = this.prevScrollPosition;
+				this.setState({firstIndex: prevState.firstIndex});
+				this.updateMoreInfo(this.safeProps.dataSize, this.scrollPosition);
+
+				for (let i = prevState.firstIndex; i < prevState.firstIndex + this.state.numOfItems; i++) {
+					const size = this.isPrimaryDirectionVertical ? clientHeight : clientWidth;
+
+					if (this.itemPositions[i + 1]?.position > this.prevItemPositions[i + 1]?.position) {
+						if (i === this.moreInfo.lastVisibleIndex && this.getItemBottomPosition(i) > this.scrollPosition + size) {
+							this.scrollPosition = this.getItemBottomPosition(i) - size;
+						}
+						break;
+					}
+
+					if (this.itemPositions[i + 1]?.position < this.prevItemPositions[i + 1]?.position) {
+						if (this.itemPositions[i].position < this.scrollPosition) {
+							this.scrollPosition = this.itemPositions[i].position;
+						}
+						break;
+					}
+				}
+			}
+
+			const {x, y} = this.getXY(this.scrollPosition, 0);
+
+			this.calculateMetrics(this.props);
+			this.setState(this.getStatesAndUpdateBounds(this.props, prevState.firstIndex ? prevState.firstIndex : 0));
+			this.setContainerSize();
+
+			const xMax = scrollWidth - clientWidth;
+			const yMax = scrollHeight - clientHeight;
+
+			this.updateScrollPosition({
+				x: xMax > x ? x : xMax,
+				y: yMax > y ? y : yMax
+			}, 'instant');
+
+			deferScrollTo = true;
+		} else if (this.hasDataSizeChanged) {
+			const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
+			this.setState(newState);
+			this.setContainerSize();
+
+			deferScrollTo = true;
+		} else if (prevProps.rtl !== this.props.rtl) {
+			this.updateScrollPosition(this.getXY(this.scrollPosition, 0), 'instant');
+		}
+
+		const maxPos = this.isPrimaryDirectionVertical ? this.scrollBounds.maxTop : this.scrollBounds.maxLeft;
+		let currentPos = this.scrollPosition;
+
+		if (this.props.scrollMode === 'native' && this.scrollToPositionTarget >= 0) {
+			currentPos = this.scrollToPositionTarget;
+		}
+
+		if (!deferScrollTo && currentPos > maxPos) {
+			this.safeProps.cbScrollTo({position: (this.isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
+			this.scrollToPositionTarget = -1;
+		}
+	}
+
+	scrollBounds = {
+		clientWidth: 0,
+		clientHeight: 0,
+		scrollWidth: 0,
+		scrollHeight: 0,
+		maxLeft: 0,
+		maxTop: 0
+	};
+
+	moreInfo: MoreInfo = {
+		firstVisibleIndex: null,
+		lastVisibleIndex: null
+	};
+
+	primary: DimensionMetrics = {
+		clientSize: 1,
+		minItemSize: null,
+		itemSize: 1,
+		gridSize: 1
+	};
+	secondary: DimensionMetrics = {
+		clientSize: 1,
+		minItemSize: null,
+		itemSize: 1,
+		gridSize: 1
+	};
+
+	isPrimaryDirectionVertical = true;
+	isItemSized = false;
+
+	shouldUpdateBounds = false;
+
+	dimensionToExtent = 0;
+	itemMarginLeft: number = 0;
+	itemMarginRight: number = 0;
+	itemMarginTop: number = 0;
+	itemMarginBottom: number = 0;
+	threshold: Threshold = {min: -Infinity, max: 0, base: 0};
+	maxFirstIndex = 0;
+	curDataSize = 0;
+	hasDataSizeChanged = false;
+	cc: ReactElement[] = [];
+	scrollPosition = 0;
+	prevScrollPosition = 0;
+	scrollPositionTarget = 0;
+	scrollToPositionTarget = -1;
+	contentRef: RefObject<HTMLDivElement | null>;
+	itemContainerRefs: HTMLElement[];
+	scrollAnimationId: number | null = null;
+	scrolling = false;
+
+	// For individually sized item
+	itemPositions: Array<{position: number}> = [];
+	prevItemPositions: Array<{position: number}> = [];
+	indexToScrollIntoView = -1;
+
+	// Merges optional props with defaultProps so TypeScript knows they are never undefined inside the class.
+	private get safeProps () {
+		return this.props as Readonly<VirtualListBasicProps> & typeof VirtualListBasic.defaultProps;
+	}
+
+	updateScrollPosition = ({x, y}: {x: number, y: number}, behavior: 'smooth' | 'instant') => {
+		if (this.props.scrollMode === 'native') {
+			this.scrollToPosition(x, y, behavior);
+		} else {
+			this.setScrollPositionTarget (x, y);
+			this.setScrollPosition(x, y);
+		}
+	};
+
+	isVertical = () => this.isPrimaryDirectionVertical;
+
+	isHorizontal = () => !this.isPrimaryDirectionVertical;
+
+	getScrollBounds = () => this.scrollBounds;
+
+	getMoreInfo = () => this.moreInfo;
+
+	getCenterItemIndexFromScrollPosition = (scrollPosition: number) => Math.floor((scrollPosition + (this.primary.clientSize / 2)) / this.primary.gridSize) * this.dimensionToExtent + Math.floor(this.dimensionToExtent / 2);
+
+	getGridPosition (index: number) {
+		const
+			{dataSize, itemSizes} = this.safeProps,
+			{dimensionToExtent, itemPositions, primary, secondary} = this,
+			secondaryPosition = (index % dimensionToExtent) * secondary.gridSize,
+			extent = Math.floor(index / dimensionToExtent);
+		let primaryPosition;
+
+		if (itemSizes && typeof itemSizes[index] !== 'undefined' && dataSize > index) {
+			const firstIndexInExtent = extent * dimensionToExtent;
+
+			if (!itemPositions[firstIndexInExtent]) {
+				// Cache individually sized item positions
+				for (let i = itemPositions.length; i <= index; i++) {
+					this.calculateAndCacheItemPosition(i);
+				}
+			}
+
+			if (itemPositions[firstIndexInExtent]) {
+				primaryPosition = itemPositions[firstIndexInExtent].position;
+			} else {
+				primaryPosition = extent * primary.gridSize;
+			}
+		} else {
+			primaryPosition = extent * primary.gridSize;
+		}
+
+		return {primaryPosition, secondaryPosition};
+	}
+
+	// For individually sized item
+	getItemBottomPosition = (index: number) => {
+		const
+			itemPosition = this.itemPositions[index],
+			itemSize = this.props.itemSizes[index];
+
+		if (itemPosition && (itemSize || itemSize === 0)) {
+			return itemPosition.position + itemSize;
+		} else {
+			return index * this.primary.gridSize - this.safeProps.spacing;
+		}
+	};
+
+	// For individually sized item
+	getItemTopPositionFromPreviousItemBottomPosition = (index: number, spacing: number) => {
+		return index === 0 ? 0 : this.getItemBottomPosition(index - 1) + spacing;
+	};
+
+	getItemPosition = (index: number, stickTo = 'start', optionalOffset = 0, disallowNegativeOffset = false) => {
+		const {isPrimaryDirectionVertical, primary, scrollBounds} = this;
+		const maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
+		const position = this.getGridPosition(index);
+		let offset = 0;
+		const marginOffset = isPrimaryDirectionVertical ? this.itemMarginTop + this.itemMarginBottom : this.itemMarginLeft + this.itemMarginRight;
+
+		if (stickTo === 'start') {         // 'start'
+			offset = optionalOffset;
+		} else if (this.props.itemSizes) { // 'end' for different item sizes
+			offset = primary.clientSize - this.props.itemSizes[index] - (optionalOffset || marginOffset);
+		} else if (stickTo === 'center') { // 'center'
+			offset = (primary.clientSize / 2) - (primary.gridSize / 2) - optionalOffset;
+		} else {                           // 'end' for same item sizes
+			offset = primary.clientSize - (typeof primary.itemSize === 'number' ? primary.itemSize : 0) - (optionalOffset || marginOffset);
+		}
+
+		/* istanbul ignore next */
+		if (disallowNegativeOffset) {
+			offset = Math.max(0, offset);
+		}
+
+		position.primaryPosition = clamp(0, maxPos, position.primaryPosition - offset);
+
+		return this.gridPositionToItemPosition(position);
+	};
+
+	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}: {primaryPosition: number, secondaryPosition: number}) =>
+		(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition});
+
+	getXY = (primaryPosition: number, secondaryPosition: number) => (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition});
+
+	getClientSize = (node: HTMLElement) => ({
+		clientWidth: node.clientWidth,
+		clientHeight: node.clientHeight
+	});
+
+	emitUpdateItems () {
+		const {dataSize} = this.safeProps;
+		const {firstIndex, numOfItems} = this.state;
+
+		forward('onUpdateItems', {
+			firstIndex: firstIndex,
+			lastIndex: Math.min(firstIndex + numOfItems, dataSize)
+		}, this.props);
+	}
+
+	calculateMetrics (props: VirtualListBasicProps) {
+		const
+			{clientSize, direction, itemSize, overhang = 3, scrollMode, spacing = 0} = props,
+			node = typeof this.props.scrollContentRef === 'object' && this.props.scrollContentRef.current;
+
+		if (!clientSize && !node) {
+			return;
+		}
+
+		const
+			{clientWidth, clientHeight} = clientSize || this.getClientSize(node),
+			heightInfo: DimensionMetrics = {
+				clientSize: clientHeight,
+				minItemSize: typeof itemSize === 'object' ? itemSize.minHeight : 0,
+				itemSize: itemSize,
+				gridSize: 1
+			},
+			widthInfo: DimensionMetrics = {
+				clientSize: clientWidth,
+				minItemSize: typeof itemSize === 'object' ? itemSize.minWidth : 0,
+				itemSize: itemSize,
+				gridSize: 1
+			};
+		let primary, secondary, dimensionToExtent, thresholdBase;
+
+		this.isPrimaryDirectionVertical = (direction === 'vertical');
+
+		if (this.isPrimaryDirectionVertical) {
+			primary = heightInfo;
+			secondary = widthInfo;
+		} else {
+			primary = widthInfo;
+			secondary = heightInfo;
+		}
+		dimensionToExtent = 1;
+
+		this.isItemSized = (!!primary.minItemSize && !!secondary.minItemSize);
+
+		if (this.isItemSized) {
+			// the number of columns is the ratio of the available width plus the spacing
+			// by the minimum item width plus the spacing
+			dimensionToExtent = Math.max(Math.floor((secondary.clientSize + spacing) / ((typeof secondary.minItemSize === 'number' ? secondary.minItemSize : 0) + spacing)), 1);
+			// the actual item width is a ratio of the remaining width after all columns
+			// and spacing are accounted for and the number of columns that we know we should have
+			secondary.itemSize = Math.floor((secondary.clientSize - (spacing * (dimensionToExtent - 1))) / dimensionToExtent);
+			// the actual item height is related to the item width
+			primary.itemSize = Math.floor((typeof primary.minItemSize === 'number' ? primary.minItemSize : 1) * (secondary.itemSize / (typeof secondary.minItemSize === 'number' ? secondary.minItemSize : 1)));
+		}
+
+		primary.gridSize = (typeof primary.itemSize === 'number' ? primary.itemSize : 0) + spacing;
+		secondary.gridSize = (typeof secondary.itemSize === 'number' ? secondary.itemSize : 0) + spacing;
+		thresholdBase = primary.gridSize * Math.ceil(overhang / 2);
+
+		this.threshold = {min: -Infinity, max: thresholdBase, base: thresholdBase};
+		this.dimensionToExtent = dimensionToExtent;
+
+		this.primary = primary;
+		this.secondary = secondary;
+
+		// reset
+		this.prevScrollPosition = this.scrollPosition;
+		for (let i = 0; i < this.itemPositions.length; i++) {
+			this.prevItemPositions[i] = this.itemPositions[i];
+		}
+		this.scrollPosition = 0;
+		this.scrollToPositionTarget = -1;
+		if (scrollMode === 'translate' && this.contentRef.current) {
+			this.contentRef.current.style.transform = '';
+		} else if (scrollMode === 'native' && node) {
+			this.updateScrollPosition(this.getXY(this.scrollPosition, 0), 'instant');
+		}
+	}
+
+	getStatesAndUpdateBounds = (props: VirtualListBasicProps, firstIndex = 0) => {
+		const
+			{dataSize = 0, overhang = 3, updateStatesAndBounds} = props,
+			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
+			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
+			wasFirstIndexMax = ((this.maxFirstIndex < (moreInfo.firstVisibleIndex || 0) - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
+			dataSizeDiff = dataSize - this.curDataSize;
+		let newFirstIndex = firstIndex;
+
+		// When calling setState() except in didScroll(), `shouldUpdateBounds` should be `true`
+		// so that setState() in didScroll() could be called to override state.
+		// Before calling setState() except in didScroll(), getStatesAndUpdateBounds() is always called.
+		// So `shouldUpdateBounds` is true here.
+		this.shouldUpdateBounds = true;
+
+		this.maxFirstIndex = Math.ceil((dataSize - numOfItems) / dimensionToExtent) * dimensionToExtent;
+		this.curDataSize = dataSize;
+
+		// reset children
+		this.cc = [];
+		this.itemPositions = []; // For individually sized item
+		this.calculateScrollBounds(props);
+		this.updateMoreInfo(dataSize, scrollPosition);
+
+		if (!(updateStatesAndBounds && updateStatesAndBounds({
+			cbScrollTo: props.cbScrollTo || nop,
+			numOfItems,
+			dataSize,
+			moreInfo
+		}))) {
+			newFirstIndex = this.calculateFirstIndex(props, wasFirstIndexMax, dataSizeDiff, firstIndex);
+		}
+
+		return {
+			firstIndex: Math.min(newFirstIndex, this.maxFirstIndex),
+			numOfItems: numOfItems
+		};
+	};
+
+	calculateFirstIndex (props: VirtualListBasicProps, wasFirstIndexMax: boolean, dataSizeDiff: number, firstIndex: number) {
+		const
+			{overhang = 3} = props,
+			{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
+			{gridSize} = primary;
+		let newFirstIndex = firstIndex;
+
+		if (wasFirstIndexMax && dataSizeDiff > 0) { // If dataSize increased from bottom, we need adjust firstIndex
+			// If this is a gridlist and dataSizeDiff is smaller than 1 line, we are adjusting firstIndex without threshold change.
+			if (dimensionToExtent > 1 && dataSizeDiff < dimensionToExtent) {
+				newFirstIndex = maxFirstIndex;
+			} else { // For other bottom adding case, we need to update firstIndex and threshold.
+				const
+					maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
+					maxOfMin = maxPos - threshold.base,
+					numOfUpperLine = Math.floor(overhang / 2),
+					firstIndexFromPosition = Math.floor(scrollPosition / gridSize),
+					expectedFirstIndex = Math.max(0, firstIndexFromPosition - numOfUpperLine);
+
+				// To navigate with 5way, we need to adjust firstIndex to the next line
+				// since at the bottom we have num of overhang lines for upper side but none for bottom side
+				// So we add numOfUpperLine at the top and rest lines at the bottom
+				newFirstIndex = Math.min(maxFirstIndex, expectedFirstIndex * dimensionToExtent);
+
+				// We need to update threshold also since we moved the firstIndex
+				threshold.max = Math.min(maxPos, threshold.max + gridSize);
+				threshold.min = Math.min(maxOfMin, threshold.max - gridSize);
+			}
+		} else { // Other cases, we can keep the min value between firstIndex and maxFirstIndex. No need to change threshold
+			newFirstIndex = Math.min(firstIndex, maxFirstIndex);
+		}
+
+		return newFirstIndex;
+	}
+
+	calculateScrollBounds (props: VirtualListBasicProps) {
+		const
+			{clientSize} = props,
+			node = typeof this.props.scrollContentRef === 'object' && this.props.scrollContentRef.current;
+
+		if (!clientSize && !node) {
+			return;
+		}
+
+		const
+			{scrollBounds, isPrimaryDirectionVertical} = this,
+			{clientWidth, clientHeight} = clientSize || this.getClientSize(node);
+		let maxPos;
+
+		scrollBounds.clientWidth = clientWidth;
+		scrollBounds.clientHeight = clientHeight;
+		scrollBounds.scrollWidth = this.getScrollWidth();
+		scrollBounds.scrollHeight = this.getScrollHeight();
+		scrollBounds.maxLeft = Math.max(0, scrollBounds.scrollWidth - clientWidth);
+		scrollBounds.maxTop = Math.max(0, scrollBounds.scrollHeight - clientHeight);
+
+		// correct position
+		maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
+
+		this.syncThreshold(maxPos);
+	}
+
+	setContainerSize = () => {
+		if (this.contentRef.current) {
+			this.contentRef.current.style.width = this.scrollBounds.scrollWidth + (this.isPrimaryDirectionVertical ? -1 : 0) + 'px';
+			this.contentRef.current.style.height = this.scrollBounds.scrollHeight + (this.isPrimaryDirectionVertical ? 0 : -1) + 'px';
+		}
+	};
+
+	updateMoreInfo (dataSize: number, primaryPosition: number) {
+		const
+			{dimensionToExtent, moreInfo} = this,
+			{itemSize, gridSize, clientSize} = this.primary;
+
+		if (dataSize <= 0) {
+			moreInfo.firstVisibleIndex = null;
+			moreInfo.lastVisibleIndex = null;
+		} else if (this.props.itemSizes) {
+			const {firstIndex, numOfItems} = this.state;
+			const {isPrimaryDirectionVertical, scrollBounds: {clientWidth, clientHeight}, scrollPosition} = this;
+			const size = isPrimaryDirectionVertical ? clientHeight : clientWidth;
+
+			let firstVisibleIndex = null, lastVisibleIndex = null;
+
+			for (let i = firstIndex; i < firstIndex +  numOfItems; i++) {
+				if (scrollPosition <= this.getItemBottomPosition(i)) {
+					firstVisibleIndex = i;
+					break;
+				}
+			}
+
+			for (let i = firstIndex + numOfItems - 1; i >= firstIndex; i--) {
+				if (scrollPosition + size >= this.getItemBottomPosition(i) - this.props.itemSizes[i]) {
+					lastVisibleIndex = i;
+					break;
+				}
+			}
+
+			if ((firstVisibleIndex !== null && lastVisibleIndex !== null) && (firstVisibleIndex > lastVisibleIndex)) {
+				firstVisibleIndex = null;
+				lastVisibleIndex = null;
+			}
+
+			moreInfo.firstVisibleIndex = firstVisibleIndex;
+			moreInfo.lastVisibleIndex = lastVisibleIndex;
+		} else {
+			moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - (typeof itemSize === 'number' ? itemSize : 0)) / gridSize) + 1) * dimensionToExtent;
+			moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent - 1);
+		}
+	}
+
+	syncThreshold (maxPos: number) {
+		const {threshold} = this;
+
+		if (threshold.max > maxPos) {
+			if (maxPos < threshold.base) {
+				threshold.max = threshold.base;
+				threshold.min = -Infinity;
+			} else {
+				threshold.max = maxPos;
+				threshold.min = maxPos - threshold.base;
+			}
+		}
+	}
+
+	// scrollMode 'native' only
+	getRtlPositionX = (x: number) => {
+		if (this.props.rtl) {
+			return (platform.chrome && platform.chrome < 85) ? this.scrollBounds.maxLeft - x : -x;
+		}
+		return x;
+	};
+
+	// scrollMode 'native' only
+	scrollToPosition (left: number, top: number, behavior: 'auto' | 'instant' | 'smooth' = 'auto'): void {
+		const {dataSize, scrollContentRef} = this.safeProps;
+		const node = typeof scrollContentRef === 'object' && scrollContentRef.current;
+		if (!node) return;
+
+		const {clientWidth, clientHeight, scrollWidth, scrollHeight} = this.scrollBounds;
+		const {firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
+
+		const scrollSize = this.isPrimaryDirectionVertical ? top >= scrollHeight - clientHeight : left >= scrollWidth - clientWidth;
+		const isTargetStart = this.isPrimaryDirectionVertical ? top === 0 : left === 0;
+		const isScrollWrap = (lastVisibleIndex === dataSize - 1 && isTargetStart) || (firstVisibleIndex === 0 && scrollSize);
+		const isScrollByPageKey = node.lastInputType === 'pageKey';
+		const isSmoothBehavior = behavior === 'smooth';
+
+		if (platform.chrome && isSmoothBehavior && !isScrollByPageKey && !isScrollWrap) {
+			this.animateScroll(this.getRtlPositionX(left), top, node);
+		} else if (node.scrollTo) {
+			if (this.scrollAnimationId) {
+				this.cancelScrollAnimation();
+			}
+			node.scrollTo({left: this.getRtlPositionX(left), top, behavior});
+		}
+	}
+
+	// scroll mode 'native' only
+	animateScroll (left: number, top: number, node: HTMLElement) {
+		// Determine the direction of scroll (1 for forward/down, -1 for backward/up, 0 for no movement)
+		const directionX = Math.sign(left - node.scrollLeft);
+		const directionY = Math.sign(top - node.scrollTop);
+
+		// Calculate an adaptive scroll factor (pixels per frame).
+		// It uses the average item size (gridSize) to ensure the speed feels consistent.
+		const scrollFactor = Math.max(this.primary.gridSize / 12, 2);
+		const startTime = performance.now();
+
+		// Progressively scrolls the node toward a target position using requestAnimationFrame.
+		// It applies an incremental scroll on each frame and cancels the animation once
+		// the target is reached or the duration (500ms) is exceeded, falling back to
+		// a smooth scroll if the timeout occurs first.
+		const animateScroll = (currentTime: number) => {
+			const elapsed = (currentTime - startTime) / 500;
+
+			// Clamp each step to the remaining distance so the final frame lands exactly on the target
+			// instead of overshooting by up to `scrollFactor`. Overshooting would push a focused item
+			// anchored to the start edge (e.g. `stickTo="start"`) past that edge and clip it.
+			const stepX = directionX === 0 ? 0 : directionX * Math.min(scrollFactor, Math.abs(left - node.scrollLeft));
+			const stepY = directionY === 0 ? 0 : directionY * Math.min(scrollFactor, Math.abs(top - node.scrollTop));
+
+			node.scrollBy({top: stepY, left: stepX, behavior: 'instant'});
+			this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+			this.scrolling = true;
+
+			const scrollHorizontally = directionX > 0 ? node.scrollLeft < left : node.scrollLeft > left;
+			const scrollVertically = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
+			const targetReached = node.scrollLeft === left && node.scrollTop === top;
+
+			// Check if we've reached the needed scroll position
+			// or the elapsed time since startTime is longer than 0.5s and cancel the animation
+			if (!scrollHorizontally && !scrollVertically || elapsed > 1) {
+				this.cancelScrollAnimation();
+
+				// Fallback: if time is out before reaching the target, jump there with smooth scroll
+				if (elapsed > 1 && !targetReached) {
+					node.scrollTo({top, left, behavior: 'smooth'});
+				}
+			}
+		};
+
+		this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
+	}
+
+	// scrollMode 'native' only
+	cancelScrollAnimation () {
+		if (this.scrollAnimationId) {
+			window.cancelAnimationFrame(this.scrollAnimationId);
+		}
+		this.scrollAnimationId = null;
+		this.scrolling = false;
+	}
+
+	// scrollMode 'native' only
+	setScrollToPositionTarget (x: number, y: number) {
+		if (this.isPrimaryDirectionVertical) {
+			this.scrollToPositionTarget = y;
+		} else {
+			this.scrollToPositionTarget = x;
+		}
+	}
+
+	// scrollMode 'translate' only
+	setScrollPositionTarget (x: number, y: number) {
+		// The `left`, `top` as parameters in scrollToPosition() are the position when stopping scrolling.
+		// But the `x`, `y` as parameters in setScrollPosition() are the position between current position and the position stopping scrolling.
+		// To know the position when stopping scrolling properly, `x` and `y` are passed and cached in `this.scrollPositionTarget`.
+		if (this.isPrimaryDirectionVertical) {
+			this.scrollPositionTarget = y;
+		} else {
+			this.scrollPositionTarget = x;
+		}
+	}
+
+	// scrollMode 'translate' only
+	setScrollPosition (x: number, y: number) {
+		const rtl = this.props.rtl;
+		if (this.contentRef.current) {
+			this.contentRef.current.style.transform = `translate3d(${rtl ? x : -x}px, -${y}px, 0)`;
+			this.didScroll(x, y);
+		}
+	}
+
+	didScroll (x: number, y: number) {
+		const
+			{dataSize, spacing, itemSizes} = this.safeProps,
+			{firstIndex} = this.state,
+			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds, itemPositions} = this,
+			{clientSize, gridSize} = this.primary,
+			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
+		let newFirstIndex = firstIndex, index, pos, size, itemPosition;
+
+		if (isPrimaryDirectionVertical) {
+			pos = y;
+		} else {
+			pos = x;
+		}
+
+		if (pos > threshold.max || pos < threshold.min) {
+			let newThresholdMin = -Infinity, newThresholdMax = Infinity;
+
+			if (this.props.itemSizes) {
+				const overhangBefore = Math.floor(this.safeProps.overhang / 2);
+				let firstRenderedIndex = -1;
+
+				// find an item which is known as placed the first rendered item's position
+				for (index = 0; index < dataSize; index += dimensionToExtent) {
+					itemPosition = itemPositions[index];
+					size = itemSizes[index];
+					if (itemPosition && size && itemPosition.position + size >= pos && itemPosition.position <= pos + clientSize) {
+						firstRenderedIndex = index;
+						break;
+					}
+				}
+
+				// found an item which is visible within a current viewport
+				if (index < dataSize && itemPosition) {
+					if (itemPosition.position <= pos) {
+						newFirstIndex = firstRenderedIndex - overhangBefore * dimensionToExtent;
+						newThresholdMin = itemPosition.position;
+						newThresholdMax = newThresholdMin + (size || 0) + spacing;
+					} else {
+						const diffToFirstIndex = Math.ceil((itemPosition.position - pos) / gridSize);
+						newFirstIndex = firstRenderedIndex - (diffToFirstIndex + overhangBefore) * dimensionToExtent;
+						newThresholdMin = itemPosition.position - diffToFirstIndex * gridSize;
+						newThresholdMax = newThresholdMin + gridSize;
+					}
+				} else { // calculate the first index based on assuming that all items have minimal size
+					const firstExtent = Math.max(
+						0,
+						Math.min(
+							Math.floor(maxFirstIndex / dimensionToExtent),
+							Math.floor((pos - gridSize * overhangBefore) / gridSize)
+						)
+					);
+
+					newFirstIndex = firstExtent * dimensionToExtent;
+					newThresholdMin = (firstExtent + overhangBefore) * gridSize;
+					newThresholdMax = newThresholdMin + gridSize;
+				}
+
+				newFirstIndex = Math.max(0, Math.min(maxFirstIndex, newFirstIndex));
+			} else {
+				const
+					overhangBefore = Math.floor(this.safeProps.overhang / 2),
+					firstExtent = Math.max(
+						0,
+						Math.min(
+							Math.floor(maxFirstIndex / dimensionToExtent),
+							Math.floor((pos - gridSize * overhangBefore) / gridSize)
+						)
+					);
+
+				newFirstIndex = firstExtent * dimensionToExtent;
+				newThresholdMin = (firstExtent + overhangBefore) * gridSize;
+				newThresholdMax = newThresholdMin + gridSize;
+			}
+
+			threshold.min = newFirstIndex === 0 ? -Infinity : newThresholdMin;
+			threshold.max = newFirstIndex === maxFirstIndex ? Infinity : newThresholdMax;
+		}
+
+		this.syncThreshold(maxPos);
+		this.scrollPosition = pos;
+		this.updateMoreInfo(dataSize, pos);
+
+		if (this.shouldUpdateBounds || firstIndex !== newFirstIndex) {
+			this.setState({firstIndex: newFirstIndex});
+		}
+	}
+
+	// For individually sized item
+	calculateAndCacheItemPosition (index: number) {
+		const {itemSizes} = this.props;
+
+		if (!this.itemPositions[index] && itemSizes[index]) {
+			const
+				{spacing} = this.safeProps,
+				position = this.getItemTopPositionFromPreviousItemBottomPosition(index, spacing);
+
+			this.itemPositions[index] = {position};
+		}
+	}
+
+	// For individually sized item
+	applyItemPositionToDOMElement (index: number) {
+		const
+			{direction, rtl} = this.props,
+			{numOfItems} = this.state,
+			{itemPositions} = this,
+			childNode = this.itemContainerRefs[index % numOfItems];
+
+		if (childNode && itemPositions[index]) {
+			const position = itemPositions[index].position;
+			if (direction === 'vertical') {
+				childNode.style.transform = `translate3d(0, ${position}px, 0)`;
+			} else {
+				childNode.style.transform = `translate3d(${position * (rtl ? -1 : 1)}px, 0, 0)`;
+			}
+		}
+	}
+
+	// For individually sized item
+	updateThresholdWithItemPosition () {
+		const
+			{overhang} = this.safeProps,
+			{firstIndex} = this.state,
+			{maxFirstIndex} = this,
+			numOfUpperLine = Math.floor(overhang / 2);
+
+		this.threshold.min = firstIndex === 0 ? -Infinity : this.getItemBottomPosition(firstIndex + numOfUpperLine);
+		this.threshold.max = firstIndex === maxFirstIndex ? Infinity : this.getItemBottomPosition(firstIndex + (numOfUpperLine + 1));
+	}
+
+	// For individually sized item
+	updateScrollBoundsWithItemPositions () {
+		const
+			{dataSize, itemSizes, spacing} = this.safeProps,
+			{firstIndex, numOfItems} = this.state,
+			{isPrimaryDirectionVertical, itemPositions} = this,
+			scrollBoundsDimension = isPrimaryDirectionVertical ? 'scrollHeight' : 'scrollWidth';
+
+		if (itemPositions.length === dataSize) { // all item sizes are known
+			this.scrollBounds[scrollBoundsDimension] =
+				itemSizes.reduce((acc, cur) => acc + cur, 0) + (dataSize - 1) * spacing;
+		} else {
+			for (let index = firstIndex + numOfItems - 1; index < dataSize; index++) {
+				const nextInfo = itemPositions[index + 1];
+				if (!nextInfo) {
+					const endPosition = this.getItemBottomPosition(index);
+					if (endPosition > this.scrollBounds[scrollBoundsDimension]) {
+						this.scrollBounds[scrollBoundsDimension] = endPosition;
+					}
+
+					break;
+				}
+			}
+		}
+
+		this.scrollBounds.maxTop = Math.max(0, this.scrollBounds.scrollHeight - this.scrollBounds.clientHeight);
+	}
+
+	// For individually sized item
+	adjustItemPositionWithItemSize () {
+		if (this.cc.length) {
+			const
+				{dataSize} = this.safeProps,
+				{firstIndex, numOfItems} = this.state,
+				lastIndex = firstIndex + numOfItems - 1;
+
+			// Cache individually sized item positions
+			// and adjust item DOM element positions
+			for (let index = firstIndex; index <= lastIndex; index++) {
+				this.calculateAndCacheItemPosition(index);
+				this.applyItemPositionToDOMElement(index);
+			}
+
+			// Update threshold based on this.itemPositions
+			this.updateThresholdWithItemPosition();
+
+			// Update scroll bounds based on this.itemPositions
+			this.updateScrollBoundsWithItemPositions();
+
+			// Set container size based on this.scrollbounds
+			this.setContainerSize();
+
+			// Update moreInfo based on this.itemPositions
+			this.updateMoreInfo(dataSize, this.scrollPosition);
+		}
+	}
+
+	composeStyle (width: number | string, height: number | string, primaryPosition: number, secondaryPosition: number) {
+		const
+			{x, y} = this.getXY(primaryPosition, secondaryPosition),
+			style: {transform: string, width?: number | string, height?: number | string} = {
+				/* FIXME: RTL / this calculation only works for Chrome */
+				transform: `translate3d(${this.props.rtl ? -x : x}px, ${y}px, 0)`
+			};
+
+		if (this.isItemSized) {
+			style.width = width;
+			style.height = height;
+		}
+
+		return style;
+	}
+
+	applyStyleToNewNode = (index: number, width: number | string, height: number | string, primaryPosition: number, secondaryPosition: number) => {
+		const
+			{childProps, itemRefs, itemRenderer, getComponentProps} = this.props,
+			key = index % this.state.numOfItems,
+			componentProps = getComponentProps && getComponentProps(index) || {},
+			itemContainerRef = (ref: HTMLDivElement | null) => {
+				if (ref === null) {
+					itemRefs.current[key] = ref;
+				} else {
+					const itemNode = ref.children[0] as HTMLElement;
+
+					itemRefs.current[key] = (parseInt(itemNode.dataset.index || '') === index) ?
+						itemNode :
+						ref.querySelector(`[data-index="${index}"]`);
+
+					this.itemContainerRefs[key] = ref;
+				}
+			};
+
+		this.cc[key] = (
+			<div className={css.listItem} key={key} ref={itemContainerRef} role="presentation" style={this.composeStyle(width, height, primaryPosition, secondaryPosition)}>
+				{itemRenderer({...childProps, ...componentProps, index})}
+			</div>
+		);
+	};
+
+	applyStyleToHideNode = (index: number): void => {
+		const
+			{itemRefs} = this.props,
+			key = index % this.state.numOfItems,
+			itemContainerRef = () => {
+				itemRefs.current[key] = null;
+			};
+
+		this.cc[key] = <div key={key} ref={itemContainerRef} style={{display: 'none'}} />;
+	};
+
+	positionItems () {
+		const
+			{dataSize, itemSizes} = this.safeProps,
+			{firstIndex, numOfItems} = this.state,
+			{cc, isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, itemPositions} = this;
+		let
+			hideTo = 0,
+			updateFrom = cc.length ? this.state.updateFrom : firstIndex,
+			updateTo = cc.length ? this.state.updateTo : firstIndex + numOfItems;
+
+		if (updateFrom >= updateTo) {
+			return;
+		} else if (updateTo > dataSize) {
+			hideTo = updateTo;
+			updateTo = dataSize;
+		}
+
+		let
+			width, height,
+			{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom);
+
+		width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
+		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
+
+		// positioning items
+		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
+			this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
+
+			if (++j === dimensionToExtent) {
+				secondaryPosition = 0;
+
+				if (this.props.itemSizes) {
+					if (itemPositions[i + 1] || itemPositions[i + 1]?.position === 0) {
+						primaryPosition = itemPositions[i + 1].position;
+					} else if (itemSizes[i]) {
+						primaryPosition += itemSizes[i] + this.safeProps.spacing;
+					} else {
+						primaryPosition += primary.gridSize;
+					}
+				} else {
+					primaryPosition += primary.gridSize;
+				}
+
+				j = 0;
+			} else {
+				secondaryPosition += secondary.gridSize;
+			}
+		}
+
+		for (let i = updateTo; i < hideTo; i++) {
+			this.applyStyleToHideNode(i);
+		}
+	}
+
+	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() + this.safeProps.getAffordance() : this.scrollBounds.clientHeight);
+
+	getScrollWidth = () => (this.isPrimaryDirectionVertical ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension());
+
+	getVirtualScrollDimension = () => {
+		if (this.props.itemSizes) {
+			return this.props.itemSizes.reduce((total, size, index) => (total + size + (index > 0 ? this.safeProps.spacing : 0)), 0);
+		} else {
+			const
+				{dimensionToExtent, primary, curDataSize} = this,
+				{spacing} = this.safeProps;
+
+			return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
+		}
+	};
+
+	syncClientSize = () => {
+		const
+			{props} = this,
+			node = typeof props.scrollContentRef === 'object' && props.scrollContentRef.current;
+
+		if (!props.clientSize && !node) {
+			return false;
+		}
+
+		const
+			{clientWidth, clientHeight} = props.clientSize || this.getClientSize(node),
+			{scrollBounds} = this;
+
+		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
+			this.calculateMetrics(props);
+			this.setState(this.getStatesAndUpdateBounds(props));
+			this.setContainerSize();
+			return true;
+		}
+
+		return false;
+	};
+
+	// render
+
+	render () {
+		const
+			{
+				cbScrollTo, childProps, className, clientSize, containerProps, dataSize, direction,
+				getAffordance, getComponentProps, isHorizontalScrollbarVisible, isVerticalScrollbarVisible,
+				itemRefs, itemRenderer, itemSize, itemSizes, onUpdate, onUpdateItems, overhang, pageScroll,
+				placeholderRenderer, role, rtl, scrollContainerContainsDangerously, scrollContentRef,
+				scrollMode, setThemeScrollContentHandle, spacing, style, updateStatesAndBounds,
+				...rest
+			} = this.props,
+			{cc, isPrimaryDirectionVertical, primary} = this,
+			scrollModeNative = scrollMode === 'native',
+			containerClasses = classNames(
+				css.virtualList,
+				isPrimaryDirectionVertical ? css.vertical : css.horizontal,
+				{[css.native]: scrollModeNative},
+				className
+			);
+		let contentClasses;
+		if (!scrollModeNative) {
+			contentClasses = css.content;
+		}
+
+		if (primary) {
+			this.positionItems();
+		}
+
+		return (
+			<div className={containerClasses} {...containerProps} ref={this.props.scrollContentRef} style={style}>
+				<div {...rest} className={contentClasses} ref={this.contentRef} role={role}>
+					{[...cc, placeholderRenderer && placeholderRenderer(primary)]}
+				</div>
+			</div>
+		);
+	}
+}
+
+export default VirtualListBasic;
+export {
+	gridListItemSizeShape,
+	itemSizesShape,
+	VirtualListBasic
+};

@@ -15,7 +15,7 @@ import {checkPropTypes, applyDefaultProps} from '../util';
 
 import computed from './computed';
 import styles from './styles';
-import {KindComponent, KindConfig} from './types';
+import {ApplyDefaults, KindComponent, KindConfig} from './types';
 import {bindInlineHandlers} from './util';
 
 // Because contextType is optional and hooks must be called in the same order, we need a fallback
@@ -132,7 +132,7 @@ const NoContext: Context<any> = createContext(null);
  * @see {@link core/handle}
  * @public
  */
-const kind = (config: KindConfig) => {
+const kind = <P extends CallbackObject = CallbackObject, C extends CallbackObject = CallbackObject, D extends Partial<P> = {}>(config: KindConfig<P, C, D>): KindComponent<P, D> => {
 	const {
 		computed: cfgComputed,
 		contextType = NoContext,
@@ -149,11 +149,12 @@ const kind = (config: KindConfig) => {
 
 	const renderStyles = cfgStyles ? styles(cfgStyles) : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
+
 	const renderKind = (props: CallbackObject, context: Context<any>): ReactElement | null => {
 		if (renderStyles && typeof renderStyles === 'function') props = renderStyles(props, context);
 		if (renderComputed && typeof renderComputed === 'function') props = renderComputed(props, context);
 
-		return render(props, context);
+		return render(props as ApplyDefaults<P, D> & C, context);
 	};
 
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
@@ -231,7 +232,7 @@ const kind = (config: KindConfig) => {
 		return renderKind(bindInlineHandlers(updated, inlineHandlers, inlineHandlerKeys, context), context);
 	};
 
-	return Component;
+	return Component as KindComponent<P, D>;
 };
 
 export default kind;

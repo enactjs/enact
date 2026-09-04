@@ -1,0 +1,352 @@
+/*
+ * Exports the {@link ui/ViewManager.View} component.
+ */
+
+import {checkPropTypes, Job} from '@enact/core/util';
+import {cloneElement, Children, Component, ReactElement} from 'react';
+
+import {Callback, CallbackObject} from '../types';
+
+interface ViewProps {
+	children: ReactElement,
+
+	/**
+	 * Time in milliseconds to complete a transition
+	 *
+	 * @type {Number}
+	 * @required
+	 * @public
+	 */
+	duration: number,
+
+	/**
+	 * Set to `true` when the View should 'appear' without transitioning into the viewport
+	 *
+	 * @type {Boolean}
+	 * @public
+	 */
+	appearing?: boolean,
+
+	/**
+	 * Arranger to control the animation
+	 *
+	 * @type {Arranger}
+	 * @public
+	 */
+	arranger: {enter: Callback, leave: Callback, stay?: Callback},
+
+	/**
+	 * An object containing properties to be passed to each child.
+	 *
+	 * @type {Object}
+	 * @public
+	 */
+	childProps: CallbackObject,
+
+	/**
+	 * Time, in milliseconds, to wait after a view has entered to inform it by passing the
+	 * `enteringProp` as `false`.
+	 *
+	 * @type {Number}
+	 * @default 0
+	 * @public
+	 */
+	enteringDelay?: number,
+
+	/**
+	 * Name of the property to pass to the wrapped view to indicate when it is entering the
+	 * viewport. When `true`, the view has been created but has not transitioned into place.
+	 * When `false`, the view has finished its transition.
+	 *
+	 * The notification can be delayed by setting `enteringDelay`. If not set, the view will not
+	 * be notified of the change in transition.
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	enteringProp: string,
+
+	/**
+	 * A getter function for a DOM node of the parent element
+	 *
+	 * Supplied by `TransitionGroup` when it clones the element `wrapWithView` produces, not by
+	 * the caller of `wrapWithView` itself.
+	 *
+	 * @type {Function}
+	 * @private
+	 */
+	getParentRef?: Callback,
+
+	/**
+	 * Index of the currently 'active' view.
+	 *
+	 * @type {Number}
+	 */
+	index?: number,
+
+	/**
+	 * When `true`, indicates if a view is currently leaving.
+	 *
+	 * Supplied by `TransitionGroup` when it clones the element `wrapWithView` produces, not by
+	 * the caller of `wrapWithView` itself.
+	 *
+	 * @type {Boolean}
+	 */
+	leaving?: boolean,
+
+	/**
+	 * When `true`, indicates if the transition should be animated
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 * @public
+	 */
+	noAnimation: boolean,
+
+	/**
+	 * Index of the previously 'active' view.
+	 *
+	 * @type {Number}
+	 */
+	previousIndex?: number,
+
+	/**
+	 * Index of the view node among the rendered children of the parent node
+	 *
+	 * Supplied by `TransitionGroup` when it clones the element `wrapWithView` produces, not by
+	 * the caller of `wrapWithView` itself.
+	 *
+	 * @type {Number}
+	 * @private
+	 */
+	renderedIndex?: number,
+
+	/**
+	 * When `true`, indicates if the transition should be reversed. The effect depends on how the provided
+	 * `arranger` handles reversal.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	reverseTransition?: boolean,
+
+	/**
+	 * When `true`, indicates the current locale uses right-to-left reading order.
+	 *
+	 * The effect depends on how the provided `arranger` handles this option.
+	 *
+	 * @type {Boolean}
+	 */
+	rtl: boolean
+}
+
+// If the View was "appearing", then entering will always be false and this will not result in a
+// re-render. If the view should enter, state.enter will be true and this will toggle it to false
+// causing a re-render.
+const clearEntering = ({entering}: {entering: boolean}) => {
+	return entering ? {entering: false} : null;
+};
+
+/**
+ * A `View` wraps a set of children for {@link ui/ViewManager.ViewManager}.
+ * It is not intended to be used directly
+ *
+ * @class View
+ * @memberof ui/ViewManager
+ * @private
+ */
+class View extends Component<ViewProps> {
+	static defaultProps = {
+		appearing: false,
+		enteringDelay: 0,
+		index: 0,
+		reverseTransition: false
+	};
+
+	constructor (props: ViewProps) {
+		super(props);
+		checkPropTypes(this, props);
+
+		this.animation = null;
+		this.state = {
+			entering: !props.appearing
+		};
+	}
+
+	state: {entering: boolean};
+
+	shouldComponentUpdate (nextProps: ViewProps) {
+		if (nextProps.leaving) {
+			// FIXME: This is generally a bad practice to mutate local state in sCU but is necessary
+			// for the time being to ensure that a view that is reversed before it completes
+			// entering will transition correctly out of the viewport.
+			this.changeDirection = this.shouldChangeDirection(this.props, nextProps);
+			return false;
+		}
+
+		return true;
+	}
+
+	componentDidUpdate (prevProps: ViewProps) {
+		checkPropTypes(this, this.props, prevProps);
+		this.changeDirection = this.shouldChangeDirection(prevProps, this.props);
+	}
+
+	componentWillUnmount () {
+		this.enteringJob.stop();
+		this.node = null;
+		if (this.animation && typeof this.animation.cancel === 'function') {
+			this.animation.cancel();
+		}
+	}
+
+	animation: Animation | null;
+	changeDirection: boolean = false;
+	node: ReactElement | null = null;
+
+	shouldChangeDirection (prevProps: ViewProps, nextProps: ViewProps) {
+		return this.animation ? prevProps.reverseTransition !== nextProps.reverseTransition : false;
+	}
+
+	enteringJob = new Job(() => {
+		this.setState(clearEntering);
+	});
+
+	componentWillAppear (callback: Callback) {
+		const {arranger} = this.props;
+		if (arranger && arranger.stay) {
+			this.prepareTransition(arranger.stay, callback, true);
+		} else {
+			callback();
+		}
+	}
+
+	componentDidAppear () {
+		this.setState(clearEntering);
+	}
+
+	// This is called at the same time as componentDidMount() for components added to an existing
+	// TransitionGroup. It will block other animations from occurring until callback is called. It
+	// will not be called on the initial render of a TransitionGroup.
+	componentWillEnter (callback: Callback) {
+		const {appearing, arranger, reverseTransition, enteringProp} = this.props;
+		// This can happen if the panel was going to be removed and the animation was canceled,
+		// causing this panel to re-enter.
+		if (!appearing && enteringProp && !this.state.entering) {
+			this.setState({entering: true});
+		}
+		if (arranger) {
+			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
+		} else {
+			callback();
+		}
+	}
+
+	componentDidEnter () {
+		const {enteringDelay, enteringProp} = this.props;
+
+		if (enteringProp) {
+			// FIXME: `startRafAfter` is a temporary solution using rAF. We need a better way to handle
+			// transition cycle and component life cycle to be in sync. See ENYO-4835.
+			this.enteringJob.startRafAfter(enteringDelay);
+		} else {
+			this.enteringJob.start();
+		}
+	}
+
+	componentWillStay (callback: Callback) {
+		const {arranger} = this.props;
+		if (arranger && arranger.stay) {
+			this.prepareTransition(arranger.stay, callback);
+		} else {
+			callback();
+		}
+	}
+
+	// This is called when the child has been removed from the ReactTransitionGroup. Though the
+	// child has been removed, ReactTransitionGroup will keep it in the DOM until callback is
+	// called.
+	componentWillLeave (callback: Callback) {
+		const {arranger, reverseTransition} = this.props;
+		this.enteringJob.stop();
+		if (arranger) {
+			this.prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback);
+		} else {
+			callback();
+		}
+	}
+
+	/**
+	 * Initiates a new transition
+	 *
+	 * @param	{Function}	arranger		Arranger function to call (enter, leave)
+	 * @param	{Function}	callback		Completion callback
+	 * @param	{Boolean}	[noAnimation]	`true` to disable animation for this transition
+	 * @returns {undefined}
+	 * @private
+	 */
+	prepareTransition = (arranger: Callback, callback: Callback, noAnimation?: boolean) => {
+		const {duration, getParentRef, index, previousIndex = index, renderedIndex = 0, reverseTransition, rtl} = this.props;
+
+		// Need to ensure that we have a valid node reference before we animation. Sometimes, React
+		// will replace the node after mount causing a reference cached there to be invalid.
+		this.node = getParentRef?.()?.children?.[renderedIndex];
+
+		if (this.animation && this.animation.playState !== 'finished' && this.changeDirection) {
+			this.animation.reverse();
+		} else {
+			this.animation = arranger({
+				from: previousIndex,
+				node: this.node,
+				reverse: reverseTransition,
+				rtl,
+				to: index,
+				fill: 'forwards',
+				duration
+			});
+		}
+
+		if (this.animation) {
+			// Must set a new handler here to ensure the right callback is invoked
+			this.animation.onfinish = () => {
+				this.animation = null;
+				// Possible for the animation callback to still be fired after the node has been
+				// unmounted if it finished before the unmount can cancel it so we check for that.
+				if (this.node) {
+					callback();
+				}
+			};
+		}
+
+		// disable animation when the instance or props flag is true
+		if ((noAnimation || this.props.noAnimation) && this.animation) {
+			this.animation.finish();
+		}
+	};
+
+	render () {
+		const {enteringProp, children, childProps} = this.props;
+
+		if (enteringProp || childProps) {
+			const props = Object.assign({}, childProps);
+			if (enteringProp) {
+				props[enteringProp] = this.state.entering;
+			}
+
+			return cloneElement(children, props);
+		} else {
+			return Children.only(children);
+		}
+	}
+}
+
+// Not a true render method but instead a wrapper for TransitionGroup to wrap arbitrary children
+// with a TransitionGroup-compatible child that supports animation
+//
+// eslint-disable-next-line enact/display-name
+const wrapWithView = (config: Omit<ViewProps, 'children'>) => (child: ReactElement) => {
+	return <View {...config}>{child}</View>;
+};
+
+export default View;
+export {View, wrapWithView};

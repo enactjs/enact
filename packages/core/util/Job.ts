@@ -12,7 +12,7 @@ import {Callback} from '../types';
 class Job {
 	id: number | Promise<unknown> | NodeJS.Timeout | null = null;
 	fn: Callback | null = null;
-	timeout: number | null = null;
+	timeout: number | null;
 	type: string | null = null;
 
 	/**
@@ -22,12 +22,12 @@ class Job {
 	 *
 	 * @memberof core/util.Job.prototype
 	 */
-	constructor (fn: Callback, timeout: number) {
+	constructor (fn: Callback, timeout: number | null = null) {
 		this.fn = fn;
 		this.timeout = timeout;
 	}
 
-	run (args: any[]) {
+	run (args: any[] = []) {
 		// don't want to inadvertently apply Job's context on `fn`
 		return this.fn && this.fn.apply(null, args);
 	}

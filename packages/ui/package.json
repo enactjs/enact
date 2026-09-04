@@ -8,7 +8,7 @@
     "directory": "packages/ui"
   },
   "homepage": "https://enactjs.com",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "clean": "enact clean",
     "interlink": "npm link ../core ../i18n",
@@ -16,7 +16,8 @@
     "test": "enact test",
     "test-json": "enact test --json",
     "test-watch": "enact test --watch",
-    "transpile": "enact transpile"
+    "transpile": "enact transpile",
+    "typecheck": "tsc --noEmit"
   },
   "license": "Apache-2.0",
   "keywords": [
@@ -34,6 +35,8 @@
   "dependencies": {
     "@enact/core": "^5.5.2",
     "@enact/i18n": "^5.5.2",
+    "@types/ramda": "^0.32.0",
+    "@types/warning": "^3.0.4",
     "classnames": "^2.5.1",
     "ilib": "^14.22.0",
     "invariant": "^2.2.4",
@@ -42,6 +45,14 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-is": "^19.2.7",
+    "typescript": "^7.0.2",
     "warning": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.4.1",
+    "@types/prop-types": "^15.7.15",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4"
   }
 }

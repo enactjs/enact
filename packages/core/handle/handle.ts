@@ -89,12 +89,12 @@ import {Callback, CallbackObject, HandlerFunction} from '../types';
  *
  * @callback EventAdapter
  * @memberof core/handle
- * @param {any} event
+ * @param {Event|null} event
  * @param {Object<string, any>} props
  * @param {Object<string, any>} context
  * @returns {any}
  */
-export type EventAdapter = HandlerFunction;
+export type EventAdapter<C = unknown> = HandlerFunction<C>;
 
 /**
  * The signature for event handlers
@@ -116,7 +116,7 @@ export interface EventHandler extends HandlerFunction {
  * @memberof core/handle
  * @private
  */
-const makeHandler = (handlers: HandlerFunction[]) => {
+const makeHandler = <C = unknown>(handlers: HandlerFunction<C>[]) => {
 	// allowing shadowing here to provide a meaningful function name in dev tools
 	// eslint-disable-next-line no-shadow
 	return function handle (this: any, ...args: any) {
@@ -209,8 +209,8 @@ const decorateHandleFunction = (fn: HandlerFunction) => {
  * @memberof core/handle
  * @public
  */
-const handle = function (this: any, ...handlers: HandlerFunction[]): EventHandler {
-	const h = makeHandler(handlers);
+const handle = function<C = unknown> (this: any, ...handlers: HandlerFunction<C>[]): EventHandler {
+	const h = makeHandler<C>(handlers);
 
 	// In order to support binding either handle (handle.bind(this)) or a handler
 	// (a = handle(), a.bind(this)), we cache `this` here and use it as the fallback for props and
@@ -311,13 +311,13 @@ const oneOf = handle.oneOf = function (...handlers: Array<[HandlerFunction, Hand
  * @public
  */
 interface ReturnsTrue {
-	(handler: HandlerFunction): HandlerFunction;
+	<C = unknown>(handler: HandlerFunction<C>): HandlerFunction<C>;
 	(): true;
 }
 
-const returnsTrue = ((handler?: HandlerFunction): HandlerFunction | true => {
+const returnsTrue = (function (handler?: HandlerFunction): HandlerFunction | true {
 	if (handler && typeof handler === 'function') {
-		return named(function (this: any, ...args: any) {
+		return named(function (this: any, ...args: Parameters<HandlerFunction>) {
 			handler.apply(this, args);
 
 			return true;
@@ -758,10 +758,10 @@ const adaptEvent = handle.adaptEvent = curry(function (adapter: EventAdapter, ha
  * @memberof core/handle
  * @public
  */
-const forwardCustom = handle.forwardCustom = function (name: string, adapter?: EventAdapter): HandlerFunction {
+const forwardCustom = handle.forwardCustom = function <C = unknown> (name: string, adapter?: EventAdapter<C>): HandlerFunction<C> {
 	return named(adaptEvent(
-		function (this: any, ev, ...args) {
-			let customEventPayload = adapter ? adapter.call(this, ev, ...args) : null;
+		function (this: any, ev, ...args: any[]) {
+			let customEventPayload = adapter ? adapter.call(this, ev, ...(args as [CallbackObject, C])) : null;
 
 			// Handle either no adapter or a non-object return from the adapter
 			if (!customEventPayload || typeof customEventPayload !== 'object') {
