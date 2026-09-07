@@ -598,8 +598,18 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 		lastVisibleIndex: null
 	};
 
-	primary = null;
-	secondary = null;
+	primary: DimensionMetrics = {
+		clientSize: 1,
+		minItemSize: null,
+		itemSize: 1,
+		gridSize: 1
+	};
+	secondary: DimensionMetrics = {
+		clientSize: 1,
+		minItemSize: null,
+		itemSize: 1,
+		gridSize: 1
+	};
 
 	isPrimaryDirectionVertical = true;
 	isItemSized = false;
