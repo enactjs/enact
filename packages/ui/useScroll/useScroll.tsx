@@ -780,7 +780,7 @@ const useScrollBase = (props: UseScrollProps) => {
 				forward('onWheel', {delta, horizontalScrollbarHandle, verticalScrollbarHandle}, props);
 
 				if (delta !== 0) {
-					scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn && overscrollEffectOn.wheel || false);
+					scrollToAccumulatedTarget(delta, canScrollV, (overscrollEffectOn && overscrollEffectOn.wheel) || false);
 					ev.preventDefault();
 					ev.stopPropagation();
 				}

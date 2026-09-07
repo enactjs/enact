@@ -326,10 +326,6 @@ const itemSizesShape = PropTypes.shape({
 	minSize: PropTypes.number.isRequired,
 	size: PropTypes.arrayOf(PropTypes.number)
 });
-export type itemSizesShapeType = {
-	minSize: number,
-	size: number[]
-};
 
 export type VirtualListBasicState = {
 	firstIndex: number,
