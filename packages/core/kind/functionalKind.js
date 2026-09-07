@@ -184,7 +184,7 @@ const functionalKind = (config) => {
 	Component.inline = function Inline (props, context) {
 		const updated = applyDefaultProps({...props}, defaultProps, defaultPropKeys);
 
-		return useRender(prepareKindProps(bindInlineHandlers(updated, handlers, handlerKeys, context), context));
+		return useRender(prepareKindProps(bindInlineHandlers(updated, handlers, handlerKeys, context), context), context);
 	};
 
 	return Component;
