@@ -4,7 +4,7 @@ import {RefObject} from 'react';
 type ContainableRef = RefObject<HTMLElement> | HTMLElement | null;
 
 function isRefObject<T> (ref: any): ref is RefObject<T> {
-	return typeof ref === 'object' && 'current' in ref;
+	return ref !== null && typeof ref === 'object' && 'current' in ref;
 }
 
 // At the end, wes should not use DOM APIs as well as the APIs in the `utilDOM`. If we use them, we have to try to remove them first if possible.
