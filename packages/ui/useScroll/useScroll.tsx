@@ -845,7 +845,7 @@ const useScrollBase = (props: UseScrollProps) => {
 						mutableRef.current.wheelDirection = dir;
 					}
 
-					scrollToAccumulatedTarget(delta, canScrollV, overscrollEffectOn && overscrollEffectOn.wheel || false);
+					scrollToAccumulatedTarget(delta, canScrollV, (overscrollEffectOn && overscrollEffectOn.wheel) || false);
 				}
 
 				if (needToHideScrollbarTrack) {
