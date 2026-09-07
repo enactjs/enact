@@ -11,10 +11,10 @@ import {ElementType, PointerEvent, RefObject} from 'react';
 
 import {configure} from './config';
 
-import {dragConfigPropType} from './Drag';
-import {flickConfigPropType} from './Flick';
-import {holdConfigPropType} from './Hold';
-import {pinchConfigPropType} from './Pinch';
+import {DragConfigPropType} from './Drag';
+import {FlickConfigPropType} from './Flick';
+import {HoldConfigPropType} from './Hold';
+import {PinchConfigPropType} from './Pinch';
 import useTouch, {useTouchConfig} from './useTouch';
 import {Callback} from '../types';
 
@@ -37,7 +37,7 @@ export interface TouchableProps {
 	 * @type {Object}
 	 * @public
 	 */
-	dragConfig: dragConfigPropType,
+	dragConfig: DragConfigPropType,
 
 	/**
 	 * Instance-specific overrides of the flick configuration.
@@ -47,7 +47,7 @@ export interface TouchableProps {
 	 * @type {Object}
 	 * @public
 	 */
-	flickConfig: flickConfigPropType,
+	flickConfig: FlickConfigPropType,
 
 	/**
 	 * Instance-specific overrides of the hold configuration.
@@ -57,7 +57,7 @@ export interface TouchableProps {
 	 * @type {Object}
 	 * @public
 	 */
-	holdConfig: holdConfigPropType,
+	holdConfig: HoldConfigPropType,
 
 	/**
 	 * Prevents resuming the touch events and gestures when re-entering the component.
@@ -267,7 +267,7 @@ export interface TouchableProps {
 	 * @type {Object}
 	 * @public
 	 */
-	pinchConfig: pinchConfigPropType,
+	pinchConfig: PinchConfigPropType,
 
 	/**
 	 * Forwards a reference to the DOM element.

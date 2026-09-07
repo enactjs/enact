@@ -1,7 +1,7 @@
 import {TouchableProps} from './Touchable';
 import PropTypes from 'prop-types';
 
-export interface holdConfigPropType {
+export interface HoldConfigPropType {
 	cancelOnMove: boolean;
 	events: Array<{name: string, time: number}>;
 	frequency: number;
@@ -10,7 +10,7 @@ export interface holdConfigPropType {
 }
 
 class Hold {
-	holdConfig: holdConfigPropType & {resume: boolean} | null = null;
+	holdConfig: HoldConfigPropType & {resume: boolean} | null = null;
 	holdJob: number | NodeJS.Timeout | null = null;
 	holdStart: number | null = null;
 	pulsing: boolean = false;
@@ -38,7 +38,7 @@ class Hold {
 		return Math.sqrt(dx * dx + dy * dy) < moveTolerance;
 	};
 
-	begin = (defaultConfig: holdConfigPropType, {holdConfig, noResume, onHoldStart, onHoldEnd, onHold}: Partial<TouchableProps>, {x, y}: {x: number, y: number}) => {
+	begin = (defaultConfig: HoldConfigPropType, {holdConfig, noResume, onHoldStart, onHoldEnd, onHold}: Partial<TouchableProps>, {x, y}: {x: number, y: number}) => {
 		if (!onHoldStart && !onHold) return;
 
 		this.startX = x;
@@ -206,7 +206,7 @@ class Hold {
 	};
 }
 
-const defaultHoldConfig: holdConfigPropType = {
+const defaultHoldConfig: HoldConfigPropType = {
 	cancelOnMove: false,
 	events: [
 		{name: 'hold', time: 200}
@@ -216,7 +216,7 @@ const defaultHoldConfig: holdConfigPropType = {
 	moveTolerance: 16
 };
 
-export const holdConfigPropType = PropTypes.shape({
+const holdConfigPropType = PropTypes.shape({
 	cancelOnMove: PropTypes.bool,
 	events: PropTypes.arrayOf(
 		PropTypes.shape({
@@ -232,5 +232,6 @@ export const holdConfigPropType = PropTypes.shape({
 export default Hold;
 export {
 	defaultHoldConfig,
-	Hold
+	Hold,
+	holdConfigPropType
 };

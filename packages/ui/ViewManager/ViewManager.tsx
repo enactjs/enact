@@ -225,7 +225,7 @@ const ViewManagerBase = class extends Component<ViewManagerProps, ViewManagerSta
 
 		this.state = {
 			prevIndex: null,
-			reverseTransition: null,
+			reverseTransition: null
 		};
 	}
 

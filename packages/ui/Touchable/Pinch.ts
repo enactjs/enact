@@ -4,7 +4,7 @@ import clamp from 'ramda/src/clamp';
 import {BoundsType} from './Drag';
 import {TouchableProps} from './Touchable';
 
-export interface pinchConfigPropType {
+export interface PinchConfigPropType {
 	boxSizing: 'border-box' | 'content-box';
 	global: boolean;
 	maxScale: number;
@@ -14,7 +14,7 @@ export interface pinchConfigPropType {
 
 class Pinch {
 	bounds: BoundsType | DOMRect | null = null;
-	pinchConfig: pinchConfigPropType & {resume?: boolean, node?: HTMLElement} | null = null;
+	pinchConfig: PinchConfigPropType & {resume?: boolean, node?: HTMLElement} | null = null;
 	scale: number = 1.0;
 	startScale: number = 1.0;
 	startDist: number = 0;
@@ -93,7 +93,7 @@ class Pinch {
 		return false;
 	};
 
-	begin = (config: pinchConfigPropType, {noResume, onPinch, onPinchEnd, onPinchStart}: Partial<TouchableProps>, coords: Array<{x: number; y: number}>, node: HTMLElement) => {
+	begin = (config: PinchConfigPropType, {noResume, onPinch, onPinchEnd, onPinchStart}: Partial<TouchableProps>, coords: Array<{x: number; y: number}>, node: HTMLElement) => {
 		if (!onPinch && !onPinchStart && !onPinchEnd) {
 			return;
 		}
@@ -172,7 +172,7 @@ class Pinch {
 	};
 }
 
-const defaultPinchConfig: pinchConfigPropType = {
+const defaultPinchConfig: PinchConfigPropType = {
 	boxSizing: 'border-box',
 	global: false,
 	maxScale: 4,
@@ -180,7 +180,7 @@ const defaultPinchConfig: pinchConfigPropType = {
 	moveTolerance: 16
 };
 
-export const pinchConfigPropType = PropTypes.shape({
+const pinchConfigPropType = PropTypes.shape({
 	boxSizing: PropTypes.string,
 	global: PropTypes.bool,
 	maxScale: PropTypes.number,
@@ -191,5 +191,6 @@ export const pinchConfigPropType = PropTypes.shape({
 export default Pinch;
 export {
 	defaultPinchConfig,
-	Pinch
+	Pinch,
+	pinchConfigPropType
 };

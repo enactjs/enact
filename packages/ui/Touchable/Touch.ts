@@ -9,10 +9,10 @@ import {Dispatch, PointerEvent, SetStateAction} from 'react';
 import {mergeConfig, TouchableConfig} from './config';
 import {States} from './state';
 import ClickAllow, {EventLike} from './ClickAllow';
-import {Drag, dragConfigPropType} from './Drag';
-import {Flick, flickConfigPropType} from './Flick';
-import {Hold, holdConfigPropType} from './Hold';
-import {Pinch, pinchConfigPropType} from './Pinch';
+import {Drag, DragConfigPropType} from './Drag';
+import {Flick, FlickConfigPropType} from './Flick';
+import {Hold, HoldConfigPropType} from './Hold';
+import {Pinch, PinchConfigPropType} from './Pinch';
 import {TouchableProps} from './Touchable';
 import {useTouchConfig} from './useTouch';
 
@@ -275,7 +275,7 @@ class Touch {
 		this.context.setState = setState;
 	}
 
-	updateGestureConfig (dragConfig: dragConfigPropType, flickConfig: flickConfigPropType, holdConfig: holdConfigPropType, pinchConfig: pinchConfigPropType) {
+	updateGestureConfig (dragConfig: DragConfigPropType, flickConfig: FlickConfigPropType, holdConfig: HoldConfigPropType, pinchConfig: PinchConfigPropType) {
 		this.config = mergeConfig({
 			drag: dragConfig,
 			flick: flickConfig,

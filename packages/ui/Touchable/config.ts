@@ -1,13 +1,13 @@
-import {defaultDragConfig, dragConfigPropType} from './Drag';
-import {defaultFlickConfig, flickConfigPropType} from './Flick';
-import {defaultHoldConfig, holdConfigPropType} from './Hold';
-import {defaultPinchConfig, pinchConfigPropType} from './Pinch';
+import {defaultDragConfig, DragConfigPropType} from './Drag';
+import {defaultFlickConfig, FlickConfigPropType} from './Flick';
+import {defaultHoldConfig, HoldConfigPropType} from './Hold';
+import {defaultPinchConfig, PinchConfigPropType} from './Pinch';
 
 export interface TouchableConfig {
-	drag: dragConfigPropType;
-	flick: flickConfigPropType;
-	hold: holdConfigPropType;
-	pinch: pinchConfigPropType;
+	drag: DragConfigPropType;
+	flick: FlickConfigPropType;
+	hold: HoldConfigPropType;
+	pinch: PinchConfigPropType;
 }
 
 const allowedDragKeys = Object.keys(defaultDragConfig);

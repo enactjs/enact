@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {TouchableProps} from './Touchable';
 
-export interface dragConfigPropType {
+export interface DragConfigPropType {
 	boxSizing: 'border-box' | 'content-box';
 	global: boolean;
 	moveTolerance: number;
@@ -24,7 +24,7 @@ const Tracking = {
 
 class Drag {
 	bounds: BoundsType | DOMRect | null = null;
-	dragConfig: dragConfigPropType & {resume?: boolean, node?: HTMLElement} | null = null;
+	dragConfig: DragConfigPropType & {resume?: boolean, node?: HTMLElement} | null = null;
 	startX: number = 0;
 	startY: number = 0;
 	tracking: number | null = null;
@@ -83,7 +83,7 @@ class Drag {
 		return false;
 	};
 
-	begin = (config: dragConfigPropType, {noResume, onDrag, onDragEnd, onDragStart}: Partial<TouchableProps>, coords: {x: number, y: number}, node: HTMLElement) => {
+	begin = (config: DragConfigPropType, {noResume, onDrag, onDragEnd, onDragStart}: Partial<TouchableProps>, coords: {x: number, y: number}, node: HTMLElement) => {
 		if (!onDrag && !onDragStart && !onDragEnd) return;
 
 		const {x, y} = coords;
@@ -181,13 +181,13 @@ class Drag {
 
 }
 
-const defaultDragConfig: dragConfigPropType = {
+const defaultDragConfig: DragConfigPropType = {
 	boxSizing: 'border-box',
 	global: false,
 	moveTolerance: 16
 };
 
-export const dragConfigPropType = PropTypes.shape({
+const dragConfigPropType = PropTypes.shape({
 	boxSizing: PropTypes.string,
 	global: PropTypes.bool,
 	moveTolerance: PropTypes.number
@@ -196,5 +196,6 @@ export const dragConfigPropType = PropTypes.shape({
 export default Drag;
 export {
 	defaultDragConfig,
-	Drag
+	Drag,
+	dragConfigPropType
 };

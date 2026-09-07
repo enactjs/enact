@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {TouchableProps} from './Touchable';
 
-export interface flickConfigPropType {
+export interface FlickConfigPropType {
 	maxDuration: number;
 	maxMoves: number;
 	maxVelocity?: number;
@@ -13,7 +13,7 @@ export interface flickConfigPropType {
 class Flick {
 	tracking: boolean;
 	moves: Array<{x: number, y: number, t: number}>;
-	flickConfig: flickConfigPropType | null = null;
+	flickConfig: FlickConfigPropType | null = null;
 	onFlick?: TouchableProps['onFlick'];
 
 	constructor () {
@@ -25,7 +25,7 @@ class Flick {
 		return this.tracking;
 	}
 
-	begin = (config: flickConfigPropType, {onFlick}: Partial<TouchableProps>, coords: {x: number, y: number}) => {
+	begin = (config: FlickConfigPropType, {onFlick}: Partial<TouchableProps>, coords: {x: number, y: number}) => {
 		this.flickConfig = {
 			...config
 		};
@@ -128,13 +128,13 @@ class Flick {
 	};
 }
 
-const defaultFlickConfig: flickConfigPropType = {
+const defaultFlickConfig: FlickConfigPropType = {
 	maxDuration: 250,
 	maxMoves: 5,
 	minVelocity: 0.1
 };
 
-export const flickConfigPropType = PropTypes.shape({
+const flickConfigPropType = PropTypes.shape({
 	maxDuration: PropTypes.number,
 	maxMoves: PropTypes.number,
 	maxVelocity: PropTypes.number
@@ -143,5 +143,6 @@ export const flickConfigPropType = PropTypes.shape({
 export default Flick;
 export {
 	defaultFlickConfig,
-	Flick
+	Flick,
+	flickConfigPropType
 };

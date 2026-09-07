@@ -137,6 +137,7 @@ type TransitionGroupChild = ReactElement<Record<string, unknown>>;
  * @method
  * @private
  */
+// eslint-disable-next-line react-hooks/rules-of-hooks
 const indexOfChild = useWith(findIndex as any, [propEq('key') as any, identity]) as (key: string, list: any[]) => number;
 
 /**
