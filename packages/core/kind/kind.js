@@ -151,8 +151,20 @@ const kind = (config) => {
 		return render(props, context);
 	};
 
+	const prepareKindProps = (props, context) => {
+		if (renderStyles) props = renderStyles(props, context);
+		if (renderComputed) props = renderComputed(props, context);
+		return props;
+	};
+
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
 	const handlerKeys = handlers ? Object.keys(handlers) : null;
+
+	// The functional branch below renders through this wrapper rather than `renderKind` directly.
+	// `render` is user-supplied and may call hooks, so the render path taken during an actual React
+	// render must itself be a hook. The `use` prefix is what tells React Compiler (and the
+	// rules-of-hooks lint) that this call may run hooks.
+	const useRenderKind = (props, context) => render(prepareKindProps(props, context), context);
 
 	let Component;
 
@@ -172,7 +184,7 @@ const kind = (config) => {
 
 			checkPropTypes(Component, merged);
 
-			return renderKind(merged, ctx);
+			return useRenderKind(merged, ctx);
 		};
 	} else {
 		Component = class extends ReactComponent {
