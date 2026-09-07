@@ -108,7 +108,7 @@ interface ViewProps {
 	 *
 	 * @type {Number}
 	 */
-	previousIndex?: number,
+	previousIndex?: number | null,
 
 	/**
 	 * Index of the view node among the rendered children of the parent node
@@ -128,7 +128,7 @@ interface ViewProps {
 	 * @type {Boolean}
 	 * @default false
 	 */
-	reverseTransition?: boolean,
+	reverseTransition?: boolean | null,
 
 	/**
 	 * When `true`, indicates the current locale uses right-to-left reading order.

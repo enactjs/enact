@@ -265,7 +265,6 @@ const SliderBase = kind({
 	_propTypes: /** @lends ui/Slider.SliderBase.prototype */ {} as SliderProps,
 
 	defaultProps: {
-		backgroundProgress: 0,
 		colorPicker: false,
 		disabled: false,
 		knobComponent: Knob,
@@ -309,7 +308,6 @@ const SliderBase = kind({
 		colorPicker,
 		componentRef,
 		css,
-		disabled,
 		knobComponent,
 		max,
 		min,
@@ -337,7 +335,7 @@ const SliderBase = kind({
 					<ComponentOverride
 						className={css?.knob}
 						component={knobComponent}
-						disabled={disabled}
+						disabled={rest.disabled}
 						orientation={orientation}
 						proportion={percent}
 						tooltipComponent={tooltipComponent}

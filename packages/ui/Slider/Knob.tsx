@@ -65,7 +65,7 @@ const Knob = kind({
 
 	_propTypes: /** @lends ui/Slider.Knob.prototype */ {} as KnobProps,
 
-	render: ({orientation = 'horizontal', proportion, tooltipComponent, value = 0, ...rest}) => {
+	render: ({orientation, proportion, tooltipComponent, value, ...rest}) => {
 		return (
 			<div {...rest}>
 				<ComponentOverride

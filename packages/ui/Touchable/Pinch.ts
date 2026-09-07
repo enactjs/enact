@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
 
 import {BoundsType} from './Drag';
@@ -178,6 +179,14 @@ const defaultPinchConfig: pinchConfigPropType = {
 	minScale: 0.5,
 	moveTolerance: 16
 };
+
+export const pinchConfigPropType = PropTypes.shape({
+	boxSizing: PropTypes.string,
+	global: PropTypes.bool,
+	maxScale: PropTypes.number,
+	minScale: PropTypes.number,
+	moveTolerance: PropTypes.number
+});
 
 export default Pinch;
 export {

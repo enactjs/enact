@@ -1,5 +1,6 @@
 import useClass from '@enact/core/useClass';
 
+import {HandlerFunction} from '../types';
 import useControlledState from '../useControlledState';
 
 import Toggle from './Toggle';
@@ -38,17 +39,10 @@ export interface useToggleConfig {
  */
 export interface useToggleInterface {
 	selected: boolean;
-	activate: () => void;
-	deactivate: () => void;
-	toggle: () => void;
+	activate: HandlerFunction;
+	deactivate: HandlerFunction;
+	toggle: HandlerFunction;
 }
-
-const useToggleConfigDefaultValues = {
-	defaultSelected: false,
-	disabled: false,
-	prop: 'selected',
-	selected: false
-};
 
 /**
  * Manages a boolean state value.
@@ -60,18 +54,15 @@ const useToggleConfigDefaultValues = {
  * @returns {useToggleInterface}
  * @private
  */
-function useToggle (config: useToggleConfig) {
-	const finalConfig = {...useToggleConfigDefaultValues, ...config};
-	const {defaultSelected, selected, ...rest} = finalConfig;
-
-	const toggle = useClass(Toggle, rest);
-	const state = useControlledState<typeof defaultSelected>(
+function useToggle ({defaultSelected, selected, ...config}: useToggleConfig = {}): useToggleInterface {
+	const toggle = useClass(Toggle, config);
+	const state = useControlledState(
 		defaultSelected,
 		selected,
 		typeof selected !== 'undefined'
 	);
 
-	const props = {disabled: rest.disabled, onToggle: rest.onToggle};
+	const props = {disabled: config.disabled, onToggle: config.onToggle};
 	toggle.setContext(props, ...state);
 
 	return {

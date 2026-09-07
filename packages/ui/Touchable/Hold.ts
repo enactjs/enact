@@ -1,4 +1,5 @@
 import {TouchableProps} from './Touchable';
+import PropTypes from 'prop-types';
 
 export interface holdConfigPropType {
 	cancelOnMove: boolean;
@@ -214,6 +215,19 @@ const defaultHoldConfig: holdConfigPropType = {
 	global: false,
 	moveTolerance: 16
 };
+
+export const holdConfigPropType = PropTypes.shape({
+	cancelOnMove: PropTypes.bool,
+	events: PropTypes.arrayOf(
+		PropTypes.shape({
+			name: PropTypes.string,
+			time: PropTypes.number
+		})
+	),
+	frequency: PropTypes.number,
+	global: PropTypes.bool,
+	moveTolerance: PropTypes.number
+});
 
 export default Hold;
 export {

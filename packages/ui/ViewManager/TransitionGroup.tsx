@@ -6,8 +6,14 @@
 
 import {EnactPropTypes} from '@enact/core/internal/prop-types';
 import {forward, forwardCustom} from '@enact/core/handle';
+import eqBy from 'ramda/src/eqBy';
+import findIndex from 'ramda/src/findIndex';
 import identity from 'ramda/src/identity';
+import prop from 'ramda/src/prop';
+import propEq from 'ramda/src/propEq';
 import remove from 'ramda/src/remove';
+import unionWith from 'ramda/src/unionWith';
+import useWith from 'ramda/src/useWith';
 import {Children, cloneElement, createElement, createRef, Component, ReactNode, ReactElement, RefObject} from 'react';
 
 import {Callback} from '../types';
@@ -131,8 +137,7 @@ type TransitionGroupChild = ReactElement<Record<string, unknown>>;
  * @method
  * @private
  */
-const indexOfChild = (key: string, children: TransitionGroupChild[]) =>
-	children.findIndex(child => child.key === key);
+const indexOfChild = useWith(findIndex as any, [propEq('key') as any, identity]) as (key: string, list: any[]) => number;
 
 /**
  * Returns an array of non-null children
@@ -156,10 +161,7 @@ const mapChildren = function (children: ReactNode): TransitionGroupChild[] {
  * @method
  * @private
  */
-const mergeChildren = (a: TransitionGroupChild[], b: TransitionGroupChild[]): TransitionGroupChild[] => {
-	const existingKeys = new Set(a.map(child => child.key));
-	return [...a, ...b.filter(child => !existingKeys.has(child.key))];
-};
+const mergeChildren = unionWith(eqBy(prop('key') as any));
 
 // Cached event forwarders
 const forwardOnAppear = forward('onAppear');

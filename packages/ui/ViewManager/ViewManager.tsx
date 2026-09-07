@@ -25,9 +25,9 @@ import {wrapWithView} from './View';
 import {Callback, CallbackObject} from '../types';
 
 export type ViewManagerState = {
-	index: number | null,
-	prevIndex?: number,
-	reverseTransition?: boolean
+	index?: number,
+	prevIndex?: number | null,
+	reverseTransition?: boolean | null
 };
 
 export interface ViewManagerProps {
@@ -224,12 +224,13 @@ const ViewManagerBase = class extends Component<ViewManagerProps, ViewManagerSta
 		super(props);
 
 		this.state = {
-			index: null
+			prevIndex: null,
+			reverseTransition: null,
 		};
 	}
 
 	static getDerivedStateFromProps (props: ViewManagerProps, state: ViewManagerState) {
-		if (props.reverseTransition) {
+		if (props.reverseTransition != null) {
 			return {
 				index: props.index,
 				prevIndex: state.index,

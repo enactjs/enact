@@ -1,4 +1,6 @@
 import clamp from 'ramda/src/clamp';
+import PropTypes from 'prop-types';
+
 import {TouchableProps} from './Touchable';
 
 export interface dragConfigPropType {
@@ -184,6 +186,12 @@ const defaultDragConfig: dragConfigPropType = {
 	global: false,
 	moveTolerance: 16
 };
+
+export const dragConfigPropType = PropTypes.shape({
+	boxSizing: PropTypes.string,
+	global: PropTypes.bool,
+	moveTolerance: PropTypes.number
+});
 
 export default Drag;
 export {

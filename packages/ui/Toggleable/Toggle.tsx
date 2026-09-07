@@ -24,7 +24,7 @@ class Toggle {
 		this.context = {};
 	}
 
-	setContext (props: Partial<ToggleProps>, value: boolean, onToggle: (value: boolean) => void) {
+	setContext (props: Partial<ToggleProps>, value: boolean | undefined, onToggle: (value: boolean) => void) {
 		this.props = {...this.props, ...props};
 		this.context.value = value;
 		this.context.onToggle = onToggle;

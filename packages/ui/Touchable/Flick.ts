@@ -1,4 +1,6 @@
 import {Job} from '@enact/core/util';
+import PropTypes from 'prop-types';
+
 import {TouchableProps} from './Touchable';
 
 export interface flickConfigPropType {
@@ -131,6 +133,12 @@ const defaultFlickConfig: flickConfigPropType = {
 	maxMoves: 5,
 	minVelocity: 0.1
 };
+
+export const flickConfigPropType = PropTypes.shape({
+	maxDuration: PropTypes.number,
+	maxMoves: PropTypes.number,
+	maxVelocity: PropTypes.number
+});
 
 export default Flick;
 export {
