@@ -5,6 +5,7 @@ export type LS2Response = {
 	returnValue?: boolean;
 	errorCode?: number;
 	errorText?: string;
+	firmwareVersion?: string;
 	[key: string]: any;
 };
 

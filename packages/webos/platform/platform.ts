@@ -52,7 +52,7 @@ const parseUserAgent = (userAgent: string) => {
 	} else {
 		const webOSSystem = window.webOSSystem ?? window.PalmSystem;
 		try {
-			let legacyInfo = JSON.parse(webOSSystem!.deviceInfo || '{}');
+			let legacyInfo = JSON.parse(webOSSystem?.deviceInfo || '{}');
 			if (typeof legacyInfo.platformVersionMajor !== 'undefined' && typeof legacyInfo.platformVersionMinor !== 'undefined') {
 				platformInfo.open = true;
 			} else {

@@ -98,7 +98,7 @@ const SignLangDecorator = hoc(defaultConfig, (config: SignLangDecoratorConfig, W
 			checkPropTypes(this, this.props, prevProps);
 		}
 
-		signLangDelayId: ReturnType<typeof setTimeout> | null = null;
+		signLangDelayId: ReturnType<typeof setTimeout> | undefined;
 
 		requestSignLang = (active: boolean) => {
 			const {signLangId = '', signLangOption = {}} = this.props;
@@ -108,13 +108,13 @@ const SignLangDecorator = hoc(defaultConfig, (config: SignLangDecoratorConfig, W
 					if (signLangDelay === 0) {
 						startSignLang(signLangId, signLangOption);
 					} else {
-						clearTimeout(this.signLangDelayId as unknown as number);
+						clearTimeout(this.signLangDelayId);
 						this.signLangDelayId = setTimeout(() => {
 							startSignLang(signLangId, signLangOption);
 						}, signLangDelay);
 					}
 				} else {
-					if (signLangDelay > 0) clearTimeout(this.signLangDelayId as unknown as number);
+					if (signLangDelay > 0) clearTimeout(this.signLangDelayId);
 					stopSignLang(signLangId, signLangOption);
 				}
 			}

@@ -41,7 +41,7 @@ const deviceinfo = (callback: (info: DeviceInfo) => void) => {
 	if (Object.keys(device).length === 0) {
 		try {
 			const webOSSystem = window.webOSSystem ?? window.PalmSystem;
-			const info = JSON.parse(webOSSystem!.deviceInfo as string);
+			const info = JSON.parse(webOSSystem?.deviceInfo || '{}');
 			device.modelName = info.modelName;
 			device.modelNameAscii = info.modelNameAscii;
 			device.version = info.platformVersion;
@@ -72,7 +72,7 @@ const deviceinfo = (callback: (info: DeviceInfo) => void) => {
 					}
 					if (response.firmwareVersion) {
 						device.version = response.firmwareVersion;
-						const segments = (device.version as string).split('.');
+						const segments = response.firmwareVersion.split('.');
 						const keys = ['versionMajor', 'versionMinor', 'versionDot'] as const;
 						for (let i = 0; i < keys.length; i++) {
 							try {
