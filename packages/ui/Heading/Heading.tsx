@@ -20,6 +20,7 @@ import compose from 'ramda/src/compose';
 import ForwardRef from '../ForwardRef';
 
 import css from './Heading.module.less';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 /**
  * A labeled Heading component.
@@ -148,7 +149,7 @@ const HeadingBase = kind({
 			<Tag {...rest} ref={componentRef} />
 		);
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * A higher-order component that adds behavior to {@link ui/Heading.HeadingBase|Heading}.

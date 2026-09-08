@@ -1,14 +1,12 @@
 /**
- * Ambient declarations for `@enact/*` and other untyped third-party packages consumed by this
- * package. These packages ship no TypeScript typings of their own, so we declare loose (but
- * explicit, non-`any`-implicit) shapes here to satisfy `strict`/`noImplicitAny` without having to
- * re-type the entirety of `@enact/core`.
- *
- * `KindConfig`/`HocConfig` intentionally type their callback parameters as `any`. That's not
- * laziness: it's what lets every call-site object literal (the `computed`, `handlers`, and
- * `render` functions passed into `kind({...})`/`hoc({...})`) receive a contextual type instead of
- * tripping `noImplicitAny` on each destructured parameter. Individual modules still declare real
- * `interface *Props` for their public, exported API; this file only covers the internal glue.
+ * Ambient declarations for third-party packages that ship no TypeScript typings of their own.
+ * `@enact/core/*` and `@enact/i18n/*` are deliberately NOT declared here -- they resolve against
+ * their real TypeScript sources so this package type-checks against the actual API surface rather
+ * than a hand-guessed approximation. An earlier version of this file guessed at `@enact/core/kind`,
+ * `hoc`, `handle`, and `internal/Registry` (typing their callback parameters as `any` so consuming
+ * object literals would get contextual typing "for free"), but several of those guesses diverged
+ * from the real implementation in ways that only surfaced once the real sources were available for
+ * comparison -- see the `kind()`/`hoc()`/`Registry` fixes made during this migration.
  */
 
 declare module 'invariant' {

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {Children, Fragment} from 'react';
 
 import componentCss from './Marquee.module.less';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 const isEventSource = (ev: any) => ev.target === ev.currentTarget;
 
@@ -266,7 +267,7 @@ const MarqueeBase = kind({
 			</div>
 		);
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 export default MarqueeBase;
 export {

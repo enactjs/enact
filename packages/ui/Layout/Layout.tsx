@@ -133,6 +133,7 @@ import ForwardRef from '../ForwardRef';
 import {Cell, CellBase, CellDecorator, toFlexAlign} from './Cell';
 
 import css from './Layout.module.less';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 interface LayoutBaseProps {
 	/**
@@ -381,7 +382,7 @@ const LayoutBase = kind({
 
 		return <Component ref={componentRef} {...rest} />;
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * Applies Layout behaviors.

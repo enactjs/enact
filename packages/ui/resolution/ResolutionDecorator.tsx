@@ -122,7 +122,8 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (config.dynamic) window.removeEventListener('resize', this.handleResize);
 		}
 
-		[key: string]: any;
+		/** The DOM node whose class list reflects the currently applied resolution classes. */
+		rootNode: Element | null = null;
 
 		handleResize = () => {
 			const classNames = this.didClassesChange();

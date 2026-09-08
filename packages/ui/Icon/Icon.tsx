@@ -16,6 +16,7 @@ import ri from '../resolution';
 import ForwardRef from '../ForwardRef';
 
 import componentCss from './Icon.module.less';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 /**
  * Merges consumer styles with the image `src` resolved through the resolution independence module.
@@ -229,7 +230,7 @@ const IconBase = kind({
 			/>
 		);
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * A higher-order component that adds behavior to {@link ui/Icon.IconBase|Icon}.

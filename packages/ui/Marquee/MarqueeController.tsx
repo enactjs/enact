@@ -1,4 +1,5 @@
 import hoc from '@enact/core/hoc';
+import type {MarqueeControllerContextValue} from './useMarqueeController';
 import {MarqueeControllerContext, useMarqueeController} from './useMarqueeController';
 
 /**
@@ -54,3 +55,4 @@ export {
 	MarqueeController,
 	MarqueeControllerContext
 };
+export type {MarqueeControllerContextValue};

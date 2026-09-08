@@ -172,8 +172,6 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			checkPropTypes(this, this.props, prevProps);
 		}
 
-		[key: string]: any;
-
 		handle = handle.bind(this);
 
 		handleChange = this.handle(

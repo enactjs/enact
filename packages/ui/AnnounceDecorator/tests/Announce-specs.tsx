@@ -27,7 +27,7 @@ describe('Announce', () => {
 
 		const expected = message;
 		// since we're manually updating the node in Announce, we have to manually check the node here
-		const actual = node!.alert.getAttribute('aria-label');
+		const actual = node!.alert!.getAttribute('aria-label');
 
 		expect(actual).toBe(expected);
 	});

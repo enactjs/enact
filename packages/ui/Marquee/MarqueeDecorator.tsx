@@ -3,6 +3,7 @@
 import {on, off} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import type {RegistryController} from '@enact/core/internal/Registry';
 import {is} from '@enact/core/keymap';
 import {checkPropTypes, Job, shallowEqual} from '@enact/core/util';
 import {isRtlText} from '@enact/i18n/util';
@@ -15,6 +16,7 @@ import {scale} from '../resolution';
 import {ResizeContext} from '../Resizable';
 
 import MarqueeBase from './MarqueeBase';
+import type {MarqueeControllerContextValue} from './MarqueeController';
 import {MarqueeControllerContext} from './MarqueeController';
 
 import componentCss from './Marquee.module.less';
@@ -339,6 +341,42 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static contextType = MarqueeControllerContext;
 
+		/** The additional trailing space, in pixels, appended between the content and its duplicate. */
+		spacing: number = 0;
+
+		/** Whether the pointer is currently over the marqueeing node. */
+		isHovered: boolean = false;
+
+		/** Whether the marqueeing node (or a descendant) currently has focus. */
+		isFocused: boolean = false;
+
+		/** The DOM node hosting the marqueeing content, set via {@link ui/Marquee.MarqueeDecorator#cacheNode|cacheNode}. */
+		node: HTMLElement | null = null;
+
+		/** Handle for the pending start/reset timeout, or `null` when none is pending. */
+		timer: number | null = null;
+
+		/** Whether marqueeing is being coordinated by a `MarqueeController` ancestor. */
+		sync!: boolean;
+
+		/** Which phase, if any, of the start/reset timer sequence is currently pending. */
+		timerState!: number;
+
+		/** Distance, in pixels, the content must travel to fully reveal itself, or `null` until measured. */
+		distance!: number | null;
+
+		/** Whether the content already fits without needing to marquee, or `null` until measured. */
+		contentFits!: boolean | null;
+
+		/** Handle returned by the `ResizeContext` registration, used to unregister on unmount. */
+		resizeRegistry!: RegistryController | null;
+
+		/** Observes the marqueeing node for size changes when `ResizeObserver` is available. */
+		resizeObserver!: ResizeObserver | null;
+
+		/** Whether the initial mount-time measurement/render pass has started. */
+		hasStartedRender!: boolean;
+
 		constructor (props: Record<string, any>) {
 			super(props);
 
@@ -432,7 +470,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					this.hasStartedRender = false;
 				}
 			} else if (disabled && this.isHovered && marqueeOn === 'focus' && this.sync) {
-				this.context.enter(this);
+				this.context!.enter();
 			}
 
 			this.validateTextDirection();
@@ -446,11 +484,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.promoteJob.stop();
 			this.demoteJob.stop();
 			if (this.sync) {
-				this.context.unregister(this);
+				this.context!.unregister(this);
 			}
 
 			if (this.resizeRegistry) {
-				this.resizeRegistry.unregister(this.handleResize);
+				this.resizeRegistry.unregister();
 			}
 
 			if (this.resizeObserver) {
@@ -461,15 +499,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			off('keydown', this.handlePointerHide, document);
 		}
 
-		// This class is generated inside a `hoc()` factory from framework-internal config (blur,
-		// enter, focus, css, invalidateProps, etc.) and mixes a large, loosely-shaped set of
-		// instance fields (timers, DOM node caches, measurement state) with its React props/state.
-		// An index signature keeps the class itself honest about that dynamism without requiring a
-		// bespoke interface for every internal field, while its public `propTypes` above remain the
-		// authoritative, precisely-typed contract consumers see.
-		[key: string]: any;
-
-		context: any = null;
+		context: MarqueeControllerContextValue | null = null;
 
 		promoteJob = new Job(() => {
 			if (this.contentFits === false) {
@@ -570,24 +600,28 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		measureWidths () {
-			if (this.node.querySelector(`.${componentCss.marquee}`)) {
+			// `this.node` is set by the `cacheNode` ref callback before `measureWidths` is ever
+			// invoked (only called from lifecycle methods that run after mount).
+			const node = this.node!;
+
+			if (node.querySelector(`.${componentCss.marquee}`)) {
 				warning(false, 'Marquee should not be nested inside another Marquee');
 
-				return {scrollWidth: this.node.scrollWidth, width: this.node.getBoundingClientRect().width};
+				return {scrollWidth: node.scrollWidth, width: node.getBoundingClientRect().width};
 			}
 
 			// move all the children into the wrapper node ...
 			const wrapper = document.createElement('span');
-			this.moveChildren(this.node, wrapper);
-			this.node.appendChild(wrapper);
+			this.moveChildren(node, wrapper);
+			node.appendChild(wrapper);
 
 			// measure it to find the precise floating point width of the content ...
 			const {width: scrollWidth} = wrapper.getBoundingClientRect();
-			const {width} = this.node.getBoundingClientRect();
+			const {width} = node.getBoundingClientRect();
 
 			// and move all the children back and remove the wrapper
-			this.node.removeChild(wrapper);
-			this.moveChildren(wrapper, this.node);
+			node.removeChild(wrapper);
+			this.moveChildren(wrapper, node);
 
 			return {scrollWidth, width};
 		}
@@ -698,7 +732,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							animating: true
 						});
 					} else if (this.sync) {
-						this.context.complete(this);
+						this.context!.complete(this);
 					}
 				}, delay, TimerState.START_PENDING);
 			}
@@ -762,7 +796,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					return;
 				}
 				this.setTimeout(() => {
-					this.context.start();
+					this.context!.start();
 				}, delay, TimerState.SYNCSTART_PENDING);
 			} else {
 				this.start(delay);
@@ -786,7 +820,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// In detail, the timer with 40ms delay needs to be applied only when marqueeDelay is less than 40,
 				// but for consistency, we decided to apply 40ms in all cases.
 				this.setTimeout(() => {
-					this.context.complete(this);
+					this.context!.complete(this);
 				}, MINIMUM_MARQUEE_RESET_DELAY, TimerState.RESET_PENDING);
 			} else if (!this.state.animating) {
 				this.startAnimation(delay);
@@ -824,7 +858,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		cancelAnimation = (retryStartingAnimation = false) => {
 			if (this.sync) {
-				this.context.cancel(retryStartingAnimation);
+				this.context!.cancel(retryStartingAnimation);
 				return;
 			}
 
@@ -870,7 +904,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.isHovered = true;
 			if (this.props.marqueeOn === 'hover') {
 				if (this.sync) {
-					this.context.enter(this);
+					this.context!.enter();
 				} else if (!this.state.animating) {
 					this.startAnimation();
 				}
@@ -894,7 +928,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.isHovered = false;
 			if (this.props.marqueeOn === 'hover') {
 				if (this.sync) {
-					this.context.leave(this);
+					this.context!.leave();
 				} else {
 					this.cancelAnimation();
 				}

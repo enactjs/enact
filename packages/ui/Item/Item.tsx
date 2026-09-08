@@ -16,6 +16,7 @@ import Touchable from '../Touchable';
 import ForwardRef from '../ForwardRef';
 
 import componentCss from './Item.module.less';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 /**
  * A basic list item component structure without any behaviors applied to it.
@@ -119,7 +120,7 @@ const ItemBase = kind({
 			</Component>
 		);
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * A higher-order component that adds touch support to the component it wraps.

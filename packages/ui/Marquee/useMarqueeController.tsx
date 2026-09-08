@@ -295,3 +295,4 @@ export {
 	MarqueeControllerContext,
 	useMarqueeController
 };
+export type {MarqueeControllerContextValue};

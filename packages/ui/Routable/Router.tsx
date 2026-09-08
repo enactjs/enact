@@ -18,8 +18,6 @@ import {RoutablePropTypes, stringifyRoutes, toSegments} from './util';
  * @private
  */
 const RouterBase = class extends ReactComponent<Record<string, any>, Record<string, any>> {
-	[key: string]: any;
-
 	static displayName = 'Router';
 
 	static propTypes = /** @lends ui/Routable.Router.prototype */ {

@@ -1,3 +1,4 @@
+import type {RegistryController} from '@enact/core/internal/Registry';
 import hoc from '@enact/core/hoc';
 import {PureComponent} from 'react';
 
@@ -79,12 +80,16 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		[key: string]: any;
+		context: ((fn: (...args: any[]) => any) => any) | null = null;
 
-		context: any = null;
+		/** Handle returned by registering with the ancestor `PlaceholderControllerDecorator`, once mounted. */
+		controller: RegistryController | null = null;
+
+		/** The DOM node hosting this component, used to measure its position against the scroll thresholds. */
+		placeholderRef: HTMLElement | null = null;
 
 		update ({leftThreshold, topThreshold}: {leftThreshold: number; topThreshold: number}) {
-			const {offsetLeft, offsetTop, offsetHeight, offsetWidth} = this.placeholderRef;
+			const {offsetLeft, offsetTop, offsetHeight, offsetWidth} = this.placeholderRef!;
 
 			if (offsetTop < topThreshold + offsetHeight && offsetLeft < leftThreshold + offsetWidth) {
 				this.setState((state) => state.visible ? null : {visible: true});

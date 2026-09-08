@@ -18,6 +18,7 @@ import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
 import componentCss from './ImageItem.module.less';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 // Adapts ComponentOverride to work within Cell since both use the component prop
 function ImageOverride ({imageComponent, ...rest}: {imageComponent?: any; [key: string]: any}) {
@@ -186,7 +187,7 @@ const ImageItemBase = kind({
 			</Component>
 		);
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * A higher-order component that adds behaviors to an

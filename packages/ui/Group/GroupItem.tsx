@@ -8,6 +8,7 @@
 import kind from '@enact/core/kind';
 
 import {isSelected, select as selectItem} from '../internal/selection';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 /**
  * Pick the `GroupItem`-specific props into a {@link /developer-guide/glossary/#private|private} `itemProps` key to be extracted by
@@ -95,7 +96,7 @@ const GroupItemBase = kind({
 
 		return <Component {...rest} />;
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 export default GroupItemBase;
 export {GroupItemBase as GroupItem, GroupItemBase, pickGroupItemProps};

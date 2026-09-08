@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import ForwardRef from '../ForwardRef';
 
 import componentCss from './BodyText.module.less';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 /**
  * A simple, unstyled text block component, without
@@ -99,7 +100,7 @@ const BodyTextBase = kind({
 			/>
 		);
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * Applies BodyText behaviors.

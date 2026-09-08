@@ -18,6 +18,7 @@ import ForwardRef from '../ForwardRef';
 import Repeater from '../Repeater';
 
 import {GroupItem, pickGroupItemProps} from './GroupItem';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 /**
  * A stateless component that supports selection of its child items via configurable
@@ -190,7 +191,7 @@ const GroupBase = kind({
 
 		return <Repeater role="group" {...rest} childComponent={GroupItem} ref={componentRef} />;
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * A higher-order component that adds behavior to {@link ui/Group.GroupBase|Group}.

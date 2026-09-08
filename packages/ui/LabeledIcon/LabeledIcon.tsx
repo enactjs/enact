@@ -19,6 +19,7 @@ import {CellBase, LayoutBase} from '../Layout';
 import Slottable from '../Slottable';
 
 import componentCss from './LabeledIcon.module.less';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 /**
  * An icon component with a label.
@@ -238,7 +239,7 @@ const LabeledIconBase = kind({
 			]
 		}, undefined as any);
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * A higher-order component that adds {@link ui/Slottable.Slottable|slot} support to {@link ui/LabeledIcon.LabeledIconBase|LabeledIconBase}

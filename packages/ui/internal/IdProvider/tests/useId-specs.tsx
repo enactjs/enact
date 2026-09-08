@@ -8,7 +8,7 @@ describe('useId', () => {
 
 	function Base (props: Record<string, any>) {
 		data.push(props);
-		return <div id={(data as any).id} />;
+		return <div id={props.id} />;
 	}
 
 	function Component ({key, prefix, onUnmount}: {key?: string; prefix?: string; onUnmount?: (id: string) => void}) {

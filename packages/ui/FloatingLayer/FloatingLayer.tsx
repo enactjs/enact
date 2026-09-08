@@ -183,7 +183,17 @@ class FloatingLayerBase extends Component<Record<string, any>, Record<string, an
 		}
 	}
 
-	[key: string]: any;
+	/** Set via `static contextType`; the register function provided by `FloatingLayerDecorator`. */
+	context: ((fn: (...args: any[]) => any) => any) | null = null;
+
+	/** Handle returned by calling `context()`, used to unregister on unmount. */
+	controller: {unregister: () => void} | null = null;
+
+	/** The DOM node into which this `FloatingLayer`'s children are rendered, once mounted. */
+	floatingLayer: HTMLElement | null = null;
+
+	/** Unused after construction; retained to match the original implementation. */
+	node: HTMLElement | null = null;
 
 	handleNotify = oneOf(
 		[forEventProp('action', 'close'), call('handleClose')],
@@ -234,7 +244,7 @@ class FloatingLayerBase extends Component<Record<string, any>, Record<string, an
 			'FloatingLayer cannot be used outside the subtree of a FloatingLayerDecorator'
 		);
 
-		on('scroll', this.handleScroll, this.floatingLayer);
+		on('scroll', this.handleScroll, this.floatingLayer!);
 
 		this.setState({readyToRender: true});
 	}
@@ -255,7 +265,7 @@ class FloatingLayerBase extends Component<Record<string, any>, Record<string, an
 					{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
 					{cloneElement(children, {onClick: this.stopPropagation})}
 				</div>,
-				this.floatingLayer
+				this.floatingLayer!
 			);
 		}
 

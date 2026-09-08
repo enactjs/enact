@@ -120,7 +120,17 @@ const handledMediaEventsMap = {
  * @public
  */
 class Media extends ReactComponent<Record<string, any>, Record<string, any>> {
-	[key: string]: any;
+	/** The underlying `<audio>`/`<video>` DOM node, set via {@link ui/Media.Media#mediaRef|mediaRef}. */
+	media: HTMLMediaElement | null = null;
+
+	/** Forwarders for the standard (non-custom) media events, keyed by DOM event name. */
+	handledMediaForwards: Record<string, (...args: any[]) => any> = {};
+
+	/** React event-handler props (e.g. `onPlay`) generated for each configured `mediaEventsMap` entry. */
+	handledMediaEvents: Record<string, (ev: any) => void> = {};
+
+	/** Forwarders for the app-defined custom media events, keyed by DOM event name. */
+	handledCustomMediaForwards: Record<string, (ev: any) => void> = {};
 
 	static propTypes = /** @lends ui/Media.Media.prototype */ {
 		/**
@@ -225,13 +235,13 @@ class Media extends ReactComponent<Record<string, any>, Record<string, any>> {
 
 	attachCustomMediaEvents = () => {
 		for (let eventName in this.handledCustomMediaForwards) {
-			on(eventName, this.handledCustomMediaForwards[eventName], this.media);
+			on(eventName, this.handledCustomMediaForwards[eventName], this.media!);
 		}
 	};
 
 	detachCustomMediaEvents = () => {
 		for (let eventName in this.handledCustomMediaForwards) {
-			off(eventName, this.handledCustomMediaForwards[eventName], this.media);
+			off(eventName, this.handledCustomMediaForwards[eventName], this.media!);
 		}
 	};
 
@@ -250,55 +260,55 @@ class Media extends ReactComponent<Record<string, any>, Record<string, any>> {
 	};
 
 	play () {
-		return this.media.play();
+		return this.media!.play();
 	}
 
 	pause () {
-		this.media.pause();
+		this.media!.pause();
 	}
 
 	load () {
-		this.media.load();
+		this.media!.load();
 	}
 
 	get currentTime ()  {
-		return this.media.currentTime;
+		return this.media!.currentTime;
 	}
 
 	set currentTime (currentTime) {
-		this.media.currentTime = currentTime;
+		this.media!.currentTime = currentTime;
 	}
 
 	get duration () {
-		return this.media.duration;
+		return this.media!.duration;
 	}
 
 	get error () {
-		return this.media.networkState === this.media.NETWORK_NO_SOURCE;
+		return this.media!.networkState === this.media!.NETWORK_NO_SOURCE;
 	}
 
 	get loading () {
-		return this.media.readyState < this.media.HAVE_ENOUGH_DATA;
+		return this.media!.readyState < this.media!.HAVE_ENOUGH_DATA;
 	}
 
 	get paused () {
-		return this.media.paused;
+		return this.media!.paused;
 	}
 
 	get playbackRate () {
-		return this.media.playbackRate;
+		return this.media!.playbackRate;
 	}
 
 	set playbackRate (playbackRate) {
-		this.media.playbackRate = playbackRate;
+		this.media!.playbackRate = playbackRate;
 	}
 
 	get proportionLoaded () {
-		return this.media.buffered.length && this.media.buffered.end(this.media.buffered.length - 1) / this.media.duration;
+		return this.media!.buffered.length && this.media!.buffered.end(this.media!.buffered.length - 1) / this.media!.duration;
 	}
 
 	get proportionPlayed () {
-		return this.media.currentTime / this.media.duration;
+		return this.media!.currentTime / this.media!.duration;
 	}
 
 	render () {

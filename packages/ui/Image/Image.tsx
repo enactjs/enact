@@ -17,6 +17,7 @@ import {selectSrc} from '../resolution';
 import ForwardRef from '../ForwardRef';
 
 import componentCss from './Image.module.less';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 /**
  * A basic image component designed to display images conditionally based on screen size.
@@ -226,7 +227,7 @@ const ImageBase = kind({
 			</div>
 		);
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * A higher-order component that adds behaviors to an {@link ui/Image.ImageBase|ImageBase}.

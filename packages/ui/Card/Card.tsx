@@ -18,6 +18,7 @@ import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
 import componentCss from './Card.module.less';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 function ImageOverride ({imageComponent, ...rest}: {imageComponent?: any; [key: string]: any}) {
 	return ComponentOverride({
@@ -203,7 +204,7 @@ const CardBase = kind({
 			</Component>
 		);
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * A higher-order component that adds behaviors to an {@link ui/Card.CardBase|Card}.

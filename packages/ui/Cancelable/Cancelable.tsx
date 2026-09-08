@@ -155,8 +155,6 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 	};
 
 	return class extends ReactComponent<Record<string, any>, Record<string, any>> {
-		[key: string]: any;
-
 		static displayName = 'Cancelable';
 
 		static propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
@@ -171,6 +169,8 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			 */
 			onCancel: PropTypes.func
 		};
+
+		isFirstRender: boolean;
 
 		constructor (props: Record<string, any>) {
 			super(props);

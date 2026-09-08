@@ -66,6 +66,9 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends Component<Record<string, any>, Record<string, any>> {
 		static displayName = 'PlaceholderControllerDecorator';
 
+		/** Ref to the DOM node whose bounds/thresholds are measured when `bounds` config isn't set. */
+		nodeRef: {current: HTMLElement | null};
+
 		constructor (props: Record<string, any>) {
 			super(props);
 
@@ -80,8 +83,6 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillUnmount () {
 			this.notifyAllJob.stop();
 		}
-
-		[key: string]: any;
 
 		bounds: {height: number; width: number} | null = null;
 		leftThreshold = -1;

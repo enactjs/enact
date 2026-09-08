@@ -65,8 +65,6 @@ const Pure = hoc(defaultConfig, (config, Wrapped) => {
 			return this.hasChanged(this.props, nextProps, propComparators);
 		}
 
-		[key: string]: any;
-
 		hasChanged (current: Record<string, any>, next: Record<string, any>, comparators: Record<string, (a: any, b: any) => boolean>) {
 			const propKeys = Object.keys(current);
 			const nextKeys = Object.keys(next);

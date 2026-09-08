@@ -60,7 +60,7 @@ const useMeasurable = () => {
 				resizeObserver.observe(refToMeasure);
 
 				return () => {
-					(resizeObserver as any).disconnect(refToMeasure);
+					resizeObserver!.disconnect();
 					resizeObserver = null;
 				};
 			// Fallback support for MutationObserver

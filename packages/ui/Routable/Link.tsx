@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import {Component} from 'react';
 
 import useLink from './useLink';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 /**
  * A base component that is used to make a link.
@@ -56,7 +57,7 @@ const LinkBase = kind({
 		);
 		/* eslint-enable jsx-a11y/anchor-has-content */
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * A higher-order component adds support to a component to handle `navigate` from {@link ui/Routable.Routable|Routable}.

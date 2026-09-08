@@ -17,6 +17,7 @@ import ForwardRef from '../ForwardRef';
 import Touchable from '../Touchable';
 
 import componentCss from './Button.module.less';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 /**
  * A basic button component structure without any behaviors applied to it.
@@ -248,7 +249,7 @@ const ButtonBase = kind({
 			</div>
 		);
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * A higher-order component that adds touch support to a {@link ui/Button.ButtonBase|ButtonBase}.

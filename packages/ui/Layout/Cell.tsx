@@ -6,6 +6,7 @@ import ForwardRef from '../ForwardRef';
 import ri from '../resolution';
 
 import css from './Layout.module.less';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 const toFlexAlign = (align?: string | null) => (
 	align === 'end' && 'flex-end' ||
@@ -184,7 +185,7 @@ const CellBase = kind({
 
 		return <Component css={componentCss} ref={componentRef} key={key} {...restProps} />;
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * Applies Cell behaviors.

@@ -10,6 +10,7 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 
 import ForwardRef from '../ForwardRef';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 /**
  * A stateless component that stamps out copies of `childComponent`, without
@@ -138,7 +139,7 @@ const RepeaterBase = kind({
 
 		return <Component ref={componentRef} role="list" {...rest} />;
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * Applies Repeater behaviors.

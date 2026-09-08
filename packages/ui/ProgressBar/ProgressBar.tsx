@@ -21,6 +21,7 @@ import {validateRange} from '../internal/validators';
 import ForwardRef from '../ForwardRef';
 
 import componentCss from './ProgressBar.module.less';
+import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 const progressToProportion = (value: number) => clamp(0, 1, value);
 const calcBarStyle = (prop: string, anchor: number, value: number = anchor, startProp: string, endProp: string) => {
@@ -197,7 +198,7 @@ const ProgressBarBase = kind({
 			</div>
 		);
 	}
-});
+}) as TypedKindComponent<Record<string, any>>;
 
 /**
  * A higher-order component that adds behavior to
