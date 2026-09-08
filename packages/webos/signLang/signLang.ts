@@ -4,10 +4,10 @@ import {info} from '@enact/webos/pmloglib';
 import LS2Request from '../LS2Request';
 import {platform} from '../platform';
 
-let signLangEnabled = null;
-let appId = '';
+let signLangEnabled: boolean | null = null;
+let appId: string | false | undefined = '';
 
-const checkSignLang = () => new Promise((resolve, reject) => {
+const checkSignLang = () => new Promise<void>((resolve, reject) => {
 	if (signLangEnabled === null) {
 		new LS2Request().send({
 			service: 'luna://com.webos.settingsservice',
@@ -43,7 +43,7 @@ const checkSignLang = () => new Promise((resolve, reject) => {
 	}
 });
 
-const callSignLangAPI = (signLangId, active, option) => () => new Promise((resolve, reject) => {
+const callSignLangAPI = (signLangId: string, active: boolean, option: Record<string, any>) => () => new Promise((resolve, reject) => {
 	const parameters = {appId, 'signGuidanceId': signLangId, 'focusOut': !active, ...option};
 
 	info('enact_signLang_callSignLangAPI', parameters, '');
@@ -61,7 +61,7 @@ const callSignLangAPI = (signLangId, active, option) => () => new Promise((resol
 	});
 });
 
-const requestSignLang = (signLangId, active, option = {}) => {
+const requestSignLang = (signLangId: string, active: boolean, option: Record<string, any> = {}) => {
 	if (platform.tv) {
 		checkSignLang()
 			.then(callSignLangAPI(signLangId, active, option))
@@ -85,7 +85,7 @@ const requestSignLang = (signLangId, active, option = {}) => {
  * @memberof webos/signLang
  * @public
  */
-const startSignLang = (signLangId = '', option = {}) => {
+const startSignLang = (signLangId = '', option: Record<string, any> = {}) => {
 	requestSignLang(signLangId, true, option);
 };
 
@@ -99,7 +99,7 @@ const startSignLang = (signLangId = '', option = {}) => {
  * @memberof webos/signLang
  * @public
  */
-const stopSignLang = (signLangId = '', option = {}) => {
+const stopSignLang = (signLangId = '', option: Record<string, any> = {}) => {
 	requestSignLang(signLangId, false, option);
 };
 

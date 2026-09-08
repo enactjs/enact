@@ -1,8 +1,13 @@
 import hoc from '@enact/core/hoc';
 import {WithRef} from '@enact/core/internal/WithRef';
 import {checkPropTypes} from '@enact/core/util';
-import {Component, createRef} from 'react';
+import {Component, createRef, type RefObject} from 'react';
 import PropTypes from 'prop-types';
+
+type VoiceControlDecoratorProps = {
+	onVoice: EventListener;
+	[prop: string]: any;
+};
 
 /**
  * VoiceControlDecorator is a higher-order component that adds a callback for voice event
@@ -58,7 +63,7 @@ import PropTypes from 'prop-types';
 const VoiceControlDecorator = hoc((config, Wrapped) => {
 	const WithRefComponent = WithRef(Wrapped);
 
-	return class extends Component {
+	return class extends Component<VoiceControlDecoratorProps> {
 		static displayName = 'VoiceControlDecorator';
 
 		static propTypes = /** @lends webos/speech.VoiceControlDecorator.prototype */ {
@@ -72,12 +77,9 @@ const VoiceControlDecorator = hoc((config, Wrapped) => {
 			onVoice: PropTypes.func.isRequired
 		};
 
-		constructor (props) {
+		constructor (props: VoiceControlDecoratorProps) {
 			super(props);
 			checkPropTypes(this, props);
-
-			this.node = null;
-			this.nodeRef = createRef();
 		}
 
 		componentDidMount () {
@@ -88,7 +90,7 @@ const VoiceControlDecorator = hoc((config, Wrapped) => {
 			if (this.node) this.node.addEventListener('webOSVoice', this.props.onVoice);
 		}
 
-		componentDidUpdate (prevProps) {
+		componentDidUpdate (prevProps: VoiceControlDecoratorProps) {
 			checkPropTypes(this, this.props, prevProps);
 		}
 
@@ -96,8 +98,11 @@ const VoiceControlDecorator = hoc((config, Wrapped) => {
 			if (this.node) this.node.removeEventListener('webOSVoice', this.props.onVoice);
 		}
 
+		node: Element | null = null;
+		nodeRef: RefObject<any> = createRef();
+
 		render () {
-			const props = {...this.props};
+			const props: Partial<VoiceControlDecoratorProps> = {...this.props};
 			delete props.onVoice;
 
 			return (
