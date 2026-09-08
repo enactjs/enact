@@ -144,13 +144,13 @@ const functionalKind = (config: FunctionalKindConfig) => {
 	const renderStyles  = cfgStyles   ? styles(cfgStyles)     : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
 
-	const prepareKindProps = (props: CallbackObject, context: Context) => {
+	const prepareKindProps = (props: CallbackObject, context: Context<any>) => {
 		if (renderStyles && typeof renderStyles === 'function') props = renderStyles(props, context);
 		if (renderComputed && typeof renderComputed === 'function') props = renderComputed(props, context);
 		return props;
 	};
 
-	const useRenderKind = (props: CallbackObject, context: Context) => useRender(prepareKindProps(props, context), context);
+	const useRenderKind = (props: CallbackObject, context: Context<any>) => useRender(prepareKindProps(props, context), context);
 
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
 	const handlerKeys     = handlers     ? Object.keys(handlers)     : null;

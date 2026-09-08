@@ -41,7 +41,7 @@ const deviceinfo = (callback: (info: DeviceInfo) => void) => {
 	if (Object.keys(device).length === 0) {
 		try {
 			const webOSSystem = window.webOSSystem ?? window.PalmSystem;
-			const info = JSON.parse(webOSSystem?.deviceInfo || '{}');
+			const info = JSON.parse(webOSSystem!.deviceInfo as string);
 			device.modelName = info.modelName;
 			device.modelNameAscii = info.modelNameAscii;
 			device.version = info.platformVersion;
