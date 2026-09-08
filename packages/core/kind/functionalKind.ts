@@ -144,12 +144,13 @@ const functionalKind = (config: FunctionalKindConfig) => {
 	const renderStyles  = cfgStyles   ? styles(cfgStyles)     : false;
 	const renderComputed = cfgComputed ? computed(cfgComputed) : false;
 
-	const renderKind = (props: CallbackObject, context: Context<any>) => {
-		if (renderStyles && typeof renderStyles === 'function')   props = renderStyles(props, context);
+	const prepareKindProps = (props: CallbackObject, context: Context) => {
+		if (renderStyles && typeof renderStyles === 'function') props = renderStyles(props, context);
 		if (renderComputed && typeof renderComputed === 'function') props = renderComputed(props, context);
-
-		return useRender(props, context); // eslint-disable-line react-hooks/rules-of-hooks
+		return props;
 	};
+
+	const useRenderKind = (props: CallbackObject, context: Context) => useRender(prepareKindProps(props, context), context);
 
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
 	const handlerKeys     = handlers     ? Object.keys(handlers)     : null;
@@ -176,7 +177,7 @@ const functionalKind = (config: FunctionalKindConfig) => {
 
 		checkPropTypes(Component, merged);
 
-		return renderKind(merged, ctx);
+		return useRenderKind(merged, ctx);
 	};
 
 	if (name)         Component.displayName = name;
@@ -189,7 +190,7 @@ const functionalKind = (config: FunctionalKindConfig) => {
 	// ── inline ──────────────────────────────────────────────────────────────
 	// A synchronous, hook-free path for calling the component logic outside
 	// of the React render cycle (e.g. in tests or server-side utilities).
-	Component.inline = (props: CallbackObject, context: Context<any>) => {
+	Component.inline = function Inline (props: CallbackObject, context: Context<any>) {
 		const inlineDefaultProps = defaultProps || {};
 		const inlineDefaultPropKeys = defaultPropKeys || [];
 		const inlineHandlers = handlers || {};
@@ -197,7 +198,7 @@ const functionalKind = (config: FunctionalKindConfig) => {
 
 		const updated = applyDefaultProps({...props}, inlineDefaultProps, inlineDefaultPropKeys);
 
-		return renderKind(bindInlineHandlers(updated, inlineHandlers, inlineHandlerKeys, context), context);
+		return useRender(prepareKindProps(bindInlineHandlers(updated, inlineHandlers, inlineHandlerKeys, context), context), context);
 	};
 
 	return Component;
