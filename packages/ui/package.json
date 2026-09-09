@@ -16,8 +16,7 @@
     "test": "enact test",
     "test-json": "enact test --json",
     "test-watch": "enact test --watch",
-    "transpile": "enact transpile",
-    "typecheck": "tsc --noEmit"
+    "transpile": "enact transpile"
   },
   "license": "Apache-2.0",
   "keywords": [
