@@ -11,10 +11,10 @@ describe('useId', () => {
 		return <div id={props.id} />;
 	}
 
-	function Component ({key, prefix, onUnmount}: {key?: string; prefix?: string; onUnmount?: (id: string) => void}) {
+	function Component ({key, prefix, onUnmount, ...rest}: {key?: string; prefix?: string; onUnmount?: (id: string) => void; [propName: string]: any}) {
 		const provider = useId({prefix});
 
-		return <Base {...provider} id={provider.generateId(key, prefix, onUnmount)} />;
+		return <Base {...rest} {...provider} id={provider.generateId(key, prefix, onUnmount)} />;
 	}
 
 	afterEach(() => data.splice(0, data.length));
@@ -43,11 +43,11 @@ describe('useId', () => {
 	});
 
 	test('should maintain the same id across renders', () => {
-		const {rerender} = render(<Component />);
+		const {rerender} = render(<Component data-render="first" />);
 
 		const expected = data[0].id;
 
-		rerender(<Component />);
+		rerender(<Component data-render="second" />);
 
 		const actual = data[1].id;
 

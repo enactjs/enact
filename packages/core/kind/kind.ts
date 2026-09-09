@@ -156,10 +156,21 @@ const kind = (config: KindConfig) => {
 		return render(props, context);
 	};
 
+	const prepareKindProps = (props: CallbackObject, context: Context<any>): CallbackObject => {
+		if (renderStyles && typeof renderStyles === 'function') props = renderStyles(props, context);
+		if (renderComputed && typeof renderComputed === 'function') props = renderComputed(props, context);
+		return props;
+	};
+
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
 	const handlerKeys = handlers ? Object.keys(handlers) : null;
 
 	let Component: KindComponent;
+	// The functional branch below renders through this wrapper rather than `renderKind` directly.
+	// `render` is user-supplied and may call hooks, so the render path taken during an actual React
+	// render must itself be a hook. The `use` prefix is what tells React Compiler (and the
+	// rules-of-hooks lint) that this call may run hooks.
+	const useRenderKind = (props: CallbackObject, context: Context<any>): ReactElement | null => render(prepareKindProps(props, context), context);
 
 	// In 4.x, this branch will become the only supported version and the class branch will be
 	// removed.
@@ -181,7 +192,7 @@ const kind = (config: KindConfig) => {
 
 			checkPropTypes(Component, merged);
 
-			return renderKind(merged, ctx);
+			return useRenderKind(merged, ctx);
 		};
 	} else {
 		Component = class extends ReactComponent {
