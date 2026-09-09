@@ -1,4 +1,4 @@
-import {Component, ComponentType, Context, ReactElement} from 'react';
+import {ComponentType, Context, ReactElement} from 'react';
 
 import {CallbackObject, HandlerFunction} from '../types';
 
@@ -8,7 +8,11 @@ export type StylesBlock = {
 	publicClassNames: boolean | string | string[];
 }
 
-export type KindComponent = (ComponentType | Component) & {
+/*
+ * `kind()` always returns either a function component or a class (a `ComponentType`, i.e. a
+ * component constructor)
+ */
+export type KindComponent = ComponentType & {
 	computed?: CallbackObject;
 	defaultProps?: CallbackObject;
 	inline?: ComputedPropFunction;

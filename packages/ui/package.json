@@ -43,5 +43,15 @@
     "react-dom": "^19.2.8",
     "react-is": "^19.2.8",
     "warning": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/invariant": "^2.2.37",
+    "@types/node": "^26.4.0",
+    "@types/prop-types": "^15.7.15",
+    "@types/ramda": "^0.32.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@types/react-is": "^19.2.0",
+    "@types/warning": "^3.0.4"
   }
 }

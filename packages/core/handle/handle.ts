@@ -350,7 +350,7 @@ handle.returnsTrue = returnsTrue;
  * @memberof core/handle
  * @private
  */
-const callOnEvent = handle.callOnEvent = curry((methodName: string, ev: CallbackObject) => {
+const callOnEvent = handle.callOnEvent = curry((methodName: string, ev: any) => {
 	if (ev[methodName]) {
 		ev[methodName]();
 	} else if (ev.nativeEvent && ev.nativeEvent[methodName]) {
@@ -384,7 +384,7 @@ const callOnEvent = handle.callOnEvent = curry((methodName: string, ev: Callback
  * @memberof core/handle
  * @public
  */
-const forEventProp = handle.forEventProp = curry((prop: string, value: any, ev: CallbackObject) => {
+const forEventProp = handle.forEventProp = curry((prop: string, value: any, ev: any) => {
 	return ev[prop] === value;
 });
 
