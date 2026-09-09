@@ -227,7 +227,7 @@ const LabeledIconBase = kind({
 						>
 							{icon}
 						</Icon> : icon
-				}, undefined as any),
+				}, void 0 as any),
 				CellBase.inline!({
 					key: 'label',
 					shrink: true,
@@ -235,9 +235,9 @@ const LabeledIconBase = kind({
 					className: css.label,
 					disabled,
 					children
-				}, undefined as any)
+				}, void 0 as any)
 			]
-		}, undefined as any);
+		}, void 0 as any);
 	}
 }) as TypedKindComponent<Record<string, any>>;
 

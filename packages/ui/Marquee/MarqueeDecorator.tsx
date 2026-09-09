@@ -341,42 +341,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static contextType = MarqueeControllerContext;
 
-		/** The additional trailing space, in pixels, appended between the content and its duplicate. */
-		spacing: number = 0;
-
-		/** Whether the pointer is currently over the marqueeing node. */
-		isHovered: boolean = false;
-
-		/** Whether the marqueeing node (or a descendant) currently has focus. */
-		isFocused: boolean = false;
-
-		/** The DOM node hosting the marqueeing content, set via {@link ui/Marquee.MarqueeDecorator#cacheNode|cacheNode}. */
-		node: HTMLElement | null = null;
-
-		/** Handle for the pending start/reset timeout, or `null` when none is pending. */
-		timer: number | null = null;
-
-		/** Whether marqueeing is being coordinated by a `MarqueeController` ancestor. */
-		sync!: boolean;
-
-		/** Which phase, if any, of the start/reset timer sequence is currently pending. */
-		timerState!: number;
-
-		/** Distance, in pixels, the content must travel to fully reveal itself, or `null` until measured. */
-		distance!: number | null;
-
-		/** Whether the content already fits without needing to marquee, or `null` until measured. */
-		contentFits!: boolean | null;
-
-		/** Handle returned by the `ResizeContext` registration, used to unregister on unmount. */
-		resizeRegistry!: RegistryController | null;
-
-		/** Observes the marqueeing node for size changes when `ResizeObserver` is available. */
-		resizeObserver!: ResizeObserver | null;
-
-		/** Whether the initial mount-time measurement/render pass has started. */
-		hasStartedRender!: boolean;
-
 		constructor (props: Record<string, any>) {
 			super(props);
 
@@ -498,6 +462,42 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			off('keydown', this.handlePointerHide, document);
 		}
+
+		/** The additional trailing space, in pixels, appended between the content and its duplicate. */
+		spacing: number = 0;
+
+		/** Whether the pointer is currently over the marqueeing node. */
+		isHovered: boolean = false;
+
+		/** Whether the marqueeing node (or a descendant) currently has focus. */
+		isFocused: boolean = false;
+
+		/** The DOM node hosting the marqueeing content, set via {@link ui/Marquee.MarqueeDecorator#cacheNode|cacheNode}. */
+		node: HTMLElement | null = null;
+
+		/** Handle for the pending start/reset timeout, or `null` when none is pending. */
+		timer: number | null = null;
+
+		/** Whether marqueeing is being coordinated by a `MarqueeController` ancestor. */
+		sync!: boolean;
+
+		/** Which phase, if any, of the start/reset timer sequence is currently pending. */
+		timerState!: number;
+
+		/** Distance, in pixels, the content must travel to fully reveal itself, or `null` until measured. */
+		distance!: number | null;
+
+		/** Whether the content already fits without needing to marquee, or `null` until measured. */
+		contentFits!: boolean | null;
+
+		/** Handle returned by the `ResizeContext` registration, used to unregister on unmount. */
+		resizeRegistry!: RegistryController | null;
+
+		/** Observes the marqueeing node for size changes when `ResizeObserver` is available. */
+		resizeObserver!: ResizeObserver | null;
+
+		/** Whether the initial mount-time measurement/render pass has started. */
+		hasStartedRender!: boolean;
 
 		context: MarqueeControllerContextValue | null = null;
 

@@ -66,12 +66,6 @@ const Announce = class extends Component<Record<string, any>, Record<string, any
 		checkPropTypes(this, props);
 	}
 
-	/** The DOM node hosting the `aria-label` alert, set via {@link ui/AnnounceDecorator.Announce#setAlertRef|setAlertRef}. */
-	alert: HTMLElement | null = null;
-
-	/** Handle for the pending timeout that clears the alert message, or `null` when none is pending. */
-	alertTimeout: ReturnType<typeof setTimeout> | null = null;
-
 	componentDidUpdate (prevProps: Record<string, any>) {
 		checkPropTypes(this, this.props, prevProps);
 	}
@@ -79,6 +73,12 @@ const Announce = class extends Component<Record<string, any>, Record<string, any
 	componentWillUnmount () {
 		this.clearTimeout();
 	}
+
+	/** Handle for the pending timeout that clears the alert message, or `null` when none is pending. */
+	alertTimeout: ReturnType<typeof setTimeout> | null = null;
+
+	/** The DOM node hosting the `aria-label` alert, set via {@link ui/AnnounceDecorator.Announce#setAlertRef|setAlertRef}. */
+	alert: HTMLElement | null = null;
 
 	clearTimeout () {
 		if (this.alertTimeout) {

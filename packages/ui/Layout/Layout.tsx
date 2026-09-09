@@ -451,7 +451,7 @@ const Column = LayoutDecorator((props: Omit<LayoutBaseProps, 'orientation'>) => 
 	LayoutBase.inline!({
 		...props,
 		orientation: 'vertical'
-	}, undefined as any)
+	}, void 0 as any)
 ));
 Column.displayName = 'Column';
 
@@ -476,7 +476,7 @@ const Row = LayoutDecorator((props: Omit<LayoutBaseProps, 'orientation'>) => (
 		...props,
 
 		orientation: 'horizontal'
-	}, undefined as any)
+	}, void 0 as any)
 ));
 Row.displayName = 'Row';
 
