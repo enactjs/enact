@@ -13,7 +13,7 @@
  * @exports ViewManagerDecorator
  */
 
-import {EnactPropTypes} from '@enact/core/internal/prop-types';
+import {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import handle, {forwardCustom} from '@enact/core/handle';
 import {Children, Component, ReactElement} from 'react';
 
@@ -61,7 +61,7 @@ export interface ViewManagerProps {
 	 * @type {String|Component}
 	 * @default 'div'
 	 */
-	component?: EnactPropTypes.renderable,
+	component?: EnactPropTypeShapes.renderable,
 
 	/**
 	 * Called with a reference to the root component.
@@ -72,7 +72,7 @@ export interface ViewManagerProps {
 	 * @type {Object|Function}
 	 * @public
 	 */
-	componentRef: EnactPropTypes.ref,
+	componentRef: EnactPropTypeShapes.ref,
 
 	/**
 	 * Time in milliseconds to complete a transition

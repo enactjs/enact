@@ -8,7 +8,7 @@
  * @exports SliderDecorator
  */
 
-import {EnactPropTypes} from '@enact/core/internal/prop-types';
+import {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import compose from 'ramda/src/compose';
 import {CSSProperties} from 'react';
@@ -44,7 +44,7 @@ interface SliderProps {
 	 * @required
 	 * @public
 	 */
-	progressBarComponent: EnactPropTypes.componentOverride,
+	progressBarComponent: EnactPropTypeShapes.componentOverride,
 
 	/**
 	 * Background progress, as a proportion between `0` and `1`.
@@ -73,7 +73,7 @@ interface SliderProps {
 	 * @type {Object|Function}
 	 * @public
 	 */
-	componentRef?: EnactPropTypes.ref,
+	componentRef?: EnactPropTypeShapes.ref,
 
 	/**
 	 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -128,7 +128,7 @@ interface SliderProps {
 	 * @default {@link ui/Slider.Knob}
 	 * @public
 	 */
-	knobComponent?: EnactPropTypes.componentOverride,
+	knobComponent?: EnactPropTypeShapes.componentOverride,
 
 	/**
 	 * The maximum value of the slider.
@@ -162,7 +162,7 @@ interface SliderProps {
 	 * @type {Component|Element}
 	 * @public
 	 */
-	minMaxComponent?: EnactPropTypes.componentOverride,
+	minMaxComponent?: EnactPropTypeShapes.componentOverride,
 
 	/**
 	 * Applies the style where the slider bar does not display filled.
@@ -238,7 +238,7 @@ interface SliderProps {
 	 * @type {Component|Element}
 	 * @public
 	 */
-	tooltipComponent?: EnactPropTypes.componentOverride,
+	tooltipComponent?: EnactPropTypeShapes.componentOverride,
 
 	/**
 	 * The value of the slider.
