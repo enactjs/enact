@@ -9,24 +9,24 @@ const STATE = {
 };
 
 interface ControlledHandlers {
-	start?: (this: any) => any;
-	stop?: (this: any) => any;
-	restart?: (this: any) => any;
+	start?: (this: object) => any;
+	stop?: (this: object) => any;
+	restart?: (this: object) => any;
 }
 
 interface ControlledComponent extends ControlledHandlers {
-	component: any;
+	component: object;
 	state: number;
 }
 
 interface MarqueeControllerContextValue {
 	cancel: (retryStartingAnimation?: boolean) => void;
-	complete: (component: any) => void;
+	complete: (component: object) => void;
 	enter: () => void;
 	leave: () => void;
-	register: (component: any, handlers: ControlledHandlers) => void;
-	start: (component?: any) => void;
-	unregister: (component: any) => void;
+	register: (component: object, handlers: ControlledHandlers) => void;
+	start: (component?: object) => void;
+	unregister: (component: object) => void;
 }
 
 const MarqueeControllerContext = createContext<MarqueeControllerContextValue | null>(null);
@@ -57,7 +57,7 @@ const useMarqueeController = (props: Record<string, any>) => {
 	 *
 	 * @returns	{undefined}
 	 */
-	const dispatch = useCallback((action: 'start' | 'stop' | 'restart', component?: any) => {
+	const dispatch = useCallback((action: 'start' | 'stop' | 'restart', component?: object) => {
 		mutableRef.current.controlled.forEach((controlled) => {
 			const {component: controlledComponent, [action]: handler} = controlled;
 			if (component !== controlledComponent && typeof handler === 'function') {
@@ -96,7 +96,7 @@ const useMarqueeController = (props: Record<string, any>) => {
 	 *
 	 * @returns	{Boolean}				`true` if no components are STATE.active
 	 */
-	const markReady = useCallback((component: any) => {
+	const markReady = useCallback((component: object) => {
 		let complete = true;
 		mutableRef.current.controlled.forEach(c => {
 			if (c.component === component) {
@@ -152,7 +152,7 @@ const useMarqueeController = (props: Record<string, any>) => {
 	 *
 	 * @returns {undefined}
 	 */
-	const handleRegister = useCallback((component: any, handlers: ControlledHandlers) => {
+	const handleRegister = useCallback((component: object, handlers: ControlledHandlers) => {
 		const needStart = !allInactive() || mutableRef.current.isFocused;
 
 		mutableRef.current.controlled.push({
@@ -173,7 +173,7 @@ const useMarqueeController = (props: Record<string, any>) => {
 	 *
 	 * @returns	{undefined}
 	 */
-	const handleUnregister = useCallback((component: any) => {
+	const handleUnregister = useCallback((component: object) => {
 		let wasRunning = false;
 		for (let i = 0; i < mutableRef.current.controlled.length; i++) {
 			if (mutableRef.current.controlled[i].component === component) {
@@ -194,7 +194,7 @@ const useMarqueeController = (props: Record<string, any>) => {
 	 *
 	 * @returns	{undefined}
 	 */
-	const handleStart = useCallback((component?: any) => {
+	const handleStart = useCallback((component?: object) => {
 		cancelJob.stop();
 		if (!anyRunning()) {
 			markAll(STATE.ready);
@@ -222,7 +222,7 @@ const useMarqueeController = (props: Record<string, any>) => {
 	 *
 	 * @returns	{undefined}
 	 */
-	const handleComplete = useCallback((component: any) => {
+	const handleComplete = useCallback((component: object) => {
 		const complete = markReady(component);
 		if (complete) {
 			markAll(STATE.ready);
