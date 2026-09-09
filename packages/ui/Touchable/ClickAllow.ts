@@ -6,7 +6,7 @@ export interface EventLike {
 	target?: EventTarget | null;
 }
 
-interface TouchEndState {
+export interface TouchEndState {
 	target?: EventTarget | null;
 	timeStamp: number;
 }

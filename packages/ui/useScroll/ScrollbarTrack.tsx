@@ -1,24 +1,11 @@
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
 import {memo} from 'react';
 
 import css from './ScrollbarTrack.module.less';
 
-export interface ScrollbarTrackProps /** @lends ui/useScroll.ScrollbarTrack.prototype */ {
-	/**
-	 * Forwards a reference to the DOM element.
-	 *
-	 * @type {Object}
-	 * @private
-	 */
+export interface ScrollbarTrackProps {
 	ref: {current: any},
-
-	/**
-	 * If `true`, the scrollbar will be oriented vertically.
-	 *
-	 * @type {Boolean}
-	 * @default true
-	 * @public
-	 */
 	vertical: boolean
 }
 
@@ -36,6 +23,25 @@ const ScrollbarTrack = (props: ScrollbarTrackProps) => {
 		className = classNames(css.scrollbarTrack, vertical ? css.vertical : null);
 
 	return <div {...rest} className={className} ref={ref} />;
+};
+
+ScrollbarTrack.propTypes = /** @lends ui/useScroll.ScrollbarTrack.prototype */ {
+	/**
+	 * Forwards a reference to the DOM element.
+	 *
+	 * @type {Object}
+	 * @private
+	 */
+	ref: PropTypes.shape({current: PropTypes.any}),
+
+	/**
+	 * If `true`, the scrollbar will be oriented vertically.
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 * @public
+	 */
+	vertical: PropTypes.bool
 };
 
 const MemoizedScrollbarTrack = memo(ScrollbarTrack);

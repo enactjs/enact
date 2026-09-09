@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
-import {memo, RefObject, useCallback, useEffect, useLayoutEffect, useRef} from 'react';
+import {FC, memo, RefObject, useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 
 import ri from '../resolution';
 
@@ -8,57 +8,13 @@ import ScrollbarTrack from './ScrollbarTrack';
 
 import componentCss from './Scrollbar.module.less';
 import {CallbackObject} from '../types';
+import PropTypes from 'prop-types';
 
-export interface ScrollbarProps /** @lends ui/useScroll.Scrollbar.prototype */ {
-	/**
-	 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
-	 *
-	 * @type {Object}
-	 * @property {Number}    clientHeight    The client height of the list.
-	 * @property {Number}    clientWidth    The client width of the list.
-	 * @public
-	 */
+export interface ScrollbarProps {
 	clientSize: {clientHeight: number, clientWidth: number},
-
-	/**
-	 * Adds a corner between the vertical and horizontal scrollbars.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @public
-	 */
 	corner: boolean,
-
-	/**
-	 * Customizes the component by mapping the supplied collection of CSS class names to the
-	 * corresponding internal elements and states of this component.
-	 *
-	 * The following classes are supported:
-	 *
-	 * * `scrollbar` - The scrollbar component class
-	 *
-	 * @type {Object}
-	 * @public
-	 */
 	css: CallbackObject<string>,
-
-	/**
-	 * The minimum size of the thumb.
-	 *
-	 * This value will be scaled.
-	 *
-	 * @type {number}
-	 * @public
-	 */
 	minThumbSize: number,
-
-	/**
-	 * If `true`, the scrollbar will be oriented vertically.
-	 *
-	 * @type {Boolean}
-	 * @default true
-	 * @public
-	 */
 	vertical: boolean
 }
 
@@ -212,9 +168,65 @@ const Scrollbar = memo(({corner = false, css = componentCss, minThumbSize = 18, 
 			<ScrollbarTrack {...scrollbarTrackProps} />
 		</div>
 	);
-});
+}) as FC<ScrollbarProps>;
 
 Scrollbar.displayName = 'ui:Scrollbar';
+
+Scrollbar.propTypes = /** @lends ui/useScroll.Scrollbar.prototype */ {
+	/**
+	 * Client size of the container; valid values are an object that has `clientWidth` and `clientHeight`.
+	 *
+	 * @type {Object}
+	 * @property {Number}    clientHeight    The client height of the list.
+	 * @property {Number}    clientWidth    The client width of the list.
+	 * @public
+	 */
+	clientSize: PropTypes.shape({
+		clientHeight: PropTypes.number.isRequired,
+		clientWidth: PropTypes.number.isRequired
+	}),
+
+	/**
+	 * Adds a corner between the vertical and horizontal scrollbars.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
+	corner: PropTypes.bool,
+
+	/**
+	 * Customizes the component by mapping the supplied collection of CSS class names to the
+	 * corresponding internal elements and states of this component.
+	 *
+	 * The following classes are supported:
+	 *
+	 * * `scrollbar` - The scrollbar component class
+	 *
+	 * @type {Object}
+	 * @public
+	 */
+	css: PropTypes.object,
+
+	/**
+	 * The minimum size of the thumb.
+	 *
+	 * This value will be scaled.
+	 *
+	 * @type {number}
+	 * @public
+	 */
+	minThumbSize: PropTypes.number,
+
+	/**
+	 * If `true`, the scrollbar will be oriented vertically.
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 * @public
+	 */
+	vertical: PropTypes.bool
+};
 
 export default Scrollbar;
 export {

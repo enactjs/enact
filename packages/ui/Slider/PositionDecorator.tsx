@@ -1,8 +1,10 @@
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
 import {checkPropTypes} from '@enact/core/util';
+import PropTypes from 'prop-types';
 import {Component} from 'react';
 
+import {DragConfigPropType} from '../Touchable/Drag';
 import {validateRangeOnce, validateSteppedOnce} from '../internal/validators';
 import {Callback} from '../types';
 
@@ -10,7 +12,14 @@ import {calcProportion, hslToHex} from './utils';
 
 import css from './Slider.module.less';
 
-interface PositionDecoratorProps {
+export type PositionBoundsType = {
+	offsetX: number,
+	offsetY: number,
+	min: number,
+	max: number
+}
+
+export interface PositionDecoratorProps {
 	colorPicker?: boolean,
 	disabled?: boolean,
 	max?: number,
@@ -37,6 +46,16 @@ const PositionDecorator = hoc((config, Wrapped) => {
 	return class extends Component<PositionDecoratorProps> {
 		static displayName = 'PositionDecorator';
 
+		static propTypes = {
+			disabled: PropTypes.bool,
+			max: PropTypes.number,
+			min: PropTypes.number,
+			onChange: PropTypes.func,
+			orientation: PropTypes.string,
+			step: PropTypes.number,
+			value: PropTypes.number
+		};
+
 		static defaultProps = positionDecoratorDefaultProps;
 
 		constructor (props: PositionDecoratorProps) {
@@ -46,23 +65,18 @@ const PositionDecorator = hoc((config, Wrapped) => {
 			this.handleDown = this.handleDown.bind(this);
 			this.handleDrag = this.handleDrag.bind(this);
 			this.handleDragStart = this.handleDragStart.bind(this);
-			this.bounds = {
-				min: 0,
-				max: 0,
-				offsetX: 0,
-				offsetY: 0
-			};
+			this.bounds = {} as PositionBoundsType;
 			this.dragConfig = {
 				global: true
-			};
+			} as DragConfigPropType;
 		}
 
 		componentDidUpdate (prevProps: PositionDecoratorProps) {
 			checkPropTypes(this, this.props, prevProps);
 		}
 
-		bounds: {offsetX: number, offsetY: number, min: number, max: number};
-		dragConfig: {};
+		bounds: PositionBoundsType;
+		dragConfig: DragConfigPropType;
 
 		// Merges optional props with defaultProps so TypeScript knows they are never undefined inside the class.
 		private get safeProps () {

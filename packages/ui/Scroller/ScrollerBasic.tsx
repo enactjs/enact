@@ -1,5 +1,7 @@
+import EnactPropTypes from '@enact/core/internal/prop-types';
 import {platform} from '@enact/core/platform';
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
 import {Component, CSSProperties, ReactElement, RefObject} from 'react';
 
 import {ScrollToFunction} from './Scroller';
@@ -7,113 +9,18 @@ import {ScrollToFunction} from './Scroller';
 import css from './Scroller.module.less';
 
 interface ScrollerBasicProps {
-	/**
-	 * Callback method of scrollTo.
-	 * Normally, `useScroll` should set this value.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
 	cbScrollTo: ScrollToFunction;
-
-	/**
-	 * Prop to check context value if the horizontal Scrollbar exists or not.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
-	isHorizontalScrollbarVisible?: boolean;
-
-	/**
-	 * Prop to check context value if the vertical Scrollbar exists or not.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
-	isVerticalScrollbarVisible: boolean;
-
-	/**
-	 * `true` if RTL, `false` if LTR.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
-	rtl: boolean;
-
-	/**
-	 * Indicates whether the scroll container should perform a dangerously permissive
-	 * DOM containment check.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
-	scrollContainerContainsDangerously?: boolean;
-
-	/**
-	 * Ref for scroll content
-	 *
-	 * @type {Object}
-	 * @private
-	 */
-	scrollContentRef: RefObject<HTMLDivElement>;
-
-	/**
-	 * Specifies the mechanism used to scroll the content.
-	 *
-	 * Valid values are:
-	 * * `'translate'`, and
-	 * * `'native'`.
-	 *
-	 * @type {String}
-	 * @public
-	 */
-	scrollMode?: 'translate' | 'native';
-
-	/**
-	 * Callback function to pass the scroll content handle up to the theme or higher-order components.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
-	setThemeScrollContentHandle?: (handle: unknown) => void;
-
-	/**
-	 * Direction of the scroller.
-	 *
-	 * Valid values are:
-	 * * `'both'`,
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'both'
-	 * @public
-	 */
-	direction: 'both' | 'horizontal' | 'vertical';
-
-	/**
-	 * Customizes the component by mapping the supplied class name to its root element.
-	 *
-	 * @type {String}
-	 * @public
-	 */
-	className?: string;
-
-	/**
-	 * Customizes the component by applying the supplied styles to its root element.
-	 *
-	 * @type {Object}
-	 * @public
-	 */
-	style?: CSSProperties;
-
-	/**
-	 * The contents to be rendered within the scroller.
-	 *
-	 * @type {Element}
-	 * @public
-	 */
 	children: ReactElement;
+	className?: string;
+	direction: 'both' | 'horizontal' | 'vertical';
+	isHorizontalScrollbarVisible?: boolean;
+	isVerticalScrollbarVisible: boolean;
+	rtl: boolean;
+	scrollContainerContainsDangerously?: boolean;
+	scrollContentRef: RefObject<HTMLDivElement>;
+	scrollMode?: 'translate' | 'native';
+	setThemeScrollContentHandle?: (handle: unknown) => void;
+	style?: CSSProperties;
 }
 
 /**
@@ -126,6 +33,57 @@ interface ScrollerBasicProps {
  */
 class ScrollerBasic extends Component<ScrollerBasicProps> {
 	static displayName = 'ui:ScrollerBasic';
+
+	static propTypes = /** @lends ui/Scroller.ScrollerBasic.prototype */ {
+		children: PropTypes.node.isRequired,
+
+		/**
+		 * Callback method of scrollTo.
+		 * Normally, `useScroll` should set this value.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		cbScrollTo: PropTypes.func,
+
+		/**
+		 * Direction of the scroller.
+		 *
+		 * Valid values are:
+		 * * `'both'`,
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'both'
+		 * @public
+		 */
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+		/**
+		 * Prop to check context value if Scrollbar exists or not.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		isVerticalScrollbarVisible: PropTypes.bool,
+
+		/**
+		 * `true` if RTL, `false` if LTR.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
+		 * Ref for scroll content
+		 *
+		 * @type {Object|Function}
+		 * @private
+		 */
+		scrollContentRef: EnactPropTypes.ref
+	};
 
 	componentDidMount () {
 		this.calculateMetrics();

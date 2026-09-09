@@ -3,140 +3,28 @@
  */
 
 import {checkPropTypes, Job} from '@enact/core/util';
+import PropTypes from 'prop-types';
 import {cloneElement, Children, Component, ReactElement} from 'react';
 
 import {Callback, CallbackObject} from '../types';
 
-interface ViewProps {
+import {shape} from './Arranger';
+
+export interface ViewProps {
 	children: ReactElement,
-
-	/**
-	 * Time in milliseconds to complete a transition
-	 *
-	 * @type {Number}
-	 * @required
-	 * @public
-	 */
 	duration: number,
-
-	/**
-	 * Set to `true` when the View should 'appear' without transitioning into the viewport
-	 *
-	 * @type {Boolean}
-	 * @public
-	 */
 	appearing?: boolean,
-
-	/**
-	 * Arranger to control the animation
-	 *
-	 * @type {Arranger}
-	 * @public
-	 */
 	arranger: {enter: Callback, leave: Callback, stay?: Callback},
-
-	/**
-	 * An object containing properties to be passed to each child.
-	 *
-	 * @type {Object}
-	 * @public
-	 */
 	childProps: CallbackObject,
-
-	/**
-	 * Time, in milliseconds, to wait after a view has entered to inform it by passing the
-	 * `enteringProp` as `false`.
-	 *
-	 * @type {Number}
-	 * @default 0
-	 * @public
-	 */
 	enteringDelay?: number,
-
-	/**
-	 * Name of the property to pass to the wrapped view to indicate when it is entering the
-	 * viewport. When `true`, the view has been created but has not transitioned into place.
-	 * When `false`, the view has finished its transition.
-	 *
-	 * The notification can be delayed by setting `enteringDelay`. If not set, the view will not
-	 * be notified of the change in transition.
-	 *
-	 * @type {String}
-	 * @public
-	 */
 	enteringProp: string,
-
-	/**
-	 * A getter function for a DOM node of the parent element
-	 *
-	 * Supplied by `TransitionGroup` when it clones the element `wrapWithView` produces, not by
-	 * the caller of `wrapWithView` itself.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
 	getParentRef?: Callback,
-
-	/**
-	 * Index of the currently 'active' view.
-	 *
-	 * @type {Number}
-	 */
 	index?: number,
-
-	/**
-	 * When `true`, indicates if a view is currently leaving.
-	 *
-	 * Supplied by `TransitionGroup` when it clones the element `wrapWithView` produces, not by
-	 * the caller of `wrapWithView` itself.
-	 *
-	 * @type {Boolean}
-	 */
 	leaving?: boolean,
-
-	/**
-	 * When `true`, indicates if the transition should be animated
-	 *
-	 * @type {Boolean}
-	 * @default true
-	 * @public
-	 */
 	noAnimation: boolean,
-
-	/**
-	 * Index of the previously 'active' view.
-	 *
-	 * @type {Number}
-	 */
 	previousIndex?: number | null,
-
-	/**
-	 * Index of the view node among the rendered children of the parent node
-	 *
-	 * Supplied by `TransitionGroup` when it clones the element `wrapWithView` produces, not by
-	 * the caller of `wrapWithView` itself.
-	 *
-	 * @type {Number}
-	 * @private
-	 */
 	renderedIndex?: number,
-
-	/**
-	 * When `true`, indicates if the transition should be reversed. The effect depends on how the provided
-	 * `arranger` handles reversal.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 */
 	reverseTransition?: boolean | null,
-
-	/**
-	 * When `true`, indicates the current locale uses right-to-left reading order.
-	 *
-	 * The effect depends on how the provided `arranger` handles this option.
-	 *
-	 * @type {Boolean}
-	 */
 	rtl: boolean
 }
 
@@ -156,6 +44,130 @@ const clearEntering = ({entering}: {entering: boolean}) => {
  * @private
  */
 class View extends Component<ViewProps> {
+	static propTypes = /** @lends ui/ViewManager.View.prototype */ {
+		children: PropTypes.node.isRequired,
+
+		/**
+		 * Time in milliseconds to complete a transition
+		 *
+		 * @type {Number}
+		 * @required
+		 * @public
+		 */
+		duration: PropTypes.number.isRequired,
+
+		/**
+		 * Set to `true` when the View should 'appear' without transitioning into the viewport
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		appearing: PropTypes.bool,
+
+		/**
+		 * Arranger to control the animation
+		 *
+		 * @type {Arranger}
+		 * @public
+		 */
+		arranger: shape,
+
+		/**
+		 * An object containing properties to be passed to each child.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		childProps: PropTypes.object,
+
+		/**
+		 * Time, in milliseconds, to wait after a view has entered to inform it by passing the
+		 * `enteringProp` as `false`.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		enteringDelay: PropTypes.number,
+
+		/**
+		 * Name of the property to pass to the wrapped view to indicate when it is entering the
+		 * viewport. When `true`, the view has been created but has not transitioned into place.
+		 * When `false`, the view has finished its transition.
+		 *
+		 * The notification can be delayed by setting `enteringDelay`. If not set, the view will not
+		 * be notified of the change in transition.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		enteringProp: PropTypes.string,
+
+		/**
+		 * A getter function for a DOM node of the parent element
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		getParentRef: PropTypes.func,
+
+		/**
+		 * Index of the currently 'active' view.
+		 *
+		 * @type {Number}
+		 */
+		index: PropTypes.number,
+
+		/**
+		 * When `true`, indicates if a view is currently leaving.
+		 *
+		 * @type {Boolean}
+		 */
+		leaving: PropTypes.bool,
+
+		/**
+		 * When `true`, indicates if the transition should be animated
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		noAnimation: PropTypes.bool,
+
+		/**
+		 * Index of the previously 'active' view.
+		 *
+		 * @type {Number}
+		 */
+		previousIndex: PropTypes.number,
+
+		/**
+		 * Index of the view node among the rendered children of the parent node
+		 *
+		 * @type {Number}
+		 * @private
+		 */
+		renderedIndex: PropTypes.number,
+
+		/**
+		 * When `true`, indicates if the transition should be reversed. The effect depends on how the provided
+		 * `arranger` handles reversal.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 */
+		reverseTransition: PropTypes.bool,
+
+		/**
+		 * When `true`, indicates the current locale uses right-to-left reading order.
+		 *
+		 * The effect depends on how the provided `arranger` handles this option.
+		 *
+		 * @type {Boolean}
+		 */
+		rtl: PropTypes.bool
+	};
+
 	static defaultProps = {
 		appearing: false,
 		enteringDelay: 0,

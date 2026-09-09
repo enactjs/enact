@@ -11,8 +11,9 @@
  * @exports ToggleIconDecorator
  */
 
-import {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
+import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
 import ForwardRef from '../ForwardRef';
@@ -23,74 +24,12 @@ import componentCss from './ToggleIcon.module.less';
 import {CallbackObject} from '../types';
 
 export interface ToggleIconProps {
-	/**
-	 * The icon to use for this component.
-	 *
-	 * @see {@link ui/Icon.IconBase.children}
-	 * @type {String|Object}
-	 * @public
-	 */
 	children: string | CallbackObject,
-
-	/**
-	 * Called with a reference to the root component.
-	 *
-	 * When using {@link ui/ToggleIcon.ToggleIcon}, the `ref` prop is forwarded to this component
-	 * as `componentRef`.
-	 *
-	 * @type {Object|Function}
-	 * @public
-	 */
 	componentRef?: EnactPropTypeShapes.ref,
-
-	/**
-	 * Customizes the component by mapping the supplied collection of CSS class names to the
-	 * corresponding internal elements and states of this component.
-	 *
-	 * The following classes are supported:
-	 *
-	 * * `toggleIcon` - The root class name
-	 * * `icon` - The background node of the button
-	 * * `selected` - Applied to a `selected` button
-	 *
-	 * @type {Object}
-	 * @public
-	 */
 	css?: CallbackObject,
-
-	/**
-	 * Disables `ToggleIcon`.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @public
-	 */
 	disabled?: boolean,
-
-	/**
-	 * CSS classes to be used on the Icon component
-	 *
-	 * @type {String}
-	 * @public
-	 */
 	iconClasses?: string,
-
-	/**
-	 * The component used to render the icon.
-	 *
-	 * @type {String|Component}
-	 * @default 'div'
-	 * @public
-	 */
 	iconComponent?: EnactPropTypeShapes.renderable,
-
-	/**
-	 * Sets whether this control is in the 'on' or 'off' state. `true` for 'on', `false` for 'off'.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @public
-	 */
 	selected?: boolean
 }
 
@@ -106,6 +45,78 @@ const ToggleIconBase = kind({
 	name: 'ui:ToggleIcon',
 
 	_propTypes: /** @lends ui/ToggleIcon.ToggleIconBase.prototype */ {} as ToggleIconProps,
+
+	propTypes: /** @lends ui/ToggleIcon.ToggleIconBase.prototype */ {
+		/**
+		 * The icon to use for this component.
+		 *
+		 * @see {@link ui/Icon.IconBase.children}
+		 * @type {String|Object}
+		 * @public
+		 */
+		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/ToggleIcon.ToggleIcon}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `toggleIcon` - The root class name
+		 * * `icon` - The background node of the button
+		 * * `selected` - Applied to a `selected` button
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
+		/**
+		 * Disables `ToggleIcon`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
+		 * CSS classes to be used on the Icon component
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		iconClasses: PropTypes.string,
+
+		/**
+		 * The component used to render the icon.
+		 *
+		 * @type {String|Component}
+		 * @default 'div'
+		 * @public
+		 */
+		iconComponent: EnactPropTypes.renderable,
+
+		/**
+		 * Sets whether this control is in the 'on' or 'off' state. `true` for 'on', `false` for 'off'.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		selected: PropTypes.bool
+	},
 
 	defaultProps: {
 		disabled: false,

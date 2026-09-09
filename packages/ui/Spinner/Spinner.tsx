@@ -14,105 +14,23 @@
  * @exports SpinnerDecorator
  */
 
-import {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
+import PropTypes from 'prop-types';
+import {CSSProperties} from 'react';
 
 import FloatingLayer from '../FloatingLayer';
 import ForwardRef from '../ForwardRef';
 
 import componentCss from './Spinner.module.less';
-import {CSSProperties} from 'react';
 
 interface SpinnerProps {
-	/**
-	 * A theme-supplied component that performs the animation.
-	 *
-	 * Theme authors can use the `css.running` class to attach the animation CSS.
-	 * This element should accept a `children` prop which takes the form of an optional message
-	 * for the user.
-	 *
-	 * Unlike most other components, this does *not* represent the root rendered element, and
-	 * instead refers to the "spinner" part of this component. The presence of `blockClickOn`
-	 * changes the rendering tree and where this is used.
-	 *
-	 * @type {String|Component}
-	 * @required
-	 * @public
-	 */
 	component: EnactPropTypeShapes.renderable,
-
-	/**
-	 * Determines how far the click-blocking should extend.
-	 *
-	 * * `null` does not block clicking
-	 * * 'screen' blocks entire screen
-	 * * 'container' blocks up to the nearest ancestor with absolute or relative positioning
-	 *
-	 * When `blockClickOn` is either `'screen'` or `'container'`, a translucent scrim can be added
-	 * by setting {@link ui/Spinner.SpinnerBase.scrim|scrim} prop to `true`.
-	 *
-	 * @type {String|null}
-	 * @public
-	 */
 	blockClickOn?: 'screen' | 'container' | null,
-
-	/**
-	 * Centers the spinner horizontally and vertically relative to its containing component.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @public
-	 */
 	centered?: boolean,
-
-	/**
-	 * Called with a reference to the root component.
-	 *
-	 * When using {@link ui/Spinner.Spinner}, the `ref` prop is forwarded to this component
-	 * as `componentRef`.
-	 *
-	 * @type {Object|Function}
-	 * @public
-	 */
 	componentRef?: EnactPropTypeShapes.ref,
-
-	/**
-	 * Customizes the component by mapping the supplied collection of CSS class names to the
-	 * corresponding internal elements and states of this component.
-	 *
-	 * The following classes are supported:
-	 *
-	 * * `spinner` - The root `component` class
-	 * * `spinnerContainer` - Added as a parent in the case of `blockOnClick="container"
-	 * * `blockClickOn` - Applied if interaction should be blocked
-	 * * `centered` - Applied if the `centered` prop is present
-	 * * `running` - Always applied to `component`. Attach animation name property to this class.
-	 * * `scrim` - The blocking layer behind the Spinner
-	 *
-	 * @type {Object}
-	 * @public
-	 */
 	css?: CSSProperties,
-
-	/**
-	 * Halts the animation of the spinner
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @public
-	 */
 	paused?: boolean,
-
-	/**
-	 * Sets a scrim behind the spinner with the `css.scrim` class applied.
-	 *
-	 * Only has an effect when `blockClickOn` is `'screen'` or `'container'` and has no effect
-	 * by default or when blockClickOn is `null`.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @public
-	 */
 	scrim?: boolean
 }
 
@@ -129,6 +47,99 @@ const SpinnerBase = kind({
 	name: 'ui:Spinner',
 
 	_propTypes: /** @lends ui/Spinner.SpinnerBase.prototype */ {} as SpinnerProps,
+
+	propTypes: /** @lends ui/Spinner.SpinnerBase.prototype */ {
+		/**
+		 * A theme-supplied component that performs the animation.
+		 *
+		 * Theme authors can use the `css.running` class to attach the animation CSS.
+		 * This element should accept a `children` prop which takes the form of an optional message
+		 * for the user.
+		 *
+		 * Unlike most other components, this does *not* represent the root rendered element, and
+		 * instead refers to the "spinner" part of this component. The presence of `blockClickOn`
+		 * changes the rendering tree and where this is used.
+		 *
+		 * @type {String|Component}
+		 * @required
+		 * @public
+		 */
+		component: EnactPropTypes.renderable.isRequired,
+
+		/**
+		 * Determines how far the click-blocking should extend.
+		 *
+		 * * `null` does not block clicking
+		 * * 'screen' blocks entire screen
+		 * * 'container' blocks up to the nearest ancestor with absolute or relative positioning
+		 *
+		 * When `blockClickOn` is either `'screen'` or `'container'`, a translucent scrim can be added
+		 * by setting {@link ui/Spinner.SpinnerBase.scrim|scrim} prop to `true`.
+		 *
+		 * @type {String|null}
+		 * @public
+		 */
+		blockClickOn: PropTypes.oneOf(['screen', 'container', null]),
+
+		/**
+		 * Centers the spinner horizontally and vertically relative to its containing component.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		centered: PropTypes.bool,
+
+		/**
+		 * Called with a reference to the root component.
+		 *
+		 * When using {@link ui/Spinner.Spinner}, the `ref` prop is forwarded to this component
+		 * as `componentRef`.
+		 *
+		 * @type {Object|Function}
+		 * @public
+		 */
+		componentRef: EnactPropTypes.ref,
+
+		/**
+		 * Customizes the component by mapping the supplied collection of CSS class names to the
+		 * corresponding internal elements and states of this component.
+		 *
+		 * The following classes are supported:
+		 *
+		 * * `spinner` - The root `component` class
+		 * * `spinnerContainer` - Added as a parent in the case of `blockOnClick="container"
+		 * * `blockClickOn` - Applied if interaction should be blocked
+		 * * `centered` - Applied if the `centered` prop is present
+		 * * `running` - Always applied to `component`. Attach animation name property to this class.
+		 * * `scrim` - The blocking layer behind the Spinner
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		css: PropTypes.object,
+
+		/**
+		 * Halts the animation of the spinner
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		paused: PropTypes.bool,
+
+		/**
+		 * Sets a scrim behind the spinner with the `css.scrim` class applied.
+		 *
+		 * Only has an effect when `blockClickOn` is `'screen'` or `'container'` and has no effect
+		 * by default or when blockClickOn is `null`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		scrim: PropTypes.bool
+	},
 
 	defaultProps: {
 		centered: false,

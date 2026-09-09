@@ -4,8 +4,9 @@
 
 // Using string refs from the source code of ReactTransitionGroup
 
-import {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import {forward, forwardCustom} from '@enact/core/handle';
+import PropTypes from 'prop-types';
 import eqBy from 'ramda/src/eqBy';
 import findIndex from 'ramda/src/findIndex';
 import identity from 'ramda/src/identity';
@@ -18,94 +19,18 @@ import {Children, cloneElement, createElement, createRef, Component, ReactNode, 
 
 import {Callback} from '../types';
 
-export interface TransitionGroupProps /** @lends ui/ViewManager.TransitionGroup.prototype */ {
+export interface TransitionGroupProps {
 	children: ReactNode,
-
-	/**
-	 * Adapts children to be compatible with TransitionGroup
-	 *
-	 * @type {Function}
-	 */
 	childFactory?: Callback,
-
-	/**
-	 * Type of component wrapping the children.
-	 *
-	 * May be a DOM node or a custom React component.
-	 *
-	 * @type {String|Component}
-	 * @default 'div'
-	 */
 	component?: EnactPropTypeShapes.renderable,
-
-	/**
-	 * Called with a reference to {@link ui/ViewManager.TransitionGroup.component|component}
-	 *
-	 * @type {Object|Function}
-	 * @private
-	 */
 	componentRef: EnactPropTypeShapes.ref,
-
-	/**
-	 * Current Index the ViewManager is on
-	 *
-	 * @type {Number}
-	 */
 	currentIndex: number,
-
-	/**
-	 * Called when each view is rendered during initial construction.
-	 *
-	 * @type {Function}
-	 */
 	onAppear: Callback,
-
-	/**
-	 * Called when each view completes its transition into the viewport.
-	 *
-	 * @type {Function}
-	 */
 	onEnter: Callback,
-
-	/**
-	 * Called when each view completes its transition out of the viewport.
-	 *
-	 * @type {Function}
-	 */
 	onLeave: Callback,
-
-	/**
-	 * Called when each view completes its transition within the viewport.
-	 *
-	 * @type {Function}
-	 */
 	onStay: Callback,
-
-	/**
-	 * Called once when all views have completed their transition.
-	 *
-	 * @type {Function}
-	 */
 	onTransition: Callback,
-
-	/**
-	 * Called once before views begin their transition.
-	 *
-	 * @type {Function}
-	 */
 	onWillTransition: Callback,
-
-	/**
-	 * Maximum number of rendered children.
-	 *
-	 * Used to limit how many visible transitions are active at any time.
-	 * A value of 1 would prevent any exit transitions whereas a value of 2,
-	 * the default, would ensure that only 1 view is transitioning on and 1 view is
-	 * transitioning off at a time.
-	 *
-	 * @type {Number}
-	 * @default 2
-	 */
 	size?: number
 }
 
@@ -184,6 +109,97 @@ const forwardOnStay = forward('onStay');
  */
 
 class TransitionGroup extends Component<TransitionGroupProps, TransitionGroupState> {
+	static propTypes = /** @lends ui/ViewManager.TransitionGroup.prototype */ {
+		children: PropTypes.node.isRequired,
+
+		/**
+		 * Adapts children to be compatible with TransitionGroup
+		 *
+		 * @type {Function}
+		 */
+		childFactory: PropTypes.func,
+
+		/**
+		 * Type of component wrapping the children.
+		 *
+		 * May be a DOM node or a custom React component.
+		 *
+		 * @type {String|Component}
+		 * @default 'div'
+		 */
+		component: EnactPropTypes.renderable,
+
+		/**
+		 * Called with a reference to {@link ui/ViewManager.TransitionGroup.component|component}
+		 *
+		 * @type {Object|Function}
+		 * @private
+		 */
+		componentRef: EnactPropTypes.ref,
+
+		/**
+		 * Current Index the ViewManager is on
+		 *
+		 * @type {Number}
+		 */
+		currentIndex: PropTypes.number,
+
+		/**
+		 * Called when each view is rendered during initial construction.
+		 *
+		 * @type {Function}
+		 */
+		onAppear: PropTypes.func,
+
+		/**
+		 * Called when each view completes its transition into the viewport.
+		 *
+		 * @type {Function}
+		 */
+		onEnter: PropTypes.func,
+
+		/**
+		 * Called when each view completes its transition out of the viewport.
+		 *
+		 * @type {Function}
+		 */
+		onLeave: PropTypes.func,
+
+		/**
+		 * Called when each view completes its transition within the viewport.
+		 *
+		 * @type {Function}
+		 */
+		onStay: PropTypes.func,
+
+		/**
+		 * Called once when all views have completed their transition.
+		 *
+		 * @type {Function}
+		 */
+		onTransition: PropTypes.func,
+
+		/**
+		 * Called once before views begin their transition.
+		 *
+		 * @type {Function}
+		 */
+		onWillTransition: PropTypes.func,
+
+		/**
+		 * Maximum number of rendered children.
+		 *
+		 * Used to limit how many visible transitions are active at any time.
+		 * A value of 1 would prevent any exit transitions whereas a value of 2,
+		 * the default, would ensure that only 1 view is transitioning on and 1 view is
+		 * transitioning off at a time.
+		 *
+		 * @type {Number}
+		 * @default 2
+		 */
+		size: PropTypes.number
+	};
+
 	static defaultProps = {
 		childFactory: identity,
 		component: 'div',

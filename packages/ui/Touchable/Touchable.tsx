@@ -11,270 +11,41 @@ import {ElementType, PointerEvent, RefObject} from 'react';
 
 import {configure} from './config';
 
-import {DragConfigPropType} from './Drag';
-import {FlickConfigPropType} from './Flick';
-import {HoldConfigPropType} from './Hold';
-import {PinchConfigPropType} from './Pinch';
+import {dragConfigPropType, DragConfigPropType} from './Drag';
+import {flickConfigPropType, FlickConfigPropType} from './Flick';
+import {holdConfigPropType, HoldConfigPropType} from './Hold';
+import {pinchConfigPropType, PinchConfigPropType} from './Pinch';
 import useTouch, {useTouchConfig} from './useTouch';
 import {Callback} from '../types';
+import PropTypes from 'prop-types';
 
 export interface TouchableProps {
-	/**
-	 * Disables the component.
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Boolean}
-	 * @default false
-	 * @public
-	 */
-	disabled?: boolean,
-
-	/**
-	 * Instance-specific overrides of the drag configuration.
-	 *
-	 * @see {@link ui/Touchable.configure}
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Object}
-	 * @public
-	 */
-	dragConfig: DragConfigPropType,
-
-	/**
-	 * Instance-specific overrides of the flick configuration.
-	 *
-	 * @see {@link ui/Touchable.configure}
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Object}
-	 * @public
-	 */
-	flickConfig: FlickConfigPropType,
-
-	/**
-	 * Instance-specific overrides of the hold configuration.
-	 *
-	 * @see {@link ui/Touchable.configure}
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Object}
-	 * @public
-	 */
-	holdConfig: HoldConfigPropType,
-
-	/**
-	 * Prevents resuming the touch events and gestures when re-entering the component.
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Boolean}
-	 * @default false
-	 * @public
-	 */
-	noResume?: boolean,
-
-	/**
-	 * Event handler for 'down' pointer events.
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Function}
-	 * @public
-	 */
-	onDown?: Callback<void, PointerEvent<HTMLElement>>,
-
-	/**
-	 * Event handler for a drag gesture.
-	 *
-	 * Event payload includes:
-	 *
-	 * * `type` - Type of event, `'onDrag'`
-	 * * `x` - Horizontal position of the drag, relative to the viewport
-	 * * `y` - Vertical position of the drag, relative to the viewport
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Function}
-	 * @public
-	 */
-	onDrag?: Callback<any, {type: 'onDrag', x: number, y: number}>,
-
-	/**
-	 * Event handler for the end of a drag gesture.
-	 *
-	 * Event payload includes:
-	 *
-	 * * `type` - Type of event, `'onDragEnd'`
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Function}
-	 * @public
-	 */
+	disabled?: boolean
+	dragConfig: DragConfigPropType
+	flickConfig: FlickConfigPropType
+	holdConfig: HoldConfigPropType
+	noResume?: boolean
+	onDown?: Callback<void, PointerEvent<HTMLElement>>
+	onDrag?: Callback<any, {type: 'onDrag', x: number, y: number}>
 	onDragEnd?: Callback<any, {type: 'onDragEnd'}>
-
-	/**
-	 * Event handler for the start of a drag gesture.
-	 *
-	 * Event payload includes:
-	 *
-	 * * `type` - Type of event, `'onDragStart'`
-	 * * `x` - Horizontal position of the drag, relative to the viewport
-	 * * `y` - Vertical position of the drag, relative to the viewport
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Function}
-	 * @public
-	 */
-	onDragStart: Callback<any, {type: 'onDragStart', x: number, y: number}>,
-
-	/**
-	 * Event handler for a flick gesture.
-	 *
-	 * Event payload includes:
-	 *
-	 * * `type` - Type of event, `'onFlick'`
-	 * * `direction` - Primary direction of the flick, either `'horizontal'` or `'vertical'`
-	 * * `velocity` - Velocity of flick
-	 * * `velocityX` - Velocity of flick along te horizontal axis
-	 * * `velocityY` - Velocity of flick along te vertical axis
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Function}
-	 * @public
-	 */
+	onDragStart: Callback<any, {type: 'onDragStart', x: number, y: number}>
 	onFlick?: Callback<any, {
 		type: 'onFlick',
 		direction: 'horizontal' | 'vertical',
 		velocity: number,
 		velocityX: number,
 		velocityY: number
-	}>,
-
-	/**
-	 * Event handler for hold pulse events.
-	 *
-	 * Event payload includes:
-	 *
-	 * * `type` - Type of event, `'onHold'`
-	 * * `time` - Time, in milliseconds, since the hold began
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Function}
-	 * @public
-	 */
+	}>
 	onHold?: Callback<any, {type: 'onHold', time: number}>
-
-	/**
-	 * Event handler for the end of hold events.
-	 *
-	 * Event payload includes:
-	 *
-	 * * `type` - Type of event, `'onHoldEnd'`
-	 * * `time` - Time, in milliseconds, since the hold began
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Function}
-	 * @public
-	 */
 	onHoldEnd?: Callback<any, {type: 'onHoldEnd', time: number}>
-
-	/**
-	 * Event handler for hold events.
-	 *
-	 * Event payload includes:
-	 *
-	 * * `type` - Type of event, `'onHoldStart'`
-	 * * `name` - The name of the hold as configured in the events list
-	 * * `time` - Time, in milliseconds, configured for this hold which may vary slightly
-	 *            from time since the hold began
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Function}
-	 * @public
-	 */
-	onHoldStart?: Callback<any, {type: 'onHoldStart', name: string, time: number}>,
-
-	/**
-	 * Event handler for 'move' pointer events.
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Function}
-	 * @public
-	 */
-	onMove?: Callback<void, PointerEvent<HTMLElement>>,
-
-	/**
-	 * Event handler for a pinch gesture.
-	 *
-	 * Event payload includes:
-	 *
-	 * * `type` - Type of event, `'onPinch'`
-	 * * `scale` - The scale factor, calculated from the distance while pinching.
-	 *             The default value is 1.0. The value would be a number between
-	 *             pinchConfig.minScale and pinchConfig.maxScale.
-	 * * `coords` - The coordinates array of the touch point, relative to the viewport
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Function}
-	 * @public
-	 */
+	onHoldStart?: Callback<any, {type: 'onHoldStart', name: string, time: number}>
+	onMove?: Callback<void, PointerEvent<HTMLElement>>
 	onPinch?: Callback<any, {type: 'onPinch', scale: number, coords:  Array<{ x: number; y: number; }>}>
-
-	/**
-	 * Event handler for the end of a pinch gesture.
-	 *
-	 * Event payload includes:
-	 *
-	 * * `type` - Type of event, `'onPinchEnd'`
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Function}
-	 * @public
-	 */
 	onPinchEnd?: Callback<any, {type: 'onPinchEnd'}>
-
-	/**
-	 * Event handler for the start of a pinch gesture.
-	 *
-	 * Event payload includes:
-	 *
-	 * * `type` - Type of event, `'onPinchStart'`
-	 * * `coords` - The coordinates array of the touch point, relative to the viewport
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Function}
-	 * @public
-	 */
 	onPinchStart?: Callback<any, {type: 'onPinchStart', coords: Array<{x: number, y: number}>}>
-
-	/**
-	 * Event handler for 'tap' pointer events.
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Function}
-	 * @public
-	 */
-	onTap?: Callback<void, PointerEvent<HTMLElement>>,
-
-	/**
-	 * Event handler for 'up' pointer events.
-	 *
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Function}
-	 * @public
-	 */
-	onUp?: Callback<void, PointerEvent<HTMLElement>>,
-
-	/**
-	 * Instance-specific overrides of the pinch configuration.
-	 *
-	 * @see {@link ui/Touchable.configure}
-	 * @memberof ui/Touchable.Touchable.prototype
-	 * @type {Object}
-	 * @public
-	 */
-	pinchConfig: PinchConfigPropType,
-
-	/**
-	 * Forwards a reference to the DOM element.
-	 *
-	 * @type {Object}
-	 * @private
-	 */
+	onTap?: Callback<void, PointerEvent<HTMLElement>>
+	onUp?: Callback<void, PointerEvent<HTMLElement>>
+	pinchConfig: PinchConfigPropType
 	ref?: RefObject<any>
 }
 
@@ -386,6 +157,260 @@ const Touchable = hoc(defaultConfig, (config: TouchableConfig, Wrapped: ElementT
 		return (
 			<Wrapped {...propsForWrapped} ref={ref} />
 		);
+	};
+
+	Touchable.propTypes = {
+		/**
+		 * Disables the component.
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
+		 * Instance-specific overrides of the drag configuration.
+		 *
+		 * @see {@link ui/Touchable.configure}
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Object}
+		 * @public
+		 */
+		dragConfig: dragConfigPropType,
+
+		/**
+		 * Instance-specific overrides of the flick configuration.
+		 *
+		 * @see {@link ui/Touchable.configure}
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Object}
+		 * @public
+		 */
+		flickConfig: flickConfigPropType,
+
+		/**
+		 * Instance-specific overrides of the hold configuration.
+		 *
+		 * @see {@link ui/Touchable.configure}
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Object}
+		 * @public
+		 */
+		holdConfig: holdConfigPropType,
+
+		/**
+		 * Prevents resuming the touch events and gestures when re-entering the component.
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noResume: PropTypes.bool,
+
+		/**
+		 * Event handler for 'down' pointer events.
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onDown: PropTypes.func,
+
+		/**
+		 * Event handler for a drag gesture.
+		 *
+		 * Event payload includes:
+		 *
+		 * * `type` - Type of event, `'onDrag'`
+		 * * `x` - Horizontal position of the drag, relative to the viewport
+		 * * `y` - Vertical position of the drag, relative to the viewport
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onDrag: PropTypes.func,
+
+		/**
+		 * Event handler for the end of a drag gesture.
+		 *
+		 * Event payload includes:
+		 *
+		 * * `type` - Type of event, `'onDragEnd'`
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onDragEnd: PropTypes.func,
+
+		/**
+		 * Event handler for the start of a drag gesture.
+		 *
+		 * Event payload includes:
+		 *
+		 * * `type` - Type of event, `'onDragStart'`
+		 * * `x` - Horizontal position of the drag, relative to the viewport
+		 * * `y` - Vertical position of the drag, relative to the viewport
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onDragStart: PropTypes.func,
+
+		/**
+		 * Event handler for a flick gesture.
+		 *
+		 * Event payload includes:
+		 *
+		 * * `type` - Type of event, `'onFlick'`
+		 * * `direction` - Primary direction of the flick, either `'horizontal'` or `'vertical'`
+		 * * `velocity` - Velocity of flick
+		 * * `velocityX` - Velocity of flick along te horizontal axis
+		 * * `velocityY` - Velocity of flick along te vertical axis
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onFlick: PropTypes.func,
+
+		/**
+		 * Event handler for hold pulse events.
+		 *
+		 * Event payload includes:
+		 *
+		 * * `type` - Type of event, `'onHold'`
+		 * * `time` - Time, in milliseconds, since the hold began
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onHold: PropTypes.func,
+
+		/**
+		 * Event handler for the end of hold events.
+		 *
+		 * Event payload includes:
+		 *
+		 * * `type` - Type of event, `'onHoldEnd'`
+		 * * `time` - Time, in milliseconds, since the hold began
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onHoldEnd: PropTypes.func,
+
+		/**
+		 * Event handler for hold events.
+		 *
+		 * Event payload includes:
+		 *
+		 * * `type` - Type of event, `'onHoldStart'`
+		 * * `name` - The name of the hold as configured in the events list
+		 * * `time` - Time, in milliseconds, configured for this hold which may vary slightly
+		 *            from time since the hold began
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onHoldStart: PropTypes.func,
+
+		/**
+		 * Event handler for 'move' pointer events.
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onMove: PropTypes.func,
+
+		/**
+		 * Event handler for a pinch gesture.
+		 *
+		 * Event payload includes:
+		 *
+		 * * `type` - Type of event, `'onPinch'`
+		 * * `scale` - The scale factor, calculated from the distance while pinching.
+		 *             The default value is 1.0. The value would be a number between
+		 *             pinchConfig.minScale and pinchConfig.maxScale.
+		 * * `coords` - The coordinates array of the touch point, relative to the viewport
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onPinch: PropTypes.func,
+
+		/**
+		 * Event handler for the end of a pinch gesture.
+		 *
+		 * Event payload includes:
+		 *
+		 * * `type` - Type of event, `'onPinchEnd'`
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onPinchEnd: PropTypes.func,
+
+		/**
+		 * Event handler for the start of a pinch gesture.
+		 *
+		 * Event payload includes:
+		 *
+		 * * `type` - Type of event, `'onPinchStart'`
+		 * * `coords` - The coordinates array of the touch point, relative to the viewport
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onPinchStart: PropTypes.func,
+
+		/**
+		 * Event handler for 'tap' pointer events.
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onTap: PropTypes.func,
+
+		/**
+		 * Event handler for 'up' pointer events.
+		 *
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		onUp: PropTypes.func,
+
+		/**
+		 * Instance-specific overrides of the pinch configuration.
+		 *
+		 * @see {@link ui/Touchable.configure}
+		 * @memberof ui/Touchable.Touchable.prototype
+		 * @type {Object}
+		 * @public
+		 */
+		pinchConfig: pinchConfigPropType,
+
+		/**
+		 * Forwards a reference to the DOM element.
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		ref: PropTypes.shape({current: PropTypes.any})
 	};
 
 	Touchable.displayName = 'Touchable';

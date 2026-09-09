@@ -9,6 +9,7 @@ import handle, {forwardCustom} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import useHandlers from '@enact/core/useHandlers';
 import {cap, checkPropTypes} from '@enact/core/util';
+import PropTypes from 'prop-types';
 import pick from 'ramda/src/pick';
 import {ElementType, SyntheticEvent, useRef} from 'react';
 import warning from 'warning';
@@ -274,6 +275,54 @@ const ToggleableHOC = hoc(defaultConfig, (config: ToggleableConfig, Wrapped: Ele
 			<Wrapped {...updated} />
 		);
 	}
+
+	Toggleable.propTypes = {
+		/**
+		 * Default toggled state applied at construction when the toggled prop is `undefined` or
+		 * `null`.
+		 *
+		 * @name defaultSelected
+		 * @memberof ui/Toggleable.Toggleable.prototype
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		[defaultPropKey]: PropTypes.bool,
+
+		/**
+		 * Whether or not the component is in a disabled state.
+		 *
+		 * @memberof ui/Toggleable.Toggleable.prototype
+		 * @type {Boolean}
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
+		 * Current toggled state.
+		 *
+		 * When set at construction, the component is considered 'controlled' and will only
+		 * update its internal value when updated by new props. If undefined, the component
+		 * is 'uncontrolled' and `Toggleable` will manage the toggled state using callbacks
+		 * defined by its configuration.
+		 *
+		 * @name selected
+		 * @memberof ui/Toggleable.Toggleable.prototype
+		 * @type {Boolean}
+		 * @public
+		 */
+		[prop]: PropTypes.bool,
+
+		/**
+		 * Event callback to notify that state should be toggled.
+		 *
+		 * @name onToggle
+		 * @memberof ui/Toggleable.Toggleable.prototype
+		 * @type {Function}
+		 * @public
+		 */
+		[toggle]: PropTypes.func
+	};
 
 	return Toggleable;
 });
