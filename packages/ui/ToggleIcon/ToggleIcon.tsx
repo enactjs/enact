@@ -11,7 +11,7 @@
  * @exports ToggleIconDecorator
  */
 
-import {EnactPropTypes} from '@enact/core/internal/prop-types';
+import {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import compose from 'ramda/src/compose';
 
@@ -41,7 +41,7 @@ export interface ToggleIconProps {
 	 * @type {Object|Function}
 	 * @public
 	 */
-	componentRef?: EnactPropTypes.ref,
+	componentRef?: EnactPropTypeShapes.ref,
 
 	/**
 	 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -82,7 +82,7 @@ export interface ToggleIconProps {
 	 * @default 'div'
 	 * @public
 	 */
-	iconComponent?: EnactPropTypes.renderable,
+	iconComponent?: EnactPropTypeShapes.renderable,
 
 	/**
 	 * Sets whether this control is in the 'on' or 'off' state. `true` for 'on', `false` for 'off'.

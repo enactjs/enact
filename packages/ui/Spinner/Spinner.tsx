@@ -14,7 +14,7 @@
  * @exports SpinnerDecorator
  */
 
-import {EnactPropTypes} from '@enact/core/internal/prop-types';
+import {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 
 import FloatingLayer from '../FloatingLayer';
@@ -39,7 +39,7 @@ interface SpinnerProps {
 	 * @required
 	 * @public
 	 */
-	component: EnactPropTypes.renderable,
+	component: EnactPropTypeShapes.renderable,
 
 	/**
 	 * Determines how far the click-blocking should extend.
@@ -74,7 +74,7 @@ interface SpinnerProps {
 	 * @type {Object|Function}
 	 * @public
 	 */
-	componentRef?: EnactPropTypes.ref,
+	componentRef?: EnactPropTypeShapes.ref,
 
 	/**
 	 * Customizes the component by mapping the supplied collection of CSS class names to the

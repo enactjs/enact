@@ -17,7 +17,7 @@
  */
 
 import {forward, forwardCustom} from '@enact/core/handle';
-import {EnactPropTypes} from '@enact/core/internal/prop-types';
+import {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
 import {
@@ -47,7 +47,7 @@ export interface TransitionBaseProps {
 	 * @default null
 	 * @public
 	 */
-	childRef?: EnactPropTypes.ref | null,
+	childRef?: EnactPropTypeShapes.ref | null,
 
 	/**
 	 * The node to be transitioned.

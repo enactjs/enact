@@ -4,7 +4,7 @@
 
 // Using string refs from the source code of ReactTransitionGroup
 
-import {EnactPropTypes} from '@enact/core/internal/prop-types';
+import {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import {forward, forwardCustom} from '@enact/core/handle';
 import eqBy from 'ramda/src/eqBy';
 import findIndex from 'ramda/src/findIndex';
@@ -36,7 +36,7 @@ export interface TransitionGroupProps /** @lends ui/ViewManager.TransitionGroup.
 	 * @type {String|Component}
 	 * @default 'div'
 	 */
-	component?: EnactPropTypes.renderable,
+	component?: EnactPropTypeShapes.renderable,
 
 	/**
 	 * Called with a reference to {@link ui/ViewManager.TransitionGroup.component|component}
@@ -44,7 +44,7 @@ export interface TransitionGroupProps /** @lends ui/ViewManager.TransitionGroup.
 	 * @type {Object|Function}
 	 * @private
 	 */
-	componentRef: EnactPropTypes.ref,
+	componentRef: EnactPropTypeShapes.ref,
 
 	/**
 	 * Current Index the ViewManager is on

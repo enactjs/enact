@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import {EnactPropTypes} from '@enact/core/internal/prop-types';
+import {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import {checkPropTypes, clamp, shallowEqual} from '@enact/core/util';
@@ -201,7 +201,7 @@ export interface VirtualListBasicProps /** @lends ui/VirtualList.VirtualListBasi
 	 * @type {Object|Function}}
 	 * @private
 	 */
-	scrollContentRef: EnactPropTypes.ref,
+	scrollContentRef: EnactPropTypeShapes.ref,
 
 	/**
 	 * Specifies how to scroll.
