@@ -25,12 +25,12 @@ class Base extends Component<Record<string, any>, Record<string, any>> {
 		this.countRenders = 0;
 	}
 
-	/** Number of times `render()` has been called; used by the test to verify re-render skipping. */
-	countRenders: number;
-
 	componentDidUpdate (prevProps: Record<string, any>) {
 		checkPropTypes(this, this.props, prevProps);
 	}
+
+	/** Number of times `render()` has been called; used by the test to verify re-render skipping. */
+	countRenders: number;
 
 	render () {
 		data = this.props;
