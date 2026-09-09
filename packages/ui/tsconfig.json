@@ -19,26 +19,12 @@
     "target": "es2022",
     "types": ["jest", "node"]
   },
-  "include": [
-    "Scroller/**/*",
-    "Skinnable/**/*",
-    "Slider/**/*",
-    "Slottable/**/*",
-    "Spinner/**/*",
-    "Toggleable/**/*",
-    "ToggleIcon/**/*",
-    "Touchable/**/*",
-    "Transition/**/*",
-    "types/**/*",
-    "useControlledState/**/*",
-    "useScroll/**/*",
-    "ViewManager/**/*",
-    "VirtualList/**/*",
-    "index.ts"
-  ],
+  "include": ["**/*.ts", "**/*.tsx", "types/**/*.d.ts"],
   "exclude": [
     "build",
     "coverage",
-    "node_modules"
+    "node_modules",
+    "**/*-specs.ts",
+    "**/*-specs.tsx"
   ]
 }

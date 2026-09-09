@@ -49,10 +49,14 @@
     "warning": "^4.0.3"
   },
   "devDependencies": {
+    "@types/invariant": "^2.2.37",
     "@types/jest": "^30.0.0",
     "@types/node": "^26.4.1",
     "@types/prop-types": "^15.7.15",
+    "@types/ramda": "^0.32.0",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4"
+    "@types/react-dom": "^19.2.4",
+    "@types/react-is": "^19.2.0",
+    "@types/warning": "^3.0.4"
   }
 }
