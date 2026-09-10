@@ -14,7 +14,7 @@ import {checkPropTypes, applyDefaultProps} from '../util';
 
 import computed from './computed';
 import styles from './styles';
-import {FunctionalKindConfig} from './types';
+import {ApplyDefaults, BoundHandlers, FunctionalKindConfig, KindComponent} from './types';
 import {bindInlineHandlers} from './util';
 
 // Fallback context when none is specified.
@@ -127,7 +127,7 @@ const NoContext = createContext(null);
  * @memberof core/kind
  * @private
  */
-const functionalKind = (config: FunctionalKindConfig) => {
+const functionalKind = <P extends CallbackObject = CallbackObject, C extends CallbackObject = CallbackObject, D extends Partial<Record<keyof P, any>> = {}, H extends object = {}>(config: FunctionalKindConfig<P, C, D, H>): KindComponent<P, D> => {
 	const {
 		computed: cfgComputed,
 		contextType = NoContext,
@@ -150,7 +150,7 @@ const functionalKind = (config: FunctionalKindConfig) => {
 		return props;
 	};
 
-	const useRenderKind = (props: CallbackObject, context: Context<any>) => useRender(prepareKindProps(props, context), context);
+	const useRenderKind = (props: CallbackObject, context: Context<any>) => useRender(prepareKindProps(props, context) as ApplyDefaults<P, D> & C & BoundHandlers<H>, context);
 
 	const defaultPropKeys = defaultProps ? Object.keys(defaultProps) : null;
 	const handlerKeys     = handlers     ? Object.keys(handlers)     : null;
@@ -198,7 +198,7 @@ const functionalKind = (config: FunctionalKindConfig) => {
 
 		const updated = applyDefaultProps({...props}, inlineDefaultProps, inlineDefaultPropKeys);
 
-		return useRender(prepareKindProps(bindInlineHandlers(updated, inlineHandlers, inlineHandlerKeys, context), context), context);
+		return useRender(prepareKindProps(bindInlineHandlers(updated, inlineHandlers, inlineHandlerKeys, context), context) as ApplyDefaults<P, D> & C & BoundHandlers<H>, context);
 	};
 
 	return Component;

@@ -15,7 +15,7 @@ import {checkPropTypes, applyDefaultProps} from '../util';
 
 import computed from './computed';
 import styles from './styles';
-import {ApplyDefaults, KindComponent, KindConfig} from './types';
+import {ApplyDefaults, BoundHandlers, KindComponent, KindConfig} from './types';
 import {bindInlineHandlers} from './util';
 
 // Because contextType is optional and hooks must be called in the same order, we need a fallback
@@ -132,7 +132,7 @@ const NoContext: Context<any> = createContext(null);
  * @see {@link core/handle}
  * @public
  */
-const kind = <P extends CallbackObject = CallbackObject, C extends CallbackObject = CallbackObject, D extends Partial<P> = {}>(config: KindConfig<P, C, D>): KindComponent<P, D> => {
+const kind = <P extends CallbackObject = CallbackObject, C extends CallbackObject = CallbackObject, D extends Partial<Record<keyof P, any>> = {}, H extends object = {}>(config: KindConfig<P, C, D, H>): KindComponent<P, D> => {
 	const {
 		computed: cfgComputed,
 		contextType = NoContext,
@@ -154,7 +154,7 @@ const kind = <P extends CallbackObject = CallbackObject, C extends CallbackObjec
 		if (renderStyles && typeof renderStyles === 'function') props = renderStyles(props, context);
 		if (renderComputed && typeof renderComputed === 'function') props = renderComputed(props, context);
 
-		return render(props as ApplyDefaults<P, D> & C, context);
+		return render(props as ApplyDefaults<P, D> & C & BoundHandlers<H>, context);
 	};
 
 	const prepareKindProps = (props: CallbackObject, context: Context<any>): CallbackObject => {
@@ -171,7 +171,7 @@ const kind = <P extends CallbackObject = CallbackObject, C extends CallbackObjec
 	// `render` is user-supplied and may call hooks, so the render path taken during an actual React
 	// render must itself be a hook. The `use` prefix is what tells React Compiler (and the
 	// rules-of-hooks lint) that this call may run hooks.
-	const useRenderKind = (props: CallbackObject, context: Context<any>): ReactElement | null => render(prepareKindProps(props, context), context);
+	const useRenderKind = (props: CallbackObject, context: Context<any>): ReactElement | null => render(prepareKindProps(props, context) as ApplyDefaults<P, D> & C & BoundHandlers<H>, context);
 
 	// In 4.x, this branch will become the only supported version and the class branch will be
 	// removed.

@@ -22,6 +22,14 @@ export type ApplyDefaults<P, D> = P & Required<Pick<P, Extract<keyof P, keyof D>
 export type ComputedCallbackObject<P> = P & {style: CSSProperties, styler: {join: Callback<string>, append: Callback<string>}}
 
 /**
+ * The `handlers` block as it reaches `render`: `kind()` binds each handler to the current props
+ * and context and merges the result into the props, so only the keys carry over.
+ *
+ * @template H The inferred `handlers` object.
+ */
+export type BoundHandlers<H> = {[K in keyof H]: Callback};
+
+/**
  * Merges your custom component props with standard React HTML attributes (like onClick, className).
  * If your custom props share a key with HTMLAttributes (e.g., onChange), your custom type wins.
  *
@@ -34,14 +42,14 @@ export type PropsWithDOM<P> = P & Omit<HTMLAttributes<HTMLDivElement>, keyof P>;
  */
 export type StylesBlock = {
 	/** The CSS module map or stylesheet object of the component. */
-	css: CSSProperties;
+	css: Record<string, string>;
 	/** The static local class name to apply to the root element. */
-	className: string;
+	className?: string;
 	/**
 	 * Specifies which class names are overridable.
 	 * If `true`, all class names of the component CSS become public.
 	 */
-	publicClassNames: boolean | string | string[];
+	publicClassNames?: boolean | string | string[];
 }
 
 /**
@@ -87,8 +95,9 @@ export interface RenderFunction<FinalProps = CallbackObject> {
  * @template P The custom props interface (inferred via `_propTypes`).
  * @template C The inferred return values from the `computed` block.
  * @template D The inferred object keys from `defaultProps`.
+ * @template H The inferred keys from the `handlers` block, bound and injected into `render`.
  */
-export interface KindConfig<P = CallbackObject, C = {}, D = {}> {
+export interface KindConfig<P = CallbackObject, C = {}, D = {}, H = {}> {
 	/**
 	 * **TYPE TOKEN:** Do not pass a value here at runtime.
 	 * Cast this property to your props interface (e.g., `_propTypes: {} as MyProps`)
@@ -113,7 +122,7 @@ export interface KindConfig<P = CallbackObject, C = {}, D = {}> {
 	/** Configures styles, merging local CSS module classes with user-provided class names. */
 	styles?: StylesBlock;
 	/** Adds event handlers that are cached between renders to prevent recreation. */
-	handlers?: CallbackObject<HandlerFunction>;
+	handlers?: {[K in keyof H]: HandlerFunction};
 	/**
 	 * Adds dynamically computed properties. The returned values from these functions
 	 * are automatically injected into the `props` argument of your `render` function.
@@ -128,7 +137,7 @@ export interface KindConfig<P = CallbackObject, C = {}, D = {}> {
 	 * The final render function. It receives a heavily strictly-typed props object
 	 * containing your base props, applied defaults, and extracted computed values.
 	 */
-	render: RenderFunction<ApplyDefaults<P, D> & C>;
+	render: RenderFunction<ApplyDefaults<P, D> & C & BoundHandlers<H>>;
 }
 
 /**
@@ -137,7 +146,8 @@ export interface KindConfig<P = CallbackObject, C = {}, D = {}> {
  * @template P The custom props interface.
  * @template C The inferred return values from the `computed` block.
  * @template D The inferred object keys from `defaultProps`.
+ * @template H The inferred keys from the `handlers` block, bound and injected into `useRender`.
  */
-export interface FunctionalKindConfig<P = CallbackObject, C = {}, D = {}> extends Omit<KindConfig<P, C, D>, 'functional' | 'render'> {
-	useRender: RenderFunction<ApplyDefaults<P, D> & C>;
+export interface FunctionalKindConfig<P = CallbackObject, C = {}, D = {}, H = {}> extends Omit<KindConfig<P, C, D, H>, 'functional' | 'render'> {
+	useRender: RenderFunction<ApplyDefaults<P, D> & C & BoundHandlers<H>>;
 }

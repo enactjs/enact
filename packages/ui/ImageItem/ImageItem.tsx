@@ -7,10 +7,11 @@
  * @exports ImageItemDecorator
  */
 
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import {ReactNode} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
@@ -18,7 +19,18 @@ import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
 import componentCss from './ImageItem.module.less';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
+
+export interface ImageItemBaseProps {
+	children?: ReactNode;
+	componentRef?: EnactPropTypeShapes.ref;
+	css: Record<string, string>;
+	imageComponent?: EnactPropTypeShapes.componentOverride;
+	orientation?: 'horizontal' | 'vertical';
+	placeholder?: string;
+	selected?: boolean;
+	slotBefore?: ReactNode;
+	src?: string | Record<string, string>;
+}
 
 // Adapts ComponentOverride to work within Cell since both use the component prop
 function ImageOverride ({imageComponent, ...rest}: {imageComponent?: any; [key: string]: any}) {
@@ -38,6 +50,8 @@ function ImageOverride ({imageComponent, ...rest}: {imageComponent?: any; [key: 
  */
 const ImageItemBase = kind({
 	name: 'ui:ImageItem',
+
+	_propTypes: {} as ImageItemBaseProps,
 
 	propTypes: /** @lends ui/ImageItem.ImageItemBase.prototype */ {
 		/**
@@ -153,8 +167,7 @@ const ImageItemBase = kind({
 		})
 	},
 
-	render: ({children, componentRef, css, imageComponent, orientation, placeholder, slotBefore, src, ...rest}) => {
-		delete rest.selected;
+	render: ({children, componentRef, css, imageComponent, orientation, placeholder, selected, slotBefore, src, ...rest}) => {
 
 		const isHorizontal = orientation === 'horizontal';
 		const Component = isHorizontal ? Row : Column;
@@ -187,7 +200,7 @@ const ImageItemBase = kind({
 			</Component>
 		);
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 /**
  * A higher-order component that adds behaviors to an

@@ -1,13 +1,28 @@
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import {forProp, forwardCustom, handle, stop} from '@enact/core/handle';
 import kind from '@enact/core/kind';
+import {Callback} from '@enact/core/types';
 import PropTypes from 'prop-types';
-import {Children, Fragment} from 'react';
+import {Children, Fragment, ReactNode} from 'react';
 
 import componentCss from './Marquee.module.less';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 const isEventSource = (ev: any) => ev.target === ev.currentTarget;
+
+export interface MarqueeBaseProps {
+	alignment?: 'left' | 'right' | 'center';
+	animating?: boolean;
+	children?: ReactNode;
+	clientRef?: EnactPropTypeShapes.ref;
+	css?: Record<string, string>;
+	distance?: number;
+	onMarqueeComplete?: Callback;
+	overflow?: 'clip' | 'ellipsis';
+	rtl?: boolean;
+	spacing?: number;
+	speed?: number;
+	willAnimate?: boolean;
+}
 
 /**
  * Marquees the children of the component.
@@ -21,6 +36,8 @@ const isEventSource = (ev: any) => ev.target === ev.currentTarget;
  */
 const MarqueeBase = kind({
 	name: 'ui:Marquee',
+
+	_propTypes: {} as MarqueeBaseProps,
 
 	propTypes: /** @lends ui/Marquee.MarqueeBase.prototype */ {
 
@@ -236,15 +253,12 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({applyOffset, children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, rtl, ...rest}) => {
+	render: ({applyOffset, children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, rtl, spacing, willAnimate, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.distance;
-		delete rest.onMarqueeComplete;
 		delete rest.overflow;
-		delete rest.spacing;
 		delete rest.speed;
-		delete rest.willAnimate;
 
 		return (
 			<div {...rest}>
@@ -257,7 +271,7 @@ const MarqueeBase = kind({
 					{children}
 					{duplicate ? (
 						<Fragment>
-							<div className={css.spacing} ref={applyOffset} />
+							<div className={css?.spacing} ref={applyOffset} />
 							<span dir={rtl ? "rtl" : "ltr"}>
 								{children}
 							</span>
@@ -267,7 +281,7 @@ const MarqueeBase = kind({
 			</div>
 		);
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 export default MarqueeBase;
 export {

@@ -42,7 +42,7 @@ export interface TransitionBaseProps {
 	children: ReactElement,
 	clipHeight?: number | null,
 	clipWidth?: number | null,
-	css?: CallbackObject<string>,
+	css: CallbackObject<string>,
 	direction?: 'up' | 'right' | 'down' | 'left',
 	duration?: string | number,
 	noAnimation?: boolean,

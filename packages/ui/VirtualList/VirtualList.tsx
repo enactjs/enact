@@ -43,10 +43,7 @@ export interface VirtualListProps {
 	verticalScrollbar: 'auto' | 'visible' | 'hidden'
 }
 
-export interface VirtualGridListProps extends VirtualListProps {
-	onScrollStart: Callback<any, {scrollLeft: number, scrollTop: number, moreInfo: {firstVisibleIndex: number, lastVisibleIndex: number}}>,
-	onScrollStop: Callback<any, {scrollLeft: number, scrollTop: number, moreInfo: {firstVisibleIndex: number, lastVisibleIndex: number}}>,
-}
+export interface VirtualGridListProps extends VirtualListProps {}
 
 const nop = () => {};
 
@@ -78,9 +75,8 @@ const virtualListDefaultProps: VirtualListProps = {
  * @ui
  * @public
  */
-const VirtualList = (props: VirtualListProps) => {
+const VirtualList = (props: Partial<VirtualListProps>) => {
 	checkPropTypes(VirtualList, props);
-
 	// Hooks
 
 	const virtualListProps = setDefaultProps(props, virtualListDefaultProps);
@@ -358,7 +354,7 @@ const virtualGridListDefaultProps: VirtualGridListProps = {
  * @ui
  * @public
  */
-const VirtualGridList = (props: VirtualGridListProps) => {
+const VirtualGridList = (props: Partial<VirtualGridListProps>) => {
 	checkPropTypes(VirtualGridList, props);
 
 	const virtualGridListProps = setDefaultProps(props, virtualGridListDefaultProps);

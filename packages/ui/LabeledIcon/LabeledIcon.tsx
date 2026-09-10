@@ -7,11 +7,11 @@
  * @exports LabeledIconDecorator
  */
 
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {isValidElement} from 'react';
+import {ComponentType, isValidElement, ReactElement, ReactNode} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
@@ -19,7 +19,19 @@ import {CellBase, LayoutBase} from '../Layout';
 import Slottable from '../Slottable';
 
 import componentCss from './LabeledIcon.module.less';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
+
+export interface LabeledIconBaseProps {
+	children?: ReactNode;
+	componentRef?: EnactPropTypeShapes.ref;
+	css: Record<string, string>;
+	disabled?: boolean;
+	flip?: string;
+	icon?: ComponentType<any> | ReactElement | string;
+	iconComponent?: ComponentType<any>;
+	inline?: boolean;
+	labelPosition?: 'above' | 'after' | 'before' | 'below' | 'left' | 'right';
+	size?: string;
+}
 
 /**
  * An icon component with a label.
@@ -31,6 +43,8 @@ import type {TypedKindComponent} from '../internal/kindComponent.type';
  */
 const LabeledIconBase = kind({
 	name: 'ui:LabeledIcon',
+
+	_propTypes: {} as LabeledIconBaseProps,
 
 	propTypes: /** @lends ui/LabeledIcon.LabeledIconBase.prototype */ {
 		/**
@@ -181,10 +195,9 @@ const LabeledIconBase = kind({
 		}
 	},
 
-	render: ({css, children, componentRef, disabled, flip, icon, iconComponent: Icon, orientation, size, ...rest}) => {
-		delete rest.inline;
+	render: ({css, children, componentRef, disabled, flip, icon, iconComponent: Icon, inline, labelPosition, orientation, size, ...rest}) => {
 
-		let iconClassName = css.icon;
+		let iconClassName: string | null = css.icon;
 
 		// Rearrange the props to support custom JSX components
 		// `icon` is normally passed to `iconComponent` as children, but if `icon` is instead a
@@ -202,9 +215,6 @@ const LabeledIconBase = kind({
 			size = Icon = undefined;
 			iconClassName = null;
 		}
-
-		delete rest.inline;
-		delete rest.labelPosition;
 
 		return LayoutBase.inline!({
 			...rest,
@@ -239,7 +249,7 @@ const LabeledIconBase = kind({
 			]
 		}, void 0 as any);
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 /**
  * A higher-order component that adds {@link ui/Slottable.Slottable|slot} support to {@link ui/LabeledIcon.LabeledIconBase|LabeledIconBase}

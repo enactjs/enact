@@ -275,7 +275,7 @@ class Touch {
 		this.context.setState = setState;
 	}
 
-	updateGestureConfig (dragConfig: DragConfigPropType, flickConfig: FlickConfigPropType, holdConfig: HoldConfigPropType, pinchConfig: PinchConfigPropType) {
+	updateGestureConfig (dragConfig?: DragConfigPropType, flickConfig?: FlickConfigPropType, holdConfig?: HoldConfigPropType, pinchConfig?: PinchConfigPropType) {
 		this.config = mergeConfig({
 			drag: dragConfig,
 			flick: flickConfig,

@@ -1,7 +1,8 @@
+import {Callback} from '@enact/core/types';
 import useClass from '@enact/core/useClass';
 import {useState, useEffect, FocusEvent, PointerEvent, TouchEvent, MouseEvent} from 'react';
 
-import {Callback, HandlerFunction} from '../types';
+import {HandlerFunction} from '../types';
 
 import {States} from './state';
 import Touch from './Touch';

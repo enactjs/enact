@@ -22,14 +22,14 @@ import PropTypes from 'prop-types';
 
 export interface TouchableProps {
 	disabled?: boolean
-	dragConfig: DragConfigPropType
-	flickConfig: FlickConfigPropType
-	holdConfig: HoldConfigPropType
+	dragConfig?: DragConfigPropType
+	flickConfig?: FlickConfigPropType
+	holdConfig?: HoldConfigPropType
 	noResume?: boolean
 	onDown?: Callback<void, PointerEvent<HTMLElement>>
 	onDrag?: Callback<any, {type: 'onDrag', x: number, y: number}>
 	onDragEnd?: Callback<any, {type: 'onDragEnd'}>
-	onDragStart: Callback<any, {type: 'onDragStart', x: number, y: number}>
+	onDragStart?: Callback<any, {type: 'onDragStart', x: number, y: number}>
 	onFlick?: Callback<any, {
 		type: 'onFlick',
 		direction: 'horizontal' | 'vertical',
@@ -46,7 +46,7 @@ export interface TouchableProps {
 	onPinchStart?: Callback<any, {type: 'onPinchStart', coords: Array<{x: number, y: number}>}>
 	onTap?: Callback<void, PointerEvent<HTMLElement>>
 	onUp?: Callback<void, PointerEvent<HTMLElement>>
-	pinchConfig: PinchConfigPropType
+	pinchConfig?: PinchConfigPropType
 	ref?: RefObject<any>
 }
 

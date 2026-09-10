@@ -4,10 +4,10 @@ import {defaultHoldConfig, HoldConfigPropType} from './Hold';
 import {defaultPinchConfig, PinchConfigPropType} from './Pinch';
 
 export interface TouchableConfig {
-	drag: DragConfigPropType;
-	flick: FlickConfigPropType;
-	hold: HoldConfigPropType;
-	pinch: PinchConfigPropType;
+	drag?: DragConfigPropType;
+	flick?: FlickConfigPropType;
+	hold?: HoldConfigPropType;
+	pinch?: PinchConfigPropType;
 }
 
 const allowedDragKeys = Object.keys(defaultDragConfig);
@@ -48,7 +48,9 @@ const mergeConfig = (cfg: TouchableConfig) => {
 		pinch: mergeGestureConfig(config.pinch, cfg.pinch, allowedPinchKeys)
 	};
 
-	merged.hold.events = merged.hold.events.map(clone);
+	if (merged.hold) {
+		merged.hold.events = merged.hold.events.map(clone);
+	}
 
 	return merged;
 };

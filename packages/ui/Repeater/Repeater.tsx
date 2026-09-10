@@ -5,12 +5,22 @@
  * @exports Repeater
  */
 
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
+import {CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 
 import ForwardRef from '../ForwardRef';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
+
+export interface RepeaterBaseProps {
+	childComponent: EnactPropTypeShapes.renderable;
+	children: string | CallbackObject<string | number>;
+	childProp?: string;
+	component?: EnactPropTypeShapes.renderable;
+	componentRef: EnactPropTypeShapes.ref;
+	indexProp?: string;
+	itemProps: CallbackObject;
+}
 
 /**
  * A stateless component that stamps out copies of `childComponent`, without
@@ -23,6 +33,8 @@ import type {TypedKindComponent} from '../internal/kindComponent.type';
  */
 const RepeaterBase = kind({
 	name: 'Repeater',
+
+	_propTypes: {} as RepeaterBaseProps,
 
 	propTypes: /** @lends ui/Repeater.RepeaterBase.prototype */ {
 		/**
@@ -131,15 +143,12 @@ const RepeaterBase = kind({
 		}
 	},
 
-	render: ({component: Component, componentRef, ...rest}) => {
+	render: ({childProp, component: Component, componentRef, indexProp, itemProps, ...rest}) => {
 		delete rest.childComponent;
-		delete rest.childProp;
-		delete rest.indexProp;
-		delete rest.itemProps;
 
 		return <Component ref={componentRef} role="list" {...rest} />;
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 /**
  * Applies Repeater behaviors.

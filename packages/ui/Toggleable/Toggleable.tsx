@@ -19,12 +19,12 @@ import {CallbackObject} from '../types';
 import {useToggle} from './useToggle';
 
 export interface ToggleableConfig {
-	activate: string;
-	deactivate: string;
-	eventProps: string[];
-	prop: string;
-	toggle: string;
-	toggleProp: string;
+	activate?: string | null;
+	deactivate?: string | null;
+	eventProps?: string[];
+	prop?: string;
+	toggle?: string;
+	toggleProp?: string | null;
 }
 
 export type DynamicToggleableProps<
@@ -43,18 +43,6 @@ export type DynamicToggleableProps<
 
 	}
 	/**
-	 * Default toggled state applied at construction when the toggled prop is `undefined` or
-	 * `null`.
-	 *
-	 * @name defaultSelected
-	 * @memberof ui/Toggleable.Toggleable.prototype
-	 * @type {Boolean}
-	 * @default false
-	 * @public
-	 */
-	& {[K in PropKey]?: boolean}
-
-	/**
 	 * Current toggled state.
 	 *
 	 * When set at construction, the component is considered 'controlled' and will only
@@ -65,6 +53,18 @@ export type DynamicToggleableProps<
 	 * @name selected
 	 * @memberof ui/Toggleable.Toggleable.prototype
 	 * @type {Boolean}
+	 * @public
+	 */
+	& {[K in PropKey]?: boolean}
+
+	/**
+	 * Default toggled state applied at construction when the toggled prop is `undefined` or
+	 * `null`.
+	 *
+	 * @name defaultSelected
+	 * @memberof ui/Toggleable.Toggleable.prototype
+	 * @type {Boolean}
+	 * @default false
 	 * @public
 	 */
 	& {[K in DefaultPropKey]?: boolean}
@@ -91,7 +91,7 @@ export type ContextType = {
  * @memberof ui/Toggleable.Toggleable
  * @hocconfig
  */
-const defaultConfig = {
+const defaultConfig: ToggleableConfig = {
 	/**
 	 * Configures the event name that activates the component.
 	 *
@@ -201,23 +201,24 @@ const defaultConfig = {
  * @hoc
  * @public
  */
-const ToggleableHOC = hoc(defaultConfig, (config: ToggleableConfig, Wrapped: ElementType) => {
+const ToggleableHOC = hoc(defaultConfig, (config: Required<ToggleableConfig>, Wrapped: ElementType) => {
 	const {activate, deactivate, eventProps, prop, toggle, toggleProp} = config;
 	const defaultPropKey = 'default' + cap(prop);
 	const adapter = (ev: Event | null, props: CallbackObject) => ({...pick(eventProps, props), ...ev});
+	const forwardEvent = <C, >(name: string | null) => forwardCustom<C>(name as string, adapter);
 
 	const toggleHandlers = {
 		onToggle: handle<ContextType>(
 			(ev, props, context) => (context?.toggle()),
-			forwardCustom(toggleProp, adapter)
+			forwardEvent<ContextType>(toggleProp)
 		),
 		onActivate: handle<ContextType>(
 			(ev, props, context) => (context?.activate()),
-			forwardCustom(activate, adapter)
+			forwardEvent<ContextType>(activate)
 		),
 		onDeactivate: handle<ContextType>(
 			(ev, props, context) => (context?.deactivate()),
-			forwardCustom(deactivate, adapter)
+			forwardEvent<ContextType>(deactivate)
 		)
 	};
 

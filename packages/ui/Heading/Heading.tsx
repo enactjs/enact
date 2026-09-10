@@ -13,14 +13,22 @@
  */
 
 import kind from '@enact/core/kind';
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import {ReactNode} from 'react';
 
 import ForwardRef from '../ForwardRef';
 
 import css from './Heading.module.less';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
+
+export interface HeadingBaseProps {
+	children?: ReactNode;
+	componentRef?: EnactPropTypeShapes.ref;
+	css?: Record<string, string>;
+	size?: 'title' | 'subtitle' | 'large' | 'medium' | 'small' | 'tiny';
+	spacing?: 'auto' | 'large' | 'medium' | 'small' | 'none';
+}
 
 /**
  * A labeled Heading component.
@@ -32,6 +40,8 @@ import type {TypedKindComponent} from '../internal/kindComponent.type';
  */
 const HeadingBase = kind({
 	name: 'ui:Heading',
+
+	_propTypes: {} as HeadingBaseProps,
 
 	propTypes: /** @lends ui/Heading.Heading.prototype */ {
 		/**
@@ -142,15 +152,13 @@ const HeadingBase = kind({
 		}
 	},
 
-	render: ({Tag, componentRef, ...rest}) => {
-		delete rest.size;
-		delete rest.spacing;
+	render: ({Tag, componentRef, size, spacing, ...rest}) => {
 
 		return (
 			<Tag {...rest} ref={componentRef} />
 		);
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 /**
  * A higher-order component that adds behavior to {@link ui/Heading.HeadingBase|Heading}.

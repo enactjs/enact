@@ -1,4 +1,4 @@
-import {CallbackObject} from './callback.type';
+import {CallbackObject} from '@enact/core/types';
 
 /**
  * The signature for event handling functions
