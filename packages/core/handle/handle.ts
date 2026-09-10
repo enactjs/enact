@@ -714,7 +714,7 @@ const call = function (method: string): HandlerFunction {
  * @param    {EventAdapter}     adapter  Function to adapt the event payload
  * @param    {HandlerFunction}  handler  Handler to call with the handler function
  *
- * @returns  {HandlerFunction}           Returns an {@link core/handle.HandlerFunction|event handler} (suitable for passing to handle) that returns the result of `handler`
+ * @returns  {HandlerFunction}           Returns an event handler (suitable for passing to handle) that returns the result of `handler`
  * @curried
  * @memberof core/handle
  * @public
@@ -873,7 +873,7 @@ const forwardCustomWithPrevent = handle.forwardCustomWithPrevent = function (nam
  * @method   not
  * @param    {HandlerFunction}  handler  Handler to complement
  *
- * @returns  {HandlerFunction}           Returns an {@link core/handle.HandlerFunction|event handler}
+ * @returns  {HandlerFunction}           Returns an event handler
  *                                       (suitable for passing to handle) that returns the complement of the
  *                                       return value of `handler`
  * @curried
