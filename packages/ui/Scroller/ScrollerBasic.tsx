@@ -17,7 +17,7 @@ interface ScrollerBasicProps {
 	isHorizontalScrollbarVisible?: boolean;
 	isVerticalScrollbarVisible: boolean;
 	rtl: boolean;
-	scrollContainerContainsDangerously?: boolean;
+	scrollContainerContainsDangerously?: (target: HTMLElement) => boolean;
 	scrollContentRef: RefObject<HTMLDivElement>;
 	scrollMode?: 'translate' | 'native';
 	setThemeScrollContentHandle?: (handle: unknown) => void;

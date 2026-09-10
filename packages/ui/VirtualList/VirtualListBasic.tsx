@@ -41,7 +41,7 @@ export interface VirtualListBasicProps {
 	isHorizontalScrollbarVisible?: boolean,
 	isVerticalScrollbarVisible?: boolean,
 	onUpdate?: Callback,
-	scrollContainerContainsDangerously?: boolean,
+	scrollContainerContainsDangerously?: Callback<boolean, HTMLElement>,
 	setThemeScrollContentHandle?: Callback
 }
 
@@ -339,12 +339,13 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 		rtl: PropTypes.bool,
 
 		/**
-		 * Whether the scroll container contains dangerous content.
+		 * Callback function that checks whether the scroll container dangerously contains a
+		 * given DOM node.
 		 *
-		 * @type {Boolean}
+		 * @type {Function}
 		 * @private
 		 */
-		scrollContainerContainsDangerously: PropTypes.bool,
+		scrollContainerContainsDangerously: PropTypes.func,
 
 		/**
 		 * Ref for scroll content
