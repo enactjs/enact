@@ -1,5 +1,6 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {platform} from '@enact/core/platform';
+import {checkPropTypes} from '@enact/core/util';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {Component, CSSProperties, ReactElement, RefObject} from 'react';
@@ -85,11 +86,17 @@ class ScrollerBasic extends Component<ScrollerBasicProps> {
 		scrollContentRef: EnactPropTypes.ref
 	};
 
+	constructor (props: ScrollerBasicProps) {
+		super(props);
+		checkPropTypes(this, props);
+	}
+
 	componentDidMount () {
 		this.calculateMetrics();
 	}
 
 	componentDidUpdate (prevProps: ScrollerBasicProps) {
+		checkPropTypes(this, this.props, prevProps);
 		this.calculateMetrics();
 		if (this.props.isVerticalScrollbarVisible && !prevProps.isVerticalScrollbarVisible) {
 			this.forceUpdate();

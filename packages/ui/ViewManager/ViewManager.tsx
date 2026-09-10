@@ -15,6 +15,7 @@
 
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import handle, {forwardCustom} from '@enact/core/handle';
+import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import {Children, Component, ReactElement} from 'react';
 
@@ -246,6 +247,7 @@ const ViewManagerBase = class extends Component<ViewManagerProps, ViewManagerSta
 
 	constructor (props: ViewManagerProps) {
 		super(props);
+		checkPropTypes(this, props);
 
 		this.state = {
 			prevIndex: null,
@@ -269,6 +271,10 @@ const ViewManagerBase = class extends Component<ViewManagerProps, ViewManagerSta
 		}
 
 		return null;
+	}
+
+	componentDidUpdate (prevProps: ViewManagerProps) {
+		checkPropTypes(this, this.props, prevProps);
 	}
 
 	// Merges optional props with defaultProps so TypeScript knows they are never undefined inside the class.

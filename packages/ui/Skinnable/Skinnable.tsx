@@ -12,6 +12,7 @@
  */
 
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import {ElementType} from 'react';
@@ -86,6 +87,7 @@ const Skinnable = hoc(defaultConfig, (config: SkinnableConfig, Wrapped: ElementT
 
 	// eslint-disable-next-line no-shadow, @typescript-eslint/no-shadow
 	function Skinnable (props: SkinnableProps) {
+		checkPropTypes(Skinnable, props);
 		const {className, skin, skinVariants, ...rest} = props as Record<string, any>;
 		const hook = useSkins({
 			defaultSkin,

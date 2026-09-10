@@ -6,6 +6,7 @@
 
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import {forward, forwardCustom} from '@enact/core/handle';
+import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import eqBy from 'ramda/src/eqBy';
 import findIndex from 'ramda/src/findIndex';
@@ -208,6 +209,7 @@ class TransitionGroup extends Component<TransitionGroupProps, TransitionGroupSta
 
 	constructor (props: TransitionGroupProps) {
 		super(props);
+		checkPropTypes(this, props);
 
 		this.state = {
 			activeChildren: [],
@@ -251,6 +253,7 @@ class TransitionGroup extends Component<TransitionGroupProps, TransitionGroupSta
 	}
 
 	componentDidUpdate (prevProps: TransitionGroupProps, prevState: TransitionGroupState) {
+		checkPropTypes(this, this.props, prevProps);
 		this.reconcileUnmountedChildren(prevState.children, this.state.children);
 		this.reconcileChildren(prevState.activeChildren, this.state.activeChildren);
 	}

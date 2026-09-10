@@ -7,6 +7,7 @@
  */
 
 import hoc from '@enact/core/hoc';
+import {checkPropTypes} from '@enact/core/util';
 import {ElementType, PointerEvent, RefObject} from 'react';
 
 import {configure} from './config';
@@ -144,6 +145,7 @@ const Touchable = hoc(defaultConfig, (config: TouchableConfig, Wrapped: ElementT
 
 	// eslint-disable-next-line no-shadow, @typescript-eslint/no-shadow
 	const Touchable = (props: TouchableProps) => {
+		checkPropTypes(Touchable, props);
 		const {disabled = false, noResume = false, ref = null, ...rest} = props;
 		const {configForHook, propsForWrapped} = selectProps({disabled, noResume, ...rest}) as Record<string, any>;
 		const hook = useTouch({getActive: !!activeProp, ...configForHook});

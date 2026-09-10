@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import {checkPropTypes, clamp, shallowEqual} from '@enact/core/util';
@@ -10,283 +10,38 @@ import {createRef, Component, RefObject, ReactElement, ReactNode} from 'react';
 import css from './VirtualList.module.less';
 import {Callback, CallbackObject} from '../types';
 
-export interface VirtualListBasicProps /** @lends ui/VirtualList.VirtualListBasic.prototype */ {
-	/**
-	 * The rendering function called for each item in the list.
-	 *
-	 * > **Note**: The list does **not** always render a component whenever its render function is called
-	 * due to performance optimization.
-	 *
-	 * Example:
-	 * ```
-	 * renderItem = ({index, ...rest}) => {
-	 *
-	 * 	return (
-	 * 		<MyComponent index={index} {...rest} />
-	 * 	);
-	 * }
-	 * ```
-	 *
-	 * @type {Function}
-	 * @param {Object} event
-	 * @param {Number} event.data-index It is required for `Spotlight` 5-way navigation. Pass to the root element in the component.
-	 * @param {Number} event.index The index number of the component to render
-	 *
-	 * @required
-	 * @public
-	 */
+export interface VirtualListBasicProps {
 	itemRenderer: Callback<ReactNode, {index: number, 'data-index'?: number}>,
-
-	/**
-	 * The size of an item for the list; valid values are either a number for `VirtualList`
-	 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
-	 *
-	 * @type {Number|ui/VirtualList.gridListItemSizeShape}
-	 * @required
-	 * @private
-	 */
 	itemSize: number | gridListItemSizeShapeType,
-
-	/**
-	 * Callback method of scrollTo.
-	 * Normally, useScroll should set this value.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
 	cbScrollTo?: Callback,
-
-	/**
-	 * Additional props included in the object passed to the `itemRenderer` callback.
-	 *
-	 * @type {Object}
-	 * @public
-	 */
 	childProps: CallbackObject,
-
-	/**
-	 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
-	 *
-	 * @type {Object}
-	 * @property {Number} clientHeight The client height of the list.
-	 * @property {Number} clientWidth The client width of the list.
-	 * @public
-	 */
 	clientSize: {
 		clientHeight: number,
 		clientWidth: number
 	},
-
-	/**
-	 * An object with properties to be passed to the container DOM.
-	 *
-	 * @type {Object}
-	 * @private
-	 */
 	containerProps: CallbackObject,
-
-	/**
-	 * The number of items of data the list contains.
-	 *
-	 * @type {Number}
-	 * @default 0
-	 * @public
-	 */
 	dataSize?: number,
-
-	/**
-	 * The layout direction of the list.
-	 *
-	 * Valid values are:
-	 * * `'horizontal'`, and
-	 * * `'vertical'`.
-	 *
-	 * @type {String}
-	 * @default 'vertical'
-	 * @public
-	 */
 	direction?: 'horizontal' | 'vertical',
-
-	/**
-	 * Called to get the scroll affordance from themed component.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
 	getAffordance?: Callback,
-
-	/**
-	 * Called to get the props for list items.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
 	getComponentProps: Callback,
-
-	/**
-	 * Ref for items
-	 *
-	 * @type {Object}
-	 * @private
-	 */
 	itemRefs: RefObject<Array<HTMLElement | null>>,
-
-	/**
-	 * The array for individually sized items.
-	 *
-	 * @type {Number[]}
-	 * @private
-	 */
 	itemSizes: number[],
-
-	/**
-	 * Called when the range of items has updated.
-	 *
-	 * Event payload includes the `firstIndex` and `lastIndex` of the list.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
 	onUpdateItems: Callback,
-
-	/**
-	 * Number of spare DOM node.
-	 * `3` is good for the default value experimentally and
-	 * this value is highly recommended not to be changed by developers.
-	 *
-	 * @type {Number}
-	 * @default 3
-	 * @private
-	 */
 	overhang?: number,
-
-	/**
-	 * When `true`, the list will scroll by page. Otherwise the list will scroll by item.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @private
-	 */
 	pageScroll?: boolean,
-
-	/**
-	 * The render function for the placeholder elements.
-	 *
-	 * @type {Function}
-	 * @required
-	 * @private
-	 */
 	placeholderRenderer: Callback,
-
-	/**
-	 * The ARIA role for the list.
-	 *
-	 * @type {String}
-	 * @default 'list'
-	 * @public
-	 */
 	role?: string,
-
-	/**
-	 * `true` if RTL, `false` if LTR.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
 	rtl: boolean,
-
-	/**
-	 * Ref for scroll content
-	 *
-	 * @type {Object|Function}}
-	 * @private
-	 */
 	scrollContentRef: EnactPropTypeShapes.ref,
-
-	/**
-	 * Specifies how to scroll.
-	 *
-	 * Valid values are:
-	 * * `'translate'`,
-	 * * `'native'`.
-	 *
-	 * @type {String}
-	 * @default 'translate'
-	 * @public
-	 */
 	scrollMode?: 'translate' | 'native',
-
-	/**
-	 * The spacing between items.
-	 *
-	 * @type {Number}
-	 * @default 0
-	 * @public
-	 */
 	spacing?: number,
-
-	/**
-	 * Called to execute additional logic in a themed component when updating states and bounds.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
 	updateStatesAndBounds?: Callback<boolean, {cbScrollTo: Callback, numOfItems: number, dataSize: number, moreInfo: {firstVisibleIndex: number | null, lastVisibleIndex: number | null}}>,
-
-	/**
-	 * Additional className for the container.
-	 *
-	 * @type {String}
-	 * @public
-	 */
 	className?: string,
-
-	/**
-	 * An object with additional style properties.
-	 *
-	 * @type {Object}
-	 * @public
-	 */
 	style?: React.CSSProperties,
-
-	/**
-	 * Indicates if horizontal scrollbar is visible.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
 	isHorizontalScrollbarVisible?: boolean,
-
-	/**
-	 * Indicates if vertical scrollbar is visible.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
 	isVerticalScrollbarVisible?: boolean,
-
-	/**
-	 * Callback for update events.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
 	onUpdate?: Callback,
-
-	/**
-	 * Whether the scroll container contains dangerous content.
-	 *
-	 * @type {Boolean}
-	 * @private
-	 */
 	scrollContainerContainsDangerously?: boolean,
-
-	/**
-	 * Sets theme scroll content handle.
-	 *
-	 * @type {Function}
-	 * @private
-	 */
 	setThemeScrollContentHandle?: Callback
 }
 
@@ -365,6 +120,286 @@ type MoreInfo = {
  */
 class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasicState> {
 	static displayName = 'ui:VirtualListBasic';
+
+	// Real `prop-types` validators, checked at runtime (in DEV) via `checkPropTypes` below — the
+	// safety net for callers TypeScript can't see through (plain-JS consumers, spread props from
+	// runtime data, `as any` casts, etc). This is also the single source of prop documentation;
+	// `VirtualListBasicProps` above is intentionally left undocumented to avoid drifting duplicate
+	// docs — keep its shape in sync with the validators below by hand.
+	static propTypes = /** @lends ui/VirtualList.VirtualListBasic.prototype */ {
+		/**
+		 * The rendering function called for each item in the list.
+		 *
+		 * > **Note**: The list does **not** always render a component whenever its render function is called
+		 * due to performance optimization.
+		 *
+		 * Example:
+		 * ```
+		 * renderItem = ({index, ...rest}) => {
+		 *
+		 * 	return (
+		 * 		<MyComponent index={index} {...rest} />
+		 * 	);
+		 * }
+		 * ```
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @param {Number} event.data-index It is required for `Spotlight` 5-way navigation. Pass to the root element in the component.
+		 * @param {Number} event.index The index number of the component to render
+		 *
+		 * @required
+		 * @public
+		 */
+		itemRenderer: PropTypes.func.isRequired,
+
+		/**
+		 * The size of an item for the list; valid values are either a number for `VirtualList`
+		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
+		 *
+		 * @type {Number|ui/VirtualList.gridListItemSizeShape}
+		 * @required
+		 * @private
+		 */
+		itemSize: PropTypes.oneOfType([
+			PropTypes.number,
+			gridListItemSizeShape
+		]).isRequired,
+
+		/**
+		 * Callback method of scrollTo.
+		 * Normally, useScroll should set this value.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		cbScrollTo: PropTypes.func,
+
+		/**
+		 * Additional props included in the object passed to the `itemRenderer` callback.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		childProps: PropTypes.object,
+
+		/**
+		 * Additional className for the container.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		className: PropTypes.string,
+
+		clientSize: PropTypes.shape({
+			clientHeight: PropTypes.number.isRequired,
+			clientWidth: PropTypes.number.isRequired
+		}),
+
+		/**
+		 * An object with properties to be passed to the container DOM.
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		containerProps: PropTypes.object,
+
+		/**
+		 * The number of items of data the list contains.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		dataSize: PropTypes.number,
+
+		/**
+		 * The layout direction of the list.
+		 *
+		 * Valid values are:
+		 * * `'horizontal'`, and
+		 * * `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'vertical'
+		 * @public
+		 */
+		direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
+		 * Called to get the scroll affordance from themed component.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		getAffordance: PropTypes.func,
+
+		/**
+		 * Called to get the props for list items.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		getComponentProps: PropTypes.func,
+
+		/**
+		 * Indicates if horizontal scrollbar is visible.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		isHorizontalScrollbarVisible: PropTypes.bool,
+
+		/**
+		 * Indicates if vertical scrollbar is visible.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		isVerticalScrollbarVisible: PropTypes.bool,
+
+		/**
+		 * Ref for items
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		itemRefs: PropTypes.object,
+
+		/**
+		 * The array for individually sized items.
+		 *
+		 * @type {Number[]}
+		 * @private
+		 */
+		itemSizes: PropTypes.arrayOf(PropTypes.number),
+
+		/**
+		 * Callback for update events.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onUpdate: PropTypes.func,
+
+		/**
+		 * Called when the range of items has updated.
+		 *
+		 * Event payload includes the `firstIndex` and `lastIndex` of the list.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onUpdateItems: PropTypes.func,
+
+		/**
+		 * Number of spare DOM node.
+		 * `3` is good for the default value experimentally and
+		 * this value is highly recommended not to be changed by developers.
+		 *
+		 * @type {Number}
+		 * @default 3
+		 * @private
+		 */
+		overhang: PropTypes.number,
+
+		/**
+		 * When `true`, the list will scroll by page. Otherwise the list will scroll by item.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		pageScroll: PropTypes.bool,
+
+		/**
+		 * The render function for the placeholder elements.
+		 *
+		 * @type {Function}
+		 * @required
+		 * @private
+		 */
+		placeholderRenderer: PropTypes.func,
+
+		/**
+		 * The ARIA role for the list.
+		 *
+		 * @type {String}
+		 * @default 'list'
+		 * @public
+		 */
+		role: PropTypes.string,
+
+		/**
+		 * `true` if RTL, `false` if LTR.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		rtl: PropTypes.bool,
+
+		/**
+		 * Whether the scroll container contains dangerous content.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		scrollContainerContainsDangerously: PropTypes.bool,
+
+		/**
+		 * Ref for scroll content
+		 *
+		 * @type {Object|Function}
+		 * @private
+		 */
+		scrollContentRef: EnactPropTypes.ref,
+
+		/**
+		 * Specifies how to scroll.
+		 *
+		 * Valid values are:
+		 * * `'translate'`,
+		 * * `'native'`.
+		 *
+		 * @type {String}
+		 * @default 'translate'
+		 * @public
+		 */
+		scrollMode: PropTypes.oneOf(['translate', 'native']),
+
+		/**
+		 * Sets theme scroll content handle.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		setThemeScrollContentHandle: PropTypes.func,
+
+		/**
+		 * The spacing between items.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		spacing: PropTypes.number,
+
+		/**
+		 * An object with additional style properties.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		style: PropTypes.object,
+
+		/**
+		 * Called to execute additional logic in a themed component when updating states and bounds.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		updateStatesAndBounds: PropTypes.func
+	};
 
 	static defaultProps = {
 		cbScrollTo: nop,

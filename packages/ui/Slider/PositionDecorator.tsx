@@ -113,8 +113,7 @@ const PositionDecorator = hoc((config, Wrapped) => {
 				proportion = calcProportion(min, max, value);
 			}
 
-			const onChangeObj = {
-				color: {},
+			const onChangeObj: {type: string, value: number, proportion: number, color?: {hex: string, hsl: string}} = {
 				type: 'onChange',
 				value,
 				proportion

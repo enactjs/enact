@@ -9,7 +9,7 @@
  * @exports VirtualListBasic
  */
 
-import {setDefaultProps} from '@enact/core/util';
+import {checkPropTypes, setDefaultProps} from '@enact/core/util';
 
 import {ResizeContext} from '../Resizable';
 import useScroll from '../useScroll';
@@ -79,6 +79,8 @@ const virtualListDefaultProps: VirtualListProps = {
  * @public
  */
 const VirtualList = (props: VirtualListProps) => {
+	checkPropTypes(VirtualList, props);
+
 	// Hooks
 
 	const virtualListProps = setDefaultProps(props, virtualListDefaultProps);
@@ -357,6 +359,8 @@ const virtualGridListDefaultProps: VirtualGridListProps = {
  * @public
  */
 const VirtualGridList = (props: VirtualGridListProps) => {
+	checkPropTypes(VirtualGridList, props);
+
 	const virtualGridListProps = setDefaultProps(props, virtualGridListDefaultProps);
 
 	const {
