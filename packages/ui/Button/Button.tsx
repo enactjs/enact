@@ -7,17 +7,32 @@
  * @exports ButtonDecorator
  */
 
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import {ReactNode} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
 import Touchable from '../Touchable';
 
 import componentCss from './Button.module.less';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
+
+export interface ButtonBaseProps {
+	children?: ReactNode;
+	componentRef?: EnactPropTypeShapes.ref;
+	css: Record<string, string>;
+	decoration?: ReactNode;
+	disabled?: boolean;
+	icon?: ReactNode | boolean;
+	iconComponent?: EnactPropTypeShapes.componentOverride;
+	iconFlip?: string;
+	minWidth?: boolean;
+	pressed?: boolean;
+	selected?: boolean;
+	size?: string;
+}
 
 /**
  * A basic button component structure without any behaviors applied to it.
@@ -29,6 +44,8 @@ import type {TypedKindComponent} from '../internal/kindComponent.type';
  */
 const ButtonBase = kind({
 	name: 'ui:Button',
+
+	_propTypes: {} as ButtonBaseProps,
 
 	propTypes: /** @lends ui/Button.ButtonBase.prototype */ {
 
@@ -225,12 +242,9 @@ const ButtonBase = kind({
 		}
 	},
 
-	render: ({children, componentRef, css, decoration, disabled, icon, ...rest}) => {
+	render: ({children, componentRef, css, decoration, disabled, icon, minWidth, pressed, selected, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconFlip;
-		delete rest.minWidth;
-		delete rest.pressed;
-		delete rest.selected;
 		delete rest.size;
 
 		return (
@@ -249,7 +263,7 @@ const ButtonBase = kind({
 			</div>
 		);
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 /**
  * A higher-order component that adds touch support to a {@link ui/Button.ButtonBase|ButtonBase}.

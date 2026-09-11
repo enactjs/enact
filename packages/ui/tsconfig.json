@@ -17,7 +17,14 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "types": ["node"]
+    "types": ["jest", "node"]
   },
-  "include": ["**/*.ts", "**/*.tsx", "types/**/*.d.ts"]
+  "include": ["**/*.ts", "**/*.tsx", "types/**/*.d.ts"],
+  "exclude": [
+    "build",
+    "coverage",
+    "node_modules",
+    "**/*-specs.ts",
+    "**/*-specs.tsx"
+  ]
 }

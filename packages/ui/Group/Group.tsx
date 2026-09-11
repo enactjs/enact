@@ -8,8 +8,9 @@
  * @exports GroupItem
  */
 
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
+import {Callback} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
@@ -18,7 +19,21 @@ import ForwardRef from '../ForwardRef';
 import Repeater from '../Repeater';
 
 import {GroupItem, pickGroupItemProps} from './GroupItem';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
+
+export interface GroupBaseProps {
+	childComponent: EnactPropTypeShapes.renderable;
+	children: string[] | {key: string | number}[];
+	childProp?: string;
+	childSelect?: string;
+	componentRef?: EnactPropTypeShapes.ref;
+	indexProp?: string;
+	itemProps?: Record<string, any>;
+	onSelect?: Callback;
+	select?: 'single' | 'radio' | 'multiple';
+	selected?: number | number[];
+	selectedEventProp?: string;
+	selectedProp?: string;
+}
 
 /**
  * A stateless component that supports selection of its child items via configurable
@@ -31,6 +46,8 @@ import type {TypedKindComponent} from '../internal/kindComponent.type';
  */
 const GroupBase = kind({
 	name: 'Group',
+
+	_propTypes: {} as GroupBaseProps,
 
 	propTypes: /** @lends ui/Group.Group.prototype */ {
 		/**
@@ -181,17 +198,13 @@ const GroupBase = kind({
 		)
 	},
 
-	render: ({componentRef, ...rest}) => {
+	render: ({childSelect, componentRef, select, selectedEventProp, selectedProp, ...rest}) => {
 		delete rest.onSelect;
-		delete rest.childSelect;
-		delete rest.select;
 		delete rest.selected;
-		delete rest.selectedEventProp;
-		delete rest.selectedProp;
 
 		return <Repeater role="group" {...rest} childComponent={GroupItem} ref={componentRef} />;
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 /**
  * A higher-order component that adds behavior to {@link ui/Group.GroupBase|Group}.

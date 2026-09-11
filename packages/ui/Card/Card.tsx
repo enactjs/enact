@@ -7,10 +7,11 @@
  * @exports CardDecorator
  */
 
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import {ReactNode} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
@@ -18,7 +19,20 @@ import Image from '../Image';
 import {Cell, Column, Row} from '../Layout';
 
 import componentCss from './Card.module.less';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
+
+export interface CardBaseProps {
+	captionOverlay?: boolean;
+	children?: ReactNode;
+	componentRef?: EnactPropTypeShapes.ref;
+	css: Record<string, string>;
+	fitImage?: boolean;
+	imageComponent?: EnactPropTypeShapes.componentOverride;
+	orientation?: 'horizontal' | 'vertical';
+	placeholder?: string;
+	selected?: boolean;
+	splitCaption?: boolean;
+	src?: string | Record<string, string>;
+}
 
 function ImageOverride ({imageComponent, ...rest}: {imageComponent?: any; [key: string]: any}) {
 	return ComponentOverride({
@@ -37,6 +51,8 @@ function ImageOverride ({imageComponent, ...rest}: {imageComponent?: any; [key: 
  */
 const CardBase = kind({
 	name: 'ui:Card',
+
+	_propTypes: {} as CardBaseProps,
 
 	propTypes: /** @lends ui/Card.CardBase.prototype */ {
 		/**
@@ -204,7 +220,7 @@ const CardBase = kind({
 			</Component>
 		);
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 /**
  * A higher-order component that adds behaviors to an {@link ui/Card.CardBase|Card}.

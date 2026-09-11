@@ -12,16 +12,26 @@
  */
 
 import kind from '@enact/core/kind';
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
+import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
 import compose from 'ramda/src/compose';
-import PropTypes from 'prop-types';
+import {ReactNode} from 'react';
 
 import {validateRange} from '../internal/validators';
 import ForwardRef from '../ForwardRef';
 
 import componentCss from './ProgressBar.module.less';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
+
+export interface ProgressBarBaseProps {
+	backgroundProgress?: number;
+	children: ReactNode;
+	componentRef?: EnactPropTypeShapes.ref;
+	css: Record<string, string>;
+	orientation?: 'horizontal' | 'vertical' | 'radial';
+	progress?: number;
+	progressAnchor?: number;
+}
 
 const progressToProportion = (value: number) => clamp(0, 1, value);
 const calcBarStyle = (prop: string, anchor: number, value: number = anchor, startProp: string, endProp: string) => {
@@ -49,6 +59,8 @@ const calcBarStyle = (prop: string, anchor: number, value: number = anchor, star
  */
 const ProgressBarBase = kind({
 	name: 'ui:ProgressBar',
+
+	_propTypes: {} as ProgressBarBaseProps,
 
 	propTypes: /** @lends ui/ProgressBar.ProgressBarBase.prototype */ {
 		/**
@@ -182,12 +194,7 @@ const ProgressBarBase = kind({
 		}
 	},
 
-	render: ({children, componentRef, css, ...rest}) => {
-		delete rest.backgroundProgress;
-		delete rest.orientation;
-		delete rest.progress;
-		delete rest.progressAnchor;
-
+	render: ({backgroundProgress, children, componentRef, css, orientation, progress, progressAnchor, ...rest}) => {
 		return (
 			<div role="progressbar" {...rest} ref={componentRef}>
 				<div className={css.bar}>
@@ -198,7 +205,7 @@ const ProgressBarBase = kind({
 			</div>
 		);
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 /**
  * A higher-order component that adds behavior to

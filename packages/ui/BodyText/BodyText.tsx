@@ -5,14 +5,21 @@
  * @exports BodyText
  */
 
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import ForwardRef from '../ForwardRef';
 
 import componentCss from './BodyText.module.less';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
+
+export interface BodyTextBaseProps {
+	centered?: boolean;
+	component?: EnactPropTypeShapes.renderable;
+	componentRef?: EnactPropTypeShapes.ref;
+	css: Record<string, string>
+}
 
 /**
  * A simple, unstyled text block component, without
@@ -25,6 +32,8 @@ import type {TypedKindComponent} from '../internal/kindComponent.type';
  */
 const BodyTextBase = kind({
 	name: 'ui:BodyText',
+
+	_propTypes: {} as BodyTextBaseProps,
 
 	propTypes: /** @lends ui/BodyText.BodyTextBase.prototype */ {
 		/**
@@ -90,9 +99,7 @@ const BodyTextBase = kind({
 		className: ({centered, styler}: Record<string, any>) => styler.append({centered})
 	},
 
-	render: ({component: Component, componentRef, ...rest}) => {
-		delete rest.centered;
-
+	render: ({centered, component: Component, componentRef, ...rest}) => {
 		return (
 			<Component
 				ref={componentRef}
@@ -100,7 +107,7 @@ const BodyTextBase = kind({
 			/>
 		);
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 /**
  * Applies BodyText behaviors.

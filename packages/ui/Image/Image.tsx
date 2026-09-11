@@ -8,16 +8,33 @@
  */
 
 import kind from '@enact/core/kind';
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import {Callback} from '@enact/core/types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import {CSSProperties, ReactNode} from 'react';
 import warning from 'warning';
 
 import {selectSrc} from '../resolution';
 import ForwardRef from '../ForwardRef';
 
 import componentCss from './Image.module.less';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
+
+export interface ImageBaseProps {
+	alt?: string;
+	'aria-label'?: string;
+	style?: CSSProperties;
+	backgroundColor?: string;
+	backgroundSrc?: string | Record<string, string>;
+	children?: ReactNode;
+	componentRef?: EnactPropTypeShapes.ref;
+	css: Record<string, string>;
+	onError?: Callback;
+	onLoad?: Callback;
+	placeholder?: string;
+	sizing?: 'fit' | 'fill' | 'none';
+	src?: string | Record<string, string>;
+}
 
 /**
  * A basic image component designed to display images conditionally based on screen size.
@@ -49,6 +66,8 @@ import type {TypedKindComponent} from '../internal/kindComponent.type';
  */
 const ImageBase = kind({
 	name: 'ui:Image',
+
+	_propTypes: {} as ImageBaseProps,
 
 	propTypes: /** @lends ui/Image.ImageBase.prototype */ {
 		/**
@@ -205,13 +224,11 @@ const ImageBase = kind({
 		className: ({className, sizing, styler}: Record<string, any>) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
 		},
-		imgSrc: ({src}: Record<string, any>) => selectSrc(src) || null
+		imgSrc: ({src}: Record<string, any>) => selectSrc(src)
 	},
 
-	render: ({alt, 'aria-label': ariaLabel, backgroundColor, bgImage, children, componentRef, css, imgSrc, onError, onLoad, style, ...rest}) => {
+	render: ({alt, 'aria-label': ariaLabel, backgroundColor, bgImage, children, componentRef, css, imgSrc, onError, onLoad, placeholder, sizing, style, ...rest}) => {
 		delete rest.backgroundSrc;
-		delete rest.placeholder;
-		delete rest.sizing;
 		delete rest.src;
 
 		return (
@@ -220,14 +237,14 @@ const ImageBase = kind({
 				{...rest}
 				aria-label={ariaLabel || alt}
 				ref={componentRef}
-				style={{...style, ...(backgroundColor ? {backgroundColor} : null), backgroundImage: bgImage}}
+				style={{...style, ...(backgroundColor ? {backgroundColor} : null), ...(bgImage ? {backgroundImage: bgImage} : null)}}
 			>
 				{children}
 				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
 			</div>
 		);
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 /**
  * A higher-order component that adds behaviors to an {@link ui/Image.ImageBase|ImageBase}.

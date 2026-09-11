@@ -7,7 +7,7 @@
  */
 
 import kind from '@enact/core/kind';
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -16,7 +16,6 @@ import ri from '../resolution';
 import ForwardRef from '../ForwardRef';
 
 import componentCss from './Icon.module.less';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 /**
  * Merges consumer styles with the image `src` resolved through the resolution independence module.
@@ -52,6 +51,16 @@ const isUri = function (c: string) {
 	return (c.indexOf('/') > -1) || (c.indexOf('.') > -1);
 };
 
+export interface IconBaseProps {
+	children?: string | Record<string, string>;
+	componentRef?: EnactPropTypeShapes.ref;
+	css?: Record<string, string>;
+	flip?: string;
+	iconList?: Record<string, string>;
+	pressed?: boolean;
+	size?: string;
+}
+
 /**
  * A basic icon component structure without any behaviors applied to it.
  *
@@ -62,6 +71,8 @@ const isUri = function (c: string) {
  */
 const IconBase = kind({
 	name: 'ui:Icon',
+
+	_propTypes: {} as IconBaseProps,
 
 	propTypes: /** @lends ui/Icon.IconBase.prototype */ {
 		/**
@@ -215,10 +226,8 @@ const IconBase = kind({
 		}
 	},
 
-	render: ({componentRef, iconProps, ...rest}) => {
+	render: ({componentRef, iconList, iconProps, pressed, ...rest}) => {
 		delete rest.flip;
-		delete rest.iconList;
-		delete rest.pressed;
 		delete rest.size;
 
 		return (
@@ -230,7 +239,7 @@ const IconBase = kind({
 			/>
 		);
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 /**
  * A higher-order component that adds behavior to {@link ui/Icon.IconBase|Icon}.

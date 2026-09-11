@@ -7,16 +7,25 @@
  * @exports ItemDecorator
  */
 
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import {ReactNode} from 'react';
 
 import Touchable from '../Touchable';
 import ForwardRef from '../ForwardRef';
 
 import componentCss from './Item.module.less';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
+
+export interface ItemBaseProps {
+	children?: ReactNode;
+	component?: EnactPropTypeShapes.renderable;
+	componentRef?: EnactPropTypeShapes.ref;
+	css?: Record<string, string>;
+	disabled?: boolean;
+	inline?: boolean;
+}
 
 /**
  * A basic list item component structure without any behaviors applied to it.
@@ -30,6 +39,8 @@ import type {TypedKindComponent} from '../internal/kindComponent.type';
  */
 const ItemBase = kind({
 	name: 'ui:Item',
+
+	_propTypes: {} as ItemBaseProps,
 
 	propTypes: /** @lends ui/Item.ItemBase.prototype */ {
 		/**
@@ -106,8 +117,7 @@ const ItemBase = kind({
 		className: ({inline, styler}: Record<string, any>) => styler.append({inline})
 	},
 
-	render: ({component: Component, componentRef, disabled, children, ...rest}) => {
-		delete rest.inline;
+	render: ({component: Component, componentRef, disabled, children, inline, ...rest}) => {
 
 		return (
 			<Component
@@ -120,7 +130,7 @@ const ItemBase = kind({
 			</Component>
 		);
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 /**
  * A higher-order component that adds touch support to the component it wraps.

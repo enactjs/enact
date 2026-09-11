@@ -16,7 +16,7 @@
     "test-ss": "lerna --concurrency 1 run test-ss",
     "test-ui": "lerna --concurrency 1 run test-ui",
     "clean": "lerna clean",
-    "validate-docs": "validate-docs --strict --standalone --path packages"
+    "validate-docs": "validate-docs --strict --standalone --path packages --pattern \"*.ts*\""
   },
   "license": "Apache-2.0",
   "overrides": {
@@ -36,7 +36,7 @@
     "vue-template-compiler": "@vue/compiler-sfc@3.4.31"
   },
   "devDependencies": {
-    "@enact/docs-utils": "^0.5.0",
+    "@enact/docs-utils": "enactjs/docs-utils#feature/typescript",
     "lerna": "^9.0.7"
   }
 }

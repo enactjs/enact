@@ -406,7 +406,7 @@ const shallowEqual = (a: CallbackObject, b: CallbackObject) => {
  * @memberof core/util
  * @public
  */
-const checkPropTypes = (component: ComponentType | Component, props: CallbackObject, prevProps?: CallbackObject) => {
+const checkPropTypes = <T = any>(component: ComponentType<T> | Component<T>, props: CallbackObject, prevProps?: CallbackObject) => {
 	if (__DEV__ && !(prevProps && prevProps === props)) {
 		const isFunction = typeof component === 'function';
 

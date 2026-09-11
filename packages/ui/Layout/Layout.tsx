@@ -123,17 +123,16 @@
  * @exports Row
  */
 
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import type {ElementType, ReactNode, Ref} from 'react';
+import type {ReactNode, Ref} from 'react';
 
 import ForwardRef from '../ForwardRef';
 
 import {Cell, CellBase, CellDecorator, toFlexAlign} from './Cell';
 
 import css from './Layout.module.less';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 interface LayoutBaseProps {
 	/**
@@ -156,7 +155,7 @@ interface LayoutBaseProps {
 	 *
 	 * @default 'div'
 	 */
-	component?: ElementType;
+	component?: EnactPropTypeShapes.renderable;
 
 	/**
 	 * Called with a reference to the root component.
@@ -228,6 +227,8 @@ interface LayoutBaseProps {
  */
 const LayoutBase = kind({
 	name: 'LayoutBase',
+
+	_propTypes: {} as LayoutBaseProps,
 
 	propTypes: /** @lends ui/Layout.LayoutBase.prototype */ {
 		/**
@@ -382,7 +383,7 @@ const LayoutBase = kind({
 
 		return <Component ref={componentRef} {...rest} />;
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 /**
  * Applies Layout behaviors.

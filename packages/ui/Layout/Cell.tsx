@@ -1,18 +1,29 @@
-import EnactPropTypes from '@enact/core/internal/prop-types';
+import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
+import {ReactNode} from 'react';
 
 import ForwardRef from '../ForwardRef';
 import ri from '../resolution';
 
 import css from './Layout.module.less';
-import type {TypedKindComponent} from '../internal/kindComponent.type';
 
 const toFlexAlign = (align?: string | null) => (
 	align === 'end' && 'flex-end' ||
 	align === 'start' && 'flex-start' ||
 	align
 );
+
+export interface CellBaseProps {
+	align?: string;
+	children?: ReactNode;
+	component?: EnactPropTypeShapes.renderable;
+	componentCss?: Record<string, string>;
+	componentRef?: EnactPropTypeShapes.ref;
+	grow?: boolean;
+	shrink?: boolean;
+	size?: string | number;
+}
 
 /**
  * A stateless component that provides a space for your content in a
@@ -25,6 +36,8 @@ const toFlexAlign = (align?: string | null) => (
  */
 const CellBase = kind({
 	name: 'Cell',
+
+	_propTypes: {} as CellBaseProps,
 
 	propTypes: /** @lends ui/Layout.CellBase.prototype */ {
 		/**
@@ -175,17 +188,16 @@ const CellBase = kind({
 		}
 	},
 
-	render: ({component: Component, componentCss, componentRef, ...rest}) => {
+	render: ({component: Component, componentCss, componentRef, shrink, ...rest}) => {
 		delete rest.align;
 		delete rest.grow;
-		delete rest.shrink;
 		delete rest.size;
 
-		const {key, ...restProps} = {...rest};
+		const {key, ...restProps} = {...rest} as Record<string, any>;
 
 		return <Component css={componentCss} ref={componentRef} key={key} {...restProps} />;
 	}
-}) as TypedKindComponent<Record<string, any>>;
+});
 
 /**
  * Applies Cell behaviors.
