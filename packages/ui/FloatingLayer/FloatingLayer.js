@@ -99,6 +99,25 @@ class FloatingLayerBase extends Component {
 		open: PropTypes.bool,
 
 		/**
+		 * Enables prerendering support.
+		 *
+		 * When `true`, the floating layer renders its content inline on the first render (the
+		 * server prerender pass and the initial client render) instead of returning `null`, then
+		 * relocates the content into the floating layer via a portal once mounted on the client.
+		 * This allows modal content (e.g. popups) to be captured by `renderToString` during a
+		 * prerender pass and to hydrate without a mismatch.
+		 *
+		 * Because portals are not supported by the server renderer, this is the only way to include
+		 * floating-layer content in prerendered HTML. Leave `false` (default) for the standard
+		 * client-only portal behavior.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		prerender: PropTypes.bool,
+
+		/**
 		 * The scrim type that overlays FloatingLayer.
 		 *
 		 * It can be either `'transparent'`, `'translucent'`, or `'none'`.
@@ -117,6 +136,7 @@ class FloatingLayerBase extends Component {
 		floatLayerId: 'floatLayer',
 		noAutoDismiss: false,
 		open: false,
+		prerender: false,
 		scrimType: 'translucent'
 	};
 
@@ -238,7 +258,7 @@ class FloatingLayerBase extends Component {
 	}
 
 	render () {
-		const {children, className, floatLayerClassName, open, scrimType, ...rest} = this.props;
+		const {children, className, floatLayerClassName, open, prerender, scrimType, ...rest} = this.props;
 		const mergedClassName = classNames(floatLayerClassName, css.floatingLayer, className);
 
 		delete rest.floatLayerId;
@@ -247,14 +267,25 @@ class FloatingLayerBase extends Component {
 		delete rest.onDismiss;
 		delete rest.onOpen;
 
-		if (open && this.state.readyToRender) {
-			return ReactDOM.createPortal(
+		// When prerendering is enabled, render the content inline on the first render (the server
+		// prerender pass and the initial client render, both before `readyToRender` flips) so it is
+		// captured by `renderToString` and matches during hydration. The portal is unavailable until
+		// after mount, when `readyToRender` becomes true and the content is relocated into it.
+		const renderInline = prerender && !this.state.readyToRender;
+
+		if (open && (this.state.readyToRender || renderInline)) {
+			const content = (
 				<div className={mergedClassName} {...rest}>
 					{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
 					{cloneElement(children, {onClick: this.stopPropagation})}
-				</div>,
-				this.floatingLayer
+				</div>
 			);
+
+			// Use the portal once the floating layer node is available on the client; otherwise
+			// (prerender pass / pre-mount) render inline.
+			return (this.state.readyToRender && this.floatingLayer) ?
+				ReactDOM.createPortal(content, this.floatingLayer) :
+				content;
 		}
 
 		return null;
