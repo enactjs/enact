@@ -46,6 +46,7 @@ jobs:
           npm install
           npm link
           popd
+          echo "$(npm prefix -g)/bin" >> "$GITHUB_PATH"
 
       - name: Install project dependencies
         run: pnpm install --frozen-lockfile
