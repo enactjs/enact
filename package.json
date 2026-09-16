@@ -3,38 +3,23 @@
   "version": "5.6.0",
   "description": "Monorepo for all Enact front end libraries.",
   "private": true,
+  "packageManager": "pnpm@12.4.2",
   "scripts": {
+    "preinstall": "node scripts/ensure-pnpm.js",
     "lerna": "lerna",
-    "bootstrap": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock install",
-    "bootstrap-link": "npm run link-all && npm run interlink",
-    "interlink": "lerna --concurrency 1 run interlink",
-    "link-all": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock link",
-    "unlink-all": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock unlink --global",
+    "bootstrap": "pnpm install",
+    "bootstrap-link": "pnpm install && pnpm run link-all",
+    "link-all": "pnpm -r --workspace-concurrency=1 exec npm --loglevel error --no-package-lock link",
+    "unlink-all": "pnpm -r --workspace-concurrency=1 exec npm --loglevel error --no-package-lock unlink --global",
     "publish": "lerna publish --skip-npm --skip-git",
-    "lint": "lerna --concurrency 1 run lint",
-    "test": "lerna --concurrency 1 run test",
-    "test-ss": "lerna --concurrency 1 run test-ss",
-    "test-ui": "lerna --concurrency 1 run test-ui",
+    "lint": "node scripts/run-recursive.js lint",
+    "test": "node scripts/run-recursive.js test",
+    "test-ss": "node scripts/run-recursive.js test-ss",
+    "test-ui": "node scripts/run-recursive.js test-ui",
     "clean": "lerna clean",
     "validate-docs": "validate-docs --strict --standalone --path packages"
   },
   "license": "Apache-2.0",
-  "overrides": {
-    "autolinker": "^4.0.0",
-    "js-yaml": "^4.3.0",
-    "nx": {
-      "minimatch": "^10.2.4",
-      "axios": "^1.16.0",
-      "brace-expansion": "^5.0.5",
-      "follow-redirects": "^1.15.12",
-      "yaml": "^2.8.3"
-    },
-    "@nx/devkit": {
-      "minimatch": "^10.2.4"
-    },
-    "tar": "^7.5.15",
-    "vue-template-compiler": "@vue/compiler-sfc@3.4.31"
-  },
   "devDependencies": {
     "@enact/docs-utils": "^0.5.0",
     "lerna": "^9.0.7"
