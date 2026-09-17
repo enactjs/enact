@@ -11,6 +11,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",
+    "interlink": "echo \"No interlink\" && exit 0",
     "lint": "enact lint --strict",
     "test": "enact test",
     "test-json": "enact test --json",

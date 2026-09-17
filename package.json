@@ -9,7 +9,7 @@
     "lerna": "lerna",
     "bootstrap": "pnpm install",
     "bootstrap-link": "pnpm install && pnpm run link-all",
-    "link-all": "pnpm -r --workspace-concurrency=1 exec npm --loglevel error --no-package-lock link",
+    "link-all": "pnpm -r --workspace-concurrency=1 exec npm --loglevel error --no-package-lock --ignore-scripts install && pnpm -r --workspace-concurrency=1 exec npm --loglevel error --no-package-lock link && pnpm -r --workspace-concurrency=1 --if-present run interlink",
     "unlink-all": "pnpm -r --workspace-concurrency=1 exec npm --loglevel error --no-package-lock unlink --global",
     "publish": "lerna publish --skip-npm --skip-git",
     "lint": "node scripts/run-recursive.js lint",
