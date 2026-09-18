@@ -1,0 +1,41 @@
+# Nested package.json files (for example packages/ui/Button/package.json)
+# only provide "main" for Node module resolution and are not workspace packages.
+packages:
+  - 'packages/*'
+
+# Isolated linking keeps declared deps in each package's node_modules (Enact CLI
+# Jest maps ilib to <package>/node_modules/ilib). shamefullyHoist also lifts
+# packages to the root for Webpack/ESLint, similar to npm.
+nodeLinker: isolated
+shamefullyHoist: true
+linkWorkspacePackages: true
+preferWorkspacePackages: true
+# Keep ^version in package.json so Jenkins `npm publish` of transpile
+# output does not ship the workspace: protocol to the npm registry.
+saveWorkspaceProtocol: false
+sharedWorkspaceLockfile: true
+
+allowBuilds:
+  '@parcel/watcher': true
+  core-js: false
+  esbuild: true
+  nx: true
+
+# storybook-utils require.resolve()s babel-loader from its own package, but
+# only lists it as a devDependency, so pnpm does not install it for consumers.
+packageExtensions:
+  '@enact/storybook-utils':
+    dependencies:
+      babel-loader: '^10.1.1'
+
+overrides:
+  autolinker: '^4.0.0'
+  js-yaml: '^4.3.0'
+  'nx>minimatch': '^10.2.4'
+  'nx>axios': '^1.16.0'
+  'nx>brace-expansion': '^5.0.5'
+  'nx>follow-redirects': '^1.15.12'
+  'nx>yaml': '^2.8.3'
+  '@nx/devkit>minimatch': '^10.2.4'
+  tar: '^7.5.15'
+  vue-template-compiler: 'npm:@vue/compiler-sfc@3.4.31'

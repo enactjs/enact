@@ -18,23 +18,26 @@ Enact is to provide the building blocks for creating robust and maintainable app
 * [i18n](./packages/i18n) Internationalization library based on iLib.
 * [webos](./packages/webos) Utility functions for working with webOS devices.
 
-Enact uses lerna to manage the individual modules within this repo.
+Enact uses [pnpm workspaces](https://pnpm.io/workspaces) to manage the individual modules within this repo. Lerna is still used for versioning and publishing.
 
 ## Getting Started
 
 Developers should use the individual npm modules hosted under the `@enact` namespace.
 
-For local framework development, this mono-repo can be setup using the `bootstrap` command:
+For local framework development, enable [Corepack](https://nodejs.org/api/corepack.html) (ships with Node.js) and install the workspace:
 
 ```
-npm run bootstrap
+corepack enable
+pnpm install
 ```
+
+pnpm links `@enact/*` packages to each other automatically. The `bootstrap` script is an alias for `pnpm install`.
 
 Alternatively, if you wish to install and setup package dependencies for global usage on a system, the `bootstrap-link` command can be used:
 ```
-npm run bootstrap-link
+pnpm run bootstrap-link
 ```
-That command will `npm link` the packages into global NPM userspace, for use in other projects via `npm link <package>` or `enact link`.
+That command will install the workspace and `npm link` the packages into global NPM userspace, for use in other projects via `npm link <package>` or `enact link`.
 
 ## Documentation
 

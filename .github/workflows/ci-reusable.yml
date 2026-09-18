@@ -18,7 +18,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['lts/*', 'node']
+        node-version: [lts, latest]
 
     steps:
       - name: Checkout code
@@ -26,10 +26,13 @@ jobs:
         with:
           ref: ${{ inputs.checkout-ref || github.ref }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup pnpm and Node.js
+        uses: pnpm/setup@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          version: 12.4.2
+          runtime: node@${{ matrix.node-version }}
+          cache: true
+          install: false
 
       - name: Install system dependencies
         run: |
@@ -43,18 +46,13 @@ jobs:
           npm install
           npm link
           popd
+          echo "$(npm prefix -g)/bin" >> "$GITHUB_PATH"
 
       - name: Install project dependencies
-        run: npm install
-
-      - name: Bootstrap packages
-        run: npm run bootstrap
-
-      - name: Interlink packages
-        run: npm run interlink
+        run: pnpm install --frozen-lockfile
 
       - name: Run tests with coverage
-        run: npm test -- -- --runInBand --coverage
+        run: pnpm test -- --runInBand --coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
@@ -63,11 +61,11 @@ jobs:
           fail_ci_if_error: false
 
       - name: Run ESLint
-        run: npm run lerna -- run lint -- -- --report-unused-disable-directives --max-warnings 0 .
+        run: pnpm lint -- --report-unused-disable-directives --max-warnings 0 .
 
       - name: Validate documentation
-        run: npm run validate-docs
+        run: pnpm validate-docs
 
       - name: Build sampler
-        run: npm run pack
+        run: pnpm run pack
         working-directory: packages/sampler
