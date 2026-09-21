@@ -57,3 +57,4 @@ package-lock.json
 packages/*/package-lock.json
 npm-shrinkwrap.json
 packages/*/npm-shrinkwrap.json
+packages/*/pnpm-lock.yaml
