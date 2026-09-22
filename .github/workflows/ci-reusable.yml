@@ -14,11 +14,14 @@ permissions:
 
 jobs:
   test:
+    name: test (${{ matrix.node.label }})
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [lts, latest]
+        node:
+          - {runtime: lts, label: 'lts/*'}
+          - {runtime: latest, label: node}
 
     steps:
       - name: Checkout code
@@ -30,7 +33,7 @@ jobs:
         uses: pnpm/setup@v2
         with:
           version: 12.4.2
-          runtime: node@${{ matrix.node-version }}
+          runtime: node@${{ matrix.node.runtime }}
           cache: true
           install: false
 
