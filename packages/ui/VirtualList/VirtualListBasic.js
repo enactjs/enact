@@ -10,6 +10,50 @@ import {createRef, Component} from 'react';
 import css from './VirtualList.module.less';
 
 const nop = () => {};
+// Delay after the last scroll event before real items are shown again
+const SCROLL_STOP_DELAY = 200;
+// Images and background images are not drawn on the canvas; a flat block in this colour stands in for them
+const IMAGE_PLACEHOLDER = 'rgba(255, 255, 255, 0.1)';
+
+// Flattens the element tree an `itemRenderer` returns into `{propName: string}`, a few levels deep, without
+// rendering it. This is the text the item was handed for that index; strings a component builds internally are not seen.
+const itemRecord = (value, record = {}, depth = 0, key = 'children') => {
+	if (depth > 4 || value == null) return record;
+
+	if (typeof value === 'string' || typeof value === 'number') {
+		// the same prop name at another level keeps both values
+		let name = key;
+		for (let i = 1; name in record && record[name] !== value; i++) name = `${key}#${i}`;
+		record[name] = value;
+	} else if (Array.isArray(value)) {
+		value.forEach((v) => itemRecord(v, record, depth + 1, key));
+	} else if (typeof value === 'object') {
+		// a React element contributes its props; a plain object its values
+		const obj = value.props || value;
+		Object.keys(obj).forEach((k) => itemRecord(obj[k], record, depth + 1, k));
+	}
+
+	return record;
+};
+
+// Cuts `text` to the longest prefix that, with an ellipsis, fits in `maxWidth` for the font set on `ctx`
+const ellipsize = (ctx, text, maxWidth) => {
+	if (ctx.measureText(text).width <= maxWidth) return text;
+
+	let lo = 0, hi = text.length;
+
+	while (lo < hi) {
+		const mid = (lo + hi + 1) >> 1;
+
+		if (ctx.measureText(text.slice(0, mid) + '…').width <= maxWidth) {
+			lo = mid;
+		} else {
+			hi = mid - 1;
+		}
+	}
+
+	return text.slice(0, lo) + '…';
+};
 
 /**
  * The shape for the grid list item size
@@ -277,7 +321,16 @@ class VirtualListBasic extends Component {
 		 * @type {Function}
 		 * @private
 		 */
-		updateStatesAndBounds: PropTypes.func
+		updateStatesAndBounds: PropTypes.func,
+
+		/**
+		 * When `true`, a canvas snapshot of the items is shown while scrolling instead of the real items.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		useCanvasScroll: PropTypes.bool
 	};
 
 	static defaultProps = {
@@ -297,6 +350,12 @@ class VirtualListBasic extends Component {
 
 		this.contentRef = createRef();
 		this.itemContainerRefs = [];
+
+		// canvas scroll: one rendered item is captured as a drawing template, each slot is drawn from it with item data
+		this.template = null;
+		this.scrolling = false;
+		this.scrollSessionStart = null;
+		this.scrollStopTimer = null;
 
 		this.state = {
 			firstIndex: 0,
@@ -367,6 +426,14 @@ class VirtualListBasic extends Component {
 				this.scrollBounds.maxLeft += marginSum;
 			}
 			this.setContainerSize();
+		}
+
+		if (this.props.useCanvasScroll && !this.template && !this.scrolling) {
+			const template = this.captureTemplate();
+			if (template) {
+				this.template = template;
+				this.forceUpdate();
+			}
 		}
 
 		let deferScrollTo = false;
@@ -494,6 +561,10 @@ class VirtualListBasic extends Component {
 			this.props.cbScrollTo({position: (this.isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 			this.scrollToPositionTarget = -1;
 		}
+	}
+
+	componentWillUnmount () {
+		clearTimeout(this.scrollStopTimer);
 	}
 
 	scrollBounds = {
@@ -708,6 +779,7 @@ class VirtualListBasic extends Component {
 
 		this.primary = primary;
 		this.secondary = secondary;
+		this.template = null;
 
 		// reset
 		this.prevScrollPosition = this.scrollPosition;
@@ -1004,7 +1076,7 @@ class VirtualListBasic extends Component {
 		}
 	}
 
-	didScroll (x, y) {
+	didScroll (x, y, inputType) {
 		const
 			{dataSize, spacing, itemSizes} = this.props,
 			{firstIndex} = this.state,
@@ -1012,6 +1084,8 @@ class VirtualListBasic extends Component {
 			{clientSize, gridSize} = this.primary,
 			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 		let newFirstIndex = firstIndex, index, pos, size, itemPosition;
+
+		this.setCanvasScroll(inputType, isPrimaryDirectionVertical ? y : x);
 
 		if (isPrimaryDirectionVertical) {
 			pos = y;
@@ -1336,6 +1410,183 @@ class VirtualListBasic extends Component {
 		return false;
 	};
 
+	// canvas scroll: flags a scroll in progress and restores the real items once it has settled
+	setCanvasScroll (inputType, position) {
+		if (this.props.useCanvasScroll && inputType === 'wheel') {
+			if (this.scrollSessionStart === null) {
+				this.scrollSessionStart = position;
+			}
+
+			// a scroll shorter than the overhang keeps the real items; they are already rendered for that range
+			if (!this.scrolling && Math.abs(position - this.scrollSessionStart) > this.props.overhang * this.primary.gridSize) {
+				this.scrolling = true;
+			}
+
+			clearTimeout(this.scrollStopTimer);
+
+			this.scrollStopTimer = setTimeout(() => {
+				this.scrollSessionStart = null;
+
+				if (this.scrolling) {
+					this.scrolling = false;
+					this.forceUpdate();
+				}
+			}, SCROLL_STOP_DELAY);
+		}
+	}
+
+	// canvas scroll: the data an item shows, taken from what `itemRenderer` returns for the index
+	getItemData (index) {
+		const
+			{childProps, getComponentProps, itemRenderer} = this.props,
+			componentProps = getComponentProps && getComponentProps(index) || {};
+
+		return itemRecord(itemRenderer({...childProps, ...componentProps, index}));
+	}
+
+	// canvas scroll: records how one rendered item is drawn, relative to its slot,
+	// as backgrounds and text ops, each text op noting the data field it came from
+	captureTemplate () {
+		const
+			{firstIndex, numOfItems} = this.state,
+			slot = this.itemContainerRefs[firstIndex % numOfItems];
+
+		if (!slot) {
+			return null;
+		}
+
+		const root = slot.getBoundingClientRect();
+
+		if (!root.width || !root.height) {
+			return null;
+		}
+
+		const
+			data = this.getItemData(firstIndex),
+			fields = Object.keys(data),
+			range = document.createRange(),
+			ops = [];
+
+		const walk = (node) => {
+			const cs = window.getComputedStyle(node);
+
+			if (cs.display === 'none' || parseFloat(cs.opacity) === 0) {
+				return;
+			}
+
+			const r = node.getBoundingClientRect();
+
+			if (cs.backgroundColor !== 'rgba(0, 0, 0, 0)') {
+				ops.push({type: 'rect', x: r.left - root.left, y: r.top - root.top, width: r.width, height: r.height, color: cs.backgroundColor});
+			}
+
+			if (node.tagName === 'IMG' || cs.backgroundImage !== 'none') {
+				ops.push({type: 'rect', x: r.left - root.left, y: r.top - root.top, width: r.width, height: r.height, color: IMAGE_PLACEHOLDER});
+			}
+
+			for (const n of node.childNodes) {
+				if (n.nodeType !== 3) {
+					continue;
+				}
+
+				const text = n.textContent.trim();
+
+				if (!text) {
+					continue;
+				}
+
+				range.selectNodeContents(n);
+
+				const
+					t = range.getBoundingClientRect(),
+					size = parseFloat(cs.fontSize);
+
+				ops.push({
+					type: 'text',
+					x: t.left - root.left,
+					y: t.top - root.top + (t.height - size) / 2 + size * 0.8,
+					maxWidth: r.right - t.left,
+					font: `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`,
+					color: cs.color,
+					field: fields.find((key) => String(data[key]) === text) || null, // null for fixed text
+					text
+				});
+			}
+
+			for (const child of node.children) {
+				walk(child);
+			}
+		};
+
+		walk(slot);
+
+		return {width: root.width, height: root.height, ops};
+	}
+
+	// canvas scroll: draws one item from the template with its own data into a slot-sized canvas
+	drawItem (canvas, index) {
+		const
+			{template} = this,
+			data = this.getItemData(index);
+
+		// assigning the size also clears the canvas, so only do it when it changed
+		if (canvas.width !== template.width || canvas.height !== template.height) {
+			canvas.width = template.width;
+			canvas.height = template.height;
+		}
+
+		const ctx = canvas.getContext('2d');
+
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+		for (const op of template.ops) {
+			ctx.fillStyle = op.color;
+
+			if (op.type === 'rect') {
+				ctx.fillRect(op.x, op.y, op.width, op.height);
+			} else {
+				const value = op.field ? data[op.field] : op.text;
+
+				if (value != null) {
+					ctx.font = op.font;
+					ctx.fillText(ellipsize(ctx, String(value), op.maxWidth), op.x, op.y);
+				}
+			}
+		}
+	}
+
+	// canvas scroll: one slot-sized canvas per rendered index, keyed like the real slots so the elements are recycled
+	// and redrawn only when the index they show changes; hidden while idle so scroll start only flips visibility
+	renderCanvasItems (hidden) {
+		const
+			{firstIndex, numOfItems} = this.state,
+			{template} = this,
+			last = Math.min(firstIndex + numOfItems, this.props.dataSize),
+			visibility = hidden ? 'hidden' : 'visible',
+			items = [];
+
+		for (let i = firstIndex; i < last; i++) {
+			const
+				{primaryPosition, secondaryPosition} = this.getGridPosition(i),
+				// positioned exactly like a real slot, so grids, horizontal lists and RTL come out right
+				style = {...this.composeStyle(template.width + 'px', template.height + 'px', primaryPosition, secondaryPosition), visibility},
+				draw = (node) => {
+					if (node && node.dataset.canvasIndex !== String(i)) {
+						node.dataset.canvasIndex = i;
+						this.drawItem(node, i);
+					}
+				};
+
+			items.push(
+				<div className={css.listItem} key={`canvas${i % numOfItems}`} style={style}>
+					<canvas ref={draw} />
+				</div>
+			);
+		}
+
+		return items;
+	}
+
 	// render
 
 	render () {
@@ -1349,7 +1600,9 @@ class VirtualListBasic extends Component {
 				{[css.native]: scrollModeNative},
 				className
 			),
-			contentClasses = scrollModeNative ? null : css.content;
+			contentClasses = scrollModeNative ? null : css.content,
+			showCanvas = primary && this.props.useCanvasScroll && this.template,
+			renderCanvas = showCanvas && this.scrolling;
 
 		delete rest.cbScrollTo;
 		delete rest.childProps;
@@ -1375,15 +1628,17 @@ class VirtualListBasic extends Component {
 		delete rest.setThemeScrollContentHandle;
 		delete rest.spacing;
 		delete rest.updateStatesAndBounds;
+		delete rest.useCanvasScroll;
 
-		if (primary) {
+		if (primary && !renderCanvas) {
 			this.positionItems();
 		}
 
 		return (
 			<div className={containerClasses} {...containerProps} ref={this.props.scrollContentRef} style={style}>
 				<div {...rest} className={contentClasses} ref={this.contentRef} role={role}>
-					{[...cc, placeholderRenderer && placeholderRenderer(primary)]}
+					{[...(renderCanvas ? [] : cc), placeholderRenderer && placeholderRenderer(primary)]}
+					{showCanvas ? this.renderCanvasItems(!renderCanvas) : null}
 				</div>
 			</div>
 		);

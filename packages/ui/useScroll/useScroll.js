@@ -882,7 +882,7 @@ const useScrollBase = (props) => {
 		}
 
 		if (scrollContentHandle.current.didScroll) {
-			scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop);
+			scrollContentHandle.current.didScroll(mutableRef.current.scrollLeft, mutableRef.current.scrollTop, mutableRef.current.lastInputType);
 		}
 	}
 
