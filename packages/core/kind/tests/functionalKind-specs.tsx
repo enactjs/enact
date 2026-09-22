@@ -19,12 +19,19 @@ type TestKind = ComponentType<CallbackObject> & {
 
 type TestContextValue = {value: string};
 
+interface TestProps {
+	prop: number;
+	label?: string;
+	onClick?: (...args: any[]) => any;
+}
+
 describe('functionalKind', () => {
 	const TestContext = createContext<TestContextValue>({
 		value: 'initial'
 	});
 	const FunctionalKind = functionalKind({
 		name: 'Kind',
+		_propTypes: {} as TestProps,
 		propTypes: {
 			prop: PropTypes.number.isRequired,
 			label: PropTypes.string
@@ -37,7 +44,7 @@ describe('functionalKind', () => {
 			className: 'kind'
 		} as StylesBlock,
 		handlers: {
-			onClick: (ev, props, context) => {
+			onClick: (ev: Event | null, props: CallbackObject, context?: unknown) => {
 				props.onClick((context as TestContextValue).value);
 			}
 		},
@@ -48,9 +55,10 @@ describe('functionalKind', () => {
 			}
 		},
 		useRender: ({contextValue, label, value, ...rest}) => {
-			delete rest.prop;
+			const restProps = rest as Record<string, any>;
+			delete restProps.prop;
 			return (
-				<div {...rest} data-context={contextValue} title={label}>
+				<div {...restProps} data-context={contextValue} title={label}>
 					{value}
 				</div>
 			);
@@ -94,7 +102,7 @@ describe('functionalKind', () => {
 
 		let consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
 
-		rerender(<Minimal value="five" />);
+		rerender(<Minimal {...({value: 'five'} as any)} />);
 
 		expect(consoleErrorMock).toHaveBeenCalled();
 
@@ -245,8 +253,8 @@ describe('functionalKind', () => {
 		test('should forward an explicitly-passed context argument to useRender', () => {
 			const WithContextArg = functionalKind({
 				name: 'WithContextArg',
-				useRender: (props, context) => context
-			});
+				useRender: (props, context) => context as any
+			}) as TestKind;
 
 			const expected = {value: 'explicit'};
 			const actual = WithContextArg.inline({}, expected);

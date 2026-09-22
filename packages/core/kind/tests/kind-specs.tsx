@@ -17,12 +17,19 @@ type TestKind = ComponentType<CallbackObject> & {
 
 type TestContextValue = {value: string};
 
+interface TestProps {
+	prop: number;
+	label?: string;
+	onClick?: (...args: any[]) => any;
+}
+
 describe('kind', () => {
 	const TestContext = createContext<TestContextValue>({
 		value: 'initial'
 	});
 	const Kind = kind({
 		name: 'Kind',
+		_propTypes: {} as TestProps,
 		propTypes: {
 			prop: PropTypes.number.isRequired,
 			label: PropTypes.string
@@ -35,7 +42,7 @@ describe('kind', () => {
 			className: 'kind'
 		} as StylesBlock,
 		handlers: {
-			onClick: (ev, props, context) => {
+			onClick: (ev: Event | null, props: CallbackObject, context?: unknown) => {
 				props.onClick((context as TestContextValue).value);
 			}
 		},
@@ -46,9 +53,10 @@ describe('kind', () => {
 			}
 		},
 		render: ({contextValue, label, value, ...rest}) => {
-			delete rest.prop;
+			const restProps = rest as Record<string, any>;
+			delete restProps.prop;
 			return (
-				<div {...rest} data-context={contextValue} title={label}>
+				<div {...restProps} data-context={contextValue} title={label}>
 					{value}
 				</div>
 			);
@@ -57,6 +65,7 @@ describe('kind', () => {
 	const FunctionalKind = kind({
 		name: 'Kind',
 		functional: true,
+		_propTypes: {} as TestProps,
 		propTypes: {
 			prop: PropTypes.number.isRequired,
 			label: PropTypes.string
@@ -69,7 +78,7 @@ describe('kind', () => {
 			className: 'kind'
 		} as StylesBlock,
 		handlers: {
-			onClick: (ev, props, context) => {
+			onClick: (ev: Event | null, props: CallbackObject, context?: unknown) => {
 				props.onClick((context as TestContextValue).value);
 			}
 		},
@@ -80,9 +89,10 @@ describe('kind', () => {
 			}
 		},
 		render: ({contextValue, label, value, ...rest}) => {
-			delete rest.prop;
+			const restProps = rest as Record<string, any>;
+			delete restProps.prop;
 			return (
-				<div {...rest} data-context={contextValue} title={label}>
+				<div {...restProps} data-context={contextValue} title={label}>
 					{value}
 				</div>
 			);
