@@ -38,5 +38,17 @@
   "devDependencies": {
     "@enact/docs-utils": "enactjs/docs-utils#feature/typescript",
     "lerna": "^9.0.7"
+  },
+  "optionalDependencies": {
+    "@nx/nx-darwin-arm64": "22.7.6",
+    "@nx/nx-darwin-x64": "22.7.6",
+    "@nx/nx-freebsd-x64": "22.7.6",
+    "@nx/nx-linux-arm-gnueabihf": "22.7.6",
+    "@nx/nx-linux-arm64-gnu": "22.7.6",
+    "@nx/nx-linux-arm64-musl": "22.7.6",
+    "@nx/nx-linux-x64-gnu": "22.7.6",
+    "@nx/nx-linux-x64-musl": "22.7.6",
+    "@nx/nx-win32-arm64-msvc": "22.7.6",
+    "@nx/nx-win32-x64-msvc": "22.7.6"
   }
 }
