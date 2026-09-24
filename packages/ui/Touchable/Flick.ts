@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {TouchableProps} from './Touchable';
 
 export interface FlickConfigPropType {
-	maxDuration?: number;
+	maxDuration: number;
 	maxMoves?: number;
 	maxVelocity?: number;
 	minVelocity?: number;
@@ -30,7 +30,7 @@ class Flick {
 			...config
 		};
 
-		if (this.flickConfig.maxDuration) {
+		if (this.flickConfig.maxDuration !== null) {
 			this.cancelJob.startAfter(this.flickConfig.maxDuration);
 		}
 
