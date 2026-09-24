@@ -14,7 +14,7 @@ import {Flick, FlickConfigPropType} from './Flick';
 import {Hold, HoldConfigPropType} from './Hold';
 import {Pinch, PinchConfigPropType} from './Pinch';
 import {TouchableProps} from './Touchable';
-import {useTouchConfig} from './useTouch';
+import {useTouchConfig, useTouchInterface} from './useTouch';
 
 export interface PointerOrTouchEvent {
 	type: string;
@@ -226,7 +226,7 @@ class Touch {
 	hold;
 	pinch;
 	clickAllow;
-	handlers;
+	handlers: useTouchInterface['handlers'];
 	config: TouchConfig = {} as TouchConfig;
 	props: TouchConfig | null = null;
 	targetBounds: DOMRect | null = null;
@@ -254,7 +254,7 @@ class Touch {
 			onMouseMove: handleMouseMove.bindAs(this, 'handleMouseMove'),
 			onMouseLeave: handleMouseLeave.bindAs(this, 'handleMouseLeave'),
 			onMouseUp: handleMouseUp.bindAs(this, 'handleMouseUp')
-		};
+		} as unknown as useTouchInterface['handlers'];
 
 		if (platform.touchEvent) {
 			Object.assign(this.handlers, {

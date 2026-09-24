@@ -54,7 +54,7 @@ describe('Slider', () => {
 		const handleChange = jest.fn();
 		render(<Slider defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} step={5} />);
 
-		const knob = screen.getByRole('progressbar').children.item(1);
+		const knob = screen.getByRole('progressbar').children.item(1) as Element;
 		fireEvent.mouseDown(knob);
 
 		const expected = {type: 'onChange'};
@@ -67,7 +67,7 @@ describe('Slider', () => {
 		const handleChange = jest.fn();
 		render(<Slider defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} orientation="vertical" step={5} />);
 
-		const knob = screen.getByRole('progressbar').children.item(1);
+		const knob = screen.getByRole('progressbar').children.item(1) as Element;
 		fireEvent.mouseDown(knob);
 
 		const expected = {type: 'onChange'};
@@ -80,7 +80,7 @@ describe('Slider', () => {
 		const handleChange = jest.fn();
 		render(<Slider colorPicker defaultValue={50} onChange={handleChange} progressBarComponent={ProgressBar} orientation="vertical" step={5} />);
 
-		const knob = screen.getByRole('progressbar').children.item(1);
+		const knob = screen.getByRole('progressbar').children.item(1) as Element;
 		fireEvent.mouseDown(knob);
 
 		const expected = {type: 'onChange'};

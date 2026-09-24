@@ -13,15 +13,16 @@
 
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
+import {Callback, CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import {ComponentType, Ref} from 'react';
 
 import ForwardRef from '../ForwardRef';
 import Toggleable from '../Toggleable';
 import Touchable from '../Touchable';
 
 import componentCss from './ToggleIcon.module.less';
-import {CallbackObject} from '../types';
 
 export interface ToggleIconProps {
 	children: string | CallbackObject,
@@ -32,6 +33,15 @@ export interface ToggleIconProps {
 	iconComponent?: EnactPropTypeShapes.renderable,
 	selected?: boolean
 }
+
+export type ToggleType = {
+	ref: Ref<any>,
+	onClick: Callback<any, {selected: string}>,
+	onTap: Callback<any, {selected: string}>,
+	onToggle: Callback<any, {selected: string}>
+}
+
+export type ToggleIconType = ComponentType<ToggleIconProps & Partial<ToggleType>>;
 
 /**
  * Represents a Boolean state, and can accept any icon to toggle.
@@ -54,7 +64,7 @@ const ToggleIconBase = kind({
 		 * @type {String|Object}
 		 * @public
 		 */
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]) as PropTypes.Validator<string | CallbackObject>,
 
 		/**
 		 * Called with a reference to the root component.
@@ -65,7 +75,7 @@ const ToggleIconBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref,
+		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -173,7 +183,7 @@ const ToggleIconDecorator = compose(
  * @ui
  * @public
  */
-const ToggleIcon = ToggleIconDecorator(ToggleIconBase);
+const ToggleIcon = ToggleIconDecorator(ToggleIconBase) as ToggleIconType;
 
 /**
  * The handler to run when the component is toggled.

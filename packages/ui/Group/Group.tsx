@@ -10,7 +10,7 @@
 
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import {Callback} from '@enact/core/types';
+import {Callback, CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
@@ -19,10 +19,11 @@ import ForwardRef from '../ForwardRef';
 import Repeater from '../Repeater';
 
 import {GroupItem, pickGroupItemProps} from './GroupItem';
+import {ComponentType, HTMLAttributes, Ref} from 'react';
 
 export interface GroupBaseProps {
 	childComponent: EnactPropTypeShapes.renderable;
-	children: string[] | {key: string | number}[];
+	children: string[] | CallbackObject<string | number>[];
 	childProp?: string;
 	childSelect?: string;
 	componentRef?: EnactPropTypeShapes.ref;
@@ -34,6 +35,12 @@ export interface GroupBaseProps {
 	selectedEventProp?: string;
 	selectedProp?: string;
 }
+
+export type GroupType = ComponentType<
+	GroupBaseProps &
+	Omit<HTMLAttributes<HTMLDivElement>, keyof GroupBaseProps> &
+	{ref?: Ref<any>}
+>;
 
 /**
  * A stateless component that supports selection of its child items via configurable
@@ -61,6 +68,15 @@ const GroupBase = kind({
 		childComponent: EnactPropTypes.renderable.isRequired,
 
 		/**
+		 * The property on each `childComponent` that receives the data in `children`
+		 *
+		 * @type {String}
+		 * @default 'children'
+		 * @public
+		 */
+		childProp: PropTypes.string,
+
+		/**
 		 * An array of data to be mapped onto the `childComponent`.
 
 		 * This supports two data types. If an array of strings is provided, the strings will be
@@ -82,16 +98,7 @@ const GroupBase = kind({
 			PropTypes.arrayOf(PropTypes.shape({
 				key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 			}))
-		]).isRequired,
-
-		/**
-		 * The property on each `childComponent` that receives the data in `children`
-		 *
-		 * @type {String}
-		 * @default 'children'
-		 * @public
-		 */
-		childProp: PropTypes.string,
+		]).isRequired as PropTypes.Validator<string[] | CallbackObject<string | number>[]>,
 
 		/**
 		 * The name of the event that triggers activation.
@@ -111,7 +118,7 @@ const GroupBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref,
+		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
 
 		/**
 		 * The property on each `childComponent` that receives the index of the item
@@ -151,7 +158,7 @@ const GroupBase = kind({
 		 * @default 'single'
 		 * @public
 		 */
-		select: PropTypes.oneOf(['single', 'radio', 'multiple']),
+		select: PropTypes.oneOf(['single', 'radio', 'multiple']) as PropTypes.Validator<'single' | 'radio' | 'multiple'>,
 
 		/**
 		 * The index(es) of the currently activated item.
@@ -236,7 +243,7 @@ const GroupDecorator = compose(
  */
 const Group = GroupDecorator(
 	GroupBase
-);
+) as GroupType;
 
 export default Group;
 export {

@@ -15,7 +15,7 @@ import {ResizeContext} from '../Resizable';
 import useScroll from '../useScroll';
 import Scrollbar from '../useScroll/Scrollbar';
 
-import {gridListItemSizeShape, itemSizesShape, VirtualListBasic} from './VirtualListBasic';
+import {gridListItemSizeShape, itemSizesShape, VirtualListBasic, VirtualListBasicProps} from './VirtualListBasic';
 import {Callback} from '../types';
 import PropTypes from 'prop-types';
 
@@ -25,11 +25,12 @@ export interface ScrollToProps {
 	focus?: boolean;
 	index?: number;
 	node?: HTMLElement;
-	position?: {x: number, y: number};
+	position?: {x?: number, y?: number};
+	stickTo?: 'start' | 'center' | 'end';
 }
 
-export interface VirtualListProps {
-	cbScrollTo: Callback<any, ScrollToProps>,
+export interface VirtualListProps extends VirtualListBasicProps {
+	cbScrollTo: (scrollTo: (opts: ScrollToProps) => void) => void,
 	direction: 'horizontal' | 'vertical',
 	horizontalScrollbar: 'auto' | 'visible' | 'hidden',
 	noScrollByDrag: boolean,
@@ -39,7 +40,7 @@ export interface VirtualListProps {
 	onScrollStop: Callback<any, {scrollLeft: number, scrollTop: number, moreInfo: {firstVisibleIndex: number, lastVisibleIndex: number}}>,
 	overscrollEffectOn: {drag: boolean, pageKey: boolean, wheel: boolean},
 	role: string,
-	scrollMode: string,
+	scrollMode: 'native' | 'translate',
 	verticalScrollbar: 'auto' | 'visible' | 'hidden'
 }
 
@@ -47,7 +48,7 @@ export interface VirtualGridListProps extends VirtualListProps {}
 
 const nop = () => {};
 
-const virtualListDefaultProps: VirtualListProps = {
+const virtualListDefaultProps: Partial<VirtualListProps> = {
 	cbScrollTo: nop,
 	direction: 'vertical',
 	horizontalScrollbar: 'auto',
@@ -326,7 +327,7 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 
 VirtualList.defaultPropValues = virtualListDefaultProps;
 
-const virtualGridListDefaultProps: VirtualGridListProps = {
+const virtualGridListDefaultProps: Partial<VirtualGridListProps> = {
 	cbScrollTo: nop,
 	direction: 'vertical',
 	horizontalScrollbar: 'auto',

@@ -3,12 +3,21 @@
 import kind from '@enact/core/kind';
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
+import {ReactNode} from 'react';
 
 import Slottable from '../Slottable';
 
+export type ComponentProps = {
+	a?: ReactNode;
+	b?: ReactNode;
+	c?: ReactNode;
+	children?: ReactNode;
+	custom?: ReactNode;
+}
+
 describe('Slottable Specs', () => {
 	test('should distribute children with a \'slot\' property', () => {
-		const Component = Slottable({slots: ['a', 'b', 'c']}, ({a, b, c}) => (
+		const Component = Slottable({slots: ['a', 'b', 'c']}, ({a, b, c}: ComponentProps) => (
 			<div data-testid="slottable">
 				{c}
 				{b}
@@ -30,7 +39,7 @@ describe('Slottable Specs', () => {
 	});
 
 	test('should distribute children with a \'type\' that matches a slot', () => {
-		const Component = Slottable({slots: ['a', 'b', 'c', 'custom']}, ({a, b, c, custom}) => (
+		const Component = Slottable({slots: ['a', 'b', 'c', 'custom']}, ({a, b, c, custom}: ComponentProps) => (
 			<div data-testid="slottable">
 				{c}
 				{b}
@@ -60,9 +69,9 @@ describe('Slottable Specs', () => {
 				return <div>{children}</div>;
 			}
 		});
-		Custom.defaultSlot = 'c';
+		(Custom as typeof Custom & {defaultSlot?: string}).defaultSlot = 'c';
 
-		const Component = Slottable({slots: ['a', 'b', 'c']}, ({a, b, c}) => (
+		const Component = Slottable({slots: ['a', 'b', 'c']}, ({a, b, c}: ComponentProps) => (
 			<div data-testid="slottable">
 				{c}
 				{b}
@@ -84,7 +93,7 @@ describe('Slottable Specs', () => {
 	});
 
 	test('should distribute children with no \'slot\' property to Slottable\'s \'children\'', () => {
-		const Component = Slottable({slots: ['a', 'b']}, ({a, b, children}) => (
+		const Component = Slottable({slots: ['a', 'b']}, ({a, b, children}: ComponentProps) => (
 			<div data-testid="slottable">
 				{children}
 				{b}
@@ -108,9 +117,9 @@ describe('Slottable Specs', () => {
 	test('should not distribute children with an invalid \'slot\' property', () => {
 		// Modify the console spy to silence error output with
 		// an empty mock implementation
-		console.error.mockImplementation();
+		(console.error as jest.Mock).mockImplementation();
 
-		const Component = Slottable({slots: ['a', 'b']}, ({a, b, c}) => (
+		const Component = Slottable({slots: ['a', 'b']}, ({a, b, c}: ComponentProps) => (
 			<div data-testid="slottable">
 				{c}
 				{b}
@@ -132,19 +141,19 @@ describe('Slottable Specs', () => {
 		expect(actual.textContent).toBe(expected);
 
 		// Check to make sure that we only get the one expected error
-		const actualErrorsLength = console.error.mock.calls.length;
+		const actualErrorsLength = (console.error as jest.Mock).mock.calls.length;
 		const expectedErrorLength = 1;
 
 		expect(actualErrorsLength).toBe(expectedErrorLength);
 
-		const actualError = console.error.mock.calls[0][0];
+		const actualError = (console.error as jest.Mock).mock.calls[0][0];
 		const expectedError = 'Warning: The slot "c" specified on div does not exist';
 
 		expect(actualError).toBe(expectedError);
 	});
 
 	test('should distribute children with props other than simply \'children\', in entirety, to the matching destination slot', () => {
-		const Component = Slottable({slots: ['a', 'b', 'c', 'custom']}, ({a, b, c, custom}) => (
+		const Component = Slottable({slots: ['a', 'b', 'c', 'custom']}, ({a, b, c, custom}: ComponentProps) => (
 			<div className="root-div" data-testid="slottable">
 				{c}
 				{b}
@@ -177,7 +186,7 @@ describe('Slottable Specs', () => {
 		// restore this because it breaks our global warning listener.
 		jest.spyOn(console, 'error').mockImplementation(() => {});
 
-		const Component = Slottable({slots: ['a']}, ({a}) => (
+		const Component = Slottable({slots: ['a']}, ({a}: ComponentProps) => (
 			<div data-testid="slottable">
 				{a}
 			</div>
@@ -195,7 +204,7 @@ describe('Slottable Specs', () => {
 	});
 
 	test('should add values to existing array in \'slot\' property', () => {
-		const Component = Slottable({slots: ['a']}, ({a}) => (
+		const Component = Slottable({slots: ['a']}, ({a}: ComponentProps) => (
 			<div data-testid="slottable">
 				{a}
 			</div>
@@ -215,7 +224,7 @@ describe('Slottable Specs', () => {
 	});
 
 	test('should distribute multiple children with the same slot into the same slot', () => {
-		function ComponentBase ({a}) {
+		function ComponentBase ({a}: ComponentProps) {
 			return (
 				<div className="root-div" data-testid="slottable">
 					{a}

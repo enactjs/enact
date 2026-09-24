@@ -13,10 +13,11 @@
 
 import kind from '@enact/core/kind';
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
+import {CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import clamp from 'ramda/src/clamp';
 import compose from 'ramda/src/compose';
-import {ReactNode} from 'react';
+import {ComponentType, HTMLAttributes, ReactNode, Ref} from 'react';
 
 import {validateRange} from '../internal/validators';
 import ForwardRef from '../ForwardRef';
@@ -25,13 +26,19 @@ import componentCss from './ProgressBar.module.less';
 
 export interface ProgressBarBaseProps {
 	backgroundProgress?: number;
-	children: ReactNode;
+	children?: ReactNode;
 	componentRef?: EnactPropTypeShapes.ref;
-	css: Record<string, string>;
+	css?: Record<string, string>;
 	orientation?: 'horizontal' | 'vertical' | 'radial';
 	progress?: number;
 	progressAnchor?: number;
 }
+
+export type ProgressBarType = ComponentType<
+	ProgressBarBaseProps &
+	Omit<HTMLAttributes<HTMLDivElement>, keyof ProgressBarBaseProps> &
+	{ref?: Ref<any>}
+>;
 
 const progressToProportion = (value: number) => clamp(0, 1, value);
 const calcBarStyle = (prop: string, anchor: number, value: number = anchor, startProp: string, endProp: string) => {
@@ -91,7 +98,7 @@ const ProgressBarBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref,
+		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -110,7 +117,7 @@ const ProgressBarBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object,
+		css: PropTypes.object as PropTypes.Validator<CallbackObject<string>>,
 
 		/**
 		 * Sets the orientation of the slider.
@@ -125,7 +132,7 @@ const ProgressBarBase = kind({
 		 * @default 'horizontal'
 		 * @public
 		 */
-		orientation: PropTypes.string,
+		orientation: PropTypes.oneOf(['horizontal', 'vertical', 'radial']),
 
 		/**
 		 * The proportion of the filled portion of the progress bar.
@@ -194,7 +201,7 @@ const ProgressBarBase = kind({
 		}
 	},
 
-	render: ({backgroundProgress, children, componentRef, css, orientation, progress, progressAnchor, ...rest}) => {
+	render: ({backgroundProgress, children, componentRef, css = {}, orientation, progress, progressAnchor, ...rest}) => {
 		return (
 			<div role="progressbar" {...rest} ref={componentRef}>
 				<div className={css.bar}>
@@ -231,7 +238,7 @@ const ProgressBarDecorator = compose(
  * @ui
  * @public
  */
-const ProgressBar = ProgressBarDecorator(ProgressBarBase);
+const ProgressBar = ProgressBarDecorator(ProgressBarBase) as ProgressBarType;
 
 export default ProgressBar;
 export {

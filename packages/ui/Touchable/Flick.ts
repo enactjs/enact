@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import {TouchableProps} from './Touchable';
 
 export interface FlickConfigPropType {
-	maxDuration: number;
-	maxMoves: number;
+	maxDuration?: number;
+	maxMoves?: number;
 	maxVelocity?: number;
 	minVelocity?: number;
 }
@@ -30,7 +30,7 @@ class Flick {
 			...config
 		};
 
-		if (this.flickConfig.maxDuration !== null) {
+		if (this.flickConfig.maxDuration) {
 			this.cancelJob.startAfter(this.flickConfig.maxDuration);
 		}
 
@@ -53,7 +53,7 @@ class Flick {
 	move = ({x, y}: {x: number, y: number}) => {
 		if (!this.tracking) return;
 
-		const {maxMoves} = this.flickConfig || defaultFlickConfig;
+		const {maxMoves = 5} = this.flickConfig || defaultFlickConfig;
 
 		this.moves.push({
 			x,
