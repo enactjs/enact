@@ -1,19 +1,21 @@
 import '@testing-library/jest-dom';
+import {CallbackObject} from '@enact/core/types';
 import {act, fireEvent, render, screen} from '@testing-library/react';
+import {ReactNode} from 'react';
 
-import VirtualList from '../VirtualList';
+import VirtualList, {ScrollToProps} from '../VirtualList';
 
-const activate = (list) => fireEvent.keyUp(list, {keyCode: 13});
-const keyDown = (keyCode) => (list) => fireEvent.keyDown(list, {keyCode});
+const activate = (list: Element) => fireEvent.keyUp(list, {keyCode: 13});
+const keyDown = (keyCode: number) => (list: Element) => fireEvent.keyDown(list, {keyCode});
 
 const downKeyDown = keyDown(40);
 
-const getElementClientCenter = (element) => {
+const getElementClientCenter = (element:  Element) => {
 	const {left, top, width, height} = element.getBoundingClientRect();
 	return {x: left + width / 2, y: top + height / 2};
 };
 
-const drag = async (element, {delta, steps = 1}) => {
+const drag = async (element: Element, {delta, steps = 1}: {delta: CallbackObject, steps?: number}) => {
 	const from = getElementClientCenter(element);
 	const to = {x: from.x + delta.x, y: from.y + delta.y};
 	const step = {x: (to.x - from.x) / steps, y: (to.y - from.y) / steps};
@@ -33,22 +35,25 @@ const drag = async (element, {delta, steps = 1}) => {
 };
 
 describe('VirtualList', () => {
+	type ScrollToFn = (opts: ScrollToProps) => void;
+	type ScrollEvent = {scrollTop: number};
+
 	let
-		clientSize,
-		dataSize,
-		getScrollTo,
-		handlerOnScroll,
-		handlerOnScrollStart,
-		handlerOnScrollStop,
-		items,
-		itemSize,
-		myScrollTo,
-		onScrollCount,
-		onScrollStartCount,
-		onScrollStopCount,
-		renderItem,
-		resultScrollTop,
-		startScrollTop;
+		clientSize: {clientWidth: number, clientHeight: number},
+		dataSize: number,
+		getScrollTo: (scrollTo: ScrollToFn) => void,
+		handlerOnScroll: () => void,
+		handlerOnScrollStart: (e: ScrollEvent) => void,
+		handlerOnScrollStop: (done: () => void, testCase: () => void) => (e: ScrollEvent) => void,
+		items: {name: string}[],
+		itemSize: number,
+		myScrollTo: ScrollToFn,
+		onScrollCount: number,
+		onScrollStartCount: number,
+		onScrollStopCount: number,
+		renderItem: (props: {index: number, [key: string]: any}) => ReactNode,
+		resultScrollTop: number,
+		startScrollTop: number;
 
 	beforeEach(() => {
 		clientSize = {clientWidth: 1280, clientHeight: 720};
@@ -91,24 +96,6 @@ describe('VirtualList', () => {
 		}
 	});
 
-	afterEach(() => {
-		clientSize = null;
-		dataSize = null;
-		getScrollTo = null;
-		handlerOnScroll = null;
-		handlerOnScrollStart = null;
-		handlerOnScrollStop = null;
-		items = null;
-		itemSize = null;
-		myScrollTo = null;
-		onScrollCount = null;
-		onScrollStartCount = null;
-		onScrollStopCount = null;
-		renderItem = null;
-		resultScrollTop = null;
-		startScrollTop = null;
-	});
-
 	test('should render a list of \'items\'', () => {
 		render(
 			<VirtualList
@@ -120,7 +107,7 @@ describe('VirtualList', () => {
 		);
 
 		const expected = 'Account 0';
-		const actual = screen.getByRole('list').children.item(0).textContent;
+		const actual = screen.getByRole('list').children.item(0)?.textContent;
 
 		expect(actual).toBe(expected);
 	});
@@ -137,7 +124,7 @@ describe('VirtualList', () => {
 		);
 
 		const expected = 'Account 0';
-		const actual = screen.getByRole('list').children.item(0).textContent;
+		const actual = screen.getByRole('list').children.item(0)?.textContent;
 
 		expect(actual).toBe(expected);
 	});
@@ -633,7 +620,7 @@ describe('VirtualList', () => {
 		test('should scroll by drag', async () => {
 			const fn = jest.fn();
 
-			const onScrollStop = (e) => {
+			const onScrollStop = (e: ScrollEvent) => {
 				fn();
 				expect(startScrollTop).toBe(0);
 				expect(onScrollStartCount).toBe(1);
@@ -696,7 +683,7 @@ describe('VirtualList', () => {
 	describe('Adding an item', () => {
 		test('should render an added item named \'Password 0\' as the first item', (done) => {
 			const itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
-			const renderItemArray = ({index, ...rest}) => {
+			const renderItemArray = ({index, ...rest}: {index: number}) => {
 				return (
 					<div {...rest} id={'item' + index}>
 						{itemArray[index].name}
@@ -727,7 +714,7 @@ describe('VirtualList', () => {
 
 			act(() => jest.advanceTimersByTime(0));
 			const expected = itemArray[0].name;
-			const actual = screen.getByRole('list').children.item(0).textContent;
+			const actual = screen.getByRole('list').children.item(0)?.textContent;
 
 			expect(actual).toBe(expected);
 			done();

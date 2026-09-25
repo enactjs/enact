@@ -68,7 +68,7 @@ describe('Skinnable/util/objectify Specs', () => {
 
 describe('Skinnable/util/preferDefined Specs', () => {
 	test('should return the first element if it is a normal string', () => {
-		const subject = ['string1', 'string2'];
+		const subject: [string, string] = ['string1', 'string2'];
 
 		const expected = 'string1';
 		const actual = preferDefined.apply(this, subject);
@@ -77,7 +77,7 @@ describe('Skinnable/util/preferDefined Specs', () => {
 	});
 
 	test('should return the first element if even if it is an empty string', () => {
-		const subject = ['', 'string2'];
+		const subject: [string, string] = ['', 'string2'];
 
 		const expected = '';
 		const actual = preferDefined.apply(this, subject);
@@ -86,7 +86,7 @@ describe('Skinnable/util/preferDefined Specs', () => {
 	});
 
 	test('should return the first element if it is a true boolean', () => {
-		const subject = [true, 'string2'];
+		const subject: [boolean, string] = [true, 'string2'];
 
 		const expected = true;
 		const actual = preferDefined.apply(this, subject);
@@ -95,7 +95,7 @@ describe('Skinnable/util/preferDefined Specs', () => {
 	});
 
 	test('should return the first element if it is a false boolean', () => {
-		const subject = [false, 'string2'];
+		const subject: [boolean, string] = [false, 'string2'];
 
 		const expected = false;
 		const actual = preferDefined.apply(this, subject);
@@ -104,7 +104,7 @@ describe('Skinnable/util/preferDefined Specs', () => {
 	});
 
 	test('should return the second element if the first is null', () => {
-		const subject = [null, 'string2'];
+		const subject: [null, string] = [null, 'string2'];
 
 		const expected = 'string2';
 		const actual = preferDefined.apply(this, subject);
@@ -113,7 +113,7 @@ describe('Skinnable/util/preferDefined Specs', () => {
 	});
 
 	test('should return the second element if the first is undefined', () => {
-		const subject = [void 0, 'string2'];
+		const subject: [undefined, string] = [void 0, 'string2'];
 
 		const expected = 'string2';
 		const actual = preferDefined.apply(this, subject);
