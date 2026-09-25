@@ -3,7 +3,7 @@ import {act, render, screen} from '@testing-library/react';
 import {createRef} from 'react';
 
 import {MockArranger} from './test-utils';
-import View from '../View';
+import View, {ArrangerType} from '../View';
 
 describe('View', () => {
 	test('should render its child when neither enteringProp or childProps is specified', () => {
@@ -48,13 +48,13 @@ describe('View', () => {
 	describe('imperative API without arranger', () => {
 		test('should call callback immediately for "stay"', () => {
 			const spy = jest.fn();
-			const ref = createRef();
+			const ref = createRef<View>();
 			render(
 				<View duration={16} ref={ref}>
 					<span />
 				</View>
 			);
-			act(() => ref.current.componentWillStay(spy));
+			act(() => ref.current?.componentWillStay(spy));
 
 			const expected = 1;
 
@@ -63,14 +63,14 @@ describe('View', () => {
 
 		test('should call callback immediately for "enter"', () => {
 			const spy = jest.fn();
-			const ref = createRef();
+			const ref = createRef<View>();
 			render(
 				<View duration={16} ref={ref}>
 					<span />
 				</View>
 			);
 
-			act(() => ref.current.componentWillEnter(spy));
+			act(() => ref.current?.componentWillEnter(spy));
 
 			const expected = 1;
 
@@ -79,14 +79,14 @@ describe('View', () => {
 
 		test('should call callback immediately for "leave"', () => {
 			const spy = jest.fn();
-			const ref = createRef();
+			const ref = createRef<View>();
 			render(
 				<View duration={16} ref={ref}>
 					<span />
 				</View>
 			);
 
-			act(() => ref.current.componentWillLeave(spy));
+			act(() => ref.current?.componentWillLeave(spy));
 
 			const expected = 1;
 
@@ -96,20 +96,20 @@ describe('View', () => {
 		test('should reset entering if a rendered panel re-enters', () => {
 			jest.useFakeTimers();
 			const spy = jest.fn();
-			const ref = createRef();
+			const ref = createRef<View>();
 			render(
 				<View duration={16} enteringProp="data-entering" ref={ref}>
 					<span data-testid="span" />
 				</View>
 			);
 
-			act(() => ref.current.componentDidAppear(spy));
+			act(() => ref.current?.componentDidAppear());
 			const firstExpected = 'false';
 			const firstSpan = screen.getByTestId('span');
 
 			expect(firstSpan).toHaveAttribute('data-entering', firstExpected);
 
-			act(() => ref.current.componentWillEnter(spy));
+			act(() => ref.current?.componentWillEnter(spy));
 			const secondExpected = 'true';
 			const secondSpan = screen.getByTestId('span');
 
@@ -127,7 +127,7 @@ describe('View', () => {
 		});
 
 		test('should call callback for "stay"', (done) => {
-			const ref = createRef();
+			const ref = createRef<View>();
 			const getParentRef = () => ({children: [{}]});
 			render(
 				<View arranger={MockArranger} duration={16} ref={ref} getParentRef={getParentRef}>
@@ -142,12 +142,12 @@ describe('View', () => {
 				done();
 			});
 
-			act(() => ref.current.componentWillStay(spy));
+			act(() => ref.current?.componentWillStay(spy));
 			jest.runAllTimers();
 		});
 
 		test('should call callback for "enter"', (done) => {
-			const ref = createRef();
+			const ref = createRef<View>();
 			const getParentRef = () => ({children: [{}]});
 			render(
 				<View arranger={MockArranger} duration={16} ref={ref} getParentRef={getParentRef}>
@@ -162,12 +162,12 @@ describe('View', () => {
 				done();
 			});
 
-			act(() => ref.current.componentWillEnter(spy));
+			act(() => ref.current?.componentWillEnter(spy));
 			jest.runAllTimers();
 		});
 
 		test('should call callback for "leave"', (done) => {
-			const ref = createRef();
+			const ref = createRef<View>();
 			const getParentRef = () => ({children: [{}]});
 			render(
 				<View arranger={MockArranger} duration={16} ref={ref} getParentRef={getParentRef}>
@@ -182,13 +182,13 @@ describe('View', () => {
 				done();
 			});
 
-			act(() => ref.current.componentWillLeave(spy));
+			act(() => ref.current?.componentWillLeave(spy));
 			jest.runAllTimers();
 		});
 
 		test('should call callback immediately when {noAnimation}', () => {
 			const spy = jest.fn();
-			const ref = createRef();
+			const ref = createRef<View>();
 			const getParentRef = () => ({children: [{}]});
 			render(
 				<View arranger={MockArranger} duration={16} noAnimation ref={ref} getParentRef={getParentRef}>
@@ -196,7 +196,7 @@ describe('View', () => {
 				</View>
 			);
 
-			act(() => ref.current.componentWillEnter(spy));
+			act(() => ref.current?.componentWillEnter(spy));
 
 			const expected = 1;
 
@@ -205,7 +205,7 @@ describe('View', () => {
 
 		test('should call callback immediately for "appear"', () => {
 			const spy = jest.fn();
-			const ref = createRef();
+			const ref = createRef<View>();
 			const getParentRef = () => ({children: [{}]});
 			render(
 				<View arranger={MockArranger} duration={16} ref={ref} getParentRef={getParentRef}>
@@ -213,7 +213,7 @@ describe('View', () => {
 				</View>
 			);
 
-			act(() => ref.current.componentWillAppear(spy));
+			act(() => ref.current?.componentWillAppear(spy));
 
 			const expected = 1;
 
@@ -232,11 +232,12 @@ describe('View', () => {
 		};
 
 		test('should pass the expected object to the arranger', () => {
+			const spy = jest.fn();
 			const arranger = {
 				enter: jest.fn(() => ({}))
-			};
+			} as ArrangerType;
 
-			const ref = createRef();
+			const ref = createRef<View>();
 			const getParentRef = () => ({children: [{}]});
 			render(
 				<View arranger={arranger} duration={1000} ref={ref} getParentRef={getParentRef}>
@@ -244,7 +245,7 @@ describe('View', () => {
 				</View>
 			);
 
-			act(() => ref.current.componentWillEnter());
+			act(() => ref.current?.componentWillEnter(spy));
 			expect(arranger.enter).toHaveBeenCalledWith(arrangerStruct);
 		});
 	});

@@ -1,23 +1,24 @@
 import '@testing-library/jest-dom';
 import {render} from '@testing-library/react';
+import {ReactElement} from 'react';
 
-import useSkins from '../useSkins';
+import useSkins, {SkinsConfig, SkinsInterface} from '../useSkins';
 
 describe('Skinnable Specs', () => {
-	let data;
+	let data: SkinsInterface;
 
-	const Base = (props) => {
+	const Base = (props: SkinsInterface) => {
 		data = props;
 		return null;
 	};
-	function Component ({config}) {
+	function Component ({config}: {config: SkinsConfig}) {
 		const skins = useSkins(config);
 		return (
 			<Base {...skins} />
 		);
 	}
 
-	function Parent ({config, children}) {
+	function Parent ({config, children}: {config: SkinsConfig, children: ReactElement}) {
 		const skins = useSkins(config);
 
 		return skins.provideSkins(children);
