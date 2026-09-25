@@ -29,7 +29,26 @@ export interface ScrollToProps {
 	stickTo?: 'start' | 'center' | 'end';
 }
 
-export interface VirtualListProps extends VirtualListBasicProps {
+type VirtualListInjectedProps =
+	| 'cbScrollTo'
+	| 'childProps'
+	| 'clientSize'
+	| 'containerProps'
+	| 'getAffordance'
+	| 'getComponentProps'
+	| 'isHorizontalScrollbarVisible'
+	| 'isVerticalScrollbarVisible'
+	| 'itemRefs'
+	| 'itemSizes'
+	| 'onUpdate'
+	| 'onUpdateItems'
+	| 'placeholderRenderer'
+	| 'scrollContainerContainsDangerously'
+	| 'scrollContentRef'
+	| 'setThemeScrollContentHandle'
+	| 'updateStatesAndBounds';
+
+export interface VirtualListProps extends Omit<VirtualListBasicProps, VirtualListInjectedProps> {
 	cbScrollTo: (scrollTo: (opts: ScrollToProps) => void) => void,
 	direction: 'horizontal' | 'vertical',
 	horizontalScrollbar: 'auto' | 'visible' | 'hidden',
@@ -41,7 +60,12 @@ export interface VirtualListProps extends VirtualListBasicProps {
 	overscrollEffectOn: {drag: boolean, pageKey: boolean, wheel: boolean},
 	role: string,
 	scrollMode: 'native' | 'translate',
-	verticalScrollbar: 'auto' | 'visible' | 'hidden'
+	verticalScrollbar: 'auto' | 'visible' | 'hidden',
+	clientSize?: {
+		clientHeight: number,
+		clientWidth: number
+	},
+	itemSizes?: number[]
 }
 
 export interface VirtualGridListProps extends VirtualListProps {}

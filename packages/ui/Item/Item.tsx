@@ -32,7 +32,7 @@ export type ItemType = ComponentType<
 	ItemBaseProps &
 	TouchableProps &
 	Omit<HTMLAttributes<HTMLElement>, keyof ItemBaseProps | keyof TouchableProps> &
-	{ref?: Ref<any>}
+	{ref?: Ref<HTMLElement>}
 >;
 
 /**

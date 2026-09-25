@@ -39,7 +39,7 @@ export type ButtonType = ComponentType<
 	ButtonBaseProps &
 	TouchableProps &
 	Omit<HTMLAttributes<HTMLDivElement>, keyof ButtonBaseProps | keyof TouchableProps> &
-	{ref?: Ref<any>}
+	{ref?: Ref<HTMLDivElement>}
 >;
 
 /**

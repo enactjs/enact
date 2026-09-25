@@ -13,7 +13,7 @@ import kind from '@enact/core/kind';
 import {Callback, CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {ComponentType, Ref} from 'react';
+import {ComponentType, HTMLAttributes, Ref} from 'react';
 
 import Changeable from '../Changeable';
 import ComponentOverride from '../ComponentOverride';
@@ -48,7 +48,11 @@ export interface SliderProps {
 	value?: number
 }
 
-export type SliderType = ComponentType<SliderProps & Partial<{ref: Ref<any>, onChange: Callback<any, {value: number, proportion: number}>}>>
+export type SliderType = ComponentType<
+	SliderProps &
+	Omit<HTMLAttributes<HTMLDivElement>, keyof SliderProps> &
+	{ref?: Ref<HTMLDivElement>, onChange?: Callback<any, {value: number, proportion: number}>}
+>
 
 /**
  * An unstyled, sliding range-selection component.

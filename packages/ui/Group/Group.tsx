@@ -23,7 +23,7 @@ import {ComponentType, HTMLAttributes, Ref} from 'react';
 
 export interface GroupBaseProps {
 	childComponent: EnactPropTypeShapes.renderable;
-	children: string[] | CallbackObject<string | number>[];
+	children: string[] | (CallbackObject<string | number> & {key: string | number})[];
 	childProp?: string;
 	childSelect?: string;
 	componentRef?: EnactPropTypeShapes.ref;
@@ -39,7 +39,7 @@ export interface GroupBaseProps {
 export type GroupType = ComponentType<
 	GroupBaseProps &
 	Omit<HTMLAttributes<HTMLDivElement>, keyof GroupBaseProps> &
-	{ref?: Ref<any>}
+	{ref?: Ref<HTMLDivElement>}
 >;
 
 /**
@@ -98,7 +98,7 @@ const GroupBase = kind({
 			PropTypes.arrayOf(PropTypes.shape({
 				key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 			}))
-		]).isRequired as PropTypes.Validator<string[] | CallbackObject<string | number>[]>,
+		]).isRequired as PropTypes.Validator<string[] | (CallbackObject<string | number> & {key: string | number})[]>,
 
 		/**
 		 * The name of the event that triggers activation.

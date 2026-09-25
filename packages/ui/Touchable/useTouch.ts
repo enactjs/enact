@@ -8,7 +8,8 @@ import {
 	TouchEvent,
 	MouseEvent,
 	MouseEventHandler,
-	FocusEventHandler
+	FocusEventHandler,
+	TouchEventHandler
 } from 'react';
 
 import {States} from './state';
@@ -100,7 +101,10 @@ export interface useTouchInterface {
 		onMouseEnter: MouseEventHandler,
 		onMouseMove: MouseEventHandler,
 		onMouseLeave: MouseEventHandler,
-		onMouseUp: MouseEventHandler
+		onMouseUp: MouseEventHandler,
+		onTouchStart?: TouchEventHandler,
+		onTouchMove?: TouchEventHandler,
+		onTouchEnd?: TouchEventHandler
 	}
 }
 

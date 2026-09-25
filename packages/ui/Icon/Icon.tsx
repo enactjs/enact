@@ -17,7 +17,7 @@ import ri from '../resolution';
 import ForwardRef from '../ForwardRef';
 
 import componentCss from './Icon.module.less';
-import {ComponentType, HTMLAttributes, ReactElement, Ref} from 'react';
+import {ComponentType, HTMLAttributes, isValidElement, ReactElement, Ref} from 'react';
 
 /**
  * Merges consumer styles with the image `src` resolved through the resolution independence module.
@@ -66,7 +66,7 @@ export interface IconBaseProps {
 export type IconType = ComponentType<
 	IconBaseProps &
 	Omit<HTMLAttributes<HTMLDivElement>, keyof IconBaseProps> &
-	{ref?: Ref<any>}
+	{ref?: Ref<HTMLDivElement>}
 >;
 
 /**
@@ -96,7 +96,7 @@ const IconBase = kind({
 		 * @type {String|Object}
 		 * @public
 		 */
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]) as PropTypes.Validator<string | Record<string, string>>,
+		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.element]) as PropTypes.Validator<string | Record<string, string> | ReactElement>,
 
 		/**
 		 * Called with a reference to the root component.
@@ -196,7 +196,9 @@ const IconBase = kind({
 		iconProps: ({children: iconProp, iconList, style}: Record<string, any>) => {
 			let icon = iconList[iconProp];
 
-			if (!icon) {
+			if (isValidElement(iconProp)) {
+				icon = iconProp;
+			} else if (!icon) {
 				if (typeof iconProp == 'string') {
 					if (iconProp.indexOf('&#x') === 0) {
 						// Converts a hex reference in HTML entity form: &#x99999;
