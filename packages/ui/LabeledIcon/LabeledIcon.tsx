@@ -9,10 +9,9 @@
 
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import {CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {ComponentType, HTMLAttributes, isValidElement, ReactElement, ReactNode, Ref} from 'react';
+import {ComponentType, isValidElement, ReactElement, ReactNode} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
@@ -24,7 +23,7 @@ import componentCss from './LabeledIcon.module.less';
 export interface LabeledIconBaseProps {
 	children?: ReactNode;
 	componentRef?: EnactPropTypeShapes.ref;
-	css?: Record<string, string>;
+	css: Record<string, string>;
 	disabled?: boolean;
 	flip?: string;
 	icon?: ComponentType<any> | ReactElement | string;
@@ -33,12 +32,6 @@ export interface LabeledIconBaseProps {
 	labelPosition?: 'above' | 'after' | 'before' | 'below' | 'left' | 'right';
 	size?: string;
 }
-
-export type LabeledIconType = ComponentType<
-	LabeledIconBaseProps &
-	Omit<HTMLAttributes<HTMLDivElement>, keyof LabeledIconBaseProps> &
-	{ref?: Ref<HTMLDivElement>}
->;
 
 /**
  * An icon component with a label.
@@ -74,7 +67,7 @@ const LabeledIconBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -99,7 +92,7 @@ const LabeledIconBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object as PropTypes.Validator<CallbackObject<string>>,
+		css: PropTypes.object,
 
 		/**
 		 * Disables the component and becomes non-interactive.
@@ -202,7 +195,7 @@ const LabeledIconBase = kind({
 		}
 	},
 
-	render: ({css = {}, children, componentRef, disabled, flip, icon, iconComponent: Icon, inline, labelPosition, orientation, size, ...rest}) => {
+	render: ({css, children, componentRef, disabled, flip, icon, iconComponent: Icon, inline, labelPosition, orientation, size, ...rest}) => {
 
 		let iconClassName: string | null = css.icon;
 
@@ -289,7 +282,7 @@ const LabeledIconDecorator = compose(
  * @ui
  * @public
  */
-const LabeledIcon = LabeledIconDecorator(LabeledIconBase) as LabeledIconType;
+const LabeledIcon = LabeledIconDecorator(LabeledIconBase);
 
 export default LabeledIcon;
 export {

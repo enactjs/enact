@@ -160,7 +160,7 @@ describe('ViewManager', () => {
 
 	test('should allow child props to update', () => {
 		const content = 'updated';
-		class ViewManagerTest extends Component<{content: string}> {
+		class ViewManagerTest extends Component {
 			render () {
 				return (
 					<ViewManager>

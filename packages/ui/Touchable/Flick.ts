@@ -5,7 +5,7 @@ import {TouchableProps} from './Touchable';
 
 export interface FlickConfigPropType {
 	maxDuration: number;
-	maxMoves?: number;
+	maxMoves: number;
 	maxVelocity?: number;
 	minVelocity?: number;
 }
@@ -53,7 +53,7 @@ class Flick {
 	move = ({x, y}: {x: number, y: number}) => {
 		if (!this.tracking) return;
 
-		const {maxMoves = 5} = this.flickConfig || defaultFlickConfig;
+		const {maxMoves} = this.flickConfig || defaultFlickConfig;
 
 		this.moves.push({
 			x,

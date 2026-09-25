@@ -5,16 +5,16 @@ import {configure, getConfig, resetDefaultConfig} from '../config';
 import useTouch from '../useTouch';
 
 describe('useTouch', () => {
-	let data: Record<string, any>;
+	let data;
 
-	const DivComponent = (props: Record<string, any>) => {
+	const DivComponent = (props) => {
 		useEffect(() => {
 			data = props;
 		}, [props]);
 
 		return (<div data-testid="component" />);
 	};
-	const TouchableComponent = ({activeProp, id, ...rest}: {activeProp: string, id?: string, [key: string]: any}) => {
+	const TouchableComponent = ({activeProp, id, ...rest}) => {
 		const hook = useTouch({getActive: !!activeProp, ...rest});
 		return (
 			<div
@@ -27,7 +27,7 @@ describe('useTouch', () => {
 			</div>
 		);
 	};
-	const preventDefault = (ev: {preventDefault: () => void}) => ev.preventDefault();
+	const preventDefault = (ev) => ev.preventDefault();
 
 	describe('config', () => {
 		beforeEach(resetDefaultConfig);
@@ -48,7 +48,7 @@ describe('useTouch', () => {
 			});
 
 			const expected = 10;
-			const actual = getConfig().flick?.maxMoves;
+			const actual = getConfig().flick.maxMoves;
 
 			expect(actual).toBe(expected);
 		});
@@ -56,14 +56,12 @@ describe('useTouch', () => {
 		test('should omit unsupported configurations', () => {
 			configure({
 				flick: {
-					// @ts-ignore
 					notSupported: 10
 				}
 			});
 
 			// eslint-disable-next-line no-undefined
 			const expected = undefined;
-			// @ts-ignore
 			const actual = getConfig().flick.notSupported;
 
 			expect(actual).toBe(expected);
@@ -80,7 +78,7 @@ describe('useTouch', () => {
 			cfg.flick.maxMoves = 20;
 
 			const expected = 10;
-			const actual = getConfig().flick?.maxMoves;
+			const actual = getConfig().flick.maxMoves;
 
 			expect(actual).toBe(expected);
 		});
@@ -98,7 +96,7 @@ describe('useTouch', () => {
 			cfg.hold.events[0].time = 2000;
 
 			const expected = 600;
-			const actual = getConfig().hold?.events[0].time;
+			const actual = getConfig().hold.events[0].time;
 
 			expect(actual).toBe(expected);
 		});
@@ -193,7 +191,7 @@ describe('useTouch', () => {
 			fireEvent.click(component, {});
 
 			const expected = ['onTap', 'click'];
-			const actual = handler.mock.calls.map((call: {type: string}[]) => call[0].type);
+			const actual = handler.mock.calls.map(call => call[0].type);
 
 			expect(actual).toEqual(expected);
 		});
@@ -224,7 +222,7 @@ describe('useTouch', () => {
 			fireEvent(component, clickEvent);
 
 			const expected = ['onTap', 'click'];
-			const actual = handler.mock.calls.map((call: {type: string}[]) => call[0].type);
+			const actual = handler.mock.calls.map(call => call[0].type);
 
 			expect(actual).toEqual(expected);
 		});

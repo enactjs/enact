@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom';
-import {RefObject} from 'react';
 
-const mockPlatform: {chrome?: number} = {};
+const mockPlatform = {};
 
 jest.mock('@enact/core/platform', () => ({
 	get platform () {
@@ -12,7 +11,7 @@ jest.mock('@enact/core/platform', () => ({
 import {ScrollerBasic} from '../Scroller';
 
 describe('ScrollBasic', () => {
-	let scrollContentRef: RefObject<any>;
+	let scrollContentRef;
 
 	beforeEach(() => {
 		jest.createMockFromModule('@enact/core/platform');
@@ -93,9 +92,9 @@ describe('ScrollBasic', () => {
 	);
 
 	describe('animateScroll', () => {
-		let rafCallbacks: {id: number, cb: Function}[];
-		let rafIdCounter: number;
-		let nowValue: number;
+		let rafCallbacks;
+		let rafIdCounter;
+		let nowValue;
 
 		beforeEach(() => {
 			rafCallbacks = [];
@@ -118,7 +117,7 @@ describe('ScrollBasic', () => {
 			jest.restoreAllMocks();
 		});
 
-		function flushRaf (time: number) {
+		function flushRaf (time) {
 			nowValue = time;
 			const callbacks = rafCallbacks.splice(0);
 			callbacks.forEach(({cb}) => cb(time));

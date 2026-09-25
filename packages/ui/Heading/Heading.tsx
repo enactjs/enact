@@ -14,10 +14,9 @@
 
 import kind from '@enact/core/kind';
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
-import {CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {ComponentType, HTMLAttributes, ReactNode, Ref} from 'react';
+import {ReactNode} from 'react';
 
 import ForwardRef from '../ForwardRef';
 
@@ -30,12 +29,6 @@ export interface HeadingBaseProps {
 	size?: 'title' | 'subtitle' | 'large' | 'medium' | 'small' | 'tiny';
 	spacing?: 'auto' | 'large' | 'medium' | 'small' | 'none';
 }
-
-export type HeadingType = ComponentType<
-	HeadingBaseProps &
-	Omit<HTMLAttributes<HTMLDivElement>, keyof HeadingBaseProps> &
-	{ref?: Ref<HTMLDivElement>}
->;
 
 /**
  * A labeled Heading component.
@@ -68,7 +61,7 @@ const HeadingBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -91,7 +84,7 @@ const HeadingBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object as PropTypes.Validator<CallbackObject<string>>,
+		css: PropTypes.object,
 
 		/**
 		 * Set the size of this component.
@@ -190,7 +183,7 @@ const HeadingDecorator = compose(
  * @ui
  * @public
  */
-const Heading = HeadingDecorator(HeadingBase) as HeadingType;
+const Heading = HeadingDecorator(HeadingBase);
 
 export default Heading;
 export {

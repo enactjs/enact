@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 
 import ToggleIcon from '../ToggleIcon';
 
-const tap = (node: Element) => {
+const tap = (node) => {
 	fireEvent.mouseDown(node);
 	fireEvent.mouseUp(node);
 };

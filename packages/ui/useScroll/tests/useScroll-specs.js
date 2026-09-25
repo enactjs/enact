@@ -1,16 +1,15 @@
 import '@testing-library/jest-dom';
-import {CallbackObject} from '@enact/core/types';
 import {act, fireEvent, renderHook} from '@testing-library/react';
 
 // Mock all dependencies at the top level BEFORE importing useScroll
-let mockRiScale: number;
-let mockPlatform: CallbackObject;
+let mockRiScale;
+let mockPlatform;
 
 jest.mock('../../resolution', () => ({
 	__esModule: true,
 	default: {
 		get scale () {
-			return mockRiScale || ((val: number) => val);
+			return mockRiScale || ((val) => val);
 		}
 	}
 }));
@@ -23,6 +22,7 @@ jest.mock('@enact/core/platform', () => ({
 }));
 
 global.ResizeObserver = class ResizeObserver {
+	constructor () {}
 	observe () {}
 	unobserve () {}
 	disconnect () {}
@@ -30,7 +30,6 @@ global.ResizeObserver = class ResizeObserver {
 
 // Import AFTER all mocks
 import {useScrollBase} from '../useScroll';
-import {UseScrollProps} from '../useScroll.types';
 
 // Helper function to create complete mock refs
 function createMockRefs () {
@@ -111,7 +110,7 @@ describe('useScroll', () => {
 				assignProperties,
 				horizontalScrollbar: 'auto',
 				verticalScrollbar: 'auto'
-			} as UseScrollProps;
+			};
 
 			renderHook(() => useScrollBase(props));
 
@@ -128,7 +127,7 @@ describe('useScroll', () => {
 			expect(itemSize.minHeight).toBe(50);
 
 			// The scaled values should be passed to scrollContentProps via assignProperties
-			const scrollContentPropsCall = assignProperties.mock.calls.findLast(([name]: [name: string]) => name === 'scrollContentProps');
+			const scrollContentPropsCall = assignProperties.mock.calls.findLast(([name]) => name === 'scrollContentProps');
 			const passedItemSize = scrollContentPropsCall?.[1]?.itemSize;
 
 			expect(passedItemSize?.minWidth).toBe(200);
@@ -154,7 +153,7 @@ describe('useScroll', () => {
 				assignProperties,
 				horizontalScrollbar: 'auto',
 				verticalScrollbar: 'auto'
-			} as UseScrollProps;
+			};
 
 			renderHook(() => useScrollBase(props));
 
@@ -170,7 +169,7 @@ describe('useScroll', () => {
 			expect(itemSizes[1]).toBe(100);
 
 			// The scaled values should be passed to scrollContentProps via assignProperties
-			const scrollContentPropsCall = assignProperties.mock.calls.findLast(([name]: [name: string]) => name === 'scrollContentProps');
+			const scrollContentPropsCall = assignProperties.mock.calls.findLast(([name]) => name === 'scrollContentProps');
 			const passedItemSizes = scrollContentPropsCall?.[1]?.itemSizes;
 
 			expect(passedItemSizes?.[1]).toBe(200);
@@ -195,7 +194,7 @@ describe('useScroll', () => {
 				assignProperties: jest.fn(),
 				horizontalScrollbar: 'auto',
 				verticalScrollbar: 'auto'
-			} as UseScrollProps;
+			};
 
 			renderHook(() => useScrollBase(props));
 
@@ -227,7 +226,7 @@ describe('useScroll', () => {
 				assignProperties: jest.fn(),
 				horizontalScrollbar: 'auto',
 				verticalScrollbar: 'auto'
-			} as UseScrollProps;
+			};
 
 			renderHook(() => useScrollBase(props));
 
@@ -243,7 +242,7 @@ describe('useScroll', () => {
 		test('should NOT scale when minWidth is missing', () => {
 			mockRiScale = jest.fn((val) => val);
 
-			const itemSize: CallbackObject = {
+			const itemSize = {
 				minHeight: 50
 			};
 
@@ -258,7 +257,7 @@ describe('useScroll', () => {
 				assignProperties: jest.fn(),
 				horizontalScrollbar: 'auto',
 				verticalScrollbar: 'auto'
-			} as UseScrollProps;
+			};
 
 			renderHook(() => useScrollBase(props));
 
@@ -277,7 +276,7 @@ describe('useScroll', () => {
 		test('should NOT scale when minHeight is missing', () => {
 			mockRiScale = jest.fn((val) => val);
 
-			const itemSize: CallbackObject = {
+			const itemSize = {
 				minWidth: 100
 			};
 
@@ -292,7 +291,7 @@ describe('useScroll', () => {
 				assignProperties: jest.fn(),
 				horizontalScrollbar: 'auto',
 				verticalScrollbar: 'auto'
-			} as UseScrollProps;
+			};
 
 			renderHook(() => useScrollBase(props));
 
@@ -391,7 +390,7 @@ describe('useScroll', () => {
 				assignProperties: jest.fn(),
 				horizontalScrollbar: 'auto',
 				verticalScrollbar: 'auto'
-			} as UseScrollProps;
+			};
 
 			renderHook(() => useScrollBase(props));
 
@@ -422,7 +421,7 @@ describe('useScroll', () => {
 				assignProperties: jest.fn(),
 				horizontalScrollbar: 'auto',
 				verticalScrollbar: 'auto'
-			} as UseScrollProps;
+			};
 
 			renderHook(() => useScrollBase(props));
 
@@ -452,7 +451,7 @@ describe('useScroll', () => {
 			jest.useRealTimers();
 		});
 
-		function createNativeScrollProps (mocks = {}, extra = {}) {
+		function createNativeScrollProps (mocks, extra = {}) {
 			return {
 				direction: 'vertical',
 				scrollMode: 'native',
@@ -467,7 +466,7 @@ describe('useScroll', () => {
 		test('should forward onKeyDown event when key is not repeated', () => {
 			const mocks = createMockRefs();
 			const onKeyDown = jest.fn();
-			const props = createNativeScrollProps(mocks, {onKeyDown}) as UseScrollProps;
+			const props = createNativeScrollProps(mocks, {onKeyDown});
 
 			renderHook(() => useScrollBase(props));
 
@@ -482,14 +481,14 @@ describe('useScroll', () => {
 		test('should not forward onKeyDown event when arrowKey is repeated and lastInputType is arrowKey', () => {
 			const mocks = createMockRefs();
 			const onKeyDown = jest.fn();
-			let scrollContainerHandle: CallbackObject | null = null;
+			let scrollContainerHandle = null;
 
 			const props = createNativeScrollProps(mocks, {
 				onKeyDown,
-				setScrollContainerHandle: (handle: CallbackObject) => {
+				setScrollContainerHandle: (handle) => {
 					scrollContainerHandle = handle;
 				}
-			}) as UseScrollProps;
+			});
 
 			renderHook(() => useScrollBase(props));
 
@@ -511,14 +510,14 @@ describe('useScroll', () => {
 		test('should not forward onKeyDown event when pageKey is repeated and lastInputType is pageKey', () => {
 			const mocks = createMockRefs();
 			const onKeyDown = jest.fn();
-			let scrollContainerHandle: CallbackObject | null = null;
+			let scrollContainerHandle = null;
 
 			const props = createNativeScrollProps(mocks, {
 				onKeyDown,
-				setScrollContainerHandle: (handle: CallbackObject) => {
+				setScrollContainerHandle: (handle) => {
 					scrollContainerHandle = handle;
 				}
-			}) as UseScrollProps;
+			});
 
 			renderHook(() => useScrollBase(props));
 
@@ -540,14 +539,14 @@ describe('useScroll', () => {
 		test('should forward onKeyDown event when repeat is true but lastInputType is neither arrowKey nor pageKey', () => {
 			const mocks = createMockRefs();
 			const onKeyDown = jest.fn();
-			let scrollContainerHandle: CallbackObject | null = null;
+			let scrollContainerHandle = null;
 
 			const props = createNativeScrollProps(mocks, {
 				onKeyDown,
-				setScrollContainerHandle: (handle: CallbackObject) => {
+				setScrollContainerHandle: (handle) => {
 					scrollContainerHandle = handle;
 				}
-			}) as UseScrollProps;
+			});
 
 			renderHook(() => useScrollBase(props));
 

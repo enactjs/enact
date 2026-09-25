@@ -10,10 +10,9 @@
 
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import {Callback, CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {ComponentType, HTMLAttributes, Ref} from 'react';
+import {CSSProperties} from 'react';
 
 import Changeable from '../Changeable';
 import ComponentOverride from '../ComponentOverride';
@@ -32,7 +31,7 @@ export interface SliderProps {
 	backgroundProgress?: number,
 	colorPicker?: boolean,
 	componentRef?: EnactPropTypeShapes.ref,
-	css?: Record<string, string> & Partial<{knob: Record<string, string>, minMax: Record<string, string>}>,
+	css?: CSSProperties & Partial<{knob: CSSProperties, minMax: CSSProperties}>,
 	defaultValue?: number,
 	disabled?: boolean,
 	knobComponent?: EnactPropTypeShapes.componentOverride,
@@ -47,12 +46,6 @@ export interface SliderProps {
 	tooltipComponent?: EnactPropTypeShapes.componentOverride,
 	value?: number
 }
-
-export type SliderType = ComponentType<
-	SliderProps &
-	Omit<HTMLAttributes<HTMLDivElement>, keyof SliderProps> &
-	{ref?: Ref<HTMLDivElement>, onChange?: Callback<any, {value: number, proportion: number}>}
->
 
 /**
  * An unstyled, sliding range-selection component.
@@ -115,7 +108,7 @@ const SliderBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -133,7 +126,7 @@ const SliderBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object as PropTypes.Validator<CallbackObject<string>>,
+		css: PropTypes.object,
 
 		/**
 		 * Disables component and does not generate events.
@@ -422,7 +415,7 @@ const SliderDecorator = compose(
  * @public
  */
 
-const Slider = SliderDecorator(SliderBase) as SliderType;
+const Slider = SliderDecorator(SliderBase);
 
 export default Slider;
 export {

@@ -1,16 +1,8 @@
 import {Callback} from '@enact/core/types';
 import useClass from '@enact/core/useClass';
-import {
-	useState,
-	useEffect,
-	FocusEvent,
-	PointerEvent,
-	TouchEvent,
-	MouseEvent,
-	MouseEventHandler,
-	FocusEventHandler,
-	TouchEventHandler
-} from 'react';
+import {useState, useEffect, FocusEvent, PointerEvent, TouchEvent, MouseEvent} from 'react';
+
+import {HandlerFunction} from '../types';
 
 import {States} from './state';
 import Touch from './Touch';
@@ -95,16 +87,13 @@ export interface useTouchConfig extends TouchableProps {
 export interface useTouchInterface {
 	active: boolean;
 	handlers: {
-		onClick: MouseEventHandler,
-		onBlur: FocusEventHandler,
-		onMouseDown: MouseEventHandler,
-		onMouseEnter: MouseEventHandler,
-		onMouseMove: MouseEventHandler,
-		onMouseLeave: MouseEventHandler,
-		onMouseUp: MouseEventHandler,
-		onTouchStart?: TouchEventHandler,
-		onTouchMove?: TouchEventHandler,
-		onTouchEnd?: TouchEventHandler
+		onClick: HandlerFunction,
+		onBlur: HandlerFunction,
+		onMouseDown: HandlerFunction,
+		onMouseEnter: HandlerFunction,
+		onMouseMove: HandlerFunction,
+		onMouseLeave: HandlerFunction,
+		onMouseUp: HandlerFunction
 	}
 }
 

@@ -1,16 +1,15 @@
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
-import {Callback, CallbackObject} from '@enact/core/types';
 import {useEffect} from 'react';
 
 import useControlledState from '../useControlledState';
 
 describe('useControlledState', () => {
-	let data: Callback;
+	let data;
 
-	function Component (props: {defaultValue?: string | null, value?: string, onChange?: Callback}) {
+	function Component (props) {
 		const [value, setValue] = useControlledState(props.defaultValue, props.value, 'value' in props);
-		const handleChange = (ev: CallbackObject) => setValue(ev.value);
+		const handleChange = (ev) => setValue(ev.value);
 		useEffect(() => {
 			data = setValue;
 		}, [setValue]);

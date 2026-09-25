@@ -8,7 +8,6 @@
 
 import kind from '@enact/core/kind';
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
-import {CallbackObject} from '@enact/core/types';
 import {cap} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -17,7 +16,6 @@ import ri from '../resolution';
 import ForwardRef from '../ForwardRef';
 
 import componentCss from './Icon.module.less';
-import {ComponentType, HTMLAttributes, isValidElement, ReactElement, Ref} from 'react';
 
 /**
  * Merges consumer styles with the image `src` resolved through the resolution independence module.
@@ -54,7 +52,7 @@ const isUri = function (c: string) {
 };
 
 export interface IconBaseProps {
-	children?: string | Record<string, string> | ReactElement;
+	children?: string | Record<string, string>;
 	componentRef?: EnactPropTypeShapes.ref;
 	css?: Record<string, string>;
 	flip?: string;
@@ -62,12 +60,6 @@ export interface IconBaseProps {
 	pressed?: boolean;
 	size?: string;
 }
-
-export type IconType = ComponentType<
-	IconBaseProps &
-	Omit<HTMLAttributes<HTMLDivElement>, keyof IconBaseProps> &
-	{ref?: Ref<HTMLDivElement>}
->;
 
 /**
  * A basic icon component structure without any behaviors applied to it.
@@ -96,7 +88,7 @@ const IconBase = kind({
 		 * @type {String|Object}
 		 * @public
 		 */
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.element]) as PropTypes.Validator<string | Record<string, string> | ReactElement>,
+		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
 		 * Called with a reference to the root component.
@@ -107,7 +99,7 @@ const IconBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -125,7 +117,7 @@ const IconBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object as PropTypes.Validator<CallbackObject<string>>,
+		css: PropTypes.object,
 
 		/**
 		 * Flip the icon horizontally, vertically or both.
@@ -147,7 +139,7 @@ const IconBase = kind({
 		 * @default {}
 		 * @public
 		 */
-		iconList: PropTypes.object as PropTypes.Validator<Record<string, string>>,
+		iconList: PropTypes.object,
 
 		/**
 		 * Applies the `pressed` CSS class.
@@ -196,9 +188,7 @@ const IconBase = kind({
 		iconProps: ({children: iconProp, iconList, style}: Record<string, any>) => {
 			let icon = iconList[iconProp];
 
-			if (isValidElement(iconProp)) {
-				icon = iconProp;
-			} else if (!icon) {
+			if (!icon) {
 				if (typeof iconProp == 'string') {
 					if (iconProp.indexOf('&#x') === 0) {
 						// Converts a hex reference in HTML entity form: &#x99999;
@@ -274,7 +264,7 @@ const IconDecorator = compose(
  * @ui
  * @public
  */
-const Icon = IconDecorator(IconBase) as IconType;
+const Icon = IconDecorator(IconBase);
 
 export default Icon;
 export {

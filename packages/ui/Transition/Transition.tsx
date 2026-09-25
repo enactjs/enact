@@ -22,8 +22,7 @@ import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import {
-	CSSProperties,
-	ReactNode,
+	ReactElement,
 	TransitionEvent,
 	use,
 	useCallback,
@@ -40,10 +39,10 @@ import {Callback, CallbackObject} from '../types';
 
 export interface TransitionBaseProps {
 	childRef?: EnactPropTypeShapes.ref | null,
-	children?: ReactNode,
+	children: ReactElement,
 	clipHeight?: number | null,
 	clipWidth?: number | null,
-	css?: CallbackObject<string>,
+	css: CallbackObject<string>,
 	direction?: 'up' | 'right' | 'down' | 'left',
 	duration?: string | number,
 	noAnimation?: boolean,
@@ -54,18 +53,15 @@ export interface TransitionBaseProps {
 }
 
 export interface TransitionProps {
-	children: ReactNode,
-	className?: string,
+	children: ReactElement,
 	direction?: 'up' | 'right' | 'down' | 'left',
 	duration?: string | number,
 	noAnimation?: boolean,
 	onHide?: Callback,
 	onShow?: Callback,
-	style?: CSSProperties,
 	timingFunction?: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'ease-in-quart' | 'ease-out-quart' | 'linear',
 	type?: 'slide' | 'clip' | 'fade',
-	visible?: boolean,
-	onTransitionEnd?: (ev: TransitionEvent<HTMLElement>) => void
+	visible?: boolean
 }
 
 const formatter = (duration: string | number) => (typeof duration === 'number' ? duration + 'ms' : duration);
@@ -99,7 +95,7 @@ const TransitionBase = kind({
 		 * @default null
 		 * @public
 		 */
-		childRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
+		childRef: EnactPropTypes.ref,
 
 		/**
 		 * The node to be transitioned.
@@ -160,7 +156,7 @@ const TransitionBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object as PropTypes.Validator<CallbackObject<string>>,
+		css: PropTypes.object,
 
 		/**
 		 * Sets the direction of transition. Where the component will move *to*; the destination.
@@ -272,14 +268,14 @@ const TransitionBase = kind({
 	},
 
 	computed: {
-		className: ({css = {}, direction, duration, noAnimation, timingFunction, type, visible, styler}) => styler.append(
+		className: ({css, direction, duration, noAnimation, timingFunction, type, visible, styler}) => styler.append(
 			visible ? 'shown' : 'hidden',
 			direction && css[direction],
 			!noAnimation && duration && css[duration],
 			!noAnimation && timingFunction && css[timingFunction],
 			css[type]
 		),
-		innerStyle: ({clipWidth, css = {}, direction, duration, type}) => {
+		innerStyle: ({clipWidth, css, direction, duration, type}) => {
 			if (type === 'clip' && (direction === 'left' || direction === 'right')) {
 				return {width: clipWidth};
 			}
@@ -289,7 +285,7 @@ const TransitionBase = kind({
 			}
 			return EMPTY_STYLE;
 		},
-		style: ({clipHeight, css = {}, direction, duration, type, visible, style}) => {
+		style: ({clipHeight, css, direction, duration, type, visible, style}) => {
 			if (type !== 'clip') return style;
 
 			const merged = style ? {...style, overflow: 'hidden'} : {overflow: 'hidden'};
@@ -306,7 +302,7 @@ const TransitionBase = kind({
 		}
 	},
 
-	render: ({clipHeight, clipWidth, css = {}, childRef, children, direction, duration, innerStyle, noAnimation, timingFunction, type, visible, ...rest}) => {
+	render: ({clipHeight, clipWidth, css, childRef, children, direction, duration, innerStyle, noAnimation, timingFunction, type, visible, ...rest}) => {
 		return (
 			<div {...rest}>
 				<div className={css.inner} style={innerStyle} ref={childRef}>

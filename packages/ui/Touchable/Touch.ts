@@ -14,7 +14,7 @@ import {Flick, FlickConfigPropType} from './Flick';
 import {Hold, HoldConfigPropType} from './Hold';
 import {Pinch, PinchConfigPropType} from './Pinch';
 import {TouchableProps} from './Touchable';
-import {useTouchConfig, useTouchInterface} from './useTouch';
+import {useTouchConfig} from './useTouch';
 
 export interface PointerOrTouchEvent {
 	type: string;
@@ -226,7 +226,7 @@ class Touch {
 	hold;
 	pinch;
 	clickAllow;
-	handlers: useTouchInterface['handlers'];
+	handlers;
 	config: TouchConfig = {} as TouchConfig;
 	props: TouchConfig | null = null;
 	targetBounds: DOMRect | null = null;
@@ -246,26 +246,21 @@ class Touch {
 
 		this.clickAllow = new ClickAllow();
 
-		const domHandler = (handler: {bindAs: (obj: Touch, name: string) => (...args: any[]) => unknown}, name: string) => {
-			const bound = handler.bindAs(this, name);
-			return (event: any) => bound(event);
-		};
-
 		this.handlers = {
-			onClick: domHandler(handleClick, 'handleClick'),
-			onBlur: domHandler(handleBlur, 'handleBlur'),
-			onMouseDown: domHandler(handleMouseDown, 'handleMouseDown'),
-			onMouseEnter: domHandler(handleMouseEnter, 'handleMouseEnter'),
-			onMouseMove: domHandler(handleMouseMove, 'handleMouseMove'),
-			onMouseLeave: domHandler(handleMouseLeave, 'handleMouseLeave'),
-			onMouseUp: domHandler(handleMouseUp, 'handleMouseUp')
+			onClick: handleClick.bindAs(this, 'handleClick'),
+			onBlur: handleBlur.bindAs(this, 'handleBlur'),
+			onMouseDown: handleMouseDown.bindAs(this, 'handleMouseDown'),
+			onMouseEnter: handleMouseEnter.bindAs(this, 'handleMouseEnter'),
+			onMouseMove: handleMouseMove.bindAs(this, 'handleMouseMove'),
+			onMouseLeave: handleMouseLeave.bindAs(this, 'handleMouseLeave'),
+			onMouseUp: handleMouseUp.bindAs(this, 'handleMouseUp')
 		};
 
 		if (platform.touchEvent) {
 			Object.assign(this.handlers, {
-				onTouchStart: domHandler(handleTouchStart, 'handleTouchStart'),
-				onTouchMove: domHandler(handleTouchMove, 'handleTouchMove'),
-				onTouchEnd: domHandler(handleTouchEnd, 'handleTouchEnd')
+				onTouchStart: handleTouchStart.bindAs(this, 'handleTouchStart'),
+				onTouchMove: handleTouchMove.bindAs(this, 'handleTouchMove'),
+				onTouchEnd: handleTouchEnd.bindAs(this, 'handleTouchEnd')
 			});
 		}
 

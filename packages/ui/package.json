@@ -45,9 +45,6 @@
     "warning": "^4.0.3"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^7.0.1",
-    "@testing-library/react": "^16.3.3",
-    "@testing-library/user-event": "^14.6.7",
     "@types/invariant": "^2.2.37",
     "@types/jest": "^30.0.0",
     "@types/node": "^26.4.1",

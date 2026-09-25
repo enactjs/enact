@@ -9,10 +9,9 @@
 
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import {CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {ComponentType, HTMLAttributes, ReactNode, Ref} from 'react';
+import {ReactNode} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
@@ -25,7 +24,7 @@ export interface CardBaseProps {
 	captionOverlay?: boolean;
 	children?: ReactNode;
 	componentRef?: EnactPropTypeShapes.ref;
-	css?: Record<string, string>;
+	css: Record<string, string>;
 	fitImage?: boolean;
 	imageComponent?: EnactPropTypeShapes.componentOverride;
 	orientation?: 'horizontal' | 'vertical';
@@ -34,12 +33,6 @@ export interface CardBaseProps {
 	splitCaption?: boolean;
 	src?: string | Record<string, string>;
 }
-
-export type CardType = ComponentType<
-	CardBaseProps &
-	Omit<HTMLAttributes<HTMLDivElement>, keyof CardBaseProps> &
-	{ref?: Ref<HTMLDivElement>}
->;
 
 function ImageOverride ({imageComponent, ...rest}: {imageComponent?: any; [key: string]: any}) {
 	return ComponentOverride({
@@ -88,7 +81,7 @@ const CardBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -99,7 +92,7 @@ const CardBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object as PropTypes.Validator<CallbackObject<string>>,
+		css: PropTypes.object,
 
 		/**
 		 * Fits the image to its height and width and positions it on the center of the Card
@@ -161,7 +154,7 @@ const CardBase = kind({
 		 * @type {String|Object}
 		 * @public
 		 */
-		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]) as PropTypes.Validator<string | Record<string, string>>
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	defaultProps: {
@@ -186,7 +179,7 @@ const CardBase = kind({
 		})
 	},
 
-	render: ({captionOverlay, children, componentRef, css = {}, imageComponent, orientation, placeholder, src, ...rest}) => {
+	render: ({captionOverlay, children, componentRef, css, imageComponent, orientation, placeholder, src, ...rest}) => {
 		delete rest.fitImage;
 		delete rest.splitCaption;
 
@@ -252,7 +245,7 @@ const CardDecorator = compose(
  * @ui
  * @public
  */
-const Card = CardDecorator(CardBase) as CardType;
+const Card = CardDecorator(CardBase);
 
 export default Card;
 export {

@@ -15,7 +15,7 @@ import {ResizeContext} from '../Resizable';
 import useScroll from '../useScroll';
 import Scrollbar from '../useScroll/Scrollbar';
 
-import {gridListItemSizeShape, itemSizesShape, VirtualListBasic, VirtualListBasicProps} from './VirtualListBasic';
+import {gridListItemSizeShape, itemSizesShape, VirtualListBasic} from './VirtualListBasic';
 import {Callback} from '../types';
 import PropTypes from 'prop-types';
 
@@ -25,31 +25,11 @@ export interface ScrollToProps {
 	focus?: boolean;
 	index?: number;
 	node?: HTMLElement;
-	position?: {x?: number, y?: number};
-	stickTo?: 'start' | 'center' | 'end';
+	position?: {x: number, y: number};
 }
 
-type VirtualListInjectedProps =
-	| 'cbScrollTo'
-	| 'childProps'
-	| 'clientSize'
-	| 'containerProps'
-	| 'getAffordance'
-	| 'getComponentProps'
-	| 'isHorizontalScrollbarVisible'
-	| 'isVerticalScrollbarVisible'
-	| 'itemRefs'
-	| 'itemSizes'
-	| 'onUpdate'
-	| 'onUpdateItems'
-	| 'placeholderRenderer'
-	| 'scrollContainerContainsDangerously'
-	| 'scrollContentRef'
-	| 'setThemeScrollContentHandle'
-	| 'updateStatesAndBounds';
-
-export interface VirtualListProps extends Omit<VirtualListBasicProps, VirtualListInjectedProps> {
-	cbScrollTo: (scrollTo: (opts: ScrollToProps) => void) => void,
+export interface VirtualListProps {
+	cbScrollTo: Callback<any, ScrollToProps>,
 	direction: 'horizontal' | 'vertical',
 	horizontalScrollbar: 'auto' | 'visible' | 'hidden',
 	noScrollByDrag: boolean,
@@ -59,20 +39,15 @@ export interface VirtualListProps extends Omit<VirtualListBasicProps, VirtualLis
 	onScrollStop: Callback<any, {scrollLeft: number, scrollTop: number, moreInfo: {firstVisibleIndex: number, lastVisibleIndex: number}}>,
 	overscrollEffectOn: {drag: boolean, pageKey: boolean, wheel: boolean},
 	role: string,
-	scrollMode: 'native' | 'translate',
-	verticalScrollbar: 'auto' | 'visible' | 'hidden',
-	clientSize?: {
-		clientHeight: number,
-		clientWidth: number
-	},
-	itemSizes?: number[]
+	scrollMode: string,
+	verticalScrollbar: 'auto' | 'visible' | 'hidden'
 }
 
 export interface VirtualGridListProps extends VirtualListProps {}
 
 const nop = () => {};
 
-const virtualListDefaultProps: Partial<VirtualListProps> = {
+const virtualListDefaultProps: VirtualListProps = {
 	cbScrollTo: nop,
 	direction: 'vertical',
 	horizontalScrollbar: 'auto',
@@ -351,7 +326,7 @@ VirtualList.propTypes = /** @lends ui/VirtualList.VirtualList.prototype */ {
 
 VirtualList.defaultPropValues = virtualListDefaultProps;
 
-const virtualGridListDefaultProps: Partial<VirtualGridListProps> = {
+const virtualGridListDefaultProps: VirtualGridListProps = {
 	cbScrollTo: nop,
 	direction: 'vertical',
 	horizontalScrollbar: 'auto',

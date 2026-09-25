@@ -9,21 +9,20 @@
 
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import {CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {ComponentType, HTMLAttributes, ReactNode, Ref} from 'react';
+import {ReactNode} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
-import Touchable, {TouchableProps} from '../Touchable';
+import Touchable from '../Touchable';
 
 import componentCss from './Button.module.less';
 
 export interface ButtonBaseProps {
 	children?: ReactNode;
 	componentRef?: EnactPropTypeShapes.ref;
-	css?: Record<string, string>;
+	css: Record<string, string>;
 	decoration?: ReactNode;
 	disabled?: boolean;
 	icon?: ReactNode | boolean;
@@ -34,13 +33,6 @@ export interface ButtonBaseProps {
 	selected?: boolean;
 	size?: string;
 }
-
-export type ButtonType = ComponentType<
-	ButtonBaseProps &
-	TouchableProps &
-	Omit<HTMLAttributes<HTMLDivElement>, keyof ButtonBaseProps | keyof TouchableProps> &
-	{ref?: Ref<HTMLDivElement>}
->;
 
 /**
  * A basic button component structure without any behaviors applied to it.
@@ -66,7 +58,7 @@ const ButtonBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -88,7 +80,7 @@ const ButtonBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object as PropTypes.Validator<CallbackObject<string>>,
+		css: PropTypes.object,
 
 		/**
 		 * Additional DOM nodes which may be necessary for decorating the Button.
@@ -250,7 +242,7 @@ const ButtonBase = kind({
 		}
 	},
 
-	render: ({children, componentRef, css = {}, decoration, disabled, icon, minWidth, pressed, selected, ...rest}) => {
+	render: ({children, componentRef, css, decoration, disabled, icon, minWidth, pressed, selected, ...rest}) => {
 		delete rest.iconComponent;
 		delete rest.iconFlip;
 		delete rest.size;
@@ -297,7 +289,7 @@ const ButtonDecorator = compose(
  * @ui
  * @public
  */
-const Button = ButtonDecorator(ButtonBase) as ButtonType;
+const Button = ButtonDecorator(ButtonBase);
 
 export default Button;
 export {

@@ -298,7 +298,7 @@ const LayoutBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Allows this `Layout` to have following siblings drawn on the same line as itself
@@ -332,7 +332,7 @@ const LayoutBase = kind({
 		 * @type {Boolean|String}
 		 * @public
 		 */
-		wrap: PropTypes.oneOfType([PropTypes.bool, PropTypes.oneOf(['reverse', 'nowrap', 'wrap'])]) as PropTypes.Validator<boolean | 'reverse' | 'nowrap' | 'wrap'>
+		wrap: PropTypes.oneOfType([PropTypes.bool, PropTypes.oneOf(['reverse', 'nowrap', 'wrap'])])
 	},
 
 	defaultProps: {
@@ -375,7 +375,7 @@ const LayoutBase = kind({
 		}
 	},
 
-	render: ({component: Component = 'div', componentRef, ...rest}) => {
+	render: ({component: Component, componentRef, ...rest}) => {
 		delete rest.align;
 		delete rest.inline;
 		delete rest.orientation;

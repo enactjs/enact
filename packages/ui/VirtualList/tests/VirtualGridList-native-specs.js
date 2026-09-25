@@ -1,18 +1,17 @@
 import '@testing-library/jest-dom';
 import {act, render, screen} from '@testing-library/react';
-import {ReactNode} from 'react';
 
 import {VirtualGridList} from '../VirtualList';
 import {ImageItem as UiImageItem} from '../../ImageItem';
 
 describe('VirtualGridList with native scrollMode', () => {
 	let
-		clientSize: {clientHeight: number, clientWidth: number},
-		dataSize: number,
-		items: {text: string, source: string}[],
-		itemSize: {minWidth: number, minHeight: number},
-		renderItem: (props: {index: number}) => ReactNode,
-		svgGenerator: (width: number, height: number, bgColor: string, textColor: string, customText: string) => string;
+		clientSize,
+		dataSize,
+		items,
+		itemSize,
+		renderItem,
+		svgGenerator;
 
 	beforeEach(() => {
 		clientSize = {clientWidth: 1280, clientHeight: 720};
@@ -33,7 +32,7 @@ describe('VirtualGridList with native scrollMode', () => {
 			);
 		};
 
-		svgGenerator = (width: number, height: number, bgColor: string, textColor: string, customText: string) => (
+		svgGenerator = (width, height, bgColor, textColor, customText) => (
 			`data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${width} ${height}' width='${width}' height='${height}'%3E` +
 			`%3Crect width='${width}' height='${height}' fill='%23${bgColor}'%3E%3C/rect%3E` +
 			`%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='36px' fill='%23${textColor}'%3E${customText}%3C/text%3E%3C/svg%3E`
@@ -55,6 +54,14 @@ describe('VirtualGridList with native scrollMode', () => {
 		return dataSize;
 	});
 
+	afterEach(() => {
+		clientSize = null;
+		dataSize = null;
+		items = null;
+		itemSize = null;
+		renderItem = null;
+	});
+
 	test('should render a list of \'items\'', () => {
 		render(
 			<VirtualGridList
@@ -67,7 +74,7 @@ describe('VirtualGridList with native scrollMode', () => {
 		);
 
 		const expected = 'Item 00';
-		const actual = screen.getByRole('list').children.item(0)?.textContent;
+		const actual = screen.getByRole('list').children.item(0).textContent;
 
 		expect(actual).toBe(expected);
 	});
@@ -121,7 +128,7 @@ describe('VirtualGridList with native scrollMode', () => {
 	describe('Adding an item', () => {
 		test('should render an added item named \'Password 0\' as the first item', (done) => {
 			const itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
-			const renderItemArray = ({index, ...rest}: {index: number}) => {
+			const renderItemArray = ({index, ...rest}) => {
 				return (
 					<div {...rest} id={'item' + index}>
 						{itemArray[index].name}
@@ -154,7 +161,7 @@ describe('VirtualGridList with native scrollMode', () => {
 
 			act(() => jest.advanceTimersByTime(0));
 			const expected = itemArray[0].name;
-			const actual = screen.getByRole('list').children.item(0)?.textContent;
+			const actual = screen.getByRole('list').children.item(0).textContent;
 
 			expect(actual).toBe(expected);
 			done();

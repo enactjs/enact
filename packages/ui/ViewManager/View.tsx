@@ -10,28 +10,22 @@ import {Callback, CallbackObject} from '../types';
 
 import {shape} from './Arranger';
 
-export type ArrangerType = {
-	enter: Callback,
-	leave: Callback,
-	stay?: Callback
-}
-
 export interface ViewProps {
 	children: ReactElement,
 	duration: number,
 	appearing?: boolean,
-	arranger?: ArrangerType,
-	childProps?: CallbackObject,
+	arranger: {enter: Callback, leave: Callback, stay?: Callback},
+	childProps: CallbackObject,
 	enteringDelay?: number,
-	enteringProp?: string,
+	enteringProp: string,
 	getParentRef?: Callback,
 	index?: number,
 	leaving?: boolean,
-	noAnimation?: boolean,
+	noAnimation: boolean,
 	previousIndex?: number | null,
 	renderedIndex?: number,
 	reverseTransition?: boolean | null,
-	rtl?: boolean
+	rtl: boolean
 }
 
 // If the View was "appearing", then entering will always be false and this will not result in a

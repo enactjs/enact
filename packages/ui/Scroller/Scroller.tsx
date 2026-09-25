@@ -8,7 +8,6 @@
 
 import {checkPropTypes, setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import {ReactNode} from 'react';
 
 import {ResizeContext} from '../Resizable';
 import useScroll from '../useScroll';
@@ -22,7 +21,6 @@ export type OnScrollFunction = (event: {scrollLeft: number, scrollTop: number}) 
 export type ScrollToFunction = (options: ScrollToOptions) => void;
 
 export interface ScrollerProps {
-	children?: ReactNode;
 	cbScrollTo?: ScrollToFunction,
 	direction?: 'both' | 'horizontal' | 'vertical',
 	horizontalScrollbar?: 'auto' | 'visible' | 'hidden',

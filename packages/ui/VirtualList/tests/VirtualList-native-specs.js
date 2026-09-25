@@ -1,11 +1,10 @@
 import '@testing-library/jest-dom';
 import {act, render, screen} from '@testing-library/react';
-import {createRef, ReactNode} from 'react';
+import {createRef} from 'react';
 
 import VirtualList, {VirtualListBasic} from '../VirtualList';
-import {VirtualListBasicProps} from '../VirtualListBasic';
 
-const mockPlatform: {chrome?: number | boolean} = {};
+const mockPlatform = {};
 
 jest.mock('@enact/core/platform', () => ({
 	get platform () {
@@ -15,11 +14,11 @@ jest.mock('@enact/core/platform', () => ({
 
 describe('VirtualList with native scrollMode', () => {
 	let
-		clientSize: {clientWidth: number, clientHeight: number},
-		dataSize: number,
-		items: {name: string}[],
-		itemSize: number,
-		renderItem: (props: {index: number}) => ReactNode;
+		clientSize,
+		dataSize,
+		items,
+		itemSize,
+		renderItem;
 
 	beforeEach(() => {
 		clientSize = {clientWidth: 1280, clientHeight: 720};
@@ -40,6 +39,14 @@ describe('VirtualList with native scrollMode', () => {
 		}
 	});
 
+	afterEach(() => {
+		clientSize = null;
+		dataSize = null;
+		items = null;
+		itemSize = null;
+		renderItem = null;
+	});
+
 	test('should render a list of \'items\'', () => {
 		render(
 			<VirtualList
@@ -52,7 +59,7 @@ describe('VirtualList with native scrollMode', () => {
 		);
 
 		const expected = 'Account 0';
-		const actual = screen.getByRole('list').children.item(0)?.textContent;
+		const actual = screen.getByRole('list').children.item(0).textContent;
 
 		expect(actual).toBe(expected);
 	});
@@ -70,7 +77,7 @@ describe('VirtualList with native scrollMode', () => {
 		);
 
 		const expected = 'Account 0';
-		const actual = screen.getByRole('list').children.item(0)?.textContent;
+		const actual = screen.getByRole('list').children.item(0).textContent;
 
 		expect(actual).toBe(expected);
 	});
@@ -140,7 +147,7 @@ describe('VirtualList with native scrollMode', () => {
 	describe('Adding an item', () => {
 		test('should render an added item named \'Password 0\' as the first item', (done) => {
 			const itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
-			const renderItemArray = ({index, ...rest}: {index: number}) => {
+			const renderItemArray = ({index, ...rest}) => {
 				return (
 					<div {...rest} id={'item' + index}>
 						{itemArray[index].name}
@@ -173,7 +180,7 @@ describe('VirtualList with native scrollMode', () => {
 
 			act(() => jest.advanceTimersByTime(0));
 			const expected = itemArray[0].name;
-			const actual = screen.getByRole('list').children.item(0)?.textContent;
+			const actual = screen.getByRole('list').children.item(0).textContent;
 
 			expect(actual).toBe(expected);
 			done();
@@ -182,10 +189,7 @@ describe('VirtualList with native scrollMode', () => {
 	});
 
 	describe('Animating scroll', () => {
-		type MockNode = HTMLElement & {scrollTo: jest.Mock, scrollBy: jest.Mock, lastInputType?: string};
-		let instance: VirtualListBasic & {rafCallback: (t?: number) => void},
-			node: MockNode,
-			scrollContentRef: {current: MockNode};
+		let instance, node, scrollContentRef;
 
 		beforeEach(() => {
 			node = {
@@ -193,11 +197,11 @@ describe('VirtualList with native scrollMode', () => {
 				scrollBy: jest.fn(),
 				scrollLeft: 0,
 				scrollTop: 0
-			} as unknown as MockNode;
+			};
 			scrollContentRef = {current: node};
-			instance =  new VirtualListBasic({scrollContentRef, clientSize, itemSize, itemRenderer: renderItem, scrollMode: 'native'} as unknown as VirtualListBasicProps) as typeof instance;
+			instance = new VirtualListBasic({scrollContentRef, clientSize, itemSize, itemRenderer: renderItem, scrollMode: 'native'});
 
-			jest.spyOn(window, 'requestAnimationFrame').mockImplementation((cb: (t?: number) => void) => {
+			jest.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
 				instance.rafCallback = cb;
 				return 123;
 			});
@@ -274,16 +278,16 @@ describe('VirtualList with native scrollMode', () => {
 });
 
 describe('VirtualListBasic scrollBounds consistency after item margin detection', () => {
-	let originalGetComputedStyle: typeof window.getComputedStyle;
+	let originalGetComputedStyle;
 
 	const nop = () => {};
 
-	function renderVirtualListBasic ({direction = 'vertical', ...rest}: {direction?: 'horizontal' | 'vertical', [key: string]: any} = {}) {
-		const scrollContentRef = createRef<HTMLDivElement>();
-		const itemRefs = createRef<(HTMLElement | null)[]>() as {current: (HTMLElement | null)[]};
+	function renderVirtualListBasic ({direction = 'vertical', ...rest} = {}) {
+		const scrollContentRef = createRef();
+		const itemRefs = createRef();
 		itemRefs.current = [];
 
-		const ref = createRef<VirtualListBasic>();
+		const ref = createRef();
 
 		render(
 			<VirtualListBasic
@@ -302,7 +306,7 @@ describe('VirtualListBasic scrollBounds consistency after item margin detection'
 				spacing={0}
 				cbScrollTo={nop}
 				ref={ref}
-				{...(rest as any)}
+				{...rest}
 			/>
 		);
 
@@ -319,12 +323,12 @@ describe('VirtualListBasic scrollBounds consistency after item margin detection'
 
 	test('should increment scrollHeight and maxTop by the same margin sum when vertical item margins are detected, and not re-apply on subsequent updates', () => {
 		const {ref} = renderVirtualListBasic();
-		const instance = ref.current!;
+		const instance = ref.current;
 
 		const marginTop = 10;
 		const marginBottom = 5;
 
-		window.getComputedStyle = (el: Element) => {
+		window.getComputedStyle = (el) => {
 			if (el === instance.props.itemRefs.current[0]) {
 				return {
 					getPropertyValue: (prop) => {
@@ -334,12 +338,12 @@ describe('VirtualListBasic scrollBounds consistency after item margin detection'
 						if (prop === 'margin-right') return '0px';
 						return '0px';
 					}
-				} as CSSStyleDeclaration;
+				};
 			}
 			return originalGetComputedStyle(el);
 		};
 
-		(instance as any).itemMarginTop = null;
+		instance.itemMarginTop = null;
 		act(() => {
 			instance.forceUpdate();
 		});
@@ -359,7 +363,7 @@ describe('VirtualListBasic scrollBounds consistency after item margin detection'
 
 	test('should increment scrollWidth and maxLeft by the same margin sum when horizontal item margins are detected', () => {
 		const {ref} = renderVirtualListBasic({direction: 'horizontal'});
-		const instance = ref.current!;
+		const instance = ref.current;
 
 		const marginLeft = 8;
 		const marginRight = 8;
@@ -374,12 +378,12 @@ describe('VirtualListBasic scrollBounds consistency after item margin detection'
 						if (prop === 'margin-right') return `${marginRight}px`;
 						return '0px';
 					}
-				} as CSSStyleDeclaration;
+				};
 			}
 			return originalGetComputedStyle(el);
 		};
 
-		(instance as any).itemMarginTop = null;
+		instance.itemMarginTop = null;
 		act(() => {
 			instance.forceUpdate();
 		});

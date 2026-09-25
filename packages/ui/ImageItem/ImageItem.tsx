@@ -9,10 +9,9 @@
 
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import {CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {ComponentType, CSSProperties, HTMLAttributes, ReactNode, Ref} from 'react';
+import {ReactNode} from 'react';
 
 import ComponentOverride from '../ComponentOverride';
 import ForwardRef from '../ForwardRef';
@@ -24,21 +23,14 @@ import componentCss from './ImageItem.module.less';
 export interface ImageItemBaseProps {
 	children?: ReactNode;
 	componentRef?: EnactPropTypeShapes.ref;
-	css?: CallbackObject<string>;
+	css: Record<string, string>;
 	imageComponent?: EnactPropTypeShapes.componentOverride;
 	orientation?: 'horizontal' | 'vertical';
 	placeholder?: string;
 	selected?: boolean;
 	slotBefore?: ReactNode;
 	src?: string | Record<string, string>;
-	style?: CSSProperties
 }
-
-export type ImageItemType = ComponentType<
-	ImageItemBaseProps &
-	Omit<HTMLAttributes<HTMLDivElement>, keyof ImageItemBaseProps> &
-	{ref?: Ref<HTMLDivElement>}
->;
 
 // Adapts ComponentOverride to work within Cell since both use the component prop
 function ImageOverride ({imageComponent, ...rest}: {imageComponent?: any; [key: string]: any}) {
@@ -79,7 +71,7 @@ const ImageItemBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -97,7 +89,7 @@ const ImageItemBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object as PropTypes.Validator<CallbackObject<string>>,
+		css: PropTypes.object,
 
 		/**
 		 * The component used to render the image component.
@@ -152,7 +144,7 @@ const ImageItemBase = kind({
 		 * @type {String|Object}
 		 * @public
 		 */
-		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]) as PropTypes.Validator<string | CallbackObject<string>>
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	defaultProps: {
@@ -175,7 +167,7 @@ const ImageItemBase = kind({
 		})
 	},
 
-	render: ({children, componentRef, css = {}, imageComponent, orientation, placeholder, selected, slotBefore, src, ...rest}) => {
+	render: ({children, componentRef, css, imageComponent, orientation, placeholder, selected, slotBefore, src, ...rest}) => {
 
 		const isHorizontal = orientation === 'horizontal';
 		const Component = isHorizontal ? Row : Column;
@@ -234,7 +226,7 @@ const ImageItemDecorator = compose(
  * @ui
  * @public
  */
-const ImageItem = ImageItemDecorator(ImageItemBase) as ImageItemType;
+const ImageItem = ImageItemDecorator(ImageItemBase);
 
 export default ImageItem;
 export {

@@ -7,7 +7,6 @@
 
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import {CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -19,7 +18,7 @@ export interface BodyTextBaseProps {
 	centered?: boolean;
 	component?: EnactPropTypeShapes.renderable;
 	componentRef?: EnactPropTypeShapes.ref;
-	css?: Record<string, string>;
+	css: Record<string, string>
 }
 
 /**
@@ -68,7 +67,7 @@ const BodyTextBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
+		componentRef: EnactPropTypes.ref,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -82,7 +81,7 @@ const BodyTextBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object as PropTypes.Validator<CallbackObject<string>>
+		css: PropTypes.object
 	},
 
 	defaultProps: {
