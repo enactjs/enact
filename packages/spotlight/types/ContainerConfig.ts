@@ -24,7 +24,7 @@ export interface LastFocusedPersistResult {
 export type LastFocusedPersist = (
 	node: Element | string,
 	all: (Element | string)[]
-) => LastFocusedPersistResult;
+) => LastFocusedPersistResult | undefined;
 
 export type LastFocusedRestore = (
 	state: LastFocusedPersistResult,
