@@ -10,7 +10,7 @@
 
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
-import {Callback, CallbackObject} from '@enact/core/types';
+import {Callback} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
