@@ -39,7 +39,7 @@ export interface ImageBaseProps {
 export type ImageType = ComponentType<
 	ImageBaseProps &
 	Omit<HTMLAttributes<HTMLDivElement>, keyof ImageBaseProps> &
-	{ref?: Ref<any>}
+	{ref?: Ref<HTMLDivElement>}
 >;
 
 /**

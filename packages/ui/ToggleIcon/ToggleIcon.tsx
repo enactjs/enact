@@ -16,7 +16,7 @@ import kind from '@enact/core/kind';
 import {Callback, CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {ComponentType, Ref} from 'react';
+import {ComponentType, HTMLAttributes, Ref} from 'react';
 
 import ForwardRef from '../ForwardRef';
 import Toggleable from '../Toggleable';
@@ -34,14 +34,16 @@ export interface ToggleIconProps {
 	selected?: boolean
 }
 
-export type ToggleType = {
-	ref: Ref<any>,
-	onClick: Callback<any, {selected: string}>,
-	onTap: Callback<any, {selected: string}>,
-	onToggle: Callback<any, {selected: string}>
-}
-
-export type ToggleIconType = ComponentType<ToggleIconProps & Partial<ToggleType>>;
+export type ToggleIconType = ComponentType<
+	ToggleIconProps &
+	Omit<HTMLAttributes<HTMLDivElement>, keyof ToggleIconProps> &
+	{
+		ref?: Ref<HTMLDivElement>,
+		onClick?: Callback<any, {selected: string}>,
+		onTap?: Callback<any, {selected: string}>,
+		onToggle?: Callback<any, {selected: string}>
+	}
+>;
 
 /**
  * Represents a Boolean state, and can accept any icon to toggle.

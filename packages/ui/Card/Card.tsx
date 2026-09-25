@@ -38,7 +38,7 @@ export interface CardBaseProps {
 export type CardType = ComponentType<
 	CardBaseProps &
 	Omit<HTMLAttributes<HTMLDivElement>, keyof CardBaseProps> &
-	{ref?: Ref<any>}
+	{ref?: Ref<HTMLDivElement>}
 >;
 
 function ImageOverride ({imageComponent, ...rest}: {imageComponent?: any; [key: string]: any}) {

@@ -34,7 +34,7 @@ export interface HeadingBaseProps {
 export type HeadingType = ComponentType<
 	HeadingBaseProps &
 	Omit<HTMLAttributes<HTMLDivElement>, keyof HeadingBaseProps> &
-	{ref?: Ref<any>}
+	{ref?: Ref<HTMLDivElement>}
 >;
 
 /**

@@ -37,7 +37,7 @@ export interface LabeledIconBaseProps {
 export type LabeledIconType = ComponentType<
 	LabeledIconBaseProps &
 	Omit<HTMLAttributes<HTMLDivElement>, keyof LabeledIconBaseProps> &
-	{ref?: Ref<any>}
+	{ref?: Ref<HTMLDivElement>}
 >;
 
 /**

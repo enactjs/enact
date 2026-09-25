@@ -37,7 +37,7 @@ export interface ImageItemBaseProps {
 export type ImageItemType = ComponentType<
 	ImageItemBaseProps &
 	Omit<HTMLAttributes<HTMLDivElement>, keyof ImageItemBaseProps> &
-	{ref?: Ref<any>}
+	{ref?: Ref<HTMLDivElement>}
 >;
 
 // Adapts ComponentOverride to work within Cell since both use the component prop

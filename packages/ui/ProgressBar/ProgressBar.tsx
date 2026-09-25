@@ -37,7 +37,7 @@ export interface ProgressBarBaseProps {
 export type ProgressBarType = ComponentType<
 	ProgressBarBaseProps &
 	Omit<HTMLAttributes<HTMLDivElement>, keyof ProgressBarBaseProps> &
-	{ref?: Ref<any>}
+	{ref?: Ref<HTMLDivElement>}
 >;
 
 const progressToProportion = (value: number) => clamp(0, 1, value);

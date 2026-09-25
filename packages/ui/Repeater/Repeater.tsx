@@ -15,7 +15,7 @@ import {ComponentType, HTMLAttributes, Ref} from 'react';
 
 export interface RepeaterBaseProps {
 	childComponent: EnactPropTypeShapes.renderable;
-	children: string[] | CallbackObject<string | number>[];
+	children: string[] | {key: string | number}[];
 	childProp?: string;
 	component?: EnactPropTypeShapes.renderable;
 	componentRef?: EnactPropTypeShapes.ref;
@@ -26,7 +26,7 @@ export interface RepeaterBaseProps {
 export type RepeaterType = ComponentType<
 	RepeaterBaseProps &
 	Omit<HTMLAttributes<HTMLElement>, keyof RepeaterBaseProps> &
-	{ref?: Ref<any>}
+	{ref?: Ref<HTMLDivElement>}
 >;
 
 /**
@@ -85,7 +85,7 @@ const RepeaterBase = kind({
 			PropTypes.arrayOf(PropTypes.shape({
 				key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 			}))
-		]).isRequired as PropTypes.Validator<string[] | CallbackObject<string | number>[]>,
+		]).isRequired as PropTypes.Validator<string[] | {key: string | number}[]>,
 
 		/**
 		 * Component type to wrap around all the repeated elements.
