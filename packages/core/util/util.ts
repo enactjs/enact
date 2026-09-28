@@ -323,7 +323,7 @@ const memoize = (fn: Callback) => {
  * @see https://react.dev/reference/react/Children#children-map
  * @public
  */
-const mapAndFilterChildren = (children: ReactNode, callback: Callback, filter: FilterCallback<any>) => {
+const mapAndFilterChildren = (children: ReactNode, callback: Callback, filter?: FilterCallback<any>) => {
 	const result = Children.map(children, (child, ...rest) => {
 		if (child != null) {
 			return callback(child, ...rest);
