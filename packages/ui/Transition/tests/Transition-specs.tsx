@@ -9,7 +9,7 @@ describe('Transition Specs', () => {
 	test.skip('should apply author classes', function () {
 		const className = 'classA classB';
 
-		const ChildNode = (props) => <div {...props}>Body</div>;
+		const ChildNode = (props: Record<string, any>) => <div {...props}>Body</div>;
 
 		render(
 			<Transition className={className}>
@@ -30,7 +30,7 @@ describe('Transition Specs', () => {
 			backgroundColor: '#FFFFFF'
 		};
 
-		const ChildNode = (props) => <div {...props}>Body</div>;
+		const ChildNode = (props: Record<string, any>) => <div {...props}>Body</div>;
 
 		render(
 			<Transition style={styles}>
@@ -83,7 +83,7 @@ describe('Transition Specs', () => {
 
 	test('should fire \'onShow\' event with type when \'visible\' prop becomes true', () => {
 		const handleShow = jest.fn();
-		const ChildNode = (props) => <div {...props}>Body</div>;
+		const ChildNode = (props: Record<string, any>) => <div {...props}>Body</div>;
 
 		const {rerender} = render(
 			<Transition noAnimation onShow={handleShow} visible={false}>
@@ -107,7 +107,7 @@ describe('Transition Specs', () => {
 
 	test('should fire \'onHide\' event with type when \'visible\' prop becomes false', () => {
 		const handleHide = jest.fn();
-		const ChildNode = (props) => <div {...props}>Body</div>;
+		const ChildNode = (props: Record<string, any>) => <div {...props}>Body</div>;
 
 		const {rerender} = render(
 			<Transition noAnimation onHide={handleHide} visible>
@@ -153,7 +153,7 @@ describe('Transition Specs', () => {
 		['linear', 'linear']
 	];
 
-	const propStyleCombination = [
+	const propStyleCombination: Array<[string, string[][]]> = [
 		['duration', durationCombination],
 		['direction', directionCombination],
 		['timingFunction', timingFunctionCombination]
@@ -205,7 +205,7 @@ describe('Transition Specs', () => {
 
 	// Custom duration paths.
 	test('should set transitionDuration on inner style for a custom duration', () => {
-		const actual = TransitionBase.computed.innerStyle({css: {}, duration: 200, type: 'slide'});
+		const actual = TransitionBase.computed?.innerStyle({css: {}, duration: 200, type: 'slide'});
 
 		const expected = {transitionDuration: '200ms'};
 
@@ -213,7 +213,7 @@ describe('Transition Specs', () => {
 	});
 
 	test('should set transitionDuration on style for type="clip" with a custom duration', () => {
-		const actual = TransitionBase.computed.style({clipHeight: 10, css: {}, direction: 'up', duration: '3s', type: 'clip', visible: true});
+		const actual = TransitionBase.computed?.style({clipHeight: 10, css: {}, direction: 'up', duration: '3s', type: 'clip', visible: true});
 
 		const expected = {height: 10, overflow: 'hidden', transitionDuration: '3s'};
 
@@ -302,7 +302,7 @@ describe('Transition Specs', () => {
 	});
 
 	test('should re-measure when notified through ResizeContext', () => {
-		let resizeHandler;
+		let resizeHandler: () => void = () => {};
 		const register = jest.fn((handler) => {
 			resizeHandler = handler;
 			return {unregister: jest.fn()};

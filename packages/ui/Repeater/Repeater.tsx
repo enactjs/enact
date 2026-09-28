@@ -11,16 +11,23 @@ import {CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 
 import ForwardRef from '../ForwardRef';
+import {ComponentType, HTMLAttributes, Ref} from 'react';
 
 export interface RepeaterBaseProps {
 	childComponent: EnactPropTypeShapes.renderable;
-	children: string | CallbackObject<string | number>;
+	children: string[] | {key: string | number}[];
 	childProp?: string;
 	component?: EnactPropTypeShapes.renderable;
-	componentRef: EnactPropTypeShapes.ref;
+	componentRef?: EnactPropTypeShapes.ref;
 	indexProp?: string;
-	itemProps: CallbackObject;
+	itemProps?: CallbackObject;
 }
+
+export type RepeaterType = ComponentType<
+	RepeaterBaseProps &
+	Omit<HTMLAttributes<HTMLElement>, keyof RepeaterBaseProps> &
+	{ref?: Ref<HTMLDivElement>}
+>;
 
 /**
  * A stateless component that stamps out copies of `childComponent`, without
@@ -49,6 +56,15 @@ const RepeaterBase = kind({
 		childComponent: EnactPropTypes.renderable.isRequired,
 
 		/**
+		 * The property on each `childComponent` that receives the data in `children`.
+		 *
+		 * @type {String}
+		 * @default 'children'
+		 * @public
+		 */
+		childProp: PropTypes.string,
+
+		/**
 		 * An array of data to be mapped onto the `childComponent`.
 		 *
 		 * This supports two data types. If an array of strings is provided, the strings will be used
@@ -69,16 +85,7 @@ const RepeaterBase = kind({
 			PropTypes.arrayOf(PropTypes.shape({
 				key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 			}))
-		]).isRequired,
-
-		/**
-		 * The property on each `childComponent` that receives the data in `children`.
-		 *
-		 * @type {String}
-		 * @default 'children'
-		 * @public
-		 */
-		childProp: PropTypes.string,
+		]).isRequired as PropTypes.Validator<string[] | {key: string | number}[]>,
 
 		/**
 		 * Component type to wrap around all the repeated elements.
@@ -100,7 +107,7 @@ const RepeaterBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref,
+		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
 
 		/**
 		 * The property on each `childComponent` that receives the index of the item in the `Repeater`.
@@ -117,7 +124,7 @@ const RepeaterBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		itemProps: PropTypes.object
+		itemProps: PropTypes.object as PropTypes.Validator<CallbackObject>
 	},
 
 	defaultProps: {
@@ -143,9 +150,7 @@ const RepeaterBase = kind({
 		}
 	},
 
-	render: ({childProp, component: Component, componentRef, indexProp, itemProps, ...rest}) => {
-		delete rest.childComponent;
-
+	render: ({childComponent, childProp, component: Component, componentRef, indexProp, itemProps, ...rest}) => {
 		return <Component ref={componentRef} role="list" {...rest} />;
 	}
 });
@@ -171,7 +176,7 @@ const RepeaterDecorator = ForwardRef({prop: 'componentRef'});
  * @ui
  * @public
  */
-const Repeater = RepeaterDecorator(RepeaterBase);
+const Repeater = RepeaterDecorator(RepeaterBase) as RepeaterType;
 
 export default Repeater;
 export {

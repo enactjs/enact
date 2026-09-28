@@ -8,11 +8,11 @@
  */
 
 import kind from '@enact/core/kind';
-import {Callback} from '@enact/core/types';
+import {Callback, CallbackObject} from '@enact/core/types';
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {CSSProperties, ReactNode} from 'react';
+import {ComponentType, CSSProperties, HTMLAttributes, ReactNode, Ref} from 'react';
 import warning from 'warning';
 
 import {selectSrc} from '../resolution';
@@ -28,13 +28,19 @@ export interface ImageBaseProps {
 	backgroundSrc?: string | Record<string, string>;
 	children?: ReactNode;
 	componentRef?: EnactPropTypeShapes.ref;
-	css: Record<string, string>;
+	css?: Record<string, string>;
 	onError?: Callback;
 	onLoad?: Callback;
 	placeholder?: string;
 	sizing?: 'fit' | 'fill' | 'none';
 	src?: string | Record<string, string>;
 }
+
+export type ImageType = ComponentType<
+	ImageBaseProps &
+	Omit<HTMLAttributes<HTMLDivElement>, keyof ImageBaseProps> &
+	{ref?: Ref<HTMLDivElement>}
+>;
 
 /**
  * A basic image component designed to display images conditionally based on screen size.
@@ -110,7 +116,7 @@ const ImageBase = kind({
 		 * @type {String|Object}
 		 * @public
 		 */
-		backgroundSrc: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+		backgroundSrc: PropTypes.oneOfType([PropTypes.string, PropTypes.object]) as PropTypes.Validator<string | Record<string, string>>,
 
 		/**
 		 * Node for the children of an `Image`. Useful for overlays.
@@ -129,7 +135,7 @@ const ImageBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref,
+		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -144,7 +150,7 @@ const ImageBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object,
+		css: PropTypes.object as PropTypes.Validator<CallbackObject<string>>,
 
 		/**
 		 * Called if the image has an error.
@@ -194,7 +200,7 @@ const ImageBase = kind({
 		 * @type {String|Object}
 		 * @public
 		 */
-		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]) as PropTypes.Validator<string | Record<string, string>>
 	},
 
 	defaultProps: {
@@ -227,7 +233,7 @@ const ImageBase = kind({
 		imgSrc: ({src}: Record<string, any>) => selectSrc(src)
 	},
 
-	render: ({alt, 'aria-label': ariaLabel, backgroundColor, bgImage, children, componentRef, css, imgSrc, onError, onLoad, placeholder, sizing, style, ...rest}) => {
+	render: ({alt, 'aria-label': ariaLabel, backgroundColor, bgImage, children, componentRef, css = {}, imgSrc, onError, onLoad, placeholder, sizing, style, ...rest}) => {
 		delete rest.backgroundSrc;
 		delete rest.src;
 
@@ -269,7 +275,7 @@ const ImageDecorator = compose(
  * @ui
  * @public
  */
-const Image = ImageDecorator(ImageBase);
+const Image = ImageDecorator(ImageBase) as ImageType;
 
 export default Image;
 export {

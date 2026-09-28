@@ -5,9 +5,11 @@ import {render, screen} from '@testing-library/react';
 
 import useSlots from '../useSlots';
 
+import {ComponentProps} from './Slottable-specs';
+
 describe('useSlots', () => {
 	test('should distribute children with a \'slot\' property', () => {
-		function Component ({a, b, c, children}) {
+		function Component ({a, b, c, children}: ComponentProps) {
 			const slots = useSlots({a, b, c, children});
 
 			return (
@@ -34,7 +36,7 @@ describe('useSlots', () => {
 	});
 
 	test('should have no children when all have been distributed', () => {
-		function Component ({a, b, c, children}) {
+		function Component ({a, b, c, children}: ComponentProps) {
 			const slots = useSlots({a, b, c, children});
 
 			return (
@@ -59,7 +61,7 @@ describe('useSlots', () => {
 	});
 
 	test('should distribute children with a \'type\' that matches a slot', () => {
-		function Component ({a, b, c, children, custom}) {
+		function Component ({a, b, c, children, custom}: ComponentProps) {
 			const slots = useSlots({a, b, c, children, custom});
 
 			return (
@@ -87,12 +89,12 @@ describe('useSlots', () => {
 	});
 
 	test('should distribute children whose \'type\' has a \'defaultSlot\' property that matches a slot', () => {
-		function Custom (props) {
+		function Custom (props: ComponentProps) {
 			return <div>{props.children}</div>;
 		}
 		Custom.defaultSlot = 'c';
 
-		function Component ({a, b, c, children}) {
+		function Component ({a, b, c, children}: ComponentProps) {
 			const slots = useSlots({a, b, c, children});
 
 			return (
@@ -119,7 +121,7 @@ describe('useSlots', () => {
 	});
 
 	test('should distribute children with no \'slot\' property to Slottable\'s \'children\'', () => {
-		function Component ({a, b, children}) {
+		function Component ({a, b, children}: ComponentProps) {
 			const slots = useSlots({a, b, children});
 
 			return (
@@ -147,9 +149,9 @@ describe('useSlots', () => {
 	test('should not distribute children with an invalid \'slot\' property', () => {
 		// Modify the console spy to silence error output with
 		// an empty mock implementation
-		console.error.mockImplementation();
+		(console.error as jest.Mock).mockImplementation();
 
-		function Component ({a, b, children}) {
+		function Component ({a, b, children}: ComponentProps) {
 			const slots = useSlots({a, b, children});
 
 			return (
@@ -175,19 +177,19 @@ describe('useSlots', () => {
 		expect(actual.textContent).toHaveLength(2);
 
 		// Check to make sure that we only get the one expected error
-		const actualErrorsLength = console.error.mock.calls.length;
+		const actualErrorsLength = (console.error as jest.Mock).mock.calls.length;
 		const expectedErrorLength = 1;
 
 		expect(actualErrorsLength).toBe(expectedErrorLength);
 
-		const actualError = console.error.mock.calls[0][0];
+		const actualError = (console.error as jest.Mock).mock.calls[0][0];
 		const expectedError = 'Warning: The slot "c" specified on div does not exist';
 
 		expect(actualError).toBe(expectedError);
 	});
 
 	test('should distribute children with props other than simply \'children\', in entirety, to the matching destination slot', () => {
-		function Component ({a, b, c, children, custom}) {
+		function Component ({a, b, c, children, custom}: ComponentProps) {
 			const slots = useSlots({a, b, c, children, custom});
 
 			return (
@@ -220,7 +222,7 @@ describe('useSlots', () => {
 	});
 
 	test('should distribute multiple children with the same slot into the same slot', () => {
-		function Component ({a, children}) {
+		function Component ({a, children}: ComponentProps) {
 			const slots = useSlots({a, children});
 			return (
 				<div data-testid="useSlots">
@@ -243,7 +245,7 @@ describe('useSlots', () => {
 	});
 
 	test('should override prop with slot value', () => {
-		function Component ({a, children}) {
+		function Component ({a, children}: ComponentProps) {
 			const slots = useSlots({a, children});
 			return (
 				<div data-testid="useSlots">
@@ -263,7 +265,7 @@ describe('useSlots', () => {
 	});
 
 	test('should fallback to prop when slot is omitted', () => {
-		function Component ({a, children}) {
+		function Component ({a, children}: ComponentProps) {
 			const slots = useSlots({a, children});
 			return (
 				<div data-testid="useSlots">

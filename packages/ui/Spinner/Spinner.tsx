@@ -99,7 +99,7 @@ const SpinnerBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref,
+		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the

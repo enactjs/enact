@@ -1,7 +1,7 @@
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import {forProp, forwardCustom, handle, stop} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import {Callback} from '@enact/core/types';
+import {Callback, CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import {Children, Fragment, ReactNode} from 'react';
 
@@ -10,6 +10,7 @@ import componentCss from './Marquee.module.less';
 const isEventSource = (ev: any) => ev.target === ev.currentTarget;
 
 export interface MarqueeBaseProps {
+	'aria-label'?: string;
 	alignment?: 'left' | 'right' | 'center';
 	animating?: boolean;
 	children?: ReactNode;
@@ -88,7 +89,7 @@ const MarqueeBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		clientRef: EnactPropTypes.ref,
+		clientRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -105,7 +106,7 @@ const MarqueeBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object,
+		css: PropTypes.object as PropTypes.Validator<CallbackObject<string>>,
 
 		/**
 		 * Distance to animate the marquee

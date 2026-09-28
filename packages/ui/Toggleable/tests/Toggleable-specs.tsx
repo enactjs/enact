@@ -5,9 +5,9 @@ import {useEffect} from 'react';
 import Toggleable from '../Toggleable';
 
 describe('Toggleable', () => {
-	let data;
+	let data: Record<string, any>;
 
-	const DivComponent = (props) => {
+	const DivComponent = (props: Record<string, any>) => {
 		useEffect(() => {
 			data = props;
 		}, [props]);

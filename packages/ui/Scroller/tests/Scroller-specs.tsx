@@ -1,10 +1,11 @@
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
+import {JSX} from 'react';
 
 import Scroller from '../Scroller';
 
 describe('Scroller', () => {
-	let contents;
+	let contents: null | JSX.Element = null;
 
 	beforeEach(() => {
 		contents = (
@@ -34,7 +35,7 @@ describe('Scroller', () => {
 				);
 
 				const horizontalScrollbar = screen.getByTestId('scroller').children.item(1);
-				const verticalScrollbar = screen.getByTestId('scroller').children.item(0).children.item(1);
+				const verticalScrollbar = screen.getByTestId('scroller').children.item(0)?.children.item(1);
 
 				expect(horizontalScrollbar).toBeInTheDocument();
 				expect(verticalScrollbar).toBeInTheDocument();
@@ -55,7 +56,7 @@ describe('Scroller', () => {
 				);
 
 				const horizontalScrollbar = screen.getByTestId('scroller').children.item(1);
-				const verticalScrollbar = screen.getByTestId('scroller').children.item(0).children.item(1);
+				const verticalScrollbar = screen.getByTestId('scroller').children.item(0)?.children.item(1);
 
 				expect(horizontalScrollbar).toBeNull();
 				expect(verticalScrollbar).toBeInTheDocument();
@@ -76,7 +77,7 @@ describe('Scroller', () => {
 				);
 
 				const horizontalScrollbar = screen.getByTestId('scroller').children.item(1);
-				const verticalScrollbar = screen.getByTestId('scroller').children.item(0).children.item(1);
+				const verticalScrollbar = screen.getByTestId('scroller').children.item(0)?.children.item(1);
 
 				expect(horizontalScrollbar).toBeNull();
 				expect(verticalScrollbar).toBeNull();

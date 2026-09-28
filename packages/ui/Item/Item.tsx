@@ -9,11 +9,12 @@
 
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
+import {CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {ReactNode} from 'react';
+import {ComponentType, HTMLAttributes, ReactNode, Ref} from 'react';
 
-import Touchable from '../Touchable';
+import Touchable, {TouchableProps} from '../Touchable';
 import ForwardRef from '../ForwardRef';
 
 import componentCss from './Item.module.less';
@@ -26,6 +27,13 @@ export interface ItemBaseProps {
 	disabled?: boolean;
 	inline?: boolean;
 }
+
+export type ItemType = ComponentType<
+	ItemBaseProps &
+	TouchableProps &
+	Omit<HTMLAttributes<HTMLElement>, keyof ItemBaseProps | keyof TouchableProps> &
+	{ref?: Ref<HTMLDivElement>}
+>;
 
 /**
  * A basic list item component structure without any behaviors applied to it.
@@ -67,7 +75,7 @@ const ItemBase = kind({
 		 * @type {Object|Function}
 		 * @private
 		 */
-		componentRef: EnactPropTypes.ref,
+		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
 
 		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
@@ -81,7 +89,7 @@ const ItemBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		css: PropTypes.object,
+		css: PropTypes.object as PropTypes.Validator<CallbackObject<string>>,
 
 		/**
 		 * Applies a disabled state to the item.
@@ -157,7 +165,7 @@ const ItemDecorator = compose(
  * @ui
  * @public
  */
-const Item = ItemDecorator(ItemBase);
+const Item = ItemDecorator(ItemBase) as ItemType;
 
 export default Item;
 export {

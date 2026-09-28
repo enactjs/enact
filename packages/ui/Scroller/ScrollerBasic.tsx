@@ -11,14 +11,14 @@ import css from './Scroller.module.less';
 
 interface ScrollerBasicProps {
 	'aria-label'?: string;
-	cbScrollTo: ScrollToFunction;
-	children: ReactElement;
+	cbScrollTo?: ScrollToFunction;
+	children?: ReactElement;
 	className?: string;
 	id?: string;
-	direction: 'both' | 'horizontal' | 'vertical';
+	direction?: 'both' | 'horizontal' | 'vertical';
 	isHorizontalScrollbarVisible?: boolean;
-	isVerticalScrollbarVisible: boolean;
-	rtl: boolean;
+	isVerticalScrollbarVisible?: boolean;
+	rtl?: boolean;
 	scrollContainerContainsDangerously?: (target: HTMLElement) => boolean;
 	scrollContentRef: RefObject<HTMLDivElement>;
 	scrollMode?: 'translate' | 'native';
@@ -88,6 +88,10 @@ class ScrollerBasic extends Component<ScrollerBasicProps> {
 		scrollContentRef: EnactPropTypes.ref
 	};
 
+	static defaultProps = {
+		direction: 'both'
+	};
+
 	constructor (props: ScrollerBasicProps) {
 		super(props);
 		checkPropTypes(this, props);
@@ -147,7 +151,7 @@ class ScrollerBasic extends Component<ScrollerBasicProps> {
 	}
 
 	// scrollMode 'native'
-	scrollToPosition (left: number, top: number, behavior: 'smooth' | 'instant', repeat: boolean) {
+	scrollToPosition (left: number, top: number, behavior: 'smooth' | 'instant', repeat?: boolean) {
 		const node = this.props.scrollContentRef.current;
 		const smoothBehavior = behavior === 'smooth';
 

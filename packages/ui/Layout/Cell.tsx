@@ -1,5 +1,6 @@
 import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
+import {CallbackObject} from '@enact/core/types';
 import PropTypes from 'prop-types';
 import {ReactNode} from 'react';
 
@@ -82,7 +83,7 @@ const CellBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		componentCss: PropTypes.object,
+		componentCss: PropTypes.object as PropTypes.Validator<CallbackObject<string>>,
 
 		/**
 		 * Called with a reference to the root component.
@@ -93,7 +94,7 @@ const CellBase = kind({
 		 * @type {Object|Function}
 		 * @public
 		 */
-		componentRef: EnactPropTypes.ref,
+		componentRef: EnactPropTypes.ref as PropTypes.Validator<EnactPropTypeShapes.ref>,
 
 		/**
 		 * Sizes `Cell` to its container.

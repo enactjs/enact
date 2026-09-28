@@ -10,6 +10,10 @@ export interface TouchableConfig {
 	pinch?: PinchConfigPropType;
 }
 
+type PartialTouchableConfig = {
+	[K in keyof TouchableConfig]?: Partial<NonNullable<TouchableConfig[K]>>;
+};
+
 const allowedDragKeys = Object.keys(defaultDragConfig);
 const allowedFlickKeys = Object.keys(defaultFlickConfig);
 const allowedHoldKeys = Object.keys(defaultHoldConfig);
@@ -27,7 +31,7 @@ let config: TouchableConfig = {} as TouchableConfig;
 const clone = <T>(o: T) => Object.assign({}, o);
 
 // Merges two configuration objects while retaining only the allowed keys
-const mergeGestureConfig = <T>(current: T, update: T, allowed: string[]) => {
+const mergeGestureConfig = <T>(current: T, update: Partial<T> | undefined, allowed: string[]) => {
 	const cfg = {...current, ...update} as Record<string, any>;
 
 	Object.keys(cfg).forEach(key => {
@@ -40,7 +44,7 @@ const mergeGestureConfig = <T>(current: T, update: T, allowed: string[]) => {
 };
 
 // Merges the current global config with the provided `cfg` and returns the result
-const mergeConfig = (cfg: TouchableConfig) => {
+const mergeConfig = (cfg: PartialTouchableConfig) => {
 	const merged = {
 		drag: mergeGestureConfig(config.drag, cfg.drag, allowedDragKeys),
 		flick: mergeGestureConfig(config.flick, cfg.flick, allowedFlickKeys),
@@ -130,7 +134,7 @@ const mergeConfig = (cfg: TouchableConfig) => {
  * @public
  * @memberof ui/Touchable
  */
-const configure = (cfg: TouchableConfig) => {
+const configure = (cfg: PartialTouchableConfig) => {
 	config = mergeConfig(cfg);
 };
 

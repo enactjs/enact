@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import {CallbackObject} from '../types';
 
 export type VariantsType = string | string[] | CallbackObject;
+export type PreferDefinedType = null | string | boolean | undefined;
 
 const objectify = (arg?: VariantsType | null): CallbackObject | string[] => {
 	// undefined, null, empty string case
@@ -29,7 +30,7 @@ const objectify = (arg?: VariantsType | null): CallbackObject | string[] => {
 	}
 };
 
-const preferDefined = (a: string, b: string) => ((a != null) ? a : b);
+const preferDefined = (a: PreferDefinedType, b: PreferDefinedType) => ((a != null) ? a : b);
 
 /**
  * Determines the effective skin

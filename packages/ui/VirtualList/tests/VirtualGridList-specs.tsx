@@ -1,20 +1,22 @@
 import '@testing-library/jest-dom';
+import {Callback, CallbackObject} from '@enact/core/types';
 import {act, fireEvent, render, screen} from '@testing-library/react';
+import {ReactNode} from 'react';
 
-import {VirtualGridList} from '../VirtualList';
+import {ScrollToProps, VirtualGridList} from '../VirtualList';
 import {ImageItem as UiImageItem} from '../../ImageItem';
 
-const activate = (list) => fireEvent.keyUp(list, {keyCode: 13});
-const keyDown = (keyCode) => (list) => fireEvent.keyDown(list, {keyCode});
+const activate = (list: Element) => fireEvent.keyUp(list, {keyCode: 13});
+const keyDown = (keyCode: number) => (list: Element) => fireEvent.keyDown(list, {keyCode});
 
 const downKeyDown = keyDown(40);
 
-const getElementClientCenter = (element) => {
+const getElementClientCenter = (element: Element) => {
 	const {left, top, width, height} = element.getBoundingClientRect();
 	return {x: left + width / 2, y: top + height / 2};
 };
 
-const drag = async (element, {delta, steps = 1}) => {
+const drag = async (element: Element, {delta, steps = 1}: {delta: CallbackObject, steps?: number}) => {
 	const from = getElementClientCenter(element);
 	const to = {x: from.x + delta.x, y: from.y + delta.y};
 	const step = {x: (to.x - from.x) / steps, y: (to.y - from.y) / steps};
@@ -34,23 +36,26 @@ const drag = async (element, {delta, steps = 1}) => {
 };
 
 describe('VirtualGridList', () => {
+	type ScrollToFn = (opts: ScrollToProps) => void;
+	type ScrollEvent = {scrollTop: number};
+
 	let
-		clientSize,
-		dataSize,
-		getScrollTo,
-		handlerOnScroll,
-		handlerOnScrollStart,
-		handlerOnScrollStop,
-		items,
-		itemSize,
-		myScrollTo,
-		onScrollCount,
-		onScrollStartCount,
-		onScrollStopCount,
-		renderItem,
-		resultScrollTop,
-		startScrollTop,
-		svgGenerator;
+		clientSize: {clientWidth: number, clientHeight: number},
+		dataSize: number,
+		getScrollTo: (scrollTo: ScrollToFn) => void,
+		handlerOnScroll: () => void,
+		handlerOnScrollStart: (e: ScrollEvent) => void,
+		handlerOnScrollStop: (done: () => void, testCase: () => void) => (e: ScrollEvent) => void,
+		items: {text: string, source: string}[],
+		itemSize: {minWidth: number, minHeight: number},
+		myScrollTo: ScrollToFn,
+		onScrollCount: number,
+		onScrollStartCount: number,
+		onScrollStopCount: number,
+		renderItem: (props: {index: number, [key: string]: any}) => ReactNode,
+		resultScrollTop: number,
+		startScrollTop: number,
+		svgGenerator: (width: number, height: number, bgColor: string, textColor: string, customText: string) => string;
 
 	beforeEach(() => {
 		clientSize = {clientWidth: 1280, clientHeight: 720};
@@ -63,7 +68,7 @@ describe('VirtualGridList', () => {
 		resultScrollTop = 0;
 		startScrollTop = 0;
 
-		getScrollTo = (scrollTo) => {
+		getScrollTo = (scrollTo: ScrollToFn) => {
 			myScrollTo = scrollTo;
 		};
 		handlerOnScroll = () => {
@@ -73,7 +78,7 @@ describe('VirtualGridList', () => {
 			startScrollTop = e.scrollTop;
 			onScrollStartCount++;
 		};
-		handlerOnScrollStop = (done, testCase) => (e) => {
+		handlerOnScrollStop = (done: Callback, testCase: Callback) => (e: ScrollEvent) => {
 			onScrollStopCount++;
 			resultScrollTop = e.scrollTop;
 
@@ -81,7 +86,7 @@ describe('VirtualGridList', () => {
 			done();
 		};
 
-		renderItem = ({index, ...rest}) => {	// eslint-disable-line enact/display-name
+		renderItem = ({index, ...rest}: {index: number}) => {	// eslint-disable-line enact/display-name
 			const {text, source} = items[index];
 			return (
 				<UiImageItem
@@ -94,7 +99,7 @@ describe('VirtualGridList', () => {
 			);
 		};
 
-		svgGenerator = (width, height, bgColor, textColor, customText) => (
+		svgGenerator = (width: number, height: number, bgColor: string, textColor: string, customText: string) => (
 			`data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${width} ${height}' width='${width}' height='${height}'%3E` +
 			`%3Crect width='${width}' height='${height}' fill='%23${bgColor}'%3E%3C/rect%3E` +
 			`%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='36px' fill='%23${textColor}'%3E${customText}%3C/text%3E%3C/svg%3E`
@@ -116,24 +121,6 @@ describe('VirtualGridList', () => {
 		return dataSize;
 	});
 
-	afterEach(() => {
-		clientSize = null;
-		dataSize = null;
-		getScrollTo = null;
-		handlerOnScroll = null;
-		handlerOnScrollStart = null;
-		handlerOnScrollStop = null;
-		items = null;
-		itemSize = null;
-		myScrollTo = null;
-		onScrollCount = null;
-		onScrollStartCount = null;
-		onScrollStopCount = null;
-		renderItem = null;
-		resultScrollTop = null;
-		startScrollTop = null;
-	});
-
 	test('should render a list of \'items\'', () => {
 		render(
 			<VirtualGridList
@@ -145,7 +132,7 @@ describe('VirtualGridList', () => {
 		);
 
 		const expected = 'Item 00';
-		const actual = screen.getByRole('list').children.item(0).textContent;
+		const actual = screen.getByRole('list').children.item(0)?.textContent;
 
 		expect(actual).toBe(expected);
 	});
@@ -518,7 +505,7 @@ describe('VirtualGridList', () => {
 		test('should scroll by drag', async () => {
 			const fn = jest.fn();
 
-			const onScrollStop = (e) => {
+			const onScrollStop = (e: ScrollEvent) => {
 				fn();
 				expect(startScrollTop).toBe(0);
 				expect(onScrollStartCount).toBe(1);
@@ -581,7 +568,7 @@ describe('VirtualGridList', () => {
 	describe('Adding an item', () => {
 		test('should render an added item named \'Password 0\' as the first item', (done) => {
 			const itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
-			const renderItemArray = ({index, ...rest}) => {
+			const renderItemArray = ({index, ...rest}: {index: number}) => {
 				return (
 					<div {...rest} id={'item' + index}>
 						{itemArray[index].name}
@@ -612,7 +599,7 @@ describe('VirtualGridList', () => {
 
 			act(() => jest.advanceTimersByTime(0));
 			const expected = itemArray[0].name;
-			const actual = screen.getByRole('list').children.item(0).textContent;
+			const actual = screen.getByRole('list').children.item(0)?.textContent;
 
 			expect(actual).toBe(expected);
 			done();

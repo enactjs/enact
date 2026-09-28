@@ -12,9 +12,9 @@ describe('Touchable', () => {
 		jest.useRealTimers();
 	});
 
-	let data;
+	let data: Record<string, any>;
 
-	const DivComponent = ({children = 'Toggle', id, onClick, onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp, onTouchStart, onTouchEnd, ...props}) => {
+	const DivComponent = ({children = 'Toggle', id, onClick, onMouseDown, onMouseEnter, onMouseLeave, onMouseMove, onMouseUp, onTouchStart, onTouchEnd, ...props}: Record<string, any>) => {
 		useEffect(() => {
 			data = props;
 		}, [props]);
@@ -36,7 +36,7 @@ describe('Touchable', () => {
 			</div>
 		);
 	};
-	const preventDefault = (ev) => ev.preventDefault();
+	const preventDefault = (ev: {preventDefault: () => void}) => ev.preventDefault();
 
 	describe('config', () => {
 		beforeEach(resetDefaultConfig);
@@ -243,7 +243,7 @@ describe('Touchable', () => {
 			});
 
 			const expected = 10;
-			const actual = getConfig().flick.maxMoves;
+			const actual = getConfig().flick?.maxMoves;
 
 			expect(actual).toBe(expected);
 		});
@@ -251,12 +251,14 @@ describe('Touchable', () => {
 		test('should omit unsupported configurations', () => {
 			configure({
 				flick: {
+					// @ts-ignore
 					notSupported: 10
 				}
 			});
 
 			// eslint-disable-next-line no-undefined
 			const expected = undefined;
+			// @ts-ignore
 			const actual = getConfig().flick.notSupported;
 
 			expect(actual).toBe(expected);
@@ -296,7 +298,7 @@ describe('Touchable', () => {
 			cfg.flick.maxMoves = 20;
 
 			const expected = 10;
-			const actual = getConfig().flick.maxMoves;
+			const actual = getConfig().flick?.maxMoves;
 
 			expect(actual).toBe(expected);
 		});
@@ -314,7 +316,7 @@ describe('Touchable', () => {
 			cfg.hold.events[0].time = 2000;
 
 			const expected = 600;
-			const actual = getConfig().hold.events[0].time;
+			const actual = getConfig().hold?.events[0].time;
 
 			expect(actual).toBe(expected);
 		});
@@ -462,7 +464,7 @@ describe('Touchable', () => {
 			fireEvent.click(component, {});
 
 			const expected = ['onTap', 'click'];
-			const actual = handler.mock.calls.map(call => call[0].type);
+			const actual = handler.mock.calls.map((call: {type: string}[]) => call[0].type);
 
 			expect(actual).toEqual(expected);
 		});
@@ -488,7 +490,7 @@ describe('Touchable', () => {
 			fireEvent(component, clickEvent);
 
 			const expected = ['onTap', 'click'];
-			const actual = handler.mock.calls.map(call => call[0].type);
+			const actual = handler.mock.calls.map((call: {type: string}[]) => call[0].type);
 
 			expect(actual).toEqual(expected);
 		});
@@ -542,7 +544,7 @@ describe('Touchable', () => {
 
 			test('should not update active state on mouse down when preventDefault is called', () => {
 				const Component = Touchable({activeProp: 'active'}, DivComponent);
-				const handler = (ev) => ev.preventDefault();
+				const handler = (ev: {preventDefault: () => void}) => ev.preventDefault();
 				render(<Component onDown={handler} />);
 				const component = screen.getByTestId('component');
 

@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import {CallbackObject} from '@enact/core/types';
 import {render, screen} from '@testing-library/react';
 import {useEffect} from 'react';
 
@@ -9,7 +10,7 @@ describe('Skinnable Specs', () => {
 		const config = {};
 		let data;
 
-		const Component = (props) => {
+		const Component = (props: CallbackObject) => {
 			useEffect(() => {
 				data = props;
 			}, [props]);
@@ -33,7 +34,7 @@ describe('Skinnable Specs', () => {
 			}
 		};
 
-		const Component = (props) => (
+		const Component = (props: CallbackObject) => (
 			<div {...props} />
 		);
 
@@ -56,7 +57,7 @@ describe('Skinnable Specs', () => {
 			}
 		};
 
-		const Component = (props) => (
+		const Component = (props: CallbackObject) => (
 			<div {...props} />
 		);
 
@@ -80,7 +81,7 @@ describe('Skinnable Specs', () => {
 		};
 		let data;
 
-		const Component = (props) => {
+		const Component = (props: CallbackObject) => {
 			useEffect(() => {
 				data = props;
 			}, [props]);
@@ -104,7 +105,7 @@ describe('Skinnable Specs', () => {
 			}
 		};
 
-		const Component = (props) => (
+		const Component = (props: CallbackObject) => (
 			<div {...props} />
 		);
 
@@ -127,7 +128,7 @@ describe('Skinnable Specs', () => {
 			}
 		};
 
-		const Component = (props) => (
+		const Component = (props: CallbackObject) => (
 			<div {...props} />
 		);
 
@@ -151,7 +152,7 @@ describe('Skinnable Specs', () => {
 			allowedVariants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const Component = (props) => (
+		const Component = (props: CallbackObject) => (
 			<div {...props} />
 		);
 
@@ -176,7 +177,7 @@ describe('Skinnable Specs', () => {
 			allowedVariants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const Component = (props) => (
+		const Component = (props: CallbackObject) => (
 			<div {...props} />
 		);
 
@@ -201,7 +202,7 @@ describe('Skinnable Specs', () => {
 			allowedVariants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const Component = (props) => (
+		const Component = (props: CallbackObject) => (
 			<div {...props} />
 		);
 
@@ -226,7 +227,7 @@ describe('Skinnable Specs', () => {
 			allowedVariants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const Component = (props) => (
+		const Component = (props: CallbackObject) => (
 			<div {...props} />
 		);
 
@@ -252,7 +253,7 @@ describe('Skinnable Specs', () => {
 			allowedVariants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const Component = (props) => (
+		const Component = (props: CallbackObject) => (
 			<div {...props} />
 		);
 
@@ -277,7 +278,7 @@ describe('Skinnable Specs', () => {
 			allowedVariants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const Component = (props) => (
+		const Component = (props: CallbackObject) => (
 			<div {...props} />
 		);
 
@@ -302,7 +303,7 @@ describe('Skinnable Specs', () => {
 			allowedVariants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const Component = (props) => (
+		const Component = (props: CallbackObject) => (
 			<div {...props} />
 		);
 
@@ -332,7 +333,7 @@ describe('Skinnable Specs', () => {
 			allowedVariants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const Component = (props) => (
+		const Component = (props: CallbackObject) => (
 			<div {...props} />
 		);
 
@@ -362,7 +363,7 @@ describe('Skinnable Specs', () => {
 			allowedVariants: ['normal', 'smallCaps', 'unicase']
 		};
 
-		const Component = (props) => (
+		const Component = (props: CallbackObject) => (
 			<div {...props} />
 		);
 
@@ -395,7 +396,7 @@ describe('Skinnable Specs', () => {
 		};
 		const wasRendered = jest.fn();
 
-		const Component = (props) => (
+		const Component = (props: CallbackObject) => (
 			<div {...props} />
 		);
 
