@@ -10,9 +10,11 @@ import {ScrollToFunction} from './Scroller';
 import css from './Scroller.module.less';
 
 interface ScrollerBasicProps {
+	'aria-label'?: string;
 	cbScrollTo: ScrollToFunction;
 	children: ReactElement;
 	className?: string;
+	id?: string;
 	direction: 'both' | 'horizontal' | 'vertical';
 	isHorizontalScrollbarVisible?: boolean;
 	isVerticalScrollbarVisible: boolean;
