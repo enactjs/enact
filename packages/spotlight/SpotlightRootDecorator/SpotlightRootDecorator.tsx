@@ -167,9 +167,22 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config: SpotlightRootDecorato
 		}
 
 		useEffect(() => {
-			if (!noAutoFocus) {
-				Spotlight.focus(void 0);
-			}
+			let attempts = 0;
+			let timer = 0;
+
+			// List items are measured and mounted after this effect. When the first focus finds
+			// nothing, retry until a spottable exists. Do not move focus once a control has it.
+			const focusWhenIdle = () => {
+				if (noAutoFocus || Spotlight.getPointerMode()) return;
+
+				const focused = Spotlight.focus(void 0);
+				if (!focused && !Spotlight.getCurrent() && attempts < 20) {
+					attempts += 1;
+					timer = window.setTimeout(focusWhenIdle, 50);
+				}
+			};
+
+			focusWhenIdle();
 
 			if (typeof document === 'object') {
 				containerNode.current = document.querySelector('#' + rootId) as HTMLElement | null;
@@ -187,6 +200,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config: SpotlightRootDecorato
 			}
 
 			return () => {
+				window.clearTimeout(timer);
 				Spotlight.terminate();
 
 				if (typeof document === 'object') {
