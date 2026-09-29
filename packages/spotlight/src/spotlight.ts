@@ -826,7 +826,12 @@ const Spotlight = (function (): SpotlightApi {
 				const focused = focusElement(target as HTMLElement | null, nextContainerIds, false, options.preventScroll);
 
 				if (focused) {
-					const containerId = wasContainerId ? elem as string : (currentContainerNode ? getContainerId(currentContainerNode) : '');
+					let containerId = '';
+					if (wasContainerId) {
+						containerId = elem as string;
+					} else if (currentContainerNode) {
+						containerId = getContainerId(currentContainerNode);
+					}
 					if (containerId) {
 						// The container's default element (panel body, list item) may not exist yet.
 						// Focusing the fallback now and leaving it there is what lands on a header.
