@@ -483,12 +483,12 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 	focusClaimAttempts = 0;
 	focusClaimTimer = 0;
 
-	// Items are measured after the first render. A panel can focus its header before item 0
-	// exists, and coming back from another panel does the same. Once item 0 is spottable, move
-	// focus there if the current target shares this list's container (the header). Leave focus
-	// alone when it is already in the list, in pointer mode, or in another container such as an
-	// input or a second list. A target outside this container can still move onto the header a
-	// moment later, so that attempt is retried instead of remembered.
+	// Items are measured after the first render, so the root focus pass can run before item 0
+	// exists. Once item 0 is spottable, focus it when nothing is focused, or when the current
+	// target shares this list's container (a panel header). Leave focus alone when it is already
+	// in the list, in pointer mode, or in another container such as an input or a second list.
+	// A target outside this container can still move onto the header a moment later, so that
+	// attempt is retried instead of remembered.
 	scheduleInitialItemFocus = () => {
 		if (this.focusClaimed || this.focusClaimTimer || typeof window === 'undefined') return;
 
@@ -556,7 +556,9 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 		const currentContainerIds = connectedCurrent ? getContainersForNode(connectedCurrent) : [];
 		const sharesContainer = listContainerIds.some((id) => currentContainerIds.includes(id));
 
-		if (!connectedCurrent || !sharesContainer) {
+		// Another container, such as Go Back or a second list, may still move onto this list's
+		// header. Keep waiting. Focusing now would take that focus away.
+		if (connectedCurrent && !sharesContainer) {
 			retry();
 			return;
 		}
