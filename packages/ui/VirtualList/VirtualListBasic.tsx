@@ -3,6 +3,8 @@ import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-typ
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import {checkPropTypes, clamp, shallowEqual} from '@enact/core/util';
+import Spotlight from '@enact/spotlight';
+import {getContainersForNode, rootContainerId} from '@enact/spotlight/src/container';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import {createRef, Component, RefObject, ReactElement, ReactNode} from 'react';
@@ -469,6 +471,116 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 		} else {
 			this.setContainerSize();
 		}
+
+		this.scheduleInitialItemFocus();
+	}
+
+	componentWillUnmount () {
+		window.clearTimeout(this.focusClaimTimer);
+	}
+
+	focusClaimed = false;
+	focusClaimAttempts = 0;
+	focusClaimTimer = 0;
+
+	// Items are measured after the first render. A panel can focus its header before item 0
+	// exists, and coming back from another panel does the same. Once item 0 is spottable, move
+	// focus there if the current target shares this list's container (the header). Leave focus
+	// alone when it is already in the list, in pointer mode, or in another container such as an
+	// input or a second list. A target outside this container can still move onto the header a
+	// moment later, so that attempt is retried instead of remembered.
+	scheduleInitialItemFocus = () => {
+		if (this.focusClaimed || this.focusClaimTimer || typeof window === 'undefined') return;
+
+		const itemNode = this.findRenderedItem(0);
+		if (!itemNode || !itemNode.classList.contains('spottable')) return;
+
+		this.focusClaimTimer = window.setTimeout(() => {
+			this.focusClaimTimer = 0;
+			this.claimInitialItemFocus();
+		}, 0);
+	};
+
+	findRenderedItem (index: number): HTMLElement | null {
+		const items = this.props.itemRefs?.current;
+		if (!items) return null;
+
+		for (let i = 0; i < items.length; i++) {
+			const node = items[i];
+			if (node && node.isConnected && node.dataset.index === String(index)) {
+				return node;
+			}
+		}
+
+		return null;
+	}
+
+	claimInitialItemFocus = () => {
+		if (this.focusClaimed) return;
+
+		const scrollNode = this.getScrollNode();
+		const itemNode = this.findRenderedItem(0);
+		if (!scrollNode || !itemNode || !itemNode.classList.contains('spottable')) return;
+
+		if (Spotlight.getPointerMode()) {
+			this.focusClaimed = true;
+			return;
+		}
+
+		const retry = () => {
+			if (this.focusClaimAttempts >= 20) {
+				this.focusClaimed = true;
+				return;
+			}
+
+			this.focusClaimAttempts += 1;
+			this.focusClaimTimer = window.setTimeout(() => {
+				this.focusClaimTimer = 0;
+				this.claimInitialItemFocus();
+			}, 50);
+		};
+
+		if (Spotlight.isPaused()) {
+			retry();
+			return;
+		}
+
+		const current = Spotlight.getCurrent();
+		const connectedCurrent = current && current.isConnected ? current : null;
+		if (connectedCurrent && scrollNode.contains(connectedCurrent)) {
+			this.focusClaimed = true;
+			return;
+		}
+
+		const listContainerIds = getContainersForNode(scrollNode).filter((id) => id !== rootContainerId);
+		const currentContainerIds = connectedCurrent ? getContainersForNode(connectedCurrent) : [];
+		const sharesContainer = listContainerIds.some((id) => currentContainerIds.includes(id));
+
+		if (!connectedCurrent || !sharesContainer) {
+			retry();
+			return;
+		}
+
+		if (Spotlight.focus(itemNode) && scrollNode.contains(Spotlight.getCurrent() as Node)) {
+			this.focusClaimed = true;
+			return;
+		}
+
+		retry();
+	};
+
+	getScrollNode (): HTMLElement | null {
+		const {scrollContentRef} = this.props;
+		if (
+			scrollContentRef &&
+			typeof scrollContentRef === 'object' &&
+			'current' in scrollContentRef &&
+			scrollContentRef.current instanceof HTMLElement
+		) {
+			return scrollContentRef.current;
+		}
+
+		return this.contentRef.current instanceof HTMLElement ? this.contentRef.current : null;
 	}
 
 	componentDidUpdate (prevProps: VirtualListBasicProps, prevState: VirtualListBasicState) {
@@ -618,6 +730,8 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 			this.safeProps.cbScrollTo({position: (this.isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 			this.scrollToPositionTarget = -1;
 		}
+
+		this.scheduleInitialItemFocus();
 	}
 
 	scrollBounds = {

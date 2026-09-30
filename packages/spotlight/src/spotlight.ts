@@ -37,7 +37,6 @@ import {
 	getAllContainerIds,
 	getContainerConfig,
 	getContainerConfigOrThrow,
-	getContainerDefaultElement,
 	getContainerId,
 	getContainerLastFocusedElement,
 	getContainerNode,
@@ -172,16 +171,6 @@ const Spotlight = (function (): SpotlightApi {
 	 * @default false
 	 */
 	let _pointerMoveDuringKeyPress = false;
-
-	/*
-	 * When a container is focused before its default element exists, remember the fallback node
-	 * and move to that element once it is in the DOM. An intentional focus (default element
-	 * already present, or the user has moved) is left alone.
-	 */
-	let _defaultElementTimer = 0;
-	let _defaultElementAttempts = 0;
-	let _defaultElementFallback: HTMLElement | null = null;
-	let _defaultElementContainerId: string | null = null;
 
 	/*
 	* protected methods
@@ -650,7 +639,6 @@ const Spotlight = (function (): SpotlightApi {
 			}
 			Spotlight.clear();
 			_initialized = false;
-			clearDefaultElementPromotion();
 		},
 
 		/**
@@ -825,19 +813,7 @@ const Spotlight = (function (): SpotlightApi {
 			if (isNavigable(target as Element | null, nextContainerId, true)) {
 				const focused = focusElement(target as HTMLElement | null, nextContainerIds, false, options.preventScroll);
 
-				if (focused) {
-					let containerId = '';
-					if (wasContainerId) {
-						containerId = elem as string;
-					} else if (currentContainerNode) {
-						containerId = getContainerId(currentContainerNode);
-					}
-					if (containerId) {
-						// The container's default element (panel body, list item) may not exist yet.
-						// Focusing the fallback now and leaving it there is what lands on a header.
-						scheduleDefaultElementPromotion(containerId, getCurrent() as HTMLElement | null);
-					}
-				} else if (wasContainerId) {
+				if (!focused && wasContainerId) {
 					setLastContainer(elem as string);
 				}
 
@@ -1038,61 +1014,6 @@ const Spotlight = (function (): SpotlightApi {
 			_5WayKeyHold = false;
 		}
 	};
-
-	function clearDefaultElementPromotion (): void {
-		if (typeof window !== 'undefined') {
-			window.clearTimeout(_defaultElementTimer);
-		}
-		_defaultElementTimer = 0;
-		_defaultElementAttempts = 0;
-		_defaultElementFallback = null;
-		_defaultElementContainerId = null;
-	}
-
-	function promoteDefaultElement (): void {
-		const containerId = _defaultElementContainerId;
-		const fallback = _defaultElementFallback;
-		if (!containerId || !fallback || getPointerMode()) {
-			clearDefaultElementPromotion();
-			return;
-		}
-
-		const current = getCurrent() as HTMLElement | null;
-		if (current !== fallback) {
-			clearDefaultElementPromotion();
-			return;
-		}
-
-		const preferred = getContainerDefaultElement(containerId) as HTMLElement | null | undefined;
-		if (preferred && preferred !== current && !preferred.contains(current)) {
-			clearDefaultElementPromotion();
-			exports.focus(preferred);
-			return;
-		}
-
-		if (!preferred && _defaultElementAttempts < 20) {
-			_defaultElementAttempts += 1;
-			_defaultElementTimer = window.setTimeout(promoteDefaultElement, 50);
-			return;
-		}
-
-		clearDefaultElementPromotion();
-	}
-
-	function scheduleDefaultElementPromotion (containerId: string, focusedNode: HTMLElement | null): void {
-		if (!focusedNode || getPointerMode()) return;
-
-		const config = getContainerConfig(containerId);
-		if (!config?.defaultElement || getContainerDefaultElement(containerId)) return;
-
-		_defaultElementContainerId = containerId;
-		_defaultElementFallback = focusedNode;
-		_defaultElementAttempts = 0;
-		if (typeof window !== 'undefined') {
-			window.clearTimeout(_defaultElementTimer);
-			_defaultElementTimer = window.setTimeout(promoteDefaultElement, 50);
-		}
-	}
 
 	return exports;
 

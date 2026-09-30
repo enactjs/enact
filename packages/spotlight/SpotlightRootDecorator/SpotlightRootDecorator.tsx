@@ -14,41 +14,12 @@ import type {SpotlightRootDecoratorConfig} from '../types/SpotlightContainerConf
 import type {SpotlightRootDecoratorProps} from '../types/SpotlightContainerProps';
 
 import {spottableClass} from '../Spottable';
-import {getContainerConfig, getContainerDefaultElement, getContainersForNode, rootContainerId} from '../src/container';
+import {rootContainerId} from '../src/container';
 import {setFocusEffectClass} from '../src/focusEffect';
 import {activateInputType, applyInputTypeToNode, getInputInfo, getInputType, setInputType} from '../src/inputType';
 import Spotlight from '../src/spotlight';
 
 import './debug.less';
-
-// A container can focus a header before its default element (panel body, list item) exists.
-// Once that element exists, initial focus should move there. A later attempt must not call
-// Spotlight.focus() with no target: that jumps to the first spottable and leaves the body.
-function nextAutofocusTarget (current: HTMLElement | null): HTMLElement | 'stay' | 'wait' {
-	if (!current) return 'wait';
-
-	const containerIds = getContainersForNode(current);
-	let waiting = false;
-
-	for (let i = containerIds.length - 1; i >= 0; i--) {
-		const config = getContainerConfig(containerIds[i]);
-		if (!config?.defaultElement) continue;
-
-		const preferred = getContainerDefaultElement(containerIds[i]) as HTMLElement | null | undefined;
-		if (!preferred) {
-			waiting = true;
-			continue;
-		}
-
-		if (preferred === current || preferred.contains(current)) {
-			return 'stay';
-		}
-
-		return preferred;
-	}
-
-	return waiting ? 'wait' : 'stay';
-}
 
 /**
  * Default configuration for SpotlightRootDecorator
@@ -196,32 +167,9 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config: SpotlightRootDecorato
 		}
 
 		useEffect(() => {
-			let attempts = 0;
-			let timer = 0;
-
-			// List items are measured after this effect. Retry only until the container's
-			// default element (a panel body control or list item) has focus. Do not call
-			// Spotlight.focus() again once that control has it.
-			const focusWhenIdle = () => {
-				if (noAutoFocus || Spotlight.getPointerMode() || attempts >= 20) return;
-
-				if (!Spotlight.getCurrent()) {
-					Spotlight.focus(void 0);
-				}
-
-				let decision = nextAutofocusTarget(Spotlight.getCurrent() as HTMLElement | null);
-				if (decision !== 'stay' && decision !== 'wait') {
-					Spotlight.focus(decision);
-					decision = nextAutofocusTarget(Spotlight.getCurrent() as HTMLElement | null);
-				}
-
-				if (decision !== 'stay') {
-					attempts += 1;
-					timer = window.setTimeout(focusWhenIdle, 50);
-				}
-			};
-
-			focusWhenIdle();
+			if (!noAutoFocus) {
+				Spotlight.focus(void 0);
+			}
 
 			if (typeof document === 'object') {
 				containerNode.current = document.querySelector('#' + rootId) as HTMLElement | null;
@@ -239,7 +187,6 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config: SpotlightRootDecorato
 			}
 
 			return () => {
-				window.clearTimeout(timer);
 				Spotlight.terminate();
 
 				if (typeof document === 'object') {
