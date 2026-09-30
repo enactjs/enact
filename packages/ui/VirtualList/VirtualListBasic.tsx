@@ -3,8 +3,6 @@ import EnactPropTypes, {EnactPropTypeShapes} from '@enact/core/internal/prop-typ
 import {forward} from '@enact/core/handle';
 import {platform} from '@enact/core/platform';
 import {checkPropTypes, clamp, shallowEqual} from '@enact/core/util';
-import Spotlight from '@enact/spotlight';
-import {getContainersForNode, rootContainerId} from '@enact/spotlight/src/container';
 import PropTypes from 'prop-types';
 import equals from 'ramda/src/equals';
 import {createRef, Component, RefObject, ReactElement, ReactNode} from 'react';
@@ -95,7 +93,7 @@ export type VirtualListBasicState = {
 
 type DimensionMetrics = {
 	clientSize: number,
-	minItemSize: number | gridListItemSizeShapeType | null,
+	minItemSize: number | null,
 	itemSize: number | gridListItemSizeShapeType,
 	gridSize: number
 };
@@ -471,118 +469,6 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 		} else {
 			this.setContainerSize();
 		}
-
-		this.scheduleInitialItemFocus();
-	}
-
-	componentWillUnmount () {
-		window.clearTimeout(this.focusClaimTimer);
-	}
-
-	focusClaimed = false;
-	focusClaimAttempts = 0;
-	focusClaimTimer = 0;
-
-	// Items are measured after the first render, so the root focus pass can run before item 0
-	// exists. Once item 0 is spottable, focus it when nothing is focused, or when the current
-	// target shares this list's container (a panel header). Leave focus alone when it is already
-	// in the list, in pointer mode, or in another container such as an input or a second list.
-	// A target outside this container can still move onto the header a moment later, so that
-	// attempt is retried instead of remembered.
-	scheduleInitialItemFocus = () => {
-		if (this.focusClaimed || this.focusClaimTimer || typeof window === 'undefined') return;
-
-		const itemNode = this.findRenderedItem(0);
-		if (!itemNode || !itemNode.classList.contains('spottable')) return;
-
-		this.focusClaimTimer = window.setTimeout(() => {
-			this.focusClaimTimer = 0;
-			this.claimInitialItemFocus();
-		}, 0);
-	};
-
-	findRenderedItem (index: number): HTMLElement | null {
-		const items = this.props.itemRefs?.current;
-		if (!items) return null;
-
-		for (let i = 0; i < items.length; i++) {
-			const node = items[i];
-			if (node && node.isConnected && node.dataset.index === String(index)) {
-				return node;
-			}
-		}
-
-		return null;
-	}
-
-	claimInitialItemFocus = () => {
-		if (this.focusClaimed) return;
-
-		const scrollNode = this.getScrollNode();
-		const itemNode = this.findRenderedItem(0);
-		if (!scrollNode || !itemNode || !itemNode.classList.contains('spottable')) return;
-
-		if (Spotlight.getPointerMode()) {
-			this.focusClaimed = true;
-			return;
-		}
-
-		const retry = () => {
-			if (this.focusClaimAttempts >= 20) {
-				this.focusClaimed = true;
-				return;
-			}
-
-			this.focusClaimAttempts += 1;
-			this.focusClaimTimer = window.setTimeout(() => {
-				this.focusClaimTimer = 0;
-				this.claimInitialItemFocus();
-			}, 50);
-		};
-
-		if (Spotlight.isPaused()) {
-			retry();
-			return;
-		}
-
-		const current = Spotlight.getCurrent();
-		const connectedCurrent = current && current.isConnected ? current : null;
-		if (connectedCurrent && scrollNode.contains(connectedCurrent)) {
-			this.focusClaimed = true;
-			return;
-		}
-
-		const listContainerIds = getContainersForNode(scrollNode).filter((id) => id !== rootContainerId);
-		const currentContainerIds = connectedCurrent ? getContainersForNode(connectedCurrent) : [];
-		const sharesContainer = listContainerIds.some((id) => currentContainerIds.includes(id));
-
-		// Another container, such as Go Back or a second list, may still move onto this list's
-		// header. Keep waiting. Focusing now would take that focus away.
-		if (connectedCurrent && !sharesContainer) {
-			retry();
-			return;
-		}
-
-		if (Spotlight.focus(itemNode) && scrollNode.contains(Spotlight.getCurrent() as Node)) {
-			this.focusClaimed = true;
-			return;
-		}
-
-		retry();
-	};
-
-	getScrollNode (): HTMLElement | null {
-		const {scrollContentRef} = this.props;
-		if (
-			scrollContentRef &&
-			typeof scrollContentRef === 'object' &&
-			'current' in scrollContentRef &&
-			scrollContentRef.current instanceof HTMLElement
-		) {
-			return scrollContentRef.current;
-		}
-
-		return this.contentRef.current instanceof HTMLElement ? this.contentRef.current : null;
 	}
 
 	componentDidUpdate (prevProps: VirtualListBasicProps, prevState: VirtualListBasicState) {
@@ -732,8 +618,6 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 			this.safeProps.cbScrollTo({position: (this.isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}, animate: false});
 			this.scrollToPositionTarget = -1;
 		}
-
-		this.scheduleInitialItemFocus();
 	}
 
 	scrollBounds = {
@@ -750,18 +634,8 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 		lastVisibleIndex: null
 	};
 
-	primary: DimensionMetrics = {
-		clientSize: 1,
-		minItemSize: null,
-		itemSize: 1,
-		gridSize: 1
-	};
-	secondary: DimensionMetrics = {
-		clientSize: 1,
-		minItemSize: null,
-		itemSize: 1,
-		gridSize: 1
-	};
+	primary: DimensionMetrics | null = null;
+	secondary: DimensionMetrics | null = null;
 
 	isPrimaryDirectionVertical = true;
 	isItemSized = false;
@@ -769,11 +643,11 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 	shouldUpdateBounds = false;
 
 	dimensionToExtent = 0;
-	itemMarginLeft: number = 0;
-	itemMarginRight: number = 0;
-	itemMarginTop: number = 0;
-	itemMarginBottom: number = 0;
-	threshold: Threshold = {min: -Infinity, max: 0, base: 0};
+	itemMarginLeft: number | null = null;
+	itemMarginRight: number | null = null;
+	itemMarginTop: number | null = null;
+	itemMarginBottom: number | null = null;
+	threshold: Threshold | number = 0;
 	maxFirstIndex = 0;
 	curDataSize = 0;
 	hasDataSizeChanged = false;
@@ -814,12 +688,14 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 
 	getMoreInfo = () => this.moreInfo;
 
-	getCenterItemIndexFromScrollPosition = (scrollPosition: number) => Math.floor((scrollPosition + (this.primary.clientSize / 2)) / this.primary.gridSize) * this.dimensionToExtent + Math.floor(this.dimensionToExtent / 2);
+	getCenterItemIndexFromScrollPosition = (scrollPosition: number) => Math.floor((scrollPosition + (this.primary!.clientSize / 2)) / this.primary!.gridSize) * this.dimensionToExtent + Math.floor(this.dimensionToExtent / 2);
 
 	getGridPosition (index: number) {
 		const
 			{dataSize, itemSizes} = this.safeProps,
-			{dimensionToExtent, itemPositions, primary, secondary} = this,
+			{dimensionToExtent, itemPositions} = this,
+			primary = this.primary!,
+			secondary = this.secondary!,
 			secondaryPosition = (index % dimensionToExtent) * secondary.gridSize,
 			extent = Math.floor(index / dimensionToExtent);
 		let primaryPosition;
@@ -855,7 +731,7 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 		if (itemPosition && (itemSize || itemSize === 0)) {
 			return itemPosition.position + itemSize;
 		} else {
-			return index * this.primary.gridSize - this.safeProps.spacing;
+			return index * this.primary!.gridSize - this.safeProps.spacing;
 		}
 	};
 
@@ -865,11 +741,12 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 	};
 
 	getItemPosition = (index: number, stickTo = 'start', optionalOffset = 0, disallowNegativeOffset = false) => {
-		const {isPrimaryDirectionVertical, primary, scrollBounds} = this;
+		const {isPrimaryDirectionVertical, scrollBounds} = this;
+		const primary = this.primary!;
 		const maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 		const position = this.getGridPosition(index);
 		let offset = 0;
-		const marginOffset = isPrimaryDirectionVertical ? this.itemMarginTop + this.itemMarginBottom : this.itemMarginLeft + this.itemMarginRight;
+		const marginOffset = isPrimaryDirectionVertical ? Number(this.itemMarginTop) + Number(this.itemMarginBottom) : Number(this.itemMarginLeft) + Number(this.itemMarginRight);
 
 		if (stickTo === 'start') {         // 'start'
 			offset = optionalOffset;
@@ -878,7 +755,7 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 		} else if (stickTo === 'center') { // 'center'
 			offset = (primary.clientSize / 2) - (primary.gridSize / 2) - optionalOffset;
 		} else {                           // 'end' for same item sizes
-			offset = primary.clientSize - (typeof primary.itemSize === 'number' ? primary.itemSize : 0) - (optionalOffset || marginOffset);
+			offset = primary.clientSize - (primary.itemSize as number) - (optionalOffset || marginOffset);
 		}
 
 		/* istanbul ignore next */
@@ -924,13 +801,13 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 			{clientWidth, clientHeight} = clientSize || this.getClientSize(node),
 			heightInfo: DimensionMetrics = {
 				clientSize: clientHeight,
-				minItemSize: typeof itemSize === 'object' ? itemSize.minHeight : 0,
+				minItemSize: (typeof itemSize === 'object' && itemSize.minHeight) || null,
 				itemSize: itemSize,
 				gridSize: 1
 			},
 			widthInfo: DimensionMetrics = {
 				clientSize: clientWidth,
-				minItemSize: typeof itemSize === 'object' ? itemSize.minWidth : 0,
+				minItemSize: (typeof itemSize === 'object' && itemSize.minWidth) || null,
 				itemSize: itemSize,
 				gridSize: 1
 			};
@@ -949,19 +826,19 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 
 		this.isItemSized = (!!primary.minItemSize && !!secondary.minItemSize);
 
-		if (this.isItemSized) {
+		if (this.isItemSized && primary.minItemSize && secondary.minItemSize) {
 			// the number of columns is the ratio of the available width plus the spacing
 			// by the minimum item width plus the spacing
-			dimensionToExtent = Math.max(Math.floor((secondary.clientSize + spacing) / ((typeof secondary.minItemSize === 'number' ? secondary.minItemSize : 0) + spacing)), 1);
+			dimensionToExtent = Math.max(Math.floor((secondary.clientSize + spacing) / (secondary.minItemSize + spacing)), 1);
 			// the actual item width is a ratio of the remaining width after all columns
 			// and spacing are accounted for and the number of columns that we know we should have
 			secondary.itemSize = Math.floor((secondary.clientSize - (spacing * (dimensionToExtent - 1))) / dimensionToExtent);
 			// the actual item height is related to the item width
-			primary.itemSize = Math.floor((typeof primary.minItemSize === 'number' ? primary.minItemSize : 1) * (secondary.itemSize / (typeof secondary.minItemSize === 'number' ? secondary.minItemSize : 1)));
+			primary.itemSize = Math.floor(primary.minItemSize * ((secondary.itemSize as number) / secondary.minItemSize));
 		}
 
-		primary.gridSize = (typeof primary.itemSize === 'number' ? primary.itemSize : 0) + spacing;
-		secondary.gridSize = (typeof secondary.itemSize === 'number' ? secondary.itemSize : 0) + spacing;
+		primary.gridSize = (primary.itemSize as number) + spacing;
+		secondary.gridSize = (secondary.itemSize as number) + spacing;
 		thresholdBase = primary.gridSize * Math.ceil(overhang / 2);
 
 		this.threshold = {min: -Infinity, max: thresholdBase, base: thresholdBase};
@@ -987,7 +864,8 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 	getStatesAndUpdateBounds = (props: VirtualListBasicProps, firstIndex = 0) => {
 		const
 			{dataSize = 0, overhang = 3, updateStatesAndBounds} = props,
-			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
+			{dimensionToExtent, moreInfo, scrollPosition} = this,
+			primary = this.primary!,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 			wasFirstIndexMax = ((this.maxFirstIndex < (moreInfo.firstVisibleIndex || 0) - dimensionToExtent) && (firstIndex === this.maxFirstIndex)),
 			dataSizeDiff = dataSize - this.curDataSize;
@@ -1026,7 +904,9 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 	calculateFirstIndex (props: VirtualListBasicProps, wasFirstIndexMax: boolean, dataSizeDiff: number, firstIndex: number) {
 		const
 			{overhang = 3} = props,
-			{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
+			{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, scrollBounds, scrollPosition} = this,
+			primary = this.primary!,
+			threshold = this.threshold as Threshold,
 			{gridSize} = primary;
 		let newFirstIndex = firstIndex;
 
@@ -1095,7 +975,7 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 	updateMoreInfo (dataSize: number, primaryPosition: number) {
 		const
 			{dimensionToExtent, moreInfo} = this,
-			{itemSize, gridSize, clientSize} = this.primary;
+			{itemSize, gridSize, clientSize} = this.primary!;
 
 		if (dataSize <= 0) {
 			moreInfo.firstVisibleIndex = null;
@@ -1129,13 +1009,13 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 			moreInfo.firstVisibleIndex = firstVisibleIndex;
 			moreInfo.lastVisibleIndex = lastVisibleIndex;
 		} else {
-			moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - (typeof itemSize === 'number' ? itemSize : 0)) / gridSize) + 1) * dimensionToExtent;
+			moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - (itemSize as number)) / gridSize) + 1) * dimensionToExtent;
 			moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent - 1);
 		}
 	}
 
 	syncThreshold (maxPos: number) {
-		const {threshold} = this;
+		const threshold = this.threshold as Threshold;
 
 		if (threshold.max > maxPos) {
 			if (maxPos < threshold.base) {
@@ -1189,7 +1069,7 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 
 		// Calculate an adaptive scroll factor (pixels per frame).
 		// It uses the average item size (gridSize) to ensure the speed feels consistent.
-		const scrollFactor = Math.max(this.primary.gridSize / 12, 2);
+		const scrollFactor = Math.max(this.primary!.gridSize / 12, 2);
 		const startTime = performance.now();
 
 		// Progressively scrolls the node toward a target position using requestAnimationFrame.
@@ -1271,8 +1151,9 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 		const
 			{dataSize, spacing, itemSizes} = this.safeProps,
 			{firstIndex} = this.state,
-			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds, itemPositions} = this,
-			{clientSize, gridSize} = this.primary,
+			{isPrimaryDirectionVertical, dimensionToExtent, maxFirstIndex, scrollBounds, itemPositions} = this,
+			threshold = this.threshold as Threshold,
+			{clientSize, gridSize} = this.primary!,
 			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 		let newFirstIndex = firstIndex, index, pos, size, itemPosition;
 
@@ -1394,8 +1275,9 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 			{maxFirstIndex} = this,
 			numOfUpperLine = Math.floor(overhang / 2);
 
-		this.threshold.min = firstIndex === 0 ? -Infinity : this.getItemBottomPosition(firstIndex + numOfUpperLine);
-		this.threshold.max = firstIndex === maxFirstIndex ? Infinity : this.getItemBottomPosition(firstIndex + (numOfUpperLine + 1));
+		const threshold = this.threshold as Threshold;
+		threshold.min = firstIndex === 0 ? -Infinity : this.getItemBottomPosition(firstIndex + numOfUpperLine);
+		threshold.max = firstIndex === maxFirstIndex ? Infinity : this.getItemBottomPosition(firstIndex + (numOfUpperLine + 1));
 	}
 
 	// For individually sized item
@@ -1512,7 +1394,9 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 		const
 			{dataSize, itemSizes} = this.safeProps,
 			{firstIndex, numOfItems} = this.state,
-			{cc, isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, itemPositions} = this;
+			{cc, isPrimaryDirectionVertical, dimensionToExtent, itemPositions} = this,
+			primary = this.primary!,
+			secondary = this.secondary!;
 		let
 			hideTo = 0,
 			updateFrom = cc.length ? this.state.updateFrom : firstIndex,
@@ -1571,7 +1455,8 @@ class VirtualListBasic extends Component<VirtualListBasicProps, VirtualListBasic
 			return this.props.itemSizes.reduce((total, size, index) => (total + size + (index > 0 ? this.safeProps.spacing : 0)), 0);
 		} else {
 			const
-				{dimensionToExtent, primary, curDataSize} = this,
+				{dimensionToExtent, curDataSize} = this,
+				primary = this.primary!,
 				{spacing} = this.safeProps;
 
 			return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
