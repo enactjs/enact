@@ -423,7 +423,7 @@ function Transition ({
 		forward('onTransitionEnd', ev, propsRef.current);
 		if (ev.target === childNodeRef.current) {
 			const eventName = propsRef.current.visible ? 'onShow' : 'onHide';
-			forward(eventName, {type: eventName, currentTarget: ev.currentTarget}, propsRef.current);
+			forward(eventName, {type: eventName, currentTarget: ev.currentTarget, propertyName: ev.propertyName}, propsRef.current);
 		}
 	}, []);
 
