@@ -14,7 +14,7 @@ class Drag {
 
 	setContainerBounds = (node) => {
 		const {global: isGlobal, boxSizing} = this.dragConfig;
-		let bounds = null;
+		let bounds;
 
 		if (!node) return;
 
