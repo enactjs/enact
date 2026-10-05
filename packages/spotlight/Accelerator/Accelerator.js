@@ -97,7 +97,7 @@ class Accelerator {
 				} else {
 					let elapsedTime = Date.now() - this.time,
 						seconds = Math.floor(elapsedTime / 1000),
-						toSkip = 0;
+						toSkip;
 
 					seconds = seconds > this.frequency.length - 1 ? this.frequency.length - 1 : seconds;
 

@@ -1015,7 +1015,7 @@ const useScrollBase = (props) => {
 			isVertical = (orientation === 'vertical'),
 			baseSize = isVertical ? bounds.clientHeight : bounds.clientWidth,
 			maxPos = bounds[isVertical ? 'maxTop' : 'maxLeft'];
-		let overDistance = 0;
+		let overDistance;
 
 		if (position < 0) {
 			overDistance = -position;

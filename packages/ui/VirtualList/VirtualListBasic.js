@@ -609,7 +609,7 @@ class VirtualListBasic extends Component {
 		const {isPrimaryDirectionVertical, primary, scrollBounds} = this;
 		const maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
 		const position = this.getGridPosition(index);
-		let offset = 0;
+		let offset;
 		const marginOffset = isPrimaryDirectionVertical ? this.itemMarginTop + this.itemMarginBottom : this.itemMarginLeft + this.itemMarginRight;
 
 		if (stickTo === 'start') {         // 'start'
@@ -767,7 +767,7 @@ class VirtualListBasic extends Component {
 			{overhang} = props,
 			{dimensionToExtent, isPrimaryDirectionVertical, maxFirstIndex, primary, scrollBounds, scrollPosition, threshold} = this,
 			{gridSize} = primary;
-		let newFirstIndex = firstIndex;
+		let newFirstIndex;
 
 		if (wasFirstIndexMax && dataSizeDiff > 0) { // If dataSize increased from bottom, we need adjust firstIndex
 			// If this is a gridlist and dataSizeDiff is smaller than 1 line, we are adjusting firstIndex without threshold change.
@@ -1020,7 +1020,7 @@ class VirtualListBasic extends Component {
 		}
 
 		if (pos > threshold.max || pos < threshold.min) {
-			let newThresholdMin = -Infinity, newThresholdMax = Infinity;
+			let newThresholdMin, newThresholdMax;
 
 			if (this.props.itemSizes) {
 				const overhangBefore = Math.floor(this.props.overhang / 2);
