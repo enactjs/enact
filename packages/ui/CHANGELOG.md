@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `ui/Transition` to forward `propertyName` in the event payload of `onShow` and `onHide`
+
 ## [5.6.0] - 2026-09-02
 
 ### Added
