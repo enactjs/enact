@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Marquee` props `orientation` and `maxLines` to scroll overflowing multi-line text vertically
+
 ## [5.6.0] - 2026-09-02
 
 ### Added
