@@ -71,7 +71,7 @@ export const Routable_ = () => {
 		setPath(ev.path);
 	};
 	return (
-		// eslint-disable-next-line react/jsx-no-bind
+		// eslint-disable-next-line enact/jsx-no-bind
 		<RoutableViews onNavigate={handleNavigate} path={path}>
 			<Route path="app" component={AppView}>
 				<Route path="settings" component={SettingsView}>
