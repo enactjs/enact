@@ -1082,6 +1082,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const marqueeOnFocus = marqueeOn === 'focus';
 			const marqueeOnHover = marqueeOn === 'hover';
 			const marqueeOnRender = marqueeOn === 'render';
+			const mergedCss = mergeCss(css, instanceCss);
 
 			if (marqueeOnFocus) {
 				rest[focus] = this.handleFocus;
@@ -1117,7 +1118,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						animating={this.state.animating}
 						clientRef={this.cacheNode}
 						clipHeight={this.clipHeight}
-						css={mergeCss(css, instanceCss)}
+						css={mergedCss}
 						distance={this.distance}
 						duplicateRef={this.cacheDuplicate}
 						maxLines={this.visibleLines()}
