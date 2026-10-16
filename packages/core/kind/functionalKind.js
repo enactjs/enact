@@ -131,7 +131,7 @@ const functionalKind = (config) => {
 		defaultProps,
 		handlers,
 		name,
-		propTypes,	// eslint-disable-line react/forbid-foreign-prop-types
+		propTypes,
 		useRender,
 		styles: cfgStyles
 	} = config;
