@@ -96,7 +96,7 @@ const TransitionGroup = (componentProps) => {
 	const props = setDefaultProps(componentProps, transitionGroupDefaultProps);
 
 	const [state, setState] = useState({children: [], firstRender: true});
-	const [hasMounted, setHasMounted] = useState(false);
+	const [hasMounted] = useState(() => true);
 
 	const nodeRef = useRef(null);
 	const currentlyTransitioningKeys = useRef({});
@@ -315,18 +315,17 @@ const TransitionGroup = (componentProps) => {
 	}, [_handleDoneAppearing]);
 
 	const children = useMemo(() => mapChildren(props.children).slice(0, props.size), [props.children, props.size]);
-	const mergedChildren = useMemo(() => mergeChildren(children, state.children).slice(0, props.size), [children, props.size, state.children]);
+	const mergedChildren = useMemo(() => mergeChildren(children, state.children).slice(0, props.size), [children, state.children, props.size]);
 
 	if (state.firstRender) {
-		setState((prev) => ({
-			...prev,
+		setState({
 			activeChildren: children,
 			children,
 			firstRender: false
-		}));
+		});
 	}
 
-	if (state.activeChildren !== children || state.children !== mergedChildren) {
+	if (state.activeChildren !== children && state.children !== mergedChildren) {
 		setState((prev) => ({
 			...prev,
 			activeChildren: children,
@@ -335,13 +334,12 @@ const TransitionGroup = (componentProps) => {
 	}
 
 	useLayoutEffect(() => {
-		setHasMounted(true);
 		// this isn't used by ViewManager or View at the moment but leaving it around for future
 		// flexibility
 		state.children.forEach(child => performAppear(child.key));
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		reconcileUnmountedChildren(prevState.children, state.children);
 		reconcileChildren(prevState.activeChildren, state.activeChildren);
 	}, [prevState.activeChildren, prevState.children, reconcileChildren, reconcileUnmountedChildren, state.activeChildren, state.children]);
@@ -372,7 +370,8 @@ const TransitionGroup = (componentProps) => {
 
 	// support wrapping arbitrary children with a component that supports the necessary
 	// lifecycle methods to animate transitions
-	const childrenToRender = useMemo(() => state.children.map((child, index) => {
+	// eslint-disable-next-line react-hooks/refs
+	const childrenToRender = useMemo(() => mergedChildren.map((child, index) => {
 		const isLeaving = child.props['data-index'] !== props.currentIndex && typeof child.props['data-index'] !== 'undefined';
 
 		return cloneElement(
@@ -385,7 +384,7 @@ const TransitionGroup = (componentProps) => {
 				getParentRef: getNodeRef,
 				renderedIndex: index
 			});
-	}), [getNodeRef, hasMounted, props, state.children, storeRefs]);
+	}), [getNodeRef, hasMounted, props, mergedChildren, storeRefs]);
 
 	// Do not forward TransitionGroup props to primitive DOM nodes
 	const forwardProps = Object.assign({}, props);
