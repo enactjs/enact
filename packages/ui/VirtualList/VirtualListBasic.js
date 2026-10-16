@@ -335,6 +335,8 @@ class VirtualListBasic extends Component {
 	componentDidMount () {
 		if (!this.props.clientSize) {
 			this.calculateMetrics(this.props);
+			// The metrics are measured from the rendered DOM, so they can only be stored after the first render
+			// eslint-disable-next-line @eslint-react/no-set-state-in-component-did-mount
 			this.setState(this.getStatesAndUpdateBounds(this.props));
 		} else {
 			this.emitUpdateItems();
@@ -436,6 +438,8 @@ class VirtualListBasic extends Component {
 			/* istanbul ignore next */
 			if (this.scrollPosition === 0 && this.moreInfo.firstVisibleIndex !== 0) {
 				this.scrollPosition = this.prevScrollPosition;
+				// Restores the previous first index after the layout props changed (guarded, so it does not loop)
+				// eslint-disable-next-line @eslint-react/no-set-state-in-component-did-update
 				this.setState({firstIndex: prevState.firstIndex});
 				this.updateMoreInfo(this.props.dataSize, this.scrollPosition);
 
@@ -461,6 +465,8 @@ class VirtualListBasic extends Component {
 			const {x, y} = this.getXY(this.scrollPosition, 0);
 
 			this.calculateMetrics(this.props);
+			// Layout props changed: the metrics are re-measured from the DOM and stored (guarded, so it does not loop)
+			// eslint-disable-next-line @eslint-react/no-set-state-in-component-did-update
 			this.setState(this.getStatesAndUpdateBounds(this.props, prevState.firstIndex ? prevState.firstIndex : 0));
 			this.setContainerSize();
 
@@ -475,6 +481,8 @@ class VirtualListBasic extends Component {
 			deferScrollTo = true;
 		} else if (this.hasDataSizeChanged) {
 			const newState = this.getStatesAndUpdateBounds(this.props, this.state.firstIndex);
+			// Data size changed: the bounds are recalculated for the new items (guarded, so it does not loop)
+			// eslint-disable-next-line @eslint-react/no-set-state-in-component-did-update
 			this.setState(newState);
 			this.setContainerSize();
 
