@@ -89,8 +89,10 @@ const MarqueeBase = kind({
 		 *
 		 * * `marquee` - The root component class
 		 * * `animate` - Applied to the inner content node when the text is animating
+		 * * `content` - The content node of a vertical marquee
 		 * * `spacing` - The spacing node used between the repeated content
 		 * * `text` - The inner content node
+		 * * `vertical` - The root modifier for a vertical marquee
 		 * * `willAnimate` - Applied to the inner content node shortly before animation
 		 *
 		 * @type {Object}
@@ -309,7 +311,7 @@ const MarqueeBase = kind({
 		}
 	},
 
-	render: ({applyOffset, children, clientClassName, clientRef, clientStyle, css, duplicate, duplicateRef, measurerRef, onMarqueeComplete, orientation, rootStyle, rtl, willAnimate, ...rest}) => {
+	render: ({applyOffset, children, clientClassName, clientRef, clientStyle, css, duplicate, duplicateRef, measurerRef, onMarqueeComplete, orientation, rootStyle, rtl, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
 		delete rest.clipHeight;
@@ -319,6 +321,7 @@ const MarqueeBase = kind({
 		delete rest.overflow;
 		delete rest.spacing;
 		delete rest.speed;
+		delete rest.willAnimate;
 
 		if (orientation === 'vertical') {
 			return (
@@ -326,7 +329,6 @@ const MarqueeBase = kind({
 					{...rest}
 					className={classNames(rest.className, css.vertical)}
 					data-vertical-marquee
-					data-will-animate={willAnimate ? '' : null}
 					style={rootStyle}
 				>
 					<div

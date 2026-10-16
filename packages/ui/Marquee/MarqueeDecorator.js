@@ -57,8 +57,10 @@ const defaultConfig = {
 	 *
 	 * * `marquee` - The root component class
 	 * * `animate` - Applied to the inner content node when the text is animating
+	 * * `content` - The content node of a vertical marquee
 	 * * `spacing` - The spacing node used between the repeated content
 	 * * `text` - The inner content node
+	 * * `vertical` - The root modifier for a vertical marquee
 	 * * `willAnimate` - Applied to the inner content node shortly before animation
 	 *
 	 * @type {Object}
@@ -133,6 +135,19 @@ const didPropChange = (propList, prev, next) => {
 };
 
 /*
+ * Keeps the theme classes from the config and appends app classes from the `css` prop.
+ */
+const mergeCss = (configCss, instanceCss) => {
+	if (!configCss || !instanceCss) return instanceCss || configCss;
+
+	const merged = {...configCss};
+	Object.keys(instanceCss).forEach(key => {
+		merged[key] = merged[key] ? `${merged[key]} ${instanceCss[key]}` : instanceCss[key];
+	});
+	return merged;
+};
+
+/*
  * There's only one timer shared for Marquee so we need to keep track of what we may be using it
  * for. We may need to clean up certain things as we move among states.
  */
@@ -194,6 +209,27 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			children: PropTypes.node,
+
+			/**
+			 * Customizes the marquee's internal elements.
+			 *
+			 * The following classes are supported:
+			 *
+			 * * `marquee` - The root component class
+			 * * `animate` - Applied to the inner content node when the text is animating
+			 * * `content` - The content node of a vertical marquee
+			 * * `spacing` - The spacing node used between the repeated content
+			 * * `text` - The inner content node
+			 * * `vertical` - The root modifier for a vertical marquee
+			 * * `willAnimate` - Applied to the inner content node shortly before animation
+			 *
+			 * An app class is appended to the class from
+			 * {@link ui/Marquee.MarqueeDecorator.defaultConfig.css}.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			css: PropTypes.object,
 
 			/**
 			 * Passed through to the wrapped component.
@@ -376,6 +412,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.resizeObserver = null;
 			this.hasStartedRender = false;
 			this.clipHeight = 0;
+			this.measuredWidth = null;
 			this.measurer = null;
 			this.duplicateNode = null;
 			this.removeFonts = null;
@@ -400,7 +437,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (this.isVertical()) {
-				this.calculateVerticalMetrics();
 				this.watchFonts();
 			}
 
@@ -416,7 +452,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidUpdate (prevProps) {
 			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeSpeed, maxLines, orientation, rtl} = this.props;
 			let forceRestartMarquee = false;
-			const verticalInFlight = this.isVertical() && (this.state.animating || this.timerState !== TimerState.CLEAR);
 
 			checkPropTypes(this, this.props, prevProps);
 			if (!prevProps.marqueeDisabled && marqueeDisabled && this.isVertical()) {
@@ -424,15 +459,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.isHovered = false;
 			}
 			if (
-				!verticalInFlight && (
-					prevProps.locale !== locale ||
-					prevProps.rtl !== rtl ||
-					prevProps.marqueeSpacing !== marqueeSpacing ||
-					prevProps.maxLines !== maxLines ||
-					prevProps.orientation !== orientation ||
-					!shallowEqual(prevProps.children, children) ||
-					(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
-				)
+				prevProps.locale !== locale ||
+				prevProps.rtl !== rtl ||
+				prevProps.marqueeSpacing !== marqueeSpacing ||
+				prevProps.maxLines !== maxLines ||
+				prevProps.orientation !== orientation ||
+				!shallowEqual(prevProps.children, children) ||
+				(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
 			) {
 				forceRestartMarquee = marqueeOn === 'render' || (
 					this.sync && (this.state.animating || this.timerState > TimerState.CLEAR)
@@ -472,11 +505,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.validateTextDirection();
-			if (!verticalInFlight && (forceRestartMarquee || this.shouldStartMarquee())) {
+			if (forceRestartMarquee || this.shouldStartMarquee()) {
 				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
-			}
-			if (this.isVertical() && this.distance == null && !this.state.animating && !marqueeDisabled) {
-				this.calculateVerticalMetrics();
 			}
 			this.syncVerticalDuplicate();
 		}
@@ -627,11 +657,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return this.props.orientation === 'vertical';
 		}
 
-		// A disabled focus-mode marquee follows the pointer, matching the vertical component.
-		verticalActsAsHover () {
-			return this.isVertical() && this.props.disabled && this.props.marqueeOn === 'focus';
-		}
-
 		visibleLines () {
 			const {maxLines} = this.props;
 			return Number.isFinite(maxLines) && maxLines > 0 ? Math.floor(maxLines) : 1;
@@ -652,7 +677,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const onFonts = () => {
 				if (this.state.animating || this.timerState !== TimerState.CLEAR) return;
 				this.invalidateMetrics();
-				this.calculateVerticalMetrics();
 			};
 			fonts.addEventListener('loadingdone', onFonts);
 			this.removeFonts = () => fonts.removeEventListener('loadingdone', onFonts);
@@ -663,7 +687,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			const content = this.node;
 			const duplicate = this.duplicateNode;
-			if (content && duplicate && duplicate.childNodes.length === 0) {
+			if (content && duplicate && (duplicate.childNodes.length === 0 || duplicate.textContent !== content.textContent)) {
 				cloneContentInto(content, duplicate);
 			}
 		}
@@ -953,13 +977,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleResize = () => {
 			if (this.node && !this.props.marqueeDisabled) {
-				if (this.isVertical() && (this.state.animating || this.timerState !== TimerState.CLEAR)) return;
+				if (this.isVertical()) {
+					const width = round2(this.node.getBoundingClientRect().width);
+					if (width === this.measuredWidth) return;
+					this.measuredWidth = width;
+				}
 
 				this.invalidateMetrics();
-				if (this.isVertical()) {
-					this.calculateVerticalMetrics();
-					return;
-				}
 				if (this.state.animating) {
 					this.cancelAnimation();
 					this.resetAnimation();
@@ -978,11 +1002,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleFocus = (ev) => {
 			this.isFocused = true;
-			if (!this.sync && !this.state.animating) {
-				const shouldStart = this.isVertical() ?
-					this.props.marqueeOn === 'focus' && !this.props.disabled :
-					true;
-				if (shouldStart) {
+			if (!this.sync) {
+				if (!this.state.animating) {
 					this.startAnimation();
 				}
 			}
@@ -994,8 +1015,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forwardBlur(ev, this.props);
 			if (this.isFocused) {
 				this.isFocused = false;
-				const keptByHover = this.isHovered && (this.props.marqueeOn === 'hover' || this.verticalActsAsHover());
-				if (!this.sync && !keptByHover) {
+				if (!this.sync && !(this.isHovered && this.props.marqueeOn === 'hover')) {
 					this.cancelAnimation();
 				}
 			}
@@ -1003,7 +1023,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = (ev) => {
 			this.isHovered = true;
-			if (this.props.marqueeOn === 'hover' || this.verticalActsAsHover()) {
+			if (this.props.marqueeOn === 'hover') {
 				if (this.sync) {
 					this.context.enter(this);
 				} else if (!this.state.animating) {
@@ -1027,7 +1047,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleUnhover () {
 			this.isHovered = false;
-			if (this.props.marqueeOn === 'hover' || this.verticalActsAsHover()) {
+			if (this.props.marqueeOn === 'hover') {
 				if (this.sync) {
 					this.context.leave(this);
 				} else {
@@ -1051,6 +1071,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {
 				alignment,
 				children,
+				css: instanceCss,
 				disabled,
 				marqueeOn,
 				marqueeSpeed,
@@ -1096,7 +1117,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						animating={this.state.animating}
 						clientRef={this.cacheNode}
 						clipHeight={this.clipHeight}
-						css={css}
+						css={mergeCss(css, instanceCss)}
 						distance={this.distance}
 						duplicateRef={this.cacheDuplicate}
 						maxLines={this.visibleLines()}

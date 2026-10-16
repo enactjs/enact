@@ -83,8 +83,7 @@ const measureNode = (node, maxLines) => {
 		const lineHeight = gap > 0 ? gap : glyphHeight;
 		let clipHeight = blockHeight;
 		if (overflows) {
-			const nextTop = boxes[maxLines] ? round2(boxes[maxLines].top - boxes[0].top) : 0;
-			clipHeight = nextTop > 0 ? nextTop : round2(lineHeight * maxLines);
+			clipHeight = round2(boxes[maxLines].top - boxes[0].top);
 		}
 
 		return {

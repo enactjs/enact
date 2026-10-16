@@ -227,7 +227,6 @@ describe('VerticalMarquee Specs', () => {
 			fireEvent.blur(view);
 
 			expect(isScrolling(view)).toBe(false);
-			expect(marqueeNode(view).hasAttribute('data-will-animate')).toBe(false);
 			expect(view.querySelectorAll('[data-vertical-marquee-content]')).toHaveLength(1);
 		});
 
@@ -409,8 +408,14 @@ describe('VerticalMarquee Specs', () => {
 			const view = setup({
 				contentHeight: 300,
 				lineHeight: 30,
+				marqueeDelay: 0,
 				marqueeSpacing: 48,
 				maxLines: 3
+			});
+
+			fireEvent.focus(view);
+			act(() => {
+				jest.advanceTimersByTime(0);
 			});
 
 			expect(marqueeNode(view).style.getPropertyValue('--vertical-marquee-spacing')).toBe(String(scale(48)));
@@ -420,8 +425,14 @@ describe('VerticalMarquee Specs', () => {
 			const view = setup({
 				contentHeight: 300,
 				lineHeight: 30,
+				marqueeDelay: 0,
 				marqueeSpacing: 'wide',
 				maxLines: 3
+			});
+
+			fireEvent.focus(view);
+			act(() => {
+				jest.advanceTimersByTime(0);
 			});
 
 			expect(marqueeNode(view).style.getPropertyValue('--vertical-marquee-spacing')).toBe('0');
@@ -487,7 +498,7 @@ describe('VerticalMarquee Specs', () => {
 			expect(isScrolling(view)).toBe(false);
 		});
 
-		test('should treat a disabled focus marquee as hover', () => {
+		test('should start a disabled focus marquee on focus and stop it on blur', () => {
 			const onFocus = jest.fn();
 			const onBlur = jest.fn();
 			const view = setup({
@@ -503,26 +514,23 @@ describe('VerticalMarquee Specs', () => {
 				onFocus
 			});
 
+			fireEvent.mouseEnter(view);
+			act(() => {
+				jest.advanceTimersByTime(0);
+			});
+
+			expect(isScrolling(view)).toBe(false);
+
 			fireEvent.focus(view);
 			act(() => {
 				jest.advanceTimersByTime(0);
 			});
 
 			expect(onFocus).toHaveBeenCalled();
-			expect(isScrolling(view)).toBe(false);
-
-			fireEvent.mouseEnter(view);
-			act(() => {
-				jest.advanceTimersByTime(0);
-			});
-
 			expect(isScrolling(view)).toBe(true);
 
 			fireEvent.blur(view);
 			expect(onBlur).toHaveBeenCalled();
-			expect(isScrolling(view)).toBe(true);
-
-			fireEvent.mouseLeave(view);
 			expect(isScrolling(view)).toBe(false);
 		});
 
@@ -641,7 +649,7 @@ describe('VerticalMarquee Specs', () => {
 			expect(track().style.transform).toBe('translateY(-300px)');
 		});
 
-		test('should keep the in-flight distance when measured again', () => {
+		test('should restart with the new distance when children change during a scroll', () => {
 			jest.useFakeTimers();
 			let contentHeight = 300;
 			const originalStyle = window.getComputedStyle.bind(window);
@@ -680,9 +688,12 @@ describe('VerticalMarquee Specs', () => {
 					{longText} more
 				</VerticalMarquee>
 			);
+			act(() => {
+				jest.advanceTimersByTime(0);
+			});
 
 			expect(isScrolling(view)).toBe(true);
-			expect(track().style.transform).toBe('translateY(-300px)');
+			expect(track().style.transform).toBe('translateY(-500px)');
 		});
 
 		test('should start after a later measurement shows overflow', () => {
@@ -769,7 +780,7 @@ describe('VerticalMarquee Specs', () => {
 			);
 
 			expect(isScrolling(view)).toBe(false);
-			expect(marqueeNode(view).hasAttribute('data-will-animate')).toBe(false);
+			expect(view.querySelectorAll('[data-vertical-marquee-content]')).toHaveLength(1);
 		});
 
 		test('should forward focus handlers while disabled and not resume a scroll', () => {
@@ -821,7 +832,7 @@ describe('VerticalMarquee Specs', () => {
 			});
 
 			expect(isScrolling(view)).toBe(false);
-			expect(marqueeNode(view).hasAttribute('data-will-animate')).toBe(false);
+			expect(view.querySelectorAll('[data-vertical-marquee-content]')).toHaveLength(1);
 		});
 
 		test('should not scroll when speed is not positive', () => {
@@ -934,8 +945,14 @@ describe('VerticalMarquee Specs', () => {
 			const view = setup({
 				contentHeight: 300,
 				lineHeight: 30,
+				marqueeDelay: 0,
 				marqueeSpacing: '50%',
 				maxLines: 3
+			});
+
+			fireEvent.focus(view);
+			act(() => {
+				jest.advanceTimersByTime(0);
 			});
 
 			expect(marqueeNode(view).style.getPropertyValue('--vertical-marquee-spacing')).not.toBe('0');
@@ -968,20 +985,6 @@ describe('verticalMeasure', () => {
 
 		expect(metrics.overflows).toBe(true);
 		expect(metrics.clipHeight).toBe(0);
-		jest.restoreAllMocks();
-	});
-
-	test('should fall back when the requested line is outside the boxes', () => {
-		const node = document.createElement('div');
-		jest.spyOn(node, 'getBoundingClientRect').mockReturnValue(rect(40));
-		jest.spyOn(document, 'createRange').mockImplementation(() => ({
-			getClientRects: () => [{bottom: 20, height: 20, left: 0, right: 10, top: 0, width: 10}],
-			selectNodeContents: () => {}
-		}));
-
-		const metrics = measureNode(node, -1);
-
-		expect(metrics.clipHeight).toBe(-20);
 		jest.restoreAllMocks();
 	});
 
