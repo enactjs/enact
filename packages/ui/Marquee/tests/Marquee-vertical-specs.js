@@ -6,6 +6,7 @@ import {act, fireEvent, render, screen} from '@testing-library/react';
 
 import {scale} from '../../resolution';
 import {Marquee} from '../index.js';
+import {mergeCss} from '../MarqueeDecorator';
 import {cloneContentInto, measureNode, prefersReducedMotion} from '../verticalMeasure';
 
 const VerticalMarquee = (props) => (
@@ -956,6 +957,27 @@ describe('VerticalMarquee Specs', () => {
 			});
 
 			expect(marqueeNode(view).style.getPropertyValue('--vertical-marquee-spacing')).not.toBe('0');
+		});
+	});
+});
+
+describe('mergeCss', () => {
+	test('should keep whichever map is provided when the other is missing', () => {
+		const configCss = {text: 'theme-text'};
+		const instanceCss = {text: 'app-text'};
+
+		expect(mergeCss(null, null)).toBeNull();
+		expect(mergeCss(null, instanceCss)).toBe(instanceCss);
+		expect(mergeCss(configCss, null)).toBe(configCss);
+	});
+
+	test('should append an instance class and add a class the config does not have', () => {
+		expect(mergeCss(
+			{text: 'theme-text'},
+			{text: 'app-text', content: 'app-content'}
+		)).toEqual({
+			text: 'theme-text app-text',
+			content: 'app-content'
 		});
 	});
 });

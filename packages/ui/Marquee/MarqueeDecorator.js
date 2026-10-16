@@ -1181,5 +1181,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 export default MarqueeDecorator;
 export {
-	MarqueeDecorator
+	MarqueeDecorator,
+	mergeCss
 };
