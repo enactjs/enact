@@ -96,11 +96,11 @@ const TransitionGroup = (componentProps) => {
 	const props = setDefaultProps(componentProps, transitionGroupDefaultProps);
 
 	const [state, setState] = useState({children: [], firstRender: true});
-	const [hasMounted] = useState(() => true);
 
+	const hasMounted = useRef(false);
 	const nodeRef = useRef(null);
 	const currentlyTransitioningKeys = useRef({});
-	const groupRefs = useRef({});
+	const groupRefs = useMemo(() => ({}), []);
 	const keysToEnter = useRef([]);
 	const keysToLeave = useRef([]);
 	const keysToStay = useRef([]);
@@ -135,7 +135,7 @@ const TransitionGroup = (componentProps) => {
 	}, [completeTransition]);
 
 	const _handleDoneLeaving = useCallback((key) => {
-		const component = groupRefs.current[key];
+		const component = groupRefs[key];
 
 		if (component.componentDidLeave) {
 			component.componentDidLeave();
@@ -152,12 +152,12 @@ const TransitionGroup = (componentProps) => {
 			...prev,
 			children: remove(indexOfChild(key, prev.children), 1, prev.children)
 		}));
-	}, [completeTransition, props]);
+	}, [completeTransition, groupRefs, props]);
 
 	const performLeave = useCallback((key) => {
 		currentlyTransitioningKeys.current[key] = true;
 
-		const component = groupRefs.current[key];
+		const component = groupRefs[key];
 		if (component.componentWillLeave) {
 			component.componentWillLeave(() => _handleDoneLeaving(key));
 		} else {
@@ -166,10 +166,10 @@ const TransitionGroup = (componentProps) => {
 			// is done.
 			_handleDoneLeaving(key);
 		}
-	}, [_handleDoneLeaving]);
+	}, [_handleDoneLeaving, groupRefs]);
 
 	const _handleDoneStaying = useCallback((key) => {
-		const component = groupRefs.current[key];
+		const component = groupRefs[key];
 		if (component.componentDidStay) {
 			component.componentDidStay();
 		}
@@ -178,20 +178,20 @@ const TransitionGroup = (componentProps) => {
 			type: 'onStay',
 			view: component
 		}, props);
-	}, [props]);
+	}, [groupRefs, props]);
 
 	const performStay = useCallback((key) => {
-		const component = groupRefs.current[key];
+		const component = groupRefs[key];
 
 		if (component.componentWillStay) {
 			component.componentWillStay(() => _handleDoneStaying(key));
 		} else {
 			_handleDoneStaying(key);
 		}
-	}, [_handleDoneStaying]);
+	}, [_handleDoneStaying, groupRefs]);
 
 	const _handleDoneEntering = useCallback((key) => {
-		const component = groupRefs.current[key];
+		const component = groupRefs[key];
 		if (component.componentDidEnter) {
 			component.componentDidEnter();
 		}
@@ -202,19 +202,19 @@ const TransitionGroup = (componentProps) => {
 		}, props);
 
 		completeTransition({key});
-	}, [completeTransition, props]);
+	}, [completeTransition, groupRefs, props]);
 
 	const performEnter = useCallback((key) => {
 		currentlyTransitioningKeys.current[key] = true;
 
-		const component = groupRefs.current[key];
+		const component = groupRefs[key];
 
 		if (component.componentWillEnter) {
 			component.componentWillEnter(() => _handleDoneEntering(key));
 		} else {
 			_handleDoneEntering(key);
 		}
-	}, [_handleDoneEntering]);
+	}, [_handleDoneEntering, groupRefs]);
 
 	const reconcileChildren = useCallback((prevActiveChildMapping, nextActiveChildMapping) => {
 		if (!prevActiveChildMapping || !nextActiveChildMapping) {
@@ -254,7 +254,7 @@ const TransitionGroup = (componentProps) => {
 		// mark any previous child not remaining as leaving
 		prevChildKeys.forEach(key => {
 			const hasNext = nextChildKeys.includes(key);
-			const isRendered = Boolean(groupRefs.current[key]);
+			const isRendered = Boolean(groupRefs[key]);
 			// flag a view to leave if it isn't in the new set (!hasNext) and it exists (isRendered)
 			if (!hasNext && isRendered) {
 				keysToLeave.current.push(key);
@@ -279,10 +279,10 @@ const TransitionGroup = (componentProps) => {
 		const localKeysToLeave = keysToLeave.current;
 		keysToLeave.current = [];
 		localKeysToLeave.forEach(performLeave);
-	}, [completeTransition, performEnter, performLeave, performStay, props]);
+	}, [completeTransition, groupRefs, performEnter, performLeave, performStay, props]);
 
 	const _handleDoneAppearing = useCallback((key) => {
-		const component = groupRefs.current[key];
+		const component = groupRefs[key];
 		if (component.componentDidAppear) {
 			component.componentDidAppear();
 		}
@@ -300,19 +300,19 @@ const TransitionGroup = (componentProps) => {
 			// This was removed before it had fully appeared. Remove it.
 			performLeave(key);
 		}
-	}, [completeTransition, performLeave, props]);
+	}, [completeTransition, groupRefs, performLeave, props]);
 
 	const performAppear = useCallback((key) => {
 		currentlyTransitioningKeys.current[key] = true;
 
-		const component = groupRefs.current[key];
+		const component = groupRefs[key];
 
 		if (component.componentWillAppear) {
 			component.componentWillAppear(() => _handleDoneAppearing(key));
 		} else {
 			_handleDoneAppearing(key);
 		}
-	}, [_handleDoneAppearing]);
+	}, [_handleDoneAppearing, groupRefs]);
 
 	const children = useMemo(() => mapChildren(props.children).slice(0, props.size), [props.children, props.size]);
 	const mergedChildren = useMemo(() => mergeChildren(children, state.children).slice(0, props.size), [children, state.children, props.size]);
@@ -325,7 +325,7 @@ const TransitionGroup = (componentProps) => {
 		});
 	}
 
-	if (state.activeChildren !== children && state.children !== mergedChildren) {
+	if (state.activeChildren !== children) {
 		setState((prev) => ({
 			...prev,
 			activeChildren: children,
@@ -334,6 +334,7 @@ const TransitionGroup = (componentProps) => {
 	}
 
 	useLayoutEffect(() => {
+		hasMounted.current = true;
 		// this isn't used by ViewManager or View at the moment but leaving it around for future
 		// flexibility
 		state.children.forEach(child => performAppear(child.key));
@@ -349,8 +350,8 @@ const TransitionGroup = (componentProps) => {
 	}, [componentProps]);
 
 	const storeRefs = useCallback((key) => (node) => {
-		groupRefs.current[key] = node;
-	}, []);
+		groupRefs[key] = node;
+	}, [groupRefs]);
 
 	/* This code is the same as @enact/core/WithRef. */
 	const getNodeRef = useCallback(() => {
@@ -380,11 +381,11 @@ const TransitionGroup = (componentProps) => {
 				key: child.key,
 				ref: storeRefs(child.key),
 				leaving: isLeaving,
-				appearing: !hasMounted,
+				appearing: !hasMounted.current,
 				getParentRef: getNodeRef,
 				renderedIndex: index
 			});
-	}), [getNodeRef, hasMounted, props, mergedChildren, storeRefs]);
+	}), [getNodeRef, props, mergedChildren, storeRefs]);
 
 	// Do not forward TransitionGroup props to primitive DOM nodes
 	const forwardProps = Object.assign({}, props);

@@ -79,13 +79,13 @@ const ViewManagerBase = (componentProps) => {
 		return {index: props.index, previousIndex: state.prevIndex};
 	}, [props.index, state.prevIndex]);
 
-	const handleTransition = useMemo(() => handle(
+	const handleTransition = handle(
 		forwardCustom('onTransition', makeTransitionEvent)
-	).bindAs({props, context: {}}, 'handleTransition'), [makeTransitionEvent, props]);
+	).bindAs({props, context: {}}, 'handleTransition');
 
-	const handleWillTransition = useMemo(() => handle(
+	const handleWillTransition = handle(
 		forwardCustom('onWillTransition', makeTransitionEvent)
-	).bindAs({props, context: {}}, 'handleWillTransition'), [makeTransitionEvent, props]);
+	).bindAs({props, context: {}}, 'handleWillTransition');
 
 	if (props.reverseTransition != null) {
 		setState({

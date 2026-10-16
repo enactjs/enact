@@ -182,16 +182,6 @@ const View = memo((componentProps) => {
 		changeDirection.current = shouldChangeDirection(previousProps, props);
 	}, [previousProps, props, shouldChangeDirection]);
 
-	useEffect(() => {
-		if (props.enteringProp) {
-			// FIXME: `startRafAfter` is a temporary solution using rAF. We need a better way to handle
-			// transition cycle and component life cycle to be in sync. See ENYO-4835.
-			enteringJob.startRafAfter(props.enteringDelay);
-		} else {
-			enteringJob.start();
-		}
-	}, [enteringJob, props.enteringDelay, props.enteringProp]);
-
 	if (props.enteringProp || props.childProps) {
 		const localProps = Object.assign({}, props.childProps);
 		if (props.enteringProp) {
