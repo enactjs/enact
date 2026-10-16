@@ -4,7 +4,7 @@
  * not jsdoc module on purpose
  */
 
-import {Component} from 'react';
+import {useCallback, useLayoutEffect, useReducer, useRef} from 'react';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 import {checkPropTypes} from '@enact/core/util';
@@ -88,47 +88,23 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		defineScreenTypes(config.screenTypes);
 	}
 
-	return class extends Component {
-		static displayName = 'ResolutionDecorator';
+	// eslint-disable-next-line no-shadow
+	function ResolutionDecorator (props) {
+		checkPropTypes(ResolutionDecorator, props);
 
-		static propTypes = /** @lends ui/resolution.ResolutionDecorator.prototype */ {
-			className: PropTypes.string
-		};
+		const rootNodeRef = useRef(null);
 
-		constructor (props) {
-			super(props);
-			checkPropTypes(this, props);
-
+		// Constructor work must finish before the first render reads resolution classes.
+		// The version is only a render trigger. Classes are read from `getResolutionClasses`,
+		// and each change increments the version so a repeated class string still re-renders.
+		const [, forceRender] = useReducer((version) => version + 1, 0, (version) => {
 			if (config.fontSizeHandling) riConfig.fontSizeHandling = config.fontSizeHandling;
 			if (config.orientationHandling) riConfig.orientationHandling = config.orientationHandling;
 			if (config.linearScaling) riConfig.linearScaling = config.linearScaling;
 
 			init({measurementNode: (typeof window !== 'undefined' && window)});
-			this.state = {
-				resolutionClasses: ''
-			};
-		}
-
-		componentDidMount () {
-			if (config.dynamic) window.addEventListener('resize', this.handleResize);
-			this.rootNode = document.getElementsByClassName(getResolutionClasses())?.[0] || null;
-		}
-
-		componentDidUpdate (prevProps) {
-			checkPropTypes(this, this.props, prevProps);
-		}
-
-		componentWillUnmount () {
-			if (config.dynamic) window.removeEventListener('resize', this.handleResize);
-		}
-
-		handleResize = () => {
-			const classNames = this.didClassesChange();
-
-			if (classNames) {
-				this.setState({resolutionClasses: classNames});
-			}
-		};
+			return version;
+		});
 
 		/*
 		 * Compare our current version of the resolved resolution class names with a fresh
@@ -137,23 +113,46 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {String|undefined} A string of new class names or undefined when there is no change.
 		 * @private
 		 */
-		didClassesChange () {
+		const didClassesChange = useCallback(() => {
 			const prevClassNames = getResolutionClasses();
-			init({measurementNode: this.rootNode});
+			init({measurementNode: rootNodeRef.current});
 			const classNames = getResolutionClasses();
 			if (prevClassNames !== classNames) {
 				return classNames;
 			}
-		}
+		}, []);
 
-		render () {
-			// Check if the classes are different from our previous classes
-			let classes = getResolutionClasses();
+		const handleResize = useCallback(() => {
+			const classNames = didClassesChange();
 
-			if (this.props.className) classes += (classes ? ' ' : '') + this.props.className;
-			return <Wrapped {...this.props} className={classes} />;
-		}
+			if (classNames) {
+				forceRender();
+			}
+		}, [didClassesChange]);
+
+		useLayoutEffect(() => {
+			if (config.dynamic) window.addEventListener('resize', handleResize);
+			rootNodeRef.current = document.getElementsByClassName(getResolutionClasses())?.[0] || null;
+
+			return () => {
+				if (config.dynamic) window.removeEventListener('resize', handleResize);
+			};
+		}, [handleResize]);
+
+		// Check if the classes are different from our previous classes
+		let classes = getResolutionClasses();
+
+		if (props.className) classes += (classes ? ' ' : '') + props.className;
+		return <Wrapped {...props} className={classes} />;
+	}
+
+	ResolutionDecorator.displayName = 'ResolutionDecorator';
+
+	ResolutionDecorator.propTypes = /** @lends ui/resolution.ResolutionDecorator.prototype */ {
+		className: PropTypes.string
 	};
+
+	return ResolutionDecorator;
 });
 
 export default ResolutionDecorator;
