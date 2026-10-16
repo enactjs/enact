@@ -15,15 +15,25 @@
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import handle, {forwardCustom} from '@enact/core/handle';
-import {checkPropTypes} from '@enact/core/util';
+import {checkPropTypes, setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import {Children, Component} from 'react';
+import {Children, useCallback, useMemo, useState} from 'react';
 
 import ForwardRef from '../ForwardRef';
 
 import {shape} from './Arranger';
 import TransitionGroup from './TransitionGroup';
 import {wrapWithView} from './View';
+
+/**
+ *
+ * @type {{component: string, duration: number, index: number}}
+ */
+const viewManagerDefaultProps = {
+	component: 'div',
+	duration: 300,
+	index: 0
+};
 
 /**
  * The base `ViewManager` component, without
@@ -34,274 +44,252 @@ import {wrapWithView} from './View';
  * @ui
  * @public
  */
-const ViewManagerBase = class extends Component {
-	static displayName = 'ViewManager';
+const ViewManagerBase = (componentProps) => {
+	checkPropTypes(ViewManagerBase, componentProps);
 
-	static propTypes = /** @lends ui/ViewManager.ViewManagerBase.prototype */ {
-		/**
-		 * Arranger to control the animation
-		 *
-		 * @type {Arranger}
-		 */
-		arranger: shape,
+	const props = useMemo(() => setDefaultProps(componentProps, viewManagerDefaultProps), [componentProps]);
+	const [state, setState] = useState({prevIndex: null, reverseTransition: null});
 
-		/**
-		 * An object containing properties to be passed to each child.
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		childProps: PropTypes.object,
+	const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, rtl, ...rest} = props;
+	let {end = index, start = index} = props;
+	const {prevIndex: previousIndex, reverseTransition} = state;
+	const childrenList = Children.toArray(children);
 
-		/**
-		 * Views to be managed.
-		 *
-		 * May be any renderable component including custom React components or primitive DOM nodes.
-		 *
-		 * @type {Node}
-		 */
-		children: PropTypes.node,
+	if (index > end) end = index;
+	if (index < start) start = index;
 
-		/**
-		 * Type of component wrapping the children. May be a DOM node or a custom React component.
-		 *
-		 * @type {String|Component}
-		 * @default 'div'
-		 */
-		component: EnactPropTypes.renderable,
+	const childCount = end - start + 1;
+	const size = (noAnimation || !arranger) ? childCount : childCount + 1;
 
-		/**
-		 * Called with a reference to the root component.
-		 *
-		 * When using {@link ui/ViewManager.ViewManager}, the `ref` prop is forwarded to this
-		 * component as `componentRef`.
-		 *
-		 * @type {Object|Function}
-		 * @public
-		 */
-		componentRef: EnactPropTypes.ref,
+	const views = childrenList.slice(start, start + childCount);
+	const childFactory = wrapWithView({
+		arranger,
+		duration,
+		index,
+		noAnimation,
+		previousIndex,
+		reverseTransition,
+		enteringDelay,
+		enteringProp,
+		childProps,
+		rtl: Boolean(rtl)
+	});
 
-		/**
-		 * Time in milliseconds to complete a transition
-		 *
-		 * @type {Number}
-		 * @default 300
-		 */
-		duration: PropTypes.number,
+	const makeTransitionEvent = useCallback(() => {
+		return {index: props.index, previousIndex: state.prevIndex};
+	}, [props.index, state.prevIndex]);
 
-		/**
-		 * Index of last visible view.
-		 *
-		 * Defaults to the current value of `index`.
-		 *
-		 * @type {Number}
-		 * @default value of index
-		 */
-		end: PropTypes.number,
+	const handleTransition = useMemo(() => handle(
+		forwardCustom('onTransition', makeTransitionEvent)
+	).bindAs({props, context: {}}, 'handleTransition'), [makeTransitionEvent, props]);
 
-		/**
-		 * Time, in milliseconds, to wait after a view has entered to inform it by pass the
-		 * `enteringProp` as false.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 */
-		enteringDelay: PropTypes.number,
+	const handleWillTransition = useMemo(() => handle(
+		forwardCustom('onWillTransition', makeTransitionEvent)
+	).bindAs({props, context: {}}, 'handleWillTransition'), [makeTransitionEvent, props]);
 
-		/**
-		 * Name of the property to pass to the wrapped view to indicate when it is entering the
-		 * viewport.
-		 *
-		 * When `true`, the view has been created but has not transitioned into place.
-		 * When `false`, the view has finished its transition.
-		 *
-		 * The notification can be delayed by setting `enteringDelay`. If not set, the view will not
-		 * be notified of the change in transition.
-		 *
-		 * @type {String}
-		 */
-		enteringProp: PropTypes.string,
-
-		/**
-		 * Index of active view
-		 *
-		 * @type {Number}
-		 * @default 0
-		 */
-		index: PropTypes.number,
-
-		/**
-		 * Indicates if the transition should be animated
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 */
-		noAnimation: PropTypes.bool,
-
-		/**
-		 * Called when each view is rendered during initial construction.
-		 *
-		 * @type {Function}
-		 */
-		onAppear: PropTypes.func,
-
-		/**
-		 * Called when each view completes its transition into the viewport.
-		 *
-		 * @type {Function}
-		 */
-		onEnter: PropTypes.func,
-
-		/**
-		 * Called when each view completes its transition out of the viewport.
-		 *
-		 * @type {Function}
-		 */
-		onLeave: PropTypes.func,
-
-		/**
-		 * Called when each view completes its transition within the viewport.
-		 *
-		 * @type {Function}
-		 */
-		onStay: PropTypes.func,
-
-		/**
-		 * Called once when all views have completed their transition.
-		 *
-		 * @type {Function}
-		 */
-		onTransition: PropTypes.func,
-
-		/**
-		 * Called once before views begin their transition.
-		 *
-		 * @type {Function}
-		 */
-		onWillTransition: PropTypes.func,
-
-		/**
-		 * Explicitly sets the transition direction.
-		 *
-		 * If omitted, the direction is determined automatically based on the change of index or a
-		 * string comparison of the first child's key.
-		 *
-		 * @type {Boolean}
-		 */
-		reverseTransition: PropTypes.bool,
-
-		/**
-		 * Indicates the current locale uses right-to-left reading order.
-		 *
-		 * `rtl` is passed to the `arranger` in order to alter the animation (e.g. reversing the
-		 * horizontal direction).
-		 *
-		 * @type {Boolean}
-		 */
-		rtl: PropTypes.bool,
-
-		/**
-		 * Index of first visible view. Defaults to the current value of `index`.
-		 *
-		 * @type {Number}
-		 * @default value of index
-		 */
-		start: PropTypes.number
-	};
-
-	static defaultProps = {
-		component: 'div',
-		duration: 300,
-		index: 0
-	};
-
-	constructor (props) {
-		super(props);
-		checkPropTypes(this, props);
-
-		this.state = {
-			prevIndex: null,
-			reverseTransition: null
-		};
-	}
-
-	static getDerivedStateFromProps (props, state) {
-		if (props.reverseTransition != null) {
-			return {
-				index: props.index,
-				prevIndex: state.index,
-				reverseTransition: !!props.reverseTransition
-			};
-		} else if (props.index !== state.index) {
-			return {
-				index: props.index,
-				prevIndex: state.index,
-				reverseTransition: state.index > props.index
-			};
-		}
-
-		return null;
-	}
-
-	componentDidUpdate (prevProps) {
-		checkPropTypes(this, this.props, prevProps);
-	}
-
-	makeTransitionEvent = () => {
-		return {index: this.props.index, previousIndex: this.state.prevIndex};
-	};
-
-	handleTransition = handle(
-		forwardCustom('onTransition', this.makeTransitionEvent)
-	).bindAs(this, 'handleTransition');
-
-	handleWillTransition = handle(
-		forwardCustom('onWillTransition', this.makeTransitionEvent)
-	).bindAs(this, 'handleWillTransition');
-
-	render () {
-		const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, rtl, ...rest} = this.props;
-		let {end = index, start = index} = this.props;
-		const {prevIndex: previousIndex, reverseTransition} = this.state;
-		const childrenList = Children.toArray(children);
-
-		if (index > end) end = index;
-		if (index < start) start = index;
-
-		const childCount = end - start + 1;
-		const size = (noAnimation || !arranger) ? childCount : childCount + 1;
-
-		const views = childrenList.slice(start, start + childCount);
-		const childFactory = wrapWithView({
-			arranger,
-			duration,
-			index,
-			noAnimation,
-			previousIndex,
-			reverseTransition,
-			enteringDelay,
-			enteringProp,
-			childProps,
-			rtl: Boolean(rtl)
+	if (props.reverseTransition != null) {
+		setState({
+			index: props.index,
+			prevIndex: state.index,
+			reverseTransition: !!props.reverseTransition
 		});
-
-		delete rest.end;
-		delete rest.reverseTransition;
-		delete rest.start;
-
-		return (
-			<TransitionGroup
-				{...rest}
-				childFactory={childFactory}
-				currentIndex={index}
-				onTransition={this.handleTransition}
-				onWillTransition={this.handleWillTransition}
-				size={size}
-			>
-				{views}
-			</TransitionGroup>
-		);
+	} else if (props.index !== state.index) {
+		setState({
+			index: props.index,
+			prevIndex: state.index,
+			reverseTransition: state.index > props.index
+		});
 	}
+
+	delete rest.end;
+	delete rest.reverseTransition;
+	delete rest.start;
+
+	return (
+		<TransitionGroup
+			{...rest}
+			childFactory={childFactory}
+			currentIndex={index}
+			onTransition={handleTransition}
+			onWillTransition={handleWillTransition}
+			size={size}
+		>
+			{views}
+		</TransitionGroup>
+	);
+};
+
+ViewManagerBase.displayName = 'ViewManager';
+ViewManagerBase.propTypes = /** @lends ui/ViewManager.ViewManagerBase.prototype */ {
+	/**
+	 * Arranger to control the animation
+	 *
+	 * @type {Arranger}
+	 */
+	arranger: shape,
+
+	/**
+	 * An object containing properties to be passed to each child.
+	 *
+	 * @type {Object}
+	 * @public
+	 */
+	childProps: PropTypes.object,
+
+	/**
+	 * Views to be managed.
+	 *
+	 * May be any renderable component including custom React components or primitive DOM nodes.
+	 *
+	 * @type {Node}
+	 */
+	children: PropTypes.node,
+
+	/**
+	 * Type of component wrapping the children. May be a DOM node or a custom React component.
+	 *
+	 * @type {String|Component}
+	 * @default 'div'
+	 */
+	component: EnactPropTypes.renderable,
+
+	/**
+	 * Called with a reference to the root component.
+	 *
+	 * When using {@link ui/ViewManager.ViewManager}, the `ref` prop is forwarded to this
+	 * component as `componentRef`.
+	 *
+	 * @type {Object|Function}
+	 * @public
+	 */
+	componentRef: EnactPropTypes.ref,
+
+	/**
+	 * Time in milliseconds to complete a transition
+	 *
+	 * @type {Number}
+	 * @default 300
+	 */
+	duration: PropTypes.number,
+
+	/**
+	 * Index of last visible view.
+	 *
+	 * Defaults to the current value of `index`.
+	 *
+	 * @type {Number}
+	 * @default value of index
+	 */
+	end: PropTypes.number,
+
+	/**
+	 * Time, in milliseconds, to wait after a view has entered to inform it by pass the
+	 * `enteringProp` as false.
+	 *
+	 * @type {Number}
+	 * @default 0
+	 */
+	enteringDelay: PropTypes.number,
+
+	/**
+	 * Name of the property to pass to the wrapped view to indicate when it is entering the
+	 * viewport.
+	 *
+	 * When `true`, the view has been created but has not transitioned into place.
+	 * When `false`, the view has finished its transition.
+	 *
+	 * The notification can be delayed by setting `enteringDelay`. If not set, the view will not
+	 * be notified of the change in transition.
+	 *
+	 * @type {String}
+	 */
+	enteringProp: PropTypes.string,
+
+	/**
+	 * Index of active view
+	 *
+	 * @type {Number}
+	 * @default 0
+	 */
+	index: PropTypes.number,
+
+	/**
+	 * Indicates if the transition should be animated
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	noAnimation: PropTypes.bool,
+
+	/**
+	 * Called when each view is rendered during initial construction.
+	 *
+	 * @type {Function}
+	 */
+	onAppear: PropTypes.func,
+
+	/**
+	 * Called when each view completes its transition into the viewport.
+	 *
+	 * @type {Function}
+	 */
+	onEnter: PropTypes.func,
+
+	/**
+	 * Called when each view completes its transition out of the viewport.
+	 *
+	 * @type {Function}
+	 */
+	onLeave: PropTypes.func,
+
+	/**
+	 * Called when each view completes its transition within the viewport.
+	 *
+	 * @type {Function}
+	 */
+	onStay: PropTypes.func,
+
+	/**
+	 * Called once when all views have completed their transition.
+	 *
+	 * @type {Function}
+	 */
+	onTransition: PropTypes.func,
+
+	/**
+	 * Called once before views begin their transition.
+	 *
+	 * @type {Function}
+	 */
+	onWillTransition: PropTypes.func,
+
+	/**
+	 * Explicitly sets the transition direction.
+	 *
+	 * If omitted, the direction is determined automatically based on the change of index or a
+	 * string comparison of the first child's key.
+	 *
+	 * @type {Boolean}
+	 */
+	reverseTransition: PropTypes.bool,
+
+	/**
+	 * Indicates the current locale uses right-to-left reading order.
+	 *
+	 * `rtl` is passed to the `arranger` in order to alter the animation (e.g. reversing the
+	 * horizontal direction).
+	 *
+	 * @type {Boolean}
+	 */
+	rtl: PropTypes.bool,
+
+	/**
+	 * Index of first visible view. Defaults to the current value of `index`.
+	 *
+	 * @type {Number}
+	 * @default value of index
+	 */
+	start: PropTypes.number
 };
 
 /**
