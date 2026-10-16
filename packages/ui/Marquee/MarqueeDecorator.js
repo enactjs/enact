@@ -16,6 +16,7 @@ import {ResizeContext} from '../Resizable';
 
 import MarqueeBase from './MarqueeBase';
 import {MarqueeControllerContext} from './MarqueeController';
+import {cloneContentInto, measureNode, prefersReducedMotion, round2} from './verticalMeasure';
 
 import componentCss from './Marquee.module.less';
 
@@ -56,8 +57,10 @@ const defaultConfig = {
 	 *
 	 * * `marquee` - The root component class
 	 * * `animate` - Applied to the inner content node when the text is animating
+	 * * `content` - The content node of a vertical marquee
 	 * * `spacing` - The spacing node used between the repeated content
 	 * * `text` - The inner content node
+	 * * `vertical` - The root modifier for a vertical marquee
 	 * * `willAnimate` - Applied to the inner content node shortly before animation
 	 *
 	 * @type {Object}
@@ -132,6 +135,19 @@ const didPropChange = (propList, prev, next) => {
 };
 
 /*
+ * Keeps the theme classes from the config and appends app classes from the `css` prop.
+ */
+const mergeCss = (configCss, instanceCss) => {
+	if (!configCss || !instanceCss) return instanceCss || configCss;
+
+	const merged = {...configCss};
+	Object.keys(instanceCss).forEach(key => {
+		merged[key] = merged[key] ? `${merged[key]} ${instanceCss[key]}` : instanceCss[key];
+	});
+	return merged;
+};
+
+/*
  * There's only one timer shared for Marquee so we need to keep track of what we may be using it
  * for. We may need to clean up certain things as we move among states.
  */
@@ -193,6 +209,27 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			children: PropTypes.node,
+
+			/**
+			 * Customizes the marquee's internal elements.
+			 *
+			 * The following classes are supported:
+			 *
+			 * * `marquee` - The root component class
+			 * * `animate` - Applied to the inner content node when the text is animating
+			 * * `content` - The content node of a vertical marquee
+			 * * `spacing` - The spacing node used between the repeated content
+			 * * `text` - The inner content node
+			 * * `vertical` - The root modifier for a vertical marquee
+			 * * `willAnimate` - Applied to the inner content node shortly before animation
+			 *
+			 * An app class is appended to the class from
+			 * {@link ui/Marquee.MarqueeDecorator.defaultConfig.css}.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			css: PropTypes.object,
 
 			/**
 			 * Passed through to the wrapped component.
@@ -304,6 +341,27 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeSpeed: PropTypes.number,
 
 			/**
+			 * Number of text lines that stay visible when `orientation` is `'vertical'`.
+			 *
+			 * @type {Number}
+			 * @default 3
+			 * @public
+			 */
+			maxLines: PropTypes.number,
+
+			/**
+			 * Direction the marquee scrolls.
+			 *
+			 * `'vertical'` scrolls overflowing wrapped text by its laid-out block height.
+			 * `'horizontal'` is the single-line marquee.
+			 *
+			 * @type {('horizontal'|'vertical')}
+			 * @default 'horizontal'
+			 * @public
+			 */
+			orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+
+			/**
 			 * Used to signal for a remeasurement inside of marquee.
 			 *
 			 * The value must change for the remeasurement to take place. The value
@@ -328,7 +386,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeOnRenderDelay: 1000,
 			marqueeResetDelay: 1000,
 			marqueeSpacing: '50%',
-			marqueeSpeed: 60
+			marqueeSpeed: 60,
+			maxLines: 3,
+			orientation: 'horizontal'
 		};
 
 		static contextType = MarqueeControllerContext;
@@ -351,6 +411,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.resizeRegistry = null;
 			this.resizeObserver = null;
 			this.hasStartedRender = false;
+			this.clipHeight = 0;
+			this.measuredWidth = null;
+			this.measurer = null;
+			this.duplicateNode = null;
+			this.removeFonts = null;
 		}
 
 		componentDidMount () {
@@ -371,6 +436,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.resizeObserver.observe(this.node);
 			}
 
+			if (this.isVertical()) {
+				this.watchFonts();
+			}
+
 			if (this.props.marqueeOn === 'render') {
 				if (!this.props.marqueeDisabled) {
 					this.hasStartedRender = true;
@@ -381,14 +450,20 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeSpeed, rtl} = this.props;
+			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeSpeed, maxLines, orientation, rtl} = this.props;
 			let forceRestartMarquee = false;
 
 			checkPropTypes(this, this.props, prevProps);
+			if (!prevProps.marqueeDisabled && marqueeDisabled && this.isVertical()) {
+				this.isFocused = false;
+				this.isHovered = false;
+			}
 			if (
 				prevProps.locale !== locale ||
 				prevProps.rtl !== rtl ||
 				prevProps.marqueeSpacing !== marqueeSpacing ||
+				prevProps.maxLines !== maxLines ||
+				prevProps.orientation !== orientation ||
 				!shallowEqual(prevProps.children, children) ||
 				(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
 			) {
@@ -433,6 +508,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (forceRestartMarquee || this.shouldStartMarquee()) {
 				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
+			this.syncVerticalDuplicate();
 		}
 
 		componentWillUnmount () {
@@ -453,6 +529,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			off('keydown', this.handlePointerHide, document);
+			if (this.removeFonts) this.removeFonts();
 		}
 
 		promoteJob = new Job(() => {
@@ -576,12 +653,80 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return {scrollWidth, width};
 		}
 
+		isVertical () {
+			return this.props.orientation === 'vertical';
+		}
+
+		visibleLines () {
+			const {maxLines} = this.props;
+			return Number.isFinite(maxLines) && maxLines > 0 ? Math.floor(maxLines) : 1;
+		}
+
+		cacheMeasurer = (node) => {
+			this.measurer = node;
+		};
+
+		cacheDuplicate = (node) => {
+			this.duplicateNode = node;
+		};
+
+		watchFonts () {
+			const fonts = typeof document !== 'undefined' ? document.fonts : null;
+			if (!fonts || typeof fonts.addEventListener !== 'function') return;
+
+			const onFonts = () => {
+				if (this.state.animating || this.timerState !== TimerState.CLEAR) return;
+				this.invalidateMetrics();
+			};
+			fonts.addEventListener('loadingdone', onFonts);
+			this.removeFonts = () => fonts.removeEventListener('loadingdone', onFonts);
+		}
+
+		syncVerticalDuplicate () {
+			if (!this.isVertical() || !this.state.promoted || !(this.distance > 0)) return;
+
+			const content = this.node;
+			const duplicate = this.duplicateNode;
+			if (content && duplicate && (duplicate.childNodes.length === 0 || duplicate.textContent !== content.textContent)) {
+				cloneContentInto(content, duplicate);
+			}
+		}
+
+		calculateVerticalMetrics () {
+			const content = this.node;
+			const measurer = this.measurer;
+			if (!content || !measurer || this.distance != null || this.props.marqueeDisabled) return;
+
+			cloneContentInto(content, measurer);
+
+			let metrics;
+			try {
+				metrics = measureNode(measurer, this.visibleLines());
+			} finally {
+				measurer.replaceChildren();
+			}
+
+			const basis = metrics.clipHeight > 0 ? metrics.clipHeight : metrics.lineHeight * this.visibleLines();
+			this.spacing = this.getSpacing(basis);
+			this.distance = metrics.overflows ? round2(metrics.contentHeight + this.spacing) : 0;
+			this.contentFits = !this.shouldAnimate(this.distance);
+			this.clipHeight = metrics.clipHeight;
+
+			const overflow = this.calculateTextOverflow(this.distance);
+			this.setState(state => state.overflow === overflow ? null : {overflow});
+		}
+
 		/*
-		* Determines if the component should marquee and the distance to animate
-		*
-		* @returns {undefined}
-		*/
+		 * Determines if the component should marquee and the distance to animate
+		 *
+		 * @returns {undefined}
+		 */
 		calculateMetrics () {
+			if (this.isVertical()) {
+				this.calculateVerticalMetrics();
+				return;
+			}
+
 			const node = this.node;
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
@@ -669,6 +814,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// if marquee isn't necessary, do not set `animating` but return `true` to mark it
 				// complete if it's synchronized so it doesn't block other instances.
 				return true;
+			} else if (this.isVertical() && (prefersReducedMotion() || !(this.props.marqueeSpeed > 0))) {
+				this.calculateMetrics();
+				return true;
 			} else if (!this.state.animating) {
 				// Don't need to worry about this.timerState because if we're sync, we were just
 				// told to start, so our state is correct already. If we're not sync, this will
@@ -695,6 +843,18 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		stop = () => {
 			this.clearTimeout();
+
+			if (this.isVertical()) {
+				this.promoteJob.stop();
+				this.demoteJob.stop();
+				if (this.state.animating || this.state.promoted) {
+					this.setState({
+						animating: false,
+						promoted: false
+					});
+				}
+				return;
+			}
 
 			if (this.state.animating) {
 				this.setState({
@@ -817,6 +977,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleResize = () => {
 			if (this.node && !this.props.marqueeDisabled) {
+				if (this.isVertical()) {
+					const width = round2(this.node.getBoundingClientRect().width);
+					if (width === this.measuredWidth) return;
+					this.measuredWidth = width;
+				}
+
 				this.invalidateMetrics();
 				if (this.state.animating) {
 					this.cancelAnimation();
@@ -826,6 +992,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		handleMarqueeComplete = () => {
+			// Snap back before the reset timer so a vertical pause is visible immediately.
+			// The reset itself stays on a timeout so the restart is not batched with this update.
+			if (this.isVertical() && this.state.animating) {
+				this.setState({animating: false});
+			}
 			this.resetAnimation();
 		};
 
@@ -900,15 +1071,18 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {
 				alignment,
 				children,
+				css: instanceCss,
 				disabled,
 				marqueeOn,
 				marqueeSpeed,
+				orientation,
 				...rest
 			} = this.props;
 
 			const marqueeOnFocus = marqueeOn === 'focus';
 			const marqueeOnHover = marqueeOn === 'hover';
 			const marqueeOnRender = marqueeOn === 'render';
+			const mergedCss = mergeCss(css, instanceCss);
 
 			if (marqueeOnFocus) {
 				rest[focus] = this.handleFocus;
@@ -933,6 +1107,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.marqueeSpacing;
 			delete rest.marqueeResetDelay;
 			delete rest.marqueeSpeed;
+			delete rest.maxLines;
 			delete rest.remeasure;
 			delete rest.rtl;
 
@@ -942,9 +1117,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						alignment={alignment}
 						animating={this.state.animating}
 						clientRef={this.cacheNode}
-						css={css}
+						clipHeight={this.clipHeight}
+						css={mergedCss}
 						distance={this.distance}
+						duplicateRef={this.cacheDuplicate}
+						maxLines={this.visibleLines()}
+						measurerRef={this.cacheMeasurer}
 						onMarqueeComplete={this.handleMarqueeComplete}
+						orientation={orientation}
 						overflow={this.state.overflow}
 						spacing={this.spacing}
 						rtl={this.state.rtl}
@@ -971,6 +1151,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.marqueeSpacing;
 			delete props.marqueeResetDelay;
 			delete props.marqueeSpeed;
+			delete props.maxLines;
+			delete props.orientation;
 			delete props.remeasure;
 			delete props.rtl;
 
@@ -999,5 +1181,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 export default MarqueeDecorator;
 export {
-	MarqueeDecorator
+	MarqueeDecorator,
+	mergeCss
 };

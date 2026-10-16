@@ -4,6 +4,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Added
+
+- `ui/Marquee` props `orientation` and `maxLines` to scroll overflowing multi-line text vertically
+- `ui/Marquee` prop `css` to customize the marquee's internal elements
+
 ### Changed
 
 - `ui/Transition` to forward `propertyName` in the event payload of `onShow` and `onHide`
