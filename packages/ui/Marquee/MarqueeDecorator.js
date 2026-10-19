@@ -16,7 +16,7 @@ import {ResizeContext} from '../Resizable';
 
 import MarqueeBase from './MarqueeBase';
 import {MarqueeControllerContext} from './MarqueeController';
-import {mergeCss} from './mergeCss';
+import {mergeCss} from './utils';
 import {cloneContentInto, measureNode, prefersReducedMotion, round2} from './verticalMeasure';
 
 import componentCss from './Marquee.module.less';
@@ -213,6 +213,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 *
 			 * An app class is appended to the class from
 			 * {@link ui/Marquee.MarqueeDecorator.defaultConfig.css}.
+			 *
+			 * When the decorator wraps a component, such as a `Button`, that component also receives
+			 * `css` to style itself. Because the same map is merged into the marquee, a `marquee`,
+			 * `text`, `animate`, `spacing` or `willAnimate` class in it also applies to the marquee's
+			 * internal elements.
 			 *
 			 * @type {Object}
 			 * @public
@@ -1101,7 +1106,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.remeasure;
 			delete rest.rtl;
 			// The css prop styles the wrapped component. Only the marquee gets the merged map.
-			if (instanceCss != null) {
+			// A DOM element has no css prop, so the map would end up as an attribute.
+			if (instanceCss != null && typeof Wrapped !== 'string') {
 				rest.css = instanceCss;
 			}
 
@@ -1139,7 +1145,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.locale;
 			delete props.marqueeCentered;
 			delete props.marqueeDelay;
-			delete props.css;
 			delete props.marqueeDisabled;
 			delete props.marqueeOn;
 			delete props.marqueeOnRenderDelay;
@@ -1150,6 +1155,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.orientation;
 			delete props.remeasure;
 			delete props.rtl;
+			// Keep css for a wrapped component that styles itself with it, as when the marquee runs.
+			if (typeof Wrapped === 'string') {
+				delete props.css;
+			}
 
 			return <Wrapped {...props} />;
 		}

@@ -6,7 +6,7 @@ import {act, fireEvent, render, screen} from '@testing-library/react';
 
 import {scale} from '../../resolution';
 import {Marquee, MarqueeBase, MarqueeDecorator} from '../index.js';
-import {mergeCss} from '../mergeCss';
+import {mergeCss} from '../utils';
 import {cloneContentInto, measureNode, prefersReducedMotion} from '../verticalMeasure';
 
 const VerticalMarquee = (props) => (
@@ -1030,6 +1030,33 @@ describe('mergeCss', () => {
 		render(<Decorated css={{button: 'Dropdown_Dropdown_button', text: 'app-text'}}>Label</Decorated>);
 
 		expect(screen.getByTestId('host')).toHaveAttribute('data-button', 'Dropdown_Dropdown_button');
+	});
+
+	test('should forward the css prop to the wrapped component when marqueeDisabled is true', () => {
+		const Host = ({css, children}) => (
+			<div data-testid="host" data-button={css && css.button}>{children}</div>
+		);
+		const Decorated = MarqueeDecorator({component: MarqueeBase}, Host);
+
+		render(<Decorated css={{button: 'Chip_button'}} marqueeDisabled>Label</Decorated>);
+
+		expect(screen.getByTestId('host')).toHaveAttribute('data-button', 'Chip_button');
+	});
+
+	test('should not set a css attribute when the marquee wraps a DOM element', () => {
+		const css = {text: 'app-text'};
+
+		render(
+			<div>
+				<Marquee css={css} data-testid="horizontal">Label</Marquee>
+				<VerticalMarquee css={css} data-testid="vertical">Label</VerticalMarquee>
+				<Marquee css={css} data-testid="disabled" marqueeDisabled>Label</Marquee>
+			</div>
+		);
+
+		expect(screen.getByTestId('horizontal')).not.toHaveAttribute('css');
+		expect(screen.getByTestId('vertical')).not.toHaveAttribute('css');
+		expect(screen.getByTestId('disabled')).not.toHaveAttribute('css');
 	});
 
 	test('should append an instance class and add a class the config does not have', () => {

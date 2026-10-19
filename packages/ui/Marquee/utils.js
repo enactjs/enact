@@ -11,7 +11,6 @@ const mergeCss = (configCss, instanceCss) => {
 	return merged;
 };
 
-export default mergeCss;
 export {
 	mergeCss
 };
