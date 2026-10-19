@@ -9,8 +9,10 @@ import {Marquee, MarqueeBase, MarqueeDecorator} from '../index.js';
 import {mergeCss} from '../utils';
 import {cloneContentInto, measureNode, prefersReducedMotion} from '../verticalMeasure';
 
-const VerticalMarquee = (props) => (
-	<Marquee {...props} orientation="vertical" />
+const VerticalMarqueeBase = MarqueeDecorator({orientation: 'vertical'}, 'div');
+
+const VerticalMarquee = ({maxLines, ...props}) => (
+	<VerticalMarqueeBase {...props} marqueeMaxLines={maxLines} />
 );
 
 const isScrolling = (view) => {
@@ -1067,6 +1069,40 @@ describe('mergeCss', () => {
 			text: 'theme-text app-text',
 			content: 'app-content'
 		});
+	});
+});
+
+describe('orientation config', () => {
+	const Host = ({children, marqueeMaxLines, orientation}) => (
+		<div data-max-lines={marqueeMaxLines} data-orientation={orientation} data-testid="host">{children}</div>
+	);
+
+	test('should pass the orientation prop to the wrapped component and keep the marquee horizontal', () => {
+		const Decorated = MarqueeDecorator({component: MarqueeBase}, Host);
+
+		render(<Decorated orientation="vertical">Label</Decorated>);
+		const host = screen.getByTestId('host');
+
+		expect(host).toHaveAttribute('data-orientation', 'vertical');
+		expect(host.querySelector('[data-vertical-marquee]')).toBeNull();
+	});
+
+	test('should pass the orientation prop to the wrapped component when marqueeDisabled is true', () => {
+		const Decorated = MarqueeDecorator({component: MarqueeBase}, Host);
+
+		render(<Decorated marqueeDisabled orientation="horizontal">Label</Decorated>);
+
+		expect(screen.getByTestId('host')).toHaveAttribute('data-orientation', 'horizontal');
+	});
+
+	test('should not pass marqueeMaxLines to the wrapped component', () => {
+		const Decorated = MarqueeDecorator({component: MarqueeBase, orientation: 'vertical'}, Host);
+
+		render(<Decorated marqueeMaxLines={4}>Label</Decorated>);
+		const host = screen.getByTestId('host');
+
+		expect(host).not.toHaveAttribute('data-max-lines');
+		expect(host.querySelector('[data-vertical-marquee]').style.getPropertyValue('--vertical-marquee-lines')).toBe('4');
 	});
 });
 

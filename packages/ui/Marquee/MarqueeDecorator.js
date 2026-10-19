@@ -118,7 +118,22 @@ const defaultConfig = {
 	 * @kind member
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
-	marqueeDirection: (str) => isRtlText(str) ? 'rtl' : 'ltr'
+	marqueeDirection: (str) => isRtlText(str) ? 'rtl' : 'ltr',
+
+	/**
+	 * Direction the marquee scrolls.
+	 *
+	 * `'vertical'` scrolls overflowing wrapped text by its laid-out block height.
+	 * `'horizontal'` is the single-line marquee.
+	 *
+	 * This is a config option rather than a prop so a wrapped component can keep its own
+	 * `orientation` prop.
+	 *
+	 * @type {('horizontal'|'vertical')}
+	 * @default 'horizontal'
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
+	 */
+	orientation: 'horizontal'
 };
 
 /*
@@ -158,7 +173,8 @@ const TimerState = {
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, component: MarqueeComponent, css, enter, focus, invalidateProps, leave, marqueeDirection} = config;
+	const {blur, component: MarqueeComponent, css, enter, focus, invalidateProps, leave, marqueeDirection, orientation} = config;
+	const vertical = orientation === 'vertical';
 
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
@@ -278,6 +294,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeDisabled: PropTypes.bool,
 
 			/**
+			 * Number of text lines that stay visible when the decorator is configured with
+			 * `orientation: 'vertical'`.
+			 *
+			 * @type {Number}
+			 * @default 3
+			 * @public
+			 */
+			marqueeMaxLines: PropTypes.number,
+
+			/**
 			 * Determines what triggers the marquee to start its animation.
 			 *
 			 * @type {('focus'|'hover'|'render')}
@@ -334,27 +360,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeSpeed: PropTypes.number,
 
 			/**
-			 * Number of text lines that stay visible when `orientation` is `'vertical'`.
-			 *
-			 * @type {Number}
-			 * @default 3
-			 * @public
-			 */
-			maxLines: PropTypes.number,
-
-			/**
-			 * Direction the marquee scrolls.
-			 *
-			 * `'vertical'` scrolls overflowing wrapped text by its laid-out block height.
-			 * `'horizontal'` is the single-line marquee.
-			 *
-			 * @type {('horizontal'|'vertical')}
-			 * @default 'horizontal'
-			 * @public
-			 */
-			orientation: PropTypes.oneOf(['horizontal', 'vertical']),
-
-			/**
 			 * Used to signal for a remeasurement inside of marquee.
 			 *
 			 * The value must change for the remeasurement to take place. The value
@@ -375,13 +380,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static defaultProps = {
 			marqueeDelay: 1000,
+			marqueeMaxLines: 3,
 			marqueeOn: 'focus',
 			marqueeOnRenderDelay: 1000,
 			marqueeResetDelay: 1000,
 			marqueeSpacing: '50%',
-			marqueeSpeed: 60,
-			maxLines: 3,
-			orientation: 'horizontal'
+			marqueeSpeed: 60
 		};
 
 		static contextType = MarqueeControllerContext;
@@ -443,7 +447,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeSpeed, maxLines, orientation, rtl} = this.props;
+			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeMaxLines, marqueeSpeed, rtl} = this.props;
 			let forceRestartMarquee = false;
 
 			checkPropTypes(this, this.props, prevProps);
@@ -455,8 +459,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				prevProps.locale !== locale ||
 				prevProps.rtl !== rtl ||
 				prevProps.marqueeSpacing !== marqueeSpacing ||
-				prevProps.maxLines !== maxLines ||
-				prevProps.orientation !== orientation ||
+				prevProps.marqueeMaxLines !== marqueeMaxLines ||
 				!shallowEqual(prevProps.children, children) ||
 				(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
 			) {
@@ -647,12 +650,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		isVertical () {
-			return this.props.orientation === 'vertical';
+			return vertical;
 		}
 
 		visibleLines () {
-			const {maxLines} = this.props;
-			return Number.isFinite(maxLines) && maxLines > 0 ? Math.floor(maxLines) : 1;
+			const {marqueeMaxLines} = this.props;
+			return Number.isFinite(marqueeMaxLines) && marqueeMaxLines > 0 ? Math.floor(marqueeMaxLines) : 1;
 		}
 
 		cacheMeasurer = (node) => {
@@ -1070,7 +1073,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				disabled,
 				marqueeOn,
 				marqueeSpeed,
-				orientation,
 				...rest
 			} = this.props;
 
@@ -1102,7 +1104,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.marqueeSpacing;
 			delete rest.marqueeResetDelay;
 			delete rest.marqueeSpeed;
-			delete rest.maxLines;
+			delete rest.marqueeMaxLines;
 			delete rest.remeasure;
 			delete rest.rtl;
 			// The css prop styles the wrapped component. Only the marquee gets the merged map.
@@ -1151,8 +1153,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.marqueeSpacing;
 			delete props.marqueeResetDelay;
 			delete props.marqueeSpeed;
-			delete props.maxLines;
-			delete props.orientation;
+			delete props.marqueeMaxLines;
 			delete props.remeasure;
 			delete props.rtl;
 			// Keep css for a wrapped component that styles itself with it, as when the marquee runs.
