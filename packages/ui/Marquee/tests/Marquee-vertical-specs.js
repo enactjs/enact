@@ -5,8 +5,8 @@ import '@testing-library/jest-dom';
 import {act, fireEvent, render, screen} from '@testing-library/react';
 
 import {scale} from '../../resolution';
-import {Marquee} from '../index.js';
-import {mergeCss} from '../MarqueeDecorator';
+import {Marquee, MarqueeBase, MarqueeDecorator} from '../index.js';
+import {mergeCss} from '../mergeCss';
 import {cloneContentInto, measureNode, prefersReducedMotion} from '../verticalMeasure';
 
 const VerticalMarquee = (props) => (
@@ -36,14 +36,14 @@ const rect = (height) => ({
 	toJSON: () => ({})
 });
 
-const mockBox = ({contentHeight, lineHeight}) => {
+const mockBox = (metrics) => {
 	const originalStyle = window.getComputedStyle.bind(window);
 
 	jest.spyOn(window, 'getComputedStyle').mockImplementation((node) => {
 		const style = originalStyle(node);
 		return new Proxy(style, {
 			get: (target, prop, receiver) => {
-				if (prop === 'lineHeight' || prop === 'fontSize') return `${lineHeight}px`;
+				if (prop === 'lineHeight' || prop === 'fontSize') return `${metrics.lineHeight}px`;
 				const value = Reflect.get(target, prop, receiver);
 				return typeof value === 'function' ? value.bind(target) : value;
 			}
@@ -51,7 +51,7 @@ const mockBox = ({contentHeight, lineHeight}) => {
 	});
 
 	jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function () {
-		const height = this.hasAttribute('data-vertical-marquee-measurer') ? contentHeight : 0;
+		const height = this.hasAttribute('data-vertical-marquee-measurer') ? metrics.contentHeight : 0;
 		return rect(height);
 	});
 };
@@ -112,12 +112,13 @@ describe('VerticalMarquee Specs', () => {
 	});
 
 	test('should render a plain block when marqueeDisabled is true', () => {
-		render(<VerticalMarquee data-testid="vertical-marquee" marqueeDisabled>Plain text</VerticalMarquee>);
+		render(<VerticalMarquee css={{vertical: 'app-vertical'}} data-testid="vertical-marquee" marqueeDisabled>Plain text</VerticalMarquee>);
 		const view = screen.getByTestId('vertical-marquee');
 
 		expect(view).toHaveTextContent('Plain text');
 		expect(view.querySelector('[data-vertical-marquee-measurer]')).toBeNull();
 		expect(view.querySelector('[data-vertical-marquee-track]')).toBeNull();
+		expect(view).not.toHaveAttribute('css');
 	});
 
 	test('should fall back to one line when maxLines is not positive', () => {
@@ -942,6 +943,55 @@ describe('VerticalMarquee Specs', () => {
 			expect(view.querySelector('[data-vertical-marquee-track]').style.transform).toBe('translateY(-300px)');
 		});
 
+		test('should remeasure when the text size changes and ignore a height-only resize', () => {
+			let onResize;
+			global.ResizeObserver = class {
+				constructor (callback) {
+					onResize = callback;
+				}
+				observe () {}
+				disconnect () {}
+			};
+			const metrics = {contentHeight: 300, lineHeight: 30};
+			jest.useFakeTimers();
+			mockBox(metrics);
+			render(
+				<VerticalMarquee data-testid="vertical-marquee" marqueeDelay={0} marqueeResetDelay={0} marqueeSpacing="0%" marqueeSpeed={30} maxLines={3}>
+					{longText}
+				</VerticalMarquee>
+			);
+			const view = screen.getByTestId('vertical-marquee');
+			const track = () => view.querySelector('[data-vertical-marquee-track]');
+
+			fireEvent.focus(view);
+			act(() => {
+				jest.advanceTimersByTime(0);
+			});
+
+			expect(track().style.transform).toBe('translateY(-300px)');
+
+			metrics.contentHeight = 500;
+			metrics.lineHeight = 50;
+			act(() => {
+				onResize();
+			});
+			act(() => {
+				jest.advanceTimersByTime(40);
+			});
+
+			expect(track().style.transform).toBe('translateY(-500px)');
+
+			metrics.contentHeight = 800;
+			act(() => {
+				onResize();
+			});
+			act(() => {
+				jest.advanceTimersByTime(40);
+			});
+
+			expect(track().style.transform).toBe('translateY(-500px)');
+		});
+
 		test('should use a percentage of the clip as spacing', () => {
 			const view = setup({
 				contentHeight: 300,
@@ -969,6 +1019,17 @@ describe('mergeCss', () => {
 		expect(mergeCss(null, null)).toBeNull();
 		expect(mergeCss(null, instanceCss)).toBe(instanceCss);
 		expect(mergeCss(configCss, null)).toBe(configCss);
+	});
+
+	test('should forward the css prop to the wrapped component', () => {
+		const Host = ({css, children}) => (
+			<div data-testid="host" data-button={css && css.button}>{children}</div>
+		);
+		const Decorated = MarqueeDecorator({component: MarqueeBase, css: {text: 'theme-text'}}, Host);
+
+		render(<Decorated css={{button: 'Dropdown_Dropdown_button', text: 'app-text'}}>Label</Decorated>);
+
+		expect(screen.getByTestId('host')).toHaveAttribute('data-button', 'Dropdown_Dropdown_button');
 	});
 
 	test('should append an instance class and add a class the config does not have', () => {

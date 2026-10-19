@@ -16,6 +16,7 @@ import {ResizeContext} from '../Resizable';
 
 import MarqueeBase from './MarqueeBase';
 import {MarqueeControllerContext} from './MarqueeController';
+import {mergeCss} from './mergeCss';
 import {cloneContentInto, measureNode, prefersReducedMotion, round2} from './verticalMeasure';
 
 import componentCss from './Marquee.module.less';
@@ -132,19 +133,6 @@ const defaultConfig = {
 const didPropChange = (propList, prev, next) => {
 	const hasPropsChanged = propList.map(i => prev[i] !== next[i]);
 	return hasPropsChanged.indexOf(true) !== -1;
-};
-
-/*
- * Keeps the theme classes from the config and appends app classes from the `css` prop.
- */
-const mergeCss = (configCss, instanceCss) => {
-	if (!configCss || !instanceCss) return instanceCss || configCss;
-
-	const merged = {...configCss};
-	Object.keys(instanceCss).forEach(key => {
-		merged[key] = merged[key] ? `${merged[key]} ${instanceCss[key]}` : instanceCss[key];
-	});
-	return merged;
 };
 
 /*
@@ -412,7 +400,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.resizeObserver = null;
 			this.hasStartedRender = false;
 			this.clipHeight = 0;
-			this.measuredWidth = null;
+			this.measuredLayout = null;
 			this.measurer = null;
 			this.duplicateNode = null;
 			this.removeFonts = null;
@@ -978,9 +966,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleResize = () => {
 			if (this.node && !this.props.marqueeDisabled) {
 				if (this.isVertical()) {
-					const width = round2(this.node.getBoundingClientRect().width);
-					if (width === this.measuredWidth) return;
-					this.measuredWidth = width;
+					// Toggling the line clamp only changes the height. A new width or text size can rewrap.
+					const {fontSize, lineHeight} = window.getComputedStyle(this.node);
+					const layout = `${round2(this.node.getBoundingClientRect().width)} ${fontSize} ${lineHeight}`;
+					if (layout === this.measuredLayout) return;
+					this.measuredLayout = layout;
 				}
 
 				this.invalidateMetrics();
@@ -1110,6 +1100,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.maxLines;
 			delete rest.remeasure;
 			delete rest.rtl;
+			// The css prop styles the wrapped component. Only the marquee gets the merged map.
+			if (instanceCss != null) {
+				rest.css = instanceCss;
+			}
 
 			return (
 				<Wrapped {...rest} onBlur={this.handleBlur} disabled={disabled}>
@@ -1145,6 +1139,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.locale;
 			delete props.marqueeCentered;
 			delete props.marqueeDelay;
+			delete props.css;
 			delete props.marqueeDisabled;
 			delete props.marqueeOn;
 			delete props.marqueeOnRenderDelay;
@@ -1181,6 +1176,5 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 export default MarqueeDecorator;
 export {
-	MarqueeDecorator,
-	mergeCss
+	MarqueeDecorator
 };
