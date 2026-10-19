@@ -3,7 +3,7 @@
  */
 
 import {checkPropTypes, Job, setDefaultProps, usePrevious} from '@enact/core/util';
-import {cloneElement, Children, useState, useRef, useEffect, useCallback, useLayoutEffect, useImperativeHandle, memo, useMemo} from 'react';
+import {cloneElement, Children, useState, useRef, useEffect, useCallback, useImperativeHandle, memo, useMemo} from 'react';
 import PropTypes from 'prop-types';
 
 import {shape} from './Arranger';
@@ -161,7 +161,12 @@ const View = memo((componentProps) => {
 		}
 	}));
 
-	useLayoutEffect(() => {
+	useEffect(() => {
+		checkPropTypes(View, props);
+		changeDirection.current = shouldChangeDirection(previousProps, props);
+	}, [previousProps, props, shouldChangeDirection]);
+
+	useEffect(() => {
 		return () => {
 			enteringJob.stop();
 			node.current = null;
@@ -170,17 +175,6 @@ const View = memo((componentProps) => {
 			}
 		};
 	}, [enteringJob]);
-
-	useEffect(() => {
-		if (props.leaving) {
-			changeDirection.current = shouldChangeDirection(previousProps, props);
-		}
-	}, [props.leaving, previousProps, props, shouldChangeDirection]);
-
-	useEffect(() => {
-		checkPropTypes(View, props);
-		changeDirection.current = shouldChangeDirection(previousProps, props);
-	}, [previousProps, props, shouldChangeDirection]);
 
 	if (props.enteringProp || props.childProps) {
 		const localProps = Object.assign({}, props.childProps);

@@ -17,7 +17,7 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import handle, {forwardCustom} from '@enact/core/handle';
 import {checkPropTypes, setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import {Children, useCallback, useMemo, useState} from 'react';
+import {Children, useCallback, useEffect, useMemo, useState} from 'react';
 
 import ForwardRef from '../ForwardRef';
 
@@ -25,10 +25,6 @@ import {shape} from './Arranger';
 import TransitionGroup from './TransitionGroup';
 import {wrapWithView} from './View';
 
-/**
- *
- * @type {{component: string, duration: number, index: number}}
- */
 const viewManagerDefaultProps = {
 	component: 'div',
 	duration: 300,
@@ -45,9 +41,8 @@ const viewManagerDefaultProps = {
  * @public
  */
 const ViewManagerBase = (componentProps) => {
-	checkPropTypes(ViewManagerBase, componentProps);
-
 	const props = useMemo(() => setDefaultProps(componentProps, viewManagerDefaultProps), [componentProps]);
+
 	const [state, setState] = useState({prevIndex: null, reverseTransition: null});
 
 	const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, rtl, ...rest} = props;
@@ -100,6 +95,10 @@ const ViewManagerBase = (componentProps) => {
 			reverseTransition: state.index > props.index
 		});
 	}
+
+	useEffect(() => {
+		checkPropTypes(ViewManagerBase, componentProps);
+	}, [componentProps]);
 
 	delete rest.end;
 	delete rest.reverseTransition;
