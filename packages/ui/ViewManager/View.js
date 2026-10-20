@@ -11,8 +11,8 @@ import {shape} from './Arranger';
 // If the View was "appearing", then entering will always be false and this will not result in a
 // re-render. If the view should enter, state.enter will be true and this will toggle it to false
 // causing a re-render.
-const clearEntering = ({entering}) => {
-	return entering ? {entering: false} : null;
+const clearEntering = (state) => {
+	return (state || state.entering) ? {entering: false} : null;
 };
 
 const viewDefaultProps = {
@@ -116,7 +116,7 @@ const View = memo((componentProps) => {
 			const {appearing, arranger, reverseTransition, enteringProp} = props;
 			// This can happen if the panel was going to be removed and the animation was canceled,
 			// causing this panel to re-enter.
-			if (!appearing && enteringProp && !state.entering) {
+			if (!appearing && enteringProp && !state?.entering) {
 				setState({entering: true});
 			}
 			if (arranger) {
@@ -159,7 +159,7 @@ const View = memo((componentProps) => {
 				callback();
 			}
 		}
-	}));
+	}), [enteringJob, prepareTransition, props, state?.entering]);
 
 	useEffect(() => {
 		checkPropTypes(View, props);
@@ -178,7 +178,7 @@ const View = memo((componentProps) => {
 
 	if (props.enteringProp || props.childProps) {
 		const localProps = Object.assign({}, props.childProps);
-		if (props.enteringProp) {
+		if (props.enteringProp && state !== null) {
 			localProps[props.enteringProp] = state.entering;
 		}
 

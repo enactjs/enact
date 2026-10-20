@@ -85,13 +85,11 @@ const reducer = (state, action) => {
 			};
 		case 'UPDATE':
 			return {
-				...state,
 				activeChildren: action.children,
 				children: action.mergedChildren
 			};
 		case 'REMOVE_CHILD':
 			return {
-				...state,
 				children: remove(indexOfChild(action.key, state.children), 1, state.children)
 			};
 		default:
@@ -153,7 +151,7 @@ const TransitionGroup = (componentProps) => {
 
 		completeTransition({key});
 
-		dispatch({type: 'REMOVE', key});
+		dispatch({type: 'REMOVE_CHILD', key});
 	}, [completeTransition, props]);
 
 	const performLeave = useCallback((key) => {
@@ -339,7 +337,7 @@ const TransitionGroup = (componentProps) => {
 		dispatch({type: 'INIT', children});
 	}
 
-	if (state.activeChildren && state.activeChildren !== children) {
+	if (state.activeChildren !== children) {
 		dispatch({type: 'UPDATE', children, mergedChildren});
 	}
 

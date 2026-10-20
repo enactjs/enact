@@ -17,7 +17,7 @@ import EnactPropTypes from '@enact/core/internal/prop-types';
 import handle, {forwardCustom} from '@enact/core/handle';
 import {checkPropTypes, setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import {Children, useCallback, useEffect, useMemo, useState} from 'react';
+import {Children, useCallback, useEffect, useMemo, useReducer} from 'react';
 
 import ForwardRef from '../ForwardRef';
 
@@ -29,6 +29,25 @@ const viewManagerDefaultProps = {
 	component: 'div',
 	duration: 300,
 	index: 0
+};
+
+const reducer = (state, action) => {
+	switch (action.type) {
+		case 'REVERSE':
+			return {
+				index: action.index,
+				prevIndex: state.index,
+				reverseTransition: action.reverseTransition
+			};
+		case 'UPDATE':
+			return {
+				index: action.index,
+				prevIndex: state.index,
+				reverseTransition: state.index > action.index
+			};
+		default:
+			return state;
+	}
 };
 
 /**
@@ -43,7 +62,7 @@ const viewManagerDefaultProps = {
 const ViewManagerBase = (componentProps) => {
 	const props = useMemo(() => setDefaultProps(componentProps, viewManagerDefaultProps), [componentProps]);
 
-	const [state, setState] = useState({prevIndex: null, reverseTransition: null});
+	const [state, dispatch] = useReducer(reducer, {prevIndex: null, reverseTransition: null});
 
 	const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, rtl, ...rest} = props;
 	let {end = index, start = index} = props;
@@ -83,16 +102,17 @@ const ViewManagerBase = (componentProps) => {
 	).bindAs({props, context: {}}, 'handleWillTransition');
 
 	if (props.reverseTransition != null) {
-		setState({
-			index: props.index,
-			prevIndex: state.index,
-			reverseTransition: !!props.reverseTransition
-		});
+		if (state.index !== props.index || state.reverseTransition !== props.reverseTransition) {
+			dispatch({
+				type: 'REVERSE',
+				index: props.index,
+				reverseTransition: !!props.reverseTransition
+			});
+		}
 	} else if (props.index !== state.index) {
-		setState({
-			index: props.index,
-			prevIndex: state.index,
-			reverseTransition: state.index > props.index
+		dispatch({
+			type: 'UPDATE',
+			index: props.index
 		});
 	}
 
