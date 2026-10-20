@@ -30,7 +30,7 @@ const viewDefaultProps = {
  * @memberof ui/ViewManager
  * @private
  */
-const View = (componentProps) => {
+const View = memo((componentProps) => {
 	const props = useMemo(() => setDefaultProps(componentProps, viewDefaultProps), [componentProps]);
 
 	const [state, setState] = useState({entering: !props.appearing});
@@ -186,7 +186,11 @@ const View = (componentProps) => {
 	} else {
 		return Children.only(props.children);
 	}
-};
+}, (prevProps, nextProps) => {
+	if (nextProps.leaving) return false;
+
+	return prevProps !== nextProps;
+});
 
 View.propTypes = /** @lends ui/ViewManager.View.prototype */ {
 	children: PropTypes.node.isRequired,
