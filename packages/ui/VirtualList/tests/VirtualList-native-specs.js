@@ -274,6 +274,17 @@ describe('VirtualList with native scrollMode', () => {
 			expect(node.scrollTo).toHaveBeenCalledWith({left: 0, top: 300, behavior: 'smooth'});
 			expect(window.cancelAnimationFrame).toHaveBeenCalled();
 		});
+
+		test('should cancel the ongoing animation before starting a new one', () => {
+			let id = 0;
+			window.requestAnimationFrame.mockImplementation(() => ++id);
+
+			instance.animateScroll(0, 300, node);
+			instance.animateScroll(0, 600, node);
+
+			expect(window.cancelAnimationFrame).toHaveBeenCalledWith(1);
+			expect(instance.scrollAnimationId).toBe(2);
+		});
 	});
 });
 

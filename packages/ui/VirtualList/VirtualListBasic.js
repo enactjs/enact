@@ -922,6 +922,13 @@ class VirtualListBasic extends Component {
 
 	// scroll mode 'native' only
 	animateScroll (left, top, node) {
+		// Cancel the ongoing animation so that only one animation loop drives the scroll.
+		// Otherwise, when frames are delayed (e.g. holding a 5-way key while the device is busy),
+		// a stale loop keeps scrolling toward its old target and its timeout fallback overrides the latest target.
+		if (this.scrollAnimationId) {
+			this.cancelScrollAnimation();
+		}
+
 		// Determine the direction of scroll (1 for forward/down, -1 for backward/up, 0 for no movement)
 		const directionX = Math.sign(left - node.scrollLeft);
 		const directionY = Math.sign(top - node.scrollTop);
