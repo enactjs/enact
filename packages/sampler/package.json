@@ -24,9 +24,9 @@
     "classnames": "^2.5.1",
     "ilib": "^14.22.0",
     "prop-types": "^15.8.1",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "react-is": "^19.2.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-is": "^19.3.0",
     "storybook": "^10.5.10"
   }
 }
