@@ -12,7 +12,7 @@ import {shape} from './Arranger';
 // re-render. If the view should enter, state.enter will be true and this will toggle it to false
 // causing a re-render.
 const clearEntering = (state) => {
-	return (state || state.entering) ? {entering: false} : null;
+	return state.entering ? {entering: false} : state;
 };
 
 const viewDefaultProps = {

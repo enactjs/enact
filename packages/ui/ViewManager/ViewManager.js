@@ -101,14 +101,12 @@ const ViewManagerBase = (componentProps) => {
 		forwardCustom('onWillTransition', makeTransitionEvent)
 	).bindAs({props, context: {}}, 'handleWillTransition');
 
-	if (props.reverseTransition != null) {
-		if (state.index !== props.index || state.reverseTransition !== props.reverseTransition) {
-			dispatch({
-				type: 'REVERSE',
-				index: props.index,
-				reverseTransition: !!props.reverseTransition
-			});
-		}
+	if (props.reverseTransition != null && props.reverseTransition !== state.reverseTransition) {
+		dispatch({
+			type: 'REVERSE',
+			index: props.index,
+			reverseTransition: props.reverseTransition
+		});
 	} else if (props.index !== state.index) {
 		dispatch({
 			type: 'UPDATE',
