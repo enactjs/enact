@@ -16,6 +16,8 @@ import {ResizeContext} from '../Resizable';
 
 import MarqueeBase from './MarqueeBase';
 import {MarqueeControllerContext} from './MarqueeController';
+import {mergeCss} from './utils';
+import {cloneContentInto, measureNode, prefersReducedMotion, round2} from './verticalMeasure';
 
 import componentCss from './Marquee.module.less';
 
@@ -56,8 +58,10 @@ const defaultConfig = {
 	 *
 	 * * `marquee` - The root component class
 	 * * `animate` - Applied to the inner content node when the text is animating
+	 * * `content` - The content node of a vertical marquee
 	 * * `spacing` - The spacing node used between the repeated content
 	 * * `text` - The inner content node
+	 * * `vertical` - The root modifier for a vertical marquee
 	 * * `willAnimate` - Applied to the inner content node shortly before animation
 	 *
 	 * @type {Object}
@@ -114,7 +118,22 @@ const defaultConfig = {
 	 * @kind member
 	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
-	marqueeDirection: (str) => isRtlText(str) ? 'rtl' : 'ltr'
+	marqueeDirection: (str) => isRtlText(str) ? 'rtl' : 'ltr',
+
+	/**
+	 * Direction the marquee scrolls.
+	 *
+	 * `'vertical'` scrolls overflowing wrapped text by its laid-out block height.
+	 * `'horizontal'` is the single-line marquee.
+	 *
+	 * This is a config option rather than a prop so a wrapped component can keep its own
+	 * `orientation` prop.
+	 *
+	 * @type {('horizontal'|'vertical')}
+	 * @default 'horizontal'
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
+	 */
+	orientation: 'horizontal'
 };
 
 /*
@@ -154,7 +173,8 @@ const TimerState = {
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, component: MarqueeComponent, css, enter, focus, invalidateProps, leave, marqueeDirection} = config;
+	const {blur, component: MarqueeComponent, css, enter, focus, invalidateProps, leave, marqueeDirection, orientation} = config;
+	const vertical = orientation === 'vertical';
 
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
@@ -193,6 +213,32 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			children: PropTypes.node,
+
+			/**
+			 * Customizes the marquee's internal elements.
+			 *
+			 * The following classes are supported:
+			 *
+			 * * `marquee` - The root component class
+			 * * `animate` - Applied to the inner content node when the text is animating
+			 * * `content` - The content node of a vertical marquee
+			 * * `spacing` - The spacing node used between the repeated content
+			 * * `text` - The inner content node
+			 * * `vertical` - The root modifier for a vertical marquee
+			 * * `willAnimate` - Applied to the inner content node shortly before animation
+			 *
+			 * An app class is appended to the class from
+			 * {@link ui/Marquee.MarqueeDecorator.defaultConfig.css}.
+			 *
+			 * When the decorator wraps a component, such as a `Button`, that component also receives
+			 * `css` to style itself. Because the same map is merged into the marquee, a `marquee`,
+			 * `text`, `animate`, `spacing` or `willAnimate` class in it also applies to the marquee's
+			 * internal elements.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			css: PropTypes.object,
 
 			/**
 			 * Passed through to the wrapped component.
@@ -246,6 +292,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Boolean}
 			 */
 			marqueeDisabled: PropTypes.bool,
+
+			/**
+			 * Number of text lines that stay visible when the decorator is configured with
+			 * `orientation: 'vertical'`.
+			 *
+			 * @type {Number}
+			 * @default 3
+			 * @public
+			 */
+			marqueeMaxLines: PropTypes.number,
 
 			/**
 			 * Determines what triggers the marquee to start its animation.
@@ -324,6 +380,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static defaultProps = {
 			marqueeDelay: 1000,
+			marqueeMaxLines: 3,
 			marqueeOn: 'focus',
 			marqueeOnRenderDelay: 1000,
 			marqueeResetDelay: 1000,
@@ -351,6 +408,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.resizeRegistry = null;
 			this.resizeObserver = null;
 			this.hasStartedRender = false;
+			this.clipHeight = 0;
+			this.measuredLayout = null;
+			this.measurer = null;
+			this.duplicateNode = null;
+			this.removeFonts = null;
 		}
 
 		componentDidMount () {
@@ -371,6 +433,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.resizeObserver.observe(this.node);
 			}
 
+			if (this.isVertical()) {
+				this.watchFonts();
+			}
+
 			if (this.props.marqueeOn === 'render') {
 				if (!this.props.marqueeDisabled) {
 					this.hasStartedRender = true;
@@ -381,14 +447,19 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeSpeed, rtl} = this.props;
+			const {children, disabled, forceDirection, locale, marqueeOn, marqueeDisabled, marqueeSpacing, marqueeMaxLines, marqueeSpeed, rtl} = this.props;
 			let forceRestartMarquee = false;
 
 			checkPropTypes(this, this.props, prevProps);
+			if (!prevProps.marqueeDisabled && marqueeDisabled && this.isVertical()) {
+				this.isFocused = false;
+				this.isHovered = false;
+			}
 			if (
 				prevProps.locale !== locale ||
 				prevProps.rtl !== rtl ||
 				prevProps.marqueeSpacing !== marqueeSpacing ||
+				prevProps.marqueeMaxLines !== marqueeMaxLines ||
 				!shallowEqual(prevProps.children, children) ||
 				(invalidateProps && didPropChange(invalidateProps, prevProps, this.props))
 			) {
@@ -433,6 +504,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (forceRestartMarquee || this.shouldStartMarquee()) {
 				this.tryStartingAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
+			this.syncVerticalDuplicate();
 		}
 
 		componentWillUnmount () {
@@ -453,6 +525,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			off('keydown', this.handlePointerHide, document);
+			if (this.removeFonts) this.removeFonts();
 		}
 
 		promoteJob = new Job(() => {
@@ -576,12 +649,80 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return {scrollWidth, width};
 		}
 
+		isVertical () {
+			return vertical;
+		}
+
+		visibleLines () {
+			const {marqueeMaxLines} = this.props;
+			return Number.isFinite(marqueeMaxLines) && marqueeMaxLines > 0 ? Math.floor(marqueeMaxLines) : 1;
+		}
+
+		cacheMeasurer = (node) => {
+			this.measurer = node;
+		};
+
+		cacheDuplicate = (node) => {
+			this.duplicateNode = node;
+		};
+
+		watchFonts () {
+			const fonts = typeof document !== 'undefined' ? document.fonts : null;
+			if (!fonts || typeof fonts.addEventListener !== 'function') return;
+
+			const onFonts = () => {
+				if (this.state.animating || this.timerState !== TimerState.CLEAR) return;
+				this.invalidateMetrics();
+			};
+			fonts.addEventListener('loadingdone', onFonts);
+			this.removeFonts = () => fonts.removeEventListener('loadingdone', onFonts);
+		}
+
+		syncVerticalDuplicate () {
+			if (!this.isVertical() || !this.state.promoted || !(this.distance > 0)) return;
+
+			const content = this.node;
+			const duplicate = this.duplicateNode;
+			if (content && duplicate && (duplicate.childNodes.length === 0 || duplicate.textContent !== content.textContent)) {
+				cloneContentInto(content, duplicate);
+			}
+		}
+
+		calculateVerticalMetrics () {
+			const content = this.node;
+			const measurer = this.measurer;
+			if (!content || !measurer || this.distance != null || this.props.marqueeDisabled) return;
+
+			cloneContentInto(content, measurer);
+
+			let metrics;
+			try {
+				metrics = measureNode(measurer, this.visibleLines());
+			} finally {
+				measurer.replaceChildren();
+			}
+
+			const basis = metrics.clipHeight > 0 ? metrics.clipHeight : metrics.lineHeight * this.visibleLines();
+			this.spacing = this.getSpacing(basis);
+			this.distance = metrics.overflows ? round2(metrics.contentHeight + this.spacing) : 0;
+			this.contentFits = !this.shouldAnimate(this.distance);
+			this.clipHeight = metrics.clipHeight;
+
+			const overflow = this.calculateTextOverflow(this.distance);
+			this.setState(state => state.overflow === overflow ? null : {overflow});
+		}
+
 		/*
-		* Determines if the component should marquee and the distance to animate
-		*
-		* @returns {undefined}
-		*/
+		 * Determines if the component should marquee and the distance to animate
+		 *
+		 * @returns {undefined}
+		 */
 		calculateMetrics () {
+			if (this.isVertical()) {
+				this.calculateVerticalMetrics();
+				return;
+			}
+
 			const node = this.node;
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
@@ -669,6 +810,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// if marquee isn't necessary, do not set `animating` but return `true` to mark it
 				// complete if it's synchronized so it doesn't block other instances.
 				return true;
+			} else if (this.isVertical() && (prefersReducedMotion() || !(this.props.marqueeSpeed > 0))) {
+				this.calculateMetrics();
+				return true;
 			} else if (!this.state.animating) {
 				// Don't need to worry about this.timerState because if we're sync, we were just
 				// told to start, so our state is correct already. If we're not sync, this will
@@ -695,6 +839,18 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		stop = () => {
 			this.clearTimeout();
+
+			if (this.isVertical()) {
+				this.promoteJob.stop();
+				this.demoteJob.stop();
+				if (this.state.animating || this.state.promoted) {
+					this.setState({
+						animating: false,
+						promoted: false
+					});
+				}
+				return;
+			}
 
 			if (this.state.animating) {
 				this.setState({
@@ -817,6 +973,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleResize = () => {
 			if (this.node && !this.props.marqueeDisabled) {
+				if (this.isVertical()) {
+					// Toggling the line clamp only changes the height. A new width or text size can rewrap.
+					const {fontSize, lineHeight} = window.getComputedStyle(this.node);
+					const layout = `${round2(this.node.getBoundingClientRect().width)} ${fontSize} ${lineHeight}`;
+					if (layout === this.measuredLayout) return;
+					this.measuredLayout = layout;
+				}
+
 				this.invalidateMetrics();
 				if (this.state.animating) {
 					this.cancelAnimation();
@@ -826,6 +990,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		handleMarqueeComplete = () => {
+			// Snap back before the reset timer so a vertical pause is visible immediately.
+			// The reset itself stays on a timeout so the restart is not batched with this update.
+			if (this.isVertical() && this.state.animating) {
+				this.setState({animating: false});
+			}
 			this.resetAnimation();
 		};
 
@@ -900,6 +1069,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {
 				alignment,
 				children,
+				css: instanceCss,
 				disabled,
 				marqueeOn,
 				marqueeSpeed,
@@ -909,6 +1079,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const marqueeOnFocus = marqueeOn === 'focus';
 			const marqueeOnHover = marqueeOn === 'hover';
 			const marqueeOnRender = marqueeOn === 'render';
+			const mergedCss = mergeCss(css, instanceCss);
 
 			if (marqueeOnFocus) {
 				rest[focus] = this.handleFocus;
@@ -933,8 +1104,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.marqueeSpacing;
 			delete rest.marqueeResetDelay;
 			delete rest.marqueeSpeed;
+			delete rest.marqueeMaxLines;
 			delete rest.remeasure;
 			delete rest.rtl;
+			// The css prop styles the wrapped component. Only the marquee gets the merged map.
+			// A DOM element has no css prop, so the map would end up as an attribute.
+			if (instanceCss != null && typeof Wrapped !== 'string') {
+				rest.css = instanceCss;
+			}
 
 			return (
 				<Wrapped {...rest} onBlur={this.handleBlur} disabled={disabled}>
@@ -942,9 +1119,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						alignment={alignment}
 						animating={this.state.animating}
 						clientRef={this.cacheNode}
-						css={css}
+						clipHeight={this.clipHeight}
+						css={mergedCss}
 						distance={this.distance}
+						duplicateRef={this.cacheDuplicate}
+						maxLines={this.visibleLines()}
+						measurerRef={this.cacheMeasurer}
 						onMarqueeComplete={this.handleMarqueeComplete}
+						orientation={orientation}
 						overflow={this.state.overflow}
 						spacing={this.spacing}
 						rtl={this.state.rtl}
@@ -971,8 +1153,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.marqueeSpacing;
 			delete props.marqueeResetDelay;
 			delete props.marqueeSpeed;
+			delete props.marqueeMaxLines;
 			delete props.remeasure;
 			delete props.rtl;
+			// Keep css for a wrapped component that styles itself with it, as when the marquee runs.
+			if (typeof Wrapped === 'string') {
+				delete props.css;
+			}
 
 			return <Wrapped {...props} />;
 		}
