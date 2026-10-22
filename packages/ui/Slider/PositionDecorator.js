@@ -140,8 +140,6 @@ const PositionDecorator = hoc((config, Wrapped) => {
 			validateStepMax(validateProps);
 		}
 
-		console.log(dragConfig)
-
 		return (
 			<Wrapped
 				{...props}
