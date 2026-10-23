@@ -1,7 +1,7 @@
 import hoc from '@enact/core/hoc';
-import {WithRef} from '@enact/core/internal/WithRef';
+import {createFragmentFallbackId, getFragmentHostNode} from '@enact/core/internal/fragmentHost';
 import {checkPropTypes} from '@enact/core/util';
-import {Component, createRef} from 'react';
+import {Component, Fragment, createRef} from 'react';
 import PropTypes from 'prop-types';
 
 /**
@@ -56,8 +56,6 @@ import PropTypes from 'prop-types';
  * @public
  */
 const VoiceControlDecorator = hoc((config, Wrapped) => {
-	const WithRefComponent = WithRef(Wrapped);
-
 	return class extends Component {
 		static displayName = 'VoiceControlDecorator';
 
@@ -78,10 +76,12 @@ const VoiceControlDecorator = hoc((config, Wrapped) => {
 
 			this.node = null;
 			this.nodeRef = createRef();
+			this.markerRef = createRef();
+			this.fallbackId = createFragmentFallbackId();
 		}
 
 		componentDidMount () {
-			this.node = this.nodeRef.current;
+			this.node = getFragmentHostNode(this.nodeRef.current, this.markerRef.current);
 			if (this.node && !(this.node.hasAttribute('data-webos-voice-event-target') || this.node.hasAttribute('data-webos-voice-intent'))) {
 				this.node = this.node.querySelector('[data-webos-voice-event-target]') || this.node.querySelector('[data-webos-voice-intent]');
 			}
@@ -101,7 +101,10 @@ const VoiceControlDecorator = hoc((config, Wrapped) => {
 			delete props.onVoice;
 
 			return (
-				<WithRefComponent {...props} outermostRef={this.nodeRef} referrerName="VoiceControlDecorator" />
+				<Fragment ref={this.nodeRef}>
+					<Wrapped {...props} data-withref-id={this.fallbackId} />
+					<div data-withref-referrer="VoiceControlDecorator" data-withref-target={this.fallbackId} ref={this.markerRef} style={{display: 'none'}} />
+				</Fragment>
 			);
 		}
 	};

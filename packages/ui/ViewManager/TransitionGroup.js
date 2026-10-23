@@ -4,6 +4,7 @@
 
 // Using string refs from the source code of ReactTransitionGroup
 
+import {createFragmentFallbackId, getFragmentHostNode} from '@enact/core/internal/fragmentHost';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward, forwardCustom} from '@enact/core/handle';
 import {checkPropTypes} from '@enact/core/util';
@@ -16,7 +17,7 @@ import propEq from 'ramda/src/propEq';
 import remove from 'ramda/src/remove';
 import unionWith from 'ramda/src/unionWith';
 import useWith from 'ramda/src/useWith';
-import {Children, cloneElement, createElement, createRef, Component} from 'react';
+import {Children, cloneElement, Component, createElement, createRef, Fragment} from 'react';
 
 /**
  * Returns the index of a child in an array found by `key` matching
@@ -187,7 +188,8 @@ class TransitionGroup extends Component {
 		this.keysToStay = [];
 		this.groupRefs = {};
 		this.nodeRef = createRef();
-		this.refNodeId = '#transition#group#';
+		this.markerRef = createRef();
+		this.fallbackId = createFragmentFallbackId();
 	}
 
 	static getDerivedStateFromProps (props, state) {
@@ -431,21 +433,9 @@ class TransitionGroup extends Component {
 		this.groupRefs[key] = node;
 	};
 
-	/* This code is the same as @enact/core/WithRef. */
-	getNodeRef = () => {
-		const refNode = this.nodeRef.current;
-		const attributeSelector = `[data-transitiongroup-id="${refNode.getAttribute('data-transitiongroup-target')}"]`;
-		/* The intended code is to search for the referrer element via a single querySelector call. But unit tests cannot handle :has() properly.
-		const selector = `:scope ${attributeSelector}, :scope :has(${attributeSelector})`;
-		return refNode?.parentElement?.querySelector(selector) || null;
-		*/
-		const targetNode = refNode?.parentElement?.querySelector(attributeSelector) || null;
-		for (let current = targetNode; current; current = current.parentElement) {
-			if (current?.parentElement === refNode?.parentElement) {
-				return current;
-			}
-		}
-	};
+	// The fragment's first host child is the component root. View indexes
+	// `children[renderedIndex]` on that element to animate one view.
+	getNodeRef = () => getFragmentHostNode(this.nodeRef.current, this.markerRef.current);
 
 	render () {
 		// support wrapping arbitrary children with a component that supports the necessary
@@ -463,7 +453,6 @@ class TransitionGroup extends Component {
 		const props = Object.assign({}, this.props);
 
 		props.ref = this.props.componentRef;
-		props['data-transitiongroup-id'] = this.refNodeId;
 
 		delete props.childFactory;
 		delete props.component;
@@ -476,12 +465,13 @@ class TransitionGroup extends Component {
 		delete props.onTransition;
 		delete props.onWillTransition;
 		delete props.size;
+		props['data-withref-id'] = this.fallbackId;
 
 		return (
-			<>
+			<Fragment ref={this.nodeRef}>
 				{createElement(this.props.component, props, childrenToRender)}
-				<div data-transitiongroup-target={this.refNodeId} ref={this.nodeRef} style={{display: 'none'}} />
-			</>
+				<div data-withref-referrer="TransitionGroup" data-withref-target={this.fallbackId} ref={this.markerRef} style={{display: 'none'}} />
+			</Fragment>
 		);
 	}
 }
