@@ -90,7 +90,6 @@ const reducer = (state, action) => {
 			};
 		case 'REMOVE_CHILD':
 			return {
-				...state,
 				children: remove(indexOfChild(action.key, state.children), 1, state.children)
 			};
 		default:
@@ -291,7 +290,7 @@ const TransitionGroup = (componentProps) => {
 				// flag a view to enter if it's new (!hasPrev), or if it's not new (hasPrev) but is
 				// re-entering (is currently transitioning)
 				keysToEnter.current.push(key);
-			} else if (index < size - (nextChildKeys.length > size ? 1 : 0)) {
+			} else if (index < size - 1) {
 				// keep views that are less than size minus the "transition out" buffer
 				keysToStay.current.push(key);
 			} else {
