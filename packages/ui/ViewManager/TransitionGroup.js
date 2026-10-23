@@ -6,7 +6,7 @@
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward, forwardCustom} from '@enact/core/handle';
-import {checkPropTypes, setDefaultProps, usePrevious} from '@enact/core/util';
+import {checkPropTypes, setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import eqBy from 'ramda/src/eqBy';
 import findIndex from 'ramda/src/findIndex';
@@ -116,6 +116,7 @@ const TransitionGroup = (componentProps) => {
 
 	const [state, dispatch] = useReducer(reducer, {children: [], firstRender: true});
 
+	const prevState = useRef(state);
 	const hasMounted = useRef(false);
 	const nodeRef = useRef(null);
 	const groupRefs = useRef({});
@@ -124,8 +125,6 @@ const TransitionGroup = (componentProps) => {
 	const keysToLeave = useRef([]);
 	const keysToStay = useRef([]);
 	const refNodeId = '#transition#group#';
-
-	const prevState = usePrevious(state);
 
 	const completeTransition = useCallback(({key, noForwarding = false}) => {
 		if (key in currentlyTransitioningKeys.current) {
@@ -349,9 +348,16 @@ const TransitionGroup = (componentProps) => {
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		reconcileUnmountedChildren(prevState.children, state.children);
-		reconcileChildren(prevState.activeChildren, state.activeChildren);
-	}, [prevState.activeChildren, prevState.children, reconcileChildren, reconcileUnmountedChildren, state.activeChildren, state.children]);
+		const {activeChildren: prevActiveChildren, children: prevChildren} = prevState.current;
+		if (prevActiveChildren === state.activeChildren && prevChildren === state.children) {
+			return;
+		}
+
+		reconcileUnmountedChildren(prevChildren, state.children);
+		reconcileChildren(prevActiveChildren, state.activeChildren);
+
+		prevState.current = state;
+	}, [state, reconcileChildren, reconcileUnmountedChildren]);
 
 	useEffect(() => {
 		checkPropTypes(TransitionGroup, componentProps);

@@ -76,7 +76,7 @@ const ViewManagerBase = (componentProps) => {
 	const size = (noAnimation || !arranger) ? childCount : childCount + 1;
 
 	const views = childrenList.slice(start, start + childCount);
-	const childFactory = wrapWithView({
+	const childFactory = useMemo(() => wrapWithView({
 		arranger,
 		duration,
 		index,
@@ -87,7 +87,7 @@ const ViewManagerBase = (componentProps) => {
 		enteringProp,
 		childProps,
 		rtl: Boolean(rtl)
-	});
+	}), [arranger, childProps, duration, index, noAnimation, previousIndex, reverseTransition, enteringDelay, enteringProp, rtl]);
 
 	const makeTransitionEvent = useCallback(() => {
 		return {index: props.index, previousIndex: state.prevIndex};
@@ -101,12 +101,14 @@ const ViewManagerBase = (componentProps) => {
 		forwardCustom('onWillTransition', makeTransitionEvent)
 	).bindAs({props, context: {}}, 'handleWillTransition');
 
-	if (props.reverseTransition != null && props.reverseTransition !== state.reverseTransition) {
-		dispatch({
-			type: 'REVERSE',
-			index: props.index,
-			reverseTransition: props.reverseTransition
-		});
+	if (props.reverseTransition != null) {
+		if (props.reverseTransition !== state.reverseTransition || props.index !== state.index) {
+			dispatch({
+				type: 'REVERSE',
+				index: props.index,
+				reverseTransition: props.reverseTransition
+			});
+		}
 	} else if (props.index !== state.index) {
 		dispatch({
 			type: 'UPDATE',
@@ -115,8 +117,8 @@ const ViewManagerBase = (componentProps) => {
 	}
 
 	useEffect(() => {
-		checkPropTypes(ViewManagerBase, componentProps);
-	}, [componentProps]);
+		checkPropTypes(ViewManagerBase, props);
+	}, [props]);
 
 	delete rest.end;
 	delete rest.reverseTransition;

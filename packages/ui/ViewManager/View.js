@@ -186,11 +186,7 @@ const View = memo((componentProps) => {
 	} else {
 		return Children.only(props.children);
 	}
-}, (prevProps, nextProps) => {
-	if (nextProps.leaving) return false;
-
-	return prevProps !== nextProps;
-});
+}, (prevProps, nextProps) => Boolean(nextProps.leaving));
 
 View.propTypes = /** @lends ui/ViewManager.View.prototype */ {
 	children: PropTypes.node.isRequired,
