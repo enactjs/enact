@@ -111,7 +111,7 @@ const reducer = (state, action) => {
  */
 
 const TransitionGroup = (componentProps) => {
-	const props = useMemo(() => setDefaultProps(componentProps, transitionGroupDefaultProps), [componentProps]);
+	const props = setDefaultProps(componentProps, transitionGroupDefaultProps);
 	checkPropTypes(TransitionGroup, props);
 	const {childFactory, currentIndex} = props;
 

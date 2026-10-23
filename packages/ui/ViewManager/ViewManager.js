@@ -15,9 +15,10 @@
 
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import handle, {forwardCustom} from '@enact/core/handle';
+import useHandlers from '@enact/core/useHandlers';
 import {checkPropTypes, setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import {Children, useCallback, useEffect, useMemo, useReducer} from 'react';
+import {Children, useMemo, useReducer} from 'react';
 
 import ForwardRef from '../ForwardRef';
 
@@ -50,6 +51,19 @@ const reducer = (state, action) => {
 	}
 };
 
+const makeTransitionEvent = (ev, props, state) => {
+	return {index: props.index, previousIndex: state.prevIndex};
+};
+
+const viewManagerHandlers = {
+	onTransition: handle(
+		forwardCustom('onTransition', makeTransitionEvent)
+	),
+	onWillTransition: handle(
+		forwardCustom('onWillTransition', makeTransitionEvent)
+	)
+};
+
 /**
  * The base `ViewManager` component, without
  * {@link ui/ViewManager.ViewManagerDecorator|ViewManagerDecorator} applied.
@@ -60,10 +74,11 @@ const reducer = (state, action) => {
  * @public
  */
 const ViewManagerBase = (componentProps) => {
-	const props = useMemo(() => setDefaultProps(componentProps, viewManagerDefaultProps), [componentProps]);
+	const props = setDefaultProps(componentProps, viewManagerDefaultProps);
 	checkPropTypes(ViewManagerBase, props);
 
 	const [state, dispatch] = useReducer(reducer, {prevIndex: null, reverseTransition: null});
+	const handlers = useHandlers(viewManagerHandlers, props, state);
 
 	const {arranger, childProps, children, duration, index, noAnimation, enteringDelay, enteringProp, rtl, ...rest} = props;
 	let {end = index, start = index} = props;
@@ -90,18 +105,6 @@ const ViewManagerBase = (componentProps) => {
 		rtl: Boolean(rtl)
 	}), [arranger, childProps, duration, index, noAnimation, previousIndex, reverseTransition, enteringDelay, enteringProp, rtl]);
 
-	const makeTransitionEvent = useCallback(() => {
-		return {index: props.index, previousIndex: state.prevIndex};
-	}, [props.index, state.prevIndex]);
-
-	const handleTransition = handle(
-		forwardCustom('onTransition', makeTransitionEvent)
-	).bindAs({props, context: {}}, 'handleTransition');
-
-	const handleWillTransition = handle(
-		forwardCustom('onWillTransition', makeTransitionEvent)
-	).bindAs({props, context: {}}, 'handleWillTransition');
-
 	if (props.reverseTransition != null) {
 		if (props.reverseTransition !== state.reverseTransition || props.index !== state.index) {
 			dispatch({
@@ -124,10 +127,9 @@ const ViewManagerBase = (componentProps) => {
 	return (
 		<TransitionGroup
 			{...rest}
+			{...handlers}
 			childFactory={childFactory}
 			currentIndex={index}
-			onTransition={handleTransition}
-			onWillTransition={handleWillTransition}
 			size={size}
 		>
 			{views}

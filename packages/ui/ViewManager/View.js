@@ -2,7 +2,7 @@
  * Exports the {@link ui/ViewManager.View} component.
  */
 
-import {checkPropTypes, Job, setDefaultProps, usePrevious} from '@enact/core/util';
+import {checkPropTypes, Job, setDefaultProps} from '@enact/core/util';
 import {cloneElement, Children, useState, useRef, useEffect, useCallback, useImperativeHandle, memo, useMemo} from 'react';
 import PropTypes from 'prop-types';
 
@@ -31,7 +31,7 @@ const viewDefaultProps = {
  * @private
  */
 const View = memo((componentProps) => {
-	const props = useMemo(() => setDefaultProps(componentProps, viewDefaultProps), [componentProps]);
+	const props = setDefaultProps(componentProps, viewDefaultProps);
 	checkPropTypes(View, props);
 
 	const [state, setState] = useState({entering: !props.appearing});
@@ -43,8 +43,7 @@ const View = memo((componentProps) => {
 	const animation = useRef(null);
 	const changeDirection = useRef(false);
 	const node = useRef(null);
-
-	const previousProps = usePrevious(props);
+	const previousProps = useRef(props);
 
 	const shouldChangeDirection = useCallback((prevProps, nextProps) => {
 		return animation.current ? prevProps.reverseTransition !== nextProps.reverseTransition : false;
@@ -164,7 +163,8 @@ const View = memo((componentProps) => {
 
 	useEffect(() => {
 		changeDirection.current = shouldChangeDirection(previousProps, props);
-	}, [previousProps, props, shouldChangeDirection]);
+		previousProps.current = props;
+	}, [props, shouldChangeDirection]);
 
 	useEffect(() => {
 		return () => {
