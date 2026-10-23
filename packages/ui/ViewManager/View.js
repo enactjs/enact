@@ -32,6 +32,7 @@ const viewDefaultProps = {
  */
 const View = memo((componentProps) => {
 	const props = useMemo(() => setDefaultProps(componentProps, viewDefaultProps), [componentProps]);
+	checkPropTypes(View, props);
 
 	const [state, setState] = useState({entering: !props.appearing});
 
@@ -162,7 +163,6 @@ const View = memo((componentProps) => {
 	}), [enteringJob, prepareTransition, props, state?.entering]);
 
 	useEffect(() => {
-		checkPropTypes(View, props);
 		changeDirection.current = shouldChangeDirection(previousProps, props);
 	}, [previousProps, props, shouldChangeDirection]);
 

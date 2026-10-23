@@ -61,6 +61,7 @@ const reducer = (state, action) => {
  */
 const ViewManagerBase = (componentProps) => {
 	const props = useMemo(() => setDefaultProps(componentProps, viewManagerDefaultProps), [componentProps]);
+	checkPropTypes(ViewManagerBase, props);
 
 	const [state, dispatch] = useReducer(reducer, {prevIndex: null, reverseTransition: null});
 
@@ -115,10 +116,6 @@ const ViewManagerBase = (componentProps) => {
 			index: props.index
 		});
 	}
-
-	useEffect(() => {
-		checkPropTypes(ViewManagerBase, props);
-	}, [props]);
 
 	delete rest.end;
 	delete rest.reverseTransition;

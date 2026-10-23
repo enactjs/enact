@@ -112,6 +112,7 @@ const reducer = (state, action) => {
 
 const TransitionGroup = (componentProps) => {
 	const props = useMemo(() => setDefaultProps(componentProps, transitionGroupDefaultProps), [componentProps]);
+	checkPropTypes(TransitionGroup, props);
 	const {childFactory, currentIndex} = props;
 
 	const [state, dispatch] = useReducer(reducer, {children: [], firstRender: true});
@@ -358,10 +359,6 @@ const TransitionGroup = (componentProps) => {
 
 		prevState.current = state;
 	}, [state, reconcileChildren, reconcileUnmountedChildren]);
-
-	useEffect(() => {
-		checkPropTypes(TransitionGroup, componentProps);
-	}, [componentProps]);
 
 	const storeRefs = useCallback((key) => (node) => {
 		groupRefs.current[key] = node;
