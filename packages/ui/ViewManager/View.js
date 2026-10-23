@@ -162,7 +162,7 @@ const View = memo((componentProps) => {
 	}), [enteringJob, prepareTransition, props, state?.entering]);
 
 	useEffect(() => {
-		changeDirection.current = shouldChangeDirection(previousProps, props);
+		changeDirection.current = shouldChangeDirection(previousProps.current, props);
 		previousProps.current = props;
 	}, [props, shouldChangeDirection]);
 
