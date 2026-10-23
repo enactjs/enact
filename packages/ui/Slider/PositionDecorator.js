@@ -25,110 +25,110 @@ const positionDecoratorDefaultProps = {
 	step: 1
 };
 
-const PositionDecorator = hoc((config, Wrapped) => {
-	const emitChangeForPosition = (x, y, props, bounds) => {
-		const {colorPicker, max, min, orientation, step} = props;
-		let position = x;
-		let offset = bounds.current.offsetX;
+const emitChangeForPosition = (x, y, props, bounds) => {
+	const {colorPicker, max, min, orientation, step} = props;
+	let position = x;
+	let offset = bounds.current.offsetX;
 
-		if (orientation === 'vertical') {
-			position = y;
-			offset = bounds.current.offsetY;
-		}
+	if (orientation === 'vertical') {
+		position = y;
+		offset = bounds.current.offsetY;
+	}
 
-		let proportion = calcProportion(bounds.current.min, bounds.current.max, position - offset);
-		if (orientation === 'vertical') {
-			proportion = 1 - proportion;
-		}
+	let proportion = calcProportion(bounds.current.min, bounds.current.max, position - offset);
+	if (orientation === 'vertical') {
+		proportion = 1 - proportion;
+	}
 
-		let value = (max - min) * proportion + min;
+	let value = (max - min) * proportion + min;
 
-		// adjust value for stepping
-		if (step) {
-			const delta = (value - min) % step;
-			if (delta < step / 2) {
-				value -= delta;
-			} else {
-				value += step - delta;
-			}
-
-			// recalculate the proportion based on the stepped value
-			proportion = calcProportion(min, max, value);
-		}
-
-		const onChangeObj = {
-			type: 'onChange',
-			value,
-			proportion
-		};
-
-		if (colorPicker) {
-			onChangeObj.color = {
-				hex: hslToHex(value),
-				hsl: `hsla(${value}, 100%, 50%, 1)`
-			};
-		}
-
-		if (value !== props.value) {
-			forward('onChange', onChangeObj, props);
-		}
-	};
-
-	const updateBounds = (node, props, bounds) => {
-		const {orientation} = props;
-
-		const localBounds = node.getBoundingClientRect();
-		const computedStyle = window.getComputedStyle(node);
-
-		if (orientation === 'horizontal') {
-			bounds.current.min = localBounds.left + parseInt(computedStyle.paddingLeft);
-			bounds.current.max = localBounds.right - parseInt(computedStyle.paddingRight);
+	// adjust value for stepping
+	if (step) {
+		const delta = (value - min) % step;
+		if (delta < step / 2) {
+			value -= delta;
 		} else {
-			bounds.current.min = localBounds.top + parseInt(computedStyle.paddingTop);
-			bounds.current.max = localBounds.bottom - parseInt(computedStyle.paddingBottom);
+			value += step - delta;
 		}
+
+		// recalculate the proportion based on the stepped value
+		proportion = calcProportion(min, max, value);
+	}
+
+	const onChangeObj = {
+		type: 'onChange',
+		value,
+		proportion
 	};
 
-	const updateOffset = (clientX, clientY, target, bounds) => {
-		bounds.current.offsetX = 0;
-		bounds.current.offsetY = 0;
+	if (colorPicker) {
+		onChangeObj.color = {
+			hex: hslToHex(value),
+			hsl: `hsla(${value}, 100%, 50%, 1)`
+		};
+	}
 
-		const knob = target.closest(`.${css.knob}`);
-		if (knob) {
-			const rect = knob.getBoundingClientRect();
-			const centerX = rect.left + rect.width / 2;
-			const centerY = rect.top + rect.height / 2;
+	if (value !== props.value) {
+		forward('onChange', onChangeObj, props);
+	}
+};
 
-			bounds.current.offsetX = clientX - centerX;
-			bounds.current.offsetY = clientY - centerY;
-		}
-	};
+const updateBounds = (node, props, bounds) => {
+	const {orientation} = props;
 
-	const handleDown = ({clientX, clientY, currentTarget, target}, props, {bounds}) => {
-		// bail early for emulated mousedown events from key presses
-		if (typeof clientX === 'undefined' || typeof clientY === 'undefined') return;
+	const localBounds = node.getBoundingClientRect();
+	const computedStyle = window.getComputedStyle(node);
 
-		updateBounds(currentTarget, props, bounds);
-		updateOffset(clientX, clientY, target, bounds);
-		emitChangeForPosition(clientX, clientY, props, bounds);
-	};
+	if (orientation === 'horizontal') {
+		bounds.current.min = localBounds.left + parseInt(computedStyle.paddingLeft);
+		bounds.current.max = localBounds.right - parseInt(computedStyle.paddingRight);
+	} else {
+		bounds.current.min = localBounds.top + parseInt(computedStyle.paddingTop);
+		bounds.current.max = localBounds.bottom - parseInt(computedStyle.paddingBottom);
+	}
+};
 
-	const handleDragStart = (ev, props, {bounds}) => {
-		forward('onDragStart', ev, props);
-		emitChangeForPosition(ev.x, ev.y, props, bounds);
-	};
+const updateOffset = (clientX, clientY, target, bounds) => {
+	bounds.current.offsetX = 0;
+	bounds.current.offsetY = 0;
 
-	const handleDrag = (ev, props, {bounds}) => {
-		forward('onDrag', ev, props);
-		emitChangeForPosition(ev.x, ev.y, props, bounds);
-	};
+	const knob = target.closest(`.${css.knob}`);
+	if (knob) {
+		const rect = knob.getBoundingClientRect();
+		const centerX = rect.left + rect.width / 2;
+		const centerY = rect.top + rect.height / 2;
 
-	const positionHandlers = {
-		onDown: handleDown,
-		onDragStart: handleDragStart,
-		onDrag: handleDrag
-	};
+		bounds.current.offsetX = clientX - centerX;
+		bounds.current.offsetY = clientY - centerY;
+	}
+};
 
+const handleDown = ({clientX, clientY, currentTarget, target}, props, {bounds}) => {
+	// bail early for emulated mousedown events from key presses
+	if (typeof clientX === 'undefined' || typeof clientY === 'undefined') return;
+
+	updateBounds(currentTarget, props, bounds);
+	updateOffset(clientX, clientY, target, bounds);
+	emitChangeForPosition(clientX, clientY, props, bounds);
+};
+
+const handleDragStart = (ev, props, {bounds}) => {
+	forward('onDragStart', ev, props);
+	emitChangeForPosition(ev.x, ev.y, props, bounds);
+};
+
+const handleDrag = (ev, props, {bounds}) => {
+	forward('onDrag', ev, props);
+	emitChangeForPosition(ev.x, ev.y, props, bounds);
+};
+
+const positionHandlers = {
+	onDown: handleDown,
+	onDragStart: handleDragStart,
+	onDrag: handleDrag
+};
+
+const PositionDecorator = hoc((config, Wrapped) => {
 	// eslint-disable-next-line no-shadow
 	const PositionDecorator = (componentProps) => {
 		const props = setDefaultProps(componentProps, positionDecoratorDefaultProps);
