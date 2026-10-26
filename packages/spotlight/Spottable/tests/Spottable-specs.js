@@ -7,15 +7,12 @@ import {setFocusEffectClass} from '../../src/focusEffect';
 const id = 'test-spottable';
 
 describe('Spottable', () => {
-	test('should keep a hidden marker for the fiber fallback', () => {
+	test('should not render a hidden marker', () => {
 		const Component = Spottable('div');
 		render(<Component data-testid={id} />);
 
-		const marker = document.querySelector('[data-withref-referrer="Spottable"]');
-		const hostId = screen.getByTestId(id).getAttribute('data-withref-id');
-
-		expect(marker).toHaveStyle({display: 'none'});
-		expect(marker).toHaveAttribute('data-withref-target', hostId);
+		expect(document.querySelector('[data-withref-referrer="Spottable"]')).toBeNull();
+		expect(screen.getByTestId(id).hasAttribute('data-withref-id')).toBe(false);
 	});
 
 	test('should set the focus attribute on the outermost node', () => {

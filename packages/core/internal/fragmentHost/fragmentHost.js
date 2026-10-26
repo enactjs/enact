@@ -1,4 +1,4 @@
-import warning from 'warning';
+/* global Node */
 
 // HostComponent, HostText, and HostSingleton. Matches React's fragment traversal,
 // which visits first-level host children and looks through composite components.
@@ -7,6 +7,33 @@ const HOST_TEXT = 6;
 const OFFSCREEN = 22;
 const HOST_SINGLETON = 27;
 const ELEMENT_NODE = 1;
+
+const emptyFragmentRect = {
+	bottom: 0,
+	height: 0,
+	left: 0,
+	right: 0,
+	top: 0,
+	width: 0
+};
+
+let missingFiberReported = false;
+
+const reportMissingFragmentFiber = () => {
+	const message = 'Fragment ref is missing `_fragmentFiber`. React internals changed and the host node cannot be resolved. Re-check getFragmentHostNode on every React upgrade.';
+
+	if (process.env.NODE_ENV !== 'production') {
+		throw new Error(message);
+	}
+
+	if (!missingFiberReported) {
+		missingFiberReported = true;
+		// eslint-disable-next-line no-console
+		console.error(message);
+	}
+
+	return null;
+};
 
 const findHostElement = (child) => {
 	for (; child; child = child.sibling) {
@@ -36,71 +63,97 @@ const findHostElement = (child) => {
 	return null;
 };
 
-// WithRef's walk: from the hidden marker, find the node stamped with the same id,
-// then the ancestor that is a direct child of the marker's parent.
-const findOutermostFromMarker = (marker) => {
-	if (!marker || marker.nodeType !== ELEMENT_NODE || !marker.hasAttribute('data-withref-target')) {
-		return null;
-	}
-
-	const attributeSelector = `[data-withref-id="${marker.getAttribute('data-withref-target')}"]`;
-	const parent = marker.parentElement;
-	const targetNode = parent && parent.querySelector(attributeSelector);
-	for (let current = targetNode; current; current = current.parentElement) {
-		if (current.parentElement === marker.parentElement) {
-			return current;
-		}
-	}
-
-	return null;
-};
-
-let fallbackSerial = 0;
-
-// Stable id for the hidden marker. `useId` values contain ":" and break the attribute selector.
-const createFragmentFallbackId = () => {
-	fallbackSerial += 1;
-	return `fragment-host-${fallbackSerial}`;
-};
-
 /**
  * First host element owned by a fragment ref.
  *
- * `FragmentInstance` does not expose its DOM children. Spottable and ViewManager
- * still need that element (`classList`, `setAttribute`, `Element.animate`, and
- * `children` for the rendered view). The hidden-marker walk used to return this
- * same outermost node.
+ * `FragmentInstance` does not expose its DOM children. This reads React's private
+ * `_fragmentFiber` and must be re-checked on every React upgrade. The fragmentHost
+ * specs render through real React, so a break shows up in CI.
  *
- * If React no longer provides `_fragmentFiber`, warn and use that marker walk.
- * The worst case is the previous WithRef behavior, not a silent null.
+ * If a fragment ref exists but `_fragmentFiber` is missing, this throws in
+ * development and logs once with `console.error` in production.
  *
- * @param {import('react').FragmentInstance|Element|null|undefined} fragment
- * @param {Element|null|undefined} marker Hidden `data-withref-target` sibling.
+ * @param {import('react').FragmentInstance|null|undefined} fragment
  * @returns {Element|null}
  * @private
  */
-const getFragmentHostNode = (fragment, marker) => {
-	if (fragment && fragment.nodeType === ELEMENT_NODE) {
-		return findOutermostFromMarker(fragment);
+const getFragmentHostNode = (fragment) => {
+	if (!fragment) {
+		return null;
 	}
 
-	const fiber = fragment && fragment._fragmentFiber;
-	if (fiber) {
-		return findHostElement(fiber.child);
+	const fiber = fragment._fragmentFiber;
+	if (!fiber) {
+		return reportMissingFragmentFiber();
 	}
 
-	if (fragment) {
-		warning(
-			false,
-			'Fragment ref is missing `_fragmentFiber`. Falling back to the hidden WithRef marker.'
-		);
-	}
-
-	return findOutermostFromMarker(marker);
+	return findHostElement(fiber.child);
 };
 
-export default getFragmentHostNode;
+/**
+ * Union of a fragment's first-level client rects.
+ *
+ * Matches `Element#getBoundingClientRect` for a single host child. A zero-size rect
+ * keeps its position. An empty list is a zero box, same as `getBoundingClientRect`.
+ *
+ * @param {import('react').FragmentInstance|null|undefined} fragment
+ * @returns {DOMRect|{bottom: Number, height: Number, left: Number, right: Number, top: Number, width: Number}|null}
+ * @private
+ */
+const getFragmentBoundingClientRect = (fragment) => {
+	if (!fragment || typeof fragment.getClientRects !== 'function') {
+		return null;
+	}
+
+	const rects = fragment.getClientRects();
+	if (!rects || rects.length === 0) {
+		return {...emptyFragmentRect};
+	}
+
+	let top = Infinity;
+	let right = -Infinity;
+	let bottom = -Infinity;
+	let left = Infinity;
+
+	for (let i = 0; i < rects.length; i++) {
+		const rect = rects[i];
+		top = Math.min(top, rect.top);
+		right = Math.max(right, rect.right);
+		bottom = Math.max(bottom, rect.bottom);
+		left = Math.min(left, rect.left);
+	}
+
+	return {
+		bottom,
+		height: bottom - top,
+		left,
+		right,
+		top,
+		width: right - left
+	};
+};
+
+/**
+ * Whether `node` is contained by the fragment.
+ *
+ * `FragmentInstance` has no `contains()`. `CONTAINED_BY` covers the host child and
+ * its descendants.
+ *
+ * @param {import('react').FragmentInstance|null|undefined} fragment
+ * @param {Node|null|undefined} node
+ * @returns {Boolean}
+ * @private
+ */
+const fragmentContains = (fragment, node) => {
+	if (!fragment || !node || typeof fragment.compareDocumentPosition !== 'function') {
+		return false;
+	}
+
+	return Boolean(fragment.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_CONTAINED_BY);
+};
+
 export {
-	createFragmentFallbackId,
+	fragmentContains,
+	getFragmentBoundingClientRect,
 	getFragmentHostNode
 };

@@ -10,10 +10,10 @@ import handle, {forward, returnsTrue} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
 import {checkPropTypes} from '@enact/core/util';
-import {createFragmentFallbackId, getFragmentHostNode} from '@enact/core/internal/fragmentHost';
+import {getFragmentHostNode} from '@enact/core/internal/fragmentHost';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import {Fragment, useCallback, useReducer, useRef, useState} from 'react';
+import {Fragment, useCallback, useReducer, useRef} from 'react';
 
 import {spottableClass, useSpottable} from './useSpottable';
 
@@ -150,10 +150,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		} = props;
 
 		// Read once after commit, same as the previous imperative handle with empty deps.
-		// The hidden marker is only used when `_fragmentFiber` is missing.
-		const [fallbackId] = useState(createFragmentFallbackId);
-		const markerRef = useRef(null);
-		const getSpotRef = useCallback(() => getFragmentHostNode(nodeRef.current, markerRef.current), []);
+		const getSpotRef = useCallback(() => getFragmentHostNode(nodeRef.current), []);
 
 		const spot = useSpottable({
 			disabled,
@@ -186,10 +183,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 					{...spot.attributes}
 					{...handlers}
 					className={classNames(className, spot.className)}
-					data-withref-id={fallbackId}
 					disabled={disabled}
 				/>
-				<div data-withref-referrer="Spottable" data-withref-target={fallbackId} ref={markerRef} style={{display: 'none'}} />
 			</Fragment>
 		);
 	}

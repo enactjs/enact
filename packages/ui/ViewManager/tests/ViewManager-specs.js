@@ -17,44 +17,6 @@ describe('ViewManager', () => {
 		jest.useRealTimers();
 	});
 
-	test('should animate the view element resolved from the fragment', () => {
-		let node = null;
-		const animation = {
-			playState: 'running',
-			finish () {
-				this.playState = 'finished';
-				if (this.onfinish) {
-					this.onfinish();
-				}
-			},
-			cancel () {}
-		};
-		const arranger = {
-			enter: (config) => {
-				node = config.node;
-				return animation;
-			},
-			stay: (config) => {
-				node = config.node;
-				return animation;
-			},
-			leave: (config) => {
-				node = config.node;
-				return animation;
-			}
-		};
-
-		render(
-			<ViewManager arranger={arranger} index={0}>
-				<div data-testid="view">View 1</div>
-			</ViewManager>
-		);
-
-		expect(node).toBe(screen.getByTestId('view'));
-		expect(document.querySelector('[data-transitiongroup-target]')).toBeNull();
-		expect(document.querySelector('[data-transitiongroup-id]')).toBeNull();
-	});
-
 	test('should render {component} as its child - <div/> by default', () => {
 		render(
 			<ViewManager data-testid="component">

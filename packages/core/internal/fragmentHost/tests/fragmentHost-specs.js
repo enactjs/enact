@@ -1,7 +1,9 @@
+/* global Node */
+
 import {createRef, Fragment} from 'react';
 import {render, screen} from '@testing-library/react';
 
-import {createFragmentFallbackId, getFragmentHostNode} from '../fragmentHost';
+import {fragmentContains, getFragmentBoundingClientRect, getFragmentHostNode} from '../fragmentHost';
 
 describe('getFragmentHostNode', () => {
 	test('should return null without a fragment', () => {
@@ -122,55 +124,25 @@ describe('getFragmentHostNode', () => {
 		expect(getFragmentHostNode(fragment)).toBe(element);
 	});
 
-	test('should walk the hidden marker when the ref is that element', () => {
-		const parent = document.createElement('div');
-		const host = document.createElement('section');
-		const inner = document.createElement('button');
-		const marker = document.createElement('div');
-		inner.setAttribute('data-withref-id', 'marker-id');
-		marker.setAttribute('data-withref-target', 'marker-id');
-		host.appendChild(inner);
-		parent.appendChild(host);
-		parent.appendChild(marker);
-		document.body.appendChild(parent);
-
-		expect(getFragmentHostNode(marker)).toBe(host);
-
-		parent.remove();
+	test('should throw when a fragment has no `_fragmentFiber`', () => {
+		expect(() => getFragmentHostNode({})).toThrow(/_fragmentFiber/);
 	});
 
-	test('should return null when the marker id matches no host', () => {
-		const parent = document.createElement('div');
-		const marker = document.createElement('div');
-		marker.setAttribute('data-withref-target', 'missing-host');
-		parent.appendChild(marker);
+	test('should log once in production when a fragment has no `_fragmentFiber`', () => {
+		const previous = process.env.NODE_ENV;
+		process.env.NODE_ENV = 'production';
+		jest.resetModules();
+		const {getFragmentHostNode: getHost} = require('../fragmentHost');
 
-		expect(getFragmentHostNode(marker)).toBeNull();
-	});
-
-	test('should mint marker ids that are safe in a selector', () => {
-		const first = createFragmentFallbackId();
-		const second = createFragmentFallbackId();
-
-		expect(first).toMatch(/^fragment-host-\d+$/);
-		expect(second).not.toBe(first);
-	});
-
-	test('should warn and use the hidden marker when the fiber field is missing', () => {
-		const parent = document.createElement('div');
-		const host = document.createElement('section');
-		const marker = document.createElement('div');
-		host.setAttribute('data-withref-id', 'missing-fiber');
-		marker.setAttribute('data-withref-target', 'missing-fiber');
-		parent.appendChild(host);
-		parent.appendChild(marker);
-		document.body.appendChild(parent);
-
-		expect(getFragmentHostNode({}, marker)).toBe(host);
-		// eslint-disable-next-line no-console
-		expect(console.error).toHaveBeenCalled();
-
-		parent.remove();
+		try {
+			expect(getHost({})).toBeNull();
+			expect(getHost({})).toBeNull();
+			// eslint-disable-next-line no-console
+			expect(console.error).toHaveBeenCalledTimes(1);
+		} finally {
+			process.env.NODE_ENV = previous;
+			jest.resetModules();
+		}
 	});
 
 	test('should skip a hidden offscreen fiber', () => {
@@ -197,5 +169,76 @@ describe('getFragmentHostNode', () => {
 		};
 
 		expect(getFragmentHostNode(fragment)).toBe(element);
+	});
+});
+
+describe('getFragmentBoundingClientRect', () => {
+	test('should return null when the fragment cannot be measured', () => {
+		expect(getFragmentBoundingClientRect(null)).toBeNull();
+		expect(getFragmentBoundingClientRect({})).toBeNull();
+	});
+
+	test('should return a zero box when there are no client rects', () => {
+		expect(getFragmentBoundingClientRect({getClientRects: () => []})).toEqual({
+			bottom: 0,
+			height: 0,
+			left: 0,
+			right: 0,
+			top: 0,
+			width: 0
+		});
+	});
+
+	test('should keep the position of a zero-size rect', () => {
+		const fragment = {
+			getClientRects: () => [{
+				bottom: 12,
+				height: 0,
+				left: 40,
+				right: 40,
+				top: 12,
+				width: 0
+			}]
+		};
+
+		expect(getFragmentBoundingClientRect(fragment)).toEqual({
+			bottom: 12,
+			height: 0,
+			left: 40,
+			right: 40,
+			top: 12,
+			width: 0
+		});
+	});
+
+	test('should union different rects', () => {
+		const fragment = {
+			getClientRects: () => [
+				{bottom: 10, height: 10, left: 0, right: 20, top: 0, width: 20},
+				{bottom: 40, height: 10, left: 40, right: 60, top: 30, width: 20}
+			]
+		};
+
+		expect(getFragmentBoundingClientRect(fragment)).toEqual({
+			bottom: 40,
+			height: 40,
+			left: 0,
+			right: 60,
+			top: 0,
+			width: 60
+		});
+	});
+});
+
+describe('fragmentContains', () => {
+	test('should report when a node is inside the fragment', () => {
+		const node = document.createElement('span');
+		const fragment = {
+			compareDocumentPosition: (target) => (target === node ? Node.DOCUMENT_POSITION_CONTAINED_BY : 0)
+		};
+
+		expect(fragmentContains(fragment, node)).toBe(true);
+		expect(fragmentContains(fragment, document.createElement('div'))).toBe(false);
+		expect(fragmentContains(null, node)).toBe(false);
 	});
 });
