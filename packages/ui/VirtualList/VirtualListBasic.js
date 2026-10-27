@@ -922,51 +922,61 @@ class VirtualListBasic extends Component {
 
 	// scroll mode 'native' only
 	animateScroll (left, top, node) {
-		// Cancel the ongoing animation so that only one animation loop drives the scroll.
-		// Otherwise, when frames are delayed (e.g. holding a 5-way key while the device is busy),
-		// a stale loop keeps scrolling toward its old target and its timeout fallback overrides the latest target.
+		// Retarget the ongoing animation instead of starting another loop so that only one loop drives the scroll.
+		// Concurrent loops keep scrolling toward their own old targets, and when frames are delayed
+		// (e.g. holding a 5-way key while the device is busy), their timeout fallbacks override the latest target.
+		// Keeping the loop alive also keeps `scrolling` true, so `onScrollStop` is not fired in the middle of a key repeat.
+		this.scrollAnimationTarget = {left, top};
+		this.scrollAnimationStartTime = performance.now();
+
 		if (this.scrollAnimationId) {
-			this.cancelScrollAnimation();
+			return;
 		}
 
-		// Determine the direction of scroll (1 for forward/down, -1 for backward/up, 0 for no movement)
-		const directionX = Math.sign(left - node.scrollLeft);
-		const directionY = Math.sign(top - node.scrollTop);
-
-		// Calculate an adaptive scroll factor (pixels per frame).
-		// It uses the average item size (gridSize) to ensure the speed feels consistent.
-		const scrollFactor = Math.max(this.primary.gridSize / 12, 2);
-		const startTime = performance.now();
-
-		// Progressively scrolls the node toward a target position using requestAnimationFrame.
+		// Progressively scrolls the node toward the latest target position using requestAnimationFrame.
 		// It applies an incremental scroll on each frame and cancels the animation once
-		// the target is reached or the duration (500ms) is exceeded, falling back to
+		// the target is reached or the duration (500ms since the latest request) is exceeded, falling back to
 		// a smooth scroll if the timeout occurs first.
 		const animateScroll = (currentTime) => {
-			const elapsed = (currentTime - startTime) / 500;
+			const {left: targetLeft, top: targetTop} = this.scrollAnimationTarget;
+			const elapsed = (currentTime - this.scrollAnimationStartTime) / 500;
+			const distanceX = targetLeft - node.scrollLeft;
+			const distanceY = targetTop - node.scrollTop;
+
+			// Determine the direction of scroll (1 for forward/down, -1 for backward/up, 0 for no movement)
+			const directionX = Math.sign(distanceX);
+			const directionY = Math.sign(distanceY);
+
+			// Calculate an adaptive scroll factor (pixels per frame) for each item left to scroll.
+			// It uses the average item size (gridSize) to ensure the speed feels consistent,
+			// and speeds up while the target is several items away (e.g. holding a 5-way key) to keep up with the focus.
+			const gridSize = Math.max(this.primary.gridSize, 1);
+			const scrollFactor = Math.max(gridSize / 12, 2);
+			const speedX = scrollFactor * Math.max(Math.ceil(Math.abs(distanceX) / gridSize), 1);
+			const speedY = scrollFactor * Math.max(Math.ceil(Math.abs(distanceY) / gridSize), 1);
 
 			// Clamp each step to the remaining distance so the final frame lands exactly on the target
 			// instead of overshooting by up to `scrollFactor`. Overshooting would push a focused item
 			// anchored to the start edge (e.g. `stickTo="start"`) past that edge and clip it.
-			const stepX = directionX === 0 ? 0 : directionX * Math.min(scrollFactor, Math.abs(left - node.scrollLeft));
-			const stepY = directionY === 0 ? 0 : directionY * Math.min(scrollFactor, Math.abs(top - node.scrollTop));
+			const stepX = directionX * Math.min(speedX, Math.abs(distanceX));
+			const stepY = directionY * Math.min(speedY, Math.abs(distanceY));
 
 			node.scrollBy({top: stepY, left: stepX, behavior: 'instant'});
 			this.scrollAnimationId = window.requestAnimationFrame(animateScroll);
 			this.scrolling = true;
 
-			const scrollHorizontally = directionX > 0 ? node.scrollLeft < left : node.scrollLeft > left;
-			const scrollVertically = directionY > 0 ? node.scrollTop < top : node.scrollTop > top;
-			const targetReached = node.scrollLeft === left && node.scrollTop === top;
+			const scrollHorizontally = directionX > 0 ? node.scrollLeft < targetLeft : node.scrollLeft > targetLeft;
+			const scrollVertically = directionY > 0 ? node.scrollTop < targetTop : node.scrollTop > targetTop;
+			const targetReached = node.scrollLeft === targetLeft && node.scrollTop === targetTop;
 
 			// Check if we've reached the needed scroll position
-			// or the elapsed time since startTime is longer than 0.5s and cancel the animation
+			// or the elapsed time since the latest request is longer than 0.5s and cancel the animation
 			if (!scrollHorizontally && !scrollVertically || elapsed > 1) {
 				this.cancelScrollAnimation();
 
 				// Fallback: if time is out before reaching the target, jump there with smooth scroll
 				if (elapsed > 1 && !targetReached) {
-					node.scrollTo({top, left, behavior: 'smooth'});
+					node.scrollTo({top: targetTop, left: targetLeft, behavior: 'smooth'});
 				}
 			}
 		};
