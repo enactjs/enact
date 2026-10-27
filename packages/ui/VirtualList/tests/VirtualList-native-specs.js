@@ -275,15 +275,69 @@ describe('VirtualList with native scrollMode', () => {
 			expect(window.cancelAnimationFrame).toHaveBeenCalled();
 		});
 
-		test('should cancel the ongoing animation before starting a new one', () => {
-			let id = 0;
-			window.requestAnimationFrame.mockImplementation(() => ++id);
+		describe('with a request during the ongoing animation', () => {
+			beforeEach(() => {
+				node.scrollBy.mockImplementation(({left, top}) => {
+					node.scrollLeft += left;
+					node.scrollTop += top;
+				});
+				instance.primary.gridSize = 120;
+			});
 
-			instance.animateScroll(0, 300, node);
-			instance.animateScroll(0, 600, node);
+			test('should retarget the ongoing animation instead of starting a new one', () => {
+				instance.animateScroll(0, 120, node);
+				instance.rafCallback(16);
+				instance.animateScroll(0, 240, node);
 
-			expect(window.cancelAnimationFrame).toHaveBeenCalledWith(1);
-			expect(instance.scrollAnimationId).toBe(2);
+				expect(window.requestAnimationFrame).toHaveBeenCalledTimes(2);
+				expect(window.cancelAnimationFrame).not.toHaveBeenCalled();
+				expect(instance.scrolling).toBe(true);
+			});
+
+			test('should reach the latest target', () => {
+				instance.animateScroll(0, 120, node);
+				instance.rafCallback(16);
+				instance.animateScroll(0, 240, node);
+
+				for (let i = 0; i < 30 && instance.scrollAnimationId; i++) {
+					instance.rafCallback(32 + i * 16);
+				}
+
+				expect(node.scrollTop).toBe(240);
+				expect(instance.scrolling).toBe(false);
+			});
+
+			test('should fall back to the latest target if the animation exceeds duration (timeout)', () => {
+				instance.animateScroll(0, 120, node);
+				instance.animateScroll(0, 240, node);
+				instance.rafCallback(600);
+
+				expect(node.scrollTo).toHaveBeenCalledWith({left: 0, top: 240, behavior: 'smooth'});
+				expect(node.scrollTo).not.toHaveBeenCalledWith({left: 0, top: 120, behavior: 'smooth'});
+			});
+
+			test('should restart the timeout on the latest request', () => {
+				instance.animateScroll(0, 120, node);
+				performance.now.mockReturnValue(400);
+				instance.animateScroll(0, 240, node);
+				instance.rafCallback(600);
+
+				expect(node.scrollTo).not.toHaveBeenCalledWith(expect.objectContaining({behavior: 'smooth'}));
+			});
+
+			test('should scroll faster while the target is several items away', () => {
+				instance.animateScroll(0, 120, node);
+				instance.rafCallback(16);
+
+				// 10 = gridSize (120) / 12 per item left to scroll
+				expect(node.scrollTop).toBe(10);
+
+				instance.animateScroll(0, 360, node);
+				instance.rafCallback(32);
+
+				// 350px (3 items) left
+				expect(node.scrollTop).toBe(40);
+			});
 		});
 	});
 });
