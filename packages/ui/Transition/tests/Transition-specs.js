@@ -129,6 +129,19 @@ describe('Transition Specs', () => {
 		expect(actual).toMatchObject(expectedType);
 	});
 
+	test('should fire the latest \'onShow\' handler when it changes along with \'visible\' and noAnimation', () => {
+		const firstHandleShow = jest.fn();
+		const latestHandleShow = jest.fn();
+
+		const {rerender} = render(<Transition noAnimation onShow={firstHandleShow} visible={false}>Body</Transition>);
+		rerender(<Transition noAnimation onShow={latestHandleShow} visible>Body</Transition>);
+
+		const expected = 1;
+
+		expect(firstHandleShow).not.toHaveBeenCalled();
+		expect(latestHandleShow).toHaveBeenCalledTimes(expected);
+	});
+
 	// Tests for prop and className combinations
 	const directionCombination = [
 		['up', 'up'],
@@ -256,6 +269,21 @@ describe('Transition Specs', () => {
 		const expected = 1;
 
 		expect(handleTransitionEnd).toHaveBeenCalledTimes(expected);
+	});
+
+	test('should fire the latest \'onShow\' handler on transitionend after it changes', () => {
+		const firstHandleShow = jest.fn();
+		const latestHandleShow = jest.fn();
+
+		const {rerender} = render(<Transition onShow={firstHandleShow} visible>Body</Transition>);
+		rerender(<Transition onShow={latestHandleShow} visible>Body</Transition>);
+
+		fireEvent.transitionEnd(screen.getByText('Body'));
+
+		const expected = 1;
+
+		expect(firstHandleShow).not.toHaveBeenCalled();
+		expect(latestHandleShow).toHaveBeenCalledTimes(expected);
 	});
 
 	// The main accordion/header path: animated clip transition driven by `transitionend`
