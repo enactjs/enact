@@ -423,4 +423,22 @@ describe('VirtualListBasic scrollBounds consistency after item margin detection'
 		});
 		expect(instance.scrollBounds.scrollHeight).toBe(expected);
 	});
+
+	test('should grow scrollHeight to the last known item bottom but never shrink it when item positions are partially known', () => {
+		const itemSizes = Array.from({length: 100}, (_, i) => 30 + i);
+		const {ref} = renderVirtualListBasic({itemSizes});
+		const instance = ref.current;
+		const lastIndex = instance.state.firstIndex + instance.state.numOfItems - 1;
+		const lastBottom = instance.itemPositions[lastIndex].position + itemSizes[lastIndex];
+
+		expect(instance.itemPositions.length).toBeLessThan(itemSizes.length);
+
+		instance.scrollBounds.scrollHeight = 0;
+		instance.updateScrollBoundsWithItemPositions();
+		expect(instance.scrollBounds.scrollHeight).toBe(lastBottom);
+
+		instance.scrollBounds.scrollHeight = lastBottom + 1000;
+		instance.updateScrollBoundsWithItemPositions();
+		expect(instance.scrollBounds.scrollHeight).toBe(lastBottom + 1000);
+	});
 });
