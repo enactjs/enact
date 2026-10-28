@@ -294,7 +294,6 @@ describe('VirtualListBasic scrollBounds consistency after item margin detection'
 				clientSize={{clientWidth: 1280, clientHeight: 720}}
 				dataSize={100}
 				direction={direction}
-				getAffordance={() => 0}
 				itemRefs={itemRefs}
 				itemRenderer={({index, ...rest2}) => <div {...rest2} data-index={index} />}
 				itemSize={30}
@@ -389,5 +388,39 @@ describe('VirtualListBasic scrollBounds consistency after item margin detection'
 		});
 
 		expect(instance.scrollBounds.scrollWidth - instance.scrollBounds.maxLeft).toBe(instance.props.clientSize.clientWidth);
+	});
+
+	test('should include the item margin in scrollHeight after scroll bounds are recalculated', () => {
+		const {ref} = renderVirtualListBasic();
+		const instance = ref.current;
+
+		const marginTop = 10;
+		const marginBottom = 5;
+
+		window.getComputedStyle = (el) => {
+			if (el === instance.props.itemRefs.current[0]) {
+				return {
+					getPropertyValue: (prop) => {
+						if (prop === 'margin-top') return `${marginTop}px`;
+						if (prop === 'margin-bottom') return `${marginBottom}px`;
+						return '0px';
+					}
+				};
+			}
+			return originalGetComputedStyle(el);
+		};
+
+		instance.itemMarginTop = null;
+		act(() => {
+			instance.forceUpdate();
+		});
+
+		const expected = instance.getVirtualScrollDimension() + marginTop + marginBottom;
+		expect(instance.scrollBounds.scrollHeight).toBe(expected);
+
+		act(() => {
+			instance.calculateScrollBounds(instance.props);
+		});
+		expect(instance.scrollBounds.scrollHeight).toBe(expected);
 	});
 });

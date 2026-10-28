@@ -154,14 +154,6 @@ class VirtualListBasic extends Component {
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * Called to get the scroll affordance from themed component.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		getAffordance: PropTypes.func,
-
-		/**
 		 * Called to get the props for list items.
 		 *
 		 * @type {Function}
@@ -284,7 +276,6 @@ class VirtualListBasic extends Component {
 		cbScrollTo: nop,
 		dataSize: 0,
 		direction: 'vertical',
-		getAffordance: () => (0),
 		overhang: 3,
 		pageScroll: false,
 		scrollMode: 'translate',
@@ -357,15 +348,7 @@ class VirtualListBasic extends Component {
 			this.itemMarginBottom = Number(firstItemStyle.getPropertyValue('margin-bottom').slice(0, -2));
 			this.itemMarginLeft = Number(firstItemStyle.getPropertyValue('margin-left').slice(0, -2));
 			this.itemMarginRight = Number(firstItemStyle.getPropertyValue('margin-right').slice(0, -2));
-			if (this.isPrimaryDirectionVertical) {
-				const marginSum = this.itemMarginTop + this.itemMarginBottom;
-				this.scrollBounds.scrollHeight += marginSum;
-				this.scrollBounds.maxTop += marginSum;
-			} else {
-				const marginSum = this.itemMarginLeft + this.itemMarginRight;
-				this.scrollBounds.scrollWidth += marginSum;
-				this.scrollBounds.maxLeft += marginSum;
-			}
+			this.calculateScrollBounds(this.props);
 			this.setContainerSize();
 		}
 
@@ -1297,9 +1280,9 @@ class VirtualListBasic extends Component {
 		}
 	}
 
-	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() + this.props.getAffordance() : this.scrollBounds.clientHeight);
+	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() + this.itemMarginTop + this.itemMarginBottom : this.scrollBounds.clientHeight);
 
-	getScrollWidth = () => (this.isPrimaryDirectionVertical ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension());
+	getScrollWidth = () => (this.isPrimaryDirectionVertical ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension() + this.itemMarginLeft + this.itemMarginRight);
 
 	getVirtualScrollDimension = () => {
 		if (this.props.itemSizes) {
@@ -1356,7 +1339,6 @@ class VirtualListBasic extends Component {
 		delete rest.clientSize;
 		delete rest.dataSize;
 		delete rest.direction;
-		delete rest.getAffordance;
 		delete rest.getComponentProps;
 		delete rest.isHorizontalScrollbarVisible;
 		delete rest.isVerticalScrollbarVisible;
