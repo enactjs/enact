@@ -16,6 +16,13 @@ import {useEffect, useState} from 'react';
 import {I18nContextDecorator} from '../I18nDecorator';
 import {createResBundle, getIStringFromBundle, getResBundle} from '../src/resBundle';
 
+function translateTextMap (map, resBundle) {
+	return Object.keys(map).reduce((obj, prop) => {
+		obj[prop].translated = String(getIStringFromBundle(obj[prop].text, resBundle));
+		return obj;
+	}, {...map});
+}
+
 function getTextMap (mapPropsToText, props) {
 	const {children, defaultText} = props;
 
@@ -142,10 +149,7 @@ const TextDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			]).then(([resBundle]) => {
 				if (!active || !resBundle) return;
 
-				setMap(prevMap => Object.keys(prevMap).reduce((obj, prop) => {
-					obj[prop].translated = String(getIStringFromBundle(obj[prop].text, resBundle));
-					return obj;
-				}, {...prevMap}));
+				setMap(prevMap => translateTextMap(prevMap, resBundle));
 			});
 
 			return () => {

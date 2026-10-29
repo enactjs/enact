@@ -133,6 +133,7 @@ export const ResolutionDecorator_ = (args) => {
 	const View = ResolutionDecorator(resolutionConfig, ResolutionDecoratorView);
 
 	return (
+		// eslint-disable-next-line react-hooks/static-components -- intentional, see the comment above
 		<View
 			args={args}
 			currentFontSize={screenInfo.currentFontSize}

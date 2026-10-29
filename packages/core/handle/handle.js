@@ -215,7 +215,7 @@ const handle = function (...handlers) {
 
 	fn.finally = function (cleanup) {
 		return decorateHandleFunction(function handleWithFinally (ev, props, context) {
-			let result = false;
+			let result;
 
 			if (hasPropsAndContext(this)) {
 				props = this.props;
