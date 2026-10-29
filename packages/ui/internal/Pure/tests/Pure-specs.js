@@ -104,7 +104,9 @@ describe('Pure', () => {
 
 		const actual = screen.getByTestId('baseComponent');
 		expect(actual).toHaveTextContent('CountRenders: 1');
-		expect(data.ref).toBeUndefined();
+		// Class components never receive `ref` on `this.props`, so assert on the ref
+		// itself. A forwarded ref would hold the Base instance.
+		expect(ref.current).toBeNull();
 	});
 
 	test('should update wrapped component when the number of props changes', () => {
