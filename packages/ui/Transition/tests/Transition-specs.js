@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import {act, fireEvent, render, screen} from '@testing-library/react';
+import {startTransition, Suspense, use} from 'react';
 
 import {ResizeContext} from '../../Resizable';
 import Transition, {TransitionBase} from '../Transition';
@@ -140,6 +141,19 @@ describe('Transition Specs', () => {
 
 		expect(firstHandleShow).not.toHaveBeenCalled();
 		expect(latestHandleShow).toHaveBeenCalledTimes(expected);
+	});
+
+	test('should fire the latest \'onHide\' handler when it changes along with \'visible\' and noAnimation', () => {
+		const firstHandleHide = jest.fn();
+		const latestHandleHide = jest.fn();
+
+		const {rerender} = render(<Transition noAnimation onHide={firstHandleHide} visible>Body</Transition>);
+		rerender(<Transition noAnimation onHide={latestHandleHide} visible={false}>Body</Transition>);
+
+		const expected = 1;
+
+		expect(firstHandleHide).not.toHaveBeenCalled();
+		expect(latestHandleHide).toHaveBeenCalledTimes(expected);
 	});
 
 	// Tests for prop and className combinations
@@ -284,6 +298,73 @@ describe('Transition Specs', () => {
 
 		expect(firstHandleShow).not.toHaveBeenCalled();
 		expect(latestHandleShow).toHaveBeenCalledTimes(expected);
+	});
+
+	test('should fire the latest \'onHide\' handler on transitionend when it changes along with \'visible\'', () => {
+		const firstHandleHide = jest.fn();
+		const latestHandleHide = jest.fn();
+
+		const {rerender} = render(<Transition onHide={firstHandleHide} visible>Body</Transition>);
+		rerender(<Transition onHide={latestHandleHide} visible={false}>Body</Transition>);
+
+		fireEvent.transitionEnd(screen.getByText('Body'));
+
+		const expected = 1;
+
+		expect(firstHandleHide).not.toHaveBeenCalled();
+		expect(latestHandleHide).toHaveBeenCalledTimes(expected);
+	});
+
+	// A transition update that suspends keeps the committed UI on screen and throws away the
+	// render of `Transition` with the new handler. `transitionend` must use the committed handler.
+	describe('with a discarded render', () => {
+		const never = new Promise(() => {});
+		const Suspender = ({suspend}) => (suspend ? use(never) : null);
+
+		const renderDiscarded = async (rerender, ui) => {
+			await act(async () => {
+				startTransition(() => {
+					rerender(<Suspense fallback="Loading">{ui}<Suspender suspend /></Suspense>);
+				});
+			});
+		};
+
+		test('should fire the committed \'onShow\' handler on transitionend', async () => {
+			const committedHandleShow = jest.fn();
+			const discardedHandleShow = jest.fn();
+
+			const {rerender} = render(
+				<Suspense fallback="Loading"><Transition onShow={committedHandleShow} visible>Body</Transition></Suspense>
+			);
+			await renderDiscarded(rerender, <Transition onShow={discardedHandleShow} visible>Body</Transition>);
+
+			fireEvent.transitionEnd(screen.getByText('Body'));
+
+			const expected = 1;
+
+			expect(discardedHandleShow).not.toHaveBeenCalled();
+			expect(committedHandleShow).toHaveBeenCalledTimes(expected);
+		});
+
+		test('should fire the committed \'onHide\' handler on transitionend', async () => {
+			const committedHandleHide = jest.fn();
+			const discardedHandleHide = jest.fn();
+
+			const {rerender} = render(
+				<Suspense fallback="Loading"><Transition onHide={committedHandleHide} visible>Body</Transition></Suspense>
+			);
+			rerender(
+				<Suspense fallback="Loading"><Transition onHide={committedHandleHide} visible={false}>Body</Transition></Suspense>
+			);
+			await renderDiscarded(rerender, <Transition onHide={discardedHandleHide} visible={false}>Body</Transition>);
+
+			fireEvent.transitionEnd(screen.getByText('Body'));
+
+			const expected = 1;
+
+			expect(discardedHandleHide).not.toHaveBeenCalled();
+			expect(committedHandleHide).toHaveBeenCalledTimes(expected);
+		});
 	});
 
 	// The main accordion/header path: animated clip transition driven by `transitionend`

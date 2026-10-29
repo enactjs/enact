@@ -15,7 +15,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/Transition` to fire `onShow` and `onHide` with the props of the committed render
+- `ui/Transition` to call the `onShow` and `onHide` handlers from the committed render instead of a discarded one
 
 ## [5.6.0] - 2026-09-02
 
