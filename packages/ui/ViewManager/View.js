@@ -2,8 +2,8 @@
  * Exports the {@link ui/ViewManager.View} component.
  */
 
-import {checkPropTypes, Job} from '@enact/core/util';
-import {cloneElement, Children, Component} from 'react';
+import {checkPropTypes, Job, setDefaultProps} from '@enact/core/util';
+import {cloneElement, Children, useState, useRef, useEffect, useCallback, useImperativeHandle, memo, useMemo, useLayoutEffect} from 'react';
 import PropTypes from 'prop-types';
 
 import {shape} from './Arranger';
@@ -11,256 +11,65 @@ import {shape} from './Arranger';
 // If the View was "appearing", then entering will always be false and this will not result in a
 // re-render. If the view should enter, state.enter will be true and this will toggle it to false
 // causing a re-render.
-const clearEntering = ({entering}) => {
-	return entering ? {entering: false} : null;
+const clearEntering = (state) => {
+	return state.entering ? {entering: false} : state;
 };
+
+const viewDefaultProps = {
+	appearing: false,
+	enteringDelay: 0,
+	index: 0,
+	reverseTransition: false
+};
+
+/**
+ * Renders the child component for {@link ui/ViewManager.View}, keeping the output
+ * frozen during leave transitions.
+ *
+ * @function ViewChild
+ * @memberof ui/ViewManager
+ * @private
+ */
+const ViewChild = memo(({childProps, children, entering, enteringProp}) => {
+	if (enteringProp || childProps) {
+		const localProps = Object.assign({}, childProps);
+		if (enteringProp) {
+			localProps[enteringProp] = entering;
+		}
+
+		return cloneElement(children, localProps);
+	} else {
+		return Children.only(children);
+	}
+}, (prevProps, nextProps) => Boolean(nextProps.leaving));
 
 /**
  * A `View` wraps a set of children for {@link ui/ViewManager.ViewManager}.
  * It is not intended to be used directly
  *
- * @class View
+ * @function View
  * @memberof ui/ViewManager
  * @private
  */
-class View extends Component {
-	static propTypes = /** @lends ui/ViewManager.View.prototype */ {
-		children: PropTypes.node.isRequired,
+const View = (componentProps) => {
+	const props = setDefaultProps(componentProps, viewDefaultProps);
+	checkPropTypes(View, props);
 
-		/**
-		 * Time in milliseconds to complete a transition
-		 *
-		 * @type {Number}
-		 * @required
-		 * @public
-		 */
-		duration: PropTypes.number.isRequired,
+	const [state, setState] = useState({entering: !props.appearing});
 
-		/**
-		 * Set to `true` when the View should 'appear' without transitioning into the viewport
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		appearing: PropTypes.bool,
+	const enteringJob = useMemo(() => new Job(() => {
+		setState(clearEntering);
+	}), []);
 
-		/**
-		 * Arranger to control the animation
-		 *
-		 * @type {Arranger}
-		 * @public
-		 */
-		arranger: shape,
+	const animation = useRef(null);
+	const changeDirection = useRef(false);
+	const node = useRef(null);
+	const previousProps = useRef(props);
+	const propsRef = useRef(props);
 
-		/**
-		 * An object containing properties to be passed to each child.
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		childProps: PropTypes.object,
-
-		/**
-		 * Time, in milliseconds, to wait after a view has entered to inform it by passing the
-		 * `enteringProp` as `false`.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		enteringDelay: PropTypes.number,
-
-		/**
-		 * Name of the property to pass to the wrapped view to indicate when it is entering the
-		 * viewport. When `true`, the view has been created but has not transitioned into place.
-		 * When `false`, the view has finished its transition.
-		 *
-		 * The notification can be delayed by setting `enteringDelay`. If not set, the view will not
-		 * be notified of the change in transition.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		enteringProp: PropTypes.string,
-
-		/**
-		 * A getter function for a DOM node of the parent element
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		getParentRef: PropTypes.func,
-
-		/**
-		 * Index of the currently 'active' view.
-		 *
-		 * @type {Number}
-		 */
-		index: PropTypes.number,
-
-		/**
-		 * When `true`, indicates if a view is currently leaving.
-		 *
-		 * @type {Boolean}
-		 */
-		leaving: PropTypes.bool,
-
-		/**
-		 * When `true`, indicates if the transition should be animated
-		 *
-		 * @type {Boolean}
-		 * @default true
-		 * @public
-		 */
-		noAnimation: PropTypes.bool,
-
-		/**
-		 * Index of the previously 'active' view.
-		 *
-		 * @type {Number}
-		 */
-		previousIndex: PropTypes.number,
-
-		/**
-		 * Index of the view node among the rendered children of the parent node
-		 *
-		 * @type {Number}
-		 * @private
-		 */
-		renderedIndex: PropTypes.number,
-
-		/**
-		 * When `true`, indicates if the transition should be reversed. The effect depends on how the provided
-		 * `arranger` handles reversal.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 */
-		reverseTransition: PropTypes.bool,
-
-		/**
-		 * When `true`, indicates the current locale uses right-to-left reading order.
-		 *
-		 * The effect depends on how the provided `arranger` handles this option.
-		 *
-		 * @type {Boolean}
-		 */
-		rtl: PropTypes.bool
-	};
-
-	static defaultProps = {
-		appearing: false,
-		enteringDelay: 0,
-		index: 0,
-		reverseTransition: false
-	};
-
-	constructor (props) {
-		super(props);
-		checkPropTypes(this, props);
-
-		this.animation = null;
-		this.state = {
-			entering: !props.appearing
-		};
-	}
-
-	shouldComponentUpdate (nextProps) {
-		if (nextProps.leaving) {
-			// FIXME: This is generally a bad practice to mutate local state in sCU but is necessary
-			// for the time being to ensure that a view that is reversed before it completes
-			// entering will transition correctly out of the viewport.
-			this.changeDirection = this.shouldChangeDirection(this.props, nextProps);
-			return false;
-		}
-
-		return true;
-	}
-
-	componentDidUpdate (prevProps) {
-		checkPropTypes(this, this.props, prevProps);
-		this.changeDirection = this.shouldChangeDirection(prevProps, this.props);
-	}
-
-	componentWillUnmount () {
-		this.enteringJob.stop();
-		this.node = null;
-		if (this.animation && typeof this.animation.cancel === 'function') {
-			this.animation.cancel();
-		}
-	}
-
-	shouldChangeDirection (prevProps, nextProps) {
-		return this.animation ? prevProps.reverseTransition !== nextProps.reverseTransition : false;
-	}
-
-	enteringJob = new Job(() => {
-		this.setState(clearEntering);
-	});
-
-	componentWillAppear (callback) {
-		const {arranger} = this.props;
-		if (arranger && arranger.stay) {
-			this.prepareTransition(arranger.stay, callback, true);
-		} else {
-			callback();
-		}
-	}
-
-	componentDidAppear () {
-		this.setState(clearEntering);
-	}
-
-	// This is called at the same time as componentDidMount() for components added to an existing
-	// TransitionGroup. It will block other animations from occurring until callback is called. It
-	// will not be called on the initial render of a TransitionGroup.
-	componentWillEnter (callback) {
-		const {appearing, arranger, reverseTransition, enteringProp} = this.props;
-		// This can happen if the panel was going to be removed and the animation was canceled,
-		// causing this panel to re-enter.
-		if (!appearing && enteringProp && !this.state.entering) {
-			this.setState({entering: true});
-		}
-		if (arranger) {
-			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
-		} else {
-			callback();
-		}
-	}
-
-	componentDidEnter () {
-		const {enteringDelay, enteringProp} = this.props;
-
-		if (enteringProp) {
-			// FIXME: `startRafAfter` is a temporary solution using rAF. We need a better way to handle
-			// transition cycle and component life cycle to be in sync. See ENYO-4835.
-			this.enteringJob.startRafAfter(enteringDelay);
-		} else {
-			this.enteringJob.start();
-		}
-	}
-
-	componentWillStay (callback) {
-		const {arranger} = this.props;
-		if (arranger && arranger.stay) {
-			this.prepareTransition(arranger.stay, callback);
-		} else {
-			callback();
-		}
-	}
-
-	// This is called when the child has been removed from the ReactTransitionGroup. Though the
-	// child has been removed, ReactTransitionGroup will keep it in the DOM until callback is
-	// called.
-	componentWillLeave (callback) {
-		const {arranger, reverseTransition} = this.props;
-		this.enteringJob.stop();
-		if (arranger) {
-			this.prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback);
-		} else {
-			callback();
-		}
-	}
+	const shouldChangeDirection = useCallback((prevProps, nextProps) => {
+		return animation.current ? prevProps.reverseTransition !== nextProps.reverseTransition : false;
+	}, []);
 
 	/**
 	 * Initiates a new transition
@@ -271,19 +80,19 @@ class View extends Component {
 	 * @returns {undefined}
 	 * @private
 	 */
-	prepareTransition = (arranger, callback, noAnimation) => {
-		const {duration, getParentRef, index, previousIndex = index, renderedIndex = 0, reverseTransition, rtl} = this.props;
+	const prepareTransition = useCallback((arranger, callback, noAnimation) => {
+		const {duration, getParentRef, index, previousIndex = index, renderedIndex = 0, reverseTransition, rtl} = propsRef.current;
 
 		// Need to ensure that we have a valid node reference before we animation. Sometimes, React
 		// will replace the node after mount causing a reference cached there to be invalid.
-		this.node = getParentRef?.()?.children?.[renderedIndex];
+		node.current = getParentRef?.()?.children?.[renderedIndex];
 
-		if (this.animation && this.animation.playState !== 'finished' && this.changeDirection) {
-			this.animation.reverse();
+		if (animation.current && animation.current.playState !== 'finished' && changeDirection.current) {
+			animation.current.reverse();
 		} else {
-			this.animation = arranger({
+			animation.current = arranger({
 				from: previousIndex,
-				node: this.node,
+				node: node.current,
 				reverse: reverseTransition,
 				rtl,
 				to: index,
@@ -293,36 +102,241 @@ class View extends Component {
 		}
 
 		// Must set a new handler here to ensure the right callback is invoked
-		this.animation.onfinish = () => {
-			this.animation = null;
+		animation.current.onfinish = () => {
+			animation.current = null;
 			// Possible for the animation callback to still be fired after the node has been
 			// unmounted if it finished before the unmount can cancel it so we check for that.
-			if (this.node) {
+			if (node.current) {
 				callback();
 			}
 		};
 
 		// disable animation when the instance or props flag is true
-		if (noAnimation || this.props.noAnimation) {
-			this.animation.finish();
+		if (noAnimation || propsRef.current.noAnimation) {
+			animation.current.finish();
 		}
-	};
+	}, []);
 
-	render () {
-		const {enteringProp, children, childProps} = this.props;
-
-		if (enteringProp || childProps) {
-			const props = Object.assign({}, childProps);
-			if (enteringProp) {
-				props[enteringProp] = this.state.entering;
+	useImperativeHandle(props.ref, () => ({
+		componentWillAppear (callback) {
+			const {arranger} = propsRef.current;
+			if (arranger && arranger.stay) {
+				prepareTransition(arranger.stay, callback, true);
+			} else {
+				callback();
 			}
+		},
 
-			return cloneElement(children, props);
-		} else {
-			return Children.only(children);
+		componentDidAppear () {
+			setState(clearEntering);
+		},
+
+		// This is called at the same time as componentDidMount() for components added to an existing
+		// TransitionGroup. It will block other animations from occurring until callback is called. It
+		// will not be called on the initial render of a TransitionGroup.
+		componentWillEnter (callback) {
+			const {appearing, arranger, reverseTransition, enteringProp} = propsRef.current;
+			// This can happen if the panel was going to be removed and the animation was canceled,
+			// causing this panel to re-enter.
+			if (!appearing && enteringProp && !state.entering) {
+				setState({entering: true});
+			}
+			if (arranger) {
+				prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
+			} else {
+				callback();
+			}
+		},
+
+		componentDidEnter () {
+			const {enteringDelay, enteringProp} = propsRef.current;
+
+			if (enteringProp) {
+				// FIXME: `startRafAfter` is a temporary solution using rAF. We need a better way to handle
+				// transition cycle and component life cycle to be in sync. See ENYO-4835.
+				enteringJob.startRafAfter(enteringDelay);
+			} else {
+				enteringJob.start();
+			}
+		},
+
+		componentWillStay (callback) {
+			const {arranger} = propsRef.current;
+			if (arranger && arranger.stay) {
+				prepareTransition(arranger.stay, callback);
+			} else {
+				callback();
+			}
+		},
+
+		// This is called when the child has been removed from the ReactTransitionGroup. Though the
+		// child has been removed, ReactTransitionGroup will keep it in the DOM until callback is
+		// called.
+		componentWillLeave (callback) {
+			const {arranger, reverseTransition} = propsRef.current;
+			enteringJob.stop();
+			if (arranger) {
+				prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback);
+			} else {
+				callback();
+			}
 		}
-	}
-}
+	}), [enteringJob, prepareTransition, state.entering]);
+
+	useLayoutEffect(() => {
+		propsRef.current = props;
+	});
+
+	useLayoutEffect(() => {
+		changeDirection.current = shouldChangeDirection(previousProps.current, props);
+		previousProps.current = props;
+	}, [props, shouldChangeDirection]);
+
+	useEffect(() => {
+		return () => {
+			enteringJob.stop();
+			node.current = null;
+			if (animation.current && typeof animation.current.cancel === 'function') {
+				animation.current.cancel();
+			}
+		};
+	}, [enteringJob]);
+
+	return (
+		<ViewChild
+			childProps={props.childProps}
+			entering={state.entering}
+			enteringProp={props.enteringProp}
+			leaving={props.leaving}
+		>
+			{props.children}
+		</ViewChild>
+	);
+};
+
+View.propTypes = /** @lends ui/ViewManager.View.prototype */ {
+	children: PropTypes.node.isRequired,
+
+	/**
+	 * Time in milliseconds to complete a transition
+	 *
+	 * @type {Number}
+	 * @required
+	 * @public
+	 */
+	duration: PropTypes.number.isRequired,
+
+	/**
+	 * Set to `true` when the View should 'appear' without transitioning into the viewport
+	 *
+	 * @type {Boolean}
+	 * @public
+	 */
+	appearing: PropTypes.bool,
+
+	/**
+	 * Arranger to control the animation
+	 *
+	 * @type {Arranger}
+	 * @public
+	 */
+	arranger: shape,
+
+	/**
+	 * An object containing properties to be passed to each child.
+	 *
+	 * @type {Object}
+	 * @public
+	 */
+	childProps: PropTypes.object,
+
+	/**
+	 * Time, in milliseconds, to wait after a view has entered to inform it by passing the
+	 * `enteringProp` as `false`.
+	 *
+	 * @type {Number}
+	 * @default 0
+	 * @public
+	 */
+	enteringDelay: PropTypes.number,
+
+	/**
+	 * Name of the property to pass to the wrapped view to indicate when it is entering the
+	 * viewport. When `true`, the view has been created but has not transitioned into place.
+	 * When `false`, the view has finished its transition.
+	 *
+	 * The notification can be delayed by setting `enteringDelay`. If not set, the view will not
+	 * be notified of the change in transition.
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	enteringProp: PropTypes.string,
+
+	/**
+	 * A getter function for a DOM node of the parent element
+	 *
+	 * @type {Function}
+	 * @private
+	 */
+	getParentRef: PropTypes.func,
+
+	/**
+	 * Index of the currently 'active' view.
+	 *
+	 * @type {Number}
+	 */
+	index: PropTypes.number,
+
+	/**
+	 * When `true`, indicates if a view is currently leaving.
+	 *
+	 * @type {Boolean}
+	 */
+	leaving: PropTypes.bool,
+
+	/**
+	 * When `true`, indicates if the transition should be animated
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 * @public
+	 */
+	noAnimation: PropTypes.bool,
+
+	/**
+	 * Index of the previously 'active' view.
+	 *
+	 * @type {Number}
+	 */
+	previousIndex: PropTypes.number,
+
+	/**
+	 * Index of the view node among the rendered children of the parent node
+	 *
+	 * @type {Number}
+	 * @private
+	 */
+	renderedIndex: PropTypes.number,
+
+	/**
+	 * When `true`, indicates if the transition should be reversed. The effect depends on how the provided
+	 * `arranger` handles reversal.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	reverseTransition: PropTypes.bool,
+
+	/**
+	 * When `true`, indicates the current locale uses right-to-left reading order.
+	 *
+	 * The effect depends on how the provided `arranger` handles this option.
+	 *
+	 * @type {Boolean}
+	 */
+	rtl: PropTypes.bool
+};
 
 // Not a true render method but instead a wrapper for TransitionGroup to wrap arbitrary children
 // with a TransitionGroup-compatible child that supports animation
