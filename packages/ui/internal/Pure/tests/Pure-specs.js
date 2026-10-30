@@ -1,7 +1,7 @@
 import {checkPropTypes} from '@enact/core/util';
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
-import {Component} from 'react';
+import {Component, createRef} from 'react';
 import PropTypes from 'prop-types';
 
 import Pure from '../Pure';
@@ -38,6 +38,19 @@ class Base extends Component {
 	}
 }
 
+class LooseBase extends Component {
+	constructor (props) {
+		super(props);
+		this.countRenders = 0;
+	}
+
+	render () {
+		this.countRenders++;
+
+		return <div data-testid="baseComponent">CountRenders: {this.countRenders}</div>;
+	}
+}
+
 const PureComponent = Pure(Base);
 
 describe('Pure', () => {
@@ -60,6 +73,46 @@ describe('Pure', () => {
 		const {rerender} = render(<PureComponent value={1} />);
 
 		rerender(<PureComponent value={2} />);
+
+		const actual = screen.getByTestId('baseComponent');
+		expect(actual).toHaveTextContent('CountRenders: 2');
+	});
+
+	test('should use a custom prop comparator', () => {
+		const CustomPure = Pure({
+			propComparators: {
+				value: (a, b) => a.id === b.id
+			}
+		}, LooseBase);
+		const {rerender} = render(<CustomPure value={{id: 1}} />);
+
+		rerender(<CustomPure value={{id: 1}} />);
+
+		const actual = screen.getByTestId('baseComponent');
+		expect(actual).toHaveTextContent('CountRenders: 1');
+
+		rerender(<CustomPure value={{id: 2}} />);
+
+		expect(actual).toHaveTextContent('CountRenders: 2');
+	});
+
+	test('should not forward ref to the wrapped component', () => {
+		const ref = createRef();
+		const {rerender} = render(<PureComponent ref={ref} value={1} />);
+
+		rerender(<PureComponent ref={ref} value={1} />);
+
+		const actual = screen.getByTestId('baseComponent');
+		expect(actual).toHaveTextContent('CountRenders: 1');
+		// Class components never receive `ref` on `this.props`, so assert on the ref
+		// itself. A forwarded ref would hold the Base instance.
+		expect(ref.current).toBeNull();
+	});
+
+	test('should update wrapped component when the number of props changes', () => {
+		const {rerender} = render(<PureComponent value={1} />);
+
+		rerender(<PureComponent value={1} id="extra" />);
 
 		const actual = screen.getByTestId('baseComponent');
 		expect(actual).toHaveTextContent('CountRenders: 2');
