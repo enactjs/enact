@@ -3,7 +3,7 @@
  */
 
 import {checkPropTypes, Job, setDefaultProps} from '@enact/core/util';
-import {cloneElement, Children, useState, useRef, useEffect, useCallback, useImperativeHandle, memo, useMemo} from 'react';
+import {cloneElement, Children, useState, useRef, useEffect, useCallback, useImperativeHandle, memo, useMemo, useLayoutEffect} from 'react';
 import PropTypes from 'prop-types';
 
 import {shape} from './Arranger';
@@ -23,14 +23,35 @@ const viewDefaultProps = {
 };
 
 /**
- * A `View` wraps a set of children for {@link ui/ViewManager.ViewManager}.
- * It is not intended to be used directly
+ * Renders the child component for {@link ui/ViewManager.View}, keeping the output
+ * frozen during leave transitions.
  *
- * @class View
+ * @function ViewChild
  * @memberof ui/ViewManager
  * @private
  */
-const View = memo((componentProps) => {
+const ViewChild = memo(({childProps, children, entering, enteringProp}) => {
+	if (enteringProp || childProps) {
+		const localProps = Object.assign({}, childProps);
+		if (enteringProp) {
+			localProps[enteringProp] = entering;
+		}
+
+		return cloneElement(children, localProps);
+	} else {
+		return Children.only(children);
+	}
+}, (prevProps, nextProps) => Boolean(nextProps.leaving));
+
+/**
+ * A `View` wraps a set of children for {@link ui/ViewManager.ViewManager}.
+ * It is not intended to be used directly
+ *
+ * @function View
+ * @memberof ui/ViewManager
+ * @private
+ */
+const View = (componentProps) => {
 	const props = setDefaultProps(componentProps, viewDefaultProps);
 	checkPropTypes(View, props);
 
@@ -44,6 +65,7 @@ const View = memo((componentProps) => {
 	const changeDirection = useRef(false);
 	const node = useRef(null);
 	const previousProps = useRef(props);
+	const propsRef = useRef(props);
 
 	const shouldChangeDirection = useCallback((prevProps, nextProps) => {
 		return animation.current ? prevProps.reverseTransition !== nextProps.reverseTransition : false;
@@ -59,7 +81,7 @@ const View = memo((componentProps) => {
 	 * @private
 	 */
 	const prepareTransition = useCallback((arranger, callback, noAnimation) => {
-		const {duration, getParentRef, index, previousIndex = index, renderedIndex = 0, reverseTransition, rtl} = props;
+		const {duration, getParentRef, index, previousIndex = index, renderedIndex = 0, reverseTransition, rtl} = propsRef.current;
 
 		// Need to ensure that we have a valid node reference before we animation. Sometimes, React
 		// will replace the node after mount causing a reference cached there to be invalid.
@@ -90,14 +112,14 @@ const View = memo((componentProps) => {
 		};
 
 		// disable animation when the instance or props flag is true
-		if (noAnimation || props.noAnimation) {
+		if (noAnimation || propsRef.current.noAnimation) {
 			animation.current.finish();
 		}
-	}, [props]);
+	}, []);
 
 	useImperativeHandle(props.ref, () => ({
 		componentWillAppear (callback) {
-			const {arranger} = props;
+			const {arranger} = propsRef.current;
 			if (arranger && arranger.stay) {
 				prepareTransition(arranger.stay, callback, true);
 			} else {
@@ -113,10 +135,10 @@ const View = memo((componentProps) => {
 		// TransitionGroup. It will block other animations from occurring until callback is called. It
 		// will not be called on the initial render of a TransitionGroup.
 		componentWillEnter (callback) {
-			const {appearing, arranger, reverseTransition, enteringProp} = props;
+			const {appearing, arranger, reverseTransition, enteringProp} = propsRef.current;
 			// This can happen if the panel was going to be removed and the animation was canceled,
 			// causing this panel to re-enter.
-			if (!appearing && enteringProp && !state?.entering) {
+			if (!appearing && enteringProp && !state.entering) {
 				setState({entering: true});
 			}
 			if (arranger) {
@@ -127,7 +149,7 @@ const View = memo((componentProps) => {
 		},
 
 		componentDidEnter () {
-			const {enteringDelay, enteringProp} = props;
+			const {enteringDelay, enteringProp} = propsRef.current;
 
 			if (enteringProp) {
 				// FIXME: `startRafAfter` is a temporary solution using rAF. We need a better way to handle
@@ -139,7 +161,7 @@ const View = memo((componentProps) => {
 		},
 
 		componentWillStay (callback) {
-			const {arranger} = props;
+			const {arranger} = propsRef.current;
 			if (arranger && arranger.stay) {
 				prepareTransition(arranger.stay, callback);
 			} else {
@@ -151,7 +173,7 @@ const View = memo((componentProps) => {
 		// child has been removed, ReactTransitionGroup will keep it in the DOM until callback is
 		// called.
 		componentWillLeave (callback) {
-			const {arranger, reverseTransition} = props;
+			const {arranger, reverseTransition} = propsRef.current;
 			enteringJob.stop();
 			if (arranger) {
 				prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback);
@@ -159,9 +181,13 @@ const View = memo((componentProps) => {
 				callback();
 			}
 		}
-	}), [enteringJob, prepareTransition, props, state?.entering]);
+	}), [enteringJob, prepareTransition, state.entering]);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
+		propsRef.current = props;
+	});
+
+	useLayoutEffect(() => {
 		changeDirection.current = shouldChangeDirection(previousProps.current, props);
 		previousProps.current = props;
 	}, [props, shouldChangeDirection]);
@@ -176,17 +202,17 @@ const View = memo((componentProps) => {
 		};
 	}, [enteringJob]);
 
-	if (props.enteringProp || props.childProps) {
-		const localProps = Object.assign({}, props.childProps);
-		if (props.enteringProp && state !== null) {
-			localProps[props.enteringProp] = state.entering;
-		}
-
-		return cloneElement(props.children, localProps);
-	} else {
-		return Children.only(props.children);
-	}
-}, (prevProps, nextProps) => Boolean(nextProps.leaving));
+	return (
+		<ViewChild
+			childProps={props.childProps}
+			entering={state.entering}
+			enteringProp={props.enteringProp}
+			leaving={props.leaving}
+		>
+			{props.children}
+		</ViewChild>
+	);
+};
 
 View.propTypes = /** @lends ui/ViewManager.View.prototype */ {
 	children: PropTypes.node.isRequired,

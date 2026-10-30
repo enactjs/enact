@@ -20,10 +20,10 @@ import {
 	Children,
 	cloneElement,
 	createElement,
-	useEffect,
 	useRef,
 	useCallback,
 	useMemo,
+	useLayoutEffect,
 	useReducer
 } from 'react';
 
@@ -77,12 +77,6 @@ const transitionGroupDefaultProps = {
 
 const reducer = (state, action) => {
 	switch (action.type) {
-		case 'INIT':
-			return {
-				activeChildren: action.children,
-				children: action.children,
-				firstRender: false
-			};
 		case 'UPDATE':
 			return {
 				activeChildren: action.children,
@@ -90,6 +84,7 @@ const reducer = (state, action) => {
 			};
 		case 'REMOVE_CHILD':
 			return {
+				activeChildren: state.children,
 				children: remove(indexOfChild(action.key, state.children), 1, state.children)
 			};
 		default:
@@ -105,7 +100,7 @@ const reducer = (state, action) => {
  * (https://facebook.github.io/react/docs/animation.html#low-level-api-reacttransitiongroup).
  * Currently somewhat specialized for the purposes of ViewManager.
  *
- * @class TransitionGroup
+ * @function TransitionGroup
  * @memberof ui/ViewManager
  * @private
  */
@@ -115,7 +110,7 @@ const TransitionGroup = (componentProps) => {
 	checkPropTypes(TransitionGroup, props);
 	const {childFactory, currentIndex} = props;
 
-	const [state, dispatch] = useReducer(reducer, {children: [], firstRender: true});
+	const [state, dispatch] = useReducer(reducer, {children: []});
 
 	const prevState = useRef(state);
 	const hasMounted = useRef(false);
@@ -125,6 +120,7 @@ const TransitionGroup = (componentProps) => {
 	const keysToEnter = useRef([]);
 	const keysToLeave = useRef([]);
 	const keysToStay = useRef([]);
+	const propsRef = useRef(props);
 	const refNodeId = '#transition#group#';
 
 	const completeTransition = useCallback(({key, noForwarding = false}) => {
@@ -132,10 +128,10 @@ const TransitionGroup = (componentProps) => {
 			delete currentlyTransitioningKeys.current[key];
 
 			if (!noForwarding && Object.keys(currentlyTransitioningKeys.current).length === 0) {
-				forwardCustom('onTransition')(null, props);
+				forwardCustom('onTransition')(null, propsRef.current);
 			}
 		}
-	},  [props]);
+	},  []);
 
 	const _handleDoneLeaving = useCallback((key) => {
 		const component = groupRefs.current[key];
@@ -147,12 +143,12 @@ const TransitionGroup = (componentProps) => {
 		forwardOnLeave({
 			type: 'onLeave',
 			view: component
-		}, props);
+		}, propsRef.current);
 
 		completeTransition({key});
 
 		dispatch({type: 'REMOVE_CHILD', key});
-	}, [completeTransition, props]);
+	}, [completeTransition]);
 
 	const performLeave = useCallback((key) => {
 		currentlyTransitioningKeys.current[key] = true;
@@ -177,17 +173,17 @@ const TransitionGroup = (componentProps) => {
 		forwardOnAppear({
 			type: 'onAppear',
 			view: component
-		}, props);
+		}, propsRef.current);
 
 		completeTransition({key, noForwarding: true});
 
-		let currentChildMapping = mapChildren(props.children);
+		let currentChildMapping = mapChildren(propsRef.current.children);
 
 		if (!currentChildMapping || !currentChildMapping.find(child => child.key === key)) {
 			// This was removed before it had fully appeared. Remove it.
 			performLeave(key);
 		}
-	}, [completeTransition, performLeave, props]);
+	}, [completeTransition, performLeave]);
 
 	const performAppear = useCallback((key) => {
 		currentlyTransitioningKeys.current[key] = true;
@@ -210,10 +206,10 @@ const TransitionGroup = (componentProps) => {
 		forwardOnEnter({
 			type: 'onEnter',
 			view: component
-		}, props);
+		}, propsRef.current);
 
 		completeTransition({key});
-	}, [completeTransition, props]);
+	}, [completeTransition]);
 
 	const performEnter = useCallback((key) => {
 		currentlyTransitioningKeys.current[key] = true;
@@ -236,8 +232,8 @@ const TransitionGroup = (componentProps) => {
 		forwardOnStay({
 			type: 'onStay',
 			view: component
-		}, props);
-	}, [props]);
+		}, propsRef.current);
+	}, []);
 
 	const performStay = useCallback((key) => {
 		const component = groupRefs.current[key];
@@ -269,7 +265,7 @@ const TransitionGroup = (componentProps) => {
 		if (!prevActiveChildMapping || !nextActiveChildMapping) {
 			return;
 		}
-		const {size} = props;
+		const {size} = propsRef.current;
 
 		const nextChildKeys = nextActiveChildMapping.map(c => c.key);
 		const prevChildKeys = prevActiveChildMapping.map(c => c.key);
@@ -311,7 +307,7 @@ const TransitionGroup = (componentProps) => {
 		});
 
 		if (keysToEnter.current.length || keysToLeave.current.length) {
-			forwardCustom('onWillTransition')(null, props);
+			forwardCustom('onWillTransition')(null, propsRef.current);
 		}
 
 		// once the component has been updated, start the enter transition for new children,
@@ -328,27 +324,27 @@ const TransitionGroup = (componentProps) => {
 		const localKeysToLeave = keysToLeave.current;
 		keysToLeave.current = [];
 		localKeysToLeave.forEach(performLeave);
-	}, [completeTransition, performEnter, performLeave, performStay, props]);
+	}, [completeTransition, performEnter, performLeave, performStay]);
 
 	const children = useMemo(() => mapChildren(props.children).slice(0, props.size), [props.children, props.size]);
 	const mergedChildren = useMemo(() => mergeChildren(children, state.children).slice(0, props.size), [children, state.children, props.size]);
-
-	if (state.firstRender) {
-		dispatch({type: 'INIT', children});
-	}
 
 	if (state.activeChildren !== children) {
 		dispatch({type: 'UPDATE', children, mergedChildren});
 	}
 
-	useEffect(() => {
+	useLayoutEffect(() => {
+		propsRef.current = props;
+	});
+
+	useLayoutEffect(() => {
 		hasMounted.current = true;
 		// this isn't used by ViewManager or View at the moment but leaving it around for future
 		// flexibility
 		state.children.forEach(child => performAppear(child.key));
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		const {activeChildren: prevActiveChildren, children: prevChildren} = prevState.current;
 		if (prevActiveChildren === state.activeChildren && prevChildren === state.children) {
 			return;

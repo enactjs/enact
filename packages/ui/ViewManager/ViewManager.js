@@ -68,7 +68,7 @@ const viewManagerHandlers = {
  * The base `ViewManager` component, without
  * {@link ui/ViewManager.ViewManagerDecorator|ViewManagerDecorator} applied.
  *
- * @class ViewManagerBase
+ * @function ViewManagerBase
  * @memberof ui/ViewManager
  * @ui
  * @public
