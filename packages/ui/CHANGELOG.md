@@ -13,6 +13,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `ui/Transition` to forward `propertyName` in the event payload of `onShow` and `onHide`
 
+### Fixed
+
+- `ui/Transition` to call the `onShow` and `onHide` handlers from the committed render instead of a discarded one
+
 ## [5.6.0] - 2026-09-02
 
 ### Added

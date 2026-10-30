@@ -9,6 +9,10 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `ui/Marquee.MarqueeDecorator` config `orientation` and prop `marqueeMaxLines` to scroll overflowing multi-line text vertically
 - `ui/Marquee` prop `css` to customize the marquee's internal elements
 
+### Fixed
+
+- `ui/Transition` to call the `onShow` and `onHide` handlers from the committed render instead of a discarded one
+
 ## [5.6.0] - 2026-09-02
 
 ### Added
