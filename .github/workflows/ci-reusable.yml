@@ -18,7 +18,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['lts/*', 'node']
+        node-version: ['lts/*', '26']
 
     steps:
       - name: Checkout code
