@@ -10,10 +10,10 @@ import handle, {forward, returnsTrue} from '@enact/core/handle';
 import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
 import {checkPropTypes} from '@enact/core/util';
-import {WithRef} from '@enact/core/internal/WithRef';
+import {getFragmentHostNode} from '@enact/core/internal/fragmentHost';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import {useCallback, useReducer, useRef} from 'react';
+import {Fragment, useCallback, useReducer, useRef} from 'react';
 
 import {spottableClass, useSpottable} from './useSpottable';
 
@@ -128,7 +128,6 @@ const defaultConfig = {
  */
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const {emulateMouse} = config;
-	const WrappedWithRef = WithRef(Wrapped);
 
 	function SpottableBase (props) {
 		checkPropTypes(SpottableBase, props);
@@ -150,7 +149,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			...rest
 		} = props;
 
-		const getSpotRef = useCallback(() => nodeRef.current, []);
+		// Read once after commit, same as the previous imperative handle with empty deps.
+		const getSpotRef = useCallback(() => getFragmentHostNode(nodeRef.current), []);
 
 		const spot = useSpottable({
 			disabled,
@@ -177,15 +177,15 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		const handlers = useHandlers(spotHandlers, rest, spot);
 
 		return (
-			<WrappedWithRef
-				{...rest}
-				{...spot.attributes}
-				{...handlers}
-				className={classNames(className, spot.className)}
-				disabled={disabled}
-				outermostRef={nodeRef}
-				referrerName="Spottable"
-			/>
+			<Fragment ref={nodeRef}>
+				<Wrapped
+					{...rest}
+					{...spot.attributes}
+					{...handlers}
+					className={classNames(className, spot.className)}
+					disabled={disabled}
+				/>
+			</Fragment>
 		);
 	}
 
