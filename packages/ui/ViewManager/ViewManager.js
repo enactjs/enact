@@ -38,6 +38,7 @@ const reducer = (state, action) => {
 			return {
 				index: action.index,
 				prevIndex: state.index,
+				props: action.props,
 				reverseTransition: action.reverseTransition
 			};
 		case 'UPDATE':
@@ -106,10 +107,11 @@ const ViewManagerBase = (componentProps) => {
 	}), [arranger, childProps, duration, index, noAnimation, previousIndex, reverseTransition, enteringDelay, enteringProp, rtl]);
 
 	if (props.reverseTransition != null) {
-		if (props.reverseTransition !== state.reverseTransition || props.index !== state.index) {
+		if (componentProps !== state.props) {
 			dispatch({
 				type: 'REVERSE',
 				index: props.index,
+				props: componentProps,
 				reverseTransition: props.reverseTransition
 			});
 		}

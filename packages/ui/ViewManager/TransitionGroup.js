@@ -84,8 +84,8 @@ const reducer = (state, action) => {
 			};
 		case 'REMOVE_CHILD':
 			return {
-				activeChildren: state.children,
-				children: remove(indexOfChild(action.key, state.children), 1, state.children)
+				...state,
+				children: mergeChildren(state.activeChildren, remove(indexOfChild(action.key, state.children), 1, state.children))
 			};
 		default:
 			return state;
