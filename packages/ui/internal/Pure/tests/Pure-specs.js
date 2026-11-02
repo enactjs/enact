@@ -96,6 +96,15 @@ describe('Pure', () => {
 		expect(actual).toHaveTextContent('CountRenders: 2');
 	});
 
+	test('should not update wrapped component when only an inline ref changes', () => {
+		const {rerender} = render(<PureComponent ref={() => {}} value={1} />);
+
+		rerender(<PureComponent ref={() => {}} value={1} />);
+
+		const actual = screen.getByTestId('baseComponent');
+		expect(actual).toHaveTextContent('CountRenders: 1');
+	});
+
 	test('should not forward ref to the wrapped component', () => {
 		const ref = createRef();
 		const {rerender} = render(<PureComponent ref={ref} value={1} />);

@@ -26,25 +26,6 @@ const defaultConfig = {
 	}
 };
 
-// Class components never saw `ref` in `this.props`. React 19 includes it on function
-// component props, so drop it before comparing or forwarding.
-const omitRef = (props) => {
-	if (!Object.prototype.hasOwnProperty.call(props, 'ref')) {
-		return props;
-	}
-
-	const next = {};
-	const keys = Object.keys(props);
-	for (let i = 0; i < keys.length; i++) {
-		const key = keys[i];
-		if (key !== 'ref') {
-			next[key] = props[key];
-		}
-	}
-
-	return next;
-};
-
 const hasChanged = (current, next, comparators) => {
 	const propKeys = Object.keys(current);
 	const nextKeys = Object.keys(next);
@@ -92,20 +73,17 @@ const hasChanged = (current, next, comparators) => {
 const Pure = hoc(defaultConfig, (config, Wrapped) => {
 	const {propComparators} = config;
 
-	// eslint-disable-next-line no-shadow
-	function Pure (props) {
-		return (
-			<Wrapped {...omitRef(props)} />
-		);
-	}
+	const Memo = memo(Wrapped, (prevProps, nextProps) => !hasChanged(prevProps, nextProps, propComparators));
 
-	const MemoizedPure = memo(Pure, (prevProps, nextProps) => (
-		!hasChanged(omitRef(prevProps), omitRef(nextProps), propComparators)
-	));
+	// Drop `ref` before it reaches `memo`. React only bails out when the ref is unchanged too.
+	// eslint-disable-next-line no-unused-vars
+	const PureDecorator = ({ref, ...rest}) => (
+		<Memo {...rest} />
+	);
 
-	MemoizedPure.displayName = 'Pure';
+	PureDecorator.displayName = 'Pure';
 
-	return MemoizedPure;
+	return PureDecorator;
 });
 
 export default Pure;
