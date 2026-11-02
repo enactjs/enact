@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Changed
 
 - `ui/Transition` to forward `propertyName` in the event payload of `onShow` and `onHide`
+- `ui/VirtualList` scroll height and width to include the item margins
 
 ### Fixed
 
