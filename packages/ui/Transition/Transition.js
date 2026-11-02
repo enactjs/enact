@@ -20,7 +20,7 @@ import {forward, forwardCustom} from '@enact/core/handle';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import kind from '@enact/core/kind';
 import {checkPropTypes, Job} from '@enact/core/util';
-import {use, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
+import {use, useCallback, useEffect, useEffectEvent, useLayoutEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 
 import {ResizeContext} from '../Resizable';
@@ -313,13 +313,13 @@ function Transition ({
 		renderState: visible ? TRANSITION_STATE.READY : TRANSITION_STATE.INIT
 	}));
 
-	const prevVisibleRef = useRef(visible);
+	const [hasBeenVisible, setHasBeenVisible] = useState(visible);
 
-	// Adjust state during render when `visible` flips on. The functional equivalent of the
-	// class's getDerivedStateFromProps. Reading/writing the ref here is intentional.
+	// Adjust state during render the first time `visible` flips on. The functional equivalent of
+	// the class's getDerivedStateFromProps.
 	// https://react.dev/reference/react/useState#storing-information-from-previous-renders
-	if (!prevVisibleRef.current && visible) { // eslint-disable-line react-hooks/refs
-		prevVisibleRef.current = true;
+	if (!hasBeenVisible && visible) {
+		setHasBeenVisible(true);
 		setState({
 			initialHeight: null,
 			initialWidth: null,
@@ -327,13 +327,9 @@ function Transition ({
 		});
 	}
 
-	// Latest props for handlers that fire asynchronously (transitionend, observer callbacks)
+	// Props passed to forwarded event handlers
 	const currentProps = {children, direction, duration, noAnimation, onHide, onShow, timingFunction, type, visible, ...rest};
 	checkPropTypes(Transition, currentProps);
-
-	const propsRef = useRef();
-	propsRef.current = currentProps; // eslint-disable-line react-hooks/refs
-
 
 	const childNodeRef = useRef(null);
 	const measuringJobRef = useRef(null);
@@ -379,11 +375,15 @@ function Transition ({
 		}
 	}, [state.renderState, state.initialHeight, visible, measureInner]);
 
-	useEffect(() => {
-		const job = measuringJobRef.current;
-		if (!propsRef.current.visible) {
+	const idleIfHidden = useEffectEvent((job) => {
+		if (!visible) {
 			job.idle();
 		}
+	});
+
+	useEffect(() => {
+		const job = measuringJobRef.current;
+		idleIfHidden(job);
 
 		return () => job.stop();
 	}, []);
@@ -408,24 +408,31 @@ function Transition ({
 
 	const prevVisibleForEffectRef = useRef(visible);
 
+	// Without animation there is no `transitionend`, so the visibility effect fires the events
+	const forwardVisibilityChange = useEffectEvent((prev) => {
+		if (!prev && visible) {
+			forwardCustom('onShow')(null, currentProps);
+		} else if (prev && !visible) {
+			forwardCustom('onHide')(null, currentProps);
+		}
+	});
+
 	useEffect(() => {
 		const prev = prevVisibleForEffectRef.current;
 		prevVisibleForEffectRef.current = visible;
 		if (!noAnimation || prev === visible) return;
-		if (!prev && visible) {
-			forwardCustom('onShow')(null, propsRef.current);
-		} else if (prev && !visible) {
-			forwardCustom('onHide')(null, propsRef.current);
-		}
+		forwardVisibilityChange(prev);
 	}, [visible, noAnimation]);
 
+	const {onTransitionEnd} = rest;
+
 	const handleTransitionEnd = useCallback((ev) => {
-		forward('onTransitionEnd', ev, propsRef.current);
+		forward('onTransitionEnd', ev, {onTransitionEnd});
 		if (ev.target === childNodeRef.current) {
-			const eventName = propsRef.current.visible ? 'onShow' : 'onHide';
-			forward(eventName, {type: eventName, currentTarget: ev.currentTarget, propertyName: ev.propertyName}, propsRef.current);
+			const eventName = visible ? 'onShow' : 'onHide';
+			forward(eventName, {type: eventName, currentTarget: ev.currentTarget, propertyName: ev.propertyName}, {onHide, onShow});
 		}
-	}, []);
+	}, [onHide, onShow, onTransitionEnd, visible]);
 
 	// If we are deferring children, don't render any.
 	if (state.renderState === TRANSITION_STATE.INIT) {

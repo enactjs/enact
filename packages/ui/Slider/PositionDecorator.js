@@ -1,7 +1,8 @@
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
-import {checkPropTypes} from '@enact/core/util';
-import {Component} from 'react';
+import useHandlers from '@enact/core/useHandlers';
+import {checkPropTypes, setDefaultProps} from '@enact/core/util';
+import {useRef} from 'react';
 import PropTypes from 'prop-types';
 
 import {validateRangeOnce, validateSteppedOnce} from '../internal/validators';
@@ -14,163 +15,154 @@ const validateRange = validateRangeOnce((props) => props, {'component': 'Positio
 const validateStepValue = validateSteppedOnce((props) => props, {'component': 'PositionDecorator'});
 const validateStepMax = validateSteppedOnce((props) => props, {'component': 'PositionDecorator', valueName: 'max'});
 
-const PositionDecorator = hoc((config, Wrapped) => {
-	return class extends Component {
-		static displayName = 'PositionDecorator';
+const dragConfig = {global: true};
 
-		static propTypes = {
-			disabled: PropTypes.bool,
-			max: PropTypes.number,
-			min: PropTypes.number,
-			onChange: PropTypes.func,
-			orientation: PropTypes.string,
-			step: PropTypes.number,
-			value: PropTypes.number
-		};
+const positionDecoratorDefaultProps = {
+	disabled: false,
+	max: 100,
+	min: 0,
+	orientation: 'horizontal',
+	step: 1
+};
 
-		static defaultProps = {
-			disabled: false,
-			max: 100,
-			min: 0,
-			orientation: 'horizontal',
-			step: 1
-		};
+const emitChangeForPosition = (x, y, props, bounds) => {
+	const {colorPicker, max, min, orientation, step} = props;
+	let position = x;
+	let offset = bounds.current.offsetX;
 
-		constructor (props) {
-			super(props);
-			checkPropTypes(this, props);
+	if (orientation === 'vertical') {
+		position = y;
+		offset = bounds.current.offsetY;
+	}
 
-			this.handleDown = this.handleDown.bind(this);
-			this.handleDrag = this.handleDrag.bind(this);
-			this.handleDragStart = this.handleDragStart.bind(this);
-			this.bounds = {};
-			this.dragConfig = {
-				global: true
-			};
+	let proportion = calcProportion(bounds.current.min, bounds.current.max, position - offset);
+	if (orientation === 'vertical') {
+		proportion = 1 - proportion;
+	}
+
+	let value = (max - min) * proportion + min;
+
+	// adjust value for stepping
+	if (step) {
+		const delta = (value - min) % step;
+		if (delta < step / 2) {
+			value -= delta;
+		} else {
+			value += step - delta;
 		}
 
-		componentDidUpdate (prevProps) {
-			checkPropTypes(this, this.props, prevProps);
-		}
+		// recalculate the proportion based on the stepped value
+		proportion = calcProportion(min, max, value);
+	}
 
-		emitChangeForPosition (x, y) {
-			const {colorPicker, max, min, orientation, step} = this.props;
-			let position = x;
-			let offset = this.bounds.offsetX;
-
-			if (orientation === 'vertical') {
-				position = y;
-				offset = this.bounds.offsetY;
-			}
-
-			let proportion = calcProportion(this.bounds.min, this.bounds.max, position - offset);
-			if (orientation === 'vertical') {
-				proportion = 1 - proportion;
-			}
-
-			let value = (max - min) * proportion + min;
-
-			// adjust value for stepping
-			if (step) {
-				const delta = (value - min) % step;
-				if (delta < step / 2) {
-					value -= delta;
-				} else {
-					value += step - delta;
-				}
-
-				// recalculate the proportion based on the stepped value
-				proportion = calcProportion(min, max, value);
-			}
-
-			const onChangeObj = {
-				type: 'onChange',
-				value,
-				proportion
-			};
-
-			if (colorPicker) {
-				onChangeObj.color = {
-					hex: hslToHex(value),
-					hsl: `hsla(${value}, 100%, 50%, 1)`
-				};
-			}
-
-			if (value !== this.props.value) {
-				forward('onChange', onChangeObj, this.props);
-			}
-		}
-
-		updateBounds (node) {
-			const {orientation} = this.props;
-
-			const bounds = node.getBoundingClientRect();
-			const computedStyle = window.getComputedStyle(node);
-
-			if (orientation === 'horizontal') {
-				this.bounds.min = bounds.left + parseInt(computedStyle.paddingLeft);
-				this.bounds.max = bounds.right - parseInt(computedStyle.paddingRight);
-			} else {
-				this.bounds.min = bounds.top + parseInt(computedStyle.paddingTop);
-				this.bounds.max = bounds.bottom - parseInt(computedStyle.paddingBottom);
-			}
-		}
-
-		updateOffset (clientX, clientY, target) {
-			this.bounds.offsetX = 0;
-			this.bounds.offsetY = 0;
-
-			const knob = target.closest(`.${css.knob}`);
-			if (knob) {
-				const rect = knob.getBoundingClientRect();
-				const centerX = rect.left + rect.width / 2;
-				const centerY = rect.top + rect.height / 2;
-
-				this.bounds.offsetX = clientX - centerX;
-				this.bounds.offsetY = clientY - centerY;
-			}
-		}
-
-		handleDown ({clientX, clientY, currentTarget, target}) {
-			// bail early for emulated mousedown events from key presses
-			if (typeof clientX === 'undefined' || typeof clientY === 'undefined') return;
-
-			this.updateBounds(currentTarget);
-			this.updateOffset(clientX, clientY, target);
-			this.emitChangeForPosition(clientX, clientY);
-		}
-
-		handleDragStart (ev) {
-			forward('onDragStart', ev, this.props);
-			this.emitChangeForPosition(ev.x, ev.y);
-		}
-
-		handleDrag (ev) {
-			forward('onDrag', ev, this.props);
-			this.emitChangeForPosition(ev.x, ev.y);
-		}
-
-		render () {
-			if (__DEV__) {
-				const {min, value = min, max, step} = this.props;
-				const props = {min, value: value || min, max, step};
-
-				validateRange(props);
-				validateStepValue(props);
-				validateStepMax(props);
-			}
-
-			return (
-				<Wrapped
-					{...this.props}
-					dragConfig={this.dragConfig}
-					onDown={this.handleDown}
-					onDragStart={this.handleDragStart}
-					onDrag={this.handleDrag}
-				/>
-			);
-		}
+	const onChangeObj = {
+		type: 'onChange',
+		value,
+		proportion
 	};
+
+	if (colorPicker) {
+		onChangeObj.color = {
+			hex: hslToHex(value),
+			hsl: `hsla(${value}, 100%, 50%, 1)`
+		};
+	}
+
+	if (value !== props.value) {
+		forward('onChange', onChangeObj, props);
+	}
+};
+
+const updateBounds = (node, props, bounds) => {
+	const {orientation} = props;
+
+	const localBounds = node.getBoundingClientRect();
+	const computedStyle = window.getComputedStyle(node);
+
+	if (orientation === 'horizontal') {
+		bounds.current.min = localBounds.left + parseInt(computedStyle.paddingLeft);
+		bounds.current.max = localBounds.right - parseInt(computedStyle.paddingRight);
+	} else {
+		bounds.current.min = localBounds.top + parseInt(computedStyle.paddingTop);
+		bounds.current.max = localBounds.bottom - parseInt(computedStyle.paddingBottom);
+	}
+};
+
+const updateOffset = (clientX, clientY, target, bounds) => {
+	bounds.current.offsetX = 0;
+	bounds.current.offsetY = 0;
+
+	const knob = target.closest(`.${css.knob}`);
+	if (knob) {
+		const rect = knob.getBoundingClientRect();
+		const centerX = rect.left + rect.width / 2;
+		const centerY = rect.top + rect.height / 2;
+
+		bounds.current.offsetX = clientX - centerX;
+		bounds.current.offsetY = clientY - centerY;
+	}
+};
+
+const handleDown = ({clientX, clientY, currentTarget, target}, props, {bounds}) => {
+	// bail early for emulated mousedown events from key presses
+	if (typeof clientX === 'undefined' || typeof clientY === 'undefined') return;
+
+	updateBounds(currentTarget, props, bounds);
+	updateOffset(clientX, clientY, target, bounds);
+	emitChangeForPosition(clientX, clientY, props, bounds);
+};
+
+const handleDragStart = (ev, props, {bounds}) => {
+	forward('onDragStart', ev, props);
+	emitChangeForPosition(ev.x, ev.y, props, bounds);
+};
+
+const handleDrag = (ev, props, {bounds}) => {
+	forward('onDrag', ev, props);
+	emitChangeForPosition(ev.x, ev.y, props, bounds);
+};
+
+const positionHandlers = {
+	onDown: handleDown,
+	onDragStart: handleDragStart,
+	onDrag: handleDrag
+};
+
+const PositionDecorator = hoc((config, Wrapped) => {
+	// eslint-disable-next-line no-shadow
+	const PositionDecorator = (componentProps) => {
+		const props = setDefaultProps(componentProps, positionDecoratorDefaultProps);
+		checkPropTypes(PositionDecorator, props);
+
+		const bounds = useRef({});
+		const handlers = useHandlers(positionHandlers, props, {bounds});
+
+		if (__DEV__) {
+			const {min, value = min, max, step} = props;
+			const validateProps = {min, value: value || min, max, step};
+
+			validateRange(validateProps);
+			validateStepValue(validateProps);
+			validateStepMax(validateProps);
+		}
+
+		return (
+			<Wrapped {...props} {...handlers} dragConfig={dragConfig} />
+		);
+	};
+
+	PositionDecorator.displayName = 'PositionDecorator';
+	PositionDecorator.propTypes = {
+		disabled: PropTypes.bool,
+		max: PropTypes.number,
+		min: PropTypes.number,
+		onChange: PropTypes.func,
+		orientation: PropTypes.string,
+		step: PropTypes.number,
+		value: PropTypes.number
+	};
+
+	return PositionDecorator;
 });
 
 export default PositionDecorator;
