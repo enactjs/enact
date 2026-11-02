@@ -38,11 +38,9 @@ jobs:
 
       - name: Clone and setup Enact CLI
         run: |
-          git clone --branch=develop --depth 1 https://github.com/enactjs/cli ../cli
+          git clone --branch=master --depth 1 https://github.com/enactjs/cli ../cli
           pushd ../cli
           npm install
-          # 0.1.18 is Babel 7 and asserts against @babel/core 8. Drop once CLI depends on a Babel 8 preset.
-          npm install --no-save github:enactjs/babel-preset-enact#feature/babel-8
           npm link
           popd
 
