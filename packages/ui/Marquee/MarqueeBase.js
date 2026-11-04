@@ -1,6 +1,7 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forProp, forwardCustom, handle, stop} from '@enact/core/handle';
 import kind from '@enact/core/kind';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {Children, Fragment} from 'react';
 
@@ -73,6 +74,14 @@ const MarqueeBase = kind({
 		clientRef: EnactPropTypes.ref,
 
 		/**
+		 * Visible height, in pixels, when `orientation` is `'vertical'`.
+		 *
+		 * @type {Number}
+		 * @private
+		 */
+		clipHeight: PropTypes.number,
+
+		/**
 		 * Customizes the component by mapping the supplied collection of CSS class names to the
 		 * corresponding internal elements and states of this component.
 		 *
@@ -80,8 +89,10 @@ const MarqueeBase = kind({
 		 *
 		 * * `marquee` - The root component class
 		 * * `animate` - Applied to the inner content node when the text is animating
+		 * * `content` - The content node of a vertical marquee
 		 * * `spacing` - The spacing node used between the repeated content
 		 * * `text` - The inner content node
+		 * * `vertical` - The root modifier for a vertical marquee
 		 * * `willAnimate` - Applied to the inner content node shortly before animation
 		 *
 		 * @type {Object}
@@ -100,12 +111,46 @@ const MarqueeBase = kind({
 		distance: PropTypes.number,
 
 		/**
+		 * Called with the duplicate content node used by a vertical marquee.
+		 *
+		 * @type {Object|Function}
+		 * @private
+		 */
+		duplicateRef: EnactPropTypes.ref,
+
+		/**
+		 * Number of text lines that stay visible when `orientation` is `'vertical'`.
+		 *
+		 * @type {Number}
+		 * @default 3
+		 * @public
+		 */
+		maxLines: PropTypes.number,
+
+		/**
+		 * Called with the hidden measurer used by a vertical marquee.
+		 *
+		 * @type {Object|Function}
+		 * @private
+		 */
+		measurerRef: EnactPropTypes.ref,
+
+		/**
 		 * Called when the marquee completes its animation
 		 *
 		 * @type {Function}
 		 * @public
 		 */
 		onMarqueeComplete: PropTypes.func,
+
+		/**
+		 * Direction the marquee scrolls.
+		 *
+		 * @type {('horizontal'|'vertical')}
+		 * @default 'horizontal'
+		 * @public
+		 */
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
 		 * Text overflow setting. Either `'clip'` or `'ellipsis'`
@@ -155,6 +200,8 @@ const MarqueeBase = kind({
 	},
 
 	defaultProps: {
+		maxLines: 3,
+		orientation: 'horizontal',
 		spacing: 0,
 		rtl: false,
 		willAnimate: false
@@ -187,6 +234,7 @@ const MarqueeBase = kind({
 		onMarqueeComplete: handle(
 			forProp('animating', true),
 			isEventSource,
+			(ev, props) => !(props.orientation === 'vertical' && ev.propertyName && ev.propertyName !== 'transform'),
 			stop,
 			forwardCustom('onMarqueeComplete')
 		)
@@ -207,7 +255,21 @@ const MarqueeBase = kind({
 			text: true,
 			willAnimate
 		}),
-		clientStyle: ({alignment, animating, distance, overflow, rtl, spacing, speed}) => {
+		clientStyle: ({alignment, animating, distance, orientation, overflow, rtl, spacing, speed}) => {
+			if (orientation === 'vertical') {
+				const verticalStyle = {};
+
+				if (animating && distance > 0 && speed > 0) {
+					verticalStyle.transform = `translateY(${-distance}px)`;
+					verticalStyle.transitionDuration = `${distance / speed}s`;
+				} else {
+					verticalStyle.transform = 'translateY(0)';
+					verticalStyle.transitionDuration = '0s';
+				}
+
+				return verticalStyle;
+			}
+
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
 			const direction = rtl ? 'rtl' : 'ltr';
@@ -230,20 +292,77 @@ const MarqueeBase = kind({
 
 			return style;
 		},
+		rootStyle: ({clipHeight, maxLines, orientation, spacing}) => {
+			if (orientation !== 'vertical') return null;
+
+			const style = {
+				'--vertical-marquee-lines': maxLines,
+				'--vertical-marquee-spacing': spacing || 0
+			};
+
+			if (clipHeight > 0) {
+				style.maxHeight = `${clipHeight}px`;
+			}
+
+			return style;
+		},
 		duplicate: ({distance, willAnimate}) => {
 			return willAnimate && distance > 0;
 		}
 	},
 
-	render: ({applyOffset, children, clientClassName, clientRef, clientStyle, css, duplicate, onMarqueeComplete, rtl, ...rest}) => {
+	render: ({applyOffset, children, clientClassName, clientRef, clientStyle, css, duplicate, duplicateRef, measurerRef, onMarqueeComplete, orientation, rootStyle, rtl, ...rest}) => {
 		delete rest.alignment;
 		delete rest.animating;
+		delete rest.clipHeight;
 		delete rest.distance;
+		delete rest.maxLines;
 		delete rest.onMarqueeComplete;
 		delete rest.overflow;
 		delete rest.spacing;
 		delete rest.speed;
 		delete rest.willAnimate;
+
+		if (orientation === 'vertical') {
+			return (
+				<div
+					{...rest}
+					className={classNames(rest.className, css.vertical)}
+					data-vertical-marquee
+					style={rootStyle}
+				>
+					<div
+						className={clientClassName}
+						data-vertical-marquee-track
+						onTransitionEnd={onMarqueeComplete}
+						style={clientStyle}
+					>
+						<div className={css.content} data-vertical-marquee-content ref={clientRef}>
+							{children}
+						</div>
+						{duplicate ? (
+							<Fragment>
+								<div className={css.spacing} />
+								<div
+									aria-hidden
+									className={css.content}
+									data-vertical-marquee-content
+									inert
+									ref={duplicateRef}
+								/>
+							</Fragment>
+						) : null}
+					</div>
+					<div
+						aria-hidden
+						className={css.measurer}
+						data-vertical-marquee-measurer
+						inert
+						ref={measurerRef}
+					/>
+				</div>
+			);
+		}
 
 		return (
 			<div {...rest}>
