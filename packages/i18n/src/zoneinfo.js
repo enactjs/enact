@@ -260,7 +260,7 @@ ZoneInfoFile.prototype.bsearch = function (target, arr) {
 
 	let high = arr.length - 1,
 		low = 0,
-		mid = 0,
+		mid,
 		value;
 
 	while (low <= high) {
