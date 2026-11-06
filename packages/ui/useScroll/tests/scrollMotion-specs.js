@@ -42,8 +42,8 @@ describe('scrollMotion', () => {
 
 	describe('startNativeScroll', () => {
 		const realNow = performance.now;
-		const realRaf = global.requestAnimationFrame;
-		const realCancel = global.cancelAnimationFrame;
+		const realRaf = window.requestAnimationFrame;
+		const realCancel = window.cancelAnimationFrame;
 		let now;
 		let next;
 
@@ -51,19 +51,19 @@ describe('scrollMotion', () => {
 			now = 1000;
 			next = null;
 			performance.now = () => now;
-			global.requestAnimationFrame = (callback) => {
+			window.requestAnimationFrame = (callback) => {
 				next = callback;
 				return 1;
 			};
-			global.cancelAnimationFrame = () => {
+			window.cancelAnimationFrame = () => {
 				next = null;
 			};
 		});
 
 		afterEach(() => {
 			performance.now = realNow;
-			global.requestAnimationFrame = realRaf;
-			global.cancelAnimationFrame = realCancel;
+			window.requestAnimationFrame = realRaf;
+			window.cancelAnimationFrame = realCancel;
 		});
 
 		const frame = (at) => {

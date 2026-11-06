@@ -386,9 +386,10 @@ const useScrollBase = (props) => {
 
 		// componentWillUnmount
 		return () => {
-			const {animator, resizeRegistry, scrolling, scrollStopJob} = mutableRef.current; // eslint-disable-line react-hooks/exhaustive-deps
+			const state = mutableRef.current; // eslint-disable-line react-hooks/exhaustive-deps
+			const {animator, resizeRegistry, scrolling, scrollStopJob} = state;
 
-			cancelScrollMotion(mutableRef.current);
+			cancelScrollMotion(state);
 			resizeRegistry.parent = null;
 
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
@@ -1241,13 +1242,16 @@ const useScrollBase = (props) => {
 		}) : null;
 
 		const begin = (skipSameTarget) => {
+			// An explicit duration (a flick) or a motion token is used as-is. The default
+			// duration is still capped by the distance of the scroll.
+			let duration = animationDuration;
+			if (requestedDuration != null) duration = requestedDuration;
+			else if (motion) duration = motion.duration;
+
 			const
 				{scrollLeft, scrollTop} = mutableRef.current,
 				bounds = getScrollBounds(),
 				{maxLeft, maxTop} = bounds,
-				// An explicit duration (a flick) or a motion token is used as-is. The default
-				// duration is still capped by the distance of the scroll.
-				duration = requestedDuration != null ? requestedDuration : (motion ? motion.duration : animationDuration),
 				fixedDuration = requestedDuration != null || !!(motion && motion.duration > 0),
 				shouldAnimate = animate && !(motion && motion.duration <= 0);
 

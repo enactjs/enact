@@ -62,7 +62,7 @@ const cancelScrollMotion = (state) => {
 	}
 
 	if (state.motionFrame) {
-		cancelAnimationFrame(state.motionFrame);
+		window.cancelAnimationFrame(state.motionFrame);
 		state.motionFrame = null;
 	}
 
@@ -104,7 +104,7 @@ const startNativeScroll = (state, {fromX, fromY, toX, toY, duration, ease, scrol
 				fromX + (toX - fromX) * progress,
 				fromY + (toY - fromY) * progress
 			);
-			frameId = requestAnimationFrame(step);
+			frameId = window.requestAnimationFrame(step);
 			state.motionFrame = frameId;
 			return;
 		}
@@ -115,7 +115,7 @@ const startNativeScroll = (state, {fromX, fromY, toX, toY, duration, ease, scrol
 	};
 
 	state.motionAnimating = true;
-	frameId = requestAnimationFrame(step);
+	frameId = window.requestAnimationFrame(step);
 	state.motionFrame = frameId;
 };
 
