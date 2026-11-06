@@ -565,4 +565,300 @@ describe('useScroll', () => {
 			expect(onKeyDown).toHaveBeenCalledTimes(1);
 		});
 	});
+
+	describe('scroll motion', () => {
+		const realRaf = window.requestAnimationFrame;
+		const realCancel = window.cancelAnimationFrame;
+		const realNow = performance.now;
+		let now;
+		let next;
+
+		beforeEach(() => {
+			mockPlatform = {chrome: 120};
+			mockRiScale = (val) => val;
+			now = 1000;
+			next = null;
+			performance.now = () => now;
+			window.requestAnimationFrame = (callback) => {
+				next = callback;
+				return 1;
+			};
+			window.cancelAnimationFrame = () => {
+				next = null;
+			};
+			if (!('onscrollend' in window)) {
+				window.onscrollend = null;
+			}
+		});
+
+		afterEach(() => {
+			performance.now = realNow;
+			window.requestAnimationFrame = realRaf;
+			window.cancelAnimationFrame = realCancel;
+			jest.useRealTimers();
+		});
+
+		const bounds = {
+			clientWidth: 1920,
+			clientHeight: 1080,
+			scrollWidth: 2000,
+			scrollHeight: 2000,
+			maxTop: 920,
+			maxLeft: 80
+		};
+
+		const token = (overrides) => ({
+			delay: 0,
+			duration: 600,
+			ease: (progress) => progress,
+			...overrides
+		});
+
+		function renderScroll (extra = {}) {
+			const mocks = createMockRefs();
+			mocks.scrollContentHandle.current.getScrollBounds = () => bounds;
+			mocks.scrollContentHandle.current.scrollToPosition = jest.fn();
+			mocks.scrollContentHandle.current.setScrollPosition = jest.fn();
+			let handle = null;
+
+			renderHook(() => useScrollBase({
+				direction: 'vertical',
+				scrollMode: 'native',
+				...mocks,
+				assignProperties: jest.fn(),
+				horizontalScrollbar: 'auto',
+				verticalScrollbar: 'auto',
+				onKeyDown: jest.fn(),
+				setScrollContainerHandle: (value) => {
+					handle = value;
+				},
+				...extra
+			}));
+
+			return {
+				mocks,
+				get handle () {
+					return handle;
+				}
+			};
+		}
+
+		function emitScroll (node, top = 10, left = 0) {
+			const event = new Event('scroll');
+			Object.defineProperty(event, 'target', {value: {scrollLeft: left, scrollTop: top}});
+			fireEvent(node, event);
+		}
+
+		function emitScrollEnd (node) {
+			fireEvent(node, new Event('scrollend'));
+		}
+
+		test('should interpolate a native scroll with the motion token', () => {
+			const themeStart = jest.fn();
+			const {mocks, handle} = renderScroll({
+				getScrollMotion: () => token(),
+				start: themeStart
+			});
+
+			act(() => {
+				handle.start({targetX: 0, targetY: 100});
+			});
+
+			expect(themeStart).toHaveBeenCalledWith(true);
+
+			act(() => {
+				next(1300);
+			});
+
+			expect(mocks.scrollContentHandle.current.scrollToPosition).toHaveBeenCalledWith(0, 50, 'instant');
+
+			act(() => {
+				next(1600);
+			});
+
+			expect(mocks.scrollContentHandle.current.scrollToPosition).toHaveBeenLastCalledWith(0, 100, 'instant');
+		});
+
+		test('should keep the browser smooth scroll when no motion token is set', () => {
+			const {mocks, handle} = renderScroll();
+
+			act(() => {
+				handle.start({targetX: 0, targetY: 100});
+			});
+
+			const call = mocks.scrollContentHandle.current.scrollToPosition.mock.calls[0];
+			expect(call.slice(0, 3)).toEqual([0, 100, 'smooth']);
+			expect(call[3]).toBeFalsy();
+		});
+
+		test('should scroll instantly when animation is disabled', () => {
+			const themeStart = jest.fn();
+			const {mocks, handle} = renderScroll({start: themeStart});
+
+			act(() => {
+				handle.start({targetX: 0, targetY: 40, animate: false});
+			});
+
+			expect(mocks.scrollContentHandle.current.scrollToPosition).toHaveBeenCalledWith(0, 40, 'instant');
+			expect(themeStart).toHaveBeenCalledWith(false);
+		});
+
+		test('should wait for the token delay before starting', () => {
+			jest.useFakeTimers({doNotFake: ['cancelAnimationFrame', 'performance', 'requestAnimationFrame']});
+			now = 1000;
+			performance.now = () => now;
+			window.requestAnimationFrame = (callback) => {
+				next = callback;
+				return 1;
+			};
+			window.cancelAnimationFrame = () => {
+				next = null;
+			};
+			const {mocks, handle} = renderScroll({
+				getScrollMotion: () => token({delay: 30})
+			});
+
+			act(() => {
+				handle.start({targetX: 0, targetY: 100});
+			});
+
+			expect(next).toBeNull();
+
+			act(() => {
+				jest.advanceTimersByTime(30);
+			});
+
+			expect(next).toEqual(expect.any(Function));
+			expect(mocks.scrollContentHandle.current.scrollToPosition).not.toHaveBeenCalled();
+		});
+
+		test('should ignore a native scroll that repeats the current target', () => {
+			const {mocks, handle} = renderScroll({
+				getScrollMotion: () => token()
+			});
+
+			act(() => {
+				emitScroll(mocks.scrollContentRef.current);
+				handle.start({targetX: 0, targetY: 100});
+			});
+
+			expect(mocks.scrollContentHandle.current.scrollToPosition).not.toHaveBeenCalled();
+			expect(next).toBeNull();
+		});
+
+		test('should apply overscroll on both axes when a scroll starts', () => {
+			const {mocks, handle} = renderScroll({
+				direction: 'both',
+				applyOverscrollEffect: jest.fn()
+			});
+
+			act(() => {
+				handle.start({targetX: 80, targetY: 920, overscrollEffect: true});
+			});
+
+			const call = mocks.scrollContentHandle.current.scrollToPosition.mock.calls[0];
+			expect(call.slice(0, 3)).toEqual([80, 920, 'smooth']);
+			expect(call[3]).toBeFalsy();
+		});
+
+		test('should ease a horizontal translate scroll with the motion token', () => {
+			const {mocks, handle} = renderScroll({
+				direction: 'horizontal',
+				scrollMode: 'translate',
+				getScrollMotion: () => token()
+			});
+
+			act(() => {
+				handle.start({targetX: 40, targetY: 0});
+			});
+			act(() => {
+				next();
+			});
+
+			expect(mocks.scrollContentHandle.current.setScrollPosition).toHaveBeenCalled();
+		});
+
+		test('should not accept scrollend while a motion scroll is running', () => {
+			const scrollStopOnScroll = jest.fn();
+			const {mocks, handle} = renderScroll({
+				getScrollMotion: () => token(),
+				scrollStopOnScroll
+			});
+
+			act(() => {
+				handle.start({targetX: 0, targetY: 100});
+				emitScroll(mocks.scrollContentRef.current);
+				emitScrollEnd(mocks.scrollContentRef.current);
+			});
+
+			expect(scrollStopOnScroll).not.toHaveBeenCalled();
+		});
+
+		test('should accept scrollend when the motion scroll is not running', () => {
+			const scrollStopOnScroll = jest.fn();
+			const {mocks} = renderScroll({scrollStopOnScroll});
+
+			act(() => {
+				emitScroll(mocks.scrollContentRef.current);
+				emitScrollEnd(mocks.scrollContentRef.current);
+			});
+
+			expect(scrollStopOnScroll).toHaveBeenCalled();
+		});
+
+		test('should ignore scrollend while a key is held or the content is scrolling', () => {
+			const scrollStopOnScroll = jest.fn();
+			const {mocks} = renderScroll({scrollStopOnScroll});
+
+			emitScroll(mocks.scrollContentRef.current);
+			fireEvent.keyDown(mocks.scrollContainerRef.current, {keyCode: 40, repeat: true});
+			emitScrollEnd(mocks.scrollContentRef.current);
+
+			expect(scrollStopOnScroll).not.toHaveBeenCalled();
+
+			fireEvent.keyUp(mocks.scrollContainerRef.current, {keyCode: 40});
+			mocks.scrollContentHandle.current.scrolling = true;
+			emitScrollEnd(mocks.scrollContentRef.current);
+
+			expect(scrollStopOnScroll).not.toHaveBeenCalled();
+		});
+
+		test('should skip the native scroll when the content handle is gone', () => {
+			const {mocks, handle} = renderScroll();
+			const inner = mocks.scrollContentHandle.current;
+			let reads = 0;
+
+			Object.defineProperty(mocks.scrollContentHandle, 'current', {
+				configurable: true,
+				get () {
+					reads += 1;
+					return reads < 4 ? inner : null;
+				}
+			});
+
+			act(() => {
+				handle.start({targetX: 0, targetY: 100});
+			});
+
+			expect(inner.scrollToPosition).not.toHaveBeenCalled();
+		});
+
+		test('should skip a motion frame when the content handle is gone', () => {
+			const {mocks, handle} = renderScroll({
+				getScrollMotion: () => token()
+			});
+			const scrollToPosition = mocks.scrollContentHandle.current.scrollToPosition;
+
+			act(() => {
+				handle.start({targetX: 0, targetY: 100});
+			});
+			mocks.scrollContentHandle.current = null;
+
+			act(() => {
+				next(1600);
+			});
+
+			expect(scrollToPosition).not.toHaveBeenCalled();
+		});
+	});
 });
