@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/useScroll` option `getScrollMotion` to time every animated scroll from a theme's motion tokens
 - `ui/Marquee.MarqueeDecorator` config `orientation` and prop `marqueeMaxLines` to scroll overflowing multi-line text vertically
 - `ui/Marquee` prop `css` to customize the marquee's internal elements
 
