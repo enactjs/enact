@@ -17,6 +17,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Transition` to call the `onShow` and `onHide` handlers from the committed render instead of a discarded one
+- `ui/VirtualList` native scroll animation to not stop at an outdated position when a 5-way key is held while frames are delayed
 
 ## [5.6.0] - 2026-09-02
 
