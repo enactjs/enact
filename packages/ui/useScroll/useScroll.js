@@ -25,6 +25,7 @@ import ri from '../resolution';
 import Touchable from '../Touchable';
 
 import ScrollAnimator from './ScrollAnimator';
+import {cancelScrollMotion, resolveScrollMotion, startNativeScroll} from './scrollMotion';
 import utilDOM from './utilDOM';
 import utilEvent from './utilEvent';
 
@@ -116,6 +117,7 @@ const useScrollBase = (props) => {
 			assignProperties,
 			dataSize,
 			direction,
+			getScrollMotion,
 			horizontalScrollbar,
 			horizontalScrollbarHandle,
 			itemRenderer,
@@ -148,6 +150,7 @@ const useScrollBase = (props) => {
 	delete rest.applyOverscrollEffect;
 	delete rest.cbScrollTo;
 	delete rest.clearOverscrollEffect;
+	delete rest.getScrollMotion;
 	delete rest.handleResizeWindow;
 	delete rest.itemSize;
 	delete rest.itemSizes;
@@ -383,8 +386,10 @@ const useScrollBase = (props) => {
 
 		// componentWillUnmount
 		return () => {
-			const {animator, resizeRegistry, scrolling, scrollStopJob} = mutableRef.current; // eslint-disable-line react-hooks/exhaustive-deps
+			const state = mutableRef.current; // eslint-disable-line react-hooks/exhaustive-deps
+			const {animator, resizeRegistry, scrolling, scrollStopJob} = state;
 
+			cancelScrollMotion(state);
 			resizeRegistry.parent = null;
 
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
@@ -916,7 +921,7 @@ const useScrollBase = (props) => {
 	 * Handler for scrollend event
 	 */
 	function onScrollEnd (ev) {
-		if (!mutableRef.current.scrolling || mutableRef.current.keyPressed || scrollContentHandle.current?.scrolling) {
+		if (!mutableRef.current.scrolling || mutableRef.current.keyPressed || mutableRef.current.motionAnimating || scrollContentHandle.current?.scrolling) {
 			return;
 		}
 
@@ -1228,105 +1233,155 @@ const useScrollBase = (props) => {
 	}
 	// scrollMode 'translate' ]]
 
-	function start ({targetX, targetY, animate = true, duration = animationDuration, overscrollEffect = false}) {
-		const
-			{scrollLeft, scrollTop} = mutableRef.current,
-			bounds = getScrollBounds(),
-			{maxLeft, maxTop} = bounds;
+	function start ({targetX, targetY, animate = true, duration: requestedDuration, overscrollEffect = false} = {}) {
+		const motion = animate ? resolveScrollMotion({
+			duration: requestedDuration,
+			keyPressed: mutableRef.current.keyPressed,
+			repeat: mutableRef.current.repeat,
+			getScrollMotion
+		}) : null;
 
-		const updatedAnimationInfo = scrollMode === 'translate' ?
-			{
-				sourceX: scrollLeft,
-				sourceY: scrollTop,
-				targetX,
-				targetY,
-				duration
-			} :
-			{
-				targetX,
-				targetY
-			};
+		const begin = (skipSameTarget) => {
+			// An explicit duration (a flick) or a motion token is used as-is. The default
+			// duration is still capped by the distance of the scroll.
+			let duration = animationDuration;
+			if (requestedDuration != null) duration = requestedDuration;
+			else if (motion) duration = motion.duration;
 
-		// bail early when scrolling to the same position
-		if (
-			(scrollMode === 'translate' && mutableRef.current.animator.isAnimating() || scrollMode === 'native' && mutableRef.current.scrolling) &&
-			mutableRef.current.animationInfo &&
-			mutableRef.current.animationInfo.targetX === targetX &&
-			mutableRef.current.animationInfo.targetY === targetY
-		) {
+			const
+				{scrollLeft, scrollTop} = mutableRef.current,
+				bounds = getScrollBounds(),
+				{maxLeft, maxTop} = bounds,
+				fixedDuration = requestedDuration != null || !!(motion && motion.duration > 0),
+				shouldAnimate = animate && !(motion && motion.duration <= 0);
+
+			const updatedAnimationInfo = scrollMode === 'translate' ?
+				{
+					sourceX: scrollLeft,
+					sourceY: scrollTop,
+					targetX,
+					targetY,
+					duration,
+					fixedDuration,
+					timingFunction: motion && motion.timingFunction
+				} :
+				{
+					targetX,
+					targetY
+				};
+
+			// bail early when scrolling to the same position
+			mutableRef.current.animationInfo = updatedAnimationInfo;
+
+			if (
+				!skipSameTarget &&
+				(scrollMode === 'translate' && mutableRef.current.animator.isAnimating() || scrollMode === 'native' && mutableRef.current.scrolling) &&
+				mutableRef.current.animationInfo &&
+				mutableRef.current.animationInfo.targetX === targetX &&
+				mutableRef.current.animationInfo.targetY === targetY
+			) {
+				return;
+			}
+
+			cancelScrollMotion(mutableRef.current);
+
+			if (scrollMode === 'translate') {
+				mutableRef.current.animator.stop();
+
+				if (!mutableRef.current.scrolling) {
+					mutableRef.current.scrolling = true;
+					forwardScrollEvent('onScrollStart');
+				}
+
+				mutableRef.current.scrollStopJob.stop();
+			}
+
+			if (Math.abs(maxLeft - targetX) < epsilon) {
+				targetX = maxLeft;
+			}
+
+			if (Math.abs(maxTop - targetY) < epsilon) {
+				targetY = maxTop;
+			}
+
+			if (mutableRef.current.overscrollEnabled && overscrollEffect) {
+				if (scrollLeft !== targetX && canScrollHorizontally(bounds)) {
+					checkAndApplyOverscrollEffectOnStart('horizontal', getEdgeFromPosition(targetX, maxLeft), targetX);
+				}
+				if (scrollTop !== targetY && canScrollVertically(bounds)) {
+					checkAndApplyOverscrollEffectOnStart('vertical', getEdgeFromPosition(targetY, maxTop), targetY);
+				}
+			}
+
+			if (scrollMode === 'translate') {
+				showScrollbarTrack(bounds);
+				if (scrollContentHandle.current && scrollContentHandle.current.setScrollPositionTarget) {
+					scrollContentHandle.current.setScrollPositionTarget(targetX, targetY);
+				}
+
+				if (shouldAnimate) {
+					mutableRef.current.animator.animate(scrollAnimation(mutableRef.current.animationInfo));
+				} else {
+					scroll(targetX, targetY);
+					stop();
+				}
+			} else if (scrollContentHandle.current) { // scrollMode 'native'
+				let {roundedTargetX, roundedTargetY} = roundTarget(scrollContentHandle.current, targetX, targetY);
+
+				if (shouldAnimate && motion && motion.duration > 0) {
+					scrollContentRef.current.lastInputType = mutableRef.current.lastInputType;
+					startNativeScroll(mutableRef.current, {
+						fromX: scrollLeft,
+						fromY: scrollTop,
+						toX: roundedTargetX,
+						toY: roundedTargetY,
+						duration: motion.duration,
+						ease: motion.ease,
+						scrollTo: (x, y) => {
+							if (scrollContentHandle.current) {
+								scrollContentHandle.current.scrollToPosition(x, y, 'instant');
+							}
+						}
+					});
+				} else if (shouldAnimate) {
+					scrollContentRef.current.lastInputType = mutableRef.current.lastInputType;
+					scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth', mutableRef.current.repeat);
+				} else {
+					scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
+				}
+
+				if (props.start) {
+					props.start(shouldAnimate);
+				}
+			}
+		};
+
+		// A token's delay is applied once, for both native and translate. Stop and unmount cancel it.
+		if (motion && motion.delay > 0) {
+			cancelScrollMotion(mutableRef.current);
+			mutableRef.current.motionDelay = setTimeout(() => {
+				mutableRef.current.motionDelay = null;
+				begin(true);
+			}, motion.delay);
 			return;
 		}
 
-		mutableRef.current.animationInfo = updatedAnimationInfo;
-
-		if (scrollMode === 'translate') {
-			mutableRef.current.animator.stop();
-
-			if (!mutableRef.current.scrolling) {
-				mutableRef.current.scrolling = true;
-				forwardScrollEvent('onScrollStart');
-			}
-
-			mutableRef.current.scrollStopJob.stop();
-		}
-
-		if (Math.abs(maxLeft - targetX) < epsilon) {
-			targetX = maxLeft;
-		}
-
-		if (Math.abs(maxTop - targetY) < epsilon) {
-			targetY = maxTop;
-		}
-
-		if (mutableRef.current.overscrollEnabled && overscrollEffect) {
-			if (scrollLeft !== targetX && canScrollHorizontally(bounds)) {
-				checkAndApplyOverscrollEffectOnStart('horizontal', getEdgeFromPosition(targetX, maxLeft), targetX);
-			}
-			if (scrollTop !== targetY && canScrollVertically(bounds)) {
-				checkAndApplyOverscrollEffectOnStart('vertical', getEdgeFromPosition(targetY, maxTop), targetY);
-			}
-		}
-
-		if (scrollMode === 'translate') {
-			showScrollbarTrack(bounds);
-			if (scrollContentHandle.current && scrollContentHandle.current.setScrollPositionTarget) {
-				scrollContentHandle.current.setScrollPositionTarget(targetX, targetY);
-			}
-
-			if (animate) {
-				mutableRef.current.animator.animate(scrollAnimation(mutableRef.current.animationInfo));
-			} else {
-				scroll(targetX, targetY);
-				stop();
-			}
-		} else { // scrollMode 'native'
-			let {roundedTargetX, roundedTargetY} = roundTarget(scrollContentHandle.current, targetX, targetY);
-
-			if (animate) {
-				scrollContentRef.current.lastInputType = mutableRef.current.lastInputType;
-				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'smooth', mutableRef.current.repeat);
-			} else {
-				scrollContentHandle.current.scrollToPosition(roundedTargetX, roundedTargetY, 'instant');
-			}
-
-			if (props.start) {
-				props.start(animate);
-			}
-		}
+		begin(false);
 	}
 
 	// scrollMode 'translate' [[
 	function scrollAnimation (animationInfo) {
 		return (curTime) => {
 			const
-				{sourceX, sourceY, targetX, targetY, duration} = animationInfo,
+				{sourceX, sourceY, targetX, targetY, duration, fixedDuration, timingFunction} = animationInfo,
 				bounds = getScrollBounds(),
-				scrollAnimationDuration = mutableRef.current.keyPressed ? minAnimationDuration : duration;
+				scrollAnimationDuration = mutableRef.current.keyPressed ? minAnimationDuration : duration,
+				timing = timingFunction || mutableRef.current.animator.timingFunction;
 
 			const dynamicScrollDuration = (target, source) => {
 				const customDuration = Math.max(minAnimationDuration, Math.abs(target - source));
 				if (mutableRef.current.keyPressed) return minAnimationDuration;
-				return animationDuration !== duration ? duration : Math.min(customDuration, duration);
+				return fixedDuration ? duration : Math.min(customDuration, duration);
 			};
 
 			if (curTime < scrollAnimationDuration) {
@@ -1337,7 +1392,7 @@ const useScrollBase = (props) => {
 
 				if (canScrollHorizontally(bounds)) {
 					const scrollDuration = dynamicScrollDuration(sourceX, targetX);
-					curTargetX = mutableRef.current.animator.timingFunction(sourceX, targetX, scrollDuration, curTime, mutableRef.current.keyPressed);
+					curTargetX = timing(sourceX, targetX, scrollDuration, curTime, mutableRef.current.keyPressed);
 
 					if (Math.abs(curTargetX - targetX) < epsilon) {
 						curTargetX = targetX;
@@ -1348,7 +1403,7 @@ const useScrollBase = (props) => {
 
 				if (canScrollVertically(bounds)) {
 					const scrollDuration = dynamicScrollDuration(sourceY, targetY);
-					curTargetY = mutableRef.current.animator.timingFunction(sourceY, targetY, scrollDuration, curTime, mutableRef.current.keyPressed);
+					curTargetY = timing(sourceY, targetY, scrollDuration, curTime, mutableRef.current.keyPressed);
 
 					if (Math.abs(curTargetY - targetY) < epsilon) {
 						curTargetY = targetY;
@@ -1411,6 +1466,8 @@ const useScrollBase = (props) => {
 	}
 
 	function stop () {
+		cancelScrollMotion(mutableRef.current);
+
 		if (scrollMode === 'translate') {
 			stopForTranslate();
 		} else {
