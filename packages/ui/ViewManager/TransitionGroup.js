@@ -4,6 +4,7 @@
 
 // Using string refs from the source code of ReactTransitionGroup
 
+import {getFragmentHostNode} from '@enact/core/internal/fragmentHost';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import {forward, forwardCustom} from '@enact/core/handle';
 import {checkPropTypes, setDefaultProps} from '@enact/core/util';
@@ -20,6 +21,7 @@ import {
 	Children,
 	cloneElement,
 	createElement,
+	Fragment,
 	useRef,
 	useCallback,
 	useMemo,
@@ -121,7 +123,6 @@ const TransitionGroup = (componentProps) => {
 	const keysToLeave = useRef([]);
 	const keysToStay = useRef([]);
 	const propsRef = useRef(props);
-	const refNodeId = '#transition#group#';
 
 	const completeTransition = useCallback(({key, noForwarding = false}) => {
 		if (key in currentlyTransitioningKeys.current) {
@@ -360,21 +361,8 @@ const TransitionGroup = (componentProps) => {
 		groupRefs.current[key] = node;
 	}, []);
 
-	/* This code is the same as @enact/core/WithRef. */
-	const getNodeRef = useCallback(() => {
-		const refNode = nodeRef.current;
-		const attributeSelector = `[data-transitiongroup-id="${refNode.getAttribute('data-transitiongroup-target')}"]`;
-		/* The intended code is to search for the referrer element via a single querySelector call. But unit tests cannot handle :has() properly.
-		const selector = `:scope ${attributeSelector}, :scope :has(${attributeSelector})`;
-		return refNode?.parentElement?.querySelector(selector) || null;
-		*/
-		const targetNode = refNode?.parentElement?.querySelector(attributeSelector) || null;
-		for (let current = targetNode; current; current = current.parentElement) {
-			if (current?.parentElement === refNode?.parentElement) {
-				return current;
-			}
-		}
-	}, []);
+	// Host element of `component`. View indexes `.children` to find the view being arranged.
+	const getNodeRef = useCallback(() => getFragmentHostNode(nodeRef.current), []);
 
 	// support wrapping arbitrary children with a component that supports the necessary
 	// lifecycle methods to animate transitions
@@ -398,7 +386,6 @@ const TransitionGroup = (componentProps) => {
 	const forwardProps = Object.assign({}, props);
 
 	forwardProps.ref = props.componentRef;
-	forwardProps['data-transitiongroup-id'] = refNodeId;
 
 	delete forwardProps.childFactory;
 	delete forwardProps.component;
@@ -413,10 +400,9 @@ const TransitionGroup = (componentProps) => {
 	delete forwardProps.size;
 
 	return (
-		<>
+		<Fragment ref={nodeRef}>
 			{createElement(props.component, forwardProps, childrenToRender)}
-			<div data-transitiongroup-target={refNodeId} ref={nodeRef} style={{display: 'none'}} />
-		</>
+		</Fragment>
 	);
 };
 

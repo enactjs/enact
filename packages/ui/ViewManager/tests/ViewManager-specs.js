@@ -43,6 +43,46 @@ describe('ViewManager', () => {
 		expect(actual).toBe(expected);
 	});
 
+	test('should resolve each view from the component host without a marker node', () => {
+		const nodes = [];
+		const animation = () => ({
+			playState: 'running',
+			finish: () => {},
+			cancel: () => {}
+		});
+		const arranger = {
+			enter: ({node}) => {
+				nodes.push(node);
+				return animation();
+			},
+			stay: ({node}) => {
+				nodes.push(node);
+				return animation();
+			},
+			leave: ({node}) => {
+				nodes.push(node);
+				return animation();
+			}
+		};
+
+		render(
+			<ViewManager arranger={arranger} data-testid="viewManager">
+				<div>View 1</div>
+				<div>View 2</div>
+			</ViewManager>
+		);
+
+		const viewManager = screen.getByTestId('viewManager');
+
+		expect(document.querySelector('[data-transitiongroup-target]')).toBeNull();
+		expect(document.querySelector('[data-transitiongroup-id]')).toBeNull();
+		expect(document.querySelector('[data-withref-target]')).toBeNull();
+		expect(nodes.length).toBeGreaterThan(0);
+		nodes.forEach(node => {
+			expect(node.parentElement).toBe(viewManager);
+		});
+	});
+
 	test('should render only 1 child view', () => {
 		render(
 			<ViewManager>
