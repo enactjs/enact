@@ -2,12 +2,6 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
-
-### Fixed
-
-- `ui/VirtualList` native scroll animation to not stop at an outdated position when a 5-way key is held while frames are delayed
-
 ## [5.6.0] - 2026-09-02
 
 ### Added
