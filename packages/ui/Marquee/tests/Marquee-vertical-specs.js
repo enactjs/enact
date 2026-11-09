@@ -748,6 +748,51 @@ describe('VerticalMarquee Specs', () => {
 			expect(view.querySelector('[data-vertical-marquee-track]').style.transform).toBe('translateY(-300px)');
 		});
 
+		test('should scroll on a later focus when an earlier measurement fit', () => {
+			jest.useFakeTimers();
+			let contentHeight = 20;
+			const originalStyle = window.getComputedStyle.bind(window);
+
+			jest.spyOn(window, 'getComputedStyle').mockImplementation((node) => {
+				const style = originalStyle(node);
+				return new Proxy(style, {
+					get: (target, prop, receiver) => {
+						if (prop === 'lineHeight' || prop === 'fontSize') return '30px';
+						const value = Reflect.get(target, prop, receiver);
+						return typeof value === 'function' ? value.bind(target) : value;
+					}
+				});
+			});
+			jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function () {
+				const height = this.hasAttribute('data-vertical-marquee-measurer') ? contentHeight : 0;
+				return rect(height);
+			});
+
+			render(
+				<VerticalMarquee data-testid="vertical-marquee" marqueeDelay={0} marqueeSpacing="0%" marqueeSpeed={30} maxLines={3}>
+					{longText}
+				</VerticalMarquee>
+			);
+			const view = screen.getByTestId('vertical-marquee');
+
+			fireEvent.focus(view);
+			act(() => {
+				jest.advanceTimersByTime(0);
+			});
+
+			expect(isScrolling(view)).toBe(false);
+
+			contentHeight = 300;
+			fireEvent.blur(view);
+			fireEvent.focus(view);
+			act(() => {
+				jest.advanceTimersByTime(0);
+			});
+
+			expect(isScrolling(view)).toBe(true);
+			expect(view.querySelector('[data-vertical-marquee-track]').style.transform).toBe('translateY(-300px)');
+		});
+
 		test('should stop a running session when the text no longer overflows', () => {
 			jest.useFakeTimers();
 			let contentHeight = 300;
