@@ -65,7 +65,7 @@ describe('ViewManager', () => {
 			}
 		};
 
-		const {container} = render(
+		render(
 			<ViewManager arranger={arranger} data-testid="viewManager">
 				<div>View 1</div>
 				<div>View 2</div>
@@ -74,9 +74,9 @@ describe('ViewManager', () => {
 
 		const viewManager = screen.getByTestId('viewManager');
 
-		expect(container.querySelector('[data-transitiongroup-target]')).toBeNull();
-		expect(container.querySelector('[data-transitiongroup-id]')).toBeNull();
-		expect(container.querySelector('[data-withref-target]')).toBeNull();
+		expect(document.querySelector('[data-transitiongroup-target]')).toBeNull();
+		expect(document.querySelector('[data-transitiongroup-id]')).toBeNull();
+		expect(document.querySelector('[data-withref-target]')).toBeNull();
 		expect(nodes.length).toBeGreaterThan(0);
 		nodes.forEach(node => {
 			expect(node.parentElement).toBe(viewManager);
