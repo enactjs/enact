@@ -1002,6 +1002,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.isFocused = true;
 			if (!this.sync) {
 				if (!this.state.animating) {
+					if (this.isVertical() && this.contentFits === true) {
+						this.invalidateMetrics();
+					}
 					this.startAnimation();
 				}
 			}

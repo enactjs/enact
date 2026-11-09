@@ -274,6 +274,94 @@ describe('VirtualList with native scrollMode', () => {
 			expect(node.scrollTo).toHaveBeenCalledWith({left: 0, top: 300, behavior: 'smooth'});
 			expect(window.cancelAnimationFrame).toHaveBeenCalled();
 		});
+
+		describe('with a request during the ongoing animation', () => {
+			let pendingFrames;
+
+			// Runs every pending frame callback like the browser does, so that concurrent animation loops are all driven
+			const runFrame = (time) => {
+				const callbacks = [...pendingFrames.values()];
+				pendingFrames.clear();
+				callbacks.forEach((cb) => cb(time));
+			};
+
+			beforeEach(() => {
+				let frameId = 0;
+				pendingFrames = new Map();
+
+				window.requestAnimationFrame.mockImplementation((cb) => {
+					pendingFrames.set(++frameId, cb);
+					return frameId;
+				});
+				window.cancelAnimationFrame.mockImplementation((id) => pendingFrames.delete(id));
+
+				node.scrollBy.mockImplementation(({left, top}) => {
+					node.scrollLeft += left;
+					node.scrollTop += top;
+				});
+				instance.primary.gridSize = 120;
+			});
+
+			test('should retarget the ongoing animation instead of starting a new one', () => {
+				instance.animateScroll(0, 120, node);
+				runFrame(16);
+				instance.animateScroll(0, 240, node);
+
+				expect(window.requestAnimationFrame).toHaveBeenCalledTimes(2);
+				expect(window.cancelAnimationFrame).not.toHaveBeenCalled();
+				expect(pendingFrames.size).toBe(1);
+				expect(instance.scrolling).toBe(true);
+			});
+
+			test('should reach the latest target when frames are delayed', () => {
+				instance.animateScroll(0, 120, node);
+				runFrame(16);
+				performance.now.mockReturnValue(400);
+				instance.animateScroll(0, 240, node);
+
+				// The next frame is delayed past the duration of the first request
+				for (let i = 0; i < 30 && pendingFrames.size; i++) {
+					runFrame(600 + i * 16);
+				}
+
+				expect(node.scrollTop).toBe(240);
+				expect(node.scrollTo).not.toHaveBeenCalledWith({left: 0, top: 120, behavior: 'smooth'});
+				expect(instance.scrolling).toBe(false);
+			});
+
+			test('should fall back to the latest target if the animation exceeds duration (timeout)', () => {
+				instance.animateScroll(0, 120, node);
+				instance.animateScroll(0, 240, node);
+				runFrame(600);
+
+				expect(node.scrollTo).toHaveBeenCalledWith({left: 0, top: 240, behavior: 'smooth'});
+				expect(node.scrollTo).not.toHaveBeenCalledWith({left: 0, top: 120, behavior: 'smooth'});
+			});
+
+			test('should restart the timeout on the latest request', () => {
+				instance.animateScroll(0, 120, node);
+				performance.now.mockReturnValue(400);
+				instance.animateScroll(0, 240, node);
+				runFrame(600);
+
+				expect(node.scrollTo).not.toHaveBeenCalledWith(expect.objectContaining({behavior: 'smooth'}));
+				expect(pendingFrames.size).toBe(1);
+			});
+
+			test('should scroll faster while the target is several items away', () => {
+				instance.animateScroll(0, 120, node);
+				runFrame(16);
+
+				// 10 = gridSize (120) / 12 per item left to scroll
+				expect(node.scrollTop).toBe(10);
+
+				instance.animateScroll(0, 360, node);
+				runFrame(32);
+
+				// 350px (3 items) left
+				expect(node.scrollTop).toBe(40);
+			});
+		});
 	});
 });
 
@@ -294,7 +382,6 @@ describe('VirtualListBasic scrollBounds consistency after item margin detection'
 				clientSize={{clientWidth: 1280, clientHeight: 720}}
 				dataSize={100}
 				direction={direction}
-				getAffordance={() => 0}
 				itemRefs={itemRefs}
 				itemRenderer={({index, ...rest2}) => <div {...rest2} data-index={index} />}
 				itemSize={30}
@@ -389,5 +476,57 @@ describe('VirtualListBasic scrollBounds consistency after item margin detection'
 		});
 
 		expect(instance.scrollBounds.scrollWidth - instance.scrollBounds.maxLeft).toBe(instance.props.clientSize.clientWidth);
+	});
+
+	test('should include the item margin in scrollHeight after scroll bounds are recalculated', () => {
+		const {ref} = renderVirtualListBasic();
+		const instance = ref.current;
+
+		const marginTop = 10;
+		const marginBottom = 5;
+
+		window.getComputedStyle = (el) => {
+			if (el === instance.props.itemRefs.current[0]) {
+				return {
+					getPropertyValue: (prop) => {
+						if (prop === 'margin-top') return `${marginTop}px`;
+						if (prop === 'margin-bottom') return `${marginBottom}px`;
+						return '0px';
+					}
+				};
+			}
+			return originalGetComputedStyle(el);
+		};
+
+		instance.itemMarginTop = null;
+		act(() => {
+			instance.forceUpdate();
+		});
+
+		const expected = instance.getVirtualScrollDimension() + marginTop + marginBottom;
+		expect(instance.scrollBounds.scrollHeight).toBe(expected);
+
+		act(() => {
+			instance.calculateScrollBounds(instance.props);
+		});
+		expect(instance.scrollBounds.scrollHeight).toBe(expected);
+	});
+
+	test('should grow scrollHeight to the last known item bottom but never shrink it when item positions are partially known', () => {
+		const itemSizes = Array.from({length: 100}, (_, i) => 30 + i);
+		const {ref} = renderVirtualListBasic({itemSizes});
+		const instance = ref.current;
+		const lastIndex = instance.state.firstIndex + instance.state.numOfItems - 1;
+		const lastBottom = instance.itemPositions[lastIndex].position + itemSizes[lastIndex];
+
+		expect(instance.itemPositions.length).toBeLessThan(itemSizes.length);
+
+		instance.scrollBounds.scrollHeight = 0;
+		instance.updateScrollBoundsWithItemPositions();
+		expect(instance.scrollBounds.scrollHeight).toBe(lastBottom);
+
+		instance.scrollBounds.scrollHeight = lastBottom + 1000;
+		instance.updateScrollBoundsWithItemPositions();
+		expect(instance.scrollBounds.scrollHeight).toBe(lastBottom + 1000);
 	});
 });
