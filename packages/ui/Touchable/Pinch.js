@@ -10,7 +10,7 @@ class Pinch {
 
 	setContainerBounds = (node) => {
 		const {global: isGlobal, boxSizing} = this.pinchConfig;
-		let bounds = null;
+		let bounds;
 
 		if (typeof window === 'undefined' || !node) return;
 
