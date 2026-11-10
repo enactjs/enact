@@ -47,7 +47,8 @@ function chainRefs (...refs) {
  * @public
  */
 function useChainRefs (...refs) {
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// The dependency list is the variable list of refs, so it cannot be an array literal
+	// eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo
 	return useCallback(chainRefs(...refs), refs);
 }
 
