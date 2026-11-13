@@ -1,4 +1,4 @@
-/* eslint no-console: ["error", { allow: ["warn", "error"] }], react/jsx-no-bind: off */
+/* eslint no-console: ["error", { allow: ["warn", "error"] }], enact/jsx-no-bind: off */
 
 import '@testing-library/jest-dom';
 import {render, screen} from '@testing-library/react';
