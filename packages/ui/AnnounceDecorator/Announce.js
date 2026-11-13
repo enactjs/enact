@@ -75,6 +75,7 @@ const Announce = (componentProps) => {
 		 * Call to update the message for the alert.
 		 *
 		 * @method
+		 * @memberof ui/AnnounceDecorator.Announce.prototype
 		 * @param   {String}     message  Message to notify the user
 		 * @param   {Boolean}    clear    Clears a previous message before setting the new message
 		 * @returns {undefined}
