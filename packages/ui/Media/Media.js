@@ -10,10 +10,10 @@
 
 import {on, off} from '@enact/core/dispatcher';
 import {forward, forwardCustom} from '@enact/core/handle';
-import {checkPropTypes} from '@enact/core/util';
+import {checkPropTypes, setDefaultProps} from '@enact/core/util';
 import EnactPropTypes from '@enact/core/internal/prop-types';
 import PropTypes from 'prop-types';
-import {Children, isValidElement, Component as ReactComponent} from 'react';
+import {Children, isValidElement, useImperativeHandle, useLayoutEffect, useRef, useState} from 'react';
 
 /**
  * Generates a key representing the source node or nodes provided
@@ -111,6 +111,42 @@ const handledMediaEventsMap = {
 	waiting         : 'onWaiting'
 };
 
+const mediaDefaultProps = {
+	mediaEventsMap: handledMediaEventsMap
+};
+
+const createMediaHandlers = (mediaEventsMap, customMediaEventsMap, propsRef) => {
+	const forwards = {};
+	const events = {};
+
+	const handleEvent = (ev) => {
+		forwardCustom('onUpdate')(null, propsRef.current);
+
+		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
+		const fwd = forwards[handledMediaEventsMap[ev.type]];
+		if (fwd) {
+			fwd(ev, propsRef.current);
+		}
+	};
+
+	// Generate event handling forwarders and a smooth block to pass to <Video>
+	for (const key in mediaEventsMap) {
+		const eventName = mediaEventsMap[key];
+		forwards[eventName] = forward(eventName);
+		events[eventName] = handleEvent;
+	}
+
+	// Generate event handling forwarders for the custom events too
+	const customForwards = {};
+	for (const eventName in customMediaEventsMap) {
+		const propName = customMediaEventsMap[eventName];
+		const forwardEvent = forward(propName);
+		customForwards[eventName] = (ev) => forwardEvent(ev, propsRef.current);
+	}
+
+	return {customForwards, events};
+};
+
 /**
  * A component representation of HTMLMediaElement.
  *
@@ -119,208 +155,157 @@ const handledMediaEventsMap = {
  * @ui
  * @public
  */
-class Media extends ReactComponent {
-	static propTypes = /** @lends ui/Media.Media.prototype */ {
-		/**
-		 * A type of media component.
-		 *
-		 * @type {String|Component}
-		 * @required
-		 * @public
-		 */
-		mediaComponent: EnactPropTypes.renderable.isRequired,
+const Media = (componentProps) => {
+	const props = setDefaultProps(componentProps, mediaDefaultProps);
+	checkPropTypes(Media, props);
 
-		/**
-		 * An event map object for custom media events.
-		 *
-		 * List custom events that aren't standard to React. These will be directly added to the media
-		 * element and props matching their name will be executed as callback functions when the event fires.
-		 *
-		 * Example:
-		 * ```
-		 * {'umsmediainfo': 'onUMSMediaInfo'} // `onUMSMediaInfo` prop function will execute when the `umsmediainfo` event happens
-		 * ```
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		customMediaEventsMap: PropTypes.object,
+	const {customMediaEventsMap, mediaComponent: Component, mediaEventsMap, ref, source, ...rest} = props;
 
-		/**
-		 * A event map object for media events.
-		 *
-		 * @type {Object}
-		 * @default {@link ui/Media.handledMediaEventsMap}
-		 * @public
-		 */
-		mediaEventsMap: PropTypes.object,
+	delete rest.onUpdate;
 
-		/**
-		 * A function to be run when media updates.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onUpdate: PropTypes.func,
+	// Remove the events we manually added so they aren't added twice or fail.
+	for (const eventName in customMediaEventsMap) {
+		delete rest[customMediaEventsMap[eventName]];
+	}
 
-		/**
-		 * Media sources passed as children to `mediaComponent`
-		 *
-		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
-		 *
-		 * @type {*}
-		 * @public
-		 */
-		source: PropTypes.any
-	};
+	const mediaRef = useRef(null);
+	const propsRef = useRef(props);
+	const sourceKey = getKeyFromSource(source);
+	const prevSourceKey = useRef(sourceKey);
 
-	static defaultProps = {
-		mediaEventsMap: handledMediaEventsMap
-	};
+	const [{customForwards, events}] = useState(() => createMediaHandlers(mediaEventsMap, customMediaEventsMap, propsRef));
 
-	constructor (props) {
-		super(props);
-		checkPropTypes(this, props);
+	useLayoutEffect(() => {
+		propsRef.current = props;
+	});
 
-		this.media = null;
+	useLayoutEffect(() => {
+		const node = mediaRef.current;
 
-		this.handledMediaForwards = {};
-		this.handledMediaEvents = {};
-		this.handledCustomMediaForwards = {};
-
-		// Generate event handling forwarders and a smooth block to pass to <Video>
-		for (let key in props.mediaEventsMap) {
-			const eventName = props.mediaEventsMap[key];
-			this.handledMediaForwards[eventName] = forward(eventName);
-			this.handledMediaEvents[eventName] = this.handleEvent;
+		for (const eventName in customForwards) {
+			on(eventName, customForwards[eventName], node);
 		}
 
-		// Generate event handling forwarders for the custom events too
-		for (let eventName in props.customMediaEventsMap) {
-			const propName = props.customMediaEventsMap[eventName];
-			const forwardEvent = forward(propName);
-			this.handledCustomMediaForwards[eventName] = ev => forwardEvent(ev, this.props);
+		return () => {
+			for (const eventName in customForwards) {
+				off(eventName, customForwards[eventName], node);
+			}
+		};
+	}, [customForwards]);
+
+	useLayoutEffect(() => {
+		if (prevSourceKey.current !== sourceKey) {
+			prevSourceKey.current = sourceKey;
+			mediaRef.current.load();
 		}
-	}
+	}, [sourceKey]);
 
-	componentDidMount () {
-		this.attachCustomMediaEvents();
-	}
-
-	componentDidUpdate (prevProps) {
-		const {source} = this.props;
-		const {source: prevSource} = prevProps;
-
-		checkPropTypes(this, this.props, prevProps);
-		if (getKeyFromSource(source) !== getKeyFromSource(prevSource)) {
-			this.load();
+	useImperativeHandle(ref, () => ({
+		play () {
+			return mediaRef.current.play();
+		},
+		pause () {
+			mediaRef.current.pause();
+		},
+		load () {
+			mediaRef.current.load();
+		},
+		get currentTime () {
+			return mediaRef.current.currentTime;
+		},
+		set currentTime (currentTime) {
+			mediaRef.current.currentTime = currentTime;
+		},
+		get duration () {
+			return mediaRef.current.duration;
+		},
+		get error () {
+			return mediaRef.current.networkState === mediaRef.current.NETWORK_NO_SOURCE;
+		},
+		get loading () {
+			return mediaRef.current.readyState < mediaRef.current.HAVE_ENOUGH_DATA;
+		},
+		get paused () {
+			return mediaRef.current.paused;
+		},
+		get playbackRate () {
+			return mediaRef.current.playbackRate;
+		},
+		set playbackRate (playbackRate) {
+			mediaRef.current.playbackRate = playbackRate;
+		},
+		get proportionLoaded () {
+			return mediaRef.current.buffered.length && mediaRef.current.buffered.end(mediaRef.current.buffered.length - 1) / mediaRef.current.duration;
+		},
+		get proportionPlayed () {
+			return mediaRef.current.currentTime / mediaRef.current.duration;
 		}
-	}
+	}), []);
 
-	componentWillUnmount () {
-		this.detachCustomMediaEvents();
-	}
+	return (
+		<Component
+			{...rest}
+			{...events}
+			ref={mediaRef}
+		>
+			{source}
+		</Component>
+	);
+};
 
-	attachCustomMediaEvents = () => {
-		for (let eventName in this.handledCustomMediaForwards) {
-			on(eventName, this.handledCustomMediaForwards[eventName], this.media);
-		}
-	};
+Media.propTypes = /** @lends ui/Media.Media.prototype */ {
+	/**
+	 * A type of media component.
+	 *
+	 * @type {String|Component}
+	 * @required
+	 * @public
+	 */
+	mediaComponent: EnactPropTypes.renderable.isRequired,
 
-	detachCustomMediaEvents = () => {
-		for (let eventName in this.handledCustomMediaForwards) {
-			off(eventName, this.handledCustomMediaForwards[eventName], this.media);
-		}
-	};
+	/**
+	 * An event map object for custom media events.
+	 *
+	 * List custom events that aren't standard to React. These will be directly added to the media
+	 * element and props matching their name will be executed as callback functions when the event fires.
+	 *
+	 * Example:
+	 * ```
+	 * {'umsmediainfo': 'onUMSMediaInfo'} // `onUMSMediaInfo` prop function will execute when the `umsmediainfo` event happens
+	 * ```
+	 *
+	 * @type {Object}
+	 * @public
+	 */
+	customMediaEventsMap: PropTypes.object,
 
-	handleEvent = (ev) => {
-		forwardCustom('onUpdate')(null, this.props);
+	/**
+	 * A event map object for media events.
+	 *
+	 * @type {Object}
+	 * @default {@link ui/Media.handledMediaEventsMap}
+	 * @public
+	 */
+	mediaEventsMap: PropTypes.object,
 
-		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
-		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];
-		if (fwd) {
-			fwd(ev, this.props);
-		}
-	};
+	/**
+	 * A function to be run when media updates.
+	 *
+	 * @type {Function}
+	 * @public
+	 */
+	onUpdate: PropTypes.func,
 
-	mediaRef = (node) => {
-		this.media = node;
-	};
-
-	play () {
-		return this.media.play();
-	}
-
-	pause () {
-		this.media.pause();
-	}
-
-	load () {
-		this.media.load();
-	}
-
-	get currentTime ()  {
-		return this.media.currentTime;
-	}
-
-	set currentTime (currentTime) {
-		this.media.currentTime = currentTime;
-	}
-
-	get duration () {
-		return this.media.duration;
-	}
-
-	get error () {
-		return this.media.networkState === this.media.NETWORK_NO_SOURCE;
-	}
-
-	get loading () {
-		return this.media.readyState < this.media.HAVE_ENOUGH_DATA;
-	}
-
-	get paused () {
-		return this.media.paused;
-	}
-
-	get playbackRate () {
-		return this.media.playbackRate;
-	}
-
-	set playbackRate (playbackRate) {
-		this.media.playbackRate = playbackRate;
-	}
-
-	get proportionLoaded () {
-		return this.media.buffered.length && this.media.buffered.end(this.media.buffered.length - 1) / this.media.duration;
-	}
-
-	get proportionPlayed () {
-		return this.media.currentTime / this.media.duration;
-	}
-
-	render () {
-		const {customMediaEventsMap, mediaComponent: Component, source, ...rest} = this.props;
-
-		delete rest.mediaEventsMap;
-		delete rest.onUpdate;
-
-		// Remove the events we manually added so they aren't added twice or fail.
-		for (let eventName in customMediaEventsMap) {
-			delete rest[customMediaEventsMap[eventName]];
-		}
-
-		return (
-			<Component
-				{...rest}
-				{...this.handledMediaEvents}
-				ref={this.mediaRef}
-			>
-				{source}
-			</Component>
-		);
-	}
-}
+	/**
+	 * Media sources passed as children to `mediaComponent`
+	 *
+	 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
+	 *
+	 * @type {*}
+	 * @public
+	 */
+	source: PropTypes.any
+};
 
 export default Media;
 export {

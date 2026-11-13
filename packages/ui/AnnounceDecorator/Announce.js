@@ -1,6 +1,13 @@
-import {checkPropTypes} from '@enact/core/util';
+import {checkPropTypes, setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import {Component} from 'react';
+import {useEffect, useImperativeHandle, useLayoutEffect, useRef} from 'react';
+
+const announceDefaultProps = {
+	// 500ms is somewhat arbitrary. Would like to do some further usability testing to determine
+	// how frequently we should allow alerting. Should also consider if this timeout should be
+	// "global" such that multiple instances of Announce respect each other.
+	timeout: 500
+};
 
 /**
  * An unstyled component with an imperative API to alert the user.
@@ -37,87 +44,80 @@ import {Component} from 'react';
  * @memberof ui/AnnounceDecorator
  * @public
  */
-const Announce = class extends Component {
-	static displayName = 'Announce';
+const Announce = (componentProps) => {
+	const props = setDefaultProps(componentProps, announceDefaultProps);
+	checkPropTypes(Announce, props);
 
-	static propTypes = /** @lends ui/AnnounceDecorator.Announce.prototype */ {
+	const {ref, ...rest} = props;
+	delete rest.timeout;
+	const alertRef = useRef(null);
+	const alertTimeoutRef = useRef(null);
+	const propsRef = useRef(props);
+
+	useLayoutEffect(() => {
+		propsRef.current = props;
+	});
+
+	useEffect(() => {
+		return () => {
+			if (alertTimeoutRef.current) {
+				clearTimeout(alertTimeoutRef.current);
+			}
+		};
+	}, []);
+
+	useImperativeHandle(ref, () => ({
+		get alert () {
+			return alertRef.current;
+		},
+
 		/**
-		 * Time, in milliseconds, to wait to remove the alert message.
-
-		 * Subsequent updates to the
-		 * message before the timeout are ignored.
+		 * Call to update the message for the alert.
 		 *
-		 * @type {Number}
-		 * @default 500
+		 * @method
+		 * @param   {String}     message  Message to notify the user
+		 * @param   {Boolean}    clear    Clears a previous message before setting the new message
+		 * @returns {undefined}
 		 * @public
 		 */
-		timeout: PropTypes.number
-	};
+		announce (message, clear = false) {
+			if (clear) {
+				if (alertTimeoutRef.current) {
+					clearTimeout(alertTimeoutRef.current);
+				}
+				alertTimeoutRef.current = null;
+				alertRef.current.removeAttribute('aria-label');
+			}
 
-	static defaultProps = {
-		// 500ms is somewhat arbitrary. Would like to do some further usability testing to determine
-		// how frequently we should allow alerting. Should also consider if this timeout should be
-		// "global" such that multiple instances of Announce respect each other.
-		timeout: 500
-	};
-
-	constructor (props) {
-		super(props);
-		checkPropTypes(this, props);
-	}
-
-	componentDidUpdate (prevProps) {
-		checkPropTypes(this, this.props, prevProps);
-	}
-
-	componentWillUnmount () {
-		this.clearTimeout();
-	}
-
-	clearTimeout () {
-		if (this.alertTimeout) {
-			clearTimeout(this.alertTimeout);
+			if (alertRef.current && !alertTimeoutRef.current && message) {
+				alertRef.current.setAttribute('aria-label', message);
+				alertTimeoutRef.current = setTimeout(() => {
+					alertTimeoutRef.current = null;
+					alertRef.current.removeAttribute('aria-label');
+				}, propsRef.current.timeout);
+			}
 		}
-	}
+	}), []);
 
-	resetAlert = () => {
-		this.alertTimeout = null;
-		this.alert.removeAttribute('aria-label');
-	};
+	return (
+		<span ref={alertRef} role="alert" {...rest} />
+	);
+};
 
+Announce.displayName = 'Announce';
+
+Announce.propTypes = /** @lends ui/AnnounceDecorator.Announce.prototype */ {
 	/**
-	 * Call to update the message for the alert.
+	 * Time, in milliseconds, to wait to remove the alert message.
+
+	 * Subsequent updates to the
+	 * message before the timeout are ignored.
 	 *
-	 * @method
-	 * @param   {String}     message  Message to notify the user
-	 * @param   {Boolean}    clear    Clears a previous message before setting the new message
-	 * @returns {undefined}
+	 * @type {Number}
+	 * @default 500
 	 * @public
 	 */
-	announce = (message, clear = false) => {
-		if (clear) {
-			this.clearTimeout();
-			this.resetAlert();
-		}
-
-		if (this.alert && !this.alertTimeout && message) {
-			this.alert.setAttribute('aria-label', message);
-			this.alertTimeout = setTimeout(this.resetAlert, this.props.timeout);
-		}
-	};
-
-	setAlertRef = (node) => {
-		this.alert = node;
-	};
-
-	render () {
-		const props = Object.assign({}, this.props);
-		delete props.timeout;
-
-		return (
-			<span ref={this.setAlertRef} role="alert" {...props} />
-		);
-	}
+	timeout: PropTypes.number
 };
 
 export default Announce;
