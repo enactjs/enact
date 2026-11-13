@@ -31,4 +31,22 @@ describe('Announce', () => {
 
 		expect(actual).toBe(expected);
 	});
+
+	test('should replace a pending message when clear is true and remove it after the timeout', () => {
+		jest.useFakeTimers();
+		const ref = createRef();
+
+		render(<Announce ref={ref} />);
+
+		ref.current.announce('first');
+		ref.current.announce('second', true);
+
+		expect(ref.current.alert.getAttribute('aria-label')).toBe('second');
+
+		jest.advanceTimersByTime(500);
+
+		expect(ref.current.alert.hasAttribute('aria-label')).toBe(false);
+
+		jest.useRealTimers();
+	});
 });

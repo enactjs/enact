@@ -115,38 +115,6 @@ const mediaDefaultProps = {
 	mediaEventsMap: handledMediaEventsMap
 };
 
-const createMediaHandlers = (mediaEventsMap, customMediaEventsMap, propsRef) => {
-	const forwards = {};
-	const events = {};
-
-	const handleEvent = (ev) => {
-		forwardCustom('onUpdate')(null, propsRef.current);
-
-		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
-		const fwd = forwards[handledMediaEventsMap[ev.type]];
-		if (fwd) {
-			fwd(ev, propsRef.current);
-		}
-	};
-
-	// Generate event handling forwarders and a smooth block to pass to <Video>
-	for (const key in mediaEventsMap) {
-		const eventName = mediaEventsMap[key];
-		forwards[eventName] = forward(eventName);
-		events[eventName] = handleEvent;
-	}
-
-	// Generate event handling forwarders for the custom events too
-	const customForwards = {};
-	for (const eventName in customMediaEventsMap) {
-		const propName = customMediaEventsMap[eventName];
-		const forwardEvent = forward(propName);
-		customForwards[eventName] = (ev) => forwardEvent(ev, propsRef.current);
-	}
-
-	return {customForwards, events};
-};
-
 /**
  * A component representation of HTMLMediaElement.
  *
@@ -173,7 +141,37 @@ const Media = (componentProps) => {
 	const sourceKey = getKeyFromSource(source);
 	const prevSourceKey = useRef(sourceKey);
 
-	const [{customForwards, events}] = useState(() => createMediaHandlers(mediaEventsMap, customMediaEventsMap, propsRef));
+	const [{customForwards, events}] = useState(() => {
+		const forwards = {};
+		const mediaEvents = {};
+
+		const handleEvent = (ev) => {
+			forwardCustom('onUpdate')(null, propsRef.current);
+
+			// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
+			const fwd = forwards[handledMediaEventsMap[ev.type]];
+			if (fwd) {
+				fwd(ev, propsRef.current);
+			}
+		};
+
+		// Generate event handling forwarders and a smooth block to pass to <Video>
+		for (const key in mediaEventsMap) {
+			const eventName = mediaEventsMap[key];
+			forwards[eventName] = forward(eventName);
+			mediaEvents[eventName] = handleEvent;
+		}
+
+		// Generate event handling forwarders for the custom events too
+		const customHandlers = {};
+		for (const eventName in customMediaEventsMap) {
+			const propName = customMediaEventsMap[eventName];
+			const forwardEvent = forward(propName);
+			customHandlers[eventName] = (ev) => forwardEvent(ev, propsRef.current);
+		}
+
+		return {customForwards: customHandlers, events: mediaEvents};
+	});
 
 	useLayoutEffect(() => {
 		propsRef.current = props;
