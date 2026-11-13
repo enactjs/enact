@@ -172,6 +172,79 @@ describe('Media', () => {
 		expect(actual).toEqual(expected);
 	});
 
+	test('should report error, loading, and paused from the media element', () => {
+		const ref = createRef();
+
+		render(
+			<Media ref={ref} mediaComponent="video" data-testid="media-id" />
+		);
+
+		const video = screen.getByTestId('media-id');
+
+		Object.defineProperty(video, 'networkState', {
+			configurable: true,
+			get: () => video.NETWORK_NO_SOURCE
+		});
+		Object.defineProperty(video, 'readyState', {
+			configurable: true,
+			get: () => 0
+		});
+		Object.defineProperty(video, 'paused', {
+			configurable: true,
+			get: () => true
+		});
+
+		expect(ref.current.error).toBe(true);
+		expect(ref.current.loading).toBe(true);
+		expect(ref.current.paused).toBe(true);
+
+		Object.defineProperty(video, 'networkState', {
+			configurable: true,
+			get: () => video.NETWORK_IDLE
+		});
+		Object.defineProperty(video, 'readyState', {
+			configurable: true,
+			get: () => video.HAVE_ENOUGH_DATA
+		});
+
+		expect(ref.current.error).toBe(false);
+		expect(ref.current.loading).toBe(false);
+	});
+
+	test('should return proportionLoaded from the buffered range', () => {
+		const ref = createRef();
+
+		render(
+			<Media ref={ref} mediaComponent="video" data-testid="media-id" />
+		);
+
+		const video = screen.getByTestId('media-id');
+
+		Object.defineProperty(video, 'duration', {
+			configurable: true,
+			get: () => 10
+		});
+		Object.defineProperty(video, 'buffered', {
+			configurable: true,
+			get: () => ({
+				length: 0,
+				end: () => 0
+			})
+		});
+
+		expect(ref.current.proportionLoaded).toBe(0);
+
+		Object.defineProperty(video, 'buffered', {
+			configurable: true,
+			get: () => ({
+				length: 1,
+				end: () => 4
+			})
+		});
+
+		expect(ref.current.proportionLoaded).toBe(0.4);
+	});
+
 	test('should be able to get and set the playback rate', () => {
 		const ref = createRef();
 		const expected = 2;
