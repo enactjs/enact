@@ -8,9 +8,9 @@
  */
 
 import {forward, forwardCustom, handle, stop, stopImmediate} from '@enact/core/handle';
-import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
+import useHandlers from '@enact/core/useHandlers';
 import {checkPropTypes} from '@enact/core/util';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
@@ -203,14 +203,14 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		}, []);
 
 		if (isFirstRender && modal) {
-			addModal({...handlers});
+			addModal(handlers);
 			setIsFirstRender(false);
 		}
 
 		useLayoutEffect(() => {
 			return () => {
 				if (modal) {
-					removeModal({...handlers});
+					removeModal(handlers);
 				}
 			};
 		}, [handlers]);
