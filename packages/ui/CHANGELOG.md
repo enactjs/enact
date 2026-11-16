@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/useScroll` option `getScrollMotion` to time every animated scroll from a theme's motion tokens
 - `ui/Marquee.MarqueeDecorator` config `orientation` and prop `marqueeMaxLines` to scroll overflowing multi-line text vertically
 - `ui/Marquee` prop `css` to customize the marquee's internal elements
 
@@ -16,6 +17,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
+- `ui/useScroll` motion scroll to stop at the end of the range instead of aiming past it
 - `ui/VirtualList` native scroll animation to not stop at an outdated position when a 5-way key is held while frames are delayed
 
 ## [5.6.0] - 2026-09-02
