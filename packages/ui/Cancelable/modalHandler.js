@@ -29,6 +29,7 @@ const dispatchToModals = (ev) => {
  * @private
  */
 const addModal = (obj) => {
+	if (modals.includes(obj)) return;
 	if (modals.push(obj) === 1 && typeof window !== 'undefined') {
 		on('keyup', dispatchToModals, window);
 	}

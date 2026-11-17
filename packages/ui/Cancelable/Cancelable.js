@@ -14,7 +14,7 @@ import useHandlers from '@enact/core/useHandlers';
 import {checkPropTypes} from '@enact/core/util';
 import invariant from 'invariant';
 import PropTypes from 'prop-types';
-import {useCallback, useLayoutEffect, useState} from 'react';
+import {useCallback, useLayoutEffect} from 'react';
 
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
 import {addModal, removeModal} from './modalHandler';
@@ -180,7 +180,6 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		checkPropTypes(Cancelable, props);
 
 		const handlers = useHandlers(cancelableHandlers, props, {dispatchCancelToConfig});
-		const [isFirstRender, setIsFirstRender] = useState(true);
 
 		const renderWrapped = useCallback((wrappedProps) => {
 			return (
@@ -202,9 +201,8 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			);
 		}, []);
 
-		if (isFirstRender && modal) {
+		if (modal) {
 			addModal(handlers);
-			setIsFirstRender(false);
 		}
 
 		useLayoutEffect(() => {
