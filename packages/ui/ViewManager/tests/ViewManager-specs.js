@@ -44,7 +44,7 @@ describe('ViewManager', () => {
 	});
 
 	test('should resolve each view from the component host without a marker node', () => {
-		const nodes = [];
+		const seen = {enter: [], stay: [], leave: []};
 		const animation = () => ({
 			playState: 'running',
 			finish: () => {},
@@ -52,35 +52,42 @@ describe('ViewManager', () => {
 		});
 		const arranger = {
 			enter: ({node}) => {
-				nodes.push(node);
+				seen.enter.push(node);
 				return animation();
 			},
 			stay: ({node}) => {
-				nodes.push(node);
+				seen.stay.push(node);
 				return animation();
 			},
 			leave: ({node}) => {
-				nodes.push(node);
+				seen.leave.push(node);
 				return animation();
 			}
 		};
 
-		render(
+		const {rerender} = render(
 			<ViewManager arranger={arranger} data-testid="viewManager">
 				<div>View 1</div>
 				<div>View 2</div>
 			</ViewManager>
 		);
 
-		const viewManager = screen.getByTestId('viewManager');
-
 		expect(document.querySelector('[data-transitiongroup-target]')).toBeNull();
 		expect(document.querySelector('[data-transitiongroup-id]')).toBeNull();
 		expect(document.querySelector('[data-withref-target]')).toBeNull();
-		expect(nodes.length).toBeGreaterThan(0);
-		nodes.forEach(node => {
-			expect(node.parentElement).toBe(viewManager);
-		});
+		expect(seen.stay).toEqual([screen.getByText('View 1')]);
+		expect(seen.enter).toEqual([]);
+		expect(seen.leave).toEqual([]);
+
+		rerender(
+			<ViewManager arranger={arranger} data-testid="viewManager" index={1}>
+				<div>View 1</div>
+				<div>View 2</div>
+			</ViewManager>
+		);
+
+		expect(seen.enter).toEqual([screen.getByText('View 2')]);
+		expect(seen.leave).toEqual([screen.getByText('View 1')]);
 	});
 
 	test('should render only 1 child view', () => {

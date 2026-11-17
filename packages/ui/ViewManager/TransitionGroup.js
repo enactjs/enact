@@ -116,7 +116,7 @@ const TransitionGroup = (componentProps) => {
 
 	const prevState = useRef(state);
 	const hasMounted = useRef(false);
-	const nodeRef = useRef(null);
+	const fragmentRef = useRef(null);
 	const groupRefs = useRef({});
 	const currentlyTransitioningKeys = useRef({});
 	const keysToEnter = useRef([]);
@@ -362,7 +362,7 @@ const TransitionGroup = (componentProps) => {
 	}, []);
 
 	// Host element of `component`. View indexes `.children` to find the view being arranged.
-	const getNodeRef = useCallback(() => getFragmentHostNode(nodeRef.current), []);
+	const getNodeRef = useCallback(() => getFragmentHostNode(fragmentRef.current), []);
 
 	// support wrapping arbitrary children with a component that supports the necessary
 	// lifecycle methods to animate transitions
@@ -400,7 +400,7 @@ const TransitionGroup = (componentProps) => {
 	delete forwardProps.size;
 
 	return (
-		<Fragment ref={nodeRef}>
+		<Fragment ref={fragmentRef}>
 			{createElement(props.component, forwardProps, childrenToRender)}
 		</Fragment>
 	);
