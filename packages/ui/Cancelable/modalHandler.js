@@ -21,9 +21,10 @@ const dispatchToModals = (ev) => {
 };
 
 /**
- * Adds a modal `Cancelable` instance to the list of modals.
+ * Adds the handlers of a modal `Cancelable` instance to the list of modals. Does nothing if
+ * they are already in the list.
  *
- * @param	{ui/Cancelable.Cancelable}	obj	Cancelable instance
+ * @param	{Object}	obj	Handlers of a `Cancelable` instance, from `useHandlers`
  *
  * @returns	{undefined}
  * @private
@@ -36,9 +37,9 @@ const addModal = (obj) => {
 };
 
 /**
- * Removes a modal `Cancelable` instance from the list of modals.
+ * Removes the handlers of a modal `Cancelable` instance from the list of modals.
  *
- * @param	{ui/Cancelable.Cancelable}	obj	Cancelable instance
+ * @param	{Object}	obj	Handlers of a `Cancelable` instance, from `useHandlers`
  *
  * @returns	{undefined}
  * @private

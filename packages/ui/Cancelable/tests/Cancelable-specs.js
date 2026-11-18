@@ -317,6 +317,33 @@ describe('Cancelable', () => {
 			expect(results).toEqual(expected);
 		});
 
+		test('should call each modal handler once after a rerender', () => {
+			const results = [];
+			const append = str => () => {
+				results.push(str);
+				return false;
+			};
+
+			const First = Cancelable(
+				{modal: true, onCancel: append('first')},
+				Component
+			);
+			const Second = Cancelable(
+				{modal: true, onCancel: append('second')},
+				Component
+			);
+
+			const {rerender} = render(<First className="a" />);
+			render(<Second />);
+			rerender(<First className="b" />);
+
+			document.dispatchEvent(makeKeyboardEvent(27));
+
+			const expected = ['second', 'first'];
+
+			expect(results).toEqual(expected);
+		});
+
 		test('should invoke nested modal handlers in LIFO order', () => {
 			const results = [];
 			const append = str => () => {
