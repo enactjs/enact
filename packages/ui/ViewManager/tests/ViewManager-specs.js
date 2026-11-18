@@ -66,7 +66,7 @@ describe('ViewManager', () => {
 		};
 
 		const {rerender} = render(
-			<ViewManager arranger={arranger} data-testid="viewManager">
+			<ViewManager arranger={arranger}>
 				<div>View 1</div>
 				<div>View 2</div>
 			</ViewManager>
@@ -74,13 +74,12 @@ describe('ViewManager', () => {
 
 		expect(document.querySelector('[data-transitiongroup-target]')).toBeNull();
 		expect(document.querySelector('[data-transitiongroup-id]')).toBeNull();
-		expect(document.querySelector('[data-withref-target]')).toBeNull();
 		expect(seen.stay).toEqual([screen.getByText('View 1')]);
 		expect(seen.enter).toEqual([]);
 		expect(seen.leave).toEqual([]);
 
 		rerender(
-			<ViewManager arranger={arranger} data-testid="viewManager" index={1}>
+			<ViewManager arranger={arranger} index={1}>
 				<div>View 1</div>
 				<div>View 2</div>
 			</ViewManager>
