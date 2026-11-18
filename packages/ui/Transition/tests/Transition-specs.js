@@ -129,6 +129,32 @@ describe('Transition Specs', () => {
 		expect(actual).toMatchObject(expectedType);
 	});
 
+	test('should fire the latest \'onShow\' handler when it changes along with \'visible\' and noAnimation', () => {
+		const firstHandleShow = jest.fn();
+		const latestHandleShow = jest.fn();
+
+		const {rerender} = render(<Transition noAnimation onShow={firstHandleShow} visible={false}>Body</Transition>);
+		rerender(<Transition noAnimation onShow={latestHandleShow} visible>Body</Transition>);
+
+		const expected = 1;
+
+		expect(firstHandleShow).not.toHaveBeenCalled();
+		expect(latestHandleShow).toHaveBeenCalledTimes(expected);
+	});
+
+	test('should fire the latest \'onHide\' handler when it changes along with \'visible\' and noAnimation', () => {
+		const firstHandleHide = jest.fn();
+		const latestHandleHide = jest.fn();
+
+		const {rerender} = render(<Transition noAnimation onHide={firstHandleHide} visible>Body</Transition>);
+		rerender(<Transition noAnimation onHide={latestHandleHide} visible={false}>Body</Transition>);
+
+		const expected = 1;
+
+		expect(firstHandleHide).not.toHaveBeenCalled();
+		expect(latestHandleHide).toHaveBeenCalledTimes(expected);
+	});
+
 	// Tests for prop and className combinations
 	const directionCombination = [
 		['up', 'up'],
@@ -256,6 +282,36 @@ describe('Transition Specs', () => {
 		const expected = 1;
 
 		expect(handleTransitionEnd).toHaveBeenCalledTimes(expected);
+	});
+
+	test('should fire the latest \'onShow\' handler on transitionend after it changes', () => {
+		const firstHandleShow = jest.fn();
+		const latestHandleShow = jest.fn();
+
+		const {rerender} = render(<Transition onShow={firstHandleShow} visible>Body</Transition>);
+		rerender(<Transition onShow={latestHandleShow} visible>Body</Transition>);
+
+		fireEvent.transitionEnd(screen.getByText('Body'));
+
+		const expected = 1;
+
+		expect(firstHandleShow).not.toHaveBeenCalled();
+		expect(latestHandleShow).toHaveBeenCalledTimes(expected);
+	});
+
+	test('should fire the latest \'onHide\' handler on transitionend when it changes along with \'visible\'', () => {
+		const firstHandleHide = jest.fn();
+		const latestHandleHide = jest.fn();
+
+		const {rerender} = render(<Transition onHide={firstHandleHide} visible>Body</Transition>);
+		rerender(<Transition onHide={latestHandleHide} visible={false}>Body</Transition>);
+
+		fireEvent.transitionEnd(screen.getByText('Body'));
+
+		const expected = 1;
+
+		expect(firstHandleHide).not.toHaveBeenCalled();
+		expect(latestHandleHide).toHaveBeenCalledTimes(expected);
 	});
 
 	// The main accordion/header path: animated clip transition driven by `transitionend`

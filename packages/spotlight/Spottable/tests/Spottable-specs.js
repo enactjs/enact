@@ -7,6 +7,20 @@ import {setFocusEffectClass} from '../../src/focusEffect';
 const id = 'test-spottable';
 
 describe('Spottable', () => {
+	test('should set the focus attribute on the outermost node', () => {
+		const Wrapped = (props) => (
+			<div data-testid="outer">
+				<span {...props} />
+			</div>
+		);
+		const Component = Spottable(Wrapped);
+		render(<Component data-testid="inner" />);
+
+		fireEvent.focus(screen.getByTestId('inner'));
+
+		expect(screen.getByTestId('outer')).toHaveAttribute('data-spotlight-focused');
+	});
+
 	test('should add the spottable class', () => {
 		const Component = Spottable('div');
 		render(<Component data-testid={id} />);
