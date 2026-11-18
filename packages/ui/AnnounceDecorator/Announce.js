@@ -1,6 +1,6 @@
 import {checkPropTypes, setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import {useEffect, useImperativeHandle, useLayoutEffect, useRef} from 'react';
+import {useImperativeHandle, useLayoutEffect, useRef} from 'react';
 
 const announceDefaultProps = {
 	// 500ms is somewhat arbitrary. Would like to do some further usability testing to determine
@@ -58,10 +58,14 @@ const Announce = (componentProps) => {
 		propsRef.current = props;
 	});
 
-	useEffect(() => {
+	// Clear at commit time, matching the class componentWillUnmount. A passive effect
+	// runs later, after alertRef has already been set to null.
+	useLayoutEffect(() => {
 		return () => {
 			if (alertTimeoutRef.current) {
 				clearTimeout(alertTimeoutRef.current);
+				// A cleared but non-null id blocks announce() after Strict Mode's remount.
+				alertTimeoutRef.current = null;
 			}
 		};
 	}, []);
@@ -94,7 +98,9 @@ const Announce = (componentProps) => {
 				alertRef.current.setAttribute('aria-label', message);
 				alertTimeoutRef.current = setTimeout(() => {
 					alertTimeoutRef.current = null;
-					alertRef.current.removeAttribute('aria-label');
+					if (alertRef.current) {
+						alertRef.current.removeAttribute('aria-label');
+					}
 				}, propsRef.current.timeout);
 			}
 		}

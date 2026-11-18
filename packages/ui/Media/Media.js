@@ -199,6 +199,11 @@ const Media = (componentProps) => {
 	}, [sourceKey]);
 
 	useImperativeHandle(ref, () => ({
+		// The underlying element. Apps reach the real node through this, for example
+		// VideoPlayer.getVideoNode().media.
+		get media () {
+			return mediaRef.current;
+		},
 		play () {
 			return mediaRef.current.play();
 		},

@@ -78,6 +78,18 @@ describe('Media', () => {
 		expect(handleCustom).toHaveBeenCalled();
 	});
 
+	test('should expose the underlying media element', () => {
+		const ref = createRef();
+
+		render(
+			<Media ref={ref} mediaComponent="video" data-testid="media-id" />
+		);
+
+		const video = screen.getByTestId('media-id');
+
+		expect(ref.current.media).toBe(video);
+	});
+
 	test('should call load', () => {
 		const ref = createRef();
 
