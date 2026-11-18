@@ -1,12 +1,78 @@
 import EnactPropTypes from '@enact/core/internal/prop-types';
-import {checkPropTypes} from '@enact/core/util';
+import {checkPropTypes, setDefaultProps} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import {Children, createElement, Component as ReactComponent} from 'react';
+import {Children, createElement} from 'react';
 import warning from 'warning';
 
 import ForwardRef from '../ForwardRef';
 
 import {RoutablePropTypes, stringifyRoutes, toSegments} from './util';
+
+const routerDefaultProps = {
+	component: 'div'
+};
+
+/**
+ * Generates a set of routes from `children` and appends them to `routes`.
+ *
+ * @param  {React.element[]} children Array of children
+ * @param  {Object}          routes   Route configuration object
+ *
+ * @returns {Object}                   Route configuration object
+ * @private
+ */
+const createRoutes = (children, routes) => {
+	Children.forEach(children, child => {
+		const {path, children: grandchildren, component, ...rest} = child.props;
+		if (path && component) {
+			routes[path] = {
+				$component: component,
+				$props: rest
+			};
+
+			if (grandchildren) {
+				createRoutes(grandchildren, routes[path]);
+			}
+		}
+	});
+	return routes;
+};
+
+/**
+ * Creates an array of React.elements for the current path.
+ *
+ * @param  {String|String[]} path     The current path
+ * @param  {Object}          [routes] Route configuration object
+ * @param  {React.element[]} children `Route` elements used when `routes` is not set
+ *
+ * @returns {React.element[]} Children to render
+ * @private
+ */
+const createChildren = (path, routes, children) => {
+	const segments = toSegments(path);
+	const computedRoutes = routes || createRoutes(children, {});
+
+	let valid = true;
+	let route = computedRoutes;
+	const childrenElements = segments.map((segment, index) => {
+		const subPath = segments.slice(0, index + 1).join('/');
+		route = route && route[segment];
+		if (route && route.$component) {
+			return createElement(route.$component, {
+				...route.$props,
+				key: 'view$/' + subPath,
+				spotlightId: `panel-${subPath.replace(/\//g, '-')}`
+			});
+		}
+
+		valid = false;
+		return null;
+	});
+
+	warning(valid, `${path} does not match the configured routes: ${stringifyRoutes(computedRoutes)}`);
+
+	return valid ? childrenElements : [];
+};
 
 /**
  * A Router component for use with {@link ui/ViewManager.ViewManager|ViewManager}
@@ -17,167 +83,94 @@ import {RoutablePropTypes, stringifyRoutes, toSegments} from './util';
  * @ui
  * @private
  */
-const RouterBase = class extends ReactComponent {
-	static displayName = 'Router';
+const RouterBase = (componentProps) => {
+	const props = setDefaultProps(componentProps, routerDefaultProps);
+	checkPropTypes(RouterBase, props);
 
-	static propTypes = /** @lends ui/Routable.Router.prototype */ {
-		/**
-		 * List of views to render.
-		 *
-		 * Will be rendered as a flat array of views suitable for use in
-		 * Panels and not a hierarchy of views as the path implies.
-		 *
-		 * May either be a URI-style path (`'/app/home/settings'`) or an array
-		 * of strings (`['app', 'home', 'settings']`).
-		 *
-		 * @type {String|String[]}
-		 * @required
-		 * @public
-		 */
-		path: RoutablePropTypes.path.isRequired,
+	const {children, component: Component, componentRef, path, routes, ...rest} = props;
 
-		/**
-		 * The component wrapping the rendered path.
-		 *
-		 * @type {String|Component}
-		 * @default 'div'
-		 * @public
-		 */
-		component: EnactPropTypes.renderable,
+	return <Component ref={componentRef} {...rest}>{createChildren(path, routes, children)}</Component>;
+};
 
-		/**
-		 * Called with a reference to {@link ui/Routable.RouterBase.component|component}.
-		 *
-		 * @type {Object|Function}
-		 * @private
-		 */
-		componentRef: EnactPropTypes.ref,
+RouterBase.displayName = 'Router';
 
-		/**
-		 * Routes defined as an object rather than via JSX.
-		 *
-		 * If specified, `routes` will take
-		 * precedence over a JSX definition.
-		 *
-		 * ```JavaScript
-		 * const routes = {
-		 *   'first': {
-		 *     '$props': {
-		 *       'title': 'About Routable Panels Pattern'
-		 *     },
-		 *     '$component': AboutPanel,
-		 *     'second': {
-		 *       '$props': {
-		 *         'next': 'fourth',
-		 *         'title': 'Second'
-		 *       },
-		 *       '$component': MainPanel
-		 *     },
-		 *     'third': {
-		 *       '$props': {
-		 *         'next': 'first',
-		 *         'title': 'Third'
-		 *       },
-		 *       '$component': MainPanel,
-		 *       'fourth': {
-		 *         '$props': {
-		 *           'next': 'third',
-		 *           'title': 'Fourth'
-		 *         },
-		 *         '$component': MainPanel
-		 *       }
-		 *     }
-		 *   }
-		 * };
-		 *
-		 *	<Panels path="/app/home/settings" routes={routes} />
-		 * ```
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		routes: PropTypes.object
-	};
-
-	static defaultProps = {
-		component: 'div'
-	};
-
-	constructor (props) {
-		super(props);
-		checkPropTypes(this, props);
-	}
-
-	componentDidUpdate (prevProps) {
-		checkPropTypes(this, this.props, prevProps);
-	}
+RouterBase.propTypes = /** @lends ui/Routable.Router.prototype */ {
+	/**
+	 * List of views to render.
+	 *
+	 * Will be rendered as a flat array of views suitable for use in
+	 * Panels and not a hierarchy of views as the path implies.
+	 *
+	 * May either be a URI-style path (`'/app/home/settings'`) or an array
+	 * of strings (`['app', 'home', 'settings']`).
+	 *
+	 * @type {String|String[]}
+	 * @required
+	 * @public
+	 */
+	path: RoutablePropTypes.path.isRequired,
 
 	/**
-	 * Generates a set of routes from `children` and appends them to `routes`.
+	 * The component wrapping the rendered path.
 	 *
-	 * @param  {React.element[]} children Array of children
-	 * @param  {Object}          routes   Route configuration object
-	 *
-	 * @returns {Object}                   Route configuration object
+	 * @type {String|Component}
+	 * @default 'div'
+	 * @public
 	 */
-	createRoutes (children, routes) {
-		Children.forEach(children, child => {
-			const {path, children: grandchildren, component, ...rest} = child.props;
-			if (path && component) {
-				routes[path] = {
-					$component: component,
-					$props: rest
-				};
-
-				if (grandchildren) {
-					this.createRoutes(grandchildren, routes[path]);
-				}
-			}
-		});
-		return routes;
-	}
+	component: EnactPropTypes.renderable,
 
 	/**
-	 * Creates an array of React.elements for the current path.
+	 * Called with a reference to {@link ui/Routable.RouterBase.component|component}.
 	 *
-	 * @returns {React.element[]} Children to render
+	 * @type {Object|Function}
+	 * @private
 	 */
-	createChildren () {
-		const segments = toSegments(this.props.path);
-		const {routes, children} = this.props;
-		const computedRoutes = routes || this.createRoutes(children, {});
+	componentRef: EnactPropTypes.ref,
 
-		let valid = true;
-		let route = computedRoutes;
-		const childrenElements = segments.map((segment, index) => {
-			const subPath = segments.slice(0, index + 1).join('/');
-			route = route && route[segment];
-			if (route && route.$component) {
-				return createElement(route.$component, {
-					...route.$props,
-					key: 'view$/' + subPath,
-					spotlightId: `panel-${subPath.replace(/\//g, '-')}`
-				});
-			}
-
-			valid = false;
-			return null;
-		});
-
-		warning(valid, `${this.props.path} does not match the configured routes: ${stringifyRoutes(computedRoutes)}`);
-
-		return valid ? childrenElements : [];
-	}
-
-	render () {
-		const {component: Component, componentRef, ...rest} = this.props;
-		const children = this.createChildren();
-
-		delete rest.path;
-		delete rest.routes;
-
-		return <Component ref={componentRef} {...rest}>{children}</Component>;
-	}
+	/**
+	 * Routes defined as an object rather than via JSX.
+	 *
+	 * If specified, `routes` will take
+	 * precedence over a JSX definition.
+	 *
+	 * ```JavaScript
+	 * const routes = {
+	 *   'first': {
+	 *     '$props': {
+	 *       'title': 'About Routable Panels Pattern'
+	 *     },
+	 *     '$component': AboutPanel,
+	 *     'second': {
+	 *       '$props': {
+	 *         'next': 'fourth',
+	 *         'title': 'Second'
+	 *       },
+	 *       '$component': MainPanel
+	 *     },
+	 *     'third': {
+	 *       '$props': {
+	 *         'next': 'first',
+	 *         'title': 'Third'
+	 *       },
+	 *       '$component': MainPanel,
+	 *       'fourth': {
+	 *         '$props': {
+	 *           'next': 'third',
+	 *           'title': 'Fourth'
+	 *         },
+	 *         '$component': MainPanel
+	 *       }
+	 *     }
+	 *   }
+	 * };
+	 *
+	 *	<Panels path="/app/home/settings" routes={routes} />
+	 * ```
+	 *
+	 * @type {Object}
+	 * @public
+	 */
+	routes: PropTypes.object
 };
 
 const Router = ForwardRef({prop: 'componentRef'}, RouterBase);
