@@ -90,8 +90,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 		const [value, setValue] = useState(() => (propValue != null ? propValue : props[defaultPropKey]));
 
 		// When controlled, keep the internal value in sync with `prop` whenever it changes. This
-		// replaces the former `getDerivedStateFromProps` and runs during render so the wrapped
-		// component never receives a stale value.
+		// runs during render so the wrapped component never receives a stale value.
 		const [prevPropValue, setPrevPropValue] = useState(propValue);
 		if (controlled && !Object.is(propValue, prevPropValue)) {
 			setPrevPropValue(propValue);
@@ -106,7 +105,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 				`Do not specify both '${prop}' and '${defaultPropKey}' for Changeable instances.
 				'${defaultPropKey}' will be ignored unless '${prop}' is 'null' or 'undefined'.`
 			);
-		// Only warn about the props used at mount, as the former constructor did
+		// Only warn about the props passed on mount
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
 
@@ -139,7 +138,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 		[change]: PropTypes.func,
 
 		/**
-		 * The value set at construction when the value prop is `undefined` or `null`.
+		 * The initial value, used when the value prop is `undefined` or `null`.
 		 *
 		 * This prop is consumed by `Changeable` and not passed onto the wrapped component.
 		 *
@@ -153,8 +152,8 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 		/**
 		 * The current value.
 		 *
-		 * When set at construction, the component is considered "controlled" and will only
-		 * update its internal value when updated by new props. If `undefined`, the component is
+		 * When set on mount, the component is considered "controlled" and will only
+		 * update its internal value when this prop changes. If `undefined`, the component is
 		 * "uncontrolled" and `Changeable` will manage the value using callbacks defined by its
 		 * configuration.
 		 *
@@ -175,7 +174,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 		disabled: PropTypes.bool
 	};
 
-	// Preserve the render bail-out previously provided by `PureComponent`
+	// Skip re-rendering when the props are shallowly equal
 	const MemoizedChangeable = memo(Changeable);
 	MemoizedChangeable.displayName = 'Changeable';
 
