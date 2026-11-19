@@ -256,6 +256,8 @@ const Media = (componentProps) => {
 	);
 };
 
+Media.displayName = 'Media';
+
 Media.propTypes = /** @lends ui/Media.Media.prototype */ {
 	/**
 	 * A type of media component.

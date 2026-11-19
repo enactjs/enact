@@ -4,6 +4,10 @@ import {createRef, StrictMode, useLayoutEffect, useRef} from 'react';
 import Announce from '../Announce';
 
 describe('Announce', () => {
+	afterEach(() => {
+		jest.useRealTimers();
+	});
+
 	test('should have an announce method on the component', () => {
 		const ref = createRef();
 		render(<Announce ref={ref} />);
