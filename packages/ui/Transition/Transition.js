@@ -423,7 +423,7 @@ function Transition ({
 		forward('onTransitionEnd', ev, propsRef.current);
 		if (ev.target === childNodeRef.current) {
 			const eventName = propsRef.current.visible ? 'onShow' : 'onHide';
-			forward(eventName, {type: eventName, currentTarget: ev.currentTarget}, propsRef.current);
+			forward(eventName, {type: eventName, currentTarget: ev.currentTarget, propertyName: ev.propertyName}, propsRef.current);
 		}
 	}, []);
 
@@ -434,7 +434,6 @@ function Transition ({
 
 	const childProps = {
 		...rest,
-		children,
 		direction,
 		duration,
 		noAnimation,
@@ -446,7 +445,7 @@ function Transition ({
 	// the transition container with its children so we can measure. Measuring
 	// will cause a state change to trigger the animation.
 	if (state.renderState === TRANSITION_STATE.MEASURE) {
-		return <TransitionBase {...childProps} childRef={childRef} visible={false} />;
+		return <TransitionBase {...childProps} childRef={childRef} visible={false}>{children}</TransitionBase>;
 	}
 
 	return (
@@ -457,7 +456,9 @@ function Transition ({
 			clipHeight={state.initialHeight}
 			clipWidth={state.initialWidth}
 			onTransitionEnd={handleTransitionEnd}
-		/>
+		>
+			{children}
+		</TransitionBase>
 	);
 }
 

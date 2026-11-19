@@ -51,4 +51,54 @@
 	:global(.enact-locale-right-to-left) & {
 		text-align: right;
 	}
+
+	&.vertical {
+		position: relative;
+		width: 100%;
+		min-width: 0;
+		white-space: normal !important;
+
+		.text {
+			display: block;
+			white-space: normal !important;
+
+			.content {
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: var(--vertical-marquee-lines, 3);
+				overflow: hidden;
+				width: 100%;
+				max-width: 100%;
+				white-space: normal;
+				overflow-wrap: break-word;
+			}
+
+			&.willAnimate .content {
+				display: block;
+				-webkit-line-clamp: unset;
+				overflow: visible;
+			}
+
+			.spacing {
+				display: block;
+				width: 100%;
+				height: calc(1px * var(--vertical-marquee-spacing, 0));
+			}
+		}
+
+		.measurer {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: auto;
+			visibility: hidden;
+			pointer-events: none;
+			overflow: visible;
+			display: block;
+			white-space: normal;
+			overflow-wrap: break-word;
+			-webkit-line-clamp: unset;
+		}
+	}
 }

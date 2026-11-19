@@ -230,5 +230,17 @@ describe('functionalKind', () => {
 
 			expect(actual).toBe(expected);
 		});
+
+		test('should forward an explicitly-passed context argument to useRender', () => {
+			const WithContextArg = functionalKind({
+				name: 'WithContextArg',
+				useRender: (props, context) => context
+			});
+
+			const expected = {value: 'explicit'};
+			const actual = WithContextArg.inline({}, expected);
+
+			expect(actual).toBe(expected);
+		});
 	});
 });

@@ -1,5 +1,3 @@
-/* eslint-disable react/sort-prop-types */
-
 /**
  * A higher-order component that adds state management for a single prop via a single event handler.
  *
