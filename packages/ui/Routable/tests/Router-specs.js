@@ -90,6 +90,22 @@ describe('Router', () => {
 		expect (actual).toBe(expected);
 	});
 
+	test('should forward `ref` to {component}', () => {
+		const ref = {current: null};
+		render(<Router routes={routes} path="/app" ref={ref} data-testid="router" />);
+		const router = screen.getByTestId('router');
+
+		expect(ref.current).toBe(router);
+	});
+
+	test('should not pass {path} or {routes} to {component}', () => {
+		render(<Router routes={routes} path="/app" data-testid="router" />);
+		const router = screen.getByTestId('router');
+
+		expect(router).not.toHaveAttribute('path');
+		expect(router).not.toHaveAttribute('routes');
+	});
+
 	test('should render an array of components matching the {path} using JSX routes', () => {
 		render(
 			<Router path="/app/home">
