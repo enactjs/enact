@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import {act, render, screen} from '@testing-library/react';
-import {useEffect} from 'react';
+import {createRef, useEffect} from 'react';
 
 import Changeable from '../Changeable';
 
@@ -89,6 +89,20 @@ describe('Changeable', () => {
 			const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 			const Component = Changeable(DivComponent);
 			render(<Component defaultValue={1} value={null} />);
+
+			const expected = '1';
+			const actual = screen.getByTestId('changeable');
+
+			expect(actual).toHaveTextContent(expected);
+			expect(spy).toHaveBeenCalled();
+		});
+
+		test('should keep defaultValue when value is null and another prop changes', () => {
+			const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+			const Component = Changeable(DivComponent);
+			const {rerender} = render(<Component className="a" defaultValue={1} value={null} />);
+
+			rerender(<Component className="b" defaultValue={1} value={null} />);
 
 			const expected = '1';
 			const actual = screen.getByTestId('changeable');
@@ -262,5 +276,18 @@ describe('Changeable', () => {
 		const actual = screen.getByTestId('changeable');
 
 		expect(actual).toHaveTextContent(expected);
+	});
+
+	test('should forward ref to the wrapped component', () => {
+		const RefComponent = ({ref, value}) => <div data-testid="changeable" ref={ref}>{value}</div>;
+		const Component = Changeable(RefComponent);
+		const componentRef = createRef();
+
+		render(<Component ref={componentRef} value={1} />);
+
+		const expected = screen.getByTestId('changeable');
+		const actual = componentRef.current;
+
+		expect(actual).toBe(expected);
 	});
 });
