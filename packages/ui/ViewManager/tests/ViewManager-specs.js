@@ -43,6 +43,50 @@ describe('ViewManager', () => {
 		expect(actual).toBe(expected);
 	});
 
+	test('should pass each view node to the arranger', () => {
+		const seen = {enter: [], stay: [], leave: []};
+		const animation = () => ({
+			playState: 'running',
+			finish: () => {},
+			cancel: () => {}
+		});
+		const arranger = {
+			enter: ({node}) => {
+				seen.enter.push(node);
+				return animation();
+			},
+			stay: ({node}) => {
+				seen.stay.push(node);
+				return animation();
+			},
+			leave: ({node}) => {
+				seen.leave.push(node);
+				return animation();
+			}
+		};
+
+		const {rerender} = render(
+			<ViewManager arranger={arranger}>
+				<div>View 1</div>
+				<div>View 2</div>
+			</ViewManager>
+		);
+
+		expect(seen.stay).toEqual([screen.getByText('View 1')]);
+		expect(seen.enter).toEqual([]);
+		expect(seen.leave).toEqual([]);
+
+		rerender(
+			<ViewManager arranger={arranger} index={1}>
+				<div>View 1</div>
+				<div>View 2</div>
+			</ViewManager>
+		);
+
+		expect(seen.enter).toEqual([screen.getByText('View 2')]);
+		expect(seen.leave).toEqual([screen.getByText('View 1')]);
+	});
+
 	test('should render only 1 child view', () => {
 		render(
 			<ViewManager>
