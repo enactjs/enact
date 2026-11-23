@@ -5,6 +5,7 @@ ignore:
     - "packages/i18n/src/zoneinfo.js"
     - "packages/i18n/Text"
     - "packages/webos/signLang"
+    - "packages/webos/speech"
     - "packages/webos/keyboard"
     - "packages/webos/lastInputType"
     - "packages/webos/platform"
@@ -12,3 +13,4 @@ ignore:
     - "packages/webos/deviceinfo"
     - "packages/webos/application"
     - "packages/webos/LS2Request"
+    - "packages/ui/Touchable/Pinch.js"
