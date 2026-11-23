@@ -1,4 +1,5 @@
 ignore:
+    - "**/tests/**"
     - "packages/i18n/src/Loader.js"
     - "packages/i18n/src/packedbuffer.js"
     - "packages/i18n/src/zoneinfo.js"
