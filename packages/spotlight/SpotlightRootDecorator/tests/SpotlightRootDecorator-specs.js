@@ -14,6 +14,7 @@ import {
 } from '../../src/container';
 
 import {getFocusEffectClass} from '../../src/focusEffect';
+import {activateInputType} from '../../src/inputType';
 
 describe('SpotlightRootDecorator', () => {
 	const AppBase = (props) => (
@@ -188,4 +189,57 @@ describe('SpotlightRootDecorator', () => {
 			jest.runAllTimers();
 		});
 	});
+
+	describe('input types that do not change the current one', () => {
+		const dispatchPointer = (type, pointerType) => {
+			document.dispatchEvent(Object.assign(new Event(type, {bubbles: true, cancelable: true}), {pointerType}));
+		};
+
+		test('should ignore pointermove events that do not come from a mouse', () => {
+			const App = SpotlightRootDecorator(AppBase);
+			render(<App />);
+			const element = screen.getByTestId('root');
+			setInputType('key');
+			fireEvent.focus(screen.queryByText('123'));
+
+			dispatchPointer('pointermove', 'touch');
+
+			expect(getInputType()).toBe('key');
+			expect(element).not.toHaveClass('spotlight-input-mouse');
+		});
+
+		test('should ignore pointerover events that do not come from a touch', () => {
+			const App = SpotlightRootDecorator(AppBase);
+			render(<App />);
+			const element = screen.getByTestId('root');
+			setInputType('key');
+			fireEvent.focus(screen.queryByText('123'));
+
+			dispatchPointer('pointerover', 'mouse');
+
+			expect(getInputType()).toBe('key');
+			expect(element).not.toHaveClass('spotlight-input-touch');
+		});
+
+		test('should keep the input type reported by the platform on keydown when input type handling is activated', async () => {
+			jest.useFakeTimers();
+			document.elementFromPoint = jest.fn().mockReturnValue(null);
+			const App = SpotlightRootDecorator(AppBase);
+			render(<App />);
+			const element = screen.getByTestId('root');
+			setInputType('touch');
+			activateInputType(true);
+
+			fireEvent.keyDown(document, {keyCode: 38});
+			await act(async () => {
+				jest.runAllTimers();
+			});
+
+			activateInputType(false);
+
+			expect(getInputType()).toBe('touch');
+			expect(element).toHaveClass('spotlight-input-touch');
+		});
+	});
+
 });

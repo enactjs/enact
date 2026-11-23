@@ -12,7 +12,6 @@ function containerExists (id) {
 const testId = 'test-useSpotlightContainer';
 
 describe('useSpotlightContainer', () => {
-	// TODO: Test lifecycle (e.g unload, preserveId)
 
 	function Component (props) {
 		const {
@@ -203,6 +202,69 @@ describe('useSpotlightContainer', () => {
 			const actual = getContainerConfig(id);
 
 			expect(actual).toMatchObject(expected);
+		});
+	});
+
+	describe('lifecycle', () => {
+		test('should remove its container when unmounted', () => {
+			const {unmount} = render(<Component spotlightId="lifecycle" />);
+
+			unmount();
+
+			expect(containerExists('lifecycle')).toBe(false);
+		});
+
+		test('should keep the configuration of its container when unmounted with `preserveId`', () => {
+			const {unmount} = render(<Component preserveId spotlightId="preserved" />);
+
+			unmount();
+
+			expect(containerExists('preserved')).toBe(true);
+		});
+
+		test('should not keep a generated container when unmounted with `preserveId`', () => {
+			const {unmount} = render(<Component data-testid={testId} preserveId />);
+			const generatedId = screen.getByTestId(testId).dataset.spotlightId;
+
+			unmount();
+
+			expect(containerExists(generatedId)).toBe(false);
+		});
+
+		test('should replace its container when its id changes', () => {
+			const {rerender} = render(<Component spotlightId="first" />);
+
+			rerender(<Component spotlightId="second" />);
+
+			expect(containerExists('first')).toBe(false);
+			expect(containerExists('second')).toBe(true);
+		});
+	});
+
+	describe('navigableFilter', () => {
+		const Filtered = ({navigableFilter, spotlightId}) => {
+			const spotlightContainer = useSpotlightContainer({id: spotlightId, navigableFilter});
+
+			return <div {...spotlightContainer.attributes} />;
+		};
+
+		test('should exclude the elements the given filter rejects', () => {
+			const allowed = document.createElement('div');
+			const rejected = document.createElement('div');
+			render(<Filtered navigableFilter={(elem) => elem === allowed} spotlightId="filtered" />);
+
+			const {navigableFilter} = getContainerConfig('filtered');
+
+			expect(navigableFilter(allowed)).toBe(true);
+			expect(navigableFilter(rejected)).toBe(false);
+		});
+
+		test('should allow every element without a filter', () => {
+			render(<Filtered spotlightId="unfiltered" />);
+
+			const {navigableFilter} = getContainerConfig('unfiltered');
+
+			expect(navigableFilter(document.createElement('div'))).toBe(true);
 		});
 	});
 });

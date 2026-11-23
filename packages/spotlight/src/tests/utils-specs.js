@@ -3,7 +3,11 @@ import {
 	getRect,
 	getPointRect,
 	getContainerRect,
-	isStandardFocusable
+	contains,
+	intersects,
+	isStandardFocusable,
+	matchSelector,
+	parseSelector
 } from '../utils';
 
 import {
@@ -250,5 +254,93 @@ describe('utils', () => {
 				expect(actual).toEqual(expected);
 			}
 		));
+	});
+
+	describe('#matchSelector', () => {
+		test('should match an element against a CSS selector', testScenario(
+			scenarios.button,
+			(root) => {
+				const child = root.querySelector('#child');
+
+				expect(matchSelector('button', child)).toBe(true);
+				expect(matchSelector('input', child)).toBe(false);
+			}
+		));
+
+		test('should match an element contained in a list of elements', testScenario(
+			scenarios.button,
+			(root) => {
+				const child = root.querySelector('#child');
+
+				expect(matchSelector([child], child)).toBe(true);
+				expect(matchSelector([root], child)).toBe(false);
+			}
+		));
+
+		test('should match an element against another element', testScenario(
+			scenarios.button,
+			(root) => {
+				const child = root.querySelector('#child');
+
+				expect(matchSelector(child, child)).toBe(true);
+				expect(matchSelector(root, child)).toBe(false);
+			}
+		));
+
+		test('should not match an unsupported selector', testScenario(
+			scenarios.button,
+			(root) => {
+				expect(matchSelector(42, root.querySelector('#child'))).toBe(false);
+			}
+		));
+	});
+
+	describe('#parseSelector', () => {
+		test('should return the elements matching a CSS selector', testScenario(
+			scenarios.button,
+			(root) => {
+				expect(parseSelector('#child')).toEqual([root.querySelector('#child')]);
+			}
+		));
+
+		test('should return the elements of a list of elements', testScenario(
+			scenarios.button,
+			(root) => {
+				const child = root.querySelector('#child');
+
+				expect(parseSelector(root.querySelectorAll('#child'))).toEqual([child]);
+			}
+		));
+
+		test('should return a single element in a list', testScenario(
+			scenarios.button,
+			(root) => {
+				const child = root.querySelector('#child');
+
+				expect(parseSelector(child)).toEqual([child]);
+			}
+		));
+
+		test('should return an empty list for an invalid CSS selector', () => {
+			expect(parseSelector('[invalid')).toEqual([]);
+		});
+	});
+
+	describe('#intersects and #contains', () => {
+		const container = {left: 0, right: 100, top: 0, bottom: 100};
+
+		test('should detect an element that overlaps the container', () => {
+			expect(intersects(container, {left: 90, right: 150, top: 10, bottom: 20})).toBe(true);
+			expect(intersects(container, {left: 110, right: 150, top: 10, bottom: 20})).toBe(false);
+		});
+
+		test('should detect an element that is entirely within the container', () => {
+			expect(contains(container, {left: 10, right: 90, top: 10, bottom: 90})).toBe(true);
+			expect(contains(container, {left: 90, right: 150, top: 10, bottom: 20})).toBe(false);
+		});
+
+		test('should accept an element that sticks out by less than a pixel as contained', () => {
+			expect(contains(container, {left: -0.5, right: 100.5, top: 0, bottom: 100})).toBe(true);
+		});
 	});
 });

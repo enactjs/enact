@@ -10,18 +10,24 @@ import {
 	getContainerLastFocusedElement,
 	getContainerNavigableElements,
 	getContainersForNode,
+	getDeepSpottableDescendants,
 	getDefaultContainer,
 	getLastContainer,
 	getNavigableContainersForNode,
 	getPositionTargetOnFocus,
 	getSpottableDescendants,
 	isContainer,
+	isContainer5WayHoldable,
 	isNavigable,
+	notifyEnterContainer,
+	notifyLeaveContainer,
+	notifyLeaveContainerFail,
 	unmountContainer,
 	removeContainer,
 	removeAllContainers,
 	rootContainerId,
 	setContainerLastFocusedElement,
+	setDefaultContainer,
 	setLastContainer,
 	setLastContainerFromTarget
 } from '../container';
@@ -1297,5 +1303,185 @@ describe('container', () => {
 				}
 			)
 		);
+	});
+});
+
+describe('container notifications and state', () => {
+	afterEach(() => {
+		removeAllContainers();
+	});
+
+	describe('#notifyLeaveContainer', () => {
+		test('should notify only the containers that focus is leaving', () => {
+			const handleLeaveFirst = jest.fn();
+			const handleLeaveShared = jest.fn();
+			addContainer('first', {onLeaveContainer: handleLeaveFirst});
+			addContainer('shared', {onLeaveContainer: handleLeaveShared});
+			const current = document.createElement('div');
+			const next = document.createElement('div');
+
+			notifyLeaveContainer('right', current, ['shared', 'first'], next, ['shared', 'second']);
+
+			expect(handleLeaveFirst).toHaveBeenCalledWith({type: 'onLeaveContainer', direction: 'right', target: current, relatedTarget: next});
+			expect(handleLeaveShared).not.toHaveBeenCalled();
+		});
+	});
+
+	describe('#notifyLeaveContainerFail', () => {
+		test('should notify every container of the element that focus could not leave', () => {
+			const handleFailInner = jest.fn();
+			const handleFailOuter = jest.fn();
+			addContainer('inner', {onLeaveContainerFail: handleFailInner});
+			addContainer('outer', {onLeaveContainerFail: handleFailOuter});
+			const current = document.createElement('div');
+
+			notifyLeaveContainerFail('up', current, ['outer', 'inner', 'unconfigured']);
+
+			expect(handleFailInner).toHaveBeenCalledWith({type: 'onLeaveContainerFail', direction: 'up', target: current});
+			expect(handleFailOuter).toHaveBeenCalledWith({type: 'onLeaveContainerFail', direction: 'up', target: current});
+		});
+	});
+
+	describe('#notifyEnterContainer', () => {
+		test('should notify only the containers that focus is entering', () => {
+			const handleEnterSecond = jest.fn();
+			const handleEnterShared = jest.fn();
+			addContainer('second', {onEnterContainer: handleEnterSecond});
+			addContainer('shared', {onEnterContainer: handleEnterShared});
+			const previous = document.createElement('div');
+			const current = document.createElement('div');
+
+			notifyEnterContainer('right', previous, ['shared', 'first'], current, ['shared', 'second']);
+
+			expect(handleEnterSecond).toHaveBeenCalledWith({type: 'onEnterContainer', direction: 'right', target: current, relatedTarget: previous});
+			expect(handleEnterShared).not.toHaveBeenCalled();
+		});
+	});
+
+	describe('#isContainer5WayHoldable', () => {
+		test('should report whether a container continues 5-way hold', () => {
+			addContainer('holding', {continue5WayHold: true});
+			addContainer('notHolding', {});
+
+			expect(isContainer5WayHoldable('holding')).toBe(true);
+			expect(isContainer5WayHoldable('notHolding')).toBe(false);
+			expect(isContainer5WayHoldable('missing')).toBe(false);
+		});
+	});
+
+	describe('#setDefaultContainer', () => {
+		afterEach(() => {
+			setDefaultContainer();
+		});
+
+		test('should set an existing container as the default one', () => {
+			addContainer('defaultContainer', {});
+
+			setDefaultContainer('defaultContainer');
+
+			expect(getDefaultContainer()).toBe('defaultContainer');
+		});
+
+		test('should throw for a container that does not exist', () => {
+			expect(() => setDefaultContainer('missing')).toThrow('Container "missing" doesn\'t exist!');
+		});
+
+		test('should clear the default container when none is given', () => {
+			addContainer('defaultContainer', {});
+			setDefaultContainer('defaultContainer');
+
+			setDefaultContainer();
+
+			expect(getDefaultContainer()).toBe('');
+		});
+	});
+
+	describe('#unmountContainer', () => {
+		test('should restore the last focused element by its position after the container is mounted again', testScenario(
+			scenarios.onlySpottables,
+			(root) => {
+				addContainer('remounted', {});
+				root.setAttribute(containerAttribute, 'remounted');
+				const spottables = root.querySelectorAll('.spottable');
+				setContainerLastFocusedElement(spottables[2], ['remounted']);
+
+				unmountContainer('remounted');
+				expect(getContainerConfig('remounted').lastFocusedElement).toBeNull();
+
+				// Restoring is deferred until spotlight asks the container for its focus target
+				getContainerFocusTarget('remounted');
+
+				expect(getContainerLastFocusedElement('remounted')).toBe(spottables[2]);
+			}
+		));
+
+		test('should forget a default element that is a node but keep a selector', () => {
+			const defaultNode = document.createElement('div');
+			addContainer('nodeDefault', {defaultElement: defaultNode});
+			addContainer('selectorDefault', {defaultElement: '.spottable'});
+
+			unmountContainer('nodeDefault');
+			unmountContainer('selectorDefault');
+
+			expect(getContainerConfig('nodeDefault').defaultElement).toBeNull();
+			expect(getContainerConfig('selectorDefault').defaultElement).toBe('.spottable');
+		});
+	});
+
+	describe('#getDeepSpottableDescendants', () => {
+		test('should skip the spottables of excluded containers', testScenario(
+			scenarios.siblingContainers,
+			(root) => {
+				addContainer('outer', {});
+				root.setAttribute(containerAttribute, 'outer');
+				addContainer('first', {});
+				addContainer('second', {});
+
+				const all = getDeepSpottableDescendants('outer');
+				const withoutFirst = getDeepSpottableDescendants('outer', ['first']);
+
+				expect(all).toHaveLength(10);
+				expect(withoutFirst).toHaveLength(5);
+				expect(withoutFirst.every((el) => root.querySelector(`[${containerAttribute}="second"]`).contains(el))).toBe(true);
+			}
+		));
+	});
+
+	describe('#getContainerNavigableElements on an overflow container', () => {
+		const setRect = (el, top) => {
+			el.getBoundingClientRect = () => ({top, bottom: top + 10, left: 0, right: 10, width: 10, height: 10});
+		};
+
+		test('should only offer the elements that are fully visible in the container', testScenario(
+			scenarios.onlySpottables,
+			(root) => {
+				addContainer('overflowing', {overflow: true});
+				root.setAttribute(containerAttribute, 'overflowing');
+				root.getBoundingClientRect = () => ({top: 0, bottom: 25, left: 0, right: 100, width: 100, height: 25});
+				const spottables = [...root.querySelectorAll('.spottable')];
+				spottables.forEach((el, index) => setRect(el, index * 10));
+
+				const actual = getContainerNavigableElements('overflowing');
+
+				// Only the first two (0-10 and 10-20) fit in the 25px tall container
+				expect(actual).toEqual(spottables.slice(0, 2));
+			}
+		));
+
+		test('should offer the topmost visible element first for `topmost`', testScenario(
+			scenarios.onlySpottables,
+			(root) => {
+				addContainer('overflowing', {overflow: true});
+				root.setAttribute(containerAttribute, 'overflowing');
+				root.getBoundingClientRect = () => ({top: 0, bottom: 100, left: 0, right: 100, width: 100, height: 100});
+				const spottables = [...root.querySelectorAll('.spottable')];
+				// Positioned bottom to top
+				spottables.forEach((el, index) => setRect(el, 80 - index * 20));
+
+				const actual = getContainerNavigableElements('overflowing', 'topmost');
+
+				expect(actual[0]).toBe(spottables[4]);
+			}
+		));
 	});
 });

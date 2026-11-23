@@ -1,5 +1,5 @@
 import Registry from '@enact/core/internal/Registry';
-import {render} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import {useEffect} from 'react';
 
 import {ResizeContext} from '../Resizable';
@@ -36,6 +36,52 @@ describe('useResize', () => {
 			const actual = typeof data.onClick;
 
 			expect(actual).toBe(expected);
+		});
+	});
+
+	describe('resize event', () => {
+		const ResizeButton = (props) => {
+			const handlers = useResize(props, {filter: props.filter, resize: 'onClick'});
+			return <button {...handlers} data-testid="button" />;
+		};
+
+		test('should forward the resize event and ask the container to invalidate its bounds', () => {
+			const handleRegistry = jest.fn();
+			const handleClick = jest.fn();
+			const resizeRegistry = Registry.create(handleRegistry);
+			render(
+				<ResizeContext value={resizeRegistry.register}>
+					<ResizeButton onClick={handleClick} />
+				</ResizeContext>
+			);
+
+			fireEvent.click(screen.getByTestId('button'));
+
+			expect(handleClick).toHaveBeenCalled();
+			expect(handleRegistry).toHaveBeenCalledWith({action: 'invalidateBounds'}, expect.any(Function));
+		});
+
+		test('should not ask the container to invalidate its bounds when the filter rejects the event', () => {
+			const handleRegistry = jest.fn();
+			const resizeRegistry = Registry.create(handleRegistry);
+			render(
+				<ResizeContext value={resizeRegistry.register}>
+					<ResizeButton filter={() => false} />
+				</ResizeContext>
+			);
+
+			fireEvent.click(screen.getByTestId('button'));
+
+			expect(handleRegistry).not.toHaveBeenCalledWith({action: 'invalidateBounds'}, expect.anything());
+		});
+
+		test('should forward the resize event without a resize container', () => {
+			const handleClick = jest.fn();
+			render(<ResizeButton onClick={handleClick} />);
+
+			fireEvent.click(screen.getByTestId('button'));
+
+			expect(handleClick).toHaveBeenCalled();
 		});
 	});
 });

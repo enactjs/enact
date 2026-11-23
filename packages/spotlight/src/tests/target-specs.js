@@ -10,6 +10,7 @@ import {
 
 import {
 	getNavigableTarget,
+	getNearestTargetFromPosition,
 	getTargetByContainer,
 	getTargetByDirectionFromElement,
 	getTargetByDirectionFromPosition,
@@ -1367,6 +1368,96 @@ describe('target', () => {
 
 				expect(actualFromPosition).toBe(expected);
 				expect(actualFromElement).toBe(expected);
+			}
+		));
+	});
+
+	describe('directional overrides', () => {
+		// Gives the grid elements and the elements around it a layout
+		const layOut = (root) => {
+			const rects = {
+				'before-grid': {top: -20, left: 0, width: 30, height: 10},
+				'top-center': {top: 0, left: 10, width: 10, height: 10},
+				'middle-center': {top: 10, left: 10, width: 10, height: 10},
+				'bottom-center': {top: 20, left: 10, width: 10, height: 10},
+				'after-grid': {top: 40, left: 0, width: 30, height: 10}
+			};
+			Object.keys(rects).forEach((id) => {
+				const {top, left, width, height} = rects[id];
+				root.querySelector('#' + id).getBoundingClientRect = () => ({top, left, width, height, right: left + width, bottom: top + height});
+			});
+		};
+
+		test('should go to the element of a `data-spot-<direction>` selector instead of the nearest one', testScenario(
+			scenarios.grid,
+			(root) => {
+				configureContainer('grid');
+				layOut(root);
+				const center = root.querySelector('#middle-center');
+				center.setAttribute('data-spot-down', '#top-center');
+
+				expect(safeTarget(getTargetByDirectionFromElement('down', center), t => t.id)).toBe('top-center');
+			}
+		));
+
+		test('should leave a container to its `leaveFor` target when there is nothing further in that direction', testScenario(
+			scenarios.grid,
+			(root) => {
+				configureContainer('grid', {leaveFor: {down: '#before-grid'}});
+				layOut(root);
+
+				expect(safeTarget(getTargetByDirectionFromElement('down', root.querySelector('#bottom-center')), t => t.id)).toBe('before-grid');
+			}
+		));
+
+		test('should leave a container to the nearest element outside of it without `leaveFor`', testScenario(
+			scenarios.grid,
+			(root) => {
+				configureContainer('grid');
+				layOut(root);
+
+				expect(safeTarget(getTargetByDirectionFromElement('down', root.querySelector('#bottom-center')), t => t.id)).toBe('after-grid');
+			}
+		));
+
+		test('should not leave a container in a direction its `leaveFor` disallows', testScenario(
+			scenarios.grid,
+			(root) => {
+				configureContainer('grid', {leaveFor: {down: ''}});
+				layOut(root);
+
+				expect(getTargetByDirectionFromElement('down', root.querySelector('#bottom-center'))).toBeNull();
+			}
+		));
+	});
+
+	describe('#getNearestTargetFromPosition', () => {
+		afterEach(() => {
+			delete document.elementFromPoint;
+		});
+
+		test('should return the spottable element under the position', testScenario(
+			scenarios.nonSpottableInContainer,
+			(root) => {
+				const inFirst = root.querySelector('#in-first');
+				document.elementFromPoint = jest.fn(() => inFirst);
+
+				expect(getNearestTargetFromPosition({x: 5, y: 5}, rootContainerId)).toBe(inFirst);
+			}
+		));
+
+		test('should return the closest spottable element in the container when there is none under the position', testScenario(
+			scenarios.grid,
+			(root) => {
+				configureContainer('grid');
+				document.elementFromPoint = jest.fn(() => null);
+				const topLeft = root.querySelector('#top-left');
+				const bottomRight = root.querySelector('#bottom-right');
+				topLeft.getBoundingClientRect = () => ({top: 0, left: 0, width: 10, height: 10, right: 10, bottom: 10});
+				bottomRight.getBoundingClientRect = () => ({top: 100, left: 100, width: 10, height: 10, right: 110, bottom: 110});
+
+				// Closer to the bottom right element
+				expect(getNearestTargetFromPosition({x: 90, y: 90}, 'grid')).toBe(bottomRight);
 			}
 		));
 	});

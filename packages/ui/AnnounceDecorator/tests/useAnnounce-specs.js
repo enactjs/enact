@@ -1,4 +1,5 @@
-import {render, screen} from '@testing-library/react';
+import '@testing-library/jest-dom';
+import {act, render, screen} from '@testing-library/react';
 import {useEffect} from 'react';
 
 import useAnnounce from '../useAnnounce';
@@ -41,22 +42,33 @@ describe('useAnnounce', () => {
 		expect(baseElementChildrenCount).toBe(expected);
 	});
 
-	// this might be too specialized to the implementation but we lack a better way to unit test this
-	// capability right now
-	// TODO: find a relevant scenario that works on testing-library
-	test.skip('should set the value passed to announce into the ARIA role="alert" node', () => {
+	test('should set the value passed to announce into the ARIA role="alert" node', () => {
 		const text = '__NOTIFY__';
-		render(<Component data-testid="announce-test" />);
+		let announceFn;
+		function Announcer () {
+			const {announce, children} = useAnnounce();
+			announceFn = announce;
 
-		const component = screen.getByTestId('announce-test');
-		component.find(Base).invoke('announce')(text);
-		component.update();
+			return children;
+		}
+		render(<Announcer />);
 
-		const expected = text;
-		// Have to get the actual DOM node here since Announce updates the DOM directly so the
-		// change isn't represented in either the React or Enzyme views
-		const actual = component.find({role: 'alert'}).instance().getAttribute('aria-label');
+		act(() => announceFn(text));
 
-		expect(actual).toBe(expected);
+		expect(screen.getByRole('alert')).toHaveAttribute('aria-label', text);
+	});
+
+	test('should ignore announcements when its children are not rendered', () => {
+		let announceFn;
+		function Announcer () {
+			const {announce} = useAnnounce();
+			announceFn = announce;
+
+			return null;
+		}
+		render(<Announcer />);
+
+		expect(() => act(() => announceFn('__NOTIFY__'))).not.toThrow();
+		expect(screen.queryByRole('alert')).toBeNull();
 	});
 });
