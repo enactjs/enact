@@ -3,6 +3,7 @@ import {forProp, forward, handle, preventDefault} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import useHandlers from '@enact/core/useHandlers';
 import PropTypes from 'prop-types';
+import {useImperativeHandle, useRef} from 'react';
 
 import useLink from './useLink';
 
@@ -109,12 +110,15 @@ const Linkable = hoc({navigate: 'onClick'}, (config, Wrapped) => {
 		)
 	};
 
-	return function LinkableAdapter (props) {
+	return function LinkableAdapter ({ref, ...rest}) {
 		const link = useLink();
-		const handlers = useHandlers(navHandlers, props, link);
+		const handlers = useHandlers(navHandlers, rest, link);
+		const linkableRef = useRef({});
+
+		useImperativeHandle(ref, () => linkableRef.current, []);
 
 		return (
-			<Wrapped {...props} {...handlers} />
+			<Wrapped {...rest} {...handlers} />
 		);
 	};
 });
