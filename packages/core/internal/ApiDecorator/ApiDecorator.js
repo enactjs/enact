@@ -6,7 +6,7 @@
  */
 
 import invariant from 'invariant';
-import {Component} from 'react';
+import {useCallback, useImperativeHandle, useRef} from 'react';
 
 import hoc from '../../hoc';
 
@@ -71,24 +71,32 @@ const ApiDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		'ApiDecorator: api is a required config property'
 	);
 
-	return class extends Component {
-		static displayName = 'ApiDecorator';
+	function ApiDecoratorBase ({ref, ...rest}) {
+		const handleRef = useRef(null);
 
-		setProvider = (provider) => {
+		if (handleRef.current == null) {
+			handleRef.current = {};
+		}
+
+		const setProvider = useCallback((provider) => {
 			api.forEach(key => {
-				Object.defineProperty(this, key, {
+				Object.defineProperty(handleRef.current, key, {
 					get: get(provider, key),
 					set: set(provider, key),
 					enumerable: true,
 					configurable: true
 				});
 			});
-		};
+		}, []);
 
-		render () {
-			return <Wrapped setApiProvider={this.setProvider} {...this.props} />;
-		}
-	};
+		useImperativeHandle(ref, () => handleRef.current, []);
+
+		return <Wrapped setApiProvider={setProvider} {...rest} />;
+	}
+
+	ApiDecoratorBase.displayName = 'ApiDecorator';
+
+	return ApiDecoratorBase;
 });
 
 export default ApiDecorator;
