@@ -4,6 +4,10 @@ import {createRef} from 'react';
 import Announce from '../Announce';
 
 describe('Announce', () => {
+	afterEach(() => {
+		jest.useRealTimers();
+	});
+
 	test('should have an announce method on the component', () => {
 		const ref = createRef();
 		render(<Announce ref={ref} />);
@@ -30,5 +34,39 @@ describe('Announce', () => {
 		const actual = node.alert.getAttribute('aria-label');
 
 		expect(actual).toBe(expected);
+	});
+
+	test('should replace a pending message when clear is true and remove it after the timeout', () => {
+		jest.useFakeTimers();
+		const ref = createRef();
+
+		render(<Announce ref={ref} />);
+
+		ref.current.announce('first');
+		ref.current.announce('second', true);
+
+		expect(ref.current.alert.getAttribute('aria-label')).toBe('second');
+
+		jest.advanceTimersByTime(500);
+
+		expect(ref.current.alert.hasAttribute('aria-label')).toBe(false);
+
+		jest.useRealTimers();
+	});
+
+	test('should not throw when unmounted before the announce timeout', () => {
+		jest.useFakeTimers();
+		const ref = createRef();
+
+		const {unmount} = render(<Announce ref={ref} />);
+
+		ref.current.announce('message');
+		unmount();
+
+		expect(() => {
+			jest.advanceTimersByTime(500);
+		}).not.toThrow();
+
+		jest.useRealTimers();
 	});
 });

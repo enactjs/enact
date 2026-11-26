@@ -141,4 +141,32 @@ describe('navigate', () => {
 			)).toBe('right');
 		}
 	);
+
+	test('should return null without a target, a direction, candidates or a config', () => {
+		const targetRect = getRect(100, 100, 10, 10);
+		const rects = [getRect(90, 100, 10, 10, 'above')];
+
+		expect(navigate(null, 'up', rects, {})).toBeNull();
+		expect(navigate(targetRect, null, rects, {})).toBeNull();
+		expect(navigate(targetRect, 'up', [], {})).toBeNull();
+		expect(navigate(targetRect, 'up', rects, null)).toBeNull();
+	});
+
+	test('should return null for an unknown direction', () => {
+		const targetRect = getRect(100, 100, 10, 10);
+		const rects = [getRect(90, 100, 10, 10, 'above')];
+
+		expect(navigate(targetRect, 'diagonal', rects, {})).toBeNull();
+	});
+
+	test('should only navigate to elements straight in the direction when `straightOnly`', () => {
+		const targetRect = getRect(100, 100, 10, 10);
+		// only diagonally below and to the right
+		const rects = [getRect(130, 130, 10, 10, 'diagonal')];
+
+		expect(navigate(targetRect, 'down', rects, {})).toBe('diagonal');
+		expect(navigate(targetRect, 'down', rects, {straightOnly: true})).toBeNull();
+	});
+
+
 });

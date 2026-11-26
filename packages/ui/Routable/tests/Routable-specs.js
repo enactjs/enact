@@ -54,6 +54,43 @@ describe('Routable', () => {
 		secondPage = screen.getByTestId('page2');
 		expect(secondPage).toBeInTheDocument();
 	});
+
+	describe('navigating from the routed component', () => {
+		const Views = Routable({navigate: 'onNavigate'}, ({children, onNavigate}) => (
+			<div>
+				<button onClick={() => onNavigate({index: 0, source: 'back'})}>back</button>
+				{children}
+			</div>
+		));
+
+		const renderViews = (path, handleNavigate) => render(
+			<Views onNavigate={handleNavigate} path={path}>
+				<Route path="app" component={() => <div>app</div>}>
+					<Route path="page2" component={() => <div>page 2</div>} />
+				</Route>
+			</Views>
+		);
+
+		test('should add the path up to the navigated index to a string path', async () => {
+			const handleNavigate = jest.fn();
+			const user = userEvent.setup();
+			renderViews('/app/page2', handleNavigate);
+
+			await user.click(screen.getByText('back'));
+
+			expect(handleNavigate).toHaveBeenCalledWith({index: 0, path: '/app', source: 'back'});
+		});
+
+		test('should add the path up to the navigated index to an array path', async () => {
+			const handleNavigate = jest.fn();
+			const user = userEvent.setup();
+			renderViews(['app', 'page2'], handleNavigate);
+
+			await user.click(screen.getByText('back'));
+
+			expect(handleNavigate).toHaveBeenCalledWith({index: 0, path: ['app'], source: 'back'});
+		});
+	});
 });
 
 describe('Route', () => {

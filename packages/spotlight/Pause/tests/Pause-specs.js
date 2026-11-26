@@ -112,4 +112,19 @@ describe('Pause', () => {
 
 		expect(actual).toBe(expected);
 	});
+
+	test('should not resume Spotlight paused by another instance', () => {
+		const owner = new Pause('owner');
+		const other = new Pause('other');
+
+		owner.pause();
+		const resumed = other.resume();
+
+		const actual = isPaused() ? PAUSED : NOT_PAUSED;
+
+		owner.resume();
+
+		expect(resumed).toBe(false);
+		expect(actual).toBe(PAUSED);
+	});
 });
