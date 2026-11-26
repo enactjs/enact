@@ -10,10 +10,6 @@ import {startSignLang, stopSignLang} from './signLang';
 const forwardBlur = forward('onBlur');
 const forwardFocus = forward('onFocus');
 
-/**
- * Forwards focus and blur events and requests or stops sign language accordingly.
- * Used by `useHandlers` with the current props and per-instance timer ref.
- */
 const signLangDecoratorHandlers = {
 	onFocus: (ev, props, {requestSignLang, signLangDelayIdRef}) => {
 		forwardFocus(ev, props);
