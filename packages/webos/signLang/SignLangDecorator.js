@@ -1,10 +1,29 @@
 import {forward} from '@enact/core/handle';
+import useHandlers from '@enact/core/useHandlers';
 import hoc from '@enact/core/hoc';
 import {checkPropTypes} from '@enact/core/util';
 import PropTypes from 'prop-types';
-import {Component} from 'react';
+import {useRef} from 'react';
 
 import {startSignLang, stopSignLang} from './signLang';
+
+const forwardBlur = forward('onBlur');
+const forwardFocus = forward('onFocus');
+
+/**
+ * Forwards focus and blur events and requests or stops sign language accordingly.
+ * Used by `useHandlers` with the current props and per-instance timer ref.
+ */
+const signLangDecoratorHandlers = {
+	onFocus: (ev, props, {requestSignLang, signLangDelayIdRef}) => {
+		forwardFocus(ev, props);
+		requestSignLang({...props, active: true, signLangDelayIdRef});
+	},
+	onBlur: (ev, props, {requestSignLang, signLangDelayIdRef}) => {
+		forwardBlur(ev, props);
+		requestSignLang({...props, active: false, signLangDelayIdRef});
+	}
+};
 
 /**
  * Default config for {@link webos/signLang.SignLangDecorator}
@@ -55,87 +74,66 @@ const defaultConfig = {
  */
 const SignLangDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {signLangDelay} = config;
-	const forwardBlur = forward('onBlur');
-	const forwardFocus = forward('onFocus');
 
-	return class extends Component {
-		static displayName = 'SignLangDecorator';
-
-		static propTypes = /** @lends webos/signLang.SignLangDecorator.prototype */ {
-			/**
-			 * Unique ID for sign language.
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			signLangId: PropTypes.string,
-
-			/**
-			 * Additional option for sign language.
-			 *
-			 * @type {Object}
-			 * @public
-			 */
-			signLangOption: PropTypes.object
-		};
-
-		constructor (props) {
-			super(props);
-			checkPropTypes(this, props);
-
-			this.signLangDelayId = null;
-		}
-
-		componentDidUpdate (prevProps) {
-			checkPropTypes(this, this.props, prevProps);
-		}
-
-		requestSignLang = (active) => {
-			const {signLangId = '', signLangOption = {}} = this.props;
-
-			if (signLangId.length > 0) {
-				if (active) {
-					if (signLangDelay === 0) {
-						startSignLang(signLangId, signLangOption);
-					} else {
-						clearTimeout(this.signLangDelayId);
-						this.signLangDelayId = setTimeout(() => {
-							startSignLang(signLangId, signLangOption);
-						}, signLangDelay);
-					}
+	const requestSignLang = ({active, signLangDelayIdRef, signLangId = '', signLangOption = {}}) => {
+		if (signLangId.length > 0) {
+			if (active) {
+				if (signLangDelay === 0) {
+					startSignLang(signLangId, signLangOption);
 				} else {
-					if (signLangDelay > 0) clearTimeout(this.signLangDelayId);
-					stopSignLang(signLangId, signLangOption);
+					clearTimeout(signLangDelayIdRef.current);
+					signLangDelayIdRef.current = setTimeout(() => {
+						startSignLang(signLangId, signLangOption);
+					}, signLangDelay);
 				}
+			} else {
+				if (signLangDelay > 0) clearTimeout(signLangDelayIdRef.current);
+				stopSignLang(signLangId, signLangOption);
 			}
-		};
-
-		onFocus = (ev) => {
-			forwardFocus(ev, this.props);
-			this.requestSignLang(true);
-		};
-
-		onBlur = (ev) => {
-			forwardBlur(ev, this.props);
-			this.requestSignLang(false);
-		};
-
-		render () {
-			const props = Object.assign({}, this.props);
-			delete props.onBlur;
-			delete props.onFocus;
-			delete props.signLangId;
-			delete props.signLangOption;
-
-			return (
-				<Wrapped
-					{...props}
-					onBlur={this.onBlur}
-					onFocus={this.onFocus}
-				/>
-			);
 		}
 	};
+
+	// eslint-disable-next-line no-shadow
+	const SignLangDecorator = (props) => {
+		checkPropTypes(SignLangDecorator, props);
+
+		const signLangDelayIdRef = useRef(null);
+		const handlers = useHandlers(signLangDecoratorHandlers, props, {requestSignLang, signLangDelayIdRef});
+
+		const wrappedProps = Object.assign({}, props);
+		delete wrappedProps.onBlur;
+		delete wrappedProps.onFocus;
+		delete wrappedProps.signLangId;
+		delete wrappedProps.signLangOption;
+
+		return (
+			<Wrapped
+				{...wrappedProps}
+				{...handlers}
+			/>
+		);
+	};
+
+	SignLangDecorator.displayName = 'SignLangDecorator';
+	SignLangDecorator.propTypes = /** @lends webos/signLang.SignLangDecorator.prototype */ {
+		/**
+		 * Unique ID for sign language.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		signLangId: PropTypes.string,
+
+		/**
+		 * Additional option for sign language.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		signLangOption: PropTypes.object
+	};
+
+	return SignLangDecorator;
 });
 
 export default SignLangDecorator;

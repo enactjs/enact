@@ -3,7 +3,6 @@ import {forProp, forward, handle, preventDefault} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import useHandlers from '@enact/core/useHandlers';
 import PropTypes from 'prop-types';
-import {Component} from 'react';
 
 import useLink from './useLink';
 
@@ -110,23 +109,13 @@ const Linkable = hoc({navigate: 'onClick'}, (config, Wrapped) => {
 		)
 	};
 
-	// eslint-disable-next-line no-shadow
-	function Linkable (props) {
+	return function LinkableAdapter (props) {
 		const link = useLink();
 		const handlers = useHandlers(navHandlers, props, link);
 
 		return (
 			<Wrapped {...props} {...handlers} />
 		);
-	}
-
-	// TODO: Added to maintain `ref` compatibility with 3.x. Remove in 4.0
-	return class LinkableAdapter extends Component {
-		render () {
-			return (
-				<Linkable {...this.props} />
-			);
-		}
 	};
 });
 
