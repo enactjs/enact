@@ -1,6 +1,7 @@
 import webpack from '@enact/storybook-utils/configs/webpack.js';
 import {readFileSync} from 'fs';
 import {createRequire} from 'module';
+import os from 'node:os';
 import {dirname} from 'path';
 import {loadCsf} from 'storybook/internal/csf-tools';
 import {fileURLToPath} from 'url';
@@ -9,10 +10,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const moduleRequire = createRequire(import.meta.url);
 
+// Collect this machine's LAN IPv4 addresses plus its hostname
+const lanHosts = [];
+for (const list of Object.values(os.networkInterfaces())) {
+	for (const i of list ?? []) {
+		if (i.family === 'IPv4' && !i.internal) lanHosts.push(i.address);
+	}
+}
+
 export default {
 	core: {
 		disableTelemetry: true,
-		allowedHosts: true
+		allowedHosts: [`http://${lanHosts[lanHosts.length - 1]}:8080`]
 	},
 	features: {
 		backgrounds: false,
