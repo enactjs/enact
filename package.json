@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+    "postinstall": "node -e \"const fs=require('fs'),p=require('path');['i18n','ui'].forEach(d=>{const t=p.join('packages',d,'node_modules','ilib');if(!fs.existsSync(t)){fs.mkdirSync(p.dirname(t),{recursive:true});fs.symlinkSync(p.resolve('node_modules','ilib'),t)}})\"",
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm test --workspaces --if-present",
     "test-ss": "npm run test-ss --workspaces --if-present",

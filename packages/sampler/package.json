@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "enact lint --strict",
-    "test": "echo \"No test suite\" && exit 0",
+    "test": "echo \"No test suite\"",
     "pack": "storybook build -c .storybook -o dist",
     "serve": "storybook dev -p 8080 -c .storybook --ci"
   },

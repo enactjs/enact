@@ -48,7 +48,7 @@ jobs:
         run: npm install
 
       - name: Run tests with coverage
-        run: npm test -- --runInBand --coverage
+        run: npm test --workspaces --if-present -- --runInBand --coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
@@ -57,7 +57,7 @@ jobs:
           fail_ci_if_error: false
 
       - name: Run ESLint
-        run: npm run lint -- --report-unused-disable-directives --max-warnings 0 .
+        run: npm run lint --workspaces --if-present -- --report-unused-disable-directives --max-warnings 0 .
 
       - name: Validate documentation
         run: npm run validate-docs
