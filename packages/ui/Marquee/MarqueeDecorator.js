@@ -1012,7 +1012,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		return inst;
 	}
 
-	// eslint-disable-next-line no-shadow
 	function MarqueeDecoratorComponent (incomingProps) {
 		const props = setDefaultProps(incomingProps, marqueeDefaultProps);
 		checkPropTypes(MarqueeDecoratorComponent, props);
@@ -1035,11 +1034,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		// Latest props, state, and context for timers, jobs, and controller callbacks.
 		// Reading and writing the ref here is intentional: measured distance lives on the instance
 		// and is read while rendering, the same way the class read `this.distance`.
-		const inst = instRef.current; // eslint-disable-line react-hooks/refs
-		inst.props = props; // eslint-disable-line react-hooks/refs
-		inst.state = state; // eslint-disable-line react-hooks/refs
-		inst.context = context; // eslint-disable-line react-hooks/refs
-		inst.resizeRegister = resizeRegister; // eslint-disable-line react-hooks/refs
+		const inst = instRef.current;
+		inst.props = props;
+		inst.state = state;
+		inst.context = context;
+		inst.resizeRegister = resizeRegister;
 
 		useLayoutEffect(() => {
 			const current = instRef.current;

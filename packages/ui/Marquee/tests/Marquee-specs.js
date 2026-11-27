@@ -1,6 +1,8 @@
+import Registry from '@enact/core/internal/Registry';
 import '@testing-library/jest-dom';
 import {act, fireEvent, render, screen} from '@testing-library/react';
 
+import {ResizeContext} from '../../Resizable';
 import {Marquee, MarqueeBase, MarqueeController} from '../index.js';
 
 const
@@ -440,6 +442,102 @@ describe('Marquee', () => {
 		});
 
 		global.ResizeObserver = originalResizeObserver;
+	});
+
+	test('should complete a disabled synchronized marquee without animating', () => {
+		render(
+			<Controller>
+				<Marquee marqueeDisabled marqueeOn="render" marqueeOnRenderDelay={0}>
+					{ltrText}
+				</Marquee>
+			</Controller>
+		);
+
+		act(() => jest.advanceTimersByTime(10));
+
+		const marquee = screen.getByText(ltrText).parentElement;
+
+		expect(marquee).not.toHaveClass('marquee');
+	});
+
+	test('should restart a synchronized marquee when its content changes while a start is pending', () => {
+		const {rerender} = render(
+			<Controller>
+				<Marquee marqueeDelay={1000} marqueeOn="render" marqueeOnRenderDelay={0}>
+					{ltrText}
+				</Marquee>
+			</Controller>
+		);
+
+		act(() => jest.advanceTimersByTime(1));
+
+		rerender(
+			<Controller>
+				<Marquee marqueeDelay={1000} marqueeOn="render" marqueeOnRenderDelay={0}>
+					{rtlText}
+				</Marquee>
+			</Controller>
+		);
+
+		act(() => jest.advanceTimersByTime(50));
+
+		expect(screen.getByText(rtlText)).toBeInTheDocument();
+	});
+
+	test('should demote a focused marquee after it blurs', () => {
+		const originalGetBoundingClientRect = global.Element.prototype.getBoundingClientRect;
+		global.Element.prototype.getBoundingClientRect = jest.fn(function () {
+			const isSpan = this && this.tagName === 'SPAN';
+			return {
+				width: isSpan ? 200 : 100,
+				height: 50,
+				top: 0,
+				left: 0,
+				bottom: 0,
+				right: isSpan ? 200 : 100
+			};
+		});
+
+		const idleCallbacks = [];
+		const originalRequestIdleCallback = window.requestIdleCallback;
+		const originalCancelIdleCallback = window.cancelIdleCallback;
+		window.requestIdleCallback = (callback) => {
+			idleCallbacks.push(callback);
+			return idleCallbacks.length;
+		};
+		window.cancelIdleCallback = jest.fn();
+
+		render(<Marquee marqueeDelay={0} marqueeOn="focus">{ltrText}</Marquee>);
+		const marquee = screen.getByText(ltrText);
+
+		fireEvent.focus(marquee);
+		act(() => jest.advanceTimersByTime(50));
+		fireEvent.blur(marquee.parentElement.parentElement);
+		act(() => {
+			idleCallbacks.forEach(callback => callback());
+		});
+		act(() => {
+			idleCallbacks.forEach(callback => callback());
+		});
+
+		expect(marquee).toBeInTheDocument();
+
+		window.requestIdleCallback = originalRequestIdleCallback;
+		window.cancelIdleCallback = originalCancelIdleCallback || (() => {});
+		global.Element.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+	});
+
+	test('should register with ResizeContext and unregister on unmount', () => {
+		const resizeRegistry = Registry.create();
+		const {unmount} = render(
+			<ResizeContext value={resizeRegistry.register}>
+				<Marquee>{ltrText}</Marquee>
+			</ResizeContext>
+		);
+
+		unmount();
+
+		expect(screen.queryByText(ltrText)).not.toBeInTheDocument();
 	});
 });
 
