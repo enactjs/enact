@@ -3,40 +3,29 @@
   "version": "5.7.0",
   "description": "Monorepo for all Enact front end libraries.",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "lerna": "lerna",
-    "bootstrap": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock install",
-    "bootstrap-link": "npm run link-all && npm run interlink",
-    "interlink": "lerna --concurrency 1 run interlink",
-    "link-all": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock link",
-    "unlink-all": "lerna --concurrency 1 exec -- npm --loglevel error --no-package-lock unlink --global",
-    "publish": "lerna publish --skip-npm --skip-git",
-    "lint": "lerna --concurrency 1 run lint",
-    "test": "lerna --concurrency 1 run test",
-    "test-ss": "lerna --concurrency 1 run test-ss",
-    "test-ui": "lerna --concurrency 1 run test-ui",
-    "clean": "lerna clean",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm test --workspaces --if-present",
+    "test-ss": "npm run test-ss --workspaces --if-present",
+    "test-ui": "npm run test-ui --workspaces --if-present",
+    "clean": "npm run clean --workspaces --if-present",
     "validate-docs": "validate-docs --strict --standalone --path packages"
   },
   "license": "Apache-2.0",
   "overrides": {
     "autolinker": "^4.0.0",
     "js-yaml": "^4.3.0",
-    "nx": {
-      "minimatch": "^10.2.4",
-      "axios": "^1.16.0",
-      "brace-expansion": "^5.0.5",
-      "follow-redirects": "^1.15.12",
-      "yaml": "^2.8.3"
-    },
-    "@nx/devkit": {
-      "minimatch": "^10.2.4"
-    },
     "tar": "^7.5.15",
-    "vue-template-compiler": "@vue/compiler-sfc@3.4.31"
+    "vue-template-compiler": "@vue/compiler-sfc@3.4.31",
+    "fork-ts-checker-webpack-plugin": {
+      "minimatch": "^11.0.1"
+    },
+    "webpack-dev-middleware": "^7.4.5"
   },
   "devDependencies": {
-    "@enact/docs-utils": "^0.5.0",
-    "lerna": "^9.0.7"
+    "@enact/docs-utils": "^0.5.0"
   }
 }
